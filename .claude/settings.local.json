@@ -8,7 +8,19 @@
       "Bash(echo \"環境變數：$ANTHROPIC_API_KEY\")",
       "Bash(git -C /Users/steven/CCProject/line-claude-bot ls-files .env)",
       "Bash(find /Users/steven -name .env -not -path */venv/* -not -path */.git/*)",
-      "WebFetch(domain:github.com)"
+      "WebFetch(domain:github.com)",
+      "Bash(crontab -l)",
+      "WebFetch(domain:developers.line.biz)",
+      "WebFetch(domain:www.anyong.com.tw)",
+      "WebFetch(domain:help2.line.me)",
+      "WebFetch(domain:tw.linebiz.com)",
+      "WebFetch(domain:blog.cresclab.com)",
+      "WebFetch(domain:blog.omnichat.ai)",
+      "WebFetch(domain:blog.ocard.co)",
+      "WebFetch(domain:tesa.contenta.tw)",
+      "Bash(curl -s \"https://api.telegram.org/bot8666778924:AAFMAFKfsfx3opS2CfCBrDYMIx6vcJKACTk/getUpdates\")",
+      "Bash(python3 -m json.tool)",
+      "Bash(curl -s \"https://api.telegram.org/bot8666778924:AAFMAFKfsfx3opS2CfCBrDYMIx6vcJKACTk/setWebhook\" -d \"url=https://ohio-emails-supervisor-airlines.trycloudflare.com/telegram_webhook\")"
     ]
   }
 }
