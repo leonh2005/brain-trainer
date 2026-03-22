@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>台股量價分析</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Noto Sans TC", sans-serif; background: #0f1117; color: #e0e0e0; min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 40px 20px; }
+  h1 { font-size: 1.6rem; margin-bottom: 30px; color: #fff; letter-spacing: 2px; }
+  .search-box { display: flex; gap: 10px; margin-bottom: 40px; }
+  input { background: #1e2130; border: 1px solid #333; border-radius: 8px; color: #fff; font-size: 1.2rem; padding: 12px 20px; width: 200px; outline: none; text-align: center; letter-spacing: 3px; }
+  input:focus { border-color: #4a9eff; }
+  button { background: #4a9eff; border: none; border-radius: 8px; color: #fff; cursor: pointer; font-size: 1rem; padding: 12px 24px; transition: background 0.2s; }
+  button:hover { background: #2d7dd2; }
+  .card { background: #1e2130; border-radius: 16px; padding: 30px; width: 100%; max-width: 500px; display: none; }
+  .symbol-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+  .symbol { font-size: 1.8rem; font-weight: bold; color: #fff; }
+  .change-up { color: #ff4d4d; }
+  .change-down { color: #4dff88; }
+  .change-flat { color: #aaa; }
+  .price { font-size: 2.2rem; font-weight: bold; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 20px 0; }
+  .stat { background: #262a3d; border-radius: 10px; padding: 12px 16px; }
+  .stat-label { color: #888; font-size: 0.8rem; margin-bottom: 4px; }
+  .stat-value { font-size: 1.1rem; font-weight: bold; }
+  .divider { border: none; border-top: 1px solid #333; margin: 20px 0; }
+  .pattern { font-size: 1.1rem; font-weight: bold; margin-bottom: 8px; }
+  .pattern-desc { color: #aaa; font-size: 0.9rem; margin-bottom: 16px; }
+  .score-bar-bg { background: #262a3d; border-radius: 999px; height: 12px; overflow: hidden; }
+  .score-bar { height: 100%; border-radius: 999px; transition: width 0.6s ease; }
+  .score-label { display: flex; justify-content: space-between; margin-top: 6px; font-size: 0.85rem; color: #aaa; }
+  .pressure { text-align: center; margin-top: 20px; }
+  .pressure-label { font-size: 0.85rem; color: #888; margin-bottom: 6px; }
+  .pressure-bar-bg { background: #262a3d; border-radius: 999px; height: 14px; overflow: hidden; display: flex; }
+  .pressure-buy { background: #ff4d4d; height: 100%; transition: width 0.6s; }
+  .pressure-sell { background: #4dff88; height: 100%; transition: width 0.6s; }
+  .pressure-nums { display: flex; justify-content: space-between; margin-top: 5px; font-size: 0.8rem; }
+  .error { color: #ff6b6b; text-align: center; padding: 20px; }
+  .loading { text-align: center; color: #888; padding: 20px; display: none; }
+</style>
+</head>
+<body>
+<h1>📊 台股量價分析</h1>
+<div class="search-box">
+  <input type="text" id="symbolInput" placeholder="2330" maxlength="6" />
+  <button onclick="analyze()">分析</button>
+</div>
+<div class="loading" id="loading">載入中...</div>
+<div class="card" id="card">
+  <div class="symbol-row">
+    <span class="symbol" id="symbol">—</span>
+    <span id="changeBadge" style="font-size:1.1rem;font-weight:bold;">—</span>
+  </div>
+  <div class="price" id="price">—</div>
+  <div class="grid">
+    <div class="stat"><div class="stat-label">開盤</div><div class="stat-value" id="open">—</div></div>
+    <div class="stat"><div class="stat-label">最高</div><div class="stat-value" id="high">—</div></div>
+    <div class="stat"><div class="stat-label">最低</div><div class="stat-value" id="low">—</div></div>
+    <div class="stat"><div class="stat-label">成交量 / 均量</div><div class="stat-value" id="volume">—</div></div>
+  </div>
+  <hr class="divider">
+  <div class="pattern" id="pattern">—</div>
+  <div class="pattern-desc" id="patternDesc">—</div>
+  <div class="score-bar-bg">
+    <div class="score-bar" id="scoreBar" style="width:0%"></div>
+  </div>
+  <div class="score-label">
+    <span>上漲機率</span>
+    <span id="scoreLabel">—</span>
+  </div>
+  <div class="pressure" id="pressureBlock">
+    <div class="pressure-label">買賣力道</div>
+    <div class="pressure-bar-bg">
+      <div class="pressure-buy" id="buyBar" style="width:50%"></div>
+      <div class="pressure-sell" id="sellBar" style="width:50%"></div>
+    </div>
+    <div class="pressure-nums">
+      <span id="buyPct" style="color:#ff4d4d">買 —</span>
+      <span id="sellPct" style="color:#4dff88">賣 —</span>
+    </div>
+  </div>
+</div>
+
+<script>
+const input = document.getElementById("symbolInput");
+input.addEventListener("keydown", e => { if (e.key === "Enter") analyze(); });
+
+async function analyze() {
+  const symbol = input.value.trim();
+  if (!symbol) return;
+  document.getElementById("loading").style.display = "block";
+  document.getElementById("card").style.display = "none";
+
+  try {
+    const res = await fetch(`/api/analyze?symbol=${encodeURIComponent(symbol)}`);
+    const d = await res.json();
+    document.getElementById("loading").style.display = "none";
+
+    if (d.error) {
+      document.getElementById("card").style.display = "block";
+      document.getElementById("card").innerHTML = `<div class="error">❌ ${d.error}</div>`;
+      return;
+    }
+
+    document.getElementById("symbol").textContent = d.symbol;
+    document.getElementById("price").textContent = d.price.toFixed(2);
+
+    const changeClass = d.change > 0 ? "change-up" : d.change < 0 ? "change-down" : "change-flat";
+    const changeSign = d.change > 0 ? "▲" : d.change < 0 ? "▼" : "—";
+    document.getElementById("changeBadge").className = changeClass;
+    document.getElementById("changeBadge").textContent = `${changeSign} ${Math.abs(d.change).toFixed(2)} (${d.change_pct}%)`;
+    document.getElementById("price").className = "price " + changeClass;
+
+    document.getElementById("open").textContent = d.open.toFixed(2);
+    document.getElementById("high").textContent = d.high.toFixed(2);
+    document.getElementById("low").textContent = d.low.toFixed(2);
+    document.getElementById("volume").textContent = d.avg_volume
+      ? `${(d.volume/1000).toFixed(0)}張 / ${(d.avg_volume/1000).toFixed(0)}張`
+      : `${(d.volume/1000).toFixed(0)}張`;
+
+    document.getElementById("pattern").textContent = d.pattern;
+    document.getElementById("patternDesc").textContent = d.pattern_desc;
+
+    const score = d.pattern_score;
+    const barColor = score >= 70 ? "#ff4d4d" : score >= 50 ? "#f0c040" : "#4dff88";
+    document.getElementById("scoreBar").style.width = score + "%";
+    document.getElementById("scoreBar").style.background = barColor;
+    document.getElementById("scoreLabel").textContent = score + "%";
+
+    if (d.buy_pressure !== null) {
+      const bp = d.buy_pressure;
+      document.getElementById("buyBar").style.width = bp + "%";
+      document.getElementById("sellBar").style.width = (100 - bp) + "%";
+      document.getElementById("buyPct").textContent = `買 ${bp}%`;
+      document.getElementById("sellPct").textContent = `賣 ${(100 - bp).toFixed(1)}%`;
+    }
+
+    document.getElementById("card").style.display = "block";
+  } catch (e) {
+    document.getElementById("loading").style.display = "none";
+    alert("發生錯誤：" + e.message);
+  }
+}
+</script>
+</body>
+</html>
