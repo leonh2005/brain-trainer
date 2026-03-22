@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "Skill(update-config)",
+      "Skill(update-config:*)",
+      "Bash(ssh:*)",
+      "Bash(echo \"環境變數：$ANTHROPIC_API_KEY\")",
+      "Bash(git -C /Users/steven/CCProject/line-claude-bot ls-files .env)",
+      "Bash(find /Users/steven -name .env -not -path */venv/* -not -path */.git/*)",
+      "WebFetch(domain:github.com)"
+    ]
+  }
+}
