@@ -1,0 +1,1274 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>7個大腦訓練</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'PingFang SC','Helvetica Neue',sans-serif;background:#0d0d1a;color:#e8e8ff;min-height:100vh;overflow-x:hidden}
+
+/* ── 全域按鈕靈敏度修正 ── */
+button,
+.btn,.diff-btn,.cat-btn,.card,.schulte-cell,
+.seq-item,.aud-digit-btn,.color-btn,.mem-choice,
+.color-swatch,.card-badge,.nav-reset{
+  touch-action:manipulation;
+  -webkit-tap-highlight-color:rgba(255,255,255,.08);
+  user-select:none;
+}
+.btn:active{transform:scale(.96)!important;opacity:.8}
+.diff-btn:active{opacity:.7;transform:scale(.97)}
+.schulte-cell:active{background:rgba(167,139,250,.4)!important}
+.seq-item:active{transform:scale(.93)}
+.aud-digit-btn:active{background:rgba(96,165,250,.35)!important;transform:scale(.93)}
+.color-btn:active{transform:scale(.92)!important}
+.cat-btn:active{transform:scale(.95)}
+.mem-choice:active{transform:scale(.92)}
+.card:active{transform:translateY(-1px)!important}
+
+/* NAV */
+#nav{display:flex;align-items:center;gap:12px;padding:14px 24px;background:rgba(255,255,255,.04);border-bottom:1px solid rgba(255,255,255,.08);position:sticky;top:0;z-index:100;backdrop-filter:blur(10px)}
+#back-btn{background:rgba(255,255,255,.1);border:none;color:#e8e8ff;padding:6px 14px;border-radius:20px;cursor:pointer;font-size:14px;display:none}
+#back-btn:hover{background:rgba(255,255,255,.18)}
+#nav-title{font-size:17px;font-weight:700;background:linear-gradient(90deg,#a78bfa,#60a5fa);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+#nav-reset{margin-left:auto;font-size:12px;color:#555577;cursor:pointer;padding:4px 10px;border-radius:10px;background:none;border:1px solid rgba(255,255,255,.08)}
+#nav-reset:hover{color:#8888aa}
+
+/* HOME */
+#home{padding:28px 20px}
+.home-hero{text-align:center;margin-bottom:36px}
+.home-hero h1{font-size:clamp(22px,5vw,38px);font-weight:800;background:linear-gradient(135deg,#a78bfa,#60a5fa,#34d399);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}
+.home-hero p{color:#8888aa;font-size:14px}
+
+/* OVERALL PROGRESS BAR */
+.overall-progress{max-width:480px;margin:0 auto 36px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:16px 20px}
+.overall-progress .label{font-size:12px;color:#8888aa;margin-bottom:10px;display:flex;justify-content:space-between}
+.prog-bar{background:rgba(255,255,255,.08);border-radius:6px;height:8px;overflow:hidden}
+.prog-fill{height:100%;border-radius:6px;background:linear-gradient(90deg,#7c3aed,#60a5fa,#34d399);transition:width .5s ease}
+.tier-stars-row{display:flex;gap:12px;margin-top:10px;flex-wrap:wrap}
+.mini-tier{font-size:12px;color:#8888aa}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:14px;max-width:980px;margin:0 auto}
+.card{background:linear-gradient(135deg,rgba(255,255,255,.05),rgba(255,255,255,.02));border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:20px;cursor:pointer;transition:all .25s;position:relative;overflow:hidden}
+.card:hover{transform:translateY(-3px);border-color:rgba(167,139,250,.45);box-shadow:0 8px 30px rgba(167,139,250,.18)}
+.card-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px}
+.card-num{font-size:12px;font-weight:700;color:#a78bfa;letter-spacing:.5px}
+.card-badge{font-size:11px;padding:3px 10px;border-radius:20px;font-weight:700;white-space:nowrap}
+.badge-d0{background:rgba(148,163,184,.12);color:#94a3b8}
+.badge-d1{background:rgba(52,211,153,.12);color:#34d399}
+.badge-d2{background:rgba(96,165,250,.12);color:#60a5fa}
+.badge-d3{background:rgba(167,139,250,.15);color:#a78bfa}
+.badge-d4{background:rgba(251,191,36,.12);color:#fbbf24}
+.card-row{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.card-icon{font-size:30px}
+.card-title{font-size:17px;font-weight:700}
+.card-desc{font-size:12px;color:#8888aa;line-height:1.6;margin-bottom:10px}
+.card-footer{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.card-tag{font-size:11px;padding:3px 10px;border-radius:20px;background:rgba(167,139,250,.12);color:#a78bfa}
+.card-stars{font-size:14px;letter-spacing:1px}
+
+/* SCREEN */
+.screen{display:none;padding:20px;max-width:780px;margin:0 auto}
+.screen.active{display:block}
+.game-header{text-align:center;margin-bottom:20px}
+.game-header h2{font-size:22px;font-weight:700;margin-bottom:6px}
+.game-header p{color:#8888aa;font-size:13px;line-height:1.6}
+
+/* DIFFICULTY PANEL */
+.diff-panel{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:14px 18px;margin-bottom:18px}
+.diff-title{font-size:12px;color:#8888aa;margin-bottom:10px;font-weight:600;letter-spacing:.5px}
+.diff-btns{display:flex;gap:6px;flex-wrap:wrap}
+.diff-btn{padding:7px 16px;border-radius:10px;border:2px solid rgba(255,255,255,.1);background:rgba(255,255,255,.05);color:#8888aa;font-size:13px;font-weight:600;cursor:pointer;transition:background .1s,border-color .1s,color .1s;flex:1;min-width:70px;text-align:center}
+.diff-btn:hover{border-color:rgba(167,139,250,.4);color:#e8e8ff}
+.diff-btn.active{color:#fff;border-color:transparent}
+.diff-btn[data-d="1"].active{background:linear-gradient(135deg,#059669,#10b981)}
+.diff-btn[data-d="2"].active{background:linear-gradient(135deg,#2563eb,#3b82f6)}
+.diff-btn[data-d="3"].active{background:linear-gradient(135deg,#7c3aed,#9333ea)}
+.diff-btn[data-d="4"].active{background:linear-gradient(135deg,#b45309,#f59e0b)}
+.diff-info{font-size:12px;color:#6666aa;margin-top:8px;min-height:16px}
+
+/* SHARED GAME ELEMENTS */
+.btn{padding:10px 24px;border:none;border-radius:10px;cursor:pointer;font-size:15px;font-weight:600;transition:transform .08s,opacity .08s}
+.btn-primary{background:linear-gradient(135deg,#7c3aed,#4f46e5);color:#fff}
+.btn-primary:hover{opacity:.85;transform:scale(1.02)}
+.btn-secondary{background:rgba(255,255,255,.1);color:#e8e8ff;border:1px solid rgba(255,255,255,.15)}
+.btn-secondary:hover{background:rgba(255,255,255,.18)}
+.btn-up{background:linear-gradient(135deg,#b45309,#f59e0b);color:#fff}
+.btn-up:hover{opacity:.85}
+
+.score-box{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:14px 20px;text-align:center;margin:14px 0}
+.score-box .label{font-size:12px;color:#8888aa;margin-bottom:4px}
+.score-box .value{font-size:28px;font-weight:800;color:#60a5fa}
+
+/* PERFORMANCE RESULT */
+.perf-result{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:24px;text-align:center;margin:12px 0}
+.perf-stars-big{font-size:32px;letter-spacing:4px;margin-bottom:8px}
+.perf-tier{display:inline-block;padding:4px 14px;border-radius:20px;font-size:13px;font-weight:700;margin-bottom:10px}
+.tier-1{background:rgba(148,163,184,.15);color:#94a3b8}
+.tier-2{background:rgba(52,211,153,.15);color:#34d399}
+.tier-3{background:rgba(96,165,250,.15);color:#60a5fa}
+.tier-4{background:rgba(167,139,250,.15);color:#a78bfa}
+.tier-5{background:rgba(251,191,36,.15);color:#fbbf24}
+.perf-desc{font-size:13px;color:#8888aa;margin-bottom:14px;line-height:1.6}
+.perf-best{font-size:12px;color:#6666aa;margin-bottom:16px}
+.upgrade-hint{font-size:12px;padding:8px 14px;border-radius:8px;margin:8px 0;background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.2);color:#fbbf24}
+
+.flex-center{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
+.timer-bar{background:rgba(255,255,255,.08);border-radius:6px;height:6px;margin:10px 0;overflow:hidden}
+.timer-fill{height:100%;border-radius:6px;background:linear-gradient(90deg,#7c3aed,#60a5fa);transition:width .1s linear}
+
+/* GAME 1 SCHULTE */
+.schulte-wrap{display:flex;flex-direction:column;align-items:center}
+.schulte-grid{display:grid;gap:6px;margin:0 auto 16px}
+.schulte-cell{aspect-ratio:1;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:700;cursor:pointer;transition:all .15s;user-select:none}
+.schulte-cell:hover{background:rgba(167,139,250,.2);border-color:#a78bfa}
+.schulte-cell.correct{background:rgba(52,211,153,.2);border-color:#34d399;color:#34d399;pointer-events:none}
+.schulte-cell.wrong{background:rgba(248,113,113,.2);border-color:#f87171;animation:shake .3s}
+.schulte-stats{display:flex;gap:20px;justify-content:center;margin-bottom:14px}
+.stat{text-align:center}.stat .val{font-size:22px;font-weight:700;color:#60a5fa}.stat .lbl{font-size:11px;color:#8888aa}
+
+/* GAME 2 STROOP */
+.stroop-word{text-align:center;font-size:clamp(38px,10vw,70px);font-weight:900;letter-spacing:2px;margin:24px 0;height:80px;display:flex;align-items:center;justify-content:center}
+.stroop-choices{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:16px}
+.color-btn{width:64px;height:64px;border-radius:12px;border:3px solid transparent;cursor:pointer;transition:all .15s;font-size:13px;font-weight:700;color:#fff}
+.color-btn:hover{transform:scale(1.08);border-color:rgba(255,255,255,.5)}
+.color-btn.correct-flash{border-color:#34d399;box-shadow:0 0 18px rgba(52,211,153,.5)}
+.color-btn.wrong-flash{border-color:#f87171;box-shadow:0 0 18px rgba(248,113,113,.5)}
+.stroop-progress{display:flex;gap:4px;justify-content:center;margin-bottom:14px}
+.stroop-dot{width:9px;height:9px;border-radius:50%;background:rgba(255,255,255,.12)}
+.stroop-dot.d-ok{background:#34d399}.stroop-dot.d-fail{background:#f87171}.stroop-dot.d-cur{background:#a78bfa}
+
+/* GAME 3 SEQUENCE */
+.seq-display{min-height:130px;display:flex;align-items:center;justify-content:center;font-size:72px;margin:14px 0}
+.seq-items{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:12px 0}
+.seq-item{font-size:36px;padding:8px;background:rgba(255,255,255,.07);border:2px solid rgba(255,255,255,.1);border-radius:10px;cursor:pointer;transition:all .18s;width:62px;height:62px;display:flex;align-items:center;justify-content:center}
+.seq-item:hover{background:rgba(167,139,250,.2);border-color:#a78bfa;transform:scale(1.06)}
+.seq-item.selected{background:rgba(52,211,153,.2);border-color:#34d399}
+.seq-item.wrong{background:rgba(248,113,113,.2);border-color:#f87171}
+.seq-answer{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;min-height:62px;margin:10px 0;padding:8px;background:rgba(255,255,255,.04);border-radius:10px;border:1px dashed rgba(255,255,255,.1)}
+.seq-slot{font-size:32px;width:54px;height:54px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.06);border-radius:8px;border:1px solid rgba(255,255,255,.08)}
+
+/* GAME 4 AUDITORY */
+.aud-display{text-align:center;font-size:clamp(56px,15vw,96px);font-weight:900;height:130px;display:flex;align-items:center;justify-content:center;color:#60a5fa}
+.aud-display.flash{color:#fff;text-shadow:0 0 40px rgba(96,165,250,.8)}
+.aud-input{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:14px 0}
+.aud-digit-btn{width:56px;height:56px;background:rgba(255,255,255,.07);border:2px solid rgba(255,255,255,.12);border-radius:10px;color:#e8e8ff;font-size:20px;font-weight:700;cursor:pointer;transition:all .15s}
+.aud-digit-btn:hover{background:rgba(96,165,250,.2);border-color:#60a5fa}
+.aud-seq-row{display:flex;gap:6px;justify-content:center;min-height:50px;flex-wrap:wrap;margin:10px 0}
+.aud-chip{width:42px;height:42px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;background:rgba(167,139,250,.12);border:1px solid rgba(167,139,250,.25)}
+.aud-chip.ok{background:rgba(52,211,153,.2);border-color:#34d399;color:#34d399}
+.aud-chip.fail{background:rgba(248,113,113,.2);border-color:#f87171;color:#f87171}
+
+/* GAME 5 MIRROR */
+.mirror-area{display:flex;gap:10px;align-items:center;justify-content:center;margin:14px 0;flex-wrap:wrap}
+.mirror-label{text-align:center;font-size:11px;color:#8888aa;margin-bottom:5px}
+canvas{border:2px solid rgba(255,255,255,.12);border-radius:10px;background:rgba(255,255,255,.02);cursor:crosshair;touch-action:none}
+.mirror-divider{font-size:22px;color:#555577}
+.mirror-controls{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:10px;align-items:center}
+.color-swatch{width:28px;height:28px;border-radius:50%;cursor:pointer;border:3px solid transparent;transition:all .15s}
+.color-swatch.active{border-color:#fff;transform:scale(1.15)}
+
+/* GAME 6 CLASSIFY */
+.classify-item{text-align:center;font-size:56px;margin:16px 0;height:70px;display:flex;align-items:center;justify-content:center}
+.classify-item-name{text-align:center;font-size:17px;font-weight:600;margin-bottom:16px;color:#c4b5fd}
+.classify-cats{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.cat-btn{padding:12px 22px;border-radius:10px;border:2px solid rgba(255,255,255,.12);background:rgba(255,255,255,.07);color:#e8e8ff;font-size:14px;font-weight:600;cursor:pointer;transition:all .15s}
+.cat-btn:hover{background:rgba(167,139,250,.22);border-color:#a78bfa;transform:scale(1.03)}
+.cat-btn.correct-flash{background:rgba(52,211,153,.28);border-color:#34d399}
+.cat-btn.wrong-flash{background:rgba(248,113,113,.28);border-color:#f87171}
+
+/* GAME 7 MEMORY */
+.mem-items{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:16px 0}
+.mem-item{font-size:40px;padding:10px;background:rgba(255,255,255,.07);border-radius:10px;border:1px solid rgba(255,255,255,.1);width:70px;height:70px;display:flex;align-items:center;justify-content:center;transition:all .3s}
+.mem-item.hidden{font-size:0;background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.06)}
+.mem-pool{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:14px 0}
+.mem-choice{font-size:34px;padding:8px;background:rgba(255,255,255,.07);border-radius:8px;border:2px solid transparent;cursor:pointer;width:58px;height:58px;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.mem-choice:hover{border-color:#a78bfa;background:rgba(167,139,250,.18)}
+.mem-choice.selected{border-color:#60a5fa;background:rgba(96,165,250,.18)}
+.mem-choice.correct{border-color:#34d399;background:rgba(52,211,153,.2)}
+.mem-choice.wrong{border-color:#f87171;background:rgba(248,113,113,.2)}
+.mem-recalled{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;min-height:58px;padding:8px;background:rgba(255,255,255,.04);border-radius:10px;border:1px dashed rgba(255,255,255,.08);margin:8px 0}
+
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+@keyframes pop{0%{transform:scale(1)}50%{transform:scale(1.2)}100%{transform:scale(1)}}
+</style>
+</head>
+<body>
+
+<div id="nav">
+  <button id="back-btn" onclick="goHome()">← 返回</button>
+  <span id="nav-title">🧠 7個大腦訓練</span>
+  <button id="nav-reset" onclick="resetAllData()">重置進度</button>
+</div>
+
+<!-- HOME -->
+<div id="home">
+  <div class="home-hero">
+    <h1>7個大腦訓練</h1>
+    <p>科學訓練方法，全面提升大腦功能</p>
+  </div>
+  <div class="overall-progress">
+    <div class="label"><span>整體訓練進度</span><span id="overall-pct">0%</span></div>
+    <div class="prog-bar"><div class="prog-fill" id="overall-fill" style="width:0%"></div></div>
+    <div class="tier-stars-row" id="overall-stars"></div>
+  </div>
+  <div class="grid" id="home-grid"></div>
+</div>
+
+<!-- GAME 1: SCHULTE -->
+<div id="g1" class="screen">
+  <div class="game-header"><h2>🔢 舒爾特表</h2><p>按 1 → N 的順序依序點擊所有數字，越快越好！</p></div>
+  <div class="diff-panel">
+    <div class="diff-title">難度選擇</div>
+    <div class="diff-btns" id="g1-diff-btns">
+      <button class="diff-btn" data-d="1" onclick="setDiff(1,1)">入門<br><small>3×3</small></button>
+      <button class="diff-btn" data-d="2" onclick="setDiff(1,2)">進階<br><small>4×4</small></button>
+      <button class="diff-btn" data-d="3" onclick="setDiff(1,3)">高手<br><small>5×5</small></button>
+      <button class="diff-btn" data-d="4" onclick="setDiff(1,4)">大師<br><small>6×6</small></button>
+    </div>
+    <div class="diff-info" id="g1-diff-info"></div>
+  </div>
+  <div class="schulte-stats">
+    <div class="stat"><div class="val" id="s1-next">1</div><div class="lbl">下一個</div></div>
+    <div class="stat"><div class="val" id="s1-time">0.0s</div><div class="lbl">本次</div></div>
+    <div class="stat"><div class="val" id="s1-best">—</div><div class="lbl">最佳</div></div>
+  </div>
+  <div class="schulte-wrap"><div class="schulte-grid" id="schulte-grid"></div></div>
+  <div class="flex-center" style="margin-top:12px">
+    <button class="btn btn-primary" onclick="initSchulje()">重新開始</button>
+  </div>
+  <div id="g1-perf" style="display:none" class="perf-result"></div>
+</div>
+
+<!-- GAME 2: STROOP -->
+<div id="g2" class="screen">
+  <div class="game-header"><h2>🎨 Stroop 訓練</h2><p>點擊文字的<strong>顏色</strong>，而非文字的意思</p></div>
+  <div class="diff-panel">
+    <div class="diff-title">難度選擇</div>
+    <div class="diff-btns" id="g2-diff-btns">
+      <button class="diff-btn" data-d="1" onclick="setDiff(2,1)">入門<br><small>4色/8題</small></button>
+      <button class="diff-btn" data-d="2" onclick="setDiff(2,2)">進階<br><small>5色/12題</small></button>
+      <button class="diff-btn" data-d="3" onclick="setDiff(2,3)">高手<br><small>6色/16題</small></button>
+      <button class="diff-btn" data-d="4" onclick="setDiff(2,4)">大師<br><small>6色/20題+限時</small></button>
+    </div>
+    <div class="diff-info" id="g2-diff-info"></div>
+  </div>
+  <div class="stroop-progress" id="stroop-progress"></div>
+  <div class="stroop-word" id="stroop-word"></div>
+  <div class="stroop-choices" id="stroop-choices"></div>
+  <div class="score-box" id="stroop-scorebox">
+    <div class="label">正確率</div><div class="value" id="stroop-score">— %</div>
+  </div>
+  <div id="g2-perf" style="display:none" class="perf-result"></div>
+</div>
+
+<!-- GAME 3: SEQUENCE MEMORY -->
+<div id="g3" class="screen">
+  <div class="game-header"><h2>📋 序列工作記憶</h2><p id="g3-inst">記住物品出現的順序，然後依序點擊</p></div>
+  <div class="diff-panel">
+    <div class="diff-title">難度選擇</div>
+    <div class="diff-btns" id="g3-diff-btns">
+      <button class="diff-btn" data-d="1" onclick="setDiff(3,1)">入門<br><small>3個</small></button>
+      <button class="diff-btn" data-d="2" onclick="setDiff(3,2)">進階<br><small>5個</small></button>
+      <button class="diff-btn" data-d="3" onclick="setDiff(3,3)">高手<br><small>7個</small></button>
+      <button class="diff-btn" data-d="4" onclick="setDiff(3,4)">大師<br><small>9個</small></button>
+    </div>
+    <div class="diff-info" id="g3-diff-info"></div>
+  </div>
+
+  <!-- 閒置狀態：大按鈕 -->
+  <div id="g3-idle" style="text-align:center;padding:40px 20px">
+    <div style="font-size:56px;margin-bottom:16px">🧠</div>
+    <div style="font-size:15px;color:#8888aa;margin-bottom:24px" id="g3-idle-desc">準備好了嗎？點擊開始，記住物品出現的順序</div>
+    <button class="btn btn-primary" style="font-size:18px;padding:14px 40px;border-radius:14px" onclick="startSeq()">▶ 開始訓練</button>
+  </div>
+
+  <!-- 遊戲中狀態 -->
+  <div id="g3-playing" style="display:none">
+    <div class="seq-display" id="seq-display"></div>
+    <div style="text-align:center;margin-bottom:8px">
+      <span id="g3-progress-label" style="font-size:13px;color:#8888aa"></span>
+    </div>
+    <div class="seq-answer" id="seq-answer"></div>
+    <div class="seq-items" id="seq-items"></div>
+  </div>
+
+  <div id="g3-perf" style="display:none" class="perf-result"></div>
+</div>
+
+<!-- GAME 4: AUDITORY -->
+<div id="g4" class="screen">
+  <div class="game-header"><h2>👂 聽覺選擇注意</h2><p id="g4-inst">記住閃現數字的順序，然後按順序輸入</p></div>
+  <div class="diff-panel">
+    <div class="diff-title">難度選擇</div>
+    <div class="diff-btns" id="g4-diff-btns">
+      <button class="diff-btn" data-d="1" onclick="setDiff(4,1)">入門<br><small>3位數</small></button>
+      <button class="diff-btn" data-d="2" onclick="setDiff(4,2)">進階<br><small>5位數</small></button>
+      <button class="diff-btn" data-d="3" onclick="setDiff(4,3)">高手<br><small>7位數</small></button>
+      <button class="diff-btn" data-d="4" onclick="setDiff(4,4)">大師<br><small>9位數+快速</small></button>
+    </div>
+    <div class="diff-info" id="g4-diff-info"></div>
+  </div>
+  <div class="aud-display" id="aud-display">準備好了嗎？</div>
+  <div class="timer-bar" style="max-width:300px;margin:0 auto 14px"><div class="timer-fill" id="aud-timer" style="width:100%"></div></div>
+  <div class="aud-seq-row" id="aud-seq-display"></div>
+  <div class="aud-input" id="aud-input" style="display:none">
+    <div style="width:100%;display:flex;justify-content:center;margin-bottom:8px">
+      <div id="aud-entered-row" class="aud-seq-row" style="min-width:180px"></div>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center">
+      <button class="aud-digit-btn" onclick="aud_enter(1)">1</button>
+      <button class="aud-digit-btn" onclick="aud_enter(2)">2</button>
+      <button class="aud-digit-btn" onclick="aud_enter(3)">3</button>
+      <button class="aud-digit-btn" onclick="aud_enter(4)">4</button>
+      <button class="aud-digit-btn" onclick="aud_enter(5)">5</button>
+      <button class="aud-digit-btn" onclick="aud_enter(6)">6</button>
+      <button class="aud-digit-btn" onclick="aud_enter(7)">7</button>
+      <button class="aud-digit-btn" onclick="aud_enter(8)">8</button>
+      <button class="aud-digit-btn" onclick="aud_enter(9)">9</button>
+      <button class="aud-digit-btn" onclick="aud_enter(0)">0</button>
+      <button class="aud-digit-btn" style="width:auto;padding:0 14px;background:rgba(248,113,113,.12);border-color:rgba(248,113,113,.25);color:#f87171" onclick="aud_backspace()">⌫</button>
+    </div>
+    <div class="flex-center" style="margin-top:12px">
+      <button class="btn btn-primary" onclick="aud_submit()">確認答案</button>
+    </div>
+  </div>
+  <div class="flex-center" style="margin-top:14px">
+    <button class="btn btn-primary" id="g4-start-btn" onclick="startAud()">開始訓練</button>
+  </div>
+  <div id="g4-perf" style="display:none" class="perf-result"></div>
+</div>
+
+<!-- GAME 5: MIRROR DRAW -->
+<div id="g5" class="screen">
+  <div class="game-header"><h2>✍️ 鏡像協調訓練</h2><p>在左側畫布自由繪畫，右側會即時鏡像反映</p></div>
+  <div class="diff-panel">
+    <div class="diff-title">挑戰模式</div>
+    <div class="diff-btns" id="g5-diff-btns">
+      <button class="diff-btn" data-d="1" onclick="setDiff(5,1)">入門<br><small>自由繪畫</small></button>
+      <button class="diff-btn" data-d="2" onclick="setDiff(5,2)">進階<br><small>描摹圖形</small></button>
+      <button class="diff-btn" data-d="3" onclick="setDiff(5,3)">高手<br><small>描摹+計時</small></button>
+      <button class="diff-btn" data-d="4" onclick="setDiff(5,4)">大師<br><small>反向描摹</small></button>
+    </div>
+    <div class="diff-info" id="g5-diff-info"></div>
+  </div>
+  <div id="g5-template" style="text-align:center;margin-bottom:8px;font-size:12px;color:#8888aa;display:none"></div>
+  <div class="mirror-area">
+    <div><div class="mirror-label" id="left-label">繪畫區</div><canvas id="left-canvas" width="260" height="260"></canvas></div>
+    <div class="mirror-divider">⟺</div>
+    <div><div class="mirror-label" id="right-label">鏡像區</div><canvas id="right-canvas" width="260" height="260"></canvas></div>
+  </div>
+  <div class="mirror-controls">
+    <span style="font-size:12px;color:#8888aa;margin-right:4px">筆色：</span>
+    <div class="color-swatch active" style="background:#a78bfa" onclick="setColor('#a78bfa',this)"></div>
+    <div class="color-swatch" style="background:#60a5fa" onclick="setColor('#60a5fa',this)"></div>
+    <div class="color-swatch" style="background:#34d399" onclick="setColor('#34d399',this)"></div>
+    <div class="color-swatch" style="background:#f87171" onclick="setColor('#f87171',this)"></div>
+    <div class="color-swatch" style="background:#fbbf24" onclick="setColor('#fbbf24',this)"></div>
+    <div class="color-swatch" style="background:#fff" onclick="setColor('#fff',this)"></div>
+    <span style="font-size:12px;color:#8888aa;margin-left:8px;margin-right:4px">粗細：</span>
+    <select id="brush-size" style="background:#1a1a2e;color:#e8e8ff;border:1px solid rgba(255,255,255,.15);border-radius:6px;padding:4px 8px;font-size:12px">
+      <option value="3">細</option><option value="6" selected>中</option><option value="12">粗</option>
+    </select>
+  </div>
+  <div class="flex-center" style="margin-top:12px">
+    <button class="btn btn-secondary" onclick="clearCanvases()">清除</button>
+    <button class="btn btn-primary" id="g5-done-btn" onclick="finishMirror()" style="display:none">完成訓練</button>
+  </div>
+  <div id="g5-perf" style="display:none" class="perf-result"></div>
+</div>
+
+<!-- GAME 6: CLASSIFY -->
+<div id="g6" class="screen">
+  <div class="game-header"><h2>🗂️ 分類邏輯訓練</h2><p>快速判斷物品屬於哪個類別</p></div>
+  <div class="diff-panel">
+    <div class="diff-title">難度選擇</div>
+    <div class="diff-btns" id="g6-diff-btns">
+      <button class="diff-btn" data-d="1" onclick="setDiff(6,1)">入門<br><small>2類/8題</small></button>
+      <button class="diff-btn" data-d="2" onclick="setDiff(6,2)">進階<br><small>3類/10題</small></button>
+      <button class="diff-btn" data-d="3" onclick="setDiff(6,3)">高手<br><small>4類/12題</small></button>
+      <button class="diff-btn" data-d="4" onclick="setDiff(6,4)">大師<br><small>4類+計時壓力</small></button>
+    </div>
+    <div class="diff-info" id="g6-diff-info"></div>
+  </div>
+  <div class="score-box" style="display:flex;gap:20px;justify-content:center">
+    <div><div class="label">題目</div><div class="value" style="font-size:20px" id="cl-count">0</div></div>
+    <div><div class="label">正確</div><div class="value" style="font-size:20px;color:#34d399" id="cl-correct">0</div></div>
+    <div><div class="label">時間</div><div class="value" style="font-size:20px;color:#fbbf24" id="cl-time">0.0s</div></div>
+  </div>
+  <div id="cl-cats" style="display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin:10px 0;font-size:12px;color:#8888aa"></div>
+  <div id="g6-countdown" style="text-align:center;font-size:13px;color:#f87171;min-height:20px;margin:4px 0"></div>
+  <div class="classify-item" id="cl-item"></div>
+  <div class="classify-item-name" id="cl-item-name"></div>
+  <div class="classify-cats" id="cl-buttons"></div>
+  <div class="flex-center" style="margin-top:14px">
+    <button class="btn btn-primary" id="g6-start-btn" onclick="initClassify()">開始訓練</button>
+  </div>
+  <div id="g6-perf" style="display:none" class="perf-result"></div>
+</div>
+
+<!-- GAME 7: MEMORY -->
+<div id="g7" class="screen">
+  <div class="game-header"><h2>🧩 情景聯想記憶</h2><p id="g7-inst">用物品構建故事，時間到後回憶所有物品</p></div>
+  <div class="diff-panel">
+    <div class="diff-title">難度選擇</div>
+    <div class="diff-btns" id="g7-diff-btns">
+      <button class="diff-btn" data-d="1" onclick="setDiff(7,1)">入門<br><small>5個/40秒</small></button>
+      <button class="diff-btn" data-d="2" onclick="setDiff(7,2)">進階<br><small>8個/30秒</small></button>
+      <button class="diff-btn" data-d="3" onclick="setDiff(7,3)">高手<br><small>11個/25秒</small></button>
+      <button class="diff-btn" data-d="4" onclick="setDiff(7,4)">大師<br><small>14個/20秒</small></button>
+    </div>
+    <div class="diff-info" id="g7-diff-info"></div>
+  </div>
+  <div class="timer-bar" style="max-width:280px;margin:0 auto 10px"><div class="timer-fill" id="mem-timer" style="width:100%"></div></div>
+  <div id="g7-status" style="text-align:center;color:#8888aa;font-size:13px;margin-bottom:6px"></div>
+  <div class="mem-items" id="mem-items"></div>
+  <div id="mem-recall-area" style="display:none">
+    <div style="text-align:center;margin-bottom:8px;font-size:13px;color:#8888aa">你記住了哪些物品？點擊選取</div>
+    <div class="mem-recalled" id="mem-recalled"></div>
+    <div class="mem-pool" id="mem-pool"></div>
+    <div class="flex-center" style="margin-top:10px">
+      <button class="btn btn-primary" onclick="submitMemory()">確認答案</button>
+    </div>
+  </div>
+  <div class="flex-center" style="margin-top:14px">
+    <button class="btn btn-primary" id="g7-start-btn" onclick="startMemory()">開始記憶</button>
+  </div>
+  <div id="g7-perf" style="display:none" class="perf-result"></div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════
+// CONSTANTS
+// ══════════════════════════════════════════════
+const GAME_DATA = {
+  1:{ icon:'🔢', title:'舒爾特表', tag:'視覺注意力', desc:'按順序點擊所有數字，越快越好' },
+  2:{ icon:'🎨', title:'Stroop訓練', tag:'認知抑制', desc:'點擊文字的顏色而非意思' },
+  3:{ icon:'📋', title:'序列工作記憶', tag:'工作記憶', desc:'記住物品順序並依序點選' },
+  4:{ icon:'👂', title:'聽覺選擇注意', tag:'聽覺注意力', desc:'記住數字閃現順序並輸入' },
+  5:{ icon:'✍️', title:'鏡像協調訓練', tag:'運動協調', desc:'左側繪畫，右側即時鏡像' },
+  6:{ icon:'🗂️', title:'分類邏輯訓練', tag:'邏輯思維', desc:'快速判斷物品類別' },
+  7:{ icon:'🧩', title:'情景聯想記憶', tag:'長期記憶', desc:'記住物品並全部回憶出來' },
+};
+
+const DIFF_NAMES = ['','入門','進階','高手','大師'];
+const DIFF_COLORS = ['','#34d399','#60a5fa','#a78bfa','#fbbf24'];
+
+const TIER_DATA = [
+  null,
+  { name:'初學者', cls:'tier-1', emoji:'🌱' },
+  { name:'入門級', cls:'tier-2', emoji:'⭐' },
+  { name:'進階級', cls:'tier-3', emoji:'🌟' },
+  { name:'高手級', cls:'tier-4', emoji:'💫' },
+  { name:'大師級', cls:'tier-5', emoji:'👑' },
+];
+
+const COLORS=[
+  {name:'紅',css:'#ef4444'},{name:'藍',css:'#3b82f6'},{name:'綠',css:'#22c55e'},
+  {name:'黃',css:'#eab308'},{name:'紫',css:'#a855f7'},{name:'橙',css:'#f97316'}
+];
+
+const SEQ_EMOJIS=['🍎','🐶','🚗','🌸','⚽','🍕','🦋','🎸','🏠','🌙','🎭','🐙','🎀','🍦','🔮','🦄','🌈','🎯','🎪','🎨'];
+const MEM_POOL_ALL=['🍎','🐶','🚗','🌸','⚽','🍕','🦋','🎸','🏠','🌙','🎭','🐙','🎀','🍦','🔮','🦄','🌈','🎯','🎪','🎨','🚀','🐬','🌺','💎','🎃','🦁','🌊','🎵','🏆','🎲','🍄','🦊','🌴','🐲','🍰','🎻','🌋','🎠'];
+
+const CLASSIFY_SETS=[
+  {cats:['動物','植物'],items:[['🐶','狗','動物'],['🌹','玫瑰','植物'],['🐱','貓','動物'],['🌿','草','植物'],['🦅','老鷹','動物'],['🌺','花','植物'],['🐬','海豚','動物'],['🌴','棕櫚','植物']]},
+  {cats:['動物','植物','礦物'],items:[['🐶','狗','動物'],['🌹','玫瑰','植物'],['💎','鑽石','礦物'],['🐱','貓','動物'],['🌿','草','植物'],['🪨','岩石','礦物'],['🦅','老鷹','動物'],['🌺','花','植物'],['⛏️','鐵礦','礦物'],['🐬','海豚','動物']]},
+  {cats:['食物','交通','樂器','動物'],items:[['🍕','披薩','食物'],['🚀','火箭','交通'],['🎸','吉他','樂器'],['🐶','狗','動物'],['🍜','麵','食物'],['🚂','火車','交通'],['🎺','小號','樂器'],['🦁','獅子','動物'],['🍣','壽司','食物'],['✈️','飛機','交通'],['🥁','鼓','樂器'],['🐬','海豚','動物']]},
+  {cats:['食物','交通','樂器','動物'],items:[['🍕','披薩','食物'],['🚀','火箭','交通'],['🎸','吉他','樂器'],['🐶','狗','動物'],['🍜','麵','食物'],['🚂','火車','交通'],['🎺','小號','樂器'],['🦁','獅子','動物'],['🍣','壽司','食物'],['✈️','飛機','交通'],['🥁','鼓','樂器'],['🐬','海豚','動物'],['🍦','冰淇淋','食物'],['🚁','直升機','交通'],['🎻','小提琴','樂器']]},
+];
+
+// ══════════════════════════════════════════════
+// STATE (localStorage)
+// ══════════════════════════════════════════════
+const STATE_KEY = 'brain7_v2';
+let gs = loadState();
+
+function loadState(){
+  try{ return JSON.parse(localStorage.getItem(STATE_KEY)) || initGS(); }
+  catch(e){ return initGS(); }
+}
+function initGS(){
+  const s={};
+  for(let i=1;i<=7;i++) s['g'+i]={ diff:1, bestStars:0, lastStars:0, played:0 };
+  return s;
+}
+function saveState(){ localStorage.setItem(STATE_KEY, JSON.stringify(gs)); }
+function resetAllData(){
+  if(!confirm('確定要重置所有訓練進度嗎？')) return;
+  gs=initGS(); saveState(); renderHome();
+}
+
+// ══════════════════════════════════════════════
+// PERFORMANCE / STARS
+// ══════════════════════════════════════════════
+function calcStars(score100){ // score 0-100
+  if(score100>=95) return 5;
+  if(score100>=80) return 4;
+  if(score100>=65) return 3;
+  if(score100>=45) return 2;
+  return 1;
+}
+function starsHTML(n, dim=false){
+  let h='';
+  for(let i=1;i<=5;i++) h+=`<span style="color:${i<=n?'#fbbf24':'rgba(255,255,255,.12)'}">${i<=n?'★':'☆'}</span>`;
+  return h;
+}
+
+function showPerf(gameNum, stars, details, score100){
+  const el = document.getElementById('g'+gameNum+'-perf');
+  const gData = gs['g'+gameNum];
+  const isNew = stars > gData.bestStars;
+  if(isNew) gData.bestStars = stars;
+  gData.lastStars = stars;
+  gData.played++;
+  saveState();
+  renderHome();
+
+  const tier = TIER_DATA[Math.min(5, Math.max(1, stars))];
+  const canUp = gData.diff < 4;
+  const canDown = gData.diff > 1;
+
+  let upgradeHint = '';
+  if(stars >= 4 && canUp) upgradeHint = `<div class="upgrade-hint">🆙 表現優秀！建議升級到「${DIFF_NAMES[gData.diff+1]}」難度挑戰</div>`;
+  else if(stars <= 2 && canDown) upgradeHint = `<div class="upgrade-hint" style="background:rgba(248,113,113,.08);border-color:rgba(248,113,113,.2);color:#f87171">💡 建議降低到「${DIFF_NAMES[gData.diff-1]}」難度練習基礎</div>`;
+
+  const diffBtns = `
+    ${canDown?`<button class="btn btn-secondary" onclick="setDiff(${gameNum}, ${gData.diff-1})">↓ 降低難度</button>`:''}
+    <button class="btn btn-primary" id="g${gameNum}-retry-btn">再試一次</button>
+    ${canUp?`<button class="btn btn-up" onclick="setDiff(${gameNum}, ${gData.diff+1})">↑ 升級難度</button>`:''}
+  `;
+
+  el.style.display='block';
+  el.innerHTML = `
+    <div class="perf-stars-big">${starsHTML(stars)}</div>
+    <div class="perf-tier ${tier.cls}">${tier.emoji} ${tier.name}</div>
+    <div class="perf-desc">${details}</div>
+    <div class="perf-best">最佳紀錄：${starsHTML(gData.bestStars)} ${isNew ? '<span style="color:#fbbf24;font-size:11px">✨ 新紀錄！</span>':''}</div>
+    ${upgradeHint}
+    <div class="flex-center">${diffBtns}</div>
+  `;
+
+  // Bind retry
+  setTimeout(()=>{
+    const rb = document.getElementById('g'+gameNum+'-retry-btn');
+    if(rb){
+      const startBtns = {1:initSchulje,2:initStroop,3:startSeq,4:startAud,5:()=>{clearCanvases();showMirrorChallenge();},6:initClassify,7:startMemory};
+      rb.onclick = ()=>{ el.style.display='none'; startBtns[gameNum]&&startBtns[gameNum](); };
+    }
+  }, 50);
+}
+
+// ══════════════════════════════════════════════
+// DIFFICULTY
+// ══════════════════════════════════════════════
+const DIFF_INFO = {
+  1:['3×3格子，共9個數字，適合初次體驗','4×4格子，共16個數字，稍有挑戰','5×5格子，共25個數字，標準訓練','6×6格子，共36個數字，極限挑戰'],
+  2:['4種顏色，8題，節奏輕鬆','5種顏色，12題，速度加快','6種顏色，16題，反應要更快','6種顏色，20題，限時2秒/題'],
+  3:['記住3個物品的順序','記住5個物品的順序','記住7個物品的順序','記住9個物品的順序'],
+  4:['3個數字，視覺+語音，1.2秒/個','5個數字，視覺+語音，1秒/個','7個數字，純語音（不顯示），0.9秒/個','9個數字，純語音（不顯示），0.7秒/個'],
+  5:['自由繪畫，體驗鏡像效果','描摹指定圖形','描摹圖形並計時30秒','反向鏡像（繪畫區與鏡像區交換）'],
+  6:['2類物品，8題','3類物品，10題','4類物品，12題','4類物品，每題限時3秒'],
+  7:['5個物品，40秒記憶','8個物品，30秒記憶','11個物品，25秒記憶','14個物品，20秒記憶'],
+};
+
+function setDiff(game, d){
+  gs['g'+game].diff = d;
+  saveState();
+  // Update buttons
+  document.querySelectorAll(`#g${game}-diff-btns .diff-btn`).forEach(b=>{
+    b.classList.toggle('active', +b.dataset.d === d);
+  });
+  document.getElementById('g'+game+'-diff-info').textContent = DIFF_INFO[game][d-1]||'';
+  // Reset perf display
+  const perf = document.getElementById('g'+game+'-perf');
+  if(perf) perf.style.display='none';
+  // Reset the game to reflect new difficulty immediately
+  if(game===1) initSchulje();
+  if(game===2) initStroop();
+  if(game===3) resetSeq();
+  if(game===4) resetAud();
+  if(game===5) showMirrorChallenge();
+  if(game===6) resetClassify();
+  if(game===7) resetMemory();
+}
+
+function applyDiffBtns(game){
+  const d = gs['g'+game].diff;
+  document.querySelectorAll(`#g${game}-diff-btns .diff-btn`).forEach(b=>{
+    b.classList.toggle('active', +b.dataset.d === d);
+  });
+  const infoEl = document.getElementById('g'+game+'-diff-info');
+  if(infoEl) infoEl.textContent = DIFF_INFO[game][d-1]||'';
+}
+
+// ══════════════════════════════════════════════
+// HOME RENDER
+// ══════════════════════════════════════════════
+function renderHome(){
+  const grid = document.getElementById('home-grid');
+  grid.innerHTML = '';
+  let totalStars=0, maxStars=0;
+
+  for(let i=1;i<=7;i++){
+    const gd = gs['g'+i];
+    const info = GAME_DATA[i];
+    const diff = gd.diff;
+    const stars = gd.bestStars;
+    totalStars += stars;
+    maxStars += 5;
+
+    const badgeCls = ['','badge-d1','badge-d2','badge-d3','badge-d4'][diff];
+    const starsStr = gd.played > 0 ? starsHTML(stars) : '<span style="color:#555577;font-size:12px">尚未訓練</span>';
+
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `
+      <div class="card-top">
+        <div class="card-num">訓練 0${i}</div>
+        <div class="card-badge ${badgeCls}">${DIFF_NAMES[diff]}</div>
+      </div>
+      <div class="card-row"><div class="card-icon">${info.icon}</div><div class="card-title">${info.title}</div></div>
+      <div class="card-desc">${info.desc}</div>
+      <div class="card-footer">
+        <div class="card-tag">${info.tag}</div>
+        <div class="card-stars">${starsStr}</div>
+      </div>
+    `;
+    card.onclick = ()=>startGame(i);
+    grid.appendChild(card);
+  }
+
+  const pct = maxStars > 0 ? Math.round(totalStars/maxStars*100) : 0;
+  document.getElementById('overall-pct').textContent = pct + '%';
+  document.getElementById('overall-fill').style.width = pct + '%';
+  document.getElementById('overall-stars').innerHTML = `<span class="mini-tier">總星數 ${totalStars}/${maxStars}</span><span class="mini-tier">${starsHTML(Math.round(totalStars/7))}</span>`;
+}
+
+// ══════════════════════════════════════════════
+// NAV
+// ══════════════════════════════════════════════
+let intervals=[];
+function clearAllIntervals(){ intervals.forEach(clearInterval); intervals=[]; }
+
+function goHome(){
+  clearAllIntervals();
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('home').style.display='block';
+  document.getElementById('back-btn').style.display='none';
+}
+
+function startGame(n){
+  clearAllIntervals();
+  document.getElementById('home').style.display='none';
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('g'+n).classList.add('active');
+  document.getElementById('back-btn').style.display='block';
+  document.getElementById('g'+n+'-perf').style.display='none';
+
+  applyDiffBtns(n);
+
+  if(n===1) initSchulje();
+  if(n===2) initStroop();
+  if(n===3) resetSeq();
+  if(n===4) resetAud();
+  if(n===5) initMirror();
+  if(n===6) resetClassify();
+  if(n===7) resetMemory();
+}
+
+// ══════════════════════════════════════════════
+// GAME 1 – SCHULTE TABLE
+// ══════════════════════════════════════════════
+const SCHULTE_CONFIG = [[3,60],[4,90],[5,120],[6,180]]; // [gridSize, targetSec]
+let s1Timer=null, s1Start=null, s1Next=1, s1Running=false, s1BestTime=null, s1GridSize=3;
+
+function initSchulje(){
+  clearInterval(s1Timer);s1Running=false;s1Next=1;
+  document.getElementById('g1-perf').style.display='none';
+  const d = gs['g1'].diff;
+  s1GridSize = SCHULTE_CONFIG[d-1][0];
+  const total = s1GridSize * s1GridSize;
+  const nums = shuffle([...Array(total).keys()].map(i=>i+1));
+  const grid = document.getElementById('schulte-grid');
+  grid.style.gridTemplateColumns = `repeat(${s1GridSize},1fr)`;
+  const size = Math.min(340, Math.floor(280/s1GridSize)*s1GridSize);
+  grid.style.width = size+'px';
+  grid.innerHTML='';
+  nums.forEach(n=>{
+    const c=document.createElement('div');
+    c.className='schulte-cell';
+    c.style.fontSize = s1GridSize<=3?'24px':s1GridSize<=4?'20px':s1GridSize<=5?'16px':'13px';
+    c.textContent=n; c.dataset.n=n;
+    c.onclick=()=>schulteClick(n,c);
+    grid.appendChild(c);
+  });
+  document.getElementById('s1-next').textContent='1';
+  document.getElementById('s1-time').textContent='0.0s';
+  s1BestTime = null;
+  document.getElementById('s1-best').textContent='—';
+}
+
+function schulteClick(n,cell){
+  if(n===s1Next){
+    if(!s1Running){ s1Running=true; s1Start=Date.now(); s1Timer=setInterval(updateS1Timer,100); intervals.push(s1Timer); }
+    cell.classList.add('correct'); s1Next++;
+    const total = s1GridSize*s1GridSize;
+    document.getElementById('s1-next').textContent = s1Next>total?'✓':s1Next;
+    if(s1Next>total){
+      clearInterval(s1Timer); s1Running=false;
+      const t = (Date.now()-s1Start)/1000;
+      const ts = t.toFixed(1);
+      document.getElementById('s1-time').textContent=ts+'s';
+      if(!s1BestTime||t<s1BestTime){ s1BestTime=t; document.getElementById('s1-best').textContent=ts+'s'; }
+      // Score: based on target time
+      const target = SCHULTE_CONFIG[gs['g1'].diff-1][1];
+      const score = Math.max(0, Math.min(100, Math.round((1 - (t-target*0.5)/target)*100)));
+      const stars = calcStars(score);
+      const timeMsg = t<target*0.5?'速度飛快！':t<target?'節奏不錯！':'繼續練習可以更快！';
+      showPerf(1, stars, `完成時間 ${ts}s｜${timeMsg}`, score);
+    }
+  } else {
+    cell.classList.add('wrong'); setTimeout(()=>cell.classList.remove('wrong'),400);
+  }
+}
+function updateS1Timer(){ document.getElementById('s1-time').textContent=((Date.now()-s1Start)/1000).toFixed(1)+'s'; }
+
+// ══════════════════════════════════════════════
+// GAME 2 – STROOP
+// ══════════════════════════════════════════════
+const STROOP_CONFIG = [[4,8,0],[5,12,0],[6,16,0],[6,20,2000]]; // [colors,rounds,timeLimit]
+let stroopQ=[],stroopIdx=0,stroopCorrect=0,stroopAnswered=false,stroopTimeout=null;
+
+function initStroop(){
+  clearTimeout(stroopTimeout);
+  stroopQ=[];stroopIdx=0;stroopCorrect=0;stroopAnswered=false;
+  document.getElementById('g2-perf').style.display='none';
+  document.getElementById('stroop-word').style.display='flex';
+  document.getElementById('stroop-choices').style.display='flex';
+  document.getElementById('stroop-scorebox').style.display='block';
+  document.getElementById('stroop-score').textContent='— %';
+  const [numColors,numRounds] = STROOP_CONFIG[gs['g2'].diff-1];
+  const usedColors = COLORS.slice(0,numColors);
+  for(let i=0;i<numRounds;i++){
+    const word=usedColors[Math.floor(Math.random()*usedColors.length)];
+    let color; do{ color=usedColors[Math.floor(Math.random()*usedColors.length)]; }while(color===word);
+    stroopQ.push({word,color,usedColors});
+  }
+  updateStroopProgress(); renderStroopQuestion();
+}
+function updateStroopProgress(){
+  const el=document.getElementById('stroop-progress'); el.innerHTML='';
+  stroopQ.forEach((_,i)=>{
+    const d=document.createElement('div');
+    d.className='stroop-dot'+(i<stroopIdx?(stroopQ[i].result?' d-ok':' d-fail'):i===stroopIdx?' d-cur':'');
+    el.appendChild(d);
+  });
+}
+function renderStroopQuestion(){
+  clearTimeout(stroopTimeout);
+  if(stroopIdx>=stroopQ.length){ finishStroop(); return; }
+  stroopAnswered=false;
+  const q=stroopQ[stroopIdx];
+  const w=document.getElementById('stroop-word');
+  w.textContent=q.word.name; w.style.color=q.color.css;
+  const ch=document.getElementById('stroop-choices'); ch.innerHTML='';
+  const opts=shuffle([...q.usedColors]).slice(0,4);
+  if(!opts.find(c=>c===q.color)) opts[0]=q.color; shuffle(opts);
+  opts.forEach(c=>{
+    const b=document.createElement('button');
+    b.className='color-btn'; b.style.background=c.css; b.title=c.name;
+    b.onclick=()=>stroopAnswer(c,b); ch.appendChild(b);
+  });
+  // Time limit for 大師
+  const [,,tl] = STROOP_CONFIG[gs['g2'].diff-1];
+  if(tl>0) stroopTimeout=setTimeout(()=>{ if(!stroopAnswered){ stroopAnswered=true; stroopQ[stroopIdx].result=false; document.getElementById('stroop-score').textContent=Math.round(stroopCorrect/(stroopIdx+1)*100)+'%'; setTimeout(()=>{stroopIdx++;updateStroopProgress();renderStroopQuestion();},300); } }, tl);
+}
+function stroopAnswer(c,btn){
+  if(stroopAnswered) return; stroopAnswered=true; clearTimeout(stroopTimeout);
+  const q=stroopQ[stroopIdx]; const ok=c===q.color;
+  q.result=ok; if(ok)stroopCorrect++;
+  btn.classList.add(ok?'correct-flash':'wrong-flash');
+  if(!ok) document.querySelectorAll('.color-btn').forEach(b=>{ if(b.style.background===q.color.css) b.classList.add('correct-flash'); });
+  document.getElementById('stroop-score').textContent=Math.round(stroopCorrect/(stroopIdx+1)*100)+'%';
+  setTimeout(()=>{ stroopIdx++; updateStroopProgress(); renderStroopQuestion(); },550);
+}
+function finishStroop(){
+  clearTimeout(stroopTimeout);
+  const pct=Math.round(stroopCorrect/stroopQ.length*100);
+  document.getElementById('stroop-word').style.display='none';
+  document.getElementById('stroop-choices').style.display='none';
+  document.getElementById('stroop-scorebox').style.display='none';
+  const stars=calcStars(pct);
+  const desc = pct>=90?'認知抑制能力極強，前額葉運作流暢！':pct>=70?'表現良好，繼續練習可以提速！':'Stroop效應挑戰了你，多練習就能改善！';
+  showPerf(2, stars, `正確率 ${pct}% (${stroopCorrect}/${stroopQ.length})｜${desc}`, pct);
+}
+
+// ══════════════════════════════════════════════
+// GAME 3 – SEQUENCE MEMORY
+// ══════════════════════════════════════════════
+const SEQ_CONFIG = [3,5,7,9]; // items count per difficulty
+let seqSequence=[],seqAnswer=[],seqPhase='idle',seqTimer=null;
+
+function resetSeq(){
+  seqPhase='idle'; seqAnswer=[]; seqSequence=[];
+  clearTimeout(seqTimer);
+  document.getElementById('g3-perf').style.display='none';
+  document.getElementById('g3-idle').style.display='block';
+  document.getElementById('g3-playing').style.display='none';
+  const descs=['準備好了嗎？記住 3 個物品出現的順序','挑戰 5 個物品的順序！','高手模式：7 個物品，專注！','大師挑戰：9 個物品，全力記憶！'];
+  document.getElementById('g3-idle-desc').textContent=descs[(gs['g3'].diff||1)-1];
+}
+function startSeq(){
+  document.getElementById('g3-perf').style.display='none';
+  document.getElementById('g3-idle').style.display='none';
+  document.getElementById('g3-playing').style.display='block';
+  const count = SEQ_CONFIG[gs['g3'].diff-1];
+  seqSequence=shuffle([...SEQ_EMOJIS]).slice(0,count);
+  seqAnswer=[]; seqPhase='showing';
+  document.getElementById('seq-display').textContent='';
+  document.getElementById('seq-answer').innerHTML='';
+  document.getElementById('seq-items').innerHTML='';
+  document.getElementById('g3-progress-label').textContent='仔細記住物品的順序…';
+  showSeqItem(0);
+}
+function showSeqItem(i){
+  if(i>=seqSequence.length){
+    document.getElementById('seq-display').textContent='?';
+    document.getElementById('g3-progress-label').textContent='按照順序點擊！';
+    seqPhase='answering'; renderSeqItems(); return;
+  }
+  document.getElementById('seq-display').textContent=seqSequence[i];
+  document.getElementById('g3-progress-label').textContent=`第 ${i+1} / ${seqSequence.length} 個`;
+  seqTimer=setTimeout(()=>showSeqItem(i+1),1100); intervals.push(seqTimer);
+}
+function renderSeqItems(){
+  const pool=shuffle([...seqSequence]);
+  const ansEl=document.getElementById('seq-answer'); ansEl.innerHTML='';
+  for(let i=0;i<seqSequence.length;i++){ const s=document.createElement('div'); s.className='seq-slot'; ansEl.appendChild(s); }
+  const itemEl=document.getElementById('seq-items'); itemEl.innerHTML='';
+  pool.forEach(it=>{
+    const d=document.createElement('div'); d.className='seq-item'; d.textContent=it;
+    d.onclick=()=>seqPick(it,d); itemEl.appendChild(d);
+  });
+}
+function seqPick(item,el){
+  if(seqPhase!=='answering') return;
+  const idx=seqAnswer.length;
+  const expected=seqSequence[idx];
+  const isCorrect=(item===expected);
+
+  // 不管對錯都記錄，並移到下一格
+  seqAnswer.push(item);
+  el.onclick=null;
+  el.style.pointerEvents='none';
+  el.style.opacity='0.35';
+  el.style.transform='scale(0.9)';
+  el.classList.add(isCorrect?'selected':'wrong');
+
+  // 更新答案欄：正確綠色，錯誤紅色並同時顯示正確答案
+  const slot=document.getElementById('seq-answer').children[idx];
+  if(slot){
+    slot.textContent=item;
+    if(!isCorrect){
+      slot.style.color='#f87171';
+      slot.style.borderColor='#f87171';
+      slot.style.background='rgba(248,113,113,.15)';
+      // 在錯誤格下方顯示正確答案（小字）
+      slot.title='正確：'+expected;
+    } else {
+      slot.style.color='#34d399';
+      slot.style.borderColor='#34d399';
+      slot.style.background='rgba(52,211,153,.15)';
+    }
+  }
+
+  if(seqAnswer.length===seqSequence.length){ seqPhase='done'; setTimeout(finishSeq,600); }
+}
+function finishSeq(){
+  const ok=seqAnswer.every((a,i)=>a===seqSequence[i]);
+  const count=seqSequence.length;
+  const correct=seqAnswer.filter((a,i)=>a===seqSequence[i]).length;
+  const pct=Math.round(correct/count*100);
+  const stars=calcStars(pct);
+  const desc=ok?'完美！全部順序正確，工作記憶運作出色！':correct>=count*0.7?'大部分正確，繼續練習！':'記憶順序較困難，多次練習會有顯著進步！';
+  showPerf(3,stars,`正確 ${correct}/${count} (${pct}%)｜${desc}`,pct);
+}
+
+// ══════════════════════════════════════════════
+// GAME 4 – AUDITORY ATTENTION
+// ══════════════════════════════════════════════
+const AUD_CONFIG = [[3],[5],[7],[9]]; // [digits]
+let audSequence=[],audEntered=[],audPhase='idle';
+let _audVoice=null;
+
+function _getAudVoice(){
+  if(_audVoice) return _audVoice;
+  const voices=window.speechSynthesis.getVoices();
+  // 優先順序：最新神經網路女聲 → 傳統女聲
+  const pref=['Flo (Chinese (Taiwan))','Shelley (Chinese (Taiwan))','Sandy (Chinese (Taiwan))','Meijia','Flo (Chinese (China mainland))','Shelley (Chinese (China mainland))','Tingting'];
+  for(const name of pref){
+    const v=voices.find(v=>v.name===name);
+    if(v){ _audVoice=v; return v; }
+  }
+  _audVoice=voices.find(v=>v.lang.startsWith('zh'))||null;
+  return _audVoice;
+}
+// 預先載入語音列表
+if(window.speechSynthesis) window.speechSynthesis.onvoiceschanged=()=>_getAudVoice();
+
+function resetAud(){
+  audPhase='idle'; audSequence=[]; audEntered=[];
+  clearAllIntervals();
+  if(window.speechSynthesis){ window.speechSynthesis.cancel(); }
+  document.getElementById('aud-display').textContent='準備好了嗎？';
+  document.getElementById('aud-display').classList.remove('flash');
+  document.getElementById('aud-input').style.display='none';
+  document.getElementById('aud-seq-display').innerHTML='';
+  document.getElementById('aud-entered-row').innerHTML='';
+  document.getElementById('aud-timer').style.width='100%';
+  document.getElementById('g4-perf').style.display='none';
+  document.getElementById('g4-start-btn').style.display='inline-block';
+  const diff=gs['g4'].diff||1;
+  document.getElementById('g4-inst').textContent=diff<=2?'聆聽並看數字，記住順序':'只聆聽聲音，記住順序（不顯示數字）';
+}
+function startAud(){
+  document.getElementById('g4-start-btn').style.display='none';
+  document.getElementById('g4-perf').style.display='none';
+  audEntered=[];
+  const diff=gs['g4'].diff;
+  const [digits] = AUD_CONFIG[diff-1];
+  audSequence=[];
+  for(let i=0;i<digits;i++) audSequence.push(Math.floor(Math.random()*9)+1);
+  audPhase='showing';
+  document.getElementById('g4-inst').textContent=diff<=2?'仔細聆聽並記住數字！':'仔細聆聽，記住順序（無視覺提示）！';
+  document.getElementById('aud-input').style.display='none';
+  document.getElementById('aud-seq-display').innerHTML='';
+  document.getElementById('aud-display').textContent='準備…';
+  document.getElementById('aud-timer').style.width='100%';
+  // 用 onend 驅動，避免 cancel 造成爆音
+  _showAudQueue(0);
+}
+function _showAudQueue(i){
+  const el=document.getElementById('aud-display');
+  const bar=document.getElementById('aud-timer');
+  const diff=gs['g4'].diff;
+  if(i>=audSequence.length){
+    el.textContent='✍️'; el.classList.remove('flash'); bar.style.width='100%';
+    setTimeout(()=>{ if(audPhase==='showing'){ audPhase='answering'; document.getElementById('aud-input').style.display='flex'; } },200);
+    return;
+  }
+  const showVisual=diff<=2;
+  el.textContent=showVisual?audSequence[i]:'🔊';
+  el.classList.add('flash');
+  bar.style.transition='none'; bar.style.width='100%';
+
+  const utt=new SpeechSynthesisUtterance(String(audSequence[i]));
+  const voice=_getAudVoice();
+  if(voice) utt.voice=voice;
+  utt.lang='zh-TW'; utt.rate=0.88; utt.pitch=1.05; utt.volume=1.0;
+
+  // 語音播完後短暫空白再播下一個
+  utt.onend=()=>{
+    el.classList.remove('flash');
+    el.textContent='…';
+    bar.style.transition='width 0.3s'; bar.style.width='0%';
+    const t=setTimeout(()=>{ if(audPhase==='showing') _showAudQueue(i+1); },350);
+    intervals.push(t);
+  };
+  utt.onerror=()=>{ // 語音失敗時用 setTimeout 繼續
+    el.classList.remove('flash'); el.textContent='…';
+    const t=setTimeout(()=>{ if(audPhase==='showing') _showAudQueue(i+1); },600);
+    intervals.push(t);
+  };
+
+  window.speechSynthesis.speak(utt);
+}
+function aud_enter(n){ if(audPhase!=='answering'||audEntered.length>=audSequence.length) return; audEntered.push(n); renderAudEntered(); }
+function aud_backspace(){ if(audEntered.length>0){ audEntered.pop(); renderAudEntered(); } }
+function renderAudEntered(){
+  const el=document.getElementById('aud-entered-row'); el.innerHTML='';
+  audEntered.forEach(n=>{ const d=document.createElement('div'); d.className='aud-chip'; d.textContent=n; el.appendChild(d); });
+}
+function aud_submit(){
+  if(audPhase!=='answering') return;
+  audPhase='done';
+  let correct=0;
+  const el=document.getElementById('aud-entered-row'); el.innerHTML='';
+  for(let i=0;i<audSequence.length;i++){
+    const d=document.createElement('div');
+    const ok=audEntered[i]===audSequence[i];
+    d.className='aud-chip '+(ok?'ok':'fail');
+    d.textContent=audEntered[i]??'_'; el.appendChild(d); if(ok)correct++;
+  }
+  const sd=document.getElementById('aud-seq-display'); sd.innerHTML='<span style="color:#8888aa;font-size:11px;margin-right:6px;align-self:center">正確：</span>';
+  audSequence.forEach(n=>{ const d=document.createElement('div'); d.className='aud-chip'; d.textContent=n; sd.appendChild(d); });
+  const pct=Math.round(correct/audSequence.length*100);
+  const stars=calcStars(pct);
+  const desc=pct===100?'完美！聽覺注意力極強，前額葉皮層高效運作！':pct>=70?'不錯，繼續訓練可提升精確度！':'數字序列記憶需要練習，多試幾次！';
+  showPerf(4,stars,`正確 ${correct}/${audSequence.length} (${pct}%)｜${desc}`,pct);
+}
+
+// ══════════════════════════════════════════════
+// GAME 5 – MIRROR DRAW
+// ══════════════════════════════════════════════
+let mirrorColor='#a78bfa',isDrawing=false,lastX=0,lastY=0;
+let lCtx,rCtx,lCanvas,rCanvas,mirrorMode='normal',mirrorStartTime=null,mirrorTimer=null;
+const TEMPLATES=['圓形','正方形','三角形','星形','波浪線','Z字形'];
+
+function initMirror(){
+  lCanvas=document.getElementById('left-canvas'); rCanvas=document.getElementById('right-canvas');
+  lCtx=lCanvas.getContext('2d'); rCtx=rCanvas.getContext('2d');
+  clearCanvases();
+  ['mousedown','mousemove','mouseup','mouseleave','touchstart','touchmove','touchend'].forEach(ev=>{
+    lCanvas.removeEventListener(ev,handleMirrorEvent);
+    lCanvas.addEventListener(ev,handleMirrorEvent,{passive:false});
+  });
+  showMirrorChallenge();
+}
+function showMirrorChallenge(){
+  const d=gs['g5'].diff;
+  const tmpl=document.getElementById('g5-template');
+  const doneBtn=document.getElementById('g5-done-btn');
+  const leftLabel=document.getElementById('left-label');
+  const rightLabel=document.getElementById('right-label');
+  document.getElementById('g5-perf').style.display='none';
+  if(d===1){ tmpl.style.display='none'; doneBtn.style.display='none'; leftLabel.textContent='繪畫區'; rightLabel.textContent='鏡像區'; mirrorMode='normal'; }
+  else if(d===2){ tmpl.style.display='block'; const t=TEMPLATES[Math.floor(Math.random()*TEMPLATES.length)]; tmpl.textContent='請嘗試描摹：'+t; doneBtn.style.display='inline-block'; leftLabel.textContent='繪畫區'; rightLabel.textContent='鏡像區'; mirrorMode='template'; }
+  else if(d===3){ tmpl.style.display='block'; const t=TEMPLATES[Math.floor(Math.random()*TEMPLATES.length)]; tmpl.textContent='⏱ 30秒內描摹：'+t; doneBtn.style.display='inline-block'; leftLabel.textContent='繪畫區'; rightLabel.textContent='鏡像區'; mirrorMode='timed'; mirrorStartTime=Date.now(); mirrorTimer=setTimeout(()=>finishMirror(),30000); intervals.push(mirrorTimer); }
+  else if(d===4){ tmpl.style.display='block'; tmpl.textContent='反向模式：右側為繪畫區，左側為鏡像'; doneBtn.style.display='inline-block'; leftLabel.textContent='鏡像區'; rightLabel.textContent='繪畫區（點此）'; mirrorMode='reverse';
+    // Rebind to right canvas
+    ['mousedown','mousemove','mouseup','mouseleave','touchstart','touchmove','touchend'].forEach(ev=>{
+      rCanvas.removeEventListener(ev,handleMirrorEventR);
+      rCanvas.addEventListener(ev,handleMirrorEventR,{passive:false});
+    });
+  }
+}
+function getPos(canvas,e){
+  const r=canvas.getBoundingClientRect();
+  if(e.touches){ const t=e.touches[0]; return{x:(t.clientX-r.left)*(canvas.width/r.width),y:(t.clientY-r.top)*(canvas.height/r.height)}; }
+  return{x:(e.clientX-r.left)*(canvas.width/r.width),y:(e.clientY-r.top)*(canvas.height/r.height)};
+}
+function handleMirrorEvent(e){
+  e.preventDefault();
+  if(mirrorMode==='reverse') return;
+  const {x,y}=getPos(lCanvas,e);
+  const bs=parseInt(document.getElementById('brush-size').value)||6;
+  if(e.type==='mousedown'||e.type==='touchstart'){ isDrawing=true; lastX=x; lastY=y; }
+  if((e.type==='mousemove'||e.type==='touchmove')&&isDrawing){
+    drawLine(lCtx,lastX,lastY,x,y,mirrorColor,bs);
+    drawLine(rCtx,lCanvas.width-lastX,lastY,lCanvas.width-x,y,mirrorColor,bs);
+    lastX=x; lastY=y;
+  }
+  if(e.type==='mouseup'||e.type==='mouseleave'||e.type==='touchend') isDrawing=false;
+}
+function handleMirrorEventR(e){
+  e.preventDefault();
+  const {x,y}=getPos(rCanvas,e);
+  const bs=parseInt(document.getElementById('brush-size').value)||6;
+  if(e.type==='mousedown'||e.type==='touchstart'){ isDrawing=true; lastX=x; lastY=y; }
+  if((e.type==='mousemove'||e.type==='touchmove')&&isDrawing){
+    drawLine(rCtx,lastX,lastY,x,y,mirrorColor,bs);
+    drawLine(lCtx,rCanvas.width-lastX,lastY,rCanvas.width-x,y,mirrorColor,bs);
+    lastX=x; lastY=y;
+  }
+  if(e.type==='mouseup'||e.type==='mouseleave'||e.type==='touchend') isDrawing=false;
+}
+function drawLine(ctx,x1,y1,x2,y2,color,size){
+  ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2);
+  ctx.strokeStyle=color; ctx.lineWidth=size; ctx.lineCap='round'; ctx.lineJoin='round'; ctx.stroke();
+}
+function clearCanvases(){
+  if(!lCtx) return;
+  lCtx.clearRect(0,0,lCanvas.width,lCanvas.height);
+  rCtx.clearRect(0,0,rCanvas.width,rCanvas.height);
+}
+function setColor(c,el){ mirrorColor=c; document.querySelectorAll('.color-swatch').forEach(s=>s.classList.remove('active')); el.classList.add('active'); }
+function finishMirror(){
+  clearTimeout(mirrorTimer);
+  const d=gs['g5'].diff;
+  let score=75,desc='';
+  if(d===1){ score=80; desc='完成自由繪畫！體驗了鏡像協調效果。'; }
+  else if(d===2){ score=75; desc='完成描摹訓練！雙側協調能力得到鍛煉。'; }
+  else if(d===3){
+    const elapsed=(Date.now()-mirrorStartTime)/1000;
+    score=elapsed<=30?85:60;
+    desc=elapsed<=30?'在時間內完成！運動皮層協調反應良好。':'超時了，繼續練習可以提升速度！';
+  }
+  else { score=90; desc='完成反向鏡像挑戰！這是最高難度，小腦與運動皮層高效配合！'; }
+  showPerf(5, calcStars(score), desc, score);
+}
+
+// ══════════════════════════════════════════════
+// GAME 6 – CLASSIFY
+// ══════════════════════════════════════════════
+const CLASSIFY_CONFIG = [
+  {setIdx:0,items:8,timedPerQ:0},
+  {setIdx:1,items:10,timedPerQ:0},
+  {setIdx:2,items:12,timedPerQ:0},
+  {setIdx:3,items:15,timedPerQ:3000},
+];
+let clItems=[],clIdx,clCorrect,clTimer,clStart,clRunning=false,clPerQTimer=null;
+
+function resetClassify(){
+  clearInterval(clTimer); clearTimeout(clPerQTimer); clRunning=false;
+  document.getElementById('cl-item').textContent='';
+  document.getElementById('cl-item-name').textContent='';
+  document.getElementById('cl-buttons').innerHTML='';
+  document.getElementById('cl-cats').innerHTML='';
+  document.getElementById('cl-count').textContent='0';
+  document.getElementById('cl-correct').textContent='0';
+  document.getElementById('cl-time').textContent='0.0s';
+  document.getElementById('g6-countdown').textContent='';
+  document.getElementById('g6-perf').style.display='none';
+  document.getElementById('g6-start-btn').style.display='inline-block';
+}
+function initClassify(){
+  document.getElementById('g6-start-btn').style.display='none';
+  document.getElementById('g6-perf').style.display='none';
+  const cfg = CLASSIFY_CONFIG[gs['g6'].diff-1];
+  const clSet = CLASSIFY_SETS[cfg.setIdx];
+  clItems = shuffle([...clSet.items]).slice(0,cfg.items);
+  clIdx=0; clCorrect=0; clRunning=true; clStart=Date.now();
+  clTimer=setInterval(()=>{ if(clRunning) document.getElementById('cl-time').textContent=((Date.now()-clStart)/1000).toFixed(1)+'s'; },100);
+  intervals.push(clTimer);
+  const catEl=document.getElementById('cl-cats'); catEl.innerHTML='類別：';
+  clSet.cats.forEach(c=>{ const s=document.createElement('span'); s.textContent=c; s.style.cssText='padding:2px 10px;background:rgba(255,255,255,.08);border-radius:12px;margin:2px'; catEl.appendChild(s); });
+  renderClassifyQ();
+}
+function renderClassifyQ(){
+  clearTimeout(clPerQTimer);
+  if(clIdx>=clItems.length){ finishClassify(); return; }
+  const [emoji,name,cat]=clItems[clIdx];
+  document.getElementById('cl-item').textContent=emoji;
+  document.getElementById('cl-item-name').textContent=name;
+  document.getElementById('cl-count').textContent=(clIdx+1)+'/'+clItems.length;
+  const cfg=CLASSIFY_CONFIG[gs['g6'].diff-1];
+  const clSet=CLASSIFY_SETS[cfg.setIdx];
+  const btns=document.getElementById('cl-buttons'); btns.innerHTML='';
+  clSet.cats.forEach(c=>{
+    const b=document.createElement('button'); b.className='cat-btn'; b.textContent=c;
+    b.onclick=()=>classifyAnswer(c,cat,b); btns.appendChild(b);
+  });
+  // Per-question timer for 大師
+  const countdown=document.getElementById('g6-countdown');
+  if(cfg.timedPerQ>0){
+    let remaining=cfg.timedPerQ/1000;
+    countdown.textContent='限時 '+remaining.toFixed(1)+'s';
+    const tick=setInterval(()=>{
+      remaining-=0.1;
+      countdown.textContent='限時 '+Math.max(0,remaining).toFixed(1)+'s';
+      if(remaining<=0){ clearInterval(tick); if(clIdx<clItems.length){ clItems[clIdx].missed=true; document.getElementById('cl-buttons').querySelectorAll('.cat-btn').forEach(b=>b.disabled=true); setTimeout(()=>{ clIdx++; renderClassifyQ(); },300); } }
+    },100); intervals.push(tick); clPerQTimer=tick;
+  } else { countdown.textContent=''; }
+}
+function classifyAnswer(chosen,correct,btn){
+  clearTimeout(clPerQTimer); clearInterval(clPerQTimer);
+  const ok=chosen===correct; if(ok)clCorrect++;
+  document.getElementById('cl-correct').textContent=clCorrect;
+  btn.classList.add(ok?'correct-flash':'wrong-flash');
+  if(!ok) document.querySelectorAll('.cat-btn').forEach(b=>{ if(b.textContent===correct) b.classList.add('correct-flash'); });
+  document.getElementById('cl-buttons').querySelectorAll('.cat-btn').forEach(b=>b.onclick=null);
+  setTimeout(()=>{ clIdx++; renderClassifyQ(); },450);
+}
+function finishClassify(){
+  clearInterval(clTimer); clRunning=false;
+  const pct=Math.round(clCorrect/clItems.length*100);
+  const t=((Date.now()-clStart)/1000).toFixed(1);
+  document.getElementById('cl-item').textContent='';
+  document.getElementById('cl-item-name').textContent='';
+  document.getElementById('cl-buttons').innerHTML='';
+  document.getElementById('g6-countdown').textContent='';
+  const stars=calcStars(pct);
+  const desc=pct>=90?'邏輯分類能力強，信息整合速度極佳！':pct>=70?'表現良好，繼續提升分類速度！':'多加練習，分類思維會越來越清晰！';
+  showPerf(6,stars,`正確率 ${pct}% (${clCorrect}/${clItems.length})｜用時 ${t}s｜${desc}`,pct);
+}
+
+// ══════════════════════════════════════════════
+// GAME 7 – SCENARIO MEMORY
+// ══════════════════════════════════════════════
+const MEM_CONFIG = [[5,40],[8,30],[11,25],[14,20]]; // [items,seconds]
+let memItems=[],memSelected=[],memPhase='idle',memTimerInt=null,memSeconds=40;
+
+function resetMemory(){
+  clearInterval(memTimerInt); memPhase='idle'; memSelected=[]; memItems=[];
+  document.getElementById('mem-items').innerHTML='';
+  document.getElementById('mem-recall-area').style.display='none';
+  document.getElementById('mem-timer').style.width='100%';
+  document.getElementById('g7-status').textContent='';
+  document.getElementById('g7-perf').style.display='none';
+  document.getElementById('g7-start-btn').style.display='inline-block';
+  document.getElementById('g7-inst').textContent='點擊開始後，記住所有物品並用它們創造一個故事';
+}
+function startMemory(){
+  document.getElementById('g7-start-btn').style.display='none';
+  document.getElementById('g7-perf').style.display='none';
+  const [count,secs]=MEM_CONFIG[gs['g7'].diff-1];
+  memItems=shuffle([...MEM_POOL_ALL]).slice(0,count);
+  memSelected=[]; memPhase='memorizing';
+  const el=document.getElementById('mem-items'); el.innerHTML='';
+  memItems.forEach(it=>{ const d=document.createElement('div'); d.className='mem-item'; d.textContent=it; el.appendChild(d); });
+  document.getElementById('mem-recall-area').style.display='none';
+  document.getElementById('g7-inst').textContent='用這些物品在腦中創造一個連貫的故事…';
+  memSeconds=secs;
+  document.getElementById('mem-timer').style.width='100%';
+  document.getElementById('g7-status').textContent='剩餘 '+memSeconds+' 秒';
+  clearInterval(memTimerInt);
+  memTimerInt=setInterval(()=>{
+    memSeconds--;
+    document.getElementById('mem-timer').style.width=(memSeconds/secs*100)+'%';
+    document.getElementById('g7-status').textContent='剩餘 '+memSeconds+' 秒';
+    if(memSeconds<=0){ clearInterval(memTimerInt); startMemRecall(); }
+  },1000);
+  intervals.push(memTimerInt);
+}
+function startMemRecall(){
+  memPhase='recalling';
+  document.querySelectorAll('.mem-item').forEach(el=>el.classList.add('hidden'));
+  document.getElementById('g7-inst').textContent='你記得哪些物品？點擊選取，然後確認';
+  document.getElementById('g7-status').textContent='';
+  const distractors=shuffle(MEM_POOL_ALL.filter(it=>!memItems.includes(it))).slice(0,Math.min(8,memItems.length));
+  const pool=shuffle([...memItems,...distractors]);
+  const poolEl=document.getElementById('mem-pool'); poolEl.innerHTML='';
+  document.getElementById('mem-recalled').innerHTML='';
+  pool.forEach(it=>{
+    const d=document.createElement('div'); d.className='mem-choice'; d.textContent=it; d.dataset.item=it;
+    d.onclick=()=>memToggle(it,d); poolEl.appendChild(d);
+  });
+  document.getElementById('mem-recall-area').style.display='block';
+}
+function memToggle(item,el){
+  if(memPhase!=='recalling') return;
+  const i=memSelected.indexOf(item);
+  if(i>=0){ memSelected.splice(i,1); el.classList.remove('selected'); }
+  else { memSelected.push(item); el.classList.add('selected'); }
+}
+function submitMemory(){
+  memPhase='done';
+  const correct=memSelected.filter(it=>memItems.includes(it));
+  const extra=memSelected.filter(it=>!memItems.includes(it));
+  document.querySelectorAll('.mem-choice').forEach(el=>{
+    const it=el.dataset.item;
+    if(memItems.includes(it)&&memSelected.includes(it)) el.classList.add('correct');
+    else if(memSelected.includes(it)&&!memItems.includes(it)) el.classList.add('wrong');
+    else if(memItems.includes(it)&&!memSelected.includes(it)) el.style.opacity='.35';
+    el.onclick=null;
+  });
+  const pct=Math.round((correct.length-extra.length*0.5)/memItems.length*100);
+  const pctClamped=Math.max(0,Math.min(100,pct));
+  const stars=calcStars(pctClamped);
+  const desc=pctClamped>=90?'記憶力驚人！情景聯想法運用得非常好！':pctClamped>=70?'記住了大部分，故事聯想效果不錯！':'繼續練習情景聯想法，記憶力會顯著提升！';
+  showPerf(7,stars,`記住 ${correct.length}/${memItems.length} (漏 ${memItems.length-correct.length} 個，多選 ${extra.length} 個)｜${desc}`,pctClamped);
+}
+
+// ══════════════════════════════════════════════
+// UTIL
+// ══════════════════════════════════════════════
+function shuffle(arr){ for(let i=arr.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [arr[i],arr[j]]=[arr[j],arr[i]]; } return arr; }
+
+// ── INIT ──
+renderHome();
+</script>
+</body>
+</html>
