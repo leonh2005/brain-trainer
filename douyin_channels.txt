@@ -1,0 +1,7 @@
+# 抖音監測帳號清單
+# 每行一個，格式範例：
+# https://www.douyin.com/user/MS4wLjABAAAA...
+# 或直接貼帳號主頁網址
+https://www.douyin.com/user/MS4wLjABAAAAFMBXuDDpl3NbGwe0qTRCOo0kKF30vTWmHgQM-bc-CJsjxk03SrIoKkGnR7_j5qRf?from_tab_name=main&relation=0&vid=7593356295370050867
+https://www.douyin.com/user/MS4wLjABAAAABiObAwk34EXITLT_6JRXjsYo0dN2ROQJngVugWJtCVJ8xsGYnCf3bn5otVtYZixr?from_tab_name=main&relation=0&vid=7608159635106778387
+
