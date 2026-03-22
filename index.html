@@ -160,15 +160,6 @@ button,
 .aud-chip.ok{background:rgba(52,211,153,.2);border-color:#34d399;color:#34d399}
 .aud-chip.fail{background:rgba(248,113,113,.2);border-color:#f87171;color:#f87171}
 
-/* GAME 5 MIRROR */
-.mirror-area{display:flex;gap:10px;align-items:center;justify-content:center;margin:14px 0;flex-wrap:wrap}
-.mirror-label{text-align:center;font-size:11px;color:#8888aa;margin-bottom:5px}
-canvas{border:2px solid rgba(255,255,255,.12);border-radius:10px;background:rgba(255,255,255,.02);cursor:crosshair;touch-action:none}
-.mirror-divider{font-size:22px;color:#555577}
-.mirror-controls{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:10px;align-items:center}
-.color-swatch{width:28px;height:28px;border-radius:50%;cursor:pointer;border:3px solid transparent;transition:all .15s}
-.color-swatch.active{border-color:#fff;transform:scale(1.15)}
-
 /* GAME 6 CLASSIFY */
 .classify-item{text-align:center;font-size:56px;margin:16px 0;height:70px;display:flex;align-items:center;justify-content:center}
 .classify-item-name{text-align:center;font-size:17px;font-weight:600;margin-bottom:16px;color:#c4b5fd}
@@ -340,45 +331,6 @@ canvas{border:2px solid rgba(255,255,255,.12);border-radius:10px;background:rgba
   <div id="g4-perf" style="display:none" class="perf-result"></div>
 </div>
 
-<!-- GAME 5: MIRROR DRAW -->
-<div id="g5" class="screen">
-  <div class="game-header"><h2>✍️ 鏡像協調訓練</h2><p>在左側畫布自由繪畫，右側會即時鏡像反映</p></div>
-  <div class="diff-panel">
-    <div class="diff-title">挑戰模式</div>
-    <div class="diff-btns" id="g5-diff-btns">
-      <button class="diff-btn" data-d="1" onclick="setDiff(5,1)">入門<br><small>自由繪畫</small></button>
-      <button class="diff-btn" data-d="2" onclick="setDiff(5,2)">進階<br><small>描摹圖形</small></button>
-      <button class="diff-btn" data-d="3" onclick="setDiff(5,3)">高手<br><small>描摹+計時</small></button>
-      <button class="diff-btn" data-d="4" onclick="setDiff(5,4)">大師<br><small>反向描摹</small></button>
-    </div>
-    <div class="diff-info" id="g5-diff-info"></div>
-  </div>
-  <div id="g5-template" style="text-align:center;margin-bottom:8px;font-size:12px;color:#8888aa;display:none"></div>
-  <div class="mirror-area">
-    <div><div class="mirror-label" id="left-label">繪畫區</div><canvas id="left-canvas" width="260" height="260"></canvas></div>
-    <div class="mirror-divider">⟺</div>
-    <div><div class="mirror-label" id="right-label">鏡像區</div><canvas id="right-canvas" width="260" height="260"></canvas></div>
-  </div>
-  <div class="mirror-controls">
-    <span style="font-size:12px;color:#8888aa;margin-right:4px">筆色：</span>
-    <div class="color-swatch active" style="background:#a78bfa" onclick="setColor('#a78bfa',this)"></div>
-    <div class="color-swatch" style="background:#60a5fa" onclick="setColor('#60a5fa',this)"></div>
-    <div class="color-swatch" style="background:#34d399" onclick="setColor('#34d399',this)"></div>
-    <div class="color-swatch" style="background:#f87171" onclick="setColor('#f87171',this)"></div>
-    <div class="color-swatch" style="background:#fbbf24" onclick="setColor('#fbbf24',this)"></div>
-    <div class="color-swatch" style="background:#fff" onclick="setColor('#fff',this)"></div>
-    <span style="font-size:12px;color:#8888aa;margin-left:8px;margin-right:4px">粗細：</span>
-    <select id="brush-size" style="background:#1a1a2e;color:#e8e8ff;border:1px solid rgba(255,255,255,.15);border-radius:6px;padding:4px 8px;font-size:12px">
-      <option value="3">細</option><option value="6" selected>中</option><option value="12">粗</option>
-    </select>
-  </div>
-  <div class="flex-center" style="margin-top:12px">
-    <button class="btn btn-secondary" onclick="clearCanvases()">清除</button>
-    <button class="btn btn-primary" id="g5-done-btn" onclick="finishMirror()" style="display:none">完成訓練</button>
-  </div>
-  <div id="g5-perf" style="display:none" class="perf-result"></div>
-</div>
-
 <!-- GAME 6: CLASSIFY -->
 <div id="g6" class="screen">
   <div class="game-header"><h2>🗂️ 分類邏輯訓練</h2><p>快速判斷物品屬於哪個類別</p></div>
@@ -447,7 +399,6 @@ const GAME_DATA = {
   2:{ icon:'🎨', title:'Stroop訓練', tag:'認知抑制', desc:'點擊文字的顏色而非意思' },
   3:{ icon:'📋', title:'序列工作記憶', tag:'工作記憶', desc:'記住物品順序並依序點選' },
   4:{ icon:'👂', title:'聽覺選擇注意', tag:'聽覺注意力', desc:'記住數字閃現順序並輸入' },
-  5:{ icon:'✍️', title:'鏡像協調訓練', tag:'運動協調', desc:'左側繪畫，右側即時鏡像' },
   6:{ icon:'🗂️', title:'分類邏輯訓練', tag:'邏輯思維', desc:'快速判斷物品類別' },
   7:{ icon:'🧩', title:'情景聯想記憶', tag:'長期記憶', desc:'記住物品並全部回憶出來' },
 };
@@ -554,7 +505,7 @@ function showPerf(gameNum, stars, details, score100){
   setTimeout(()=>{
     const rb = document.getElementById('g'+gameNum+'-retry-btn');
     if(rb){
-      const startBtns = {1:initSchulje,2:initStroop,3:startSeq,4:startAud,5:()=>{clearCanvases();showMirrorChallenge();},6:initClassify,7:startMemory};
+      const startBtns = {1:initSchulje,2:initStroop,3:startSeq,4:startAud,6:initClassify,7:startMemory};
       rb.onclick = ()=>{ el.style.display='none'; startBtns[gameNum]&&startBtns[gameNum](); };
     }
   }, 50);
@@ -568,7 +519,6 @@ const DIFF_INFO = {
   2:['4種顏色，8題，節奏輕鬆','5種顏色，12題，速度加快','6種顏色，16題，反應要更快','6種顏色，20題，限時2秒/題'],
   3:['記住3個物品的順序','記住5個物品的順序','記住7個物品的順序','記住9個物品的順序'],
   4:['3個數字，視覺+語音，1.2秒/個','5個數字，視覺+語音，1秒/個','7個數字，純語音（不顯示），0.9秒/個','9個數字，純語音（不顯示），0.7秒/個'],
-  5:['自由繪畫，體驗鏡像效果','描摹指定圖形','描摹圖形並計時30秒','反向鏡像（繪畫區與鏡像區交換）'],
   6:['2類物品，8題','3類物品，10題','4類物品，12題','4類物品，每題限時3秒'],
   7:['5個物品，40秒記憶','8個物品，30秒記憶','11個物品，25秒記憶','14個物品，20秒記憶'],
 };
@@ -589,7 +539,6 @@ function setDiff(game, d){
   if(game===2) initStroop();
   if(game===3) resetSeq();
   if(game===4) resetAud();
-  if(game===5) showMirrorChallenge();
   if(game===6) resetClassify();
   if(game===7) resetMemory();
 }
@@ -612,6 +561,7 @@ function renderHome(){
   let totalStars=0, maxStars=0;
 
   for(let i=1;i<=7;i++){
+    if(i===5) continue;
     const gd = gs['g'+i];
     const info = GAME_DATA[i];
     const diff = gd.diff;
@@ -673,7 +623,6 @@ function startGame(n){
   if(n===2) initStroop();
   if(n===3) resetSeq();
   if(n===4) resetAud();
-  if(n===5) initMirror();
   if(n===6) resetClassify();
   if(n===7) resetMemory();
 }
@@ -1008,96 +957,6 @@ function aud_submit(){
   const stars=calcStars(pct);
   const desc=pct===100?'完美！聽覺注意力極強，前額葉皮層高效運作！':pct>=70?'不錯，繼續訓練可提升精確度！':'數字序列記憶需要練習，多試幾次！';
   showPerf(4,stars,`正確 ${correct}/${audSequence.length} (${pct}%)｜${desc}`,pct);
-}
-
-// ══════════════════════════════════════════════
-// GAME 5 – MIRROR DRAW
-// ══════════════════════════════════════════════
-let mirrorColor='#a78bfa',isDrawing=false,lastX=0,lastY=0;
-let lCtx,rCtx,lCanvas,rCanvas,mirrorMode='normal',mirrorStartTime=null,mirrorTimer=null;
-const TEMPLATES=['圓形','正方形','三角形','星形','波浪線','Z字形'];
-
-function initMirror(){
-  lCanvas=document.getElementById('left-canvas'); rCanvas=document.getElementById('right-canvas');
-  lCtx=lCanvas.getContext('2d'); rCtx=rCanvas.getContext('2d');
-  clearCanvases();
-  ['mousedown','mousemove','mouseup','mouseleave','touchstart','touchmove','touchend'].forEach(ev=>{
-    lCanvas.removeEventListener(ev,handleMirrorEvent);
-    lCanvas.addEventListener(ev,handleMirrorEvent,{passive:false});
-  });
-  showMirrorChallenge();
-}
-function showMirrorChallenge(){
-  const d=gs['g5'].diff;
-  const tmpl=document.getElementById('g5-template');
-  const doneBtn=document.getElementById('g5-done-btn');
-  const leftLabel=document.getElementById('left-label');
-  const rightLabel=document.getElementById('right-label');
-  document.getElementById('g5-perf').style.display='none';
-  if(d===1){ tmpl.style.display='none'; doneBtn.style.display='none'; leftLabel.textContent='繪畫區'; rightLabel.textContent='鏡像區'; mirrorMode='normal'; }
-  else if(d===2){ tmpl.style.display='block'; const t=TEMPLATES[Math.floor(Math.random()*TEMPLATES.length)]; tmpl.textContent='請嘗試描摹：'+t; doneBtn.style.display='inline-block'; leftLabel.textContent='繪畫區'; rightLabel.textContent='鏡像區'; mirrorMode='template'; }
-  else if(d===3){ tmpl.style.display='block'; const t=TEMPLATES[Math.floor(Math.random()*TEMPLATES.length)]; tmpl.textContent='⏱ 30秒內描摹：'+t; doneBtn.style.display='inline-block'; leftLabel.textContent='繪畫區'; rightLabel.textContent='鏡像區'; mirrorMode='timed'; mirrorStartTime=Date.now(); mirrorTimer=setTimeout(()=>finishMirror(),30000); intervals.push(mirrorTimer); }
-  else if(d===4){ tmpl.style.display='block'; tmpl.textContent='反向模式：右側為繪畫區，左側為鏡像'; doneBtn.style.display='inline-block'; leftLabel.textContent='鏡像區'; rightLabel.textContent='繪畫區（點此）'; mirrorMode='reverse';
-    // Rebind to right canvas
-    ['mousedown','mousemove','mouseup','mouseleave','touchstart','touchmove','touchend'].forEach(ev=>{
-      rCanvas.removeEventListener(ev,handleMirrorEventR);
-      rCanvas.addEventListener(ev,handleMirrorEventR,{passive:false});
-    });
-  }
-}
-function getPos(canvas,e){
-  const r=canvas.getBoundingClientRect();
-  if(e.touches){ const t=e.touches[0]; return{x:(t.clientX-r.left)*(canvas.width/r.width),y:(t.clientY-r.top)*(canvas.height/r.height)}; }
-  return{x:(e.clientX-r.left)*(canvas.width/r.width),y:(e.clientY-r.top)*(canvas.height/r.height)};
-}
-function handleMirrorEvent(e){
-  e.preventDefault();
-  if(mirrorMode==='reverse') return;
-  const {x,y}=getPos(lCanvas,e);
-  const bs=parseInt(document.getElementById('brush-size').value)||6;
-  if(e.type==='mousedown'||e.type==='touchstart'){ isDrawing=true; lastX=x; lastY=y; }
-  if((e.type==='mousemove'||e.type==='touchmove')&&isDrawing){
-    drawLine(lCtx,lastX,lastY,x,y,mirrorColor,bs);
-    drawLine(rCtx,lCanvas.width-lastX,lastY,lCanvas.width-x,y,mirrorColor,bs);
-    lastX=x; lastY=y;
-  }
-  if(e.type==='mouseup'||e.type==='mouseleave'||e.type==='touchend') isDrawing=false;
-}
-function handleMirrorEventR(e){
-  e.preventDefault();
-  const {x,y}=getPos(rCanvas,e);
-  const bs=parseInt(document.getElementById('brush-size').value)||6;
-  if(e.type==='mousedown'||e.type==='touchstart'){ isDrawing=true; lastX=x; lastY=y; }
-  if((e.type==='mousemove'||e.type==='touchmove')&&isDrawing){
-    drawLine(rCtx,lastX,lastY,x,y,mirrorColor,bs);
-    drawLine(lCtx,rCanvas.width-lastX,lastY,rCanvas.width-x,y,mirrorColor,bs);
-    lastX=x; lastY=y;
-  }
-  if(e.type==='mouseup'||e.type==='mouseleave'||e.type==='touchend') isDrawing=false;
-}
-function drawLine(ctx,x1,y1,x2,y2,color,size){
-  ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2);
-  ctx.strokeStyle=color; ctx.lineWidth=size; ctx.lineCap='round'; ctx.lineJoin='round'; ctx.stroke();
-}
-function clearCanvases(){
-  if(!lCtx) return;
-  lCtx.clearRect(0,0,lCanvas.width,lCanvas.height);
-  rCtx.clearRect(0,0,rCanvas.width,rCanvas.height);
-}
-function setColor(c,el){ mirrorColor=c; document.querySelectorAll('.color-swatch').forEach(s=>s.classList.remove('active')); el.classList.add('active'); }
-function finishMirror(){
-  clearTimeout(mirrorTimer);
-  const d=gs['g5'].diff;
-  let score=75,desc='';
-  if(d===1){ score=80; desc='完成自由繪畫！體驗了鏡像協調效果。'; }
-  else if(d===2){ score=75; desc='完成描摹訓練！雙側協調能力得到鍛煉。'; }
-  else if(d===3){
-    const elapsed=(Date.now()-mirrorStartTime)/1000;
-    score=elapsed<=30?85:60;
-    desc=elapsed<=30?'在時間內完成！運動皮層協調反應良好。':'超時了，繼續練習可以提升速度！';
-  }
-  else { score=90; desc='完成反向鏡像挑戰！這是最高難度，小腦與運動皮層高效配合！'; }
-  showPerf(5, calcStars(score), desc, score);
 }
 
 // ══════════════════════════════════════════════
