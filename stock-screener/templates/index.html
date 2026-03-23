@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<title>台股選股儀表板</title>
+<script src="https://unpkg.com/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:#131722;color:#d1d4dc;font-family:'Segoe UI',system-ui,sans-serif;font-size:13px;height:100vh;overflow:hidden;}
+
+/* ── Header ── */
+.hdr{background:#1e222d;border-bottom:1px solid #2a2e39;padding:0 16px;height:44px;display:flex;align-items:center;justify-content:space-between;}
+.hdr-title{font-size:15px;font-weight:700;color:#fff;letter-spacing:.3px;}
+.hdr-right{display:flex;align-items:center;gap:12px;font-size:12px;color:#787b86;}
+.dot{width:7px;height:7px;border-radius:50%;background:#26a69a;display:inline-block;margin-right:5px;}
+.btn-refresh{background:#2196f320;border:1px solid #2196f360;color:#2196f3;padding:3px 12px;border-radius:4px;cursor:pointer;font-size:11px;transition:all .15s;}
+.btn-refresh:hover{background:#2196f3;color:#fff;}
+
+/* ── Layout ── */
+.main{display:flex;height:calc(100vh - 44px);}
+
+/* ── Radar Panel ── */
+.radar{width:195px;min-width:195px;background:#1e222d;border-right:1px solid #2a2e39;display:flex;flex-direction:column;}
+.panel-hdr{padding:9px 12px;border-bottom:1px solid #2a2e39;font-size:10px;color:#4c525e;text-transform:uppercase;letter-spacing:.8px;font-weight:600;}
+.radar-list{flex:1;overflow-y:auto;}
+.radar-list::-webkit-scrollbar{width:3px;}
+.radar-list::-webkit-scrollbar-thumb{background:#2a2e39;}
+
+.r-item{display:flex;align-items:center;padding:7px 10px;border-bottom:1px solid #2a2e3930;cursor:default;}
+.r-rank{width:18px;font-size:10px;color:#4c525e;flex-shrink:0;}
+.r-info{flex:1;min-width:0;}
+.r-sym{font-weight:700;font-size:12px;color:#d1d4dc;}
+.r-name{font-size:10px;color:#4c525e;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:80px;}
+.r-right{text-align:right;margin-right:6px;}
+.r-price{font-size:12px;font-weight:600;}
+.r-vol{font-size:10px;color:#4c525e;}
+
+.add-btn{width:22px;height:22px;border-radius:4px;border:1px solid #2196f350;background:#2196f315;color:#2196f3;cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s;}
+.add-btn:hover{background:#2196f3;color:#fff;border-color:#2196f3;}
+.add-btn.added{background:#26a69a15;border-color:#26a69a50;color:#26a69a;cursor:default;font-size:12px;}
+
+.up{color:#ef5350;} .down{color:#26a69a;} .flat{color:#787b86;}
+
+/* ── Watchlist ── */
+.watchlist{flex:1;overflow-y:auto;padding:10px;display:grid;grid-template-columns:repeat(2,1fr);gap:10px;align-content:start;}
+.watchlist::-webkit-scrollbar{width:6px;}
+.watchlist::-webkit-scrollbar-track{background:#131722;}
+.watchlist::-webkit-scrollbar-thumb{background:#2a2e39;border-radius:3px;}
+.watchlist::-webkit-scrollbar-thumb:hover{background:#4c525e;}
+
+/* ── Stock Card ── */
+.card{background:#1e222d;border:1px solid #2a2e39;border-radius:6px;overflow:visible;display:flex;flex-direction:column;}
+
+/* ── Resize Handle ── */
+.resize-handle{height:8px;background:transparent;cursor:ns-resize;display:flex;align-items:center;justify-content:center;border-top:1px solid #2a2e39;flex-shrink:0;}
+.resize-handle::after{content:'';width:32px;height:2px;background:#2a2e39;border-radius:1px;transition:background .15s;}
+.resize-handle:hover::after{background:#787b86;}
+.card-hdr{padding:7px 10px;border-bottom:1px solid #2a2e39;display:flex;align-items:center;justify-content:space-between;}
+.c-sym{font-size:14px;font-weight:800;color:#fff;}
+.c-name{font-size:10px;color:#4c525e;margin-left:5px;}
+.c-price{font-size:13px;font-weight:600;}
+.c-chg{font-size:11px;margin-left:4px;}
+.c-ctrl{display:flex;align-items:center;gap:5px;}
+
+.mode-btn{padding:2px 7px;border-radius:3px;border:1px solid #2a2e39;background:transparent;color:#4c525e;cursor:pointer;font-size:11px;transition:all .15s;}
+.mode-btn:hover:not(.active){border-color:#787b86;color:#d1d4dc;}
+.mode-btn.active{background:#2196f3;border-color:#2196f3;color:#fff;}
+
+.rm-btn{width:20px;height:20px;border-radius:3px;border:1px solid #2a2e39;background:transparent;color:#4c525e;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;transition:all .15s;}
+.rm-btn:hover{background:#ef5350;border-color:#ef5350;color:#fff;}
+
+/* ── Badges ── */
+.badges{padding:4px 10px;display:flex;flex-wrap:wrap;gap:4px;border-bottom:1px solid #2a2e39;min-height:28px;align-items:center;}
+.badge{padding:1px 6px;border-radius:3px;font-size:10px;font-weight:600;}
+.b-ok{background:#26a69a18;color:#26a69a;border:1px solid #26a69a35;}
+.b-no{background:#ef535018;color:#ef5350;border:1px solid #ef535035;}
+.b-warn{background:#ff980018;color:#ff9800;border:1px solid #ff980035;}
+.b-info{background:#2196f318;color:#2196f3;border:1px solid #2196f335;}
+.b-star{background:#ffd70018;color:#ffd700;border:1px solid #ffd70035;font-size:11px;}
+
+/* ── Chart sections ── */
+.csec{position:relative;}
+.clabel{position:absolute;top:3px;left:7px;font-size:9px;color:#4c525e;z-index:10;pointer-events:none;letter-spacing:.3px;}
+.ma-legend{position:absolute;top:3px;right:7px;font-size:9px;z-index:10;pointer-events:none;display:flex;gap:6px;}
+.ma-legend span{font-weight:600;}
+
+/* ── Empty slot ── */
+.empty{background:#1e222d;border:1px dashed #2a2e39;border-radius:6px;display:flex;align-items:center;justify-content:center;color:#2a2e39;font-size:12px;min-height:160px;}
+
+/* ── Expand mode ── */
+.watchlist.expanded{grid-template-columns:1fr;overflow-y:auto;}
+.watchlist.expanded .card{width:100%;}
+.btn-back{background:#2a2e39;border:1px solid #4c525e;color:#d1d4dc;padding:3px 12px;border-radius:4px;cursor:pointer;font-size:11px;margin-right:6px;transition:all .15s;}
+.btn-back:hover{background:#4c525e;}
+.exp-btn{width:20px;height:20px;border-radius:3px;border:1px solid #2a2e39;background:transparent;color:#787b86;cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center;transition:all .15s;}
+.exp-btn:hover,.exp-btn.active{background:#f7d06030;border-color:#f7d060;color:#f7d060;}
+
+/* ── 一般模式：可捲動 ── */
+.watchlist:not(.expanded){overflow-y:auto;}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div class="hdr-title">📊 台股選股儀表板</div>
+  <div class="hdr-right">
+    <span><span class="dot"></span><span id="mkt-status">載入中</span></span>
+    <span id="upd-time">--:--:--</span>
+    <button class="btn-refresh" onclick="fetchRadar()">🔄 刷新雷達</button>
+  </div>
+</div>
+
+<div class="main">
+  <div class="radar">
+    <div class="panel-hdr">量能雷達 TOP 20</div>
+    <div class="radar-list" id="radar-list"><div style="padding:20px;color:#4c525e;text-align:center;">載入中…</div></div>
+  </div>
+  <div class="watchlist" id="watchlist"></div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════
+//  State
+// ═══════════════════════════════════════════════
+const watchlist = [];        // [{symbol,name,price,change_pct}]
+const charts = {};           // symbol → [LWChart, ...]
+const stockModes = {};       // symbol → 'today'|'daily'|'intraday'
+const MAX_WL = 6;
+
+// ═══════════════════════════════════════════════
+//  Utils
+// ═══════════════════════════════════════════════
+const fmtVol = v => v >= 10000 ? (v/10000).toFixed(1)+'萬' : Math.round(v).toLocaleString();
+const cc = v => v > 0 ? 'up' : v < 0 ? 'down' : 'flat';
+const fmtChg = v => (v > 0 ? '+' : '') + (+v).toFixed(2) + '%';
+
+// ═══════════════════════════════════════════════
+//  Radar
+// ═══════════════════════════════════════════════
+async function fetchRadar() {
+  try {
+    const data = await fetch('/api/radar').then(r => r.json());
+    renderRadar(data);
+    document.getElementById('upd-time').textContent = new Date().toLocaleTimeString('zh-TW');
+    document.getElementById('mkt-status').textContent = '盤中運行';
+  } catch(e) {
+    document.getElementById('mkt-status').textContent = '取得失敗';
+  }
+}
+
+function renderRadar(stocks) {
+  const el = document.getElementById('radar-list');
+  if (!stocks.length) { el.innerHTML = '<div style="padding:20px;color:#4c525e;text-align:center;">無資料</div>'; return; }
+  el.innerHTML = stocks.map((s, i) => {
+    const inWL = watchlist.some(w => w.symbol === s.symbol);
+    return `
+    <div class="r-item">
+      <span class="r-rank">${i+1}</span>
+      <div class="r-info">
+        <div class="r-sym">${s.symbol}</div>
+        <div class="r-name" title="${s.name}">${s.name}</div>
+      </div>
+      <div class="r-right">
+        <div class="r-price ${cc(s.change_pct)}">$${s.price}</div>
+        <div class="r-vol">${fmtVol(s.volume)}張</div>
+      </div>
+      <button class="add-btn${inWL?' added':''}"
+        onclick="${inWL ? '' : `addToWL('${s.symbol}','${s.name.replace(/'/g,"\\'")}',${s.price},${s.change_pct})`}"
+        title="${inWL?'已加入':'加入監控'}">${inWL?'✓':'+'}</button>
+    </div>`;
+  }).join('');
+}
+
+// ═══════════════════════════════════════════════
+//  Watchlist
+// ═══════════════════════════════════════════════
+let expandedSymbol = null;
+
+// 展開模式固定高度
+const H_EXP = { candle:300, vol:90, macd:100, rsi:90, obv:90 };
+
+// 固定高度：讓所有指標都可見，靠 watchlist overflow-y:auto 捲動
+function calcH() {
+  return { candle: 150, vol: 50, macd: 55, rsi: 50, obv: 50 };
+}
+
+function addToWL(symbol, name, price, change_pct) {
+  if (watchlist.length >= MAX_WL) { alert('自選清單已滿（最多6檔）'); return; }
+  if (watchlist.some(w => w.symbol === symbol)) return;
+  watchlist.push({symbol, name, price, change_pct});
+  renderWatchlist();
+  fetchRadar();
+}
+
+function removeFromWL(symbol) {
+  const i = watchlist.findIndex(w => w.symbol === symbol);
+  if (i < 0) return;
+  watchlist.splice(i, 1);
+  destroyCharts(symbol);
+  if (expandedSymbol === symbol) expandedSymbol = null;
+  renderWatchlist();
+  fetchRadar();
+}
+
+function destroyCharts(symbol) {
+  if (!charts[symbol]) return;
+  charts[symbol].forEach(c => { try { c.remove(); } catch(_){} });
+  delete charts[symbol];
+}
+
+function toggleExpand(symbol) {
+  expandedSymbol = (expandedSymbol === symbol) ? null : symbol;
+  renderWatchlist();
+}
+
+function renderWatchlist() {
+  const panel = document.getElementById('watchlist');
+  // 清除所有圖表
+  watchlist.forEach(s => destroyCharts(s.symbol));
+  panel.innerHTML = '';
+
+  if (expandedSymbol) {
+    // 展開模式：只顯示一檔，全寬
+    panel.classList.add('expanded');
+    const stock = watchlist.find(w => w.symbol === expandedSymbol);
+    if (stock) {
+      // 返回按鈕列
+      const bar = document.createElement('div');
+      bar.style.cssText = 'display:flex;align-items:center;margin-bottom:8px;grid-column:1/-1;';
+      bar.innerHTML = `<button class="btn-back" onclick="toggleExpand('${expandedSymbol}')">← 返回全部</button>
+        <span style="color:#787b86;font-size:12px;">${expandedSymbol} ${stock.name} — 展開檢視</span>`;
+      panel.appendChild(bar);
+      panel.appendChild(buildCard(stock, true));
+    }
+  } else {
+    // 一般模式：2x3 格
+    panel.classList.remove('expanded');
+    watchlist.forEach(s => panel.appendChild(buildCard(s, false)));
+    for (let i = watchlist.length; i < MAX_WL; i++) {
+      const d = document.createElement('div');
+      d.className = 'empty';
+      d.innerHTML = '<span>← 點左側 [+] 加入監控</span>';
+      panel.appendChild(d);
+    }
+  }
+
+  // 載入所有（或單一）股票資料
+  const toLoad = expandedSymbol
+    ? watchlist.filter(w => w.symbol === expandedSymbol)
+    : watchlist;
+  toLoad.forEach(s => loadStock(s.symbol, stockModes[s.symbol] || 'today'));
+}
+
+// ═══════════════════════════════════════════════
+//  Card DOM
+// ═══════════════════════════════════════════════
+function buildCard({symbol, name, price, change_pct}, expanded=false) {
+  const h = expanded ? H_EXP : calcH();
+  const isExp = expandedSymbol === symbol;
+  const d = document.createElement('div');
+  d.className = 'card'; d.id = `card-${symbol}`;
+  d.innerHTML = `
+    <div class="card-hdr">
+      <div style="display:flex;align-items:center">
+        <span class="c-sym">${symbol}</span>
+        <span class="c-name">${name}</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <div>
+          <span class="c-price ${cc(change_pct)}">$${price}</span>
+          <span class="c-chg ${cc(change_pct)}">${fmtChg(change_pct)}</span>
+        </div>
+        <div class="c-ctrl">
+          <button class="mode-btn active" id="btn-t-${symbol}" onclick="switchMode('${symbol}','today')">今日</button>
+          <button class="mode-btn" id="btn-d-${symbol}" onclick="switchMode('${symbol}','daily')">日K</button>
+          <button class="mode-btn" id="btn-i-${symbol}" onclick="switchMode('${symbol}','intraday')">1分K</button>
+          <button class="exp-btn${isExp?' active':''}" onclick="toggleExpand('${symbol}')" title="${isExp?'縮回':'展開單看'}">⛶</button>
+          <button class="rm-btn" onclick="removeFromWL('${symbol}')" title="移除">✕</button>
+        </div>
+      </div>
+    </div>
+    <div class="badges" id="bdg-${symbol}"><span class="badge b-info">載入中…</span></div>
+    <div class="csec">
+      <div class="clabel">K線</div>
+      <div class="ma-legend" id="mal-${symbol}"><span style="color:#f7d060">MA5</span><span style="color:#ff9f40">MA10</span><span style="color:#7ec8e3">MA20</span></div>
+      <div id="cv-${symbol}" style="height:${h.candle}px"></div>
+    </div>
+    <div class="csec"><div class="clabel">成交量</div><div id="vv-${symbol}" style="height:${h.vol}px"></div></div>
+    <div class="csec"><div class="clabel">MACD</div><div id="mv-${symbol}" style="height:${h.macd}px"></div></div>
+    <div class="csec"><div class="clabel">RSI</div><div id="rv-${symbol}" style="height:${h.rsi}px"></div></div>
+    <div class="csec"><div class="clabel">OBV</div><div id="ov-${symbol}" style="height:${h.obv}px"></div></div>
+    <div class="resize-handle" onmousedown="startResize(event,'${symbol}')" title="拖拉調整高度"></div>
+  `;
+  return d;
+}
+
+// ═══════════════════════════════════════════════
+//  Chart factory
+// ═══════════════════════════════════════════════
+const BASE_OPTS = {
+  layout: { background:{color:'#1e222d'}, textColor:'#4c525e' },
+  grid: { vertLines:{color:'#2a2e3940'}, horzLines:{color:'#2a2e3940'} },
+  crosshair: { mode: LightweightCharts.CrosshairMode.Normal },
+  rightPriceScale: { borderColor:'#2a2e39' },
+  timeScale: { borderColor:'#2a2e39', timeVisible:true },
+  handleScroll: true, handleScale: true,
+};
+
+function mkChart(id, h, showTime=false) {
+  const el = document.getElementById(id);
+  if (!el) return null;
+  return LightweightCharts.createChart(el, {
+    ...BASE_OPTS,
+    width: el.clientWidth, height: h,
+    timeScale: { ...BASE_OPTS.timeScale, visible: showTime },
+  });
+}
+
+// ═══════════════════════════════════════════════
+//  Load & render
+// ═══════════════════════════════════════════════
+async function loadStock(symbol, mode) {
+  const url = mode === 'daily' ? `/api/stock/${symbol}/daily` : `/api/stock/${symbol}/intraday`;
+  try {
+    const data = await fetch(url).then(r => r.json());
+    if (data.error) throw new Error(data.error);
+    renderCharts(symbol, data, mode);
+    if (data.signals) updateBadges(symbol, data.signals);
+  } catch(e) {
+    const el = document.getElementById(`bdg-${symbol}`);
+    if (el) el.innerHTML = `<span class="badge b-no">取得失敗</span>`;
+  }
+}
+
+function renderCharts(symbol, data, mode) {
+  destroyCharts(symbol);
+  charts[symbol] = [];
+  const h = (expandedSymbol === symbol) ? H_EXP : calcH();
+
+  // 1. 主圖：今日走勢（面積圖）或蠟燭圖
+  const cc = mkChart(`cv-${symbol}`, h.candle, false);
+  if (cc) {
+    const maLegend = document.getElementById(`mal-${symbol}`);
+    if (maLegend) maLegend.style.display = mode === 'today' ? 'none' : 'flex';
+
+    if (mode === 'today') {
+      // 今日走勢：面積圖（顏色依漲跌）
+      const chg = (data.candles?.length >= 2)
+        ? data.candles[data.candles.length-1].close - data.candles[0].open
+        : 0;
+      const lineColor = chg >= 0 ? '#ef5350' : '#26a69a';
+      const cs = cc.addAreaSeries({
+        lineColor, lineWidth: 2,
+        topColor: lineColor + '40', bottomColor: lineColor + '05',
+        priceLineVisible: true, lastValueVisible: true,
+      });
+      cs.setData((data.candles || []).map(c => ({time: c.time, value: c.close})));
+      cc.timeScale().fitContent();
+    } else {
+      // 日K / 1分K：蠟燭圖 + MA
+      const cs = cc.addCandlestickSeries({
+        upColor:'#ef5350', downColor:'#26a69a',
+        borderUpColor:'#ef5350', borderDownColor:'#26a69a',
+        wickUpColor:'#ef535080', wickDownColor:'#26a69a80',
+      });
+      cs.setData(data.candles || []);
+      const ma5s = cc.addLineSeries({color:'#f7d060',lineWidth:1,priceLineVisible:false,lastValueVisible:false});
+      ma5s.setData(data.ma5 || []);
+      const ma10s = cc.addLineSeries({color:'#ff9f40',lineWidth:1,priceLineVisible:false,lastValueVisible:false});
+      ma10s.setData(data.ma10 || []);
+      const ma20s = cc.addLineSeries({color:'#7ec8e3',lineWidth:1,priceLineVisible:false,lastValueVisible:false});
+      ma20s.setData(data.ma20 || []);
+      cc.timeScale().fitContent();
+    }
+    charts[symbol].push(cc);
+  }
+
+  // 2. 成交量
+  const vc = mkChart(`vv-${symbol}`, h.vol, false);
+  if (vc) {
+    const vs = vc.addHistogramSeries({priceFormat:{type:'volume'}, priceScaleId:''});
+    vc.priceScale('').applyOptions({scaleMargins:{top:0.05,bottom:0}});
+    vs.setData(data.volumes || []);
+    vc.timeScale().fitContent();
+    charts[symbol].push(vc);
+  }
+
+  // 3. MACD
+  const mc = mkChart(`mv-${symbol}`, h.macd, false);
+  if (mc) {
+    const mh = mc.addHistogramSeries({priceScaleId:'m',lastValueVisible:false,priceLineVisible:false});
+    mh.setData(data.macd_hist || []);
+    const ml = mc.addLineSeries({color:'#2196f3',lineWidth:1,priceScaleId:'m',lastValueVisible:false,priceLineVisible:false});
+    ml.setData(data.macd || []);
+    const sl = mc.addLineSeries({color:'#ff9800',lineWidth:1,priceScaleId:'m',lastValueVisible:false,priceLineVisible:false});
+    sl.setData(data.macd_signal || []);
+    mc.timeScale().fitContent();
+    charts[symbol].push(mc);
+  }
+
+  // 4. RSI
+  const rc = mkChart(`rv-${symbol}`, h.rsi, false);
+  if (rc) {
+    const rs = rc.addLineSeries({color:'#ab47bc',lineWidth:1,lastValueVisible:true,priceLineVisible:false});
+    rs.setData(data.rsi || []);
+    rs.createPriceLine({price:75,color:'#ef535060',lineWidth:1,lineStyle:2,axisLabelVisible:false});
+    rs.createPriceLine({price:50,color:'#2196f360',lineWidth:1,lineStyle:2,axisLabelVisible:false});
+    rs.createPriceLine({price:20,color:'#26a69a60',lineWidth:1,lineStyle:2,axisLabelVisible:false});
+    rc.timeScale().fitContent();
+    charts[symbol].push(rc);
+  }
+
+  // 5. OBV
+  const oc = mkChart(`ov-${symbol}`, h.obv, true);
+  if (oc) {
+    const os = oc.addLineSeries({color:'#4caf50',lineWidth:1,lastValueVisible:false,priceLineVisible:false});
+    os.setData(data.obv || []);
+    oc.timeScale().fitContent();
+    charts[symbol].push(oc);
+  }
+
+  // 時間軸同步
+  syncTime(symbol);
+}
+
+function syncTime(symbol) {
+  const cs = charts[symbol];
+  if (!cs || cs.length < 2) return;
+  cs.forEach((c, i) => {
+    c.timeScale().subscribeVisibleLogicalRangeChange(range => {
+      if (!range) return;
+      cs.forEach((o, j) => { if (i !== j) o.timeScale().setVisibleLogicalRange(range); });
+    });
+  });
+}
+
+// ═══════════════════════════════════════════════
+//  Badges
+// ═══════════════════════════════════════════════
+function updateBadges(symbol, sig) {
+  const el = document.getElementById(`bdg-${symbol}`);
+  if (!el) return;
+  const b = [];
+  b.push(`<span class="badge ${sig.vol_attack?'b-ok':'b-no'}">${sig.vol_attack?'✅':'❌'} 攻擊量</span>`);
+  b.push(`<span class="badge ${sig.obv_breakout?'b-ok':'b-no'}">${sig.obv_breakout?'✅':'❌'} OBV</span>`);
+  b.push(`<span class="badge ${sig.macd_ok?'b-ok':'b-no'}">${sig.macd_ok?'✅':'❌'} MACD</span>`);
+  b.push(`<span class="badge ${sig.rsi_ok?'b-ok':'b-no'}">${sig.rsi_ok?'✅':'❌'} RSI</span>`);
+  if (sig.four_in_one)
+    b.push(`<span class="badge b-star">🚀 四位一體</span>`);
+  if (sig.trap === 'false_breakout')
+    b.push(`<span class="badge b-no">🔴 假突破</span>`);
+  else if (sig.trap === 'distribution')
+    b.push(`<span class="badge b-warn">🟠 主力出貨</span>`);
+  else if (sig.trap === 'bottom_wash')
+    b.push(`<span class="badge b-info">🟢 洗盤佈局</span>`);
+  el.innerHTML = b.join('');
+}
+
+// ═══════════════════════════════════════════════
+//  Mode switch
+// ═══════════════════════════════════════════════
+function switchMode(symbol, mode) {
+  stockModes[symbol] = mode;
+  document.getElementById(`btn-t-${symbol}`)?.classList.toggle('active', mode==='today');
+  document.getElementById(`btn-d-${symbol}`)?.classList.toggle('active', mode==='daily');
+  document.getElementById(`btn-i-${symbol}`)?.classList.toggle('active', mode==='intraday');
+  loadStock(symbol, mode);
+}
+
+// ═══════════════════════════════════════════════
+//  Card Drag Resize
+// ═══════════════════════════════════════════════
+const CHART_IDS = ['cv','vv','mv','rv','ov'];
+let _rs = null;  // resize state
+
+function startResize(e, symbol) {
+  e.preventDefault();
+  const card = document.getElementById(`card-${symbol}`);
+  _rs = { symbol, startY: e.clientY, startH: card.offsetHeight };
+  document.addEventListener('mousemove', _onResize);
+  document.addEventListener('mouseup', _stopResize);
+}
+
+function _onResize(e) {
+  if (!_rs) return;
+  const { symbol, startY, startH } = _rs;
+  const card = document.getElementById(`card-${symbol}`);
+  if (!card) return;
+  const newH = Math.max(220, startH + (e.clientY - startY));
+  card.style.height = newH + 'px';
+  _applyChartHeights(symbol, newH);
+}
+
+function _stopResize() {
+  _rs = null;
+  document.removeEventListener('mousemove', _onResize);
+  document.removeEventListener('mouseup', _stopResize);
+}
+
+function _applyChartHeights(symbol, cardH) {
+  // 固定區域：card-hdr(~44px) + badges(~32px) + resize-handle(8px) + borders(6px) ≈ 90px
+  const fixed = 90;
+  const area = Math.max(130, cardH - fixed);
+  const candle = Math.max(60, Math.floor(area * 0.44));
+  const small  = Math.max(20, Math.floor((area - candle) / 4));
+  const heights = [candle, small, small, small, small];
+
+  CHART_IDS.forEach((id, i) => {
+    const el = document.getElementById(`${id}-${symbol}`);
+    if (el) el.style.height = heights[i] + 'px';
+  });
+  charts[symbol]?.forEach((c, i) => {
+    c.applyOptions({ height: heights[i] });
+  });
+}
+
+// ── 視窗寬度變化時更新圖寬 ──
+window.addEventListener('resize', () => {
+  Object.keys(charts).forEach(sym => {
+    charts[sym].forEach((c, i) => {
+      const el = document.getElementById(`${CHART_IDS[i]}-${sym}`);
+      if (el) c.applyOptions({ width: el.clientWidth });
+    });
+  });
+});
+
+// ═══════════════════════════════════════════════
+//  Init
+// ═══════════════════════════════════════════════
+renderWatchlist();   // 顯示空槽
+fetchRadar();
+setInterval(fetchRadar, 60000);
+</script>
+</body>
+</html>
