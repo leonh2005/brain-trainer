@@ -1,0 +1,5 @@
+Unfortunately, I was unable to retrieve any stock data for the ticker symbol `0050` within the specified date range of '2025-03-24' to '2026-03-24'. This could be due to the ticker symbol being incorrect, the date range being outside of available data, or the market being closed on the specified dates.
+
+Additionally, the indicator data for `close_50_sma`, `close_200_sma`, `rsi`, `macd`, `macdh`, `atr`, and `vwma` also returned "N/A: Not a trading day (weekend or holiday)" for all dates within the requested period. This strongly suggests that the specified date range does not contain any valid trading days for the `0050` ticker.
+
+To provide a meaningful analysis, please verify the ticker symbol and ensure that the date range includes active trading days. If you can provide a valid ticker and a date range with trading activity, I would be happy to re-run the analysis.
