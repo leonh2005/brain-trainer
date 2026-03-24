@@ -112,8 +112,9 @@ def build_chart_payload(df: pd.DataFrame, time_col='date', is_intraday=False) ->
 
     def fmt_time(val):
         if is_intraday:
-            ts = pd.Timestamp(val)
-            # Lightweight Charts 分K 用 Unix timestamp（秒）
+            from datetime import timezone, timedelta
+            twn = timezone(timedelta(hours=8))
+            ts = pd.Timestamp(val).replace(tzinfo=twn)
             return int(ts.timestamp())
         else:
             return pd.Timestamp(val).strftime('%Y-%m-%d')

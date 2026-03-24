@@ -1,7 +1,10 @@
 from flask import Flask, render_template, jsonify
-from fugle_client import get_snapshot_all, get_daily_candles, get_intraday_candles
+from shioaji_client import get_snapshot_all, get_daily_candles, get_intraday_candles
 from indicators import build_chart_payload, detect_signals
+from dotenv import load_dotenv
 import os
+
+load_dotenv()
 
 app = Flask(__name__)
 
