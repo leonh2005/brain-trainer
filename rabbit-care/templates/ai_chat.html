@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-title">🤖 AI 照護諮詢</div>
+
+<div class="card" style="margin-bottom:16px;">
+  <p style="color:#666; font-size:14px; line-height:1.8;">
+    AI 會根據你的兔子紀錄（基本資料、近期日誌、就醫紀錄）來回答問題。<br>
+    你可以詢問飲食建議、行為分析、症狀判斷等問題。
+  </p>
+</div>
+
+<!-- 建議問題 -->
+<div style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:20px;">
+  <button class="quick-q btn btn-sm" style="background:#fff0ee;color:#e64a19;border:1px solid #ffccbc;">
+    最近體重趨勢正常嗎？
+  </button>
+  <button class="quick-q btn btn-sm" style="background:#fff0ee;color:#e64a19;border:1px solid #ffccbc;">
+    排便偏少該怎麼辦？
+  </button>
+  <button class="quick-q btn btn-sm" style="background:#fff0ee;color:#e64a19;border:1px solid #ffccbc;">
+    目前飲食有什麼需要調整的？
+  </button>
+  <button class="quick-q btn btn-sm" style="background:#fff0ee;color:#e64a19;border:1px solid #ffccbc;">
+    根據年齡建議哪些保健重點？
+  </button>
+  <button class="quick-q btn btn-sm" style="background:#fff0ee;color:#e64a19;border:1px solid #ffccbc;">
+    有哪些症狀需要立刻就醫？
+  </button>
+</div>
+
+<!-- 對話區 -->
+<div id="chat-box" style="
+  background:white; border-radius:14px; padding:20px;
+  min-height:300px; max-height:500px; overflow-y:auto;
+  box-shadow:0 2px 12px rgba(0,0,0,0.07); margin-bottom:16px;
+">
+  <div class="msg-ai">
+    <div style="font-size:13px; color:#888; margin-bottom:4px;">🤖 AI 顧問</div>
+    <div style="background:#fff8f5; border-radius:10px; padding:14px; border-left:3px solid #ff7043; font-size:15px; line-height:1.8; color:#333;">
+      你好！我是你的兔子照護顧問。我已載入了你的兔子紀錄，有任何照護問題都可以問我。
+    </div>
+  </div>
+</div>
+
+<!-- 輸入框 -->
+<div style="display:flex; gap:10px;">
+  <input id="q-input" type="text" placeholder="輸入你的問題..."
+    style="flex:1; padding:12px 16px; border:1.5px solid #e0e0e0; border-radius:10px;
+           font-size:15px; font-family:inherit; outline:none;"
+    onfocus="this.style.borderColor='#ff7043'"
+    onblur="this.style.borderColor='#e0e0e0'"
+  >
+  <button id="send-btn" onclick="sendQuestion()" class="btn btn-primary">送出</button>
+</div>
+
+<script>
+  // 快速問題
+  document.querySelectorAll('.quick-q').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.getElementById('q-input').value = btn.textContent.trim();
+      sendQuestion();
+    });
+  });
+
+  // Enter 鍵送出
+  document.getElementById('q-input').addEventListener('keydown', e => {
+    if (e.key === 'Enter') sendQuestion();
+  });
+
+  async function sendQuestion() {
+    const input = document.getElementById('q-input');
+    const question = input.value.trim();
+    if (!question) return;
+
+    const chatBox = document.getElementById('chat-box');
+    const sendBtn = document.getElementById('send-btn');
+
+    // 顯示使用者訊息
+    chatBox.innerHTML += `
+      <div style="text-align:right; margin-top:16px;">
+        <div style="font-size:13px; color:#888; margin-bottom:4px;">你</div>
+        <div style="display:inline-block; background:#ff7043; color:white; border-radius:10px;
+                    padding:12px 16px; max-width:80%; font-size:15px; line-height:1.6; text-align:left;">
+          ${escapeHtml(question)}
+        </div>
+      </div>`;
+
+    input.value = '';
+    sendBtn.disabled = true;
+    sendBtn.textContent = '思考中...';
+    chatBox.scrollTop = chatBox.scrollHeight;
+
+    // 顯示載入中
+    const loadingId = 'loading-' + Date.now();
+    chatBox.innerHTML += `
+      <div id="${loadingId}" class="msg-ai" style="margin-top:16px;">
+        <div style="font-size:13px; color:#888; margin-bottom:4px;">🤖 AI 顧問</div>
+        <div style="background:#f5f5f5; border-radius:10px; padding:14px; color:#aaa; font-size:15px;">
+          正在思考中...
+        </div>
+      </div>`;
+    chatBox.scrollTop = chatBox.scrollHeight;
+
+    try {
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ question })
+      });
+      const data = await res.json();
+
+      document.getElementById(loadingId).remove();
+
+      const answer = data.answer || data.error || '發生錯誤';
+      chatBox.innerHTML += `
+        <div class="msg-ai" style="margin-top:16px;">
+          <div style="font-size:13px; color:#888; margin-bottom:4px;">🤖 AI 顧問</div>
+          <div style="background:#fff8f5; border-radius:10px; padding:14px;
+                      border-left:3px solid #ff7043; font-size:15px; line-height:1.8; color:#333;
+                      white-space:pre-wrap;">
+            ${escapeHtml(answer)}
+          </div>
+        </div>`;
+    } catch (err) {
+      document.getElementById(loadingId).remove();
+      chatBox.innerHTML += `<div style="color:red; margin-top:8px;">連線錯誤，請稍後再試</div>`;
+    }
+
+    sendBtn.disabled = false;
+    sendBtn.textContent = '送出';
+    chatBox.scrollTop = chatBox.scrollHeight;
+  }
+
+  function escapeHtml(text) {
+    return text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+</script>
+{% endblock %}

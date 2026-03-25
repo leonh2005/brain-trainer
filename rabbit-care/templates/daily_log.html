@@ -1,0 +1,173 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-title">📋 每日日誌</div>
+
+<div class="card">
+  <h2>新增紀錄</h2>
+  <form method="POST">
+    <div class="form-row">
+      <div class="form-group">
+        <label>日期 *</label>
+        <input type="date" name="log_date" required value="{{ today }}">
+      </div>
+      <div class="form-group">
+        <label>體重 (kg)</label>
+        <input type="number" name="weight" step="0.01" placeholder="例：1.85">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>食物</label>
+        <input type="text" name="food" placeholder="例：提摩西草、蘿蔔葉、少量苜蓿">
+      </div>
+      <div class="form-group">
+        <label>飲水狀況</label>
+        <input type="text" name="water" placeholder="例：正常、約 100ml、偏少">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>排便狀況</label>
+        <select name="poop">
+          <option value="">-- 選擇 --</option>
+          <option value="正常">正常</option>
+          <option value="偏少">偏少</option>
+          <option value="偏多">偏多</option>
+          <option value="軟便">軟便</option>
+          <option value="盲腸便偏多">盲腸便偏多</option>
+          <option value="未見排便">未見排便</option>
+          <option value="異常（顆粒變小）">異常（顆粒變小）</option>
+          <option value="異常（顏色異常）">異常（顏色異常）</option>
+          <option value="異常（帶血）">異常（帶血）</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>&nbsp;</label>
+        <button type="submit" class="btn btn-primary" style="margin-top:2px; width:100%;">儲存</button>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>健康觀察</label>
+      <textarea name="health_note" placeholder="活力、行為、外觀、食慾等任何觀察..."></textarea>
+    </div>
+  </form>
+</div>
+
+<!-- 歷史紀錄 -->
+<div class="card">
+  <h2>歷史紀錄</h2>
+  {% if logs %}
+  <table>
+    <tr>
+      <th>日期</th><th>體重</th><th>食物</th><th>飲水</th><th>排便</th><th>觀察</th><th></th>
+    </tr>
+    {% for log in logs %}
+    <tr>
+      <td>{{ log.log_date }}</td>
+      <td>{% if log.weight %}{{ log.weight }}kg{% else %}-{% endif %}</td>
+      <td>{{ log.food or '-' }}</td>
+      <td>{{ log.water or '-' }}</td>
+      <td>
+        {% if log.poop %}
+          {% if '異常' in log.poop or '未見' in log.poop %}
+            <span class="badge badge-red">{{ log.poop }}</span>
+          {% elif '偏少' in log.poop or '軟便' in log.poop %}
+            <span class="badge badge-orange">{{ log.poop }}</span>
+          {% else %}
+            <span class="badge badge-green">{{ log.poop }}</span>
+          {% endif %}
+        {% else %}-{% endif %}
+      </td>
+      <td style="max-width:200px;">{{ log.health_note or '-' }}</td>
+      <td style="white-space:nowrap;">
+        <button class="btn btn-sm" style="background:#e8f5e9;color:#2e7d32;border:1px solid #c8e6c9;"
+          onclick="openEditLog({{ log.id }},'{{ log.log_date }}','{{ log.weight or '' }}',
+            '{{ (log.food or '')|replace("'","\\'") }}','{{ log.water or '' }}',
+            '{{ log.poop or '' }}','{{ (log.health_note or '')|replace("'","\\'") }}')">編輯</button>
+        <form method="POST" action="/log/{{ log.id }}/delete" style="display:inline"
+              onsubmit="return confirm('確定刪除？')">
+          <button type="submit" class="btn btn-sm btn-danger">刪除</button>
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </table>
+  {% else %}
+  <p class="text-muted">尚無紀錄</p>
+  {% endif %}
+</div>
+
+<!-- 編輯彈窗 -->
+<div id="edit-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.4);
+     z-index:1000; align-items:center; justify-content:center;">
+  <div style="background:white; border-radius:16px; padding:28px; width:90%; max-width:520px;
+              max-height:90vh; overflow-y:auto; box-shadow:0 8px 32px rgba(0,0,0,0.2);">
+    <h3 style="margin-bottom:20px; color:#ff7043;">編輯日誌</h3>
+    <form id="edit-form" method="POST">
+      <div class="form-row">
+        <div class="form-group">
+          <label>日期</label>
+          <input type="date" name="log_date" id="e-date" required>
+        </div>
+        <div class="form-group">
+          <label>體重 (kg)</label>
+          <input type="number" name="weight" id="e-weight" step="0.01">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>食物</label>
+          <input type="text" name="food" id="e-food">
+        </div>
+        <div class="form-group">
+          <label>飲水</label>
+          <input type="text" name="water" id="e-water">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>排便</label>
+        <select name="poop" id="e-poop">
+          <option value="">-- 選擇 --</option>
+          <option value="正常">正常</option>
+          <option value="偏少">偏少</option>
+          <option value="偏多">偏多</option>
+          <option value="軟便">軟便</option>
+          <option value="盲腸便偏多">盲腸便偏多</option>
+          <option value="未見排便">未見排便</option>
+          <option value="異常（顆粒變小）">異常（顆粒變小）</option>
+          <option value="異常（顏色異常）">異常（顏色異常）</option>
+          <option value="異常（帶血）">異常（帶血）</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>健康觀察</label>
+        <textarea name="health_note" id="e-note"></textarea>
+      </div>
+      <div style="display:flex; gap:10px; justify-content:flex-end;">
+        <button type="button" onclick="closeEditLog()" class="btn"
+          style="background:#f5f5f5; color:#555;">取消</button>
+        <button type="submit" class="btn btn-primary">儲存</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+function openEditLog(id, date, weight, food, water, poop, note) {
+  document.getElementById('edit-form').action = '/log/' + id + '/edit';
+  document.getElementById('e-date').value = date;
+  document.getElementById('e-weight').value = weight;
+  document.getElementById('e-food').value = food;
+  document.getElementById('e-water').value = water;
+  document.getElementById('e-poop').value = poop;
+  document.getElementById('e-note').value = note;
+  document.getElementById('edit-modal').style.display = 'flex';
+}
+function closeEditLog() {
+  document.getElementById('edit-modal').style.display = 'none';
+}
+document.getElementById('edit-modal').addEventListener('click', function(e) {
+  if (e.target === this) closeEditLog();
+});
+</script>
+{% endblock %}

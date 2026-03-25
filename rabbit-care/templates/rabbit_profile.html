@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-title">🐰 兔子基本資料</div>
+
+<div class="card">
+  <form method="POST" enctype="multipart/form-data">
+    <!-- 照片上傳 -->
+    <div class="form-group" style="text-align:center; margin-bottom:24px;">
+      {% if rabbit and rabbit.photo %}
+      <img src="/uploads/{{ rabbit.photo }}" id="preview-img"
+           style="width:120px; height:120px; border-radius:50%; object-fit:cover; border:3px solid #ff7043; margin-bottom:12px; display:block; margin:0 auto 12px;">
+      {% else %}
+      <div id="preview-placeholder" style="width:120px; height:120px; border-radius:50%; background:#fff0eb; border:3px dashed #ff7043; display:flex; align-items:center; justify-content:center; font-size:48px; margin:0 auto 12px;">🐰</div>
+      <img id="preview-img" style="width:120px; height:120px; border-radius:50%; object-fit:cover; border:3px solid #ff7043; margin:0 auto 12px; display:none;">
+      {% endif %}
+      <label style="cursor:pointer; display:inline-block;">
+        <span class="btn btn-sm" style="background:#fff0eb; color:#ff7043; border:1px solid #ffccbc;">📷 上傳照片</span>
+        <input type="file" name="photo" id="photo-input" accept="image/*" style="display:none;" onchange="previewPhoto(this)">
+      </label>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>名字 *</label>
+        <input type="text" name="name" required value="{{ rabbit.name if rabbit else '' }}" placeholder="例：小白">
+      </div>
+      <div class="form-group">
+        <label>品種</label>
+        <input type="text" name="breed" value="{{ rabbit.breed if rabbit else '' }}" placeholder="例：荷蘭侏儒兔">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>生日</label>
+        <input type="date" name="birthday" value="{{ rabbit.birthday if rabbit else '' }}">
+      </div>
+      <div class="form-group">
+        <label>性別</label>
+        <select name="gender">
+          <option value="">-- 選擇 --</option>
+          <option value="公" {% if rabbit and rabbit.gender == '公' %}selected{% endif %}>公</option>
+          <option value="母" {% if rabbit and rabbit.gender == '母' %}selected{% endif %}>母</option>
+          <option value="已結紮（公）" {% if rabbit and rabbit.gender == '已結紮（公）' %}selected{% endif %}>已結紮（公）</option>
+          <option value="已結紮（母）" {% if rabbit and rabbit.gender == '已結紮（母）' %}selected{% endif %}>已結紮（母）</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>習慣與個性描述</label>
+      <textarea name="habits" placeholder="例：喜歡早上活動、怕陌生人、習慣在固定角落排便、愛吃香蜂草...">{{ rabbit.habits if rabbit else '' }}</textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">儲存</button>
+  </form>
+</div>
+
+<script>
+function previewPhoto(input) {
+  if (!input.files || !input.files[0]) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const img = document.getElementById('preview-img');
+    const ph = document.getElementById('preview-placeholder');
+    img.src = e.target.result;
+    img.style.display = 'block';
+    if (ph) ph.style.display = 'none';
+  };
+  reader.readAsDataURL(input.files[0]);
+}
+</script>
+{% endblock %}

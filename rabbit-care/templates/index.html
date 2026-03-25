@@ -1,0 +1,192 @@
+{% extends "base.html" %}
+{% block content %}
+
+{% if not rabbit %}
+<div class="card" style="text-align:center; padding: 48px;">
+  <div style="font-size:64px; margin-bottom:16px;">🐰</div>
+  <h2 style="color:#333; margin-bottom:12px;">歡迎使用兔子照護系統</h2>
+  <p style="color:#888; margin-bottom:24px;">請先建立你的兔子資料</p>
+  <a href="/rabbit" class="btn btn-primary">建立兔子資料</a>
+</div>
+{% else %}
+
+<!-- 提醒事項 -->
+{% if reminders %}
+<div style="margin-bottom:20px;">
+  {% for r in reminders %}
+  <div style="
+    background: {% if r.type == 'danger' %}#ffebee{% elif r.type == 'warning' %}#fff8e1{% else %}#e3f2fd{% endif %};
+    border-left: 4px solid {% if r.type == 'danger' %}#e53935{% elif r.type == 'warning' %}#f9a825{% else %}#1976d2{% endif %};
+    padding: 12px 16px; border-radius: 0 8px 8px 0; margin-bottom: 8px;
+    font-size: 14px; color: #333;
+  ">{{ r.icon }} {{ r.text }}</div>
+  {% endfor %}
+</div>
+{% endif %}
+
+<!-- 兔子資料卡 -->
+<div class="card" style="display:flex; align-items:center; gap:24px; flex-wrap:wrap;">
+  {% if rabbit.photo %}
+  <img src="/uploads/{{ rabbit.photo }}" style="width:88px; height:88px; border-radius:50%; object-fit:cover; border:3px solid #ff7043; flex-shrink:0;">
+  {% else %}
+  <div style="font-size:72px; flex-shrink:0;">🐰</div>
+  {% endif %}
+  <div style="flex:1;">
+    <div style="font-size:26px; font-weight:bold; color:#333;">{{ rabbit.name }}</div>
+    <div style="color:#888; margin-top:6px; font-size:15px;">
+      {{ rabbit.breed or '品種不明' }} ·
+      {% if age %}{{ age }}{% endif %}
+      {% if rabbit.gender %} · {{ rabbit.gender }}{% endif %}
+    </div>
+    {% if rabbit.habits %}
+    <div style="margin-top:10px; font-size:14px; color:#555; background:#fff8f5; padding:10px 14px; border-radius:8px; border-left:3px solid #ff7043;">
+      {{ rabbit.habits }}
+    </div>
+    {% endif %}
+  </div>
+  <a href="/rabbit" class="btn btn-primary btn-sm">編輯</a>
+</div>
+
+<!-- 體重趨勢 -->
+{% if weight_values != '[]' %}
+<div class="card">
+  <h2>📈 體重趨勢</h2>
+  <canvas id="weightChart" height="80"></canvas>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  new Chart(document.getElementById('weightChart'), {
+    type: 'line',
+    data: {
+      labels: {{ weight_labels | safe }},
+      datasets: [{
+        label: '體重 (kg)',
+        data: {{ weight_values | safe }},
+        borderColor: '#ff7043',
+        backgroundColor: 'rgba(255,112,67,0.08)',
+        tension: 0.3, fill: true,
+        pointBackgroundColor: '#ff7043',
+      }]
+    },
+    options: {
+      plugins: { legend: { display: false } },
+      scales: { y: { beginAtZero: false } }
+    }
+  });
+</script>
+{% endif %}
+
+<div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; flex-wrap:wrap;">
+
+<!-- 近期日誌 -->
+<div class="card">
+  <h2>📋 近期日誌</h2>
+  {% if recent_logs %}
+  <table>
+    <tr><th>日期</th><th>體重</th><th>觀察</th></tr>
+    {% for log in recent_logs %}
+    <tr>
+      <td>{{ log.log_date }}</td>
+      <td>{% if log.weight %}{{ log.weight }}kg{% else %}-{% endif %}</td>
+      <td style="max-width:150px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
+        {{ log.health_note or log.poop or '-' }}
+      </td>
+    </tr>
+    {% endfor %}
+  </table>
+  {% else %}
+  <p class="text-muted">尚無日誌</p>
+  {% endif %}
+  <div class="mt-16" style="display:flex; gap:8px;">
+    <a href="/log" class="btn btn-primary btn-sm">新增日誌</a>
+    <a href="/export/logs" class="btn btn-sm" style="background:#e8f5e9; color:#2e7d32;">📥 匯出</a>
+  </div>
+</div>
+
+<!-- 就醫紀錄 -->
+<div class="card">
+  <h2>🏥 就醫紀錄</h2>
+  {% if recent_visits %}
+  <table>
+    <tr><th>日期</th><th>症狀</th><th>診斷</th></tr>
+    {% for v in recent_visits %}
+    <tr>
+      <td>{{ v.visit_date }}</td>
+      <td>{{ v.symptoms or '-' }}</td>
+      <td>{{ v.diagnosis or '-' }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+  {% else %}
+  <p class="text-muted">尚無就醫紀錄</p>
+  {% endif %}
+  <div class="mt-16" style="display:flex; gap:8px;">
+    <a href="/vet" class="btn btn-primary btn-sm">新增紀錄</a>
+    <a href="/export/vet" class="btn btn-sm" style="background:#e8f5e9; color:#2e7d32;">📥 匯出</a>
+  </div>
+</div>
+
+</div>
+
+<!-- 目前用藥 -->
+{% if active_meds %}
+<div class="card">
+  <h2>💊 目前用藥</h2>
+  <table>
+    <tr><th>藥名</th><th>劑量</th><th>頻率</th><th>至</th></tr>
+    {% for m in active_meds %}
+    <tr>
+      <td><strong>{{ m.name }}</strong></td>
+      <td>{{ m.dose or '-' }}</td>
+      <td>{{ m.frequency or '-' }}</td>
+      <td>{{ m.end_date or '持續中' }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+  <div class="mt-16">
+    <a href="/med" class="btn btn-primary btn-sm">管理用藥</a>
+  </div>
+</div>
+{% endif %}
+
+<!-- 快速新增日誌 -->
+<div class="card">
+  <h2>⚡ 快速記錄今日狀況</h2>
+  <form method="POST" action="/log">
+    <input type="date" name="log_date" value="{{ today }}" required>
+    <div class="form-row">
+      <div class="form-group">
+        <label>體重 (kg)</label>
+        <input type="number" name="weight" step="0.01" placeholder="例：1.85">
+      </div>
+      <div class="form-group">
+        <label>食物</label>
+        <input type="text" name="food" placeholder="例：提摩西草、蔬菜">
+      </div>
+      <div class="form-group">
+        <label>飲水</label>
+        <input type="text" name="water" placeholder="例：正常、較少">
+      </div>
+      <div class="form-group">
+        <label>排便</label>
+        <select name="poop">
+          <option value="">-- 選擇 --</option>
+          <option value="正常">正常</option>
+          <option value="偏少">偏少</option>
+          <option value="偏多">偏多</option>
+          <option value="軟便">軟便</option>
+          <option value="未見排便">未見排便</option>
+          <option value="異常">異常</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>健康觀察</label>
+      <textarea name="health_note" placeholder="活力、行為、外觀等任何觀察..."></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">儲存</button>
+  </form>
+</div>
+
+{% endif %}
+{% endblock %}
