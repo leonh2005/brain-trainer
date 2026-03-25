@@ -111,6 +111,13 @@ body{background:#131722;color:#d1d4dc;font-family:'Segoe UI',system-ui,sans-seri
   <div class="hdr-right">
     <span><span class="dot"></span><span id="mkt-status">載入中</span></span>
     <span id="upd-time">--:--:--</span>
+    <div style="display:flex;align-items:center;gap:4px;">
+      <input id="search-input" type="text" placeholder="輸入代碼" maxlength="6"
+        style="width:80px;padding:3px 8px;border-radius:4px;border:1px solid #2196f360;background:#1e222d;color:#d1d4dc;font-size:12px;outline:none;"
+        onkeydown="if(event.key==='Enter') searchStock()"
+        oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+      <button class="btn-refresh" onclick="searchStock()">🔍 加入</button>
+    </div>
     <button class="btn-refresh" onclick="fetchRadar()">🔄 刷新雷達</button>
   </div>
 </div>
@@ -567,6 +574,35 @@ window.addEventListener('resize', () => {
     });
   });
 });
+
+// ═══════════════════════════════════════════════
+//  Manual Search
+// ═══════════════════════════════════════════════
+async function searchStock() {
+  const input = document.getElementById('search-input');
+  const symbol = input.value.trim().toUpperCase();
+  if (!symbol) return;
+  if (watchlist.some(w => w.symbol === symbol)) {
+    alert(`${symbol} 已在監控清單中`);
+    return;
+  }
+  if (watchlist.length >= MAX_WL) {
+    alert('自選清單已滿（最多6檔）');
+    return;
+  }
+  try {
+    const info = await fetch(`api/stock/${symbol}/info`).then(r => r.json());
+    if (info.error) throw new Error(info.error);
+    watchlist.push({ symbol, name: info.name || symbol, price: info.price, change_pct: info.change_pct });
+    renderWatchlist();
+    fetchRadar();
+    input.value = '';
+    document.getElementById('mkt-status').textContent = `已加入 ${info.name || symbol}`;
+    setTimeout(() => document.getElementById('mkt-status').textContent = '盤中運行', 3000);
+  } catch(e) {
+    alert(`找不到股票代碼：${symbol}`);
+  }
+}
 
 // ═══════════════════════════════════════════════
 //  Init

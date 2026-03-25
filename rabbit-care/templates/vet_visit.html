@@ -1,0 +1,149 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-title">🏥 就醫紀錄</div>
+
+<div class="card">
+  <h2>新增就醫紀錄</h2>
+  <form method="POST">
+    <div class="form-row">
+      <div class="form-group">
+        <label>日期 *</label>
+        <input type="date" name="visit_date" required value="{{ today }}">
+      </div>
+      <div class="form-group">
+        <label>獸醫師 / 醫院</label>
+        <input type="text" name="vet_name" placeholder="例：王醫師 / 動物醫院名稱">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>症狀</label>
+      <input type="text" name="symptoms" placeholder="例：食慾不振、腹部膨脹">
+    </div>
+    <div class="form-group">
+      <label>診斷</label>
+      <input type="text" name="diagnosis" placeholder="例：腸胃蠕動不足（GI stasis）">
+    </div>
+    <div class="form-group">
+      <label>治療 / 用藥</label>
+      <textarea name="treatment" placeholder="例：注射促腸胃蠕動藥，口服止痛藥，補充水分..."></textarea>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>備註</label>
+        <textarea name="note" placeholder="醫囑、後續追蹤事項..."></textarea>
+      </div>
+      <div class="form-group">
+        <label>下次回診日期</label>
+        <input type="date" name="next_visit">
+      </div>
+    </div>
+    <button type="submit" class="btn btn-primary">儲存</button>
+  </form>
+</div>
+
+<div class="card">
+  <h2>就醫歷史</h2>
+  {% if visits %}
+  <table>
+    <tr><th>日期</th><th>症狀</th><th>診斷</th><th>治療</th><th>醫師</th><th>回診</th><th></th></tr>
+    {% for v in visits %}
+    <tr>
+      <td>{{ v.visit_date }}</td>
+      <td>{{ v.symptoms or '-' }}</td>
+      <td>{{ v.diagnosis or '-' }}</td>
+      <td style="max-width:160px;">{{ v.treatment or '-' }}</td>
+      <td>{{ v.vet_name or '-' }}</td>
+      <td>{% if v.next_visit %}<span class="badge badge-orange">{{ v.next_visit }}</span>{% else %}-{% endif %}</td>
+      <td style="white-space:nowrap;">
+        <button class="btn btn-sm" style="background:#e8f5e9;color:#2e7d32;border:1px solid #c8e6c9;"
+          onclick="openEditVet({{ v.id }},'{{ v.visit_date }}',
+            '{{ (v.symptoms or '')|replace("'","\\'") }}',
+            '{{ (v.diagnosis or '')|replace("'","\\'") }}',
+            '{{ (v.treatment or '')|replace("'","\\'") }}',
+            '{{ (v.vet_name or '')|replace("'","\\'") }}',
+            '{{ (v.note or '')|replace("'","\\'") }}',
+            '{{ v.next_visit or '' }}')">編輯</button>
+        <form method="POST" action="/vet/{{ v.id }}/delete" style="display:inline"
+              onsubmit="return confirm('確定刪除？')">
+          <button type="submit" class="btn btn-sm btn-danger">刪除</button>
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </table>
+  <div class="mt-16" style="display:flex; gap:8px;">
+    <a href="/export/vet" class="btn btn-sm" style="background:#e8f5e9; color:#2e7d32;">📥 匯出 CSV</a>
+  </div>
+  {% else %}
+  <p class="text-muted">尚無就醫紀錄</p>
+  {% endif %}
+</div>
+
+<!-- 編輯彈窗 -->
+<div id="edit-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.4);
+     z-index:1000; align-items:center; justify-content:center;">
+  <div style="background:white; border-radius:16px; padding:28px; width:90%; max-width:520px;
+              max-height:90vh; overflow-y:auto; box-shadow:0 8px 32px rgba(0,0,0,0.2);">
+    <h3 style="margin-bottom:20px; color:#ff7043;">編輯就醫紀錄</h3>
+    <form id="edit-form" method="POST">
+      <div class="form-row">
+        <div class="form-group">
+          <label>日期</label>
+          <input type="date" name="visit_date" id="e-date" required>
+        </div>
+        <div class="form-group">
+          <label>獸醫師 / 醫院</label>
+          <input type="text" name="vet_name" id="e-vet">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>症狀</label>
+        <input type="text" name="symptoms" id="e-symptoms">
+      </div>
+      <div class="form-group">
+        <label>診斷</label>
+        <input type="text" name="diagnosis" id="e-diagnosis">
+      </div>
+      <div class="form-group">
+        <label>治療 / 用藥</label>
+        <textarea name="treatment" id="e-treatment"></textarea>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>備註</label>
+          <textarea name="note" id="e-note"></textarea>
+        </div>
+        <div class="form-group">
+          <label>下次回診</label>
+          <input type="date" name="next_visit" id="e-next-visit">
+        </div>
+      </div>
+      <div style="display:flex; gap:10px; justify-content:flex-end;">
+        <button type="button" onclick="closeEditVet()" class="btn"
+          style="background:#f5f5f5; color:#555;">取消</button>
+        <button type="submit" class="btn btn-primary">儲存</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+function openEditVet(id, date, symptoms, diagnosis, treatment, vet, note, next_visit) {
+  document.getElementById('edit-form').action = '/vet/' + id + '/edit';
+  document.getElementById('e-date').value = date;
+  document.getElementById('e-symptoms').value = symptoms;
+  document.getElementById('e-diagnosis').value = diagnosis;
+  document.getElementById('e-treatment').value = treatment;
+  document.getElementById('e-vet').value = vet;
+  document.getElementById('e-note').value = note;
+  document.getElementById('e-next-visit').value = next_visit;
+  document.getElementById('edit-modal').style.display = 'flex';
+}
+function closeEditVet() {
+  document.getElementById('edit-modal').style.display = 'none';
+}
+document.getElementById('edit-modal').addEventListener('click', function(e) {
+  if (e.target === this) closeEditVet();
+});
+</script>
+{% endblock %}

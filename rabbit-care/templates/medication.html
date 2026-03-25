@@ -1,0 +1,167 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-title">💊 藥物紀錄</div>
+
+<!-- 新增藥物 -->
+<div class="card">
+  <h2>新增用藥</h2>
+  <form method="POST">
+    <div class="form-row">
+      <div class="form-group">
+        <label>藥名 *</label>
+        <input type="text" name="name" required placeholder="例：消炎藥、益生菌">
+      </div>
+      <div class="form-group">
+        <label>劑量</label>
+        <input type="text" name="dose" placeholder="例：0.3ml、半顆">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>頻率</label>
+        <input type="text" name="frequency" placeholder="例：每天2次、早晚各一次">
+      </div>
+      <div class="form-group">
+        <label>開始日期 *</label>
+        <input type="date" name="start_date" value="{{ today }}" required>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>結束日期</label>
+        <input type="date" name="end_date" placeholder="留空表示持續用藥">
+      </div>
+      <div class="form-group">
+        <label>備注</label>
+        <input type="text" name="note" placeholder="例：需與食物一起服用">
+      </div>
+    </div>
+    <button type="submit" class="btn btn-primary">新增</button>
+  </form>
+</div>
+
+<!-- 用藥清單 -->
+{% if meds %}
+<div class="card">
+  <h2>用藥紀錄</h2>
+  <table>
+    <tr>
+      <th>狀態</th>
+      <th>藥名</th>
+      <th>劑量／頻率</th>
+      <th>開始</th>
+      <th>結束</th>
+      <th>備注</th>
+      <th>操作</th>
+    </tr>
+    {% for m in meds %}
+    <tr>
+      <td>
+        {% if m.active %}
+          <span class="badge badge-green">用藥中</span>
+        {% else %}
+          <span class="badge" style="background:#f5f5f5; color:#999;">已停藥</span>
+        {% endif %}
+      </td>
+      <td><strong>{{ m.name }}</strong></td>
+      <td>{{ m.dose or '-' }}{% if m.frequency %} · {{ m.frequency }}{% endif %}</td>
+      <td>{{ m.start_date }}</td>
+      <td>{{ m.end_date or '持續中' }}</td>
+      <td class="text-muted">{{ m.note or '-' }}</td>
+      <td>
+        <button class="btn btn-sm btn-primary" onclick="openEdit({{ m.id }}, '{{ m.name }}', '{{ m.dose or '' }}', '{{ m.frequency or '' }}', '{{ m.start_date }}', '{{ m.end_date or '' }}', '{{ m.note or '' }}', {{ m.active }})">編輯</button>
+        {% if m.active %}
+        <form method="POST" action="/med/{{ m.id }}/stop" style="display:inline;">
+          <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('確認停藥？')">停藥</button>
+        </form>
+        {% endif %}
+        <form method="POST" action="/med/{{ m.id }}/delete" style="display:inline;">
+          <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('確認刪除？')">刪除</button>
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </table>
+
+  <div class="mt-16" style="display:flex; gap:10px;">
+    <a href="/export/med" class="btn btn-sm" style="background:#e8f5e9; color:#2e7d32;">📥 匯出 CSV</a>
+  </div>
+</div>
+{% else %}
+<div class="card" style="text-align:center; padding:40px;">
+  <div style="font-size:48px; margin-bottom:12px;">💊</div>
+  <p class="text-muted">尚無用藥紀錄</p>
+</div>
+{% endif %}
+
+<!-- 編輯 Modal -->
+<div id="edit-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.45); z-index:200; align-items:center; justify-content:center;">
+  <div style="background:white; border-radius:16px; padding:28px; width:90%; max-width:480px; box-shadow:0 8px 32px rgba(0,0,0,0.2);">
+    <h2 style="color:#ff7043; margin-bottom:20px;">編輯用藥</h2>
+    <form method="POST" id="edit-form">
+      <div class="form-row">
+        <div class="form-group">
+          <label>藥名 *</label>
+          <input type="text" name="name" id="e-name" required>
+        </div>
+        <div class="form-group">
+          <label>劑量</label>
+          <input type="text" name="dose" id="e-dose">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>頻率</label>
+          <input type="text" name="frequency" id="e-frequency">
+        </div>
+        <div class="form-group">
+          <label>開始日期 *</label>
+          <input type="date" name="start_date" id="e-start" required>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>結束日期</label>
+          <input type="date" name="end_date" id="e-end">
+        </div>
+        <div class="form-group">
+          <label>備注</label>
+          <input type="text" name="note" id="e-note">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>狀態</label>
+        <select name="active" id="e-active">
+          <option value="1">用藥中</option>
+          <option value="0">已停藥</option>
+        </select>
+      </div>
+      <div style="display:flex; gap:10px; margin-top:8px;">
+        <button type="submit" class="btn btn-primary">儲存</button>
+        <button type="button" class="btn btn-danger" onclick="closeEdit()">取消</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+function openEdit(id, name, dose, freq, start, end, note, active) {
+  document.getElementById('edit-form').action = `/med/${id}/edit`;
+  document.getElementById('e-name').value = name;
+  document.getElementById('e-dose').value = dose;
+  document.getElementById('e-frequency').value = freq;
+  document.getElementById('e-start').value = start;
+  document.getElementById('e-end').value = end;
+  document.getElementById('e-note').value = note;
+  document.getElementById('e-active').value = active ? '1' : '0';
+  const m = document.getElementById('edit-modal');
+  m.style.display = 'flex';
+}
+function closeEdit() {
+  document.getElementById('edit-modal').style.display = 'none';
+}
+document.getElementById('edit-modal').addEventListener('click', function(e) {
+  if (e.target === this) closeEdit();
+});
+</script>
+{% endblock %}

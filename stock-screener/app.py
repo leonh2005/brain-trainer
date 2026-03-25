@@ -14,6 +14,31 @@ def index():
     return render_template('index.html')
 
 
+@app.route('/api/stock/<symbol>/info')
+def stock_info(symbol):
+    """取得單一股票基本資訊（名稱 + 即時價格）"""
+    from shioaji_client import _get_api, _get_stock_list
+    try:
+        api = _get_api()
+        contract = api.Contracts.Stocks[symbol]
+        if contract is None:
+            return jsonify({'error': 'not found'}), 404
+        snaps = api.snapshots([contract])
+        stock_list = _get_stock_list()
+        name_map = {s['symbol']: s['name'] for s in stock_list}
+        if snaps:
+            s = snaps[0]
+            return jsonify({
+                'symbol': symbol,
+                'name': name_map.get(symbol, symbol),
+                'price': s.close,
+                'change_pct': round(s.change_rate, 2),
+            })
+        return jsonify({'symbol': symbol, 'name': name_map.get(symbol, symbol), 'price': 0, 'change_pct': 0})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
 @app.route('/api/radar')
 def radar():
     """總成交量前 20（不限價格）"""
