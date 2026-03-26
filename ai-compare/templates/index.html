@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Arena</title>
+  <script src="https://cdn.jsdelivr.net/npm/marked@9/marked.min.js"></script>
+  <style>
+    :root {
+      --bg:      #0d1117;
+      --bg2:     #161b22;
+      --bg3:     #1c2128;
+      --bg4:     #21262d;
+      --border:  #30363d;
+      --text:    #e6edf3;
+      --dim:     #8b949e;
+      --accent:  #58a6ff;
+      --green:   #3fb950;
+      --yellow:  #e3b341;
+      --red:     #f85149;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* ── Header ── */
+    .hdr {
+      background: var(--bg2);
+      border-bottom: 1px solid var(--border);
+      padding: 9px 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+    .hdr-brand { font-size: 16px; font-weight: 700; display: flex; align-items: center; gap: 7px; }
+    .hdr-sub   { color: var(--dim); font-size: 12px; }
+    .spacer    { flex: 1; }
+    .lbtns     { display: flex; gap: 3px; }
+    .lbtn {
+      background: var(--bg3); border: 1px solid var(--border); color: var(--dim);
+      width: 28px; height: 28px; border-radius: 5px; cursor: pointer;
+      font-size: 11px; font-weight: 700; transition: all .15s;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .lbtn:hover, .lbtn.on { border-color: var(--accent); color: var(--accent); background: rgba(88,166,255,.1); }
+    .btn {
+      background: var(--bg3); border: 1px solid var(--border); color: var(--text);
+      padding: 5px 13px; border-radius: 6px; cursor: pointer; font-size: 13px;
+      transition: all .15s; white-space: nowrap;
+    }
+    .btn:hover { border-color: var(--accent); }
+
+    /* ── Grid ── */
+    .grid {
+      flex: 1; display: grid; gap: 1px; background: var(--border);
+      overflow: hidden; min-height: 0;
+    }
+    .grid.l1 { grid-template-columns: 1fr; grid-template-rows: 1fr; }
+    .grid.l2 { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr; }
+    .grid.l3 { grid-template-columns: 1fr 1fr 1fr; grid-template-rows: 1fr; }
+    .grid.l4 { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; }
+
+    /* ── Panel ── */
+    .panel { background: var(--bg); display: flex; flex-direction: column; overflow: hidden; }
+
+    .phead {
+      background: var(--bg3); border-bottom: 1px solid var(--border);
+      padding: 8px 12px; display: flex; align-items: center; gap: 8px;
+      flex-shrink: 0;
+    }
+    .svc-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+    .svc-sel {
+      flex: 1; background: var(--bg2); border: 1px solid var(--border); color: var(--text);
+      padding: 4px 8px; border-radius: 5px; font-size: 12px; cursor: pointer;
+    }
+    .svc-sel:focus { outline: none; border-color: var(--accent); }
+    .login-dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: var(--border); flex-shrink: 0; transition: background .3s;
+    }
+    .login-dot.ok      { background: var(--green); }
+    .login-dot.waiting { background: var(--yellow); animation: pulse .8s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.2} }
+
+    .open-btn {
+      background: none; border: 1px solid var(--border); color: var(--dim);
+      padding: 2px 9px; border-radius: 4px; font-size: 11px; cursor: pointer;
+      transition: all .15s; flex-shrink: 0;
+    }
+    .open-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .open-btn.opened { border-color: var(--green); color: var(--green); }
+
+    .stream-dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: transparent; flex-shrink: 0;
+    }
+    .stream-dot.on  { background: var(--accent); animation: pulse .4s infinite; }
+    .stream-dot.err { background: var(--red); }
+
+    .timer { font-size: 11px; color: var(--dim); min-width: 26px; text-align: right; flex-shrink: 0; }
+    .cpbtn {
+      background: none; border: 1px solid transparent; color: var(--dim);
+      padding: 2px 7px; border-radius: 4px; font-size: 11px; cursor: pointer;
+      flex-shrink: 0; transition: all .15s;
+    }
+    .cpbtn:hover { border-color: var(--border); color: var(--text); }
+
+    /* ── Panel body ── */
+    .pbody {
+      flex: 1; overflow-y: auto; padding: 14px;
+      scrollbar-width: thin; scrollbar-color: var(--border) transparent;
+    }
+    .pbody::-webkit-scrollbar { width: 4px; }
+    .pbody::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+    .empty {
+      height: 100%; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 10px;
+    }
+    .empty-icon { font-size: 28px; opacity: .35; }
+    .empty-txt  { font-size: 13px; color: var(--dim); text-align: center; line-height: 1.7; }
+
+    /* Setup hint shown when service not logged in */
+    .setup-hint {
+      height: 100%; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 12px;
+      text-align: center; padding: 20px;
+    }
+    .setup-hint .icon { font-size: 32px; opacity: .5; }
+    .setup-hint p { font-size: 13px; color: var(--dim); line-height: 1.7; }
+    .setup-hint .do-btn {
+      background: var(--accent); color: #0d1117; border: none;
+      padding: 7px 18px; border-radius: 6px; font-size: 13px; font-weight: 600;
+      cursor: pointer; transition: filter .15s;
+    }
+    .setup-hint .do-btn:hover { filter: brightness(1.1); }
+
+    /* ── Messages ── */
+    .msg-q {
+      background: var(--bg3); border-left: 3px solid var(--accent);
+      padding: 7px 11px; margin-bottom: 10px; border-radius: 0 6px 6px 0;
+      font-size: 13px; color: var(--dim); word-break: break-word;
+    }
+    .msg-q strong { display: block; font-size: 11px; margin-bottom: 2px; }
+    .msg-a { font-size: 14px; line-height: 1.75; word-break: break-word; margin-bottom: 6px; }
+    .msg-err { color: var(--red); font-size: 13px; }
+    .divider { border: none; border-top: 1px solid var(--border); margin: 14px 0; }
+
+    /* Markdown */
+    .msg-a p      { margin-bottom: 9px; }
+    .msg-a p:last-child { margin-bottom: 0; }
+    .msg-a h1,.msg-a h2,.msg-a h3 { margin: 12px 0 5px; }
+    .msg-a ul,.msg-a ol { padding-left: 20px; margin-bottom: 9px; }
+    .msg-a li      { margin-bottom: 3px; }
+    .msg-a code    { background: var(--bg3); border: 1px solid var(--border); padding: 1px 5px; border-radius: 3px; font-family: monospace; font-size: 12px; color: #e2b714; }
+    .msg-a pre     { background: var(--bg2); border: 1px solid var(--border); border-radius: 6px; padding: 12px; overflow-x: auto; margin: 8px 0; }
+    .msg-a pre code { background: none; border: none; padding: 0; color: var(--text); }
+    .msg-a blockquote { border-left: 3px solid var(--accent); padding-left: 12px; color: var(--dim); margin: 8px 0; }
+    .msg-a a       { color: var(--accent); }
+    .msg-a table   { width: 100%; border-collapse: collapse; margin: 8px 0; font-size: 13px; }
+    .msg-a th,.msg-a td { border: 1px solid var(--border); padding: 5px 9px; }
+    .msg-a th      { background: var(--bg2); }
+
+    .cursor { display: inline-block; width: 2px; height: 14px; background: var(--accent); animation: blink .7s infinite; vertical-align: middle; margin-left: 2px; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+    /* ── Input ── */
+    .iarea {
+      background: var(--bg2); border-top: 1px solid var(--border);
+      padding: 10px 14px; display: flex; gap: 9px; align-items: flex-end;
+      flex-shrink: 0;
+    }
+    .iwrap { flex: 1; }
+    .ifield {
+      width: 100%; background: var(--bg); border: 1px solid var(--border); color: var(--text);
+      padding: 9px 13px; border-radius: 8px; font-size: 14px; resize: none;
+      min-height: 42px; max-height: 130px; line-height: 1.5; font-family: inherit;
+      transition: border-color .15s;
+    }
+    .ifield:focus { outline: none; border-color: var(--accent); }
+    .ifield::placeholder { color: var(--dim); }
+    .sbtn {
+      background: var(--accent); border: none; color: #0d1117;
+      width: 42px; height: 42px; border-radius: 8px; cursor: pointer;
+      font-size: 18px; flex-shrink: 0; transition: all .15s;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .sbtn:hover    { filter: brightness(1.1); transform: scale(1.04); }
+    .sbtn:disabled { opacity: .35; cursor: not-allowed; transform: none; }
+
+    /* ── New-chat bar ── */
+    .ncbar {
+      background: var(--bg2); border-top: 1px solid var(--border);
+      padding: 4px 14px; display: flex; align-items: center; gap: 8px;
+      font-size: 12px; color: var(--dim); flex-shrink: 0;
+    }
+    .ncbar button {
+      background: none; border: 1px solid var(--border); color: var(--dim);
+      padding: 2px 10px; border-radius: 4px; cursor: pointer; font-size: 11px;
+      transition: all .15s;
+    }
+    .ncbar button:hover { border-color: var(--accent); color: var(--accent); }
+  </style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="hdr">
+  <div class="hdr-brand">⚡ AI Arena</div>
+  <div class="hdr-sub">多模型同步比較</div>
+  <div class="spacer"></div>
+  <div class="lbtns" id="lbtns">
+    <button class="lbtn" onclick="setLayout(1)">1</button>
+    <button class="lbtn" onclick="setLayout(2)">2</button>
+    <button class="lbtn" onclick="setLayout(3)">3</button>
+    <button class="lbtn on" onclick="setLayout(4)">4</button>
+  </div>
+  <button class="btn" onclick="newChatAll()" title="在所有面板開新對話">＋ 新對話</button>
+</div>
+
+<!-- Panels -->
+<div class="grid l4" id="grid"></div>
+
+<!-- New-chat hint bar -->
+<div class="ncbar">
+  <span>每次送出會在同一個對話中繼續</span>
+  <button onclick="newChatAll()">全部開新對話</button>
+</div>
+
+<!-- Input -->
+<div class="iarea">
+  <div class="iwrap">
+    <textarea id="q" class="ifield" rows="1"
+      placeholder="輸入問題，所有已登入的 AI 同時回答… (Enter 送出，Shift+Enter 換行)"></textarea>
+  </div>
+  <button class="sbtn" id="sbtn" onclick="sendAll()">&#9658;</button>
+</div>
+
+<script>
+marked.setOptions({ breaks: true });
+
+/* ── Services config (mirrors backend) ─────────────────────── */
+const SVC_ORDER = ['claude','chatgpt','gemini','grok','copilot'];
+let services = {};   // loaded from /api/services
+let status   = {};   // loaded from /api/status
+
+/* ── Panel state ─────────────────────────────────────────────── */
+let numPanels = 4;
+let panels    = [];  // [{sid, el, messages[], rawText, startTime}]
+let busy      = false;
+
+const DEFAULT_SVCS = ['claude','chatgpt','gemini','grok'];
+
+/* ── Init ────────────────────────────────────────────────────── */
+async function init() {
+  const [s, st] = await Promise.all([
+    fetch('/api/services').then(r => r.json()),
+    fetch('/api/status').then(r => r.json()),
+  ]);
+  services = s;
+  status   = st;
+  renderGrid();
+  pollStatus();
+}
+
+/* ── Status polling ──────────────────────────────────────────── */
+function pollStatus() {
+  setInterval(async () => {
+    try {
+      status = await fetch('/api/status').then(r => r.json());
+      updateStatusDots();
+    } catch(_) {}
+  }, 1000);
+}
+
+function updateStatusDots() {
+  panels.forEach((p, i) => {
+    const ld = document.getElementById(`ld-${i}`);
+    const ob = document.getElementById(`ob-${i}`);
+    const sd = document.getElementById(`sd-${i}`);
+    if (!ld) return;
+
+    const st = status[p.sid] || {};
+    if (st.logged_in) {
+      ld.className = 'login-dot ok';
+      if (ob) { ob.textContent = '已登入'; ob.className = 'open-btn opened'; }
+    } else if (st.opened) {
+      ld.className = 'login-dot waiting';
+      if (ob) { ob.textContent = '請登入'; ob.className = 'open-btn'; }
+    } else {
+      ld.className = 'login-dot';
+      if (ob) { ob.textContent = '開啟'; ob.className = 'open-btn'; }
+    }
+  });
+}
+
+/* ── Grid ────────────────────────────────────────────────────── */
+function renderGrid() {
+  const grid = document.getElementById('grid');
+  grid.className = `grid l${numPanels}`;
+  grid.innerHTML = '';
+  panels = [];
+  for (let i = 0; i < numPanels; i++) {
+    const sid = DEFAULT_SVCS[i] || SVC_ORDER[0];
+    const p = makePanel(i, sid);
+    panels.push(p);
+    grid.appendChild(p.el);
+  }
+  updateStatusDots();
+}
+
+function makePanel(i, sid) {
+  const svc  = services[sid] || { name: sid, color: '#888' };
+  const st   = status[sid]   || {};
+
+  const opts = SVC_ORDER.map(id => {
+    const s = services[id];
+    return s ? `<option value="${id}" ${id===sid?'selected':''}>${s.name}</option>` : '';
+  }).join('');
+
+  const el = document.createElement('div');
+  el.className = 'panel';
+  el.innerHTML = `
+    <div class="phead">
+      <div class="svc-dot" id="dc-${i}" style="background:${svc.color}"></div>
+      <select class="svc-sel" id="ss-${i}" onchange="changeService(${i},this.value)">${opts}</select>
+      <div class="login-dot" id="ld-${i}"></div>
+      <button class="open-btn" id="ob-${i}" onclick="openSvc(${i})">開啟</button>
+      <div class="stream-dot" id="sd-${i}"></div>
+      <div class="timer" id="tm-${i}"></div>
+      <button class="cpbtn" onclick="copyPanel(${i})">複製</button>
+    </div>
+    <div class="pbody" id="pb-${i}">
+      ${renderEmpty(sid, i)}
+    </div>`;
+
+  return { sid, el, messages: [], rawText: '', startTime: null };
+}
+
+function renderEmpty(sid, i) {
+  const st = status[sid] || {};
+  if (!st.opened) {
+    return `<div class="setup-hint">
+      <div class="icon">🌐</div>
+      <p>點下方「開啟」，在彈出的瀏覽器中登入 <strong>${(services[sid]||{name:sid}).name}</strong><br>登入後這裡就會自動就緒</p>
+      <button class="do-btn" onclick="openSvc(${i})">開啟登入</button>
+    </div>`;
+  }
+  return `<div class="empty">
+    <div class="empty-icon">💬</div>
+    <div class="empty-txt">在下方輸入問題<br>所有面板同時回答</div>
+  </div>`;
+}
+
+function changeService(i, sid) {
+  panels[i].sid = sid;
+  panels[i].messages = [];
+  panels[i].rawText  = '';
+  const svc = services[sid] || { color: '#888' };
+  const dc  = document.getElementById(`dc-${i}`);
+  if (dc) dc.style.background = svc.color;
+  const pb  = document.getElementById(`pb-${i}`);
+  if (pb) pb.innerHTML = renderEmpty(sid, i);
+  updateStatusDots();
+}
+
+function setLayout(n) {
+  numPanels = n;
+  document.querySelectorAll('.lbtn').forEach((b,i) => b.classList.toggle('on', i===n-1));
+  renderGrid();
+}
+
+/* ── Open service ────────────────────────────────────────────── */
+async function openSvc(i) {
+  const sid = panels[i].sid;
+  await fetch(`/api/open/${sid}`, { method: 'POST' });
+  const pb = document.getElementById(`pb-${i}`);
+  if (pb) {
+    pb.innerHTML = `<div class="setup-hint">
+      <div class="icon">🔑</div>
+      <p>瀏覽器已開啟 <strong>${(services[sid]||{name:sid}).name}</strong><br>請在其中登入，完成後狀態會自動更新為綠色</p>
+    </div>`;
+  }
+  const ob = document.getElementById(`ob-${i}`);
+  if (ob) ob.textContent = '請登入';
+}
+
+/* ── Send to all ─────────────────────────────────────────────── */
+async function sendAll() {
+  const q  = document.getElementById('q');
+  const msg = q.value.trim();
+  if (!msg || busy) return;
+
+  q.value = '';
+  q.style.height = 'auto';
+  busy = true;
+  document.getElementById('sbtn').disabled = true;
+
+  const activePanels = panels.filter(p => (status[p.sid]||{}).logged_in);
+  if (!activePanels.length) {
+    alert('沒有已登入的服務。請先點「開啟」並在瀏覽器中登入。');
+    busy = false;
+    document.getElementById('sbtn').disabled = false;
+    return;
+  }
+
+  // Prepare each active panel
+  panels.forEach((p, i) => {
+    const isActive = (status[p.sid]||{}).logged_in;
+    if (!isActive) return;
+
+    p.messages.push({ role: 'user', content: msg });
+    p.rawText = '';
+
+    const pb = document.getElementById(`pb-${i}`);
+    const hasHistory = pb && !pb.querySelector('.empty') && !pb.querySelector('.setup-hint') && !pb.querySelector('.empty-icon');
+    if (hasHistory) pb.innerHTML += '<hr class="divider">';
+    else pb.innerHTML = '';
+
+    pb.innerHTML += `<div class="msg-q"><strong>你</strong>${esc(msg)}</div>`;
+    pb.innerHTML += `<div class="msg-a" id="ai-${i}"></div>`;
+    setSD(i, 'on');
+    document.getElementById(`tm-${i}`).textContent = '';
+  });
+
+  // Stream all active panels concurrently
+  await Promise.all(panels.map((p, i) => {
+    if (!(status[p.sid]||{}).logged_in) return Promise.resolve();
+    return streamPanel(i, msg);
+  }));
+
+  busy = false;
+  document.getElementById('sbtn').disabled = false;
+}
+
+async function streamPanel(i, msg) {
+  const p    = panels[i];
+  const aiEl = document.getElementById(`ai-${i}`);
+  const pb   = document.getElementById(`pb-${i}`);
+  p.startTime = Date.now();
+
+  try {
+    const res = await fetch('/api/ask', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ service: p.sid, message: msg }),
+    });
+
+    const reader = res.body.getReader();
+    const dec    = new TextDecoder();
+    let buf = '';
+
+    outer: while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      buf += dec.decode(value, { stream: true });
+
+      const lines = buf.split('\n');
+      buf = lines.pop();
+
+      for (const line of lines) {
+        if (!line.startsWith('data: ')) continue;
+        const raw = line.slice(6);
+        if (raw === '[DONE]') break outer;
+
+        try {
+          const obj = JSON.parse(raw);
+
+          if (obj.type === 'error') {
+            if (aiEl) aiEl.innerHTML = `<span class="msg-err">❌ ${esc(obj.content)}</span>`;
+            setSD(i, 'err');
+            return;
+          }
+          if (obj.type === 'reset') {
+            p.rawText = obj.content;
+            if (aiEl) aiEl.innerHTML = marked.parse(p.rawText) + '<span class="cursor"></span>';
+          }
+          if (obj.type === 'chunk') {
+            p.rawText += obj.content;
+            if (aiEl) aiEl.innerHTML = marked.parse(p.rawText) + '<span class="cursor"></span>';
+            if (pb) pb.scrollTop = pb.scrollHeight;
+          }
+          if (obj.type === 'done') {
+            finalize(i, p, aiEl, pb);
+            break outer;
+          }
+        } catch(_) {}
+      }
+    }
+  } catch(e) {
+    if (aiEl) aiEl.innerHTML = `<span class="msg-err">❌ 連線錯誤: ${esc(e.message)}</span>`;
+    setSD(i, 'err');
+    return;
+  }
+
+  // If stream ended without explicit 'done'
+  if (p.rawText) finalize(i, p, aiEl, pb);
+}
+
+function finalize(i, p, aiEl, pb) {
+  const ms = ((Date.now() - p.startTime) / 1000).toFixed(1);
+  setSD(i, '');
+  document.getElementById(`tm-${i}`).textContent = ms + 's';
+  if (aiEl) aiEl.innerHTML = marked.parse(p.rawText);
+  if (pb)   pb.scrollTop = pb.scrollHeight;
+  p.messages.push({ role: 'assistant', content: p.rawText });
+}
+
+/* ── New chat ────────────────────────────────────────────────── */
+async function newChatAll() {
+  panels.forEach((p, i) => {
+    p.messages = []; p.rawText = '';
+    fetch(`/api/new-chat/${p.sid}`, { method: 'POST' });
+    const pb = document.getElementById(`pb-${i}`);
+    if (pb) pb.innerHTML = renderEmpty(p.sid, i);
+    setSD(i,'');
+    document.getElementById(`tm-${i}`).textContent = '';
+  });
+  updateStatusDots();
+}
+
+/* ── Helpers ─────────────────────────────────────────────────── */
+function setSD(i, cls) {
+  const el = document.getElementById(`sd-${i}`);
+  if (el) el.className = `stream-dot ${cls}`;
+}
+
+function copyPanel(i) {
+  const txt = panels[i].rawText;
+  if (!txt) return;
+  navigator.clipboard.writeText(txt);
+  const btns = document.querySelectorAll('.cpbtn');
+  if (btns[i]) { btns[i].textContent = '✓'; setTimeout(() => btns[i].textContent = '複製', 1500); }
+}
+
+function esc(s) {
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+/* ── Input ───────────────────────────────────────────────────── */
+document.getElementById('q').addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendAll(); }
+});
+document.getElementById('q').addEventListener('input', function() {
+  this.style.height = 'auto';
+  this.style.height = Math.min(this.scrollHeight, 130) + 'px';
+});
+
+init();
+</script>
+</body>
+</html>
