@@ -58,7 +58,7 @@ def summarize_notes(notes: list[Path], target_date: date) -> str:
     )
 
     result = client.models.generate_content(
-        model="gemini-2.5-flash",
+        model="gemini-2.5-flash-lite",
         contents=[prompt]
     )
 
@@ -69,6 +69,11 @@ def summarize_notes(notes: list[Path], target_date: date) -> str:
 def main():
     notes = get_notes_to_summarize()
     target_date = date.today() - timedelta(days=1) if MARKER_FILE.exists() else date.today()
+
+    if not notes:
+        print(f"{target_date} 無新增珍藏，跳過摘要。")
+        MARKER_FILE.write_text(date.today().isoformat())
+        return
 
     summary_content = summarize_notes(notes, target_date)
 
