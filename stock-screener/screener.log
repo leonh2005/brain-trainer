@@ -1,0 +1,272 @@
+2026-03-24 11:47:45.287 | WARNING  | importlib._bootstrap:_call_with_frames_removed:491 - Optional: pip install shioaji[speed] or uv add shioaji --extra speed for better performance.
+ * Serving Flask app 'app'
+ * Debug mode: on
+Address already in use
+Port 5001 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2026-03-24 11:47:55.886 | WARNING  | importlib._bootstrap:_call_with_frames_removed:491 - Optional: pip install shioaji[speed] or uv add shioaji --extra speed for better performance.
+ * Serving Flask app 'app'
+ * Debug mode: on
+Address already in use
+Port 5001 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2026-03-24 11:48:05.957 | WARNING  | importlib._bootstrap:_call_with_frames_removed:491 - Optional: pip install shioaji[speed] or uv add shioaji --extra speed for better performance.
+ * Serving Flask app 'app'
+ * Debug mode: on
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5001
+[33mPress CTRL+C to quit[0m
+127.0.0.1 - - [24/Mar/2026 11:48:06] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 11:48:14] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 11:48:18] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 11:58:52] "[33mGET /stocks/ HTTP/1.1[0m" 404 -
+127.0.0.1 - - [24/Mar/2026 11:58:58] "[33mGET /stocks/ HTTP/1.1[0m" 404 -
+127.0.0.1 - - [24/Mar/2026 11:59:13] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 11:59:22] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 11:59:23] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 11:59:34] "GET /api/stock/3481/intraday HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 11:59:34] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:00:18] "GET /api/stock/3481/intraday HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:00:18] "GET /api/stock/6770/intraday HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:00:18] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:00:21] "GET /api/stock/3481/intraday HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:00:21] "GET /api/stock/2344/intraday HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:00:21] "GET /api/stock/6770/intraday HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:00:21] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:00:26] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:00:26] "GET /api/stock/3481/intraday HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:00:26] "GET /api/stock/6770/intraday HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:00:26] "GET /api/stock/2344/intraday HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:00:26] "GET /api/stock/2408/intraday HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:00:26] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:01:23] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:02:24] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:02:31] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:02:31] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:02:33] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:02:33] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:02:35] "GET /api/stock/3481/intraday HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:02:36] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:03:33] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:04:29] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:04:29] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:04:32] "GET /api/stock/3481/intraday HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:04:32] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:05:14] "GET /api/stock/3481/daily HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:05:29] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:05:37] "GET /api/stock/3481/intraday HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:06:29] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:07:30] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:08:30] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:09:31] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:10:31] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:11:31] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:12:32] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:13:32] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:14:32] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:15:33] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:16:33] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:17:34] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:18:34] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:19:34] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:19:34] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:19:34] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:19:37] "GET /api/stock/3481/intraday HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:19:38] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:19:43] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:19:43] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:19:46] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:19:46] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:19:49] "GET /api/stock/3481/intraday HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:19:49] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:20:06] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:20:06] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:20:08] "GET /api/stock/3481/intraday HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:20:08] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:20:39] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:20:42] "GET /api/stock/3481/daily HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:20:47] "GET /api/stock/3481/intraday HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:20:50] "GET /api/stock/3481/intraday HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:21:06] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:22:06] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:22:09] "GET /api/stock/2330/intraday HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:22:24] "GET /api/stock/3481/daily HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:22:26] "GET /api/stock/3481/intraday HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:23:06] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:24:07] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:25:07] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:26:08] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:27:08] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:28:08] "GET /api/radar HTTP/1.1" 200 -
+/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/multiprocessing/resource_tracker.py:396: UserWarning: resource_tracker: There appear to be 1 leaked semaphore objects to clean up at shutdown: {'/mp-7vlo4nwi'}
+  warnings.warn(
+2026-03-24 12:29:09.255 | WARNING  | importlib._bootstrap:_call_with_frames_removed:491 - Optional: pip install shioaji[speed] or uv add shioaji --extra speed for better performance.
+ * Serving Flask app 'app'
+ * Debug mode: on
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5001
+[33mPress CTRL+C to quit[0m
+127.0.0.1 - - [24/Mar/2026 12:29:10] "[33mGET /api/intraday/2330 HTTP/1.1[0m" 404 -
+127.0.0.1 - - [24/Mar/2026 12:29:17] "[33mGET /api/intraday/2330 HTTP/1.1[0m" 404 -
+127.0.0.1 - - [24/Mar/2026 12:29:22] "[33mGET /api/chart/2330?mode=intraday HTTP/1.1[0m" 404 -
+127.0.0.1 - - [24/Mar/2026 12:29:25] "[33mGET /api/chart/2330?mode=intraday HTTP/1.1[0m" 404 -
+127.0.0.1 - - [24/Mar/2026 12:29:31] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:29:39] "GET /api/stock/2330/intraday HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:30:12] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:31:09] "GET /api/radar HTTP/1.1" 200 -
+/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/multiprocessing/resource_tracker.py:396: UserWarning: resource_tracker: There appear to be 1 leaked semaphore objects to clean up at shutdown: {'/mp-0np3yb1b'}
+  warnings.warn(
+2026-03-24 12:31:49.804 | WARNING  | importlib._bootstrap:_call_with_frames_removed:491 - Optional: pip install shioaji[speed] or uv add shioaji --extra speed for better performance.
+ * Serving Flask app 'app'
+ * Debug mode: on
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5001
+[33mPress CTRL+C to quit[0m
+127.0.0.1 - - [24/Mar/2026 12:31:53] "GET /api/stock/2330/intraday HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:31:57] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:31:59] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:32:58] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:33:58] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:34:52] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:34:52] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:34:54] "GET /api/stock/3481/intraday HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:34:54] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:35:53] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:36:30] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:36:30] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:36:38] "GET /api/stock/3481/intraday HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:36:38] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:36:53] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:37:30] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:37:53] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:38:31] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:38:54] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:39:32] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:39:55] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:40:55] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:41:56] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:42:55] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:43:56] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:44:55] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:45:55] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:46:55] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:47:55] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:48:55] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:49:55] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:50:56] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:51:57] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:52:57] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 12:53:58] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 13:02:01] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 13:03:02] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 13:04:02] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 13:05:03] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 13:06:03] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 13:07:04] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 13:08:04] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 13:09:05] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 13:10:05] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 13:11:06] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 13:12:06] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 13:13:07] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 13:14:07] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 13:15:08] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 13:16:08] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 13:17:09] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 13:18:09] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 13:19:09] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 13:20:10] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 13:21:10] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 13:22:11] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 13:23:11] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 13:24:12] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 13:25:12] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 13:26:13] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 13:27:14] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 13:28:14] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 13:29:14] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 13:30:15] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 13:31:15] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 13:32:16] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 13:33:16] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 13:34:16] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 13:35:17] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 13:36:17] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 13:37:17] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 13:38:18] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 13:39:18] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 13:40:19] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 13:41:20] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 13:42:20] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 13:43:20] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 13:44:22] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 13:45:21] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 13:46:23] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 13:47:22] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 13:48:23] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 13:49:23] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 13:50:20] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 13:50:22] "GET /api/stock/3481/intraday HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 13:50:22] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 13:50:23] "GET /api/stock/3481/intraday HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 13:50:23] "GET /api/stock/6770/intraday HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 13:50:23] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 13:50:23] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 13:50:23] "GET /api/stock/2344/intraday HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 13:50:23] "GET /api/stock/3481/intraday HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 13:50:23] "GET /api/stock/6770/intraday HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 13:50:23] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 13:50:24] "GET /api/stock/2344/intraday HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 13:50:24] "GET /api/stock/2408/intraday HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 13:50:24] "GET /api/stock/6770/intraday HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 13:50:24] "GET /api/stock/3481/intraday HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 13:50:24] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 13:51:24] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 13:52:25] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 13:53:25] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 13:54:26] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 13:55:26] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 13:56:28] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 13:57:28] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 13:58:26] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 13:59:27] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 14:00:28] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 14:01:28] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 14:02:27] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 14:03:28] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 14:04:29] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 14:05:29] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 14:06:30] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 14:07:30] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 14:08:31] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 14:09:31] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 14:10:32] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 14:11:33] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 14:12:33] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 14:13:34] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 14:14:34] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 14:15:35] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 14:16:35] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 14:17:36] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 14:18:37] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 14:19:36] "GET /api/radar HTTP/1.1" 200 -
+127.0.0.1 - - [24/Mar/2026 15:38:31] "[33mGET /api/simulation/history?limit=20 HTTP/1.1[0m" 404 -
+127.0.0.1 - - [24/Mar/2026 15:39:01] "[33mGET /api/simulation/history?limit=20 HTTP/1.1[0m" 404 -
+SDK NOTICE Wed Mar 25 04:14:10.228 2026 solClient.c:11266                    (170fe7000) Session '(c0,s1)_sinopac' keep-alive on tcp_TxRx detected session down, client name 'PYAPI/N124711691/0324/043153/142145/220.141.1.107', VPN name 'sinopac', peer host '210.59.255.161:80' address 'IP 210.59.255.161', connection 'tcp_TxRx' local address 'IP 192.168.68.123:59406'
+SDK NOTICE Wed Mar 25 04:14:13.313 2026 solClient.c:11196                    (170fe7000) Connect attempt for host '210.59.255.161:80' for session '(c0,s1)_sinopac(client name 'PYAPI/N124711691/0324/043153/142145/220.141.1.107', VPN name 'sinopac', peer host '210.59.255.161:80' address 'IP 210.59.255.161', connection 'tcp_TxRx' local address 'IP 192.168.68.123:50643')' timed out
+SDK NOTICE Wed Mar 25 04:14:19.424 2026 solClient.c:11196                    (170fe7000) Connect attempt for host '210.59.255.161:80' for session '(c0,s1)_sinopac(client name 'PYAPI/N124711691/0324/043153/142145/220.141.1.107', VPN name 'sinopac', peer host '210.59.255.161:80' address 'IP 210.59.255.161', connection 'tcp_TxRx' local address 'IP 192.168.68.123:50644')' timed out
+SDK NOTICE Wed Mar 25 04:14:25.499 2026 solClient.c:11196                    (170fe7000) Connect attempt for host '210.59.255.161:80' for session '(c0,s1)_sinopac(client name 'PYAPI/N124711691/0324/043153/142145/220.141.1.107', VPN name 'sinopac', peer host '210.59.255.161:80' address 'IP 210.59.255.161', connection 'tcp_TxRx' local address 'IP 192.168.68.123:50645')' timed out
+SDK NOTICE Wed Mar 25 04:14:31.614 2026 solClient.c:11196                    (170fe7000) Connect attempt for host '210.59.255.161:80' for session '(c0,s1)_sinopac(client name 'PYAPI/N124711691/0324/043153/142145/220.141.1.107', VPN name 'sinopac', peer host '210.59.255.161:80' address 'IP 210.59.255.161', connection 'tcp_TxRx' local address 'IP 192.168.68.123:50647')' timed out
+SDK NOTICE Wed Mar 25 04:14:37.731 2026 solClient.c:11196                    (170fe7000) Connect attempt for host '210.59.255.161:80' for session '(c0,s1)_sinopac(client name 'PYAPI/N124711691/0324/043153/142145/220.141.1.107', VPN name 'sinopac', peer host '210.59.255.161:80' address 'IP 210.59.255.161', connection 'tcp_TxRx' local address 'IP 192.168.68.123:50648')' timed out
+SDK NOTICE Wed Mar 25 04:14:43.857 2026 solClient.c:11196                    (170fe7000) Connect attempt for host '210.59.255.161:80' for session '(c0,s1)_sinopac(client name 'PYAPI/N124711691/0324/043153/142145/220.141.1.107', VPN name 'sinopac', peer host '210.59.255.161:80' address 'IP 210.59.255.161', connection 'tcp_TxRx' local address 'IP 192.168.68.123:50650')' timed out
+SDK NOTICE Wed Mar 25 04:14:49.965 2026 solClient.c:11196                    (170fe7000) Connect attempt for host '210.59.255.161:80' for session '(c0,s1)_sinopac(client name 'PYAPI/N124711691/0324/043153/142145/220.141.1.107', VPN name 'sinopac', peer host '210.59.255.161:80' address 'IP 210.59.255.161', connection 'tcp_TxRx' local address 'IP 192.168.68.123:50652')' timed out
+SDK NOTICE Wed Mar 25 04:14:56.086 2026 solClient.c:11196                    (170fe7000) Connect attempt for host '210.59.255.161:80' for session '(c0,s1)_sinopac(client name 'PYAPI/N124711691/0324/043153/142145/220.141.1.107', VPN name 'sinopac', peer host '210.59.255.161:80' address 'IP 210.59.255.161', connection 'tcp_TxRx' local address 'IP 192.168.68.123:50653')' timed out
+SDK NOTICE Wed Mar 25 04:15:02.193 2026 solClient.c:11196                    (170fe7000) Connect attempt for host '210.59.255.161:80' for session '(c0,s1)_sinopac(client name 'PYAPI/N124711691/0324/043153/142145/220.141.1.107', VPN name 'sinopac', peer host '210.59.255.161:80' address 'IP 210.59.255.161', connection 'tcp_TxRx' local address 'IP 192.168.68.123:50654')' timed out
+SDK NOTICE Wed Mar 25 04:15:08.310 2026 solClient.c:11196                    (170fe7000) Connect attempt for host '210.59.255.161:80' for session '(c0,s1)_sinopac(client name 'PYAPI/N124711691/0324/043153/142145/220.141.1.107', VPN name 'sinopac', peer host '210.59.255.161:80' address 'IP 210.59.255.161', connection 'tcp_TxRx' local address 'IP 192.168.68.123:50655')' timed out
+127.0.0.1 - - [25/Mar/2026 14:35:12] "GET / HTTP/1.1" 200 -
+/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/multiprocessing/resource_tracker.py:396: UserWarning: resource_tracker: There appear to be 1 leaked semaphore objects to clean up at shutdown: {'/mp-mtkdpabk'}
+  warnings.warn(
+2026-03-26 16:46:35.637 | WARNING  | importlib._bootstrap:_call_with_frames_removed:491 - Optional: pip install shioaji[speed] or uv add shioaji --extra speed for better performance.
+ * Serving Flask app 'app'
+ * Debug mode: on
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5001
+[33mPress CTRL+C to quit[0m
