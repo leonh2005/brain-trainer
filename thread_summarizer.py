@@ -10,7 +10,7 @@ from datetime import date, timedelta, datetime
 from pathlib import Path
 from google import genai
 
-GEMINI_API_KEY = "AIzaSyAvng5q3FjDYgTEUl1gOfzUYUmpbI2Sg4U"
+GEMINI_API_KEY = "AIzaSyB2omd7huYgJxMAffEozEcCPnIsXfOFq_Y"
 VAULT_PATH = Path("/Users/steven/Library/CloudStorage/GoogleDrive-leonh2005@gmail.com/我的雲端硬碟/Obsidian Vault")
 THREAD_DIR = VAULT_PATH / "thread"
 SUMMARY_DIR = THREAD_DIR / "摘要"
@@ -58,7 +58,7 @@ def summarize_notes(notes: list[Path], target_date: date) -> str:
     )
 
     result = client.models.generate_content(
-        model="gemini-2.5-flash",
+        model="gemini-2.5-flash-lite",
         contents=[prompt]
     )
 
@@ -69,6 +69,11 @@ def summarize_notes(notes: list[Path], target_date: date) -> str:
 def main():
     notes = get_notes_to_summarize()
     target_date = date.today() - timedelta(days=1) if MARKER_FILE.exists() else date.today()
+
+    if not notes:
+        print(f"{target_date} 無新增珍藏，跳過摘要。")
+        MARKER_FILE.write_text(date.today().isoformat())
+        return
 
     summary_content = summarize_notes(notes, target_date)
 
