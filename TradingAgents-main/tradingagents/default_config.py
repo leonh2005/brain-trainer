@@ -8,10 +8,10 @@ DEFAULT_CONFIG = {
         "dataflows/data_cache",
     ),
     # LLM settings
-    "llm_provider": "groq",
-    "deep_think_llm": "llama-3.3-70b-versatile",
-    "quick_think_llm": "llama-3.3-70b-versatile",
-    "backend_url": "https://api.groq.com/openai/v1",
+    "llm_provider": "google",
+    "deep_think_llm": "gemini-2.5-flash-lite",
+    "quick_think_llm": "gemini-2.5-flash-lite",
+    "backend_url": "https://generativelanguage.googleapis.com/v1beta/openai/",
     # Provider-specific thinking configuration
     "google_thinking_level": None,      # "high", "minimal", etc.
     "openai_reasoning_effort": None,    # "medium", "high", "low"

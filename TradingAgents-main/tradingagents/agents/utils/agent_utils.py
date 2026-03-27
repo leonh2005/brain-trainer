@@ -20,12 +20,15 @@ from tradingagents.agents.utils.news_data_tools import (
 )
 
 
+LANG_INSTRUCTION = "\n\nIMPORTANT: All your responses, reports, analyses, and recommendations MUST be written entirely in Traditional Chinese (繁體中文). Do not use English in any output."
+
 def build_instrument_context(ticker: str) -> str:
     """Describe the exact instrument so agents preserve exchange-qualified tickers."""
     return (
         f"The instrument to analyze is `{ticker}`. "
         "Use this exact ticker in every tool call, report, and recommendation, "
         "preserving any exchange suffix (e.g. `.TO`, `.L`, `.HK`, `.T`)."
+        + LANG_INSTRUCTION
     )
 
 def create_msg_delete():

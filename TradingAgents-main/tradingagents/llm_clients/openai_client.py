@@ -30,6 +30,7 @@ _PROVIDER_CONFIG = {
     "openrouter": ("https://openrouter.ai/api/v1", "OPENROUTER_API_KEY"),
     "ollama": ("http://localhost:11434/v1", None),
     "groq": ("https://api.groq.com/openai/v1", "GROQ_API_KEY"),
+    "google": ("https://generativelanguage.googleapis.com/v1beta/openai/", "GEMINI_API_KEY"),
 }
 
 
