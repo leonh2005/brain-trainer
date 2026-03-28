@@ -1,0 +1,79 @@
+[     815ms] [ERROR] Failed to emit 'TimeToInitializeTelemetryClient__Duration' event. Error: Dimension key and value must be a non empty string @ https://cloud.oracle.com/plugins/console/4.13.19hotfix.6/js/vendors.console.49d0a293.js:1
+[     820ms] [ERROR] Failed to emit 'NavigationMenu_I18nInit_en' event. Error: Dimension key and value must be a non empty string @ https://cloud.oracle.com/plugins/console/4.13.19hotfix.6/js/vendors.console.49d0a293.js:1
+[     820ms] [ERROR] Failed to emit 'Shell_I18nInit_en' event. Error: Dimension key and value must be a non empty string @ https://cloud.oracle.com/plugins/console/4.13.19hotfix.6/js/vendors.console.49d0a293.js:1
+[     820ms] [ERROR] Failed to emit 'WhatsNew_I18nInit_en' event. Error: Dimension key and value must be a non empty string @ https://cloud.oracle.com/plugins/console/4.13.19hotfix.6/js/vendors.console.49d0a293.js:1
+[     820ms] [ERROR] Failed to emit 'SearchConfig_I18nInit_en' event. Error: Dimension key and value must be a non empty string @ https://cloud.oracle.com/plugins/console/4.13.19hotfix.6/js/vendors.console.49d0a293.js:1
+[     821ms] [WARNING] WARNING! XMLHttpRequest signing for OCI endpoints is being deprecated @ https://cloud.oracle.com/plugins/console/4.13.19hotfix.6/js/vendors.console.49d0a293.js:1
+[     832ms] [ERROR] [Orca] Load Error @ https://cloud.oracle.com/plugins/console/4.13.19hotfix.6/js/vendors.console.b48beae3.js:1
+[  199325ms] [ERROR] Failed to emit 'TimeToInitializeTelemetryClient__Duration' event. Error: Dimension key and value must be a non empty string @ https://cloud.oracle.com/plugins/console/4.13.19hotfix.6/js/vendors.console.49d0a293.js:1
+[  199328ms] [ERROR] Failed to emit 'MultiRegionLogin.LoginSoupPreflightCheck__Count' event. Error: Dimension key and value must be a non empty string @ https://cloud.oracle.com/plugins/console/4.13.19hotfix.6/js/vendors.console.49d0a293.js:1
+[  199328ms] [ERROR] Failed to emit 'MultiRegionLogin.LoginSoupPreflightCheck_NonConfigOverride__Count' event. Error: Dimension key and value must be a non empty string @ https://cloud.oracle.com/plugins/console/4.13.19hotfix.6/js/vendors.console.49d0a293.js:1
+[  199329ms] [ERROR] Failed to emit 'MultiRegionLogin.LoginSoupPreflightCheck_Cached__Count' event. Error: Dimension key and value must be a non empty string @ https://cloud.oracle.com/plugins/console/4.13.19hotfix.6/js/vendors.console.49d0a293.js:1
+[  199329ms] [ERROR] Failed to emit 'MultiRegionLogin.LoginSoupPreflightCheck_PluginPage__Count' event. Error: Dimension key and value must be a non empty string @ https://cloud.oracle.com/plugins/console/4.13.19hotfix.6/js/vendors.console.49d0a293.js:1
+[  199329ms] [ERROR] Failed to emit 'MultiRegionLogin.LoginSoupPreflightCheck_NonCanary__Count' event. Error: Dimension key and value must be a non empty string @ https://cloud.oracle.com/plugins/console/4.13.19hotfix.6/js/vendors.console.49d0a293.js:1
+[  199329ms] [ERROR] Failed to emit 'MultiRegionLogin.LoginSoupPreflightCheck_HomeRegion__Count' event. Error: Dimension key and value must be a non empty string @ https://cloud.oracle.com/plugins/console/4.13.19hotfix.6/js/vendors.console.49d0a293.js:1
+[  199329ms] [ERROR] Failed to emit 'NavigationMenu_I18nInit_en' event. Error: Dimension key and value must be a non empty string @ https://cloud.oracle.com/plugins/console/4.13.19hotfix.6/js/vendors.console.49d0a293.js:1
+[  199329ms] [ERROR] Failed to emit 'Shell_I18nInit_en' event. Error: Dimension key and value must be a non empty string @ https://cloud.oracle.com/plugins/console/4.13.19hotfix.6/js/vendors.console.49d0a293.js:1
+[  199329ms] [ERROR] Failed to emit 'WhatsNew_I18nInit_en' event. Error: Dimension key and value must be a non empty string @ https://cloud.oracle.com/plugins/console/4.13.19hotfix.6/js/vendors.console.49d0a293.js:1
+[  199329ms] [ERROR] Failed to emit 'SearchConfig_I18nInit_en' event. Error: Dimension key and value must be a non empty string @ https://cloud.oracle.com/plugins/console/4.13.19hotfix.6/js/vendors.console.49d0a293.js:1
+[  199802ms] [ERROR] Failed to emit 'MultiRegionLogin.GlobalSoupDuration__Duration' event. Error: Dimension key and value must be a non empty string @ https://s.go-mpulse.net/boomerang/HA4J9-QN9JU-LSVMP-BUGZK-6GRU5:9
+[  199802ms] [ERROR] Failed to emit 'MultiRegionLogin.AshburnSoupEndpointSuccess__Count' event. Error: Dimension key and value must be a non empty string @ https://s.go-mpulse.net/boomerang/HA4J9-QN9JU-LSVMP-BUGZK-6GRU5:9
+[  199802ms] [ERROR] Failed to emit 'MultiRegionLogin.AshburnSoupEndpointSuccess_NonConfigOverride__Count' event. Error: Dimension key and value must be a non empty string @ https://s.go-mpulse.net/boomerang/HA4J9-QN9JU-LSVMP-BUGZK-6GRU5:9
+[  199802ms] [ERROR] Failed to emit 'MultiRegionLogin.AshburnSoupEndpointSuccess_Cached__Count' event. Error: Dimension key and value must be a non empty string @ https://s.go-mpulse.net/boomerang/HA4J9-QN9JU-LSVMP-BUGZK-6GRU5:9
+[  199802ms] [ERROR] Failed to emit 'MultiRegionLogin.AshburnSoupEndpointSuccess_PluginPage__Count' event. Error: Dimension key and value must be a non empty string @ https://s.go-mpulse.net/boomerang/HA4J9-QN9JU-LSVMP-BUGZK-6GRU5:9
+[  199803ms] [ERROR] Failed to emit 'MultiRegionLogin.AshburnSoupEndpointSuccess_NonCanary__Count' event. Error: Dimension key and value must be a non empty string @ https://s.go-mpulse.net/boomerang/HA4J9-QN9JU-LSVMP-BUGZK-6GRU5:9
+[  199803ms] [ERROR] Failed to emit 'MultiRegionLogin.AshburnSoupEndpointSuccess_HomeRegion__Count' event. Error: Dimension key and value must be a non empty string @ https://s.go-mpulse.net/boomerang/HA4J9-QN9JU-LSVMP-BUGZK-6GRU5:9
+[  199803ms] [ERROR] Failed to emit 'MultiRegionLogin.GlobalSoupEndpointSuccess__Count' event. Error: Dimension key and value must be a non empty string @ https://s.go-mpulse.net/boomerang/HA4J9-QN9JU-LSVMP-BUGZK-6GRU5:9
+[  199803ms] [ERROR] Failed to emit 'MultiRegionLogin.GlobalSoupEndpointSuccess_NonConfigOverride__Count' event. Error: Dimension key and value must be a non empty string @ https://s.go-mpulse.net/boomerang/HA4J9-QN9JU-LSVMP-BUGZK-6GRU5:9
+[  199803ms] [ERROR] Failed to emit 'MultiRegionLogin.GlobalSoupEndpointSuccess_Cached__Count' event. Error: Dimension key and value must be a non empty string @ https://s.go-mpulse.net/boomerang/HA4J9-QN9JU-LSVMP-BUGZK-6GRU5:9
+[  199803ms] [ERROR] Failed to emit 'MultiRegionLogin.GlobalSoupEndpointSuccess_PluginPage__Count' event. Error: Dimension key and value must be a non empty string @ https://s.go-mpulse.net/boomerang/HA4J9-QN9JU-LSVMP-BUGZK-6GRU5:9
+[  199803ms] [ERROR] Failed to emit 'MultiRegionLogin.GlobalSoupEndpointSuccess_NonCanary__Count' event. Error: Dimension key and value must be a non empty string @ https://s.go-mpulse.net/boomerang/HA4J9-QN9JU-LSVMP-BUGZK-6GRU5:9
+[  199803ms] [ERROR] Failed to emit 'MultiRegionLogin.GlobalSoupEndpointSuccess_HomeRegion__Count' event. Error: Dimension key and value must be a non empty string @ https://s.go-mpulse.net/boomerang/HA4J9-QN9JU-LSVMP-BUGZK-6GRU5:9
+[  199803ms] [WARNING] WARNING! XMLHttpRequest signing for OCI endpoints is being deprecated @ https://cloud.oracle.com/plugins/console/4.13.19hotfix.6/js/vendors.console.49d0a293.js:1
+[  201806ms] [ERROR] Invalid region @ https://login.oci.oraclecloud.com/assets/soup-ux/js/main.js?ver=907b3b49613da5e626da:0
+[  340955ms] [ERROR] Invalid region @ https://login.oci.oraclecloud.com/assets/soup-ux/js/henosis.js?ver=907b3b49613da5e626da:0
+[  341248ms] [ERROR] Failed to emit 'TimeToInitializeTelemetryClient__Duration' event. Error: Dimension key and value must be a non empty string @ https://cloud.oracle.com/plugins/console/4.13.19hotfix.6/js/vendors.console.49d0a293.js:1
+[  341250ms] [ERROR] Failed to emit 'NavigationMenu_I18nInit_en' event. Error: Dimension key and value must be a non empty string @ https://cloud.oracle.com/plugins/console/4.13.19hotfix.6/js/vendors.console.49d0a293.js:1
+[  341250ms] [ERROR] Failed to emit 'Shell_I18nInit_en' event. Error: Dimension key and value must be a non empty string @ https://cloud.oracle.com/plugins/console/4.13.19hotfix.6/js/vendors.console.49d0a293.js:1
+[  341250ms] [ERROR] Failed to emit 'WhatsNew_I18nInit_en' event. Error: Dimension key and value must be a non empty string @ https://cloud.oracle.com/plugins/console/4.13.19hotfix.6/js/vendors.console.49d0a293.js:1
+[  341250ms] [ERROR] Failed to emit 'SearchConfig_I18nInit_en' event. Error: Dimension key and value must be a non empty string @ https://cloud.oracle.com/plugins/console/4.13.19hotfix.6/js/vendors.console.49d0a293.js:1
+[  341250ms] [WARNING] WARNING! XMLHttpRequest signing for OCI endpoints is being deprecated @ https://cloud.oracle.com/plugins/console/4.13.19hotfix.6/js/vendors.console.49d0a293.js:1
+[  341895ms] [ERROR] Error occurred in Application., Error: Failed to retrieve capabilities: TypeError: Cannot read properties of undefined (reading 'capabilityModule'), {"metadata":{"url":"https://cloud.oracle.com/compute/instances?region=ap-osaka-1"},"eventName":"HandledExceptionEvent"} @ https://s.go-mpulse.net/boomerang/HA4J9-QN9JU-LSVMP-BUGZK-6GRU5:9
+[  342318ms] [ERROR] Error occurred in Application., Error: Failed to load Fetch.OrganizationSubscription API: Error: Please start runtime before using it., {"metadata":{"url":"https://cloud.oracle.com/compute/instances?region=ap-osaka-1"},"eventName":"HandledExceptionEvent"} @ https://s.go-mpulse.net/boomerang/HA4J9-QN9JU-LSVMP-BUGZK-6GRU5:9
+[  342548ms] [ERROR] Empty or null path provided in NavigationRegistryItem: , {"navigationItem":{"text":"Pipelines","path":null,"key":"GUARDED_DATA_PIPELINES_PIPELINES"},"registryItem":{"pluginName":"gdp","labelKey":"GUARDED_DATA_PIPELINES_PIPELINES","appendPath":"/pipelines","alwaysFree":true}} @ https://s.go-mpulse.net/boomerang/HA4J9-QN9JU-LSVMP-BUGZK-6GRU5:9
+[  342549ms] [ERROR] Empty or null path provided in NavigationRegistryItem: , {"navigationItem":{"text":"Metrics","path":null,"key":"GUARDED_DATA_PIPELINES_METRICS"},"registryItem":{"pluginName":"gdp","labelKey":"GUARDED_DATA_PIPELINES_METRICS","appendPath":"/metrics","alwaysFree":true}} @ https://s.go-mpulse.net/boomerang/HA4J9-QN9JU-LSVMP-BUGZK-6GRU5:9
+[  342764ms] [WARNING] Error showing the usage of an account in active promotion @ https://cloud.oracle.com/plugins/console/4.13.19hotfix.6/js/vendors.console.49d0a293.js:1
+[  342940ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://cloud.oracle.com/root.css:0
+[  342961ms] [WARNING] An iframe which has both allow-scripts and allow-same-origin for its sandbox attribute can escape its sandboxing. @ https://cloud.oracle.com/plugins/maui-preact/latest/prod-oc1-index.tpl.html?region=ap-osaka-1:0
+[  345541ms] [WARNING] You cannot refresh listInstances at this time since it is already being refreshed. Please wait or consider making your polling less aggressive @ https://cloud.oracle.com/plugins/maui-preact/latest/js/vendor.oci.4e6644.1774030336631.js:1
+[  346182ms] Error: Dimension key and value must be a non empty string
+    at https://cloud.oracle.com/plugins/console/4.13.19hotfix.6/js/vendors.console.49d0a293.js:2:797328
+    at Array.forEach (<anonymous>)
+    at a.validateDimensionParamaters (https://cloud.oracle.com/plugins/console/4.13.19hotfix.6/js/vendors.console.49d0a293.js:2:797246)
+    at a.sendMetric (https://cloud.oracle.com/plugins/console/4.13.19hotfix.6/js/vendors.console.49d0a293.js:2:797418)
+    at t.default.<anonymous> (https://cloud.oracle.com/plugins/console/4.13.19hotfix.6/js/vendors.console.49d0a293.js:2:693211)
+    at Generator.next (<anonymous>)
+    at a (https://cloud.oracle.com/plugins/console/4.13.19hotfix.6/js/vendors.console.49d0a293.js:2:689166)
+[  346182ms] Error: Dimension key and value must be a non empty string
+    at https://cloud.oracle.com/plugins/console/4.13.19hotfix.6/js/vendors.console.49d0a293.js:2:797328
+    at Array.forEach (<anonymous>)
+    at a.validateDimensionParamaters (https://cloud.oracle.com/plugins/console/4.13.19hotfix.6/js/vendors.console.49d0a293.js:2:797246)
+    at a.sendMetric (https://cloud.oracle.com/plugins/console/4.13.19hotfix.6/js/vendors.console.49d0a293.js:2:797418)
+    at t.default.<anonymous> (https://cloud.oracle.com/plugins/console/4.13.19hotfix.6/js/vendors.console.49d0a293.js:2:693211)
+    at Generator.next (<anonymous>)
+    at a (https://cloud.oracle.com/plugins/console/4.13.19hotfix.6/js/vendors.console.49d0a293.js:2:689166)
+[  405611ms] Error: Dimension key and value must be a non empty string
+    at https://cloud.oracle.com/plugins/console/4.13.19hotfix.6/js/vendors.console.49d0a293.js:2:797328
+    at Array.forEach (<anonymous>)
+    at a.validateDimensionParamaters (https://cloud.oracle.com/plugins/console/4.13.19hotfix.6/js/vendors.console.49d0a293.js:2:797246)
+    at a.sendMetric (https://cloud.oracle.com/plugins/console/4.13.19hotfix.6/js/vendors.console.49d0a293.js:2:797418)
+    at t.default.<anonymous> (https://cloud.oracle.com/plugins/console/4.13.19hotfix.6/js/vendors.console.49d0a293.js:2:693211)
+    at Generator.next (<anonymous>)
+    at a (https://cloud.oracle.com/plugins/console/4.13.19hotfix.6/js/vendors.console.49d0a293.js:2:689166)
+[ 3882603ms] [WARNING] SessionActivity: Session is about to expire. @ https://cloud.oracle.com/plugins/console/4.13.19hotfix.6/js/vendors.console.49d0a293.js:1
+[ 3882630ms] [ERROR] Empty or null path provided in NavigationRegistryItem: , {"navigationItem":{"text":"Pipelines","path":null,"key":"GUARDED_DATA_PIPELINES_PIPELINES"},"registryItem":{"pluginName":"gdp","labelKey":"GUARDED_DATA_PIPELINES_PIPELINES","appendPath":"/pipelines","alwaysFree":true}} @ https://s.go-mpulse.net/boomerang/HA4J9-QN9JU-LSVMP-BUGZK-6GRU5:9
+[ 3882630ms] [ERROR] Empty or null path provided in NavigationRegistryItem: , {"navigationItem":{"text":"Metrics","path":null,"key":"GUARDED_DATA_PIPELINES_METRICS"},"registryItem":{"pluginName":"gdp","labelKey":"GUARDED_DATA_PIPELINES_METRICS","appendPath":"/metrics","alwaysFree":true}} @ https://s.go-mpulse.net/boomerang/HA4J9-QN9JU-LSVMP-BUGZK-6GRU5:9
+[ 3942626ms] [ERROR] Empty or null path provided in NavigationRegistryItem: , {"navigationItem":{"text":"Pipelines","path":null,"key":"GUARDED_DATA_PIPELINES_PIPELINES"},"registryItem":{"pluginName":"gdp","labelKey":"GUARDED_DATA_PIPELINES_PIPELINES","appendPath":"/pipelines","alwaysFree":true}} @ https://s.go-mpulse.net/boomerang/HA4J9-QN9JU-LSVMP-BUGZK-6GRU5:9
+[ 3942626ms] [ERROR] Empty or null path provided in NavigationRegistryItem: , {"navigationItem":{"text":"Metrics","path":null,"key":"GUARDED_DATA_PIPELINES_METRICS"},"registryItem":{"pluginName":"gdp","labelKey":"GUARDED_DATA_PIPELINES_METRICS","appendPath":"/metrics","alwaysFree":true}} @ https://s.go-mpulse.net/boomerang/HA4J9-QN9JU-LSVMP-BUGZK-6GRU5:9
+[ 3944299ms] [ERROR] Invalid region @ https://login.oci.oraclecloud.com/assets/soup-ux/js/main.js?ver=907b3b49613da5e626da:0
+[ 4398899ms] [ERROR] Invalid region @ https://login.oci.oraclecloud.com/assets/soup-ux/js/main.js?ver=907b3b49613da5e626da:0

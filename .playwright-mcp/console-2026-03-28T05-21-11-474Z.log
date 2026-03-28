@@ -1,0 +1,27 @@
+[      46ms] [WARNING] eventName is null， please check @ https://lf-static.applogcdn.com/obj/applog-sdk-static/log-sdk/collect/5/collect.dy.js:0
+[     495ms] [ERROR] The Content Security Policy directive 'upgrade-insecure-requests' is ignored when delivered in a report-only policy. @ https://www.douyin.com/user/MS4wLjABAAAABiObAwk34EXITLT_6JRXjsYo0dN2ROQJngVugWJtCVJ8xsGYnCf3bn5otVtYZixr:0
+[     744ms] [WARNING] [SDK] 1774675272217        0 already inited @ https://lf3-short.ibytedapm.com/slardar/fe/sdk-web/browser.cn.js?bid=douyin_web&globalName=Slardar:0
+[    1126ms] [ERROR] The Content Security Policy directive 'upgrade-insecure-requests' is ignored when delivered in a report-only policy. @ https://lf-douyin-pc-web.douyinstatic.com/obj/douyin-pc-web/ies/douyin_web/async/5498.378eb90d.js:1
+[    1223ms] [ERROR] The Content Security Policy directive 'upgrade-insecure-requests' is ignored when delivered in a report-only policy. @ https://lf-douyin-pc-web.douyinstatic.com/obj/douyin-pc-web/ies/douyin_web/async/81708.18085ed3.js:1
+[    1260ms] [ERROR] Not allowed to launch 'bitbrowser://cc/' because a user gesture is required. @ https://www.douyin.com/user/MS4wLjABAAAABiObAwk34EXITLT_6JRXjsYo0dN2ROQJngVugWJtCVJ8xsGYnCf3bn5otVtYZixr:0
+[    3853ms] [ERROR] The Content Security Policy directive 'upgrade-insecure-requests' is ignored when delivered in a report-only policy. @ https://lf-douyin-pc-web.douyinstatic.com/obj/douyin-pc-web/ies/douyin_web/29221.00e9552b.js:8
+[    3854ms] [ERROR] The Content Security Policy directive 'upgrade-insecure-requests' is ignored when delivered in a report-only policy. @ https://lf-douyin-pc-web.douyinstatic.com/obj/douyin-pc-web/ies/douyin_web/29221.00e9552b.js:8
+[    3857ms] [ERROR] The Content Security Policy directive 'upgrade-insecure-requests' is ignored when delivered in a report-only policy. @ https://lf-douyin-pc-web.douyinstatic.com/obj/douyin-pc-web/ies/douyin_web/29221.00e9552b.js:8
+[  180960ms] [ERROR] The Content Security Policy directive 'upgrade-insecure-requests' is ignored when delivered in a report-only policy. @ https://lf-douyin-pc-web.douyinstatic.com/obj/douyin-pc-web/ies/douyin_web/async/81708.18085ed3.js:1
+[  180961ms] [ERROR] The Content Security Policy directive 'upgrade-insecure-requests' is ignored when delivered in a report-only policy. @ https://lf-douyin-pc-web.douyinstatic.com/obj/douyin-pc-web/ies/douyin_web/async/81708.18085ed3.js:1
+[  180963ms] [ERROR] The Content Security Policy directive 'upgrade-insecure-requests' is ignored when delivered in a report-only policy. @ https://lf-douyin-pc-web.douyinstatic.com/obj/douyin-pc-web/ies/douyin_web/async/81708.18085ed3.js:1
+[  181913ms] [ERROR] The Content Security Policy directive 'upgrade-insecure-requests' is ignored when delivered in a report-only policy. @ :2
+[  181913ms] [ERROR] The Content Security Policy directive 'upgrade-insecure-requests' is ignored when delivered in a report-only policy. @ :2
+[  181915ms] [ERROR] The Content Security Policy directive 'upgrade-insecure-requests' is ignored when delivered in a report-only policy. @ :2
+[  421961ms] [ERROR] The Content Security Policy directive 'upgrade-insecure-requests' is ignored when delivered in a report-only policy. @ https://lf-douyin-pc-web.douyinstatic.com/obj/douyin-pc-web/ies/douyin_web/async/81708.18085ed3.js:1
+[  421961ms] [ERROR] The Content Security Policy directive 'upgrade-insecure-requests' is ignored when delivered in a report-only policy. @ https://lf-douyin-pc-web.douyinstatic.com/obj/douyin-pc-web/ies/douyin_web/async/81708.18085ed3.js:1
+[  421963ms] [ERROR] The Content Security Policy directive 'upgrade-insecure-requests' is ignored when delivered in a report-only policy. @ https://lf-douyin-pc-web.douyinstatic.com/obj/douyin-pc-web/ies/douyin_web/async/81708.18085ed3.js:1
+[  422204ms] [ERROR] The Content Security Policy directive 'upgrade-insecure-requests' is ignored when delivered in a report-only policy. @ :2
+[  422204ms] [ERROR] The Content Security Policy directive 'upgrade-insecure-requests' is ignored when delivered in a report-only policy. @ :2
+[  422206ms] [ERROR] The Content Security Policy directive 'upgrade-insecure-requests' is ignored when delivered in a report-only policy. @ :2
+[  662254ms] [ERROR] The Content Security Policy directive 'upgrade-insecure-requests' is ignored when delivered in a report-only policy. @ https://lf-douyin-pc-web.douyinstatic.com/obj/douyin-pc-web/ies/douyin_web/async/81708.18085ed3.js:1
+[  662256ms] [ERROR] The Content Security Policy directive 'upgrade-insecure-requests' is ignored when delivered in a report-only policy. @ https://lf-douyin-pc-web.douyinstatic.com/obj/douyin-pc-web/ies/douyin_web/async/81708.18085ed3.js:1
+[  662261ms] [ERROR] The Content Security Policy directive 'upgrade-insecure-requests' is ignored when delivered in a report-only policy. @ https://lf-douyin-pc-web.douyinstatic.com/obj/douyin-pc-web/ies/douyin_web/async/81708.18085ed3.js:1
+[  662533ms] [ERROR] The Content Security Policy directive 'upgrade-insecure-requests' is ignored when delivered in a report-only policy. @ :2
+[  662534ms] [ERROR] The Content Security Policy directive 'upgrade-insecure-requests' is ignored when delivered in a report-only policy. @ :2
+[  662536ms] [ERROR] The Content Security Policy directive 'upgrade-insecure-requests' is ignored when delivered in a report-only policy. @ :2

@@ -1,0 +1,8 @@
+[    1429ms] [ERROR] TypeError: Failed to fetch (a-api.anthropic.com)
+    at https://platform.claude.com/_next/static/chunks/35246-b2e0d3d5be35a607.js:14:1612
+    at a (https://platform.claude.com/_next/static/chunks/83318-dc2050caf7c703e0.js:1:2794)
+    at f (https://platform.claude.com/_next/static/chunks/83318-dc2050caf7c703e0.js:1:93748)
+    at Array.map (<anonymous>)
+    at https://platform.claude.com/_next/static/chunks/83318-dc2050caf7c703e0.js:1:94201
+    at https://platform.claude.com/_next/static/chunks/83318-dc2050caf7c703e0.js:1:86430
+    at n (https://platform.claude.com/_next/static/chunks/35246-b2e0d3d5be35a607.js:1:84953) @ https://platform.claude.com/_next/static/chunks/35246-b2e0d3d5be35a607.js:13

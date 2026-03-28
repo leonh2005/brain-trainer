@@ -21,7 +21,8 @@
       "Bash(curl -s \"https://api.telegram.org/bot8666778924:AAFMAFKfsfx3opS2CfCBrDYMIx6vcJKACTk/getUpdates\")",
       "Bash(python3 -m json.tool)",
       "Bash(curl -s \"https://api.telegram.org/bot8666778924:AAFMAFKfsfx3opS2CfCBrDYMIx6vcJKACTk/setWebhook\" -d \"url=https://ohio-emails-supervisor-airlines.trycloudflare.com/telegram_webhook\")",
-      "Bash(ping -c 3 -W 5 161.33.6.190)"
+      "Bash(ping -c 3 -W 5 161.33.6.190)",
+      "Bash(gh run:*)"
     ]
   }
 }
