@@ -94,7 +94,7 @@ def git_commit_push(repo: str) -> str:
                 cwd=repo, check=True, capture_output=True
             )
 
-        r3 = subprocess.run(['git', 'push'], cwd=repo,
+        r3 = subprocess.run(['git', 'push', 'origin', 'main'], cwd=repo,
                             capture_output=True, text=True)
         if r3.returncode == 0:
             return f"✅ {name}：push 完成"
