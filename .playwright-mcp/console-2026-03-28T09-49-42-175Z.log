@@ -1,0 +1,172 @@
+[     660ms] [ERROR] Failed to emit 'TimeToInitializeTelemetryClient__Duration' event. Error: Dimension key and value must be a non empty string @ https://s.go-mpulse.net/boomerang/HA4J9-QN9JU-LSVMP-BUGZK-6GRU5:9
+[     665ms] [ERROR] Failed to emit 'NavigationMenu_I18nInit_en' event. Error: Dimension key and value must be a non empty string @ https://s.go-mpulse.net/boomerang/HA4J9-QN9JU-LSVMP-BUGZK-6GRU5:9
+[     665ms] [ERROR] Failed to emit 'Shell_I18nInit_en' event. Error: Dimension key and value must be a non empty string @ https://s.go-mpulse.net/boomerang/HA4J9-QN9JU-LSVMP-BUGZK-6GRU5:9
+[     665ms] [ERROR] Failed to emit 'WhatsNew_I18nInit_en' event. Error: Dimension key and value must be a non empty string @ https://s.go-mpulse.net/boomerang/HA4J9-QN9JU-LSVMP-BUGZK-6GRU5:9
+[     665ms] [ERROR] Failed to emit 'SearchConfig_I18nInit_en' event. Error: Dimension key and value must be a non empty string @ https://s.go-mpulse.net/boomerang/HA4J9-QN9JU-LSVMP-BUGZK-6GRU5:9
+[     666ms] [WARNING] WARNING! XMLHttpRequest signing for OCI endpoints is being deprecated @ https://cloud.oracle.com/plugins/console/4.18.1hotfix.1/js/vendors.console.49d0a293.js:1
+[    2404ms] [ERROR] Invalid region @ https://login.oci.oraclecloud.com/assets/soup-ux/js/main.js?ver=907b3b49613da5e626da:0
+[  216797ms] [ERROR] Invalid region @ https://login.oci.oraclecloud.com/assets/soup-ux/js/henosis.js?ver=907b3b49613da5e626da:0
+[  217308ms] [ERROR] Failed to emit 'TimeToInitializeTelemetryClient__Duration' event. Error: Dimension key and value must be a non empty string @ https://cloud.oracle.com/plugins/console/4.18.1hotfix.1/js/vendors.console.49d0a293.js:1
+[  217312ms] [ERROR] Failed to emit 'NavigationMenu_I18nInit_en' event. Error: Dimension key and value must be a non empty string @ https://cloud.oracle.com/plugins/console/4.18.1hotfix.1/js/vendors.console.49d0a293.js:1
+[  217312ms] [ERROR] Failed to emit 'Shell_I18nInit_en' event. Error: Dimension key and value must be a non empty string @ https://cloud.oracle.com/plugins/console/4.18.1hotfix.1/js/vendors.console.49d0a293.js:1
+[  217312ms] [ERROR] Failed to emit 'WhatsNew_I18nInit_en' event. Error: Dimension key and value must be a non empty string @ https://cloud.oracle.com/plugins/console/4.18.1hotfix.1/js/vendors.console.49d0a293.js:1
+[  217312ms] [ERROR] Failed to emit 'SearchConfig_I18nInit_en' event. Error: Dimension key and value must be a non empty string @ https://cloud.oracle.com/plugins/console/4.18.1hotfix.1/js/vendors.console.49d0a293.js:1
+[  217312ms] [WARNING] WARNING! XMLHttpRequest signing for OCI endpoints is being deprecated @ https://cloud.oracle.com/plugins/console/4.18.1hotfix.1/js/vendors.console.49d0a293.js:1
+[  217317ms] [WARNING] The database "duplo" can't be downgraded from version 22 to version 2. @ https://cloud.oracle.com/plugins/console/4.18.1hotfix.1/js/vendors.console.49d0a293.js:1
+[  217854ms] [ERROR] Error occurred in Application., Error: Failed to retrieve capabilities: TypeError: Cannot read properties of undefined (reading 'capabilityModule'), {"metadata":{"url":"https://cloud.oracle.com/compute/instances?region=ap-osaka-1"},"eventName":"HandledExceptionEvent"} @ https://s.go-mpulse.net/boomerang/HA4J9-QN9JU-LSVMP-BUGZK-6GRU5:9
+[  218226ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://cloud.oracle.com/root.css:0
+[  218347ms] [WARNING] An iframe which has both allow-scripts and allow-same-origin for its sandbox attribute can escape its sandboxing. @ https://cloud.oracle.com/plugins/maui-preact/latest/prod-oc1-index.tpl.html?region=ap-osaka-1:0
+[  218914ms] Error: Dimension key and value must be a non empty string
+    at https://cloud.oracle.com/plugins/console/4.18.1hotfix.1/js/vendors.console.49d0a293.js:2:795900
+    at Array.forEach (<anonymous>)
+    at a.validateDimensionParamaters (https://cloud.oracle.com/plugins/console/4.18.1hotfix.1/js/vendors.console.49d0a293.js:2:795818)
+    at a.sendMetric (https://cloud.oracle.com/plugins/console/4.18.1hotfix.1/js/vendors.console.49d0a293.js:2:795990)
+    at t.default.<anonymous> (https://cloud.oracle.com/plugins/console/4.18.1hotfix.1/js/vendors.console.49d0a293.js:2:691999)
+    at Generator.next (<anonymous>)
+    at a (https://cloud.oracle.com/plugins/console/4.18.1hotfix.1/js/vendors.console.49d0a293.js:2:687954)
+[  218916ms] Error: Dimension key and value must be a non empty string
+    at https://cloud.oracle.com/plugins/console/4.18.1hotfix.1/js/vendors.console.49d0a293.js:2:795900
+    at Array.forEach (<anonymous>)
+    at a.validateDimensionParamaters (https://cloud.oracle.com/plugins/console/4.18.1hotfix.1/js/vendors.console.49d0a293.js:2:795818)
+    at a.sendMetric (https://cloud.oracle.com/plugins/console/4.18.1hotfix.1/js/vendors.console.49d0a293.js:2:795990)
+    at t.default.<anonymous> (https://cloud.oracle.com/plugins/console/4.18.1hotfix.1/js/vendors.console.49d0a293.js:2:691999)
+    at Generator.next (<anonymous>)
+    at a (https://cloud.oracle.com/plugins/console/4.18.1hotfix.1/js/vendors.console.49d0a293.js:2:687954)
+[  218917ms] Error: Dimension key and value must be a non empty string
+    at https://cloud.oracle.com/plugins/console/4.18.1hotfix.1/js/vendors.console.49d0a293.js:2:795900
+    at Array.forEach (<anonymous>)
+    at a.validateDimensionParamaters (https://cloud.oracle.com/plugins/console/4.18.1hotfix.1/js/vendors.console.49d0a293.js:2:795818)
+    at a.sendMetric (https://cloud.oracle.com/plugins/console/4.18.1hotfix.1/js/vendors.console.49d0a293.js:2:795990)
+    at t.default.<anonymous> (https://cloud.oracle.com/plugins/console/4.18.1hotfix.1/js/vendors.console.49d0a293.js:2:691999)
+    at Generator.next (<anonymous>)
+    at a (https://cloud.oracle.com/plugins/console/4.18.1hotfix.1/js/vendors.console.49d0a293.js:2:687954)
+[  218917ms] Error: Dimension key and value must be a non empty string
+    at https://cloud.oracle.com/plugins/console/4.18.1hotfix.1/js/vendors.console.49d0a293.js:2:795900
+    at Array.forEach (<anonymous>)
+    at a.validateDimensionParamaters (https://cloud.oracle.com/plugins/console/4.18.1hotfix.1/js/vendors.console.49d0a293.js:2:795818)
+    at a.sendMetric (https://cloud.oracle.com/plugins/console/4.18.1hotfix.1/js/vendors.console.49d0a293.js:2:795990)
+    at t.default.<anonymous> (https://cloud.oracle.com/plugins/console/4.18.1hotfix.1/js/vendors.console.49d0a293.js:2:691999)
+    at Generator.next (<anonymous>)
+    at a (https://cloud.oracle.com/plugins/console/4.18.1hotfix.1/js/vendors.console.49d0a293.js:2:687954)
+[  218917ms] Error: Dimension key and value must be a non empty string
+    at https://cloud.oracle.com/plugins/console/4.18.1hotfix.1/js/vendors.console.49d0a293.js:2:795900
+    at Array.forEach (<anonymous>)
+    at a.validateDimensionParamaters (https://cloud.oracle.com/plugins/console/4.18.1hotfix.1/js/vendors.console.49d0a293.js:2:795818)
+    at a.sendMetric (https://cloud.oracle.com/plugins/console/4.18.1hotfix.1/js/vendors.console.49d0a293.js:2:795990)
+    at t.default.<anonymous> (https://cloud.oracle.com/plugins/console/4.18.1hotfix.1/js/vendors.console.49d0a293.js:2:691999)
+    at Generator.next (<anonymous>)
+    at a (https://cloud.oracle.com/plugins/console/4.18.1hotfix.1/js/vendors.console.49d0a293.js:2:687954)
+[  218917ms] Error: Dimension key and value must be a non empty string
+    at https://cloud.oracle.com/plugins/console/4.18.1hotfix.1/js/vendors.console.49d0a293.js:2:795900
+    at Array.forEach (<anonymous>)
+    at a.validateDimensionParamaters (https://cloud.oracle.com/plugins/console/4.18.1hotfix.1/js/vendors.console.49d0a293.js:2:795818)
+    at a.sendMetric (https://cloud.oracle.com/plugins/console/4.18.1hotfix.1/js/vendors.console.49d0a293.js:2:795990)
+    at t.default.<anonymous> (https://cloud.oracle.com/plugins/console/4.18.1hotfix.1/js/vendors.console.49d0a293.js:2:691999)
+    at Generator.next (<anonymous>)
+    at a (https://cloud.oracle.com/plugins/console/4.18.1hotfix.1/js/vendors.console.49d0a293.js:2:687954)
+[  218917ms] Error: Dimension key and value must be a non empty string
+    at https://cloud.oracle.com/plugins/console/4.18.1hotfix.1/js/vendors.console.49d0a293.js:2:795900
+    at Array.forEach (<anonymous>)
+    at a.validateDimensionParamaters (https://cloud.oracle.com/plugins/console/4.18.1hotfix.1/js/vendors.console.49d0a293.js:2:795818)
+    at a.sendMetric (https://cloud.oracle.com/plugins/console/4.18.1hotfix.1/js/vendors.console.49d0a293.js:2:795990)
+    at t.default.<anonymous> (https://cloud.oracle.com/plugins/console/4.18.1hotfix.1/js/vendors.console.49d0a293.js:2:691999)
+    at Generator.next (<anonymous>)
+    at a (https://cloud.oracle.com/plugins/console/4.18.1hotfix.1/js/vendors.console.49d0a293.js:2:687954)
+[  219333ms] [WARNING] Error showing the usage of an account in active promotion @ https://cloud.oracle.com/plugins/console/4.18.1hotfix.1/js/vendors.console.49d0a293.js:1
+[  220589ms] [WARNING] You cannot refresh listInstances at this time since it is already being refreshed. Please wait or consider making your polling less aggressive @ https://cloud.oracle.com/plugins/maui-preact/latest/js/vendor.oci.4e6644.1774030336631.js:1
+[  221260ms] Error: Dimension key and value must be a non empty string
+    at https://cloud.oracle.com/plugins/console/4.18.1hotfix.1/js/vendors.console.49d0a293.js:2:795900
+    at Array.forEach (<anonymous>)
+    at a.validateDimensionParamaters (https://cloud.oracle.com/plugins/console/4.18.1hotfix.1/js/vendors.console.49d0a293.js:2:795818)
+    at a.sendMetric (https://cloud.oracle.com/plugins/console/4.18.1hotfix.1/js/vendors.console.49d0a293.js:2:795990)
+    at t.default.<anonymous> (https://cloud.oracle.com/plugins/console/4.18.1hotfix.1/js/vendors.console.49d0a293.js:2:691999)
+    at Generator.next (<anonymous>)
+    at a (https://cloud.oracle.com/plugins/console/4.18.1hotfix.1/js/vendors.console.49d0a293.js:2:687954)
+[  221267ms] Error: Dimension key and value must be a non empty string
+    at https://cloud.oracle.com/plugins/console/4.18.1hotfix.1/js/vendors.console.49d0a293.js:2:795900
+    at Array.forEach (<anonymous>)
+    at a.validateDimensionParamaters (https://cloud.oracle.com/plugins/console/4.18.1hotfix.1/js/vendors.console.49d0a293.js:2:795818)
+    at a.sendMetric (https://cloud.oracle.com/plugins/console/4.18.1hotfix.1/js/vendors.console.49d0a293.js:2:795990)
+    at t.default.<anonymous> (https://cloud.oracle.com/plugins/console/4.18.1hotfix.1/js/vendors.console.49d0a293.js:2:691999)
+    at Generator.next (<anonymous>)
+    at a (https://cloud.oracle.com/plugins/console/4.18.1hotfix.1/js/vendors.console.49d0a293.js:2:687954)
+[  280707ms] Error: Dimension key and value must be a non empty string
+    at https://cloud.oracle.com/plugins/console/4.18.1hotfix.1/js/vendors.console.49d0a293.js:2:795900
+    at Array.forEach (<anonymous>)
+    at a.validateDimensionParamaters (https://cloud.oracle.com/plugins/console/4.18.1hotfix.1/js/vendors.console.49d0a293.js:2:795818)
+    at a.sendMetric (https://cloud.oracle.com/plugins/console/4.18.1hotfix.1/js/vendors.console.49d0a293.js:2:795990)
+    at t.default.<anonymous> (https://cloud.oracle.com/plugins/console/4.18.1hotfix.1/js/vendors.console.49d0a293.js:2:691999)
+    at Generator.next (<anonymous>)
+    at a (https://cloud.oracle.com/plugins/console/4.18.1hotfix.1/js/vendors.console.49d0a293.js:2:687954)
+[  864592ms] [WARNING] An iframe which has both allow-scripts and allow-same-origin for its sandbox attribute can escape its sandboxing. @ https://cloud.oracle.com/plugins/cloudshell/latest/prod-oc1-index.tpl.html?region=ap-osaka-1:0
+[  865117ms] [WARNING] cloudShellApi is using overridden endpoint: https://cloudshell.ap-osaka-1.oci.oraclecloud.com/20190917 @ https://cloud.oracle.com/plugins/cloudshell/latest/js/chunk-1.bc35e79bcb70e32105c6.js:1
+[  865117ms] [WARNING] virtualNetworkApi is using overridden endpoint: https://iaas.ap-osaka-1.oraclecloud.com/20160918 @ https://cloud.oracle.com/plugins/cloudshell/latest/js/chunk-1.bc35e79bcb70e32105c6.js:1
+[  866059ms] [WARNING] Canvas2D: Multiple readback operations using getImageData are faster with the willReadFrequently attribute set to true. See: https://html.spec.whatwg.org/multipage/canvas.html#concept-canvas-will-read-frequently @ https://cloud.oracle.com/plugins/cloudshell/latest/js/chunk-1.bc35e79bcb70e32105c6.js:1
+[  873870ms] [WARNING] Canvas2D: Multiple readback operations using getImageData are faster with the willReadFrequently attribute set to true. See: https://html.spec.whatwg.org/multipage/canvas.html#concept-canvas-will-read-frequently @ https://cloud.oracle.com/plugins/cloudshell/latest/js/chunk-1.bc35e79bcb70e32105c6.js:1
+[  875439ms] [WARNING] Long running task detected self. containerId: sandbox-cloudshell-container
+            containerName: 
+            containerSrc: https://cloud.oracle.com/plugins/cloudshell/latest/prod-oc1-index.tpl.html?region=ap-osaka-1
+            containerType: iframe  LongTask undefined @ https://cloud.oracle.com/plugins/cloudshell/latest/js/chunk-1.bc35e79bcb70e32105c6.js:1
+[  875442ms] [WARNING] [cloudshell__LongTask]: Long running task detected self. containerId: sandbox-cloudshell-container
+            containerName: 
+            containerSrc: https://cloud.oracle.com/plugins/cloudshell/latest/prod-oc1-index.tpl.html?region=ap-osaka-1
+            containerType: iframe  {logMetadata: Object, msg: Message: 'Long running task detected self. contain…on=ap-osaka-1
+            containerType: iframe '} @ https://cloud.oracle.com/plugins/console/4.18.1hotfix.1/js/vendors.console.49d0a293.js:1
+[  875442ms] [WARNING] Message: 'Long running task detected self. containerId: sandbox-cloudshell-container
+            containerName: 
+            containerSrc: https://cloud.oracle.com/plugins/cloudshell/latest/prod-oc1-index.tpl.html?region=ap-osaka-1
+            containerType: iframe ' @ https://cloud.oracle.com/plugins/console/4.18.1hotfix.1/js/vendors.console.49d0a293.js:1
+[ 3400937ms] Error: Dimension key and value must be a non empty string
+    at https://cloud.oracle.com/plugins/console/4.18.1hotfix.1/js/vendors.console.49d0a293.js:2:795900
+    at Array.forEach (<anonymous>)
+    at a.validateDimensionParamaters (https://cloud.oracle.com/plugins/console/4.18.1hotfix.1/js/vendors.console.49d0a293.js:2:795818)
+    at a.sendMetric (https://cloud.oracle.com/plugins/console/4.18.1hotfix.1/js/vendors.console.49d0a293.js:2:795990)
+    at t.default.<anonymous> (https://cloud.oracle.com/plugins/console/4.18.1hotfix.1/js/vendors.console.49d0a293.js:2:691999)
+    at Generator.next (<anonymous>)
+    at a (https://cloud.oracle.com/plugins/console/4.18.1hotfix.1/js/vendors.console.49d0a293.js:2:687954)
+[ 3402042ms] [WARNING] Event 'PluginDataInteractiveLoad_compute_instances.compute' has already been emitted. @ https://cloud.oracle.com/plugins/maui-preact/latest/js/vendor.oci.4e6644.1774030336631.js:1
+[ 3402400ms] [WARNING] Long running task detected same-origin. containerId: sandbox-maui-preact-container
+            containerName: 
+            containerSrc: https://cloud.oracle.com/plugins/maui-preact/latest/prod-oc1-index.tpl.html?region=ap-osaka-1
+            containerType: iframe  LongTask undefined @ https://cloud.oracle.com/plugins/cloudshell/latest/js/chunk-1.bc35e79bcb70e32105c6.js:1
+[ 3402401ms] [WARNING] [cloudshell__LongTask]: Long running task detected same-origin. containerId: sandbox-maui-preact-container
+            containerName: 
+            containerSrc: https://cloud.oracle.com/plugins/maui-preact/latest/prod-oc1-index.tpl.html?region=ap-osaka-1
+            containerType: iframe  {logMetadata: Object, msg: Message: 'Long running task detected same-origin. …on=ap-osaka-1
+            containerType: iframe '} @ https://cloud.oracle.com/plugins/console/4.18.1hotfix.1/js/vendors.console.49d0a293.js:1
+[ 3402401ms] [WARNING] Message: 'Long running task detected same-origin. containerId: sandbox-maui-preact-container
+            containerName: 
+            containerSrc: https://cloud.oracle.com/plugins/maui-preact/latest/prod-oc1-index.tpl.html?region=ap-osaka-1
+            containerType: iframe ' @ https://cloud.oracle.com/plugins/console/4.18.1hotfix.1/js/vendors.console.49d0a293.js:1
+[ 4301119ms] Error: Dimension key and value must be a non empty string
+    at https://cloud.oracle.com/plugins/console/4.18.1hotfix.1/js/vendors.console.49d0a293.js:2:795900
+    at Array.forEach (<anonymous>)
+    at a.validateDimensionParamaters (https://cloud.oracle.com/plugins/console/4.18.1hotfix.1/js/vendors.console.49d0a293.js:2:795818)
+    at a.sendMetric (https://cloud.oracle.com/plugins/console/4.18.1hotfix.1/js/vendors.console.49d0a293.js:2:795990)
+    at t.default.<anonymous> (https://cloud.oracle.com/plugins/console/4.18.1hotfix.1/js/vendors.console.49d0a293.js:2:691999)
+    at Generator.next (<anonymous>)
+    at a (https://cloud.oracle.com/plugins/console/4.18.1hotfix.1/js/vendors.console.49d0a293.js:2:687954)
+[ 4301900ms] [WARNING] Event 'PluginDataInteractiveLoad_compute_instances.compute' has already been emitted. @ https://cloud.oracle.com/plugins/maui-preact/latest/js/vendor.oci.4e6644.1774030336631.js:1
+[ 4303525ms] [WARNING] Long running task detected same-origin. containerId: sandbox-maui-preact-container
+            containerName: 
+            containerSrc: https://cloud.oracle.com/plugins/maui-preact/latest/prod-oc1-index.tpl.html?region=ap-osaka-1
+            containerType: iframe  LongTask undefined @ https://cloud.oracle.com/plugins/cloudshell/latest/js/chunk-1.bc35e79bcb70e32105c6.js:1
+[ 4303526ms] [WARNING] [cloudshell__LongTask]: Long running task detected same-origin. containerId: sandbox-maui-preact-container
+            containerName: 
+            containerSrc: https://cloud.oracle.com/plugins/maui-preact/latest/prod-oc1-index.tpl.html?region=ap-osaka-1
+            containerType: iframe  {logMetadata: Object, msg: Message: 'Long running task detected same-origin. …on=ap-osaka-1
+            containerType: iframe '} @ https://cloud.oracle.com/plugins/console/4.18.1hotfix.1/js/vendors.console.49d0a293.js:1
+[ 4303527ms] [WARNING] Message: 'Long running task detected same-origin. containerId: sandbox-maui-preact-container
+            containerName: 
+            containerSrc: https://cloud.oracle.com/plugins/maui-preact/latest/prod-oc1-index.tpl.html?region=ap-osaka-1
+            containerType: iframe ' @ https://cloud.oracle.com/plugins/console/4.18.1hotfix.1/js/vendors.console.49d0a293.js:1
+[ 4361395ms] Error: Dimension key and value must be a non empty string
+    at https://cloud.oracle.com/plugins/console/4.18.1hotfix.1/js/vendors.console.49d0a293.js:2:795900
+    at Array.forEach (<anonymous>)
+    at a.validateDimensionParamaters (https://cloud.oracle.com/plugins/console/4.18.1hotfix.1/js/vendors.console.49d0a293.js:2:795818)
+    at a.sendMetric (https://cloud.oracle.com/plugins/console/4.18.1hotfix.1/js/vendors.console.49d0a293.js:2:795990)
+    at t.default.<anonymous> (https://cloud.oracle.com/plugins/console/4.18.1hotfix.1/js/vendors.console.49d0a293.js:2:691999)
+    at Generator.next (<anonymous>)
+    at a (https://cloud.oracle.com/plugins/console/4.18.1hotfix.1/js/vendors.console.49d0a293.js:2:687954)
+[ 4361629ms] [WARNING] Event 'PluginDataInteractiveLoad_compute_instances.compute' has already been emitted. @ https://cloud.oracle.com/plugins/maui-preact/latest/js/vendor.oci.4e6644.1774030336631.js:1
+[ 7103034ms] [WARNING] SessionActivity: Session is about to expire. @ https://cloud.oracle.com/plugins/console/4.18.1hotfix.1/js/vendors.console.49d0a293.js:1
