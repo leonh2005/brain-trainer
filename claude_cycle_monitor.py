@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Claude usage 週期監測 - 每5小時提醒 + 結束前自動同步"""
 
-import os, time, subprocess, requests, anthropic
+import os, time, subprocess, requests
 from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 from dotenv import load_dotenv
@@ -119,12 +119,12 @@ def rsync_vm() -> str:
 
 
 def auto_update_memory() -> str:
-    """用 Claude API 分析近期 git 變更，自動更新記憶檔案"""
-    api_key = os.getenv('ANTHROPIC_API_KEY')
+    """用 Gemini 分析近期 git 變更，自動更新記憶檔案"""
+    import google.genai as genai
+    api_key = os.getenv('GEMINI_API_KEY')
     if not api_key:
-        return "⚠️ 無 ANTHROPIC_API_KEY，跳過記憶更新"
+        return "⚠️ 無 GEMINI_API_KEY，跳過記憶更新"
 
-    # 收集最近兩個 repo 的 git log
     logs = []
     for repo in REPOS:
         name = os.path.basename(repo)
@@ -146,33 +146,31 @@ def auto_update_memory() -> str:
     except Exception:
         index = ''
 
-    client = anthropic.Anthropic(api_key=api_key)
     prompt = (
         "你是 Steven 的 Claude Code 助手，負責維護記憶系統。\n"
         "以下是最近的 git commit 記錄：\n\n"
         + '\n\n'.join(logs) +
         "\n\n現有記憶索引：\n" + index +
-        "\n\n請判斷這些 commit 中是否有需要更新記憶的重要事項（專案狀態、架構變更、重要決策等）。"
+        "\n\n請判斷這些 commit 中是否有需要更新記憶的重要事項"
+        "（專案狀態、架構變更、重要決策等）。"
         "若有，直接輸出需要新增或修改的記憶內容（Markdown 格式，含 frontmatter）；"
         "若無新事項，輸出「無需更新」即可。不要輸出其他說明。"
     )
 
     try:
-        resp = client.messages.create(
-            model='claude-haiku-4-5-20251001',
-            max_tokens=1000,
-            messages=[{'role': 'user', 'content': prompt}]
+        client = genai.Client(api_key=api_key)
+        resp = client.models.generate_content(
+            model='gemini-2.5-flash', contents=prompt
         )
-        result = resp.content[0].text.strip()
-        if result == '無需更新':
+        result = resp.text.strip()
+        if '無需更新' in result:
             return "✅ 記憶無需更新"
-        # 寫入記憶檔案
         fname = os.path.join(memory_dir, f'auto_{datetime.now(TZ).strftime("%Y%m%d_%H%M")}.md')
         with open(fname, 'w') as f:
             f.write(result)
         return f"✅ 記憶已更新：{os.path.basename(fname)}"
     except Exception as e:
-        return f"⚠️ Claude API 記憶更新失敗：{str(e)[:60]}"
+        return f"⚠️ 記憶更新失敗：{str(e)[:60]}"
 
 
 def run_auto_session_end():
