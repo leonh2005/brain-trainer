@@ -1,0 +1,112 @@
+2026-03-28 09:23:29 UTC
+macOS-26.3.1-arm64-arm-64bit
+Ren'Py 8.5.2.26010301
+
+Early init took 17 ms
+Loading error handling took 14 ms
+Loading script took 288 ms
+Loading save slot metadata took 10 ms
+Loading persistent took 0 ms
+=== TRANSLATE FILES ===
+=== SEARCHPATH ===
+/Users/steven/CCProject/sl_vn_demo/game
+/Applications/renpy-8.5.2-sdk/renpy/common
+
+Full traceback:
+  File "renpy/common/00mixers.rpy", line 53, in script
+    python hide:
+  File "renpy/ast.py", line 1187, in execute
+    renpy.python.py_exec_bytecode(self.code.bytecode, self.hide, store=self.store)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "renpy/python.py", line 1273, in py_exec_bytecode
+    exec(bytecode, globals, locals)
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "renpy/common/00mixers.rpy", line 53, in <module>
+    python hide:
+  File "renpy/common/00mixers.rpy", line 55, in _execute_python_hide
+    if not renpy.music.channel_defined("movie"):
+           ^^^^^^^^^^^                          
+AttributeError: module 'renpy' has no attribute 'music'
+
+While running game code:
+AttributeError: module 'renpy' has no attribute 'music'
+DPI scale factor: 1.000000
+Interface start took 173 ms
+
+Initializing gl2 renderer:
+primary display bounds: (0, 0, 1920, 1080)
+swap interval: 1 frames
+Windowed mode.
+Vendor: 'Apple'
+Renderer: 'Apple M4'
+Version: '2.1 Metal - 90.5'
+Display Info: <Info({'bitsize': 32, 'bytesize': 4, 'masks': (16711680, 65280, 255, 4278190080), 'shifts': (16, 8, 0, 24), 'losses': (0, 0, 0, 0), 'current_w': 1920, 'current_h': 1080, 'refresh_rate': 60, 'hw': False, 'wm': True, 'video_mem': 268435456, 'blit_hw': False, 'blit_hw_CC': False, 'blit_hw_A': False, 'blit_sw': False, 'blit_sw_CC': False, 'blit_sw_A': False})>
+Screen sizes: virtual=(1280, 720) physical=(1280, 720) drawable=(1280, 720)
+Maximum texture size: 4096x4096
+Could not open 'cache/shaders.txt':
+
+Full traceback:
+  File "renpy/common/00mixers.rpy", line 53, in script
+    python hide:
+  File "renpy/ast.py", line 1187, in execute
+    renpy.python.py_exec_bytecode(self.code.bytecode, self.hide, store=self.store)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "renpy/python.py", line 1273, in py_exec_bytecode
+    exec(bytecode, globals, locals)
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "renpy/common/00mixers.rpy", line 53, in <module>
+    python hide:
+  File "renpy/common/00mixers.rpy", line 55, in _execute_python_hide
+    if not renpy.music.channel_defined("movie"):
+           ^^^^^^^^^^^                          
+AttributeError: module 'renpy' has no attribute 'music'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "renpy/bootstrap.py", line 401, in bootstrap
+    renpy.main.main()
+    ~~~~~~~~~~~~~~~^^
+  File "renpy/main.py", line 483, in main
+    node.execute_init()
+    ~~~~~~~~~~~~~~~~~^^
+  File "renpy/ast.py", line 1071, in execute_init
+    renpy.game.context().run(self.block[0])
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "renpy/common/00mixers.rpy", line 53, in script
+    python hide:
+  File "renpy/common/00mixers.rpy", line 53, in script
+    python hide:
+  File "renpy/display/error.py", line 135, in report_exception
+    renpy.game.invoke_in_new_context(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        call_exception_screen,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+        ignore_action=ignore_action,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "renpy/game.py", line 285, in invoke_in_new_context
+    return callable(*args, **kwargs)
+           ~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "renpy/display/error.py", line 44, in call_exception_screen
+    return renpy.ui.interact(mouse="screen", type="screen", suppress_overlay=True, suppress_underlay=True)
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "renpy/ui.py", line 306, in interact
+    rv = renpy.game.interface.interact(roll_forward=roll_forward, **kwargs)
+         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "renpy/display/core.py", line 2139, in interact
+    i()
+    ~^^
+  File "renpy/common/00sideimage.rpy", line 63, in _side_per_interact
+    new = renpy.get_side_image(side_image_prefix_tag, image_tag=side_image_tag, not_showing=config.side_image_only_not_showing)
+          ^^^^^^^^^^^^^^^^^^^^                                                                                                 
+AttributeError: module 'renpy' has no attribute 'get_side_image'
+
+While running game code:
+AttributeError: module 'renpy' has no attribute 'music'
+
+During handling of the above exception, another exception occurred:
+
+AttributeError: module 'renpy' has no attribute 'get_side_image'
