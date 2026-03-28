@@ -1,0 +1,161 @@
+[     222ms] [ERROR] Failed to load resource: the server responded with a status of 404 (NOT FOUND) @ http://localhost:5050/api/report/status:0
+[     222ms] [ERROR] Failed to load resource: the server responded with a status of 404 (NOT FOUND) @ http://localhost:5050/api/report/status?heartbeat=1:0
+[     223ms] [ERROR] 检查Report Engine状态失败: SyntaxError: Unexpected token '<', "<!doctype "... is not valid JSON @ http://localhost:5050/:4487
+[   10018ms] [ERROR] Failed to load resource: the server responded with a status of 500 (INTERNAL SERVER ERROR) @ http://localhost:5050/api/system/start:0
+[   15219ms] [ERROR] Failed to load resource: the server responded with a status of 404 (NOT FOUND) @ http://localhost:5050/api/report/status:0
+[   15219ms] [ERROR] 检查Report Engine状态失败: SyntaxError: Unexpected token '<', "<!doctype "... is not valid JSON @ http://localhost:5050/:4487
+[   15219ms] [ERROR] Failed to load resource: the server responded with a status of 404 (NOT FOUND) @ http://localhost:5050/api/report/status?heartbeat=1:0
+[   30221ms] [ERROR] Failed to load resource: the server responded with a status of 404 (NOT FOUND) @ http://localhost:5050/api/report/status:0
+[   30221ms] [ERROR] 检查Report Engine状态失败: SyntaxError: Unexpected token '<', "<!doctype "... is not valid JSON @ http://localhost:5050/:4487
+[   30221ms] [ERROR] Failed to load resource: the server responded with a status of 404 (NOT FOUND) @ http://localhost:5050/api/report/status?heartbeat=1:0
+[   45220ms] [ERROR] Failed to load resource: the server responded with a status of 404 (NOT FOUND) @ http://localhost:5050/api/report/status:0
+[   45220ms] [ERROR] 检查Report Engine状态失败: SyntaxError: Unexpected token '<', "<!doctype "... is not valid JSON @ http://localhost:5050/:4487
+[   45220ms] [ERROR] Failed to load resource: the server responded with a status of 404 (NOT FOUND) @ http://localhost:5050/api/report/status?heartbeat=1:0
+[   60220ms] [ERROR] Failed to load resource: the server responded with a status of 404 (NOT FOUND) @ http://localhost:5050/api/report/status:0
+[   60220ms] [ERROR] 检查Report Engine状态失败: SyntaxError: Unexpected token '<', "<!doctype "... is not valid JSON @ http://localhost:5050/:4487
+[   60221ms] [ERROR] Failed to load resource: the server responded with a status of 404 (NOT FOUND) @ http://localhost:5050/api/report/status?heartbeat=1:0
+[   75221ms] [ERROR] Failed to load resource: the server responded with a status of 404 (NOT FOUND) @ http://localhost:5050/api/report/status:0
+[   75221ms] [ERROR] 检查Report Engine状态失败: SyntaxError: Unexpected token '<', "<!doctype "... is not valid JSON @ http://localhost:5050/:4487
+[   75222ms] [ERROR] Failed to load resource: the server responded with a status of 404 (NOT FOUND) @ http://localhost:5050/api/report/status?heartbeat=1:0
+[   90221ms] [ERROR] Failed to load resource: the server responded with a status of 404 (NOT FOUND) @ http://localhost:5050/api/report/status:0
+[   90222ms] [ERROR] 检查Report Engine状态失败: SyntaxError: Unexpected token '<', "<!doctype "... is not valid JSON @ http://localhost:5050/:4487
+[   90222ms] [ERROR] Failed to load resource: the server responded with a status of 404 (NOT FOUND) @ http://localhost:5050/api/report/status?heartbeat=1:0
+[  105220ms] [ERROR] Failed to load resource: the server responded with a status of 404 (NOT FOUND) @ http://localhost:5050/api/report/status:0
+[  105220ms] [ERROR] 检查Report Engine状态失败: SyntaxError: Unexpected token '<', "<!doctype "... is not valid JSON @ http://localhost:5050/:4487
+[  105221ms] [ERROR] Failed to load resource: the server responded with a status of 404 (NOT FOUND) @ http://localhost:5050/api/report/status?heartbeat=1:0
+[  120221ms] [ERROR] Failed to load resource: the server responded with a status of 404 (NOT FOUND) @ http://localhost:5050/api/report/status:0
+[  120221ms] [ERROR] 检查Report Engine状态失败: SyntaxError: Unexpected token '<', "<!doctype "... is not valid JSON @ http://localhost:5050/:4487
+[  120222ms] [ERROR] Failed to load resource: the server responded with a status of 404 (NOT FOUND) @ http://localhost:5050/api/report/status?heartbeat=1:0
+[  135220ms] [ERROR] Failed to load resource: the server responded with a status of 404 (NOT FOUND) @ http://localhost:5050/api/report/status:0
+[  135220ms] [ERROR] 检查Report Engine状态失败: SyntaxError: Unexpected token '<', "<!doctype "... is not valid JSON @ http://localhost:5050/:4487
+[  135221ms] [ERROR] Failed to load resource: the server responded with a status of 404 (NOT FOUND) @ http://localhost:5050/api/report/status?heartbeat=1:0
+[  150222ms] [ERROR] Failed to load resource: the server responded with a status of 404 (NOT FOUND) @ http://localhost:5050/api/report/status:0
+[  150223ms] [ERROR] 检查Report Engine状态失败: SyntaxError: Unexpected token '<', "<!doctype "... is not valid JSON @ http://localhost:5050/:4487
+[  150223ms] [ERROR] Failed to load resource: the server responded with a status of 404 (NOT FOUND) @ http://localhost:5050/api/report/status?heartbeat=1:0
+[  165219ms] [ERROR] Failed to load resource: the server responded with a status of 404 (NOT FOUND) @ http://localhost:5050/api/report/status:0
+[  165219ms] [ERROR] 检查Report Engine状态失败: SyntaxError: Unexpected token '<', "<!doctype "... is not valid JSON @ http://localhost:5050/:4487
+[  165219ms] [ERROR] Failed to load resource: the server responded with a status of 404 (NOT FOUND) @ http://localhost:5050/api/report/status?heartbeat=1:0
+[  180220ms] [ERROR] Failed to load resource: the server responded with a status of 404 (NOT FOUND) @ http://localhost:5050/api/report/status:0
+[  180220ms] [ERROR] 检查Report Engine状态失败: SyntaxError: Unexpected token '<', "<!doctype "... is not valid JSON @ http://localhost:5050/:4487
+[  180221ms] [ERROR] Failed to load resource: the server responded with a status of 404 (NOT FOUND) @ http://localhost:5050/api/report/status?heartbeat=1:0
+[  196205ms] [ERROR] Failed to load resource: the server responded with a status of 404 (NOT FOUND) @ http://localhost:5050/api/report/status:0
+[  196205ms] [ERROR] 检查Report Engine状态失败: SyntaxError: Unexpected token '<', "<!doctype "... is not valid JSON @ http://localhost:5050/:4487
+[  196205ms] [ERROR] Failed to load resource: the server responded with a status of 404 (NOT FOUND) @ http://localhost:5050/api/report/status?heartbeat=1:0
+[  210801ms] [ERROR] Failed to load resource: the server responded with a status of 404 (NOT FOUND) @ http://localhost:5050/api/report/status:0
+[  210801ms] [ERROR] 检查Report Engine状态失败: SyntaxError: Unexpected token '<', "<!doctype "... is not valid JSON @ http://localhost:5050/:4487
+[  210802ms] [ERROR] Failed to load resource: the server responded with a status of 404 (NOT FOUND) @ http://localhost:5050/api/report/status?heartbeat=1:0
+[  225220ms] [ERROR] Failed to load resource: the server responded with a status of 404 (NOT FOUND) @ http://localhost:5050/api/report/status:0
+[  225221ms] [ERROR] 检查Report Engine状态失败: SyntaxError: Unexpected token '<', "<!doctype "... is not valid JSON @ http://localhost:5050/:4487
+[  225222ms] [ERROR] Failed to load resource: the server responded with a status of 404 (NOT FOUND) @ http://localhost:5050/api/report/status?heartbeat=1:0
+[  240231ms] [ERROR] Failed to load resource: the server responded with a status of 404 (NOT FOUND) @ http://localhost:5050/api/report/status:0
+[  240231ms] [ERROR] 检查Report Engine状态失败: SyntaxError: Unexpected token '<', "<!doctype "... is not valid JSON @ http://localhost:5050/:4487
+[  240231ms] [ERROR] Failed to load resource: the server responded with a status of 404 (NOT FOUND) @ http://localhost:5050/api/report/status?heartbeat=1:0
+[  255221ms] [ERROR] Failed to load resource: the server responded with a status of 404 (NOT FOUND) @ http://localhost:5050/api/report/status:0
+[  255221ms] [ERROR] 检查Report Engine状态失败: SyntaxError: Unexpected token '<', "<!doctype "... is not valid JSON @ http://localhost:5050/:4487
+[  255222ms] [ERROR] Failed to load resource: the server responded with a status of 404 (NOT FOUND) @ http://localhost:5050/api/report/status?heartbeat=1:0
+[  270247ms] [ERROR] Failed to load resource: the server responded with a status of 404 (NOT FOUND) @ http://localhost:5050/api/report/status:0
+[  270247ms] [ERROR] 检查Report Engine状态失败: SyntaxError: Unexpected token '<', "<!doctype "... is not valid JSON @ http://localhost:5050/:4487
+[  270248ms] [ERROR] Failed to load resource: the server responded with a status of 404 (NOT FOUND) @ http://localhost:5050/api/report/status?heartbeat=1:0
+[  285219ms] [ERROR] Failed to load resource: the server responded with a status of 404 (NOT FOUND) @ http://localhost:5050/api/report/status:0
+[  285219ms] [ERROR] 检查Report Engine状态失败: SyntaxError: Unexpected token '<', "<!doctype "... is not valid JSON @ http://localhost:5050/:4487
+[  285220ms] [ERROR] Failed to load resource: the server responded with a status of 404 (NOT FOUND) @ http://localhost:5050/api/report/status?heartbeat=1:0
+[  300232ms] [ERROR] Failed to load resource: the server responded with a status of 404 (NOT FOUND) @ http://localhost:5050/api/report/status:0
+[  300232ms] [ERROR] 检查Report Engine状态失败: SyntaxError: Unexpected token '<', "<!doctype "... is not valid JSON @ http://localhost:5050/:4487
+[  300232ms] [ERROR] Failed to load resource: the server responded with a status of 404 (NOT FOUND) @ http://localhost:5050/api/report/status?heartbeat=1:0
+[  315220ms] [ERROR] Failed to load resource: the server responded with a status of 404 (NOT FOUND) @ http://localhost:5050/api/report/status:0
+[  315221ms] [ERROR] 检查Report Engine状态失败: SyntaxError: Unexpected token '<', "<!doctype "... is not valid JSON @ http://localhost:5050/:4487
+[  315221ms] [ERROR] Failed to load resource: the server responded with a status of 404 (NOT FOUND) @ http://localhost:5050/api/report/status?heartbeat=1:0
+[  323263ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:5050/socket.io/?EIO=4&transport=polling&t=PqZXeEQ:0
+[  324219ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:5050/api/output/insight:0
+[  324219ms] [ERROR] 刷新输出失败: TypeError: Failed to fetch
+    at refreshConsoleOutput (http://localhost:5050/:3485:17)
+    at http://localhost:5050/:1722:21 @ http://localhost:5050/:3501
+[  324219ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:5050/api/forum/log:0
+[  324219ms] [ERROR] 刷新论坛消息失败: TypeError: Failed to fetch
+    at refreshForumMessages (http://localhost:5050/:4296:13)
+    at http://localhost:5050/:1729:21 @ http://localhost:5050/:4317
+[  324419ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:5050/socket.io/?EIO=4&transport=polling&t=PqZXeWV:0
+[  355154ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8501/_stcore/health:0
+[  355154ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8501/_stcore/host-config:0
+[  355595ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:5050/socket.io/?EIO=4&transport=polling&t=PqZXm7c:0
+[  355657ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8501/_stcore/health:0
+[  355657ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8501/_stcore/host-config:0
+[  356218ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:5050/api/forum/log:0
+[  356218ms] [ERROR] 刷新论坛消息失败: TypeError: Failed to fetch
+    at refreshForumMessages (http://localhost:5050/:4296:13)
+    at http://localhost:5050/:1729:21 @ http://localhost:5050/:4317
+[  356666ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8501/_stcore/health:0
+[  356666ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8501/_stcore/host-config:0
+[  356903ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:5050/socket.io/?EIO=4&transport=polling&t=PqZXmS3:0
+[  358219ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:5050/api/forum/log:0
+[  358219ms] [ERROR] 刷新论坛消息失败: TypeError: Failed to fetch
+    at refreshForumMessages (http://localhost:5050/:4296:13)
+    at http://localhost:5050/:1729:21 @ http://localhost:5050/:4317
+[  359051ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8501/_stcore/health:0
+[  359052ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8501/_stcore/host-config:0
+[  360220ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:5050/api/status:0
+[  360220ms] [ERROR] 状态检查失败: TypeError: Failed to fetch
+    at checkStatus (http://localhost:5050/:3733:13) @ http://localhost:5050/:3740
+[  360221ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:5050/api/report/status:0
+[  360221ms] [ERROR] 检查Report Engine状态失败: TypeError: Failed to fetch
+    at checkReportLockStatus (http://localhost:5050/:4449:13) @ http://localhost:5050/:4487
+[  360222ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:5050/api/forum/log:0
+[  360222ms] [ERROR] 刷新论坛消息失败: TypeError: Failed to fetch
+    at refreshForumMessages (http://localhost:5050/:4296:13)
+    at http://localhost:5050/:1729:21 @ http://localhost:5050/:4317
+[  360222ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:5050/api/report/status?heartbeat=1:0
+[  360227ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:5050/api/config:0
+[  360227ms] [ERROR] TypeError: Failed to fetch
+    at refreshConfigFromServer (http://localhost:5050/:2408:13)
+    at http://localhost:5050/:2371:21 @ http://localhost:5050/:2425
+[  361908ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:5050/socket.io/?EIO=4&transport=polling&t=PqZXngE:0
+[  362220ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:5050/api/forum/log:0
+[  362220ms] [ERROR] 刷新论坛消息失败: TypeError: Failed to fetch
+    at refreshForumMessages (http://localhost:5050/:4296:13)
+    at http://localhost:5050/:1729:21 @ http://localhost:5050/:4317
+[  363272ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8501/_stcore/health:0
+[  363272ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8501/_stcore/host-config:0
+[  364218ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:5050/api/forum/log:0
+[  364218ms] [ERROR] 刷新论坛消息失败: TypeError: Failed to fetch
+    at refreshForumMessages (http://localhost:5050/:4296:13)
+    at http://localhost:5050/:1729:21 @ http://localhost:5050/:4317
+[  372014ms] [ERROR] The page that you have requested does not seem to exist. Running the app's main page. @ http://localhost:8501/static/js/main.d090770a.js:1
+[  418934ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8501/_stcore/host-config:0
+[  418934ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8501/_stcore/health:0
+[  419129ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:5050/socket.io/?EIO=4&transport=polling&t=PqZX_eL:0
+[  419438ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8501/_stcore/health:0
+[  419438ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8501/_stcore/host-config:0
+[  420220ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:5050/api/status:0
+[  420220ms] [ERROR] 状态检查失败: TypeError: Failed to fetch
+    at checkStatus (http://localhost:5050/:3733:13) @ http://localhost:5050/:3740
+[  420221ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:5050/api/output/insight:0
+[  420221ms] [ERROR] 刷新输出失败: TypeError: Failed to fetch
+    at refreshConsoleOutput (http://localhost:5050/:3485:17)
+    at http://localhost:5050/:1722:21 @ http://localhost:5050/:3501
+[  420221ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:5050/api/forum/log:0
+[  420221ms] [ERROR] 刷新论坛消息失败: TypeError: Failed to fetch
+    at refreshForumMessages (http://localhost:5050/:4296:13)
+    at http://localhost:5050/:1729:21 @ http://localhost:5050/:4317
+[  420221ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:5050/api/report/status:0
+[  420221ms] [ERROR] 检查Report Engine状态失败: TypeError: Failed to fetch
+    at checkReportLockStatus (http://localhost:5050/:4449:13) @ http://localhost:5050/:4487
+[  420221ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:5050/api/report/status?heartbeat=1:0
+[  420226ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:5050/api/config:0
+[  420227ms] [ERROR] TypeError: Failed to fetch
+    at refreshConfigFromServer (http://localhost:5050/:2408:13)
+    at http://localhost:5050/:2371:21 @ http://localhost:5050/:2425
+[  420255ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:5050/socket.io/?EIO=4&transport=polling&t=PqZX_vw:0
+[  420618ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8501/_stcore/health:0
+[  420618ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8501/_stcore/host-config:0
+[  422218ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:5050/api/output/insight:0
+[  422218ms] [ERROR] 刷新输出失败: TypeError: Failed to fetch
+    at refreshConsoleOutput (http://localhost:5050/:3485:17)
+    at http://localhost:5050/:1722:21 @ http://localhost:5050/:3501
+[  422218ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:5050/api/forum/log:0
+[  422218ms] [ERROR] 刷新论坛消息失败: TypeError: Failed to fetch
+    at refreshForumMessages (http://localhost:5050/:4296:13)
+    at http://localhost:5050/:1729:21 @ http://localhost:5050/:4317
+[  422752ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8501/_stcore/health:0
+[  422752ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8501/_stcore/host-config:0
+[  426366ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8501/_stcore/health:0
+[  426366ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8501/_stcore/host-config:0

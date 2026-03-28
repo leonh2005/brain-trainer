@@ -1,0 +1,52 @@
+[ 1676419ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:5050/api/output/insight:0
+[ 1676419ms] [ERROR] 刷新输出失败: TypeError: Failed to fetch
+    at refreshConsoleOutput (http://localhost:5050/:3485:17)
+    at http://localhost:5050/:1722:21 @ http://localhost:5050/:3501
+[ 1676420ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:5050/api/forum/log:0
+[ 1676420ms] [ERROR] 刷新论坛消息失败: TypeError: Failed to fetch
+    at refreshForumMessages (http://localhost:5050/:4296:13)
+    at http://localhost:5050/:1729:21 @ http://localhost:5050/:4317
+[ 1676673ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:5050/socket.io/?EIO=4&transport=polling&t=PqZg5Ks:0
+[ 1677744ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8501/_stcore/health:0
+[ 1677744ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8501/_stcore/host-config:0
+[ 1678416ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:5050/api/output/insight:0
+[ 1678416ms] [ERROR] 刷新输出失败: TypeError: Failed to fetch
+    at refreshConsoleOutput (http://localhost:5050/:3485:17)
+    at http://localhost:5050/:1722:21 @ http://localhost:5050/:3501
+[ 1678416ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:5050/api/forum/log:0
+[ 1678416ms] [ERROR] 刷新论坛消息失败: TypeError: Failed to fetch
+    at refreshForumMessages (http://localhost:5050/:4296:13)
+    at http://localhost:5050/:1729:21 @ http://localhost:5050/:4317
+[ 1678558ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8501/_stcore/health:0
+[ 1678558ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8501/_stcore/host-config:0
+[ 1678664ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:5050/socket.io/?EIO=4&transport=polling&t=PqZg5p-:0
+[ 1680871ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8501/_stcore/health:0
+[ 1680871ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8501/_stcore/host-config:0
+[ 1684180ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8501/_stcore/health:0
+[ 1684180ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8501/_stcore/host-config:0
+[ 2636422ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:5050/api/output/insight:0
+[ 2636422ms] [ERROR] 刷新输出失败: TypeError: Failed to fetch
+    at refreshConsoleOutput (http://localhost:5050/:3485:17)
+    at http://localhost:5050/:1722:21 @ http://localhost:5050/:3501
+[ 2636422ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:5050/api/forum/log:0
+[ 2636422ms] [ERROR] 刷新论坛消息失败: TypeError: Failed to fetch
+    at refreshForumMessages (http://localhost:5050/:4296:13)
+    at http://localhost:5050/:1729:21 @ http://localhost:5050/:4317
+[ 2636699ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:5050/socket.io/?EIO=4&transport=polling&t=PqZjljG:0
+[ 2638374ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8501/_stcore/health:0
+[ 2638374ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8501/_stcore/host-config:0
+[ 2638422ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:5050/api/output/insight:0
+[ 2638423ms] [ERROR] 刷新输出失败: TypeError: Failed to fetch
+    at refreshConsoleOutput (http://localhost:5050/:3485:17)
+    at http://localhost:5050/:1722:21 @ http://localhost:5050/:3501
+[ 2638423ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:5050/api/forum/log:0
+[ 2638423ms] [ERROR] 刷新论坛消息失败: TypeError: Failed to fetch
+    at refreshForumMessages (http://localhost:5050/:4296:13)
+    at http://localhost:5050/:1729:21 @ http://localhost:5050/:4317
+[ 2638611ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:5050/socket.io/?EIO=4&transport=polling&t=PqZjmB8:0
+[ 2639337ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8501/_stcore/health:0
+[ 2639337ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8501/_stcore/host-config:0
+[ 2641158ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8501/_stcore/health:0
+[ 2641158ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8501/_stcore/host-config:0
+[ 2644483ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8501/_stcore/health:0
+[ 2644483ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8501/_stcore/host-config:0
