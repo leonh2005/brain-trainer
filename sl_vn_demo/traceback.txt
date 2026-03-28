@@ -1,29 +1,125 @@
 ﻿I'm sorry, but an uncaught exception occurred.
 
 While running game code:
-AttributeError: module 'renpy' has no attribute 'music'
+  File "renpy/style.pyx", line 808, in renpy.style.rebuild
+  File "game/screens.rpy", line 359, in prepare_screen
+    screen preferences():
+  File "game/screens.rpy", line 359, in prepare
+    screen preferences():
+  File "game/screens.rpy", line 361, in prepare
+    use game_menu("設　定", scroll="viewport"):
+  File "game/screens.rpy", line 361, in prepare
+    use game_menu("設　定", scroll="viewport"):
+  File "game/screens.rpy", line 362, in prepare
+    vbox:
+  File "game/screens.rpy", line 362, in prepare
+    vbox:
+  File "game/screens.rpy", line 365, in prepare
+    hbox:
+  File "game/screens.rpy", line 365, in prepare
+    hbox:
+  File "game/screens.rpy", line 376, in prepare
+    vbox:
+  File "game/screens.rpy", line 376, in prepare
+    vbox:
+  File "game/screens.rpy", line 380, in prepare
+    textbutton "快速跳過確認" action Preference("confirm skips", "toggle")
+  File "game/screens.rpy", line 380, in prepare
+    textbutton "快速跳過確認" action Preference("confirm skips", "toggle")
+  File "game/screens.rpy", line 380, in <module>
+    textbutton "快速跳過確認" action Preference("confirm skips", "toggle")
+Exception: Preference('confirm skips', 'toggle') is unknown.
 
 During handling of the above exception, another exception occurred:
 
-AttributeError: module 'renpy' has no attribute 'get_side_image'
+Traceback (most recent call last):
+  File "game/screens.rpy", line 359, in prepare_screen
+    screen preferences():
+  File "game/screens.rpy", line 359, in prepare
+    screen preferences():
+  File "game/screens.rpy", line 361, in prepare
+    use game_menu("設　定", scroll="viewport"):
+  File "game/screens.rpy", line 361, in prepare
+    use game_menu("設　定", scroll="viewport"):
+  File "game/screens.rpy", line 362, in prepare
+    vbox:
+  File "game/screens.rpy", line 362, in prepare
+    vbox:
+  File "game/screens.rpy", line 365, in prepare
+    hbox:
+  File "game/screens.rpy", line 365, in prepare
+    hbox:
+  File "game/screens.rpy", line 376, in prepare
+    vbox:
+  File "game/screens.rpy", line 376, in prepare
+    vbox:
+  File "game/screens.rpy", line 380, in prepare
+    textbutton "快速跳過確認" action Preference("confirm skips", "toggle")
+  File "game/screens.rpy", line 380, in prepare
+    textbutton "快速跳過確認" action Preference("confirm skips", "toggle")
+  File "game/screens.rpy", line 380, in <module>
+    textbutton "快速跳過確認" action Preference("confirm skips", "toggle")
+Exception: Preference('confirm skips', 'toggle') is unknown.
 
 -- Full Traceback ------------------------------------------------------------
 
 Traceback (most recent call last):
-  File "renpy/common/00mixers.rpy", line 53, in script
-    python hide:
+  File "renpy/common/00start.rpy", line 216, in script
+    python:
   File "renpy/ast.py", line 1187, in execute
     renpy.python.py_exec_bytecode(self.code.bytecode, self.hide, store=self.store)
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
   File "renpy/python.py", line 1273, in py_exec_bytecode
     exec(bytecode, globals, locals)
     ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "renpy/common/00mixers.rpy", line 53, in <module>
-    python hide:
-  File "renpy/common/00mixers.rpy", line 55, in _execute_python_hide
-    if not renpy.music.channel_defined("movie"):
-           ^^^^^^^^^^^                          
-AttributeError: module 'renpy' has no attribute 'music'
+  File "renpy/common/00start.rpy", line 217, in <module>
+    _init_language()
+    ~~~~~~~~~~~~~~^^
+  File "renpy/common/00start.rpy", line 86, in _init_language
+    renpy.change_language(language, force=True)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "renpy/translation/__init__.py", line 854, in change_language
+    renpy.style.rebuild()
+    ~~~~~~~~~~~~~~~~~~~^^
+  File "renpy/style.pyx", line 808, in renpy.style.rebuild
+  File "renpy/display/screen.py", line 1035, in prepare_screens
+    s.ast.prepare_screen()
+    ~~~~~~~~~~~~~~~~~~~~^^
+  File "game/screens.rpy", line 359, in prepare_screen
+    screen preferences():
+  File "game/screens.rpy", line 359, in prepare
+    screen preferences():
+  File "game/screens.rpy", line 361, in prepare
+    use game_menu("設　定", scroll="viewport"):
+  File "game/screens.rpy", line 361, in prepare
+    use game_menu("設　定", scroll="viewport"):
+  File "game/screens.rpy", line 362, in prepare
+    vbox:
+  File "game/screens.rpy", line 362, in prepare
+    vbox:
+  File "game/screens.rpy", line 365, in prepare
+    hbox:
+  File "game/screens.rpy", line 365, in prepare
+    hbox:
+  File "game/screens.rpy", line 376, in prepare
+    vbox:
+  File "game/screens.rpy", line 376, in prepare
+    vbox:
+  File "game/screens.rpy", line 380, in prepare
+    textbutton "快速跳過確認" action Preference("confirm skips", "toggle")
+  File "game/screens.rpy", line 380, in prepare
+    textbutton "快速跳過確認" action Preference("confirm skips", "toggle")
+  File "renpy/python.py", line 1298, in py_eval_bytecode
+    return eval(bytecode, globals, locals)
+           ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "game/screens.rpy", line 380, in <module>
+    textbutton "快速跳過確認" action Preference("confirm skips", "toggle")
+  File "renpy/common/00preferences.rpy", line 675, in Preference
+    rv = get()
+         ~~~^^
+  File "renpy/common/00preferences.rpy", line 673, in get
+    raise Exception("Preference(%r, %r) is unknown." % (name , value))
+Exception: Preference('confirm skips', 'toggle') is unknown.
 
 During handling of the above exception, another exception occurred:
 
@@ -31,16 +127,19 @@ Traceback (most recent call last):
   File "renpy/bootstrap.py", line 401, in bootstrap
     renpy.main.main()
     ~~~~~~~~~~~~~~~^^
-  File "renpy/main.py", line 483, in main
-    node.execute_init()
-    ~~~~~~~~~~~~~~~~~^^
-  File "renpy/ast.py", line 1071, in execute_init
-    renpy.game.context().run(self.block[0])
-    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
-  File "renpy/common/00mixers.rpy", line 53, in script
-    python hide:
-  File "renpy/common/00mixers.rpy", line 53, in script
-    python hide:
+  File "renpy/main.py", line 591, in main
+    run(restart)
+    ~~~^^^^^^^^^
+  File "renpy/main.py", line 137, in run
+    renpy.execution.run_context(True)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "renpy/execution.py", line 1036, in run_context
+    context.run()
+    ~~~~~~~~~~~^^
+  File "renpy/common/00start.rpy", line 216, in script
+    python:
+  File "renpy/common/00start.rpy", line 216, in script
+    python:
   File "renpy/display/error.py", line 135, in report_exception
     renpy.game.invoke_in_new_context(
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
@@ -60,15 +159,59 @@ Traceback (most recent call last):
   File "renpy/ui.py", line 306, in interact
     rv = renpy.game.interface.interact(roll_forward=roll_forward, **kwargs)
          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "renpy/display/core.py", line 2139, in interact
-    i()
-    ~^^
-  File "renpy/common/00sideimage.rpy", line 63, in _side_per_interact
-    new = renpy.get_side_image(side_image_prefix_tag, image_tag=side_image_tag, not_showing=config.side_image_only_not_showing)
-          ^^^^^^^^^^^^^^^^^^^^                                                                                                 
-AttributeError: module 'renpy' has no attribute 'get_side_image'
+  File "renpy/display/core.py", line 2154, in interact
+    repeat, rv = self.interact_core(
+                 ~~~~~~~~~~~~~~~~~~^
+        preloads=preloads,
+        ^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+        **kwargs,
+        ^^^^^^^^^
+    )
+    ^
+  File "renpy/display/core.py", line 2384, in interact_core
+    renpy.display.screen.prepare_screens()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "renpy/display/screen.py", line 1035, in prepare_screens
+    s.ast.prepare_screen()
+    ~~~~~~~~~~~~~~~~~~~~^^
+  File "game/screens.rpy", line 359, in prepare_screen
+    screen preferences():
+  File "game/screens.rpy", line 359, in prepare
+    screen preferences():
+  File "game/screens.rpy", line 361, in prepare
+    use game_menu("設　定", scroll="viewport"):
+  File "game/screens.rpy", line 361, in prepare
+    use game_menu("設　定", scroll="viewport"):
+  File "game/screens.rpy", line 362, in prepare
+    vbox:
+  File "game/screens.rpy", line 362, in prepare
+    vbox:
+  File "game/screens.rpy", line 365, in prepare
+    hbox:
+  File "game/screens.rpy", line 365, in prepare
+    hbox:
+  File "game/screens.rpy", line 376, in prepare
+    vbox:
+  File "game/screens.rpy", line 376, in prepare
+    vbox:
+  File "game/screens.rpy", line 380, in prepare
+    textbutton "快速跳過確認" action Preference("confirm skips", "toggle")
+  File "game/screens.rpy", line 380, in prepare
+    textbutton "快速跳過確認" action Preference("confirm skips", "toggle")
+  File "renpy/python.py", line 1298, in py_eval_bytecode
+    return eval(bytecode, globals, locals)
+           ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "game/screens.rpy", line 380, in <module>
+    textbutton "快速跳過確認" action Preference("confirm skips", "toggle")
+  File "renpy/common/00preferences.rpy", line 675, in Preference
+    rv = get()
+         ~~~^^
+  File "renpy/common/00preferences.rpy", line 673, in get
+    raise Exception("Preference(%r, %r) is unknown." % (name , value))
+Exception: Preference('confirm skips', 'toggle') is unknown.
 
 macOS-26.3.1-arm64-arm-64bit arm64
 Ren'Py 8.5.2.26010301
 獨自覺醒 Demo 0.1
-Sat Mar 28 17:23:30 2026
+Sat Mar 28 23:52:41 2026
