@@ -1,0 +1,72 @@
+2026-03-30 09:30:02.757 | INFO     | FinMind.data.finmind_api:login_by_token:84 - Login success
+2026-03-30 09:30:02.807 | INFO     | FinMind.data.finmind_api:login_by_token:84 - Login success
+2026-03-30 09:30:03.274 | INFO     | FinMind.data.finmind_api:get_data:153 - download Dataset.TaiwanStockPrice, data_id: 2367
+2026-03-30 09:30:03.448 | INFO     | FinMind.data.finmind_api:get_data:153 - download Dataset.TaiwanStockPrice, data_id: 6770
+2026-03-30 09:30:03.511 | INFO     | FinMind.data.finmind_api:get_data:153 - download Dataset.TaiwanStockPrice, data_id: 3481
+2026-03-30 09:30:03.574 | INFO     | FinMind.data.finmind_api:get_data:153 - download Dataset.TaiwanStockPrice, data_id: 2344
+2026-03-30 09:30:03.638 | INFO     | FinMind.data.finmind_api:get_data:153 - download Dataset.TaiwanStockPrice, data_id: 2313
+2026-03-30 09:30:03.700 | INFO     | FinMind.data.finmind_api:get_data:153 - download Dataset.TaiwanStockPrice, data_id: 2408
+2026-03-30 09:30:03.762 | INFO     | FinMind.data.finmind_api:get_data:153 - download Dataset.TaiwanStockPrice, data_id: 4906
+2026-03-30 09:30:03.825 | INFO     | FinMind.data.finmind_api:get_data:153 - download Dataset.TaiwanStockPrice, data_id: 0050
+2026-03-30 09:30:03.890 | INFO     | FinMind.data.finmind_api:get_data:153 - download Dataset.TaiwanStockPrice, data_id: 2355
+2026-03-30 09:30:03.952 | INFO     | FinMind.data.finmind_api:get_data:153 - download Dataset.TaiwanStockPrice, data_id: 1304
+2026-03-30 09:30:04.014 | INFO     | FinMind.data.finmind_api:get_data:153 - download Dataset.TaiwanStockPrice, data_id: 3715
+2026-03-30 09:30:04.076 | INFO     | FinMind.data.finmind_api:get_data:153 - download Dataset.TaiwanStockPrice, data_id: 2409
+2026-03-30 09:30:04.137 | INFO     | FinMind.data.finmind_api:get_data:153 - download Dataset.TaiwanStockPrice, data_id: 3576
+2026-03-30 09:30:04.202 | INFO     | FinMind.data.finmind_api:get_data:153 - download Dataset.TaiwanStockPrice, data_id: 2887
+2026-03-30 09:30:04.262 | INFO     | FinMind.data.finmind_api:get_data:153 - download Dataset.TaiwanStockPrice, data_id: 1905
+2026-03-30 09:30:04.339 | INFO     | FinMind.data.finmind_api:get_data:153 - download Dataset.TaiwanStockPrice, data_id: 2324
+2026-03-30 09:30:04.409 | INFO     | FinMind.data.finmind_api:get_data:153 - download Dataset.TaiwanStockPrice, data_id: 2489
+2026-03-30 09:30:04.476 | INFO     | FinMind.data.finmind_api:get_data:153 - download Dataset.TaiwanStockPrice, data_id: 1802
+2026-03-30 09:30:04.538 | INFO     | FinMind.data.finmind_api:get_data:153 - download Dataset.TaiwanStockPrice, data_id: 4958
+2026-03-30 09:30:04.599 | INFO     | FinMind.data.finmind_api:get_data:153 - download Dataset.TaiwanStockPrice, data_id: 1314
+2026-03-30 09:30:04.663 | INFO     | FinMind.data.finmind_api:get_data:153 - download Dataset.TaiwanFuturesInstitutionalInvestors, data_id: TX
+📊 <b>當沖候選</b>｜2026-03-30 09:30
+
+🌐 大盤外資期貨（2026-03-27）：偏空 ↓（多空差 -39,919 口）
+
+📋 <b>篩選條件</b>
+量前20 ＋ 振幅&gt;3% ＋ 近5均量&gt;3000張 ＋ 漲幅&gt;1.5%
+
+✅ 符合 9 檔：
+
+🟡 <b>2367 燿華</b>
+   收:78.2  漲:+3.9%  振:11.2%
+   量:341,703張  近5均:188,454張  收盤位:51%
+
+🔴 <b>2313 華通</b>
+   收:270.0  漲:+10.0%  振:12.7%
+   量:156,245張  近5均:106,827張  收盤位:100%
+
+🟡 <b>2355 敬鵬</b>
+   收:50.5  漲:+2.2%  振:9.8%
+   量:88,961張  近5均:29,917張  收盤位:78%
+
+🟢 <b>1304 台聚</b>
+   收:16.2  漲:+2.2%  振:8.8%
+   量:86,568張  近5均:51,329張  收盤位:14%
+
+🔴 <b>3715 定穎投控</b>
+   收:203.5  漲:+10.0%  振:11.2%
+   量:76,656張  近5均:47,852張  收盤位:100%
+
+🔴 <b>1905 華紙</b>
+   收:15.4  漲:+10.0%  振:7.3%
+   量:63,599張  近5均:23,256張  收盤位:100%
+
+🔴 <b>2489 瑞軒</b>
+   收:35.0  漲:+9.9%  振:13.1%
+   量:58,295張  近5均:70,136張  收盤位:100%
+
+🔴 <b>1802 台玻</b>
+   收:54.9  漲:+3.0%  振:8.7%
+   量:56,916張  近5均:80,503張  收盤位:98%
+
+🔴 <b>4958 臻鼎-KY</b>
+   收:230.0  漲:+5.3%  振:11.7%
+   量:55,191張  近5均:32,612張  收盤位:82%
+
+⚡ 進場參考：開盤後5~15分鐘確認方向再進
+🛑 停損：跌破進場價 -1.5% 出清
+
+⚠️ 數據參考，非投資建議，買賣自負

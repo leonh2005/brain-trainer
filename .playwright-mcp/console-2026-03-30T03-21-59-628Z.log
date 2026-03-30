@@ -1,0 +1,22 @@
+[     114ms] Uncaught Error: Transport not open
+    at send (https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.js:3304:14)
+    at flush (https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.js:2965:23)
+    at sendPacket (https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.js:3031:11)
+    at write (https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.js:2985:11)
+    at _packet (https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.js:595:20)
+    at packet (https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.js:998:14)
+    at disconnect (https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.js:1286:13)
+    at close (https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.js:1311:18)
+    at cleanupOnUnload (http://localhost:5050/:1778:23)
+[     283ms] Uncaught Error: Transport not open
+    at send (https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.js:3304:14)
+    at flush (https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.js:2965:23)
+    at sendPacket (https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.js:3031:11)
+    at write (https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.js:2985:11)
+    at _packet (https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.js:595:20)
+    at packet (https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.js:998:14)
+    at disconnect (https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.js:1286:13)
+    at close (https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.js:1311:18)
+    at cleanupOnUnload (http://localhost:5050/:1778:23)
+[     283ms] [ERROR] 刷新输出失败: TypeError: Failed to fetch @ http://localhost:5050/:3501
+[     284ms] [ERROR] 刷新论坛消息失败: TypeError: Failed to fetch @ http://localhost:5050/:4317
