@@ -1,0 +1,106 @@
+2026-03-30 12:30:02.065 | INFO     | FinMind.data.finmind_api:login_by_token:84 - Login success
+2026-03-30 12:30:02.150 | INFO     | FinMind.data.finmind_api:login_by_token:84 - Login success
+2026-03-30 12:30:02.323 | INFO     | FinMind.data.finmind_api:get_data:153 - download Dataset.TaiwanStockInstitutionalInvestorsBuySell, data_id: 2313
+2026-03-30 12:30:02.732 | INFO     | FinMind.data.finmind_api:get_data:153 - download Dataset.TaiwanStockPrice, data_id: 2313
+2026-03-30 12:30:02.797 | INFO     | FinMind.data.finmind_api:get_data:153 - download Dataset.TaiwanStockInstitutionalInvestorsBuySell, data_id: 2355
+2026-03-30 12:30:02.878 | INFO     | FinMind.data.finmind_api:get_data:153 - download Dataset.TaiwanStockPrice, data_id: 2355
+2026-03-30 12:30:02.944 | INFO     | FinMind.data.finmind_api:get_data:153 - download Dataset.TaiwanStockInstitutionalInvestorsBuySell, data_id: 3715
+2026-03-30 12:30:03.461 | INFO     | FinMind.data.finmind_api:get_data:153 - download Dataset.TaiwanStockPrice, data_id: 3715
+2026-03-30 12:30:03.520 | INFO     | FinMind.data.finmind_api:get_data:153 - download Dataset.TaiwanStockInstitutionalInvestorsBuySell, data_id: 1905
+2026-03-30 12:30:04.075 | INFO     | FinMind.data.finmind_api:get_data:153 - download Dataset.TaiwanStockPrice, data_id: 1905
+2026-03-30 12:30:04.143 | INFO     | FinMind.data.finmind_api:get_data:153 - download Dataset.TaiwanStockInstitutionalInvestorsBuySell, data_id: 2489
+2026-03-30 12:30:04.216 | INFO     | FinMind.data.finmind_api:get_data:153 - download Dataset.TaiwanStockPrice, data_id: 2489
+2026-03-30 12:30:04.281 | INFO     | FinMind.data.finmind_api:get_data:153 - download Dataset.TaiwanStockInstitutionalInvestorsBuySell, data_id: 1802
+2026-03-30 12:30:04.360 | INFO     | FinMind.data.finmind_api:get_data:153 - download Dataset.TaiwanStockPrice, data_id: 1802
+2026-03-30 12:30:04.424 | INFO     | FinMind.data.finmind_api:get_data:153 - download Dataset.TaiwanStockInstitutionalInvestorsBuySell, data_id: 4958
+2026-03-30 12:30:04.500 | INFO     | FinMind.data.finmind_api:get_data:153 - download Dataset.TaiwanStockPrice, data_id: 4958
+2026-03-30 12:30:04.563 | INFO     | FinMind.data.finmind_api:get_data:153 - download Dataset.TaiwanStockInstitutionalInvestorsBuySell, data_id: 6285
+2026-03-30 12:30:04.638 | INFO     | FinMind.data.finmind_api:get_data:153 - download Dataset.TaiwanStockPrice, data_id: 6285
+2026-03-30 12:30:04.707 | INFO     | FinMind.data.finmind_api:get_data:153 - download Dataset.TaiwanStockInstitutionalInvestorsBuySell, data_id: 2419
+2026-03-30 12:30:05.677 | INFO     | FinMind.data.finmind_api:get_data:153 - download Dataset.TaiwanStockPrice, data_id: 2419
+2026-03-30 12:30:05.740 | INFO     | FinMind.data.finmind_api:get_data:153 - download Dataset.TaiwanStockInstitutionalInvestorsBuySell, data_id: 1528
+2026-03-30 12:30:05.821 | INFO     | FinMind.data.finmind_api:get_data:153 - download Dataset.TaiwanStockPrice, data_id: 1528
+2026-03-30 12:30:05.881 | INFO     | FinMind.data.finmind_api:get_data:153 - download Dataset.TaiwanStockInstitutionalInvestorsBuySell, data_id: 3026
+2026-03-30 12:30:05.952 | INFO     | FinMind.data.finmind_api:get_data:153 - download Dataset.TaiwanStockPrice, data_id: 3026
+2026-03-30 12:30:06.013 | INFO     | FinMind.data.finmind_api:get_data:153 - download Dataset.TaiwanStockInstitutionalInvestorsBuySell, data_id: 4919
+2026-03-30 12:30:06.466 | INFO     | FinMind.data.finmind_api:get_data:153 - download Dataset.TaiwanStockPrice, data_id: 4919
+2026-03-30 12:30:06.531 | INFO     | FinMind.data.finmind_api:get_data:153 - download Dataset.TaiwanStockInstitutionalInvestorsBuySell, data_id: 1582
+2026-03-30 12:30:06.614 | INFO     | FinMind.data.finmind_api:get_data:153 - download Dataset.TaiwanStockPrice, data_id: 1582
+2026-03-30 12:30:06.692 | INFO     | FinMind.data.finmind_api:get_data:153 - download Dataset.TaiwanStockInstitutionalInvestorsBuySell, data_id: 6213
+2026-03-30 12:30:06.766 | INFO     | FinMind.data.finmind_api:get_data:153 - download Dataset.TaiwanStockPrice, data_id: 6213
+2026-03-30 12:30:06.825 | INFO     | FinMind.data.finmind_api:get_data:153 - download Dataset.TaiwanStockInstitutionalInvestorsBuySell, data_id: 3062
+2026-03-30 12:30:07.550 | INFO     | FinMind.data.finmind_api:get_data:153 - download Dataset.TaiwanStockPrice, data_id: 3062
+2026-03-30 12:30:07.612 | INFO     | FinMind.data.finmind_api:get_data:153 - download Dataset.TaiwanStockInstitutionalInvestorsBuySell, data_id: 5871
+2026-03-30 12:30:07.699 | INFO     | FinMind.data.finmind_api:get_data:153 - download Dataset.TaiwanStockPrice, data_id: 5871
+2026-03-30 12:30:07.762 | INFO     | FinMind.data.finmind_api:get_data:153 - download Dataset.TaiwanStockInstitutionalInvestorsBuySell, data_id: 1309
+2026-03-30 12:30:08.458 | INFO     | FinMind.data.finmind_api:get_data:153 - download Dataset.TaiwanStockPrice, data_id: 1309
+2026-03-30 12:30:08.523 | INFO     | FinMind.data.finmind_api:get_data:153 - download Dataset.TaiwanStockInstitutionalInvestorsBuySell, data_id: 2484
+2026-03-30 12:30:08.594 | INFO     | FinMind.data.finmind_api:get_data:153 - download Dataset.TaiwanStockPrice, data_id: 2484
+2026-03-30 12:30:08.657 | INFO     | FinMind.data.finmind_api:get_data:153 - download Dataset.TaiwanStockInstitutionalInvestorsBuySell, data_id: 1909
+2026-03-30 12:30:09.081 | INFO     | FinMind.data.finmind_api:get_data:153 - download Dataset.TaiwanStockPrice, data_id: 1909
+2026-03-30 12:30:09.192 | INFO     | FinMind.data.finmind_api:get_data:153 - download Dataset.TaiwanStockInstitutionalInvestorsBuySell, data_id: 2485
+2026-03-30 12:30:09.669 | INFO     | FinMind.data.finmind_api:get_data:153 - download Dataset.TaiwanStockPrice, data_id: 2485
+2026-03-30 12:30:09.803 | INFO     | FinMind.data.finmind_api:get_data:153 - download Dataset.TaiwanStockPrice, data_id: 3006
+2026-03-30 12:30:09.865 | INFO     | FinMind.data.finmind_api:get_data:153 - download Dataset.TaiwanStockInstitutionalInvestorsBuySell, data_id: 3006
+2026-03-30 12:30:10.274 | INFO     | FinMind.data.finmind_api:get_data:153 - download Dataset.TaiwanStockPrice, data_id: 2344
+2026-03-30 12:30:10.334 | INFO     | FinMind.data.finmind_api:get_data:153 - download Dataset.TaiwanStockInstitutionalInvestorsBuySell, data_id: 2344
+2026-03-30 12:30:10.418 | INFO     | FinMind.data.finmind_api:get_data:153 - download Dataset.TaiwanFuturesInstitutionalInvestors, data_id: TX
+🌙 <b>隔日沖候選</b>｜2026-03-30 12:30
+
+🌐 大盤外資期貨（2026-03-27）：偏空 ↓（-39,919 口）
+
+📋 <b>篩選條件</b>
+量&gt;5000張 ＋ 漲&gt;2% ＋ 收高70%+ ＋ 外資買超
+
+✅ 符合 14 檔：
+
+🟢 <b>2313 華通</b>
+   收:270.0  漲:+10.0%  收盤位:100%
+   量:156,245張（均106,827）  外資:+10,322張
+   量平穩
+
+🟢 <b>3715 定穎投控</b>
+   收:203.5  漲:+10.0%  收盤位:100%
+   量:76,656張（均47,852）  外資:+4,259張
+   量平穩
+
+🟢 <b>1802 台玻</b>
+   收:54.9  漲:+3.0%  收盤位:98%
+   量:56,916張（均80,503）  外資:+2,281張
+   量平穩
+
+🟢 <b>6285 啟碁</b>
+   收:188.5  漲:+9.6%  收盤位:98%
+   量:46,939張（均26,383）  外資:+10,707張
+   量平穩
+
+🟢 <b>3026 禾伸堂</b>
+   收:151.0  漲:+3.1%  收盤位:72%
+   量:28,955張（均9,411）  外資:+3,340張
+   爆量3.1x 收高 → 強勢吸貨 ✅
+
+🟢 <b>4919 新唐</b>
+   收:102.5  漲:+10.0%  收盤位:100%
+   量:28,648張（均27,073）  外資:+1,512張
+   量平穩
+
+🟢 <b>1582 信錦</b>
+   收:102.0  漲:+9.7%  收盤位:100%
+   量:26,631張（均8,703）  外資:+1,260張
+   爆量3.1x 收高 → 強勢吸貨 ✅
+
+🟢 <b>6213 聯茂</b>
+   收:158.0  漲:+9.7%  收盤位:100%
+   量:25,477張（均13,681）  外資:+1,338張
+   量平穩
+
+⚡ 進場：收盤前30分鐘（14:00~14:30）確認量增收高再買
+🛑 出場：隔日開盤漲2~4%賣，開盤跳空綠立刻出
+
+👀 <b>自選股狀況</b>
+📌 3006 晶豪科  收:172  漲:+9.2%  量:5,943張
+   量平穩  外資+273張
+📌 2344 華邦電  收:92  漲:+2.4%  量:159,719張
+   量平穩  外資+24,119張
+
+⚠️ 數據參考，非投資建議，買賣自負
