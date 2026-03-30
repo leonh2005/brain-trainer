@@ -1,16 +1,19 @@
 #!/usr/bin/env python3
 """
 隔日沖候選推播 — 週間 12:30 執行
-依據今日盤中即時資料篩選隔日沖候選，收盤前 2 小時送出 Telegram
-條件：今日量>5000張 + 漲幅>2% + 收盤位置>70% + 外資(昨)買超
+資料來源：永豐金 Shioaji API（行情/K棒）+ FinMind（外資、期貨法人）
 """
 
 import requests
 import pandas as pd
 import warnings
-from datetime import datetime, timedelta
+import shioaji as sj
+import os
+from datetime import datetime, date, timedelta
+from dotenv import load_dotenv
 from FinMind.data import DataLoader
 
+load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
 warnings.filterwarnings('ignore')
 
 # ── 設定 ──────────────────────────────────────────
@@ -21,14 +24,106 @@ TODAY     = datetime.today().strftime('%Y-%m-%d')
 D10       = (datetime.today() - timedelta(days=15)).strftime('%Y-%m-%d')
 D5        = (datetime.today() - timedelta(days=8)).strftime('%Y-%m-%d')
 
-# 自選股 watchlist（可自行增減）
 WATCHLIST = {
     '3006': '晶豪科',
     '2344': '華邦電',
 }
 
-api = DataLoader()
-api.login_by_token(api_token=TOKEN)
+# FinMind（法人資料）
+finmind = DataLoader()
+finmind.login_by_token(api_token=TOKEN)
+
+# ── Shioaji 連線（singleton）─────────────────────
+_sj_api = None
+
+def _get_sj():
+    global _sj_api
+    if _sj_api is None:
+        _sj_api = sj.Shioaji(simulation=True)
+        _sj_api.login(
+            api_key=os.environ['SHIOAJI_API_KEY'],
+            secret_key=os.environ['SHIOAJI_SECRET_KEY'],
+        )
+        print('[sj] 永豐 API 登入成功')
+    return _sj_api
+
+
+def get_sj_daily_kbars(symbol: str, days: int = 20) -> pd.DataFrame:
+    """Shioaji 歷史日K（1分K聚合）"""
+    try:
+        api = _get_sj()
+        contract = api.Contracts.Stocks[symbol]
+        if contract is None:
+            return pd.DataFrame()
+        start = str(date.today() - timedelta(days=days))
+        end   = str(date.today())
+        kb = api.kbars(contract, start=start, end=end)
+        df = pd.DataFrame({**kb})
+        if df.empty:
+            return pd.DataFrame()
+        df['ts'] = pd.to_datetime(df['ts'])
+        df['_d'] = df['ts'].dt.date
+        daily = df.groupby('_d').agg(
+            open=('Open', 'first'),
+            high=('High', 'max'),
+            low=('Low', 'min'),
+            close=('Close', 'last'),
+            volume=('Volume', 'sum'),
+        ).reset_index()
+        daily['volume'] = daily['volume'] / 1000  # 股→張
+        return daily.sort_values('_d').reset_index(drop=True)
+    except Exception as e:
+        print(f'[sj] kbars {symbol} 失敗: {e}')
+        return pd.DataFrame()
+
+
+def get_sj_snapshot_all() -> pd.DataFrame:
+    """Shioaji 全市場即時快照，回傳與原 TWSE 格式相容的 DataFrame"""
+    api = _get_sj()
+
+    stocks = []
+    try:
+        r = requests.get(
+            'https://openapi.twse.com.tw/v1/exchangeReport/STOCK_DAY_ALL',
+            timeout=20, verify=False, headers={'User-Agent': 'Mozilla/5.0'}
+        )
+        for s in r.json():
+            code = s.get('Code', '').strip()
+            if code and len(code) == 4 and code.isdigit():
+                stocks.append({'symbol': code, 'name': s.get('Name', '')})
+    except Exception as e:
+        print(f'[data] TWSE 清單失敗: {e}')
+
+    rows = []
+    for i in range(0, len(stocks), 100):
+        batch = stocks[i:i+100]
+        try:
+            contracts = [api.Contracts.Stocks[s['symbol']] for s in batch]
+            name_map  = {s['symbol']: s['name'] for s in batch}
+            valid = [c for c in contracts if c is not None]
+            if not valid:
+                continue
+            snaps = api.snapshots(valid)
+            for snap in snaps:
+                if snap.close <= 0 or snap.total_volume <= 0:
+                    continue
+                rng = snap.high - snap.low
+                close_pos = ((snap.close - snap.low) / rng * 100) if rng > 0 else 50
+                amp_pct   = (rng / snap.low * 100) if snap.low > 0 else 0
+                rows.append({
+                    'Code':        snap.code,
+                    'Name':        name_map.get(snap.code, ''),
+                    'ClosingPrice': snap.close,
+                    'vol_k':       snap.total_volume / 1000,
+                    'chg_pct':     round(snap.change_rate, 2),
+                    'amp_pct':     round(amp_pct, 2),
+                    'close_pos':   round(close_pos, 1),
+                })
+        except Exception as e:
+            print(f'[sj] snapshot batch {i} 失敗: {e}')
+
+    return pd.DataFrame(rows) if rows else pd.DataFrame()
+
 
 def send_telegram(text: str):
     requests.post(
@@ -37,47 +132,34 @@ def send_telegram(text: str):
         timeout=10
     )
 
-def get_twse_intraday():
-    """TWSE 全市場今日盤中最新資料"""
-    r = requests.get(
-        'https://openapi.twse.com.tw/v1/exchangeReport/STOCK_DAY_ALL',
-        timeout=20, verify=False
-    )
-    df = pd.DataFrame(r.json())
-    num_cols = ['TradeVolume','OpeningPrice','HighestPrice','LowestPrice','ClosingPrice','Change']
-    for c in num_cols:
-        df[c] = pd.to_numeric(df[c], errors='coerce')
-    df = df.dropna(subset=['TradeVolume','ClosingPrice'])
-    df['vol_k']   = df['TradeVolume'] / 1000
-    df['chg_pct'] = ((df['Change'] / (df['ClosingPrice'] - df['Change'])) * 100).round(2)
-    df['amp_pct'] = (((df['HighestPrice'] - df['LowestPrice']) / df['LowestPrice']) * 100).round(2)
-    rng = df['HighestPrice'] - df['LowestPrice']
-    df['close_pos'] = ((df['ClosingPrice'] - df['LowestPrice']) / rng.replace(0, float('nan')) * 100).round(1)
-    df = df[df['Code'].str.match(r'^\d{4}$')]
-    return df
 
 def get_fi_yesterday(stock_id):
-    """外資昨日買賣超（張）"""
+    """外資昨日買賣超（張）—— FinMind"""
     try:
-        df = api.taiwan_stock_institutional_investors(stock_id=stock_id, start_date=D5)
+        df = finmind.taiwan_stock_institutional_investors(stock_id=stock_id, start_date=D5)
         fi = df[df['name']=='Foreign_Investor']
         last = fi.iloc[-1]
         return int((last['buy'] - last['sell']) / 1000), str(last['date'])[:10]
     except:
         return 0, ''
 
+
 def get_avg5_vol(stock_id):
-    """近5日均量（張）"""
+    """近5日均量（張）—— Shioaji kbars；失敗時 fallback FinMind"""
+    df = get_sj_daily_kbars(stock_id, days=20)
+    if len(df) >= 5:
+        return round(df['volume'].tail(5).mean(), 0)
+    # Fallback: FinMind
     try:
-        h = api.taiwan_stock_daily(stock_id=stock_id, start_date=D10)
+        h = finmind.taiwan_stock_daily(stock_id=stock_id, start_date=D10)
         if len(h) >= 5:
             return round(h['Trading_Volume'].tail(5).mean() / 1000, 0)
-    except:
+    except Exception:
         pass
     return 0
 
+
 def vol_signal(vol_k, avg5, chg_pct, close_pos):
-    """量價訊號"""
     if avg5 == 0:
         return "量資料不足"
     ratio = vol_k / avg5
@@ -96,9 +178,10 @@ def vol_signal(vol_k, avg5, chg_pct, close_pos):
     else:
         return "量平穩"
 
+
 def get_futures_direction():
     try:
-        fut = api.taiwan_futures_institutional_investors(futures_id="TX", start_date=D5)
+        fut = finmind.taiwan_futures_institutional_investors(futures_id="TX", start_date=D5)
         fi = fut[fut['institutional_investors']=='外資']
         last = fi.iloc[-1]
         diff = int(last['long_open_interest_balance_volume']) - int(last['short_open_interest_balance_volume'])
@@ -106,11 +189,28 @@ def get_futures_direction():
     except:
         return 0, ''
 
+
 # ── 主程式 ────────────────────────────────────────
 
-df = get_twse_intraday()
+df = get_sj_snapshot_all()
 
-# 隔日沖篩選
+if df.empty:
+    # Fallback: TWSE 公開 API
+    print('[fallback] Shioaji 快照失敗，改用 TWSE API')
+    r = requests.get('https://openapi.twse.com.tw/v1/exchangeReport/STOCK_DAY_ALL',
+                     timeout=20, verify=False)
+    raw = pd.DataFrame(r.json())
+    for c in ['TradeVolume','HighestPrice','LowestPrice','ClosingPrice','Change']:
+        raw[c] = pd.to_numeric(raw[c], errors='coerce')
+    raw = raw.dropna(subset=['TradeVolume','ClosingPrice'])
+    raw['vol_k']    = raw['TradeVolume'] / 1000
+    raw['chg_pct']  = ((raw['Change'] / (raw['ClosingPrice'] - raw['Change'])) * 100).round(2)
+    raw['amp_pct']  = (((raw['HighestPrice'] - raw['LowestPrice']) / raw['LowestPrice']) * 100).round(2)
+    rng = raw['HighestPrice'] - raw['LowestPrice']
+    raw['close_pos'] = ((raw['ClosingPrice'] - raw['LowestPrice']) / rng.replace(0, float('nan')) * 100).round(1)
+    raw = raw[raw['Code'].str.match(r'^\d{4}$')]
+    df = raw[['Code','Name','ClosingPrice','vol_k','chg_pct','amp_pct','close_pos']].copy()
+
 pool = df[
     (df['vol_k'] >= 5000) &
     (df['chg_pct'] >= 2.0) &
@@ -143,14 +243,16 @@ for _, row in pool.iterrows():
 watchlist_data = []
 for code, name in WATCHLIST.items():
     try:
-        h = api.taiwan_stock_daily(stock_id=code, start_date=D10)
-        h['vol_k'] = h['Trading_Volume'] / 1000
+        h = get_sj_daily_kbars(code, days=20)
+        if h.empty:
+            continue
+        h['vol_k'] = h['volume']
         avg5 = round(h['vol_k'].tail(5).mean(), 0)
         last = h.iloc[-1]
-        chg_pct = round((last['close'] - last['open']) / last['open'] * 100, 2)
-        rng = last['max'] - last['min']
-        close_pos = round((last['close'] - last['min']) / rng * 100, 1) if rng > 0 else 50
-        amp_pct = round(rng / last['min'] * 100, 2) if last['min'] > 0 else 0
+        chg_pct = round((last['close'] - last['open']) / last['open'] * 100, 2) if last['open'] > 0 else 0
+        rng = last['high'] - last['low']
+        close_pos = round((last['close'] - last['low']) / rng * 100, 1) if rng > 0 else 50
+        amp_pct   = round(rng / last['low'] * 100, 2) if last['low'] > 0 else 0
         sig = vol_signal(last['vol_k'], avg5, chg_pct, close_pos)
         fi_net, fi_date = get_fi_yesterday(code)
         watchlist_data.append({
@@ -159,8 +261,8 @@ for code, name in WATCHLIST.items():
             'vol_k': int(last['vol_k']), 'avg5': int(avg5),
             'signal': sig, 'fi_net': fi_net,
         })
-    except:
-        pass
+    except Exception as e:
+        print(f'watchlist {code} 失敗: {e}')
 
 fut_diff, fut_date = get_futures_direction()
 mkt_dir = "偏多 ↑" if fut_diff > 0 else "偏空 ↓"
@@ -168,15 +270,13 @@ mkt_dir = "偏多 ↑" if fut_diff > 0 else "偏空 ↓"
 # ── 組訊息 ────────────────────────────────────────
 
 lines = [f"🌙 <b>隔日沖候選</b>｜{TODAY} 12:30\n"]
-
 lines.append(f"🌐 大盤外資期貨（{fut_date}）：{mkt_dir}（{fut_diff:+,} 口）\n")
-
 lines.append("📋 <b>篩選條件</b>")
 lines.append("量&gt;5000張 ＋ 漲&gt;2% ＋ 收高70%+ ＋ 外資買超\n")
 
 if candidates:
     lines.append(f"✅ 符合 {len(candidates)} 檔：\n")
-    for c in candidates[:8]:  # 最多顯示8檔
+    for c in candidates[:8]:
         lines.append(
             f"🟢 <b>{c['code']} {c['name']}</b>\n"
             f"   收:{c['close']:.1f}  漲:{c['chg_pct']:+.1f}%  收盤位:{c['close_pos']:.0f}%\n"
@@ -188,7 +288,6 @@ if candidates:
 else:
     lines.append("❌ 今日無符合隔日沖條件標的（外資未買超）\n")
 
-# 自選股
 if watchlist_data:
     lines.append("👀 <b>自選股狀況</b>")
     for w in watchlist_data:
