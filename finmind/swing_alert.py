@@ -11,6 +11,18 @@ import shioaji as sj
 import os
 from datetime import datetime, date, timedelta
 from dotenv import load_dotenv
+
+def trading_days_ago(n):
+    """往回數 n 個交易日（跳過週末，未排除國定假日）"""
+    from datetime import date, timedelta
+    d = date.today()
+    count = 0
+    while count < n:
+        d -= timedelta(days=1)
+        if d.weekday() < 5:
+            count += 1
+    return d.strftime('%Y-%m-%d')
+
 from FinMind.data import DataLoader
 
 load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
@@ -21,13 +33,14 @@ BOT_TOKEN = "8666778924:AAFMAFKfsfx3opS2CfCBrDYMIx6vcJKACTk"
 CHAT_ID   = "7556217543"
 TOKEN     = open('/Users/steven/CCProject/.secrets/finmind_token.txt').read().strip()
 TODAY     = datetime.today().strftime('%Y-%m-%d')
-D10       = (datetime.today() - timedelta(days=15)).strftime('%Y-%m-%d')
-D5        = (datetime.today() - timedelta(days=8)).strftime('%Y-%m-%d')
+D10 = trading_days_ago(15)
+D5  = trading_days_ago(7)
 
 WATCHLIST = {
     '3006': '晶豪科',
     '2344': '華邦電',
 }
+
 
 # FinMind（法人資料）
 finmind = DataLoader()
@@ -39,7 +52,7 @@ _sj_api = None
 def _get_sj():
     global _sj_api
     if _sj_api is None:
-        _sj_api = sj.Shioaji(simulation=True)
+        _sj_api = sj.Shioaji(simulation=False)
         _sj_api.login(
             api_key=os.environ['SHIOAJI_API_KEY'],
             secret_key=os.environ['SHIOAJI_SECRET_KEY'],
@@ -249,7 +262,8 @@ for code, name in WATCHLIST.items():
         h['vol_k'] = h['volume']
         avg5 = round(h['vol_k'].tail(5).mean(), 0)
         last = h.iloc[-1]
-        chg_pct = round((last['close'] - last['open']) / last['open'] * 100, 2) if last['open'] > 0 else 0
+        prev_close = h.iloc[-2]['close'] if len(h) >= 2 else last['open']
+        chg_pct = round((last['close'] - prev_close) / prev_close * 100, 2) if prev_close > 0 else 0
         rng = last['high'] - last['low']
         close_pos = round((last['close'] - last['low']) / rng * 100, 1) if rng > 0 else 50
         amp_pct   = round(rng / last['low'] * 100, 2) if last['low'] > 0 else 0

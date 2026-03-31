@@ -11,6 +11,18 @@ import shioaji as sj
 import os
 from datetime import datetime, date, timedelta
 from dotenv import load_dotenv
+
+def trading_days_ago(n):
+    """往回數 n 個交易日（跳過週末，未排除國定假日）"""
+    from datetime import date, timedelta
+    d = date.today()
+    count = 0
+    while count < n:
+        d -= timedelta(days=1)
+        if d.weekday() < 5:
+            count += 1
+    return d.strftime('%Y-%m-%d')
+
 from FinMind.data import DataLoader
 
 load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
@@ -21,7 +33,8 @@ BOT_TOKEN = "8666778924:AAFMAFKfsfx3opS2CfCBrDYMIx6vcJKACTk"
 CHAT_ID   = "7556217543"
 TOKEN     = open('/Users/steven/CCProject/.secrets/finmind_token.txt').read().strip()
 TODAY     = datetime.today().strftime('%Y-%m-%d')
-D5        = (datetime.today() - timedelta(days=8)).strftime('%Y-%m-%d')
+D5  = trading_days_ago(7)
+
 
 # FinMind（期貨法人）
 finmind = DataLoader()
@@ -33,7 +46,7 @@ _sj_api = None
 def _get_sj():
     global _sj_api
     if _sj_api is None:
-        _sj_api = sj.Shioaji(simulation=True)
+        _sj_api = sj.Shioaji(simulation=False)
         _sj_api.login(
             api_key=os.environ['SHIOAJI_API_KEY'],
             secret_key=os.environ['SHIOAJI_SECRET_KEY'],
@@ -100,7 +113,7 @@ def get_avg5_vol(stock_id):
         return round(df['volume'].tail(5).mean(), 0)
     # Fallback: FinMind
     try:
-        D10 = (datetime.today() - timedelta(days=15)).strftime('%Y-%m-%d')
+        D10 = trading_days_ago(15)
         h = finmind.taiwan_stock_daily(stock_id=stock_id, start_date=D10)
         if len(h) >= 5:
             return round(h['Trading_Volume'].tail(5).mean() / 1000, 0)
