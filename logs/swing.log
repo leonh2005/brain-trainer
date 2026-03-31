@@ -104,3 +104,32 @@
    量平穩  外資+24,119張
 
 ⚠️ 數據參考，非投資建議，買賣自負
+2026-03-31 12:30:03.885 | WARNING  | importlib._bootstrap:_call_with_frames_removed:491 - Optional: pip install shioaji[speed] or uv add shioaji --extra speed for better performance.
+2026-03-31 12:30:04.309 | INFO     | FinMind.data.finmind_api:login_by_token:84 - Login success
+2026-03-31 12:30:04.395 | INFO     | FinMind.data.finmind_api:login_by_token:84 - Login success
+Response Code: 0 | Event Code: 0 | Info: host '210.59.255.161:80', hostname '210.59.255.161:80' IP 210.59.255.161:80 (host 1 of 1) (host connection attempt 1 of 1) (total connection attempt 1 of 1) | Event: Session up
+Traceback (most recent call last):
+  File "/Users/steven/CCProject/finmind/swing_alert.py", line 195, in <module>
+    df = get_sj_snapshot_all()
+  File "/Users/steven/CCProject/finmind/swing_alert.py", line 82, in get_sj_snapshot_all
+    api = _get_sj()
+  File "/Users/steven/CCProject/finmind/swing_alert.py", line 43, in _get_sj
+    _sj_api.login(
+    ~~~~~~~~~~~~~^
+        api_key=os.environ['SHIOAJI_API_KEY'],
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        secret_key=os.environ['SHIOAJI_SECRET_KEY'],
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/steven/CCProject/finmind/venv/lib/python3.14/site-packages/shioaji/shioaji.py", line 347, in login
+    accounts, contract_download, person_id = self._solace.token_login(
+                                             ~~~~~~~~~~~~~~~~~~~~~~~~^
+        api_key, secret_key, subscribe_trade, receive_window
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "api.pyx", line 738, in api.SolaceAPI.token_login
+  File "/Users/steven/CCProject/finmind/venv/lib/python3.14/site-packages/shioaji/utils.py", line 57, in raise_resp_error
+    raise Exception(resp)
+Exception: {'status': {'status_code': 400}, 'response': {'token': '', 'accounts': [], 'detail': 'key: BRwGK1MrAbhSoBc7biaVwRAGdFfF7tWzER2TKvhH4Cyx not exist.', 'ip_address': '59.115.247.178', 'person_id': '', 'client_name': '', 'contract_download': False, 'web_token': '', 'solace_props': None}}
