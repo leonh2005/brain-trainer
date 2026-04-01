@@ -1,0 +1,17 @@
+[scheduler] 啟動失敗：No module named 'apscheduler'
+兔子照護系統啟動：http://localhost:5200
+ * Serving Flask app 'app'
+ * Debug mode: off
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5200
+ * Running on http://192.168.68.123:5200
+[33mPress CTRL+C to quit[0m
+127.0.0.1 - - [01/Apr/2026 16:44:26] "[32mPOST /login HTTP/1.1[0m" 302 -
+127.0.0.1 - - [01/Apr/2026 16:44:26] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [01/Apr/2026 19:12:00] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [01/Apr/2026 19:12:01] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [01/Apr/2026 19:12:03] "DELETE /api/action-log/8 HTTP/1.1" 200 -
+127.0.0.1 - - [01/Apr/2026 19:12:05] "DELETE /api/action-log/9 HTTP/1.1" 200 -
+127.0.0.1 - - [01/Apr/2026 19:12:12] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [01/Apr/2026 19:12:12] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -

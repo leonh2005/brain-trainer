@@ -1,0 +1,218 @@
+- generic [active] [ref=e1]:
+  - navigation [ref=e2]:
+    - generic [ref=e3]: 🐰 兔子照護
+    - link "首頁" [ref=e4] [cursor=pointer]:
+      - /url: /
+    - link "基本資料" [ref=e5] [cursor=pointer]:
+      - /url: /rabbit
+    - link "日誌" [ref=e6] [cursor=pointer]:
+      - /url: /log
+    - link "就醫紀錄" [ref=e7] [cursor=pointer]:
+      - /url: /vet
+    - link "💊 藥物" [ref=e8] [cursor=pointer]:
+      - /url: /med
+    - link "🤖 AI 諮詢" [ref=e9] [cursor=pointer]:
+      - /url: /ai
+    - link "登出" [ref=e10] [cursor=pointer]:
+      - /url: /logout
+  - generic [ref=e11]:
+    - generic [ref=e13]: 📋 已有 7 天未記錄日誌，上次：2026-03-25
+    - generic [ref=e14]:
+      - generic [ref=e15]:
+        - strong [ref=e16]: 🎯 今日行為
+        - text: 😴 睡覺 1次 🍽 吃飯 14次 💧 喝水 3次
+      - list [ref=e17]:
+        - listitem [ref=e18]:
+          - text: 😴 睡覺
+          - generic [ref=e19]:
+            - text: 15:58
+            - link "截圖" [ref=e20] [cursor=pointer]:
+              - /url: /static/action_screenshots/20260401_155848_sleeping.jpg
+            - button "✕" [ref=e21] [cursor=pointer]
+        - listitem [ref=e22]:
+          - text: 🍽 吃飯
+          - generic [ref=e23]:
+            - text: 15:57
+            - link "截圖" [ref=e24] [cursor=pointer]:
+              - /url: /static/action_screenshots/20260401_155735_eating.jpg
+            - button "✕" [ref=e25] [cursor=pointer]
+        - listitem [ref=e26]:
+          - text: 🍽 吃飯
+          - generic [ref=e27]:
+            - text: 15:54
+            - link "截圖" [ref=e28] [cursor=pointer]:
+              - /url: /static/action_screenshots/20260401_155412_eating.jpg
+            - button "✕" [ref=e29] [cursor=pointer]
+        - listitem [ref=e30]:
+          - text: 🍽 吃飯
+          - generic [ref=e31]:
+            - text: 15:53
+            - link "截圖" [ref=e32] [cursor=pointer]:
+              - /url: /static/action_screenshots/20260401_155303_eating.jpg
+            - button "✕" [ref=e33] [cursor=pointer]
+        - listitem [ref=e34]:
+          - text: 🍽 吃飯
+          - generic [ref=e35]:
+            - text: 15:51
+            - link "截圖" [ref=e36] [cursor=pointer]:
+              - /url: /static/action_screenshots/20260401_155115_eating.jpg
+            - button "✕" [ref=e37] [cursor=pointer]
+        - listitem [ref=e38]:
+          - text: 🍽 吃飯
+          - generic [ref=e39]:
+            - text: 15:50
+            - link "截圖" [ref=e40] [cursor=pointer]:
+              - /url: /static/action_screenshots/20260401_155014_eating.jpg
+            - button "✕" [ref=e41] [cursor=pointer]
+        - listitem [ref=e42]:
+          - text: 🍽 吃飯
+          - generic [ref=e43]:
+            - text: 15:49
+            - link "截圖" [ref=e44] [cursor=pointer]:
+              - /url: /static/action_screenshots/20260401_154909_eating.jpg
+            - button "✕" [ref=e45] [cursor=pointer]
+        - listitem [ref=e46]:
+          - text: 🍽 吃飯
+          - generic [ref=e47]:
+            - text: 15:48
+            - link "截圖" [ref=e48] [cursor=pointer]:
+              - /url: /static/action_screenshots/20260401_154818_eating.jpg
+            - button "✕" [ref=e49] [cursor=pointer]
+        - listitem [ref=e50]:
+          - text: 🍽 吃飯
+          - generic [ref=e51]:
+            - text: 15:47
+            - link "截圖" [ref=e52] [cursor=pointer]:
+              - /url: /static/action_screenshots/20260401_154715_eating.jpg
+            - button "✕" [ref=e53] [cursor=pointer]
+        - listitem [ref=e54]:
+          - text: 🍽 吃飯
+          - generic [ref=e55]:
+            - text: 15:46
+            - link "截圖" [ref=e56] [cursor=pointer]:
+              - /url: /static/action_screenshots/20260401_154604_eating.jpg
+            - button "✕" [ref=e57] [cursor=pointer]
+        - listitem [ref=e58]:
+          - text: 🍽 吃飯
+          - generic [ref=e59]:
+            - text: 15:44
+            - link "截圖" [ref=e60] [cursor=pointer]:
+              - /url: /static/action_screenshots/20260401_154454_eating.jpg
+            - button "✕" [ref=e61] [cursor=pointer]
+        - listitem [ref=e62]:
+          - text: 🍽 吃飯
+          - generic [ref=e63]:
+            - text: 15:43
+            - link "截圖" [ref=e64] [cursor=pointer]:
+              - /url: /static/action_screenshots/20260401_154341_eating.jpg
+            - button "✕" [ref=e65] [cursor=pointer]
+        - listitem [ref=e66]:
+          - text: 🍽 吃飯
+          - generic [ref=e67]:
+            - text: 15:42
+            - button "✕" [ref=e68] [cursor=pointer]
+        - listitem [ref=e69]:
+          - text: 💧 喝水
+          - generic [ref=e70]:
+            - text: 15:39
+            - button "✕" [ref=e71] [cursor=pointer]
+        - listitem [ref=e72]:
+          - text: 💧 喝水
+          - generic [ref=e73]:
+            - text: 15:38
+            - button "✕" [ref=e74] [cursor=pointer]
+        - listitem [ref=e75]:
+          - text: 💧 喝水
+          - generic [ref=e76]:
+            - text: 15:37
+            - button "✕" [ref=e77] [cursor=pointer]
+        - listitem [ref=e78]:
+          - text: 🍽 吃飯
+          - generic [ref=e79]:
+            - text: 15:35
+            - button "✕" [ref=e80] [cursor=pointer]
+        - listitem [ref=e81]:
+          - text: 🍽 吃飯
+          - generic [ref=e82]:
+            - text: 15:34
+            - button "✕" [ref=e83] [cursor=pointer]
+    - generic [ref=e84]:
+      - generic [ref=e85]: 🐰
+      - generic [ref=e86]:
+        - generic [ref=e87]: 墨墨
+        - generic [ref=e88]: 荷蘭侏儒兔 · 8 歲 3 個月 · 已結紮（公）
+        - generic [ref=e89]: 不會上便盆，所以時常尿尿在草旁邊。喝水量和吃草量都偏少。不喜歡人抱。
+      - link "編輯" [ref=e90] [cursor=pointer]:
+        - /url: /rabbit
+    - heading "📈 體重趨勢" [level=2] [ref=e92]
+    - generic [ref=e94]:
+      - generic [ref=e95]:
+        - heading "📋 近期日誌" [level=2] [ref=e96]
+        - table [ref=e97]:
+          - rowgroup [ref=e98]:
+            - row "日期 體重 觀察" [ref=e99]:
+              - columnheader "日期" [ref=e100]
+              - columnheader "體重" [ref=e101]
+              - columnheader "觀察" [ref=e102]
+            - row "2026-03-25 0.98kg 最近睡覺時常有悶哼聲或打呼聲。伸懶腰的頻率似乎比以前頻繁。" [ref=e103]:
+              - cell "2026-03-25" [ref=e104]
+              - cell "0.98kg" [ref=e105]
+              - cell "最近睡覺時常有悶哼聲或打呼聲。伸懶腰的頻率似乎比以前頻繁。" [ref=e106]
+        - generic [ref=e107]:
+          - link "新增日誌" [ref=e108] [cursor=pointer]:
+            - /url: /log
+          - link "📥 匯出" [ref=e109] [cursor=pointer]:
+            - /url: /export/logs
+      - generic [ref=e110]:
+        - heading "🏥 就醫紀錄" [level=2] [ref=e111]
+        - table [ref=e112]:
+          - rowgroup [ref=e113]:
+            - row "日期 症狀 診斷" [ref=e114]:
+              - columnheader "日期" [ref=e115]
+              - columnheader "症狀" [ref=e116]
+              - columnheader "診斷" [ref=e117]
+            - row "2026-03-23 心臟病複診追蹤 血糖低於正常值十點，心臟有比較小一點" [ref=e118]:
+              - cell "2026-03-23" [ref=e119]
+              - cell "心臟病複診追蹤" [ref=e120]
+              - cell "血糖低於正常值十點，心臟有比較小一點" [ref=e121]
+            - row "2026-02-09 白內障 -" [ref=e122]:
+              - cell "2026-02-09" [ref=e123]
+              - cell "白內障" [ref=e124]
+              - cell "-" [ref=e125]
+            - row "2025-10-20 呼吸不順 肺炎" [ref=e126]:
+              - cell "2025-10-20" [ref=e127]
+              - cell "呼吸不順" [ref=e128]
+              - cell "肺炎" [ref=e129]
+        - generic [ref=e130]:
+          - link "新增紀錄" [ref=e131] [cursor=pointer]:
+            - /url: /vet
+          - link "📥 匯出" [ref=e132] [cursor=pointer]:
+            - /url: /export/vet
+    - generic [ref=e133]:
+      - heading "⚡ 快速記錄今日狀況" [level=2] [ref=e134]
+      - generic [ref=e135]:
+        - textbox [ref=e136]: 2026-04-01
+        - generic [ref=e137]:
+          - generic [ref=e138]:
+            - generic [ref=e139]: 體重 (kg)
+            - spinbutton [ref=e140]
+          - generic [ref=e141]:
+            - generic [ref=e142]: 食物
+            - textbox "例：提摩西草、蔬菜" [ref=e143]
+          - generic [ref=e144]:
+            - generic [ref=e145]: 飲水
+            - textbox "例：正常、較少" [ref=e146]
+          - generic [ref=e147]:
+            - generic [ref=e148]: 排便
+            - combobox [ref=e149]:
+              - option "-- 選擇 --" [selected]
+              - option "正常"
+              - option "偏少"
+              - option "偏多"
+              - option "軟便"
+              - option "未見排便"
+              - option "異常"
+        - generic [ref=e150]:
+          - generic [ref=e151]: 健康觀察
+          - textbox "活力、行為、外觀等任何觀察..." [ref=e152]
+        - button "儲存" [ref=e153] [cursor=pointer]

@@ -25,16 +25,24 @@
 {% endif %}
 
 <!-- 今日行為 -->
-{% if today_action_summary %}
+{% if today_action_list %}
 <div class="card mb-3">
-  <div class="card-header"><strong>🎯 今日行為</strong></div>
+  <div class="card-header d-flex justify-content-between align-items-center">
+    <strong>🎯 今日行為</strong>
+    <span class="text-muted small">
+      {% for key, info in today_action_summary.items() %}{{ info.label }} {{ info.count }}次　{% endfor %}
+    </span>
+  </div>
   <ul class="list-group list-group-flush">
-    {% for key, info in today_action_summary.items() %}
-    <li class="list-group-item d-flex justify-content-between align-items-center">
-      {{ info.label }}
-      <span>
-        <span class="badge bg-primary rounded-pill">{{ info.count }} 次</span>
-        <small class="text-muted ms-2">最後 {{ info.last_time }}</small>
+    {% for entry in today_action_list %}
+    <li class="list-group-item d-flex justify-content-between align-items-center py-2" id="action-{{ entry.id }}">
+      <span>{{ entry.label }}</span>
+      <span id="action-ctrl-{{ entry.id }}">
+        <small class="text-muted me-2">{{ entry.time }}</small>
+        {% if entry.screenshot %}
+        <a href="/static/{{ entry.screenshot }}" target="_blank" class="btn btn-sm btn-outline-secondary py-0 px-2 me-1">截圖</a>
+        {% endif %}
+        <button class="btn btn-sm btn-outline-danger py-0 px-2" onclick="askDelete({{ entry.id }})">✕</button>
       </span>
     </li>
     {% endfor %}
@@ -93,6 +101,23 @@
   });
 </script>
 {% endif %}
+<script>
+function askDelete(id) {
+  var ctrl = document.getElementById('action-ctrl-' + id);
+  ctrl.innerHTML = '<small class="text-danger me-2">確定刪除？</small>'
+    + '<button class="btn btn-sm btn-danger py-0 px-2 me-1" onclick="doDelete(' + id + ')">刪除</button>'
+    + '<button class="btn btn-sm btn-secondary py-0 px-2" onclick="cancelDelete(' + id + ')">取消</button>';
+}
+function cancelDelete(id) {
+  location.reload();
+}
+function doDelete(id) {
+  fetch('/api/action-log/' + id, {method: 'DELETE'})
+    .then(r => { if (r.redirected) { location.href='/login'; return null; } return r.json(); })
+    .then(data => { if (data && data.status === 'ok') document.getElementById('action-' + id).remove(); })
+    .catch(e => alert('刪除失敗：' + e));
+}
+</script>
 
 <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; flex-wrap:wrap;">
 
