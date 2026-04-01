@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 當沖候選推播 — 週間 09:30 執行
-資料來源：永豐金 Shioaji（主）+ TWSE 公開 API（輔）+ FinMind（期貨法人）
+資料來源：永豐金 Shioaji snapshots（主，即時）+ TWSE 公開 API（輔）+ FinMind（期貨法人）
 """
 
 import requests
@@ -13,7 +13,6 @@ from datetime import datetime, date, timedelta
 from dotenv import load_dotenv
 
 def trading_days_ago(n):
-    """往回數 n 個交易日（跳過週末，未排除國定假日）"""
     from datetime import date, timedelta
     d = date.today()
     count = 0
@@ -33,10 +32,8 @@ BOT_TOKEN = "8666778924:AAFMAFKfsfx3opS2CfCBrDYMIx6vcJKACTk"
 CHAT_ID   = "7556217543"
 TOKEN     = open('/Users/steven/CCProject/.secrets/finmind_token.txt').read().strip()
 TODAY     = datetime.today().strftime('%Y-%m-%d')
-D5  = trading_days_ago(7)
+D5        = trading_days_ago(7)
 
-
-# FinMind（期貨法人）
 finmind = DataLoader()
 finmind.login_by_token(api_token=TOKEN)
 
@@ -55,49 +52,65 @@ def _get_sj():
     return _sj_api
 
 
-def get_sj_full_data(symbol: str) -> dict | None:
-    """Shioaji 取歷史日K，回傳最新一日 OHLCV + 漲幅/振幅/收盤位 + 近5日均量"""
+def get_sj_snapshots(codes: list) -> dict:
+    """Shioaji 批次取即時快照（今日 OHLCV + 漲幅）"""
     try:
         api = _get_sj()
-        contract = api.Contracts.Stocks[symbol]
+        contracts = [api.Contracts.Stocks[c] for c in codes if api.Contracts.Stocks.get(c)]
+        if not contracts:
+            return {}
+        snaps = api.snapshots(contracts)
+        result = {}
+        for s in snaps:
+            rng = s.high - s.low
+            close_pos = round((s.close - s.low) / rng * 100, 1) if rng > 0 else 50.0
+            amp_pct   = round((s.high - s.low) / s.low * 100, 2) if s.low > 0 else 0.0
+            result[s.code] = {
+                'close':     s.close,
+                'chg_pct':   round(float(s.change_rate), 2),
+                'amp_pct':   amp_pct,
+                'close_pos': close_pos,
+                'vol_k':     int(s.total_volume),
+            }
+        return result
+    except Exception as e:
+        print(f'[sj] snapshots 失敗: {e}')
+        return {}
+
+
+def get_sj_avg5(symbol: str) -> int:
+    """Shioaji 歷史日K 算近5日均量（不含今日）"""
+    try:
+        api = _get_sj()
+        contract = api.Contracts.Stocks.get(symbol)
         if contract is None:
-            return None
-        start = str(date.today() - timedelta(days=30))
-        end   = str(date.today())
+            return 0
+        start = str(date.today() - timedelta(days=20))
+        end   = str(date.today() - timedelta(days=1))
         kb = api.kbars(contract, start=start, end=end)
         df = pd.DataFrame({**kb})
         if df.empty:
-            return None
+            return 0
         df['ts'] = pd.to_datetime(df['ts'])
         df['_d'] = df['ts'].dt.date
-        daily = df.groupby('_d').agg(
-            open=('Open', 'first'),
-            high=('High', 'max'),
-            low=('Low', 'min'),
-            close=('Close', 'last'),
-            volume=('Volume', 'sum')
-        ).reset_index().sort_values('_d').reset_index(drop=True)
-        daily['volume'] = daily['volume'] / 1000  # 股→張
-        if len(daily) < 2:
-            return None
-        today_row = daily.iloc[-1]
-        prev_row  = daily.iloc[-2]
-        chg_pct   = round((today_row['close'] - prev_row['close']) / prev_row['close'] * 100, 2)
-        amp_pct   = round((today_row['high'] - today_row['low']) / today_row['low'] * 100, 2)
-        rng       = today_row['high'] - today_row['low']
-        close_pos = round((today_row['close'] - today_row['low']) / rng * 100, 1) if rng > 0 else 50.0
-        avg5      = round(daily['volume'].tail(5).mean(), 0)
-        return {
-            'close':     today_row['close'],
-            'chg_pct':   float(chg_pct),
-            'amp_pct':   float(amp_pct),
-            'close_pos': float(close_pos),
-            'vol_k':     int(today_row['volume']),
-            'avg5':      int(avg5),
-        }
+        daily = df.groupby('_d').agg(volume=('Volume', 'sum')).reset_index()
+        if len(daily) >= 5:
+            return int(round(daily['volume'].tail(5).mean(), 0))
     except Exception as e:
-        print(f'[sj] full_data {symbol} 失敗: {e}')
-        return None
+        print(f'[sj] avg5 {symbol} 失敗: {e}')
+    return 0
+
+
+def get_avg5_finmind(stock_id: str) -> int:
+    """FinMind 近5日均量（Shioaji 失敗時備用）"""
+    try:
+        D10 = trading_days_ago(15)
+        h = finmind.taiwan_stock_daily(stock_id=stock_id, start_date=D10)
+        if len(h) >= 5:
+            return int(round(h['Trading_Volume'].tail(5).mean() / 1000, 0))
+    except Exception:
+        pass
+    return 0
 
 
 def send_telegram(text: str):
@@ -108,8 +121,8 @@ def send_telegram(text: str):
     )
 
 
-def get_twse_yesterday():
-    """TWSE 全市場收盤資料（Shioaji 失敗時備用）"""
+def get_twse_data():
+    """TWSE 全市場收盤資料（Shioaji snapshot 失敗時備用）"""
     r = requests.get(
         'https://openapi.twse.com.tw/v1/exchangeReport/STOCK_DAY_ALL',
         timeout=20, verify=False
@@ -128,18 +141,6 @@ def get_twse_yesterday():
     return df
 
 
-def get_avg5_finmind(stock_id: str) -> int:
-    """FinMind 近5日均量（Shioaji 完全失敗時最後備用）"""
-    try:
-        D10 = trading_days_ago(15)
-        h = finmind.taiwan_stock_daily(stock_id=stock_id, start_date=D10)
-        if len(h) >= 5:
-            return round(h['Trading_Volume'].tail(5).mean() / 1000, 0)
-    except Exception:
-        pass
-    return 0
-
-
 def get_futures_direction():
     try:
         fut = finmind.taiwan_futures_institutional_investors(futures_id="TX", start_date=D5)
@@ -153,39 +154,46 @@ def get_futures_direction():
 
 # ── 主程式 ────────────────────────────────────────
 
-twse_df = get_twse_yesterday()
+twse_df = get_twse_data()
 top20   = twse_df.nlargest(20, 'TradeVolume')
+codes   = top20['Code'].tolist()
 twse_map = {row['Code']: row for _, row in top20.iterrows()}
 
+# Shioaji 批次快照（今日即時）
+sj_snaps = get_sj_snapshots(codes)
+
 candidates = []
-for code, twse_row in twse_map.items():
-    # 優先用 Shioaji
-    sj_data = get_sj_full_data(code)
-    if sj_data:
-        close     = sj_data['close']
-        chg_pct   = sj_data['chg_pct']
-        amp_pct   = sj_data['amp_pct']
-        close_pos = sj_data['close_pos']
-        vol_k     = sj_data['vol_k']
-        avg5      = sj_data['avg5']
+for code in codes:
+    twse_row = twse_map[code]
+    name = twse_row['Name']
+
+    if code in sj_snaps:
+        d = sj_snaps[code]
+        close, chg_pct, amp_pct, close_pos, vol_k = (
+            d['close'], d['chg_pct'], d['amp_pct'], d['close_pos'], d['vol_k']
+        )
     else:
-        # 備用：TWSE 價格 + FinMind 均量
+        # 備用：TWSE
         close     = twse_row['ClosingPrice']
         chg_pct   = twse_row['chg_pct']
         amp_pct   = twse_row['amp_pct']
         close_pos = twse_row['close_pos']
         vol_k     = int(twse_row['vol_k'])
-        avg5      = get_avg5_finmind(code)
+
+    # 近5日均量：Shioaji kbars，失敗用 FinMind
+    avg5 = get_sj_avg5(code)
+    if avg5 == 0:
+        avg5 = get_avg5_finmind(code)
 
     if amp_pct >= 3 and avg5 >= 3000 and chg_pct >= 1.5:
         candidates.append({
             'code':      code,
-            'name':      twse_row['Name'],
+            'name':      name,
             'close':     close,
             'chg_pct':   chg_pct,
             'amp_pct':   amp_pct,
             'vol_k':     vol_k,
-            'avg5':      int(avg5),
+            'avg5':      avg5,
             'close_pos': close_pos,
         })
 
