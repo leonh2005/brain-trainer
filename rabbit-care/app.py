@@ -109,6 +109,15 @@ def init_db():
                 active INTEGER DEFAULT 1,
                 created_at TEXT DEFAULT (datetime('now','localtime'))
             );
+
+            CREATE TABLE IF NOT EXISTS action_log (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                log_date TEXT NOT NULL,
+                action TEXT NOT NULL,
+                confidence REAL NOT NULL,
+                timestamp TEXT NOT NULL,
+                created_at TEXT DEFAULT (datetime('now','localtime'))
+            );
         ''')
         # 補欄位（舊資料庫升級）
         try:
@@ -649,6 +658,39 @@ def send_daily_summary():
             lines.append(f"  {r['icon']} {r['text']}")
 
     send_telegram('\n'.join(lines))
+
+
+# ── 動作辨識 API ──────────────────────────────────────────────
+
+@app.route('/api/log-action', methods=['POST'])
+def api_log_action():
+    data = request.get_json()
+    action = data.get('action', '')
+    confidence = float(data.get('confidence', 0))
+    timestamp = data.get('timestamp', '')
+
+    if action == 'other' or not action:
+        return jsonify({'status': 'ignored'})
+
+    log_date = timestamp[:10] if timestamp else date.today().isoformat()
+
+    with get_db() as conn:
+        conn.execute(
+            'INSERT INTO action_log (log_date, action, confidence, timestamp) VALUES (?,?,?,?)',
+            (log_date, action, confidence, timestamp)
+        )
+    return jsonify({'status': 'ok'})
+
+
+@app.route('/api/today-actions')
+def api_today_actions():
+    target_date = request.args.get('date', date.today().isoformat())
+    with get_db() as conn:
+        rows = conn.execute(
+            'SELECT action, confidence, timestamp FROM action_log WHERE log_date=? ORDER BY timestamp',
+            (target_date,)
+        ).fetchall()
+    return jsonify({'actions': [dict(r) for r in rows]})
 
 
 if __name__ == '__main__':
