@@ -528,7 +528,7 @@ document.addEventListener('DOMContentLoaded', () => {
     a.href     = url;
     a.download = `dan-koe-restart-${rec.date}.json`;
     a.click();
-    URL.revokeObjectURL(url);
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
   });
 });
 </script>
