@@ -27,13 +27,19 @@ RABBIT_CARE_URL  = os.getenv('RABBIT_CARE_URL', 'http://localhost:5200')
 MOTION_THRESHOLD = int(os.getenv('MOTION_THRESHOLD', '500'))
 COOLDOWN_SECONDS = int(os.getenv('COOLDOWN_SECONDS', '60'))
 MIN_CONFIDENCE   = float(os.getenv('GEMINI_MIN_CONFIDENCE', '0.7'))
+BOT_TOKEN        = os.getenv('TELEGRAM_BOT_TOKEN', '')
+CHAT_ID          = os.getenv('TELEGRAM_CHAT_ID', '')
 
-PROMPT = """這是寵物兔子的監控截圖（依時間順序）。
-請判斷牠正在做什麼，從以下選項中選一個：
-- eating（在吃飯）
-- drinking（在喝水）
-- stretching（在伸懶腰）
-- other（其他）
+PROMPT = """這是寵物兔子（墨墨）的監控截圖（依時間順序）。
+籠子擺設說明：
+- 畫面右側有一個黃色飲水容器（水碗/水瓶）
+- 籠子地板鋪滿牧草，兔子會直接低頭在草上進食
+
+請根據兔子的位置和姿勢，判斷牠正在做什麼，從以下選項中選一個：
+- eating（頭低下在草上進食）
+- drinking（靠近右側黃色水容器在喝水）
+- stretching（身體完全伸展開來在伸懶腰）
+- other（其他動作）
 
 只回傳 JSON，格式：{"action": "eating", "confidence": 0.9}"""
 
@@ -89,8 +95,29 @@ def analyze_frames(frames: list):
         return None
 
 
+ACTION_EMOJI = {'eating': '🍽', 'drinking': '💧', 'stretching': '🐇'}
+ACTION_LABEL = {'eating': '吃飯', 'drinking': '喝水', 'stretching': '伸懶腰'}
+
+def send_telegram(action: str, confidence: float):
+    """推播 Telegram 通知"""
+    if not BOT_TOKEN or not CHAT_ID:
+        return
+    emoji = ACTION_EMOJI.get(action, '🐾')
+    label = ACTION_LABEL.get(action, action)
+    now = datetime.now().strftime('%H:%M')
+    text = f"{emoji} 墨墨正在{label}！（{now}，信心 {confidence:.0%}）"
+    try:
+        requests.post(
+            f'https://api.telegram.org/bot{BOT_TOKEN}/sendMessage',
+            json={'chat_id': CHAT_ID, 'text': text},
+            timeout=10
+        )
+    except Exception as e:
+        logger.error(f'Telegram 推播失敗: {e}')
+
+
 def post_action(action: str, confidence: float):
-    """寫入 rabbit-care API"""
+    """寫入 rabbit-care API 並推播 Telegram"""
     try:
         resp = requests.post(
             f'{RABBIT_CARE_URL}/api/log-action',
@@ -105,6 +132,7 @@ def post_action(action: str, confidence: float):
         logger.info(f'已記錄動作: {action} (信心: {confidence:.2f})')
     except Exception as e:
         logger.error(f'寫入 rabbit-care 失敗: {e}')
+    send_telegram(action, confidence)
 
 
 def detect_motion(prev_frame, curr_frame) -> bool:
