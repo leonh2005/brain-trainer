@@ -5,15 +5,11 @@
 """
 
 import os
-import cv2
 import json
 import time
 import logging
 import requests
-import numpy as np
 from datetime import datetime
-from PIL import Image
-import google.genai as genai
 from dotenv import load_dotenv
 
 load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
@@ -54,6 +50,8 @@ def _get_gemini_client():
 
 def frames_to_pil(frames: list) -> list:
     """numpy BGR frames → PIL RGB Images"""
+    import cv2
+    from PIL import Image
     result = []
     for f in frames:
         rgb = cv2.cvtColor(f, cv2.COLOR_BGR2RGB)
@@ -111,6 +109,7 @@ def post_action(action: str, confidence: float):
 
 def detect_motion(prev_frame, curr_frame) -> bool:
     """比較兩影格差異，超過門檻視為移動"""
+    import cv2
     diff = cv2.absdiff(prev_frame, curr_frame)
     gray = cv2.cvtColor(diff, cv2.COLOR_BGR2GRAY)
     _, thresh = cv2.threshold(gray, 25, 255, cv2.THRESH_BINARY)
@@ -129,6 +128,8 @@ def run():
     in_motion = False
     still_count = 0
 
+    import cv2
+    import numpy as np
     while True:
         cap = cv2.VideoCapture(RTSP_URL)
         if not cap.isOpened():
