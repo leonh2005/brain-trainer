@@ -65,7 +65,9 @@ SSH 指令前綴：ssh -i ~/.ssh/oracle_line_bot -o ConnectTimeout=10 -o BatchMo
 " 2>&1)
 
 if [ -z "$REPORT" ]; then
+    echo "[$(date '+%Y-%m-%d %H:%M')] claude 無回應"
     send_telegram "❌ 半夜巡邏失敗：claude 無回應"
 else
+    echo "$REPORT"
     send_telegram "$REPORT"
 fi
