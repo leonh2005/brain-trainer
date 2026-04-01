@@ -285,9 +285,21 @@ def index():
         active_meds = conn.execute(
             "SELECT * FROM medication WHERE active=1 ORDER BY start_date DESC LIMIT 5"
         ).fetchall()
+        today_actions_raw = conn.execute(
+            'SELECT action, timestamp FROM action_log WHERE log_date=? ORDER BY timestamp',
+            (date.today().isoformat(),)
+        ).fetchall()
     weight_labels = [r['log_date'] for r in weight_data]
     weight_values = [r['weight'] for r in weight_data]
     reminders = get_reminders()
+    action_labels = {'eating': '🍽 吃飯', 'drinking': '💧 喝水', 'stretching': '🐇 伸懶腰'}
+    today_action_summary = {}
+    for row in today_actions_raw:
+        a = row['action']
+        if a not in today_action_summary:
+            today_action_summary[a] = {'label': action_labels.get(a, a), 'count': 0, 'last_time': ''}
+        today_action_summary[a]['count'] += 1
+        today_action_summary[a]['last_time'] = row['timestamp'][11:16]
     return render_template('index.html',
         rabbit=rabbit, age=age,
         recent_logs=recent_logs,
@@ -297,6 +309,7 @@ def index():
         weight_values=json.dumps(weight_values),
         today=date.today().isoformat(),
         reminders=reminders,
+        today_action_summary=today_action_summary,
     )
 
 
