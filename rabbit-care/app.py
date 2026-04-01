@@ -116,6 +116,7 @@ def init_db():
                 action TEXT NOT NULL,
                 confidence REAL NOT NULL,
                 timestamp TEXT NOT NULL,
+                screenshot TEXT,
                 created_at TEXT DEFAULT (datetime('now','localtime'))
             );
         ''')
@@ -126,6 +127,10 @@ def init_db():
             pass
         try:
             conn.execute('ALTER TABLE vet_visit ADD COLUMN next_visit TEXT')
+        except Exception:
+            pass
+        try:
+            conn.execute('ALTER TABLE action_log ADD COLUMN screenshot TEXT')
         except Exception:
             pass
 
@@ -286,20 +291,28 @@ def index():
             "SELECT * FROM medication WHERE active=1 ORDER BY start_date DESC LIMIT 5"
         ).fetchall()
         today_actions_raw = conn.execute(
-            'SELECT action, timestamp FROM action_log WHERE log_date=? ORDER BY timestamp',
+            'SELECT id, action, timestamp, screenshot FROM action_log WHERE log_date=? ORDER BY timestamp DESC',
             (date.today().isoformat(),)
         ).fetchall()
     weight_labels = [r['log_date'] for r in weight_data]
     weight_values = [r['weight'] for r in weight_data]
     reminders = get_reminders()
-    action_labels = {'eating': '🍽 吃飯', 'drinking': '💧 喝水', 'stretching': '🐇 伸懶腰'}
+    action_labels = {'eating': '🍽 吃飯', 'drinking': '💧 喝水', 'stretching': '🐇 伸懶腰', 'sleeping': '😴 睡覺'}
+    today_action_list = [
+        {
+            'id': r['id'],
+            'label': action_labels.get(r['action'], r['action']),
+            'time': r['timestamp'][11:16],
+            'screenshot': r['screenshot']
+        }
+        for r in today_actions_raw
+    ]
     today_action_summary = {}
     for row in today_actions_raw:
         a = row['action']
         if a not in today_action_summary:
-            today_action_summary[a] = {'label': action_labels.get(a, a), 'count': 0, 'last_time': ''}
+            today_action_summary[a] = {'label': action_labels.get(a, a), 'count': 0}
         today_action_summary[a]['count'] += 1
-        today_action_summary[a]['last_time'] = row['timestamp'][11:16]
     return render_template('index.html',
         rabbit=rabbit, age=age,
         recent_logs=recent_logs,
@@ -310,6 +323,7 @@ def index():
         today=date.today().isoformat(),
         reminders=reminders,
         today_action_summary=today_action_summary,
+        today_action_list=today_action_list,
     )
 
 
@@ -681,6 +695,7 @@ def api_log_action():
     action = data.get('action', '')
     confidence = float(data.get('confidence', 0))
     timestamp = data.get('timestamp', '')
+    screenshot = data.get('screenshot')
 
     if action == 'other' or not action:
         return jsonify({'status': 'ignored'})
@@ -689,9 +704,17 @@ def api_log_action():
 
     with get_db() as conn:
         conn.execute(
-            'INSERT INTO action_log (log_date, action, confidence, timestamp) VALUES (?,?,?,?)',
-            (log_date, action, confidence, timestamp)
+            'INSERT INTO action_log (log_date, action, confidence, timestamp, screenshot) VALUES (?,?,?,?,?)',
+            (log_date, action, confidence, timestamp, screenshot)
         )
+    return jsonify({'status': 'ok'})
+
+
+@app.route('/api/action-log/<int:log_id>', methods=['DELETE'])
+@login_required
+def api_delete_action(log_id):
+    with get_db() as conn:
+        conn.execute('DELETE FROM action_log WHERE id=?', (log_id,))
     return jsonify({'status': 'ok'})
 
 
