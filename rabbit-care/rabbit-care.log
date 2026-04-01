@@ -7,3 +7,18 @@
  * Running on http://127.0.0.1:5200
  * Running on http://192.168.68.123:5200
 [33mPress CTRL+C to quit[0m
+127.0.0.1 - - [01/Apr/2026 12:16:20] "[33mPOST /api/log-action HTTP/1.1[0m" 404 -
+127.0.0.1 - - [01/Apr/2026 12:16:23] "[32mGET / HTTP/1.1[0m" 302 -
+127.0.0.1 - - [01/Apr/2026 12:16:34] "[33mPOST /api/log-action HTTP/1.1[0m" 404 -
+127.0.0.1 - - [01/Apr/2026 12:16:37] "[33mGET /api/today-actions HTTP/1.1[0m" 404 -
+127.0.0.1 - - [01/Apr/2026 12:17:00] "[33mGET /api/today-actions?date=2026-04-01 HTTP/1.1[0m" 404 -
+[scheduler] 每日摘要排程已啟動（08:00）
+兔子照護系統啟動：http://localhost:5200
+ * Serving Flask app 'app'
+ * Debug mode: off
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5200
+ * Running on http://192.168.68.123:5200
+[33mPress CTRL+C to quit[0m
+127.0.0.1 - - [01/Apr/2026 12:17:12] "POST /api/log-action HTTP/1.1" 200 -
