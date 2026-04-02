@@ -23,3 +23,4 @@
 [Thu Apr  2 07:30:11 CST 2026] 2026-04-01T23:30:11Z INF Registered tunnel connection connIndex=0 connection=44293bce-b597-4258-bfeb-e96bef8fc9ad event=0 ip=198.41.200.113 location=tpe01 protocol=quic
 [Thu Apr  2 18:15:18 CST 2026] 2026-04-02T10:15:18Z ERR Failed to refresh DNS local resolver error="lookup region1.v2.argotunnel.com: i/o timeout"
 [Thu Apr  2 21:00:23 CST 2026] 2026-04-02T13:00:23Z ERR Failed to refresh DNS local resolver error="lookup region1.v2.argotunnel.com: i/o timeout"
+[Fri Apr  3 05:30:30 CST 2026] 2026-04-02T21:30:30Z ERR Failed to refresh DNS local resolver error="lookup region1.v2.argotunnel.com: i/o timeout"
