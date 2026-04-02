@@ -729,6 +729,48 @@ def api_today_actions():
     return jsonify({'actions': [dict(r) for r in rows]})
 
 
+@app.route('/actions')
+@login_required
+def action_history():
+    target_date = request.args.get('date', date.today().isoformat())
+    action_labels = {
+        'eating': '🍽 吃飯', 'drinking': '💧 喝水',
+        'stretching': '🐇 伸懶腰', 'sleeping': '😴 睡覺', 'resting': '🐰 休息'
+    }
+    with get_db() as conn:
+        rows = conn.execute(
+            'SELECT id, action, confidence, timestamp, screenshot FROM action_log WHERE log_date=? ORDER BY timestamp DESC',
+            (target_date,)
+        ).fetchall()
+        dates = conn.execute(
+            'SELECT DISTINCT log_date FROM action_log ORDER BY log_date DESC LIMIT 30'
+        ).fetchall()
+    action_list = [
+        {
+            'id': r['id'],
+            'action': r['action'],
+            'label': action_labels.get(r['action'], r['action']),
+            'confidence': r['confidence'],
+            'time': r['timestamp'][11:16] if r['timestamp'] else '',
+            'screenshot': r['screenshot'],
+        }
+        for r in rows
+    ]
+    summary = {}
+    for entry in action_list:
+        a = entry['action']
+        if a not in summary:
+            summary[a] = {'label': action_labels.get(a, a), 'count': 0}
+        summary[a]['count'] += 1
+    available_dates = [r['log_date'] for r in dates]
+    return render_template('action_history.html',
+        target_date=target_date,
+        action_list=action_list,
+        summary=summary,
+        available_dates=available_dates,
+    )
+
+
 if __name__ == '__main__':
     init_db()
     # 每天 08:00 推送 Telegram 健康摘要

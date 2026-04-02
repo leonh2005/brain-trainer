@@ -27,23 +27,30 @@ RTSP_URL         = os.getenv('RTSP_URL', '')
 RABBIT_CARE_URL  = os.getenv('RABBIT_CARE_URL', 'http://localhost:5200')
 MOTION_THRESHOLD = int(os.getenv('MOTION_THRESHOLD', '500'))
 COOLDOWN_SECONDS = int(os.getenv('COOLDOWN_SECONDS', '60'))
-MIN_CONFIDENCE   = float(os.getenv('GEMINI_MIN_CONFIDENCE', '0.7'))
+MIN_CONFIDENCE   = float(os.getenv('GEMINI_MIN_CONFIDENCE', '0.85'))
 BOT_TOKEN        = os.getenv('TELEGRAM_BOT_TOKEN', '')
 CHAT_ID          = os.getenv('TELEGRAM_CHAT_ID', '')
 
 PROMPT = """這是寵物兔子（墨墨）的監控截圖（依時間順序）。
 籠子擺設說明：
-- 畫面右側有一個黃色飲水容器（水碗/水瓶）
-- 籠子地板鋪滿牧草，兔子會直接低頭在草上進食
+- 地板鋪有白色地墊（不是草地）
+- 畫面右側或角落有黃色飲水容器（水碗/水瓶）
+- 牧草放在固定的草架或草盤，不是直接鋪在地上
 
-請根據兔子的位置和姿勢，判斷牠正在做什麼，從以下選項中選一個：
-- eating（頭低下在草上進食）
-- drinking（靠近右側黃色水容器在喝水）
+請根據兔子的具體動作，從以下選項中選一個：
+- eating（嘴巴在啃咬動作，可以看到頭部反覆點動或下顎咀嚼，且頭部靠近草架/食物區）
+- drinking（嘴巴靠近水容器，有飲水動作）
+- resting（靜止坐著或趴著在地墊上，無明顯動作，頭可能稍低但沒有咀嚼）
 - stretching（身體完全伸展開來在伸懶腰）
 - sleeping（身體側躺或蜷縮，眼睛閉著或幾乎不動，長時間靜止）
 - other（其他動作）
 
-只回傳 JSON，格式：{"action": "eating", "confidence": 0.9}"""
+重要提示：
+- 如果兔子只是靜止坐著或趴著，請選 resting，不是 eating
+- 只有看到明確咀嚼或啃咬動作才選 eating
+- 如果不確定，請降低 confidence 值（低於 0.7）
+
+只回傳 JSON，格式：{"action": "resting", "confidence": 0.9}"""
 
 
 _gemini_client = None
@@ -96,8 +103,8 @@ def analyze_frames(frames: list):
         return None
 
 
-ACTION_EMOJI = {'eating': '🍽', 'drinking': '💧', 'stretching': '🐇', 'sleeping': '😴'}
-ACTION_LABEL = {'eating': '吃飯', 'drinking': '喝水', 'stretching': '伸懶腰', 'sleeping': '睡覺'}
+ACTION_EMOJI = {'eating': '🍽', 'drinking': '💧', 'stretching': '🐇', 'sleeping': '😴', 'resting': '🐰'}
+ACTION_LABEL = {'eating': '吃飯', 'drinking': '喝水', 'stretching': '伸懶腰', 'sleeping': '睡覺', 'resting': '休息'}
 
 SCREENSHOT_DIR = os.path.join(os.path.dirname(__file__), 'static', 'action_screenshots')
 os.makedirs(SCREENSHOT_DIR, exist_ok=True)
