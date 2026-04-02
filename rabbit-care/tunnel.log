@@ -1,0 +1,23 @@
+[Thu Apr  2 07:29:56 CST 2026] 啟動 tunnel...
+[Thu Apr  2 07:30:01 CST 2026] 2026-04-01T23:30:01Z INF Thank you for trying Cloudflare Tunnel. Doing so, without a Cloudflare account, is a quick way to experiment and try it out. However, be aware that these account-less Tunnels have no uptime guarantee, are subject to the Cloudflare Online Services Terms of Use (https://www.cloudflare.com/website-terms/), and Cloudflare reserves the right to investigate your use of Tunnels for violations of such terms. If you intend to use Tunnels in production you should use a pre-created named tunnel by following: https://developers.cloudflare.com/cloudflare-one/connections/connect-apps
+[Thu Apr  2 07:30:01 CST 2026] 2026-04-01T23:30:01Z INF Requesting new quick Tunnel on trycloudflare.com...
+[Thu Apr  2 07:30:10 CST 2026] 2026-04-01T23:30:10Z INF +--------------------------------------------------------------------------------------------+
+[Thu Apr  2 07:30:10 CST 2026] 2026-04-01T23:30:10Z INF |  Your quick Tunnel has been created! Visit it at (it may take some time to be reachable):  |
+[Thu Apr  2 07:30:10 CST 2026] 2026-04-01T23:30:10Z INF |  https://next-nine-side-leading.trycloudflare.com                                          |
+{"ok":true,"result":{"message_id":222,"from":{"id":8666778924,"is_bot":true,"first_name":"Ccagent","username":"CcagentForsteven_bot"},"chat":{"id":7556217543,"first_name":"Steven","type":"private"},"date":1775086211,"text":"\ud83d\udc30 \u5154\u5b50\u7167\u8b77\u7cfb\u7d71\u5916\u90e8\u9023\u7d50\uff1a\nhttps://next-nine-side-leading.trycloudflare.com\n\n\u5bc6\u78bc\uff1amomo2026","entities":[{"offset":15,"length":48,"type":"url"}],"link_preview_options":{"url":"https://next-nine-side-leading.trycloudflare.com/"}}}[Thu Apr  2 07:30:11 CST 2026] URL 已傳送：https://next-nine-side-leading.trycloudflare.com
+[Thu Apr  2 07:30:11 CST 2026] 2026-04-01T23:30:10Z INF +--------------------------------------------------------------------------------------------+
+[Thu Apr  2 07:30:11 CST 2026] 2026-04-01T23:30:10Z INF Cannot determine default configuration path. No file [config.yml config.yaml] in [~/.cloudflared ~/.cloudflare-warp ~/cloudflare-warp /etc/cloudflared /usr/local/etc/cloudflared]
+[Thu Apr  2 07:30:11 CST 2026] 2026-04-01T23:30:10Z INF Version 2026.3.0 (Checksum 99f099a3834e0b20ec2a18ac77d3d77261b77652310d97eca18fc1797d4349d0)
+[Thu Apr  2 07:30:11 CST 2026] 2026-04-01T23:30:10Z INF GOOS: darwin, GOVersion: go1.26.1, GoArch: arm64
+[Thu Apr  2 07:30:11 CST 2026] 2026-04-01T23:30:10Z INF Settings: map[ha-connections:1 no-autoupdate:true protocol:quic url:http://localhost:5200]
+[Thu Apr  2 07:30:11 CST 2026] 2026-04-01T23:30:10Z INF cloudflared will not automatically update if installed by a package manager.
+[Thu Apr  2 07:30:11 CST 2026] 2026-04-01T23:30:10Z INF Generated Connector ID: 59f3009e-8b79-45db-adf5-9c5beef189c4
+[Thu Apr  2 07:30:11 CST 2026] 2026-04-01T23:30:10Z INF Initial protocol quic
+[Thu Apr  2 07:30:11 CST 2026] 2026-04-01T23:30:10Z INF ICMP proxy will use 192.168.68.123 as source for IPv4
+[Thu Apr  2 07:30:11 CST 2026] 2026-04-01T23:30:10Z INF ICMP proxy will use fe80::85b:6f62:5177:91e3 in zone en1 as source for IPv6
+[Thu Apr  2 07:30:11 CST 2026] 2026-04-01T23:30:10Z INF Created ICMP proxy listening on 192.168.68.123:0
+[Thu Apr  2 07:30:11 CST 2026] 2026-04-01T23:30:10Z INF ICMP proxy will use 192.168.68.123 as source for IPv4
+[Thu Apr  2 07:30:11 CST 2026] 2026-04-01T23:30:10Z INF ICMP proxy will use fe80::85b:6f62:5177:91e3 in zone en1 as source for IPv6
+[Thu Apr  2 07:30:11 CST 2026] 2026-04-01T23:30:10Z INF Starting metrics server on 127.0.0.1:20241/metrics
+[Thu Apr  2 07:30:11 CST 2026] 2026-04-01T23:30:10Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveP256] connIndex=0 event=0 ip=198.41.200.113
+[Thu Apr  2 07:30:11 CST 2026] 2026-04-01T23:30:11Z INF Registered tunnel connection connIndex=0 connection=44293bce-b597-4258-bfeb-e96bef8fc9ad event=0 ip=198.41.200.113 location=tpe01 protocol=quic

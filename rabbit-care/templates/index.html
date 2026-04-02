@@ -47,6 +47,16 @@
     </li>
     {% endfor %}
   </ul>
+  <div style="padding:10px 16px; border-top:1px solid #f5f5f5;">
+    <a href="/actions" style="color:#ff7043; text-decoration:none; font-size:14px; font-weight:600;">📅 查看歷史紀錄 →</a>
+  </div>
+</div>
+{% endif %}
+
+<!-- 行為歷史快捷（無今日行為時顯示） -->
+{% if not today_action_list %}
+<div style="margin-bottom:16px;">
+  <a href="/actions" style="display:inline-block; padding:10px 20px; background:#fff8f5; border:1.5px solid #ffccbc; border-radius:10px; color:#ff7043; text-decoration:none; font-weight:600; font-size:15px;">📅 查看行為歷史紀錄</a>
 </div>
 {% endif %}
 

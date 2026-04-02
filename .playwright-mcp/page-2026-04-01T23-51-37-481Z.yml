@@ -1,0 +1,7 @@
+- generic [ref=e2]:
+  - generic [ref=e3]: 🐰
+  - heading "兔子照護系統" [level=1] [ref=e4]
+  - paragraph [ref=e5]: 請輸入密碼進入
+  - generic [ref=e6]:
+    - textbox "••••••••" [active] [ref=e7]
+    - button "進入" [ref=e8] [cursor=pointer]
