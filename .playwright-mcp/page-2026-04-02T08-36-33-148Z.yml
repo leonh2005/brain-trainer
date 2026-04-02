@@ -1,0 +1,832 @@
+- generic [active] [ref=e1]:
+  - generic:
+    - text:         
+    - navigation [ref=e2]:
+      - generic [ref=e4]:
+        - link [ref=e5] [cursor=pointer]:
+          - /url: /
+          - img [ref=e6]
+        - list [ref=e7]:
+          - listitem [ref=e8]:
+            - img [ref=e10] [cursor=pointer]
+          - listitem [ref=e12]:
+            - link [ref=e13] [cursor=pointer]:
+              - /url: /users/sign_in
+              - img [ref=e14]
+          - listitem [ref=e16]:
+            - img [ref=e18] [cursor=pointer]
+          - listitem [ref=e20]
+  - text:                                                                                    
+  - generic [ref=e24]:
+    - generic [ref=e37]:
+      - heading [level=3]
+      - iframe [ref=e40]:
+        - img [ref=f48e1]
+    - generic [ref=e55]:
+      - generic [ref=e56]:
+        - generic [ref=e57]:
+          - link:
+            - /url: https://docs.google.com/forms/d/e/1FAIpQLSdSHi1r6YlyNRaoFXrxB1Q9K-3wTzV3nHoQ-PFFKGyJ8exufw/viewform
+        - generic:
+          - link:
+            - /url: https://www.trohome.com/categories/belgium%E5%BA%8A%E7%B5%84-%E5%B0%88%E5%8D%80
+      - generic [ref=e61]:
+        - button [ref=e62] [cursor=pointer]
+        - button [ref=e63] [cursor=pointer]
+    - generic [ref=e76]:
+      - link [ref=e78] [cursor=pointer]:
+        - /url: https://www.trohome.com/categories/%E5%BE%AE%E7%91%95%E7%B5%95%E7%89%88%E7%89%B9%E8%B3%A3
+      - link [ref=e83] [cursor=pointer]:
+        - /url: https://www.trohome.com/categories/2026%E7%8F%BE%E8%B2%A8%E6%96%B0%E5%93%81
+    - generic [ref=e103]:
+      - link:
+        - /url: https://www.trohome.com/pages/about-trohome-%E9%97%9C%E6%96%BC%E6%8B%93%E5%AE%B6-1?draft=true&debug=true
+    - generic [ref=e111]:
+      - generic [ref=e112]:
+        - generic [ref=e113]:
+          - link:
+            - /url: https://www.trohome.com/pages/trohome-%C3%97-2024-taiwanese-drama
+        - generic:
+          - link:
+            - /url: https://www.trohome.com/pages/trohome-%C3%97-2024-taiwanese-drama
+        - generic:
+          - link:
+            - /url: https://www.trohome.com/pages/trohome-%C3%97-2024-taiwanese-drama
+        - generic:
+          - link:
+            - /url: https://www.trohome.com/pages/trohome-%C3%97-2024-taiwanese-drama
+      - generic [ref=e117]:
+        - button [ref=e118] [cursor=pointer]
+        - button [ref=e119] [cursor=pointer]
+        - button [ref=e120] [cursor=pointer]
+        - button [ref=e121] [cursor=pointer]
+    - generic [ref=e148]:
+      - link:
+        - /url: https://www.trohome.com/blog/posts/20230831
+    - generic [ref=e164]:
+      - link [ref=e166] [cursor=pointer]:
+        - /url: https://www.trohome.com/pages/%E5%A6%82%E4%BD%95%E8%A8%82%E8%A3%BD%E4%BD%A0%E7%9A%84%E5%B0%88%E5%B1%AC%E6%A1%8C%E5%AD%90
+      - link [ref=e171] [cursor=pointer]:
+        - /url: https://www.trohome.com/pages/%E5%A6%82%E4%BD%95%E8%A8%82%E8%A3%BD%E4%BD%A0%E7%9A%84%E5%B0%88%E5%B1%AC%E6%AB%83%E5%AD%90-1
+      - link [ref=e176] [cursor=pointer]:
+        - /url: https://www.trohome.com/pages/%E8%87%AA%E7%84%B6%E5%AF%A6%E6%9C%A8%E8%88%87%E8%A3%BD%E4%BD%9C%E6%B5%81%E7%A8%8B
+    - generic [ref=e189]:
+      - link [ref=e191] [cursor=pointer]:
+        - /url: https://www.youtube.com/channel/UCNObHhqXrcVUsmJUYL63wAg
+      - link [ref=e196] [cursor=pointer]:
+        - /url: https://www.trohome.com/pages/case-sharing
+    - generic [ref=e206]:
+      - link:
+        - /url: https://www.trohome.com/pages/customize-sofa-1
+    - generic [ref=e214]:
+      - generic [ref=e215]:
+        - generic:
+          - link:
+            - /url: https://www.trohome.com/products/brulee
+        - generic:
+          - link:
+            - /url: https://www.trohome.com/products/62f5d488281971001c6d13f4
+        - generic:
+          - link:
+            - /url: https://www.trohome.com/products/jolie
+        - generic:
+          - link:
+            - /url: https://www.trohome.com/products/brulee
+        - generic:
+          - link:
+            - /url: https://www.trohome.com/products/cs6113
+        - generic:
+          - link:
+            - /url: https://www.trohome.com/products/the-stroll
+        - generic:
+          - link:
+            - /url: https://www.trohome.com/products/62f5d1d415d5a7002e5738ba
+      - generic [ref=e220]:
+        - button [ref=e221] [cursor=pointer]
+        - button [ref=e222] [cursor=pointer]
+        - button [ref=e223] [cursor=pointer]
+        - button [ref=e224] [cursor=pointer]
+        - button [ref=e225] [cursor=pointer]
+        - button [ref=e226] [cursor=pointer]
+        - button [ref=e227] [cursor=pointer]
+        - button [ref=e228] [cursor=pointer]
+    - generic [ref=e232]:
+      - generic [ref=e233]:
+        - link "展示品六折出清!! 原價17640元 布蕾無扶手沙發 售完 展示品六折出清!! 原價17640元 布蕾無扶手沙發 NT$10,584 NT$17,640 " [ref=e237] [cursor=pointer]:
+          - /url: https://www.trohome.com/products/trob-20250412-018
+          - generic [ref=e238]:
+            - img "展示品六折出清!! 原價17640元 布蕾無扶手沙發" [ref=e241]
+            - generic [ref=e243]: 售完
+          - generic [ref=e245]:
+            - generic [ref=e246]: 展示品六折出清!! 原價17640元 布蕾無扶手沙發
+            - generic [ref=e247]:
+              - generic [ref=e248]: NT$10,584
+              - generic [ref=e250]: NT$17,640
+            - generic [ref=e252]: 
+        - link "可訂製 The Walz 圓舞曲沙發 可訂製 The Walz 圓舞曲沙發 " [ref=e256] [cursor=pointer]:
+          - /url: https://www.trohome.com/products/cs9406
+          - img "可訂製 The Walz 圓舞曲沙發" [ref=e260]
+          - generic [ref=e262]:
+            - generic [ref=e263]: 可訂製 The Walz 圓舞曲沙發
+            - generic [ref=e265]: 
+        - link "可訂製 大船沙發 雙段式可調椅背 × 船型舒適設計 可訂製 大船沙發 雙段式可調椅背 × 船型舒適設計 " [ref=e269] [cursor=pointer]:
+          - /url: https://www.trohome.com/products/cs9461
+          - img "可訂製 大船沙發 雙段式可調椅背 × 船型舒適設計" [ref=e273]
+          - generic [ref=e275]:
+            - generic [ref=e276]: 可訂製 大船沙發 雙段式可調椅背 × 船型舒適設計
+            - generic [ref=e278]: 
+        - link "可訂製 Mori木語沙發 自帶茶几×內建插座×無線充電 可訂製 Mori木語沙發 自帶茶几×內建插座×無線充電 " [ref=e282] [cursor=pointer]:
+          - /url: https://www.trohome.com/products/cs8151
+          - img "可訂製 Mori木語沙發 自帶茶几×內建插座×無線充電" [ref=e286]
+          - generic [ref=e288]:
+            - generic [ref=e289]: 可訂製 Mori木語沙發 自帶茶几×內建插座×無線充電
+            - generic [ref=e291]: 
+      - link "查看更多" [ref=e292] [cursor=pointer]:
+        - /url: https://www.trohome.com/categories/5d122eeca220c84a4867000f
+        - generic [ref=e293]: 查看更多
+    - generic [ref=e300]:
+      - link:
+        - /url: https://www.trohome.com/pages/%E5%A6%82%E4%BD%95%E8%A8%82%E8%A3%BD%E4%BD%A0%E7%9A%84%E5%B0%88%E5%B1%AC%E6%A1%8C%E5%AD%90
+    - generic [ref=e308]:
+      - generic [ref=e309]:
+        - generic [ref=e310]:
+          - link:
+            - /url: https://www.trohome.com/categories/custom-table-%E5%AE%A2%E8%A3%BD%E5%8C%96%E6%A1%8C%E6%AC%BE
+        - generic:
+          - link:
+            - /url: https://www.trohome.com/categories/custom-table-%E5%AE%A2%E8%A3%BD%E5%8C%96%E6%A1%8C%E6%AC%BE
+        - generic:
+          - link:
+            - /url: https://www.trohome.com/products/%E5%8F%AF%E8%A8%82%E8%A3%BD-%E6%9A%96%E6%9A%96%E5%85%A8%E5%AF%A6%E6%9C%A8%E9%A4%90%E6%A1%8C%E5%B7%A5%E4%BD%9C%E6%A1%8C%E6%A1%8C%E8%85%B3
+        - generic:
+          - link:
+            - /url: https://www.trohome.com/categories/custom-table-%E5%AE%A2%E8%A3%BD%E5%8C%96%E6%A1%8C%E6%AC%BE
+        - generic:
+          - link:
+            - /url: https://www.trohome.com/products/t6642
+        - generic:
+          - link:
+            - /url: https://www.trohome.com/products/t6174
+        - generic:
+          - link:
+            - /url: https://www.trohome.com/products/t0419-03
+        - generic:
+          - link:
+            - /url: https://www.trohome.com/categories/custom-table-%E5%AE%A2%E8%A3%BD%E5%8C%96%E6%A1%8C%E6%AC%BE
+        - generic:
+          - link:
+            - /url: https://www.trohome.com/products/t8140-1
+      - generic [ref=e314]:
+        - button [ref=e315] [cursor=pointer]
+        - button [ref=e316] [cursor=pointer]
+        - button [ref=e317] [cursor=pointer]
+        - button [ref=e318] [cursor=pointer]
+        - button [ref=e319] [cursor=pointer]
+        - button [ref=e320] [cursor=pointer]
+        - button [ref=e321] [cursor=pointer]
+        - button [ref=e322] [cursor=pointer]
+        - button [ref=e323] [cursor=pointer]
+        - button [ref=e324] [cursor=pointer]
+    - generic [ref=e328]:
+      - generic [ref=e329]:
+        - link "展示品五折出清!! 原價25370元 冰與火 雙素材餐桌/工作桌 售完 展示品五折出清!! 原價25370元 冰與火 雙素材餐桌/工作桌 NT$12,685 NT$25,370 " [ref=e333] [cursor=pointer]:
+          - /url: https://www.trohome.com/products/trob-20230410-002
+          - generic [ref=e334]:
+            - img "展示品五折出清!! 原價25370元 冰與火 雙素材餐桌/工作桌" [ref=e337]
+            - generic [ref=e339]: 售完
+          - generic [ref=e341]:
+            - generic [ref=e342]: 展示品五折出清!! 原價25370元 冰與火 雙素材餐桌/工作桌
+            - generic [ref=e343]:
+              - generic [ref=e344]: NT$12,685
+              - generic [ref=e346]: NT$25,370
+            - generic [ref=e348]: 
+        - link "展示品七折出清!! 原價24800元 梣木伸縮延展桌 展示品七折出清!! 原價24800元 梣木伸縮延展桌 NT$17,360 NT$24,800 " [ref=e352] [cursor=pointer]:
+          - /url: https://www.trohome.com/products/trob-20240830-001
+          - img "展示品七折出清!! 原價24800元 梣木伸縮延展桌" [ref=e356]
+          - generic [ref=e358]:
+            - generic [ref=e359]: 展示品七折出清!! 原價24800元 梣木伸縮延展桌
+            - generic [ref=e360]:
+              - generic [ref=e361]: NT$17,360
+              - generic [ref=e363]: NT$24,800
+            - generic [ref=e365]: 
+        - link "展示品八折出清!! 原價22800元 蝶型全實木桌 展示品八折出清!! 原價22800元 蝶型全實木桌 NT$18,240 NT$22,800 " [ref=e369] [cursor=pointer]:
+          - /url: https://www.trohome.com/products/trob-20251215-002
+          - img "展示品八折出清!! 原價22800元 蝶型全實木桌" [ref=e373]
+          - generic [ref=e375]:
+            - generic [ref=e376]: 展示品八折出清!! 原價22800元 蝶型全實木桌
+            - generic [ref=e377]:
+              - generic [ref=e378]: NT$18,240
+              - generic [ref=e380]: NT$22,800
+            - generic [ref=e382]: 
+        - link "可訂製 松木L型收納工作桌 可訂製 松木L型收納工作桌 " [ref=e386] [cursor=pointer]:
+          - /url: https://www.trohome.com/products/t13360
+          - img "可訂製 松木L型收納工作桌" [ref=e390]
+          - generic [ref=e392]:
+            - generic [ref=e393]: 可訂製 松木L型收納工作桌
+            - generic [ref=e395]: 
+      - link "查看更多" [ref=e396] [cursor=pointer]:
+        - /url: https://www.trohome.com/categories/68287208ed6b890011148172
+        - generic [ref=e397]: 查看更多
+    - generic [ref=e414]:
+      - link:
+        - /url: https://www.trohome.com/pages/%E5%A6%82%E4%BD%95%E8%A8%82%E8%A3%BD%E4%BD%A0%E7%9A%84%E5%B0%88%E5%B1%AC%E6%AB%83%E5%AD%90-1
+    - generic [ref=e422]:
+      - generic [ref=e423]:
+        - generic:
+          - link:
+            - /url: https://www.trohome.com/categories/%E5%AE%A2%E8%A3%BD%E5%8C%96%E5%AF%A6%E6%9C%A8
+        - generic:
+          - link:
+            - /url: https://www.trohome.com/categories/%E5%AE%A2%E8%A3%BD%E5%8C%96%E5%AF%A6%E6%9C%A8
+        - generic:
+          - link:
+            - /url: https://www.trohome.com/categories/%E5%AE%A2%E8%A3%BD%E5%8C%96%E5%AF%A6%E6%9C%A8
+        - generic:
+          - link:
+            - /url: https://www.trohome.com/categories/%E5%AE%A2%E8%A3%BD%E5%8C%96%E5%AF%A6%E6%9C%A8
+        - generic:
+          - link:
+            - /url: https://www.trohome.com/products/ca8238
+        - generic:
+          - link:
+            - /url: https://www.trohome.com/categories/%E5%AE%A2%E8%A3%BD%E5%8C%96%E5%AF%A6%E6%9C%A8
+      - generic [ref=e428]:
+        - button [ref=e429] [cursor=pointer]
+        - button [ref=e430] [cursor=pointer]
+        - button [ref=e431] [cursor=pointer]
+        - button [ref=e432] [cursor=pointer]
+        - button [ref=e433] [cursor=pointer]
+        - button [ref=e434] [cursor=pointer]
+        - button [ref=e435] [cursor=pointer]
+    - generic [ref=e439]:
+      - generic [ref=e440]:
+        - link "展示品五折出清!! 原價31000元 貨櫃雙抽電視櫃 展示品五折出清!! 原價31000元 貨櫃雙抽電視櫃 NT$15,500 NT$31,000 " [ref=e444] [cursor=pointer]:
+          - /url: https://www.trohome.com/products/trob-20220801-001
+          - img "展示品五折出清!! 原價31000元 貨櫃雙抽電視櫃" [ref=e448]
+          - generic [ref=e450]:
+            - generic [ref=e451]: 展示品五折出清!! 原價31000元 貨櫃雙抽電視櫃
+            - generic [ref=e452]:
+              - generic [ref=e453]: NT$15,500
+              - generic [ref=e455]: NT$31,000
+            - generic [ref=e457]: 
+        - link "展示品五折出清!! 原價4980元 實木多層水管層架 售完 展示品五折出清!! 原價4980元 實木多層水管層架 NT$2,490 NT$4,980 " [ref=e461] [cursor=pointer]:
+          - /url: https://www.trohome.com/products/trob-20240311-001
+          - generic [ref=e462]:
+            - img "展示品五折出清!! 原價4980元 實木多層水管層架" [ref=e465]
+            - generic [ref=e467]: 售完
+          - generic [ref=e469]:
+            - generic [ref=e470]: 展示品五折出清!! 原價4980元 實木多層水管層架
+            - generic [ref=e471]:
+              - generic [ref=e472]: NT$2,490
+              - generic [ref=e474]: NT$4,980
+            - generic [ref=e476]: 
+        - link "良品出清!! LOFT全鐵貨櫃門(現貨在倉) 良品出清!! LOFT全鐵貨櫃門(現貨在倉) NT$9,800 NT$31,900 " [ref=e480] [cursor=pointer]:
+          - /url: https://www.trohome.com/products/trob-20210722-067
+          - img "良品出清!! LOFT全鐵貨櫃門(現貨在倉)" [ref=e484]
+          - generic [ref=e486]:
+            - generic [ref=e487]: 良品出清!! LOFT全鐵貨櫃門(現貨在倉)
+            - generic [ref=e488]:
+              - generic [ref=e489]: NT$9,800
+              - generic [ref=e491]: NT$31,900
+            - generic [ref=e493]: 
+        - link "良品出清!! LOFT全鐵貨櫃門(現貨在倉) 良品出清!! LOFT全鐵貨櫃門(現貨在倉) NT$8,800 NT$27,000 " [ref=e497] [cursor=pointer]:
+          - /url: https://www.trohome.com/products/trob-20211101-013
+          - img "良品出清!! LOFT全鐵貨櫃門(現貨在倉)" [ref=e501]
+          - generic [ref=e503]:
+            - generic [ref=e504]: 良品出清!! LOFT全鐵貨櫃門(現貨在倉)
+            - generic [ref=e505]:
+              - generic [ref=e506]: NT$8,800
+              - generic [ref=e508]: NT$27,000
+            - generic [ref=e510]: 
+      - link "查看更多" [ref=e511] [cursor=pointer]:
+        - /url: https://www.trohome.com/categories/5d12240440b90b0015a1f7a2
+        - generic [ref=e512]: 查看更多
+    - generic [ref=e519]:
+      - link:
+        - /url: https://www.trohome.com/pages/belgium-%E5%85%A8%E5%8F%B0%E7%8D%A8%E8%B3%A3
+    - generic [ref=e527]:
+      - generic [ref=e528]:
+        - generic [ref=e529]:
+          - link:
+            - /url: https://www.trohome.com/products/tg5089
+        - generic:
+          - link:
+            - /url: https://www.trohome.com/products/c0709
+        - generic:
+          - link:
+            - /url: https://www.trohome.com/products/cs6694
+        - generic:
+          - link:
+            - /url: https://www.trohome.com/products/bed0111
+        - generic:
+          - link:
+            - /url: https://www.trohome.com/products/t6704
+        - generic:
+          - link:
+            - /url: https://www.trohome.com/products/bed6727
+        - generic:
+          - link:
+            - /url: https://www.trohome.com/products/t5095
+        - generic:
+          - link:
+            - /url: https://www.trohome.com/products/belgium%E5%8E%9F%E5%89%B5-%E2%9D%99-%E6%9B%BC%E5%93%88%E9%A0%93%E7%9A%84%E5%A4%9C-%E5%BA%8A%E7%B5%84
+      - generic [ref=e533]:
+        - button [ref=e534] [cursor=pointer]
+        - button [ref=e535] [cursor=pointer]
+        - button [ref=e536] [cursor=pointer]
+        - button [ref=e537] [cursor=pointer]
+        - button [ref=e538] [cursor=pointer]
+        - button [ref=e539] [cursor=pointer]
+        - button [ref=e540] [cursor=pointer]
+        - button [ref=e541] [cursor=pointer]
+    - generic [ref=e545]:
+      - generic [ref=e546]:
+        - link "展示品六折出清!! 原價13800元 Belgium全台獨家 ❙ Benz賓士玻璃茶几 售完 展示品六折出清!! 原價13800元 Belgium全台獨家 ❙ Benz賓士玻璃茶几 NT$8,280 NT$13,800 " [ref=e550] [cursor=pointer]:
+          - /url: https://www.trohome.com/products/trob-20231114-003
+          - generic [ref=e551]:
+            - img "展示品六折出清!! 原價13800元 Belgium全台獨家 ❙ Benz賓士玻璃茶几" [ref=e554]
+            - generic [ref=e556]: 售完
+          - generic [ref=e558]:
+            - generic [ref=e559]: 展示品六折出清!! 原價13800元 Belgium全台獨家 ❙ Benz賓士玻璃茶几
+            - generic [ref=e560]:
+              - generic [ref=e561]: NT$8,280
+              - generic [ref=e563]: NT$13,800
+            - generic [ref=e565]: 
+        - link "展示品五折出清!! 原價75980元 Belgium全台獨家 ❙ The flower花瓣電動沙發 展示品五折出清!! 原價75980元 Belgium全台獨家 ❙ The flower花瓣電動沙發 NT$37,990 NT$75,980 " [ref=e569] [cursor=pointer]:
+          - /url: https://www.trohome.com/products/trob-20240322-003
+          - img "展示品五折出清!! 原價75980元 Belgium全台獨家 ❙ The flower花瓣電動沙發" [ref=e573]
+          - generic [ref=e575]:
+            - generic [ref=e576]: 展示品五折出清!! 原價75980元 Belgium全台獨家 ❙ The flower花瓣電動沙發
+            - generic [ref=e577]:
+              - generic [ref=e578]: NT$37,990
+              - generic [ref=e580]: NT$75,980
+            - generic [ref=e582]: 
+        - link "Belgium全台獨家 ❙ 電視櫃 Belgium全台獨家 ❙ 電視櫃 NT$28,800 NT$31,800 " [ref=e586] [cursor=pointer]:
+          - /url: https://www.trohome.com/products/ca0532
+          - img "Belgium全台獨家 ❙ 電視櫃" [ref=e590]
+          - generic [ref=e592]:
+            - generic [ref=e593]: Belgium全台獨家 ❙ 電視櫃
+            - generic [ref=e594]:
+              - generic [ref=e595]: NT$28,800
+              - generic [ref=e597]: NT$31,800
+            - generic [ref=e599]: 
+        - link "Belgium全台獨家 ❙ 客廳裡的魔術師 茶几 Belgium全台獨家 ❙ 客廳裡的魔術師 茶几 NT$8,980 NT$10,980 " [ref=e603] [cursor=pointer]:
+          - /url: https://www.trohome.com/products/t0504
+          - img "Belgium全台獨家 ❙ 客廳裡的魔術師 茶几" [ref=e607]
+          - generic [ref=e609]:
+            - generic [ref=e610]: Belgium全台獨家 ❙ 客廳裡的魔術師 茶几
+            - generic [ref=e611]:
+              - generic [ref=e612]: NT$8,980
+              - generic [ref=e614]: NT$10,980
+            - generic [ref=e616]: 
+        - link "Belgium全台獨家 ❙ 多重身分的臥底 邊几/椅凳 Belgium全台獨家 ❙ 多重身分的臥底 邊几/椅凳 NT$12,800 NT$14,800 " [ref=e620] [cursor=pointer]:
+          - /url: https://www.trohome.com/products/tg5092
+          - img "Belgium全台獨家 ❙ 多重身分的臥底 邊几/椅凳" [ref=e624]
+          - generic [ref=e626]:
+            - generic [ref=e627]: Belgium全台獨家 ❙ 多重身分的臥底 邊几/椅凳
+            - generic [ref=e628]:
+              - generic [ref=e629]: NT$12,800
+              - generic [ref=e631]: NT$14,800
+            - generic [ref=e633]: 
+      - link "查看更多" [ref=e634] [cursor=pointer]:
+        - /url: https://www.trohome.com/categories/5d121f67fcffa8003bc8738b
+        - generic [ref=e635]: 查看更多
+    - generic [ref=e642]:
+      - link:
+        - /url: https://www.trohome.com/pages/belgium-new2024
+    - generic [ref=e650]:
+      - generic [ref=e651]:
+        - generic [ref=e652]:
+          - link:
+            - /url: https://www.trohome.com/pages/belgium-new2024
+        - generic:
+          - link:
+            - /url: https://www.trohome.com/pages/belgium-new2024
+        - generic:
+          - link:
+            - /url: https://www.trohome.com/pages/belgium-new2024
+      - button [ref=e656] [cursor=pointer]:
+        - img [ref=e657]
+      - button [ref=e659] [cursor=pointer]:
+        - img [ref=e660]
+    - generic [ref=e665]:
+      - generic [ref=e666]:
+        - link "展示品七折出清!! 原價43800元 Belgium全台獨家 ❙ 流動微光 黃金砂木腳餐桌 展示品七折出清!! 原價43800元 Belgium全台獨家 ❙ 流動微光 黃金砂木腳餐桌 NT$30,660 NT$43,800 " [ref=e670] [cursor=pointer]:
+          - /url: https://www.trohome.com/products/trob-20250513-012
+          - img "展示品七折出清!! 原價43800元 Belgium全台獨家 ❙ 流動微光 黃金砂木腳餐桌" [ref=e674]
+          - generic [ref=e676]:
+            - generic [ref=e677]: 展示品七折出清!! 原價43800元 Belgium全台獨家 ❙ 流動微光 黃金砂木腳餐桌
+            - generic [ref=e678]:
+              - generic [ref=e679]: NT$30,660
+              - generic [ref=e681]: NT$43,800
+            - generic [ref=e683]: 
+        - link "展示品六折出清!! 原價25800元 Belgium全台獨家 ❙ 流金歲月 白金砂榆木茶几 展示品六折出清!! 原價25800元 Belgium全台獨家 ❙ 流金歲月 白金砂榆木茶几 NT$15,480 NT$25,800 " [ref=e687] [cursor=pointer]:
+          - /url: https://www.trohome.com/products/trob-20250818-001
+          - img "展示品六折出清!! 原價25800元 Belgium全台獨家 ❙ 流金歲月 白金砂榆木茶几" [ref=e691]
+          - generic [ref=e693]:
+            - generic [ref=e694]: 展示品六折出清!! 原價25800元 Belgium全台獨家 ❙ 流金歲月 白金砂榆木茶几
+            - generic [ref=e695]:
+              - generic [ref=e696]: NT$15,480
+              - generic [ref=e698]: NT$25,800
+            - generic [ref=e700]: 
+        - link "Belgium全台獨家 ❙ 小島 沙發 Belgium全台獨家 ❙ 小島 沙發 NT$43,800 NT$46,800 " [ref=e704] [cursor=pointer]:
+          - /url: https://www.trohome.com/products/cs2112
+          - img "Belgium全台獨家 ❙ 小島 沙發" [ref=e708]
+          - generic [ref=e710]:
+            - generic [ref=e711]: Belgium全台獨家 ❙ 小島 沙發
+            - generic [ref=e712]:
+              - generic [ref=e713]: NT$43,800
+              - generic [ref=e715]: NT$46,800
+            - generic [ref=e717]: 
+        - link "Belgium全台獨家 ❙ 搖滾 單椅 Belgium全台獨家 ❙ 搖滾 單椅 NT$15,800 NT$17,800 " [ref=e721] [cursor=pointer]:
+          - /url: https://www.trohome.com/products/cb8122
+          - img "Belgium全台獨家 ❙ 搖滾 單椅" [ref=e725]
+          - generic [ref=e727]:
+            - generic [ref=e728]: Belgium全台獨家 ❙ 搖滾 單椅
+            - generic [ref=e729]:
+              - generic [ref=e730]: NT$15,800
+              - generic [ref=e732]: NT$17,800
+            - generic [ref=e734]: 
+      - link "查看更多" [ref=e735] [cursor=pointer]:
+        - /url: https://www.trohome.com/categories/66a998aa00a0d600133de81f
+        - generic [ref=e736]: 查看更多
+    - generic [ref=e743]:
+      - link:
+        - /url: https://www.trohome.com/pages/rekke-%E6%96%91%E9%A7%81%E7%89%9B%E7%9A%AE%E7%B3%BB%E5%88%97
+    - generic [ref=e751]:
+      - generic [ref=e752]:
+        - generic [ref=e753]:
+          - link:
+            - /url: https://www.trohome.com/pages/rekke-%E6%96%91%E9%A7%81%E7%89%9B%E7%9A%AE%E7%B3%BB%E5%88%97
+        - generic:
+          - link:
+            - /url: https://www.trohome.com/products/%E5%8F%AF%E8%A8%82%E8%A3%BD-rekke-%E5%B8%83%E6%9C%97%E5%85%88%E7%94%9F-%E9%9B%99%E8%89%B2%E7%89%9B%E7%9A%AE%E6%B2%99%E7%99%BC
+        - generic:
+          - link:
+            - /url: https://www.trohome.com/products/%E7%B6%93%E5%85%B8%E9%9B%99%E8%89%B2%E7%89%9B%E7%9A%AE%E6%B2%99%E7%99%BC
+        - generic:
+          - link:
+            - /url: https://www.trohome.com/products/%E5%8F%AF%E8%A8%82%E8%A3%BD-rekke-%E5%93%88%E9%9B%B7-%E6%8B%BC%E6%8E%A5%E7%89%9B%E7%9A%AEl%E5%9E%8B%E6%B2%99%E7%99%BC
+        - generic:
+          - link:
+            - /url: https://www.trohome.com/products/%E5%8F%AF%E8%A8%82%E8%A3%BD-rekke%E7%B3%BB%E5%88%97-%E8%80%81%E5%8F%A4%E8%91%A3%E6%B2%99%E7%99%BC
+        - generic:
+          - link:
+            - /url: https://www.trohome.com/pages/rekke-%E6%96%91%E9%A7%81%E7%89%9B%E7%9A%AE%E7%B3%BB%E5%88%97
+        - generic:
+          - link:
+            - /url: https://www.trohome.com/pages/rekke-%E6%96%91%E9%A7%81%E7%89%9B%E7%9A%AE%E7%B3%BB%E5%88%97
+      - generic [ref=e757]:
+        - button [ref=e758] [cursor=pointer]
+        - button [ref=e759] [cursor=pointer]
+        - button [ref=e760] [cursor=pointer]
+        - button [ref=e761] [cursor=pointer]
+        - button [ref=e762] [cursor=pointer]
+        - button [ref=e763] [cursor=pointer]
+        - button [ref=e764] [cursor=pointer]
+    - generic [ref=e768]:
+      - generic [ref=e769]:
+        - link "展示品六折出清!! 原價29800元 Rekke 范特西沙發 展示品六折出清!! 原價29800元 Rekke 范特西沙發 NT$17,880 NT$29,800 " [ref=e773] [cursor=pointer]:
+          - /url: https://www.trohome.com/products/trob-20220608-018
+          - img "展示品六折出清!! 原價29800元 Rekke 范特西沙發" [ref=e777]
+          - generic [ref=e779]:
+            - generic [ref=e780]: 展示品六折出清!! 原價29800元 Rekke 范特西沙發
+            - generic [ref=e781]:
+              - generic [ref=e782]: NT$17,880
+              - generic [ref=e784]: NT$29,800
+            - generic [ref=e786]: 
+        - link "可訂製 Rekke 縫線真皮圓形茶几/椅凳 可訂製 Rekke 縫線真皮圓形茶几/椅凳 NT$21,800 NT$26,800 " [ref=e790] [cursor=pointer]:
+          - /url: https://www.trohome.com/products/rekke-可訂製-復古縫線真皮圓形茶几
+          - img "可訂製 Rekke 縫線真皮圓形茶几/椅凳" [ref=e794]
+          - generic [ref=e796]:
+            - generic [ref=e797]: 可訂製 Rekke 縫線真皮圓形茶几/椅凳
+            - generic [ref=e798]:
+              - generic [ref=e799]: NT$21,800
+              - generic [ref=e801]: NT$26,800
+            - generic [ref=e803]: 
+        - link "Rekke 復古圓形組合式茶几 Rekke 復古圓形組合式茶几 NT$4,580 ~ NT$... NT$11,980 " [ref=e807] [cursor=pointer]:
+          - /url: https://www.trohome.com/products/rekke-復古圓形組合式茶几
+          - img "Rekke 復古圓形組合式茶几" [ref=e811]
+          - generic [ref=e813]:
+            - generic [ref=e814]: Rekke 復古圓形組合式茶几
+            - generic [ref=e815]:
+              - generic [ref=e816]: NT$4,580 ~ NT$...
+              - generic [ref=e818]: NT$11,980
+            - generic [ref=e820]: 
+        - link "可訂製 Rekke 系列 魔豆腳凳 可訂製 Rekke 系列 魔豆腳凳 NT$12,800 NT$17,800 " [ref=e824] [cursor=pointer]:
+          - /url: https://www.trohome.com/products/rekke-系列-魔豆腳凳
+          - img "可訂製 Rekke 系列 魔豆腳凳" [ref=e828]
+          - generic [ref=e830]:
+            - generic [ref=e831]: 可訂製 Rekke 系列 魔豆腳凳
+            - generic [ref=e832]:
+              - generic [ref=e833]: NT$12,800
+              - generic [ref=e835]: NT$17,800
+            - generic [ref=e837]: 
+        - link "可訂製 Rekke 牛皮縫線單椅(含腳凳) 可訂製 Rekke 牛皮縫線單椅(含腳凳) NT$7,800 ~ NT$... NT$31,800 " [ref=e841] [cursor=pointer]:
+          - /url: https://www.trohome.com/products/rekke-牛皮縫線鐵腳單椅
+          - img "可訂製 Rekke 牛皮縫線單椅(含腳凳)" [ref=e845]
+          - generic [ref=e847]:
+            - generic [ref=e848]: 可訂製 Rekke 牛皮縫線單椅(含腳凳)
+            - generic [ref=e849]:
+              - generic [ref=e850]: NT$7,800 ~ NT$...
+              - generic [ref=e852]: NT$31,800
+            - generic [ref=e854]: 
+      - link "查看更多" [ref=e855] [cursor=pointer]:
+        - /url: https://www.trohome.com/categories/5dca75b12d4bf30039931b71
+        - generic [ref=e856]: 查看更多
+    - generic [ref=e863]:
+      - link:
+        - /url: https://www.trohome.com/pages/albert-%E8%B3%AA%E6%84%9F%E6%99%82%E5%B0%9A
+    - generic [ref=e871]:
+      - generic [ref=e872]:
+        - generic [ref=e873]:
+          - link:
+            - /url: https://www.trohome.com/pages/albert-%E8%B3%AA%E6%84%9F%E6%99%82%E5%B0%9A
+        - generic:
+          - link:
+            - /url: https://www.trohome.com/pages/albert-%E8%B3%AA%E6%84%9F%E6%99%82%E5%B0%9A
+      - generic [ref=e877]:
+        - button [ref=e878] [cursor=pointer]
+        - button [ref=e879] [cursor=pointer]
+    - generic [ref=e883]:
+      - generic [ref=e884]:
+        - link "展示品六折出清!! 原價12800元 Albert 瑞卡收納櫃 展示品六折出清!! 原價12800元 Albert 瑞卡收納櫃 NT$7,680 NT$12,800 " [ref=e888] [cursor=pointer]:
+          - /url: https://www.trohome.com/products/trob-20211029-054
+          - img "展示品六折出清!! 原價12800元 Albert 瑞卡收納櫃" [ref=e892]
+          - generic [ref=e894]:
+            - generic [ref=e895]: 展示品六折出清!! 原價12800元 Albert 瑞卡收納櫃
+            - generic [ref=e896]:
+              - generic [ref=e897]: NT$7,680
+              - generic [ref=e899]: NT$12,800
+            - generic [ref=e901]: 
+        - link "展示品五折出清!! 原價30800元 米勒五尺床架 展示品五折出清!! 原價30800元 米勒五尺床架 NT$15,400 NT$30,800 " [ref=e905] [cursor=pointer]:
+          - /url: https://www.trohome.com/products/trob-20210823-001
+          - img "展示品五折出清!! 原價30800元 米勒五尺床架" [ref=e909]
+          - generic [ref=e911]:
+            - generic [ref=e912]: 展示品五折出清!! 原價30800元 米勒五尺床架
+            - generic [ref=e913]:
+              - generic [ref=e914]: NT$15,400
+              - generic [ref=e916]: NT$30,800
+            - generic [ref=e918]: 
+        - link "展示品三折出清!! 原價10980元 Albert 瑞比小茶几/邊几 售完 展示品三折出清!! 原價10980元 Albert 瑞比小茶几/邊几 NT$3,294 NT$10,980 " [ref=e922] [cursor=pointer]:
+          - /url: https://www.trohome.com/products/trob-20210726-037
+          - generic [ref=e923]:
+            - img "展示品三折出清!! 原價10980元 Albert 瑞比小茶几/邊几" [ref=e926]
+            - generic [ref=e928]: 售完
+          - generic [ref=e930]:
+            - generic [ref=e931]: 展示品三折出清!! 原價10980元 Albert 瑞比小茶几/邊几
+            - generic [ref=e932]:
+              - generic [ref=e933]: NT$3,294
+              - generic [ref=e935]: NT$10,980
+            - generic [ref=e937]: 
+        - link "展示品三折出清!! 原價6980元 Albert 莫迪紅床頭櫃 展示品三折出清!! 原價6980元 Albert 莫迪紅床頭櫃 NT$2,094 NT$6,980 " [ref=e941] [cursor=pointer]:
+          - /url: https://www.trohome.com/products/trob-20210726-012
+          - img "展示品三折出清!! 原價6980元 Albert 莫迪紅床頭櫃" [ref=e945]
+          - generic [ref=e947]:
+            - generic [ref=e948]: 展示品三折出清!! 原價6980元 Albert 莫迪紅床頭櫃
+            - generic [ref=e949]:
+              - generic [ref=e950]: NT$2,094
+              - generic [ref=e952]: NT$6,980
+            - generic [ref=e954]: 
+      - link "查看更多" [ref=e955] [cursor=pointer]:
+        - /url: https://www.trohome.com/categories/5dd4d1299804be001b900f1a
+        - generic [ref=e956]: 查看更多
+    - generic [ref=e963]:
+      - link:
+        - /url: https://www.trohome.com/categories/now%E5%B8%B8%E5%82%99%E7%8F%BE%E8%B2%A8%E6%AC%BE
+    - generic [ref=e973]:
+      - link:
+        - /url: https://www.trohome.com/pages/catalog-%E7%8F%BE%E8%B2%A8%E7%B3%BB%E5%88%97%E7%9B%AE%E9%8C%84-1
+    - generic [ref=e980]:
+      - generic [ref=e981]:
+        - link "Elmo 木紋岩板托盤餐櫃 Elmo 木紋岩板托盤餐櫃 NT$2,480 ~ NT$... NT$9,980 " [ref=e985] [cursor=pointer]:
+          - /url: https://www.trohome.com/products/elmo-木紋岩板托盤餐櫃
+          - img "Elmo 木紋岩板托盤餐櫃" [ref=e989]
+          - generic [ref=e991]:
+            - generic [ref=e992]: Elmo 木紋岩板托盤餐櫃
+            - generic [ref=e993]:
+              - generic [ref=e994]: NT$2,480 ~ NT$...
+              - generic [ref=e996]: NT$9,980
+            - generic [ref=e998]: 
+        - link "Elmo 木紋木面中島櫃 Elmo 木紋木面中島櫃 NT$12,580 NT$14,580 " [ref=e1002] [cursor=pointer]:
+          - /url: https://www.trohome.com/products/tf12805
+          - img "Elmo 木紋木面中島櫃" [ref=e1006]
+          - generic [ref=e1008]:
+            - generic [ref=e1009]: Elmo 木紋木面中島櫃
+            - generic [ref=e1010]:
+              - generic [ref=e1011]: NT$12,580
+              - generic [ref=e1013]: NT$14,580
+            - generic [ref=e1015]: 
+        - link "Elmo 木紋岩板中島櫃 Elmo 木紋岩板中島櫃 NT$17,180 NT$19,180 " [ref=e1019] [cursor=pointer]:
+          - /url: https://www.trohome.com/products/tf12804
+          - img "Elmo 木紋岩板中島櫃" [ref=e1023]
+          - generic [ref=e1025]:
+            - generic [ref=e1026]: Elmo 木紋岩板中島櫃
+            - generic [ref=e1027]:
+              - generic [ref=e1028]: NT$17,180
+              - generic [ref=e1030]: NT$19,180
+            - generic [ref=e1032]: 
+        - link "Elmo 木紋岩板收納電器餐櫃 Elmo 木紋岩板收納電器餐櫃 NT$10,180 ~ NT... NT$17,380 " [ref=e1036] [cursor=pointer]:
+          - /url: https://www.trohome.com/products/elmo-木紋岩板收納電器餐櫃
+          - img "Elmo 木紋岩板收納電器餐櫃" [ref=e1040]
+          - generic [ref=e1042]:
+            - generic [ref=e1043]: Elmo 木紋岩板收納電器餐櫃
+            - generic [ref=e1044]:
+              - generic [ref=e1045]: NT$10,180 ~ NT...
+              - generic [ref=e1047]: NT$17,380
+            - generic [ref=e1049]: 
+      - link "查看更多" [ref=e1050] [cursor=pointer]:
+        - /url: https://www.trohome.com/categories/5ffc646345802c003507c497
+        - generic [ref=e1051]: 查看更多
+    - generic [ref=e1055]:
+      - heading "拓家部落格" [level=3] [ref=e1056]
+      - generic [ref=e1057]:
+        - generic [ref=e1059]:
+          - link [ref=e1063] [cursor=pointer]:
+            - /url: blog/posts/belgium-room-slow
+            - generic [ref=e1066]:
+              - generic [ref=e1068]: 2023-10-05
+              - heading "主臥美，能解你所有的憂" [level=5] [ref=e1069]
+              - paragraph [ref=e1070]: "早上起床第一件事， 就是打開臥室和陽台的窗戶 陽光穿過幕簾 在拉開的那一刻湧進室內 光灑落在身邊、桌邊和床邊 若能讓這麼美的畫面揭開一天的生活序幕 我想 已無憾 而其實這一切 在拓家，你其實輕易就能得到! 就讓我們一起來探索 這組Belgium特輯中出現的最強單品吧!! 圖中左下角搭配的單人椅是， ● 不要你受生活束縛的： Belgium全台獨家 ❙ Darwin達爾文單人椅 https://reurl.cc/blEvml 這樣型態的他 通常性只出現高端精品的世界裡 你很難會能以拓家這樣的價格，認識他 ‧ 運用背面為皮革支撐帶的靠背設計 讓整體坐感柔韌有彈性 完美呈接你的椎型曲線 是一張好椅型的舒適關鍵 ‧ 不鏽鋼架椅腳，承重力穩固 體現椅型的體態輕盈之美 ‧ 馬鞍皮坐墊 與 芟繁就簡的扶手設計 大幅提升空間視覺感 也讓時尚賦予它，表現自己的能力 ●在實品還沒進駐展間前就能大賣的 Belgium全台獨家 ❙ 解憂山丘 床組 https://reurl.cc/3e3LyR ‧ 床架底座是由，多根實木條排列組合而成 呈現有如排骨架的模樣 最大的優點在於 透氣性佳！ 堅固耐用 且 支撐力平穩 圖中的床墊是拓家體感床墊 點我了解更多床墊 > https://reurl.cc/Nyylj6 ‧ 羊圈絨搭配肥肥短短的床腳 創造出令人放心的穩重安全感 也碰撞出特色十足的時尚玩趣風格 故意設計呈稍底高度的床高 讓你上下床都 超級無負擔 寬闊空間感也更升級!! 布料皆可拆洗， 不用擔心用久髒掉的問題 我們也提供多種面料供您選購喔 ●絕不讓你受到任何空間限制的 Belgium全台獨家 ❙ 空間裡的魔法 延伸工作桌 https://reurl.cc/5O8q3G 延伸桌的結構， 可以讓大小坪數的空間 更充分更靈活的運用 尤其，也能讓它 發揮再大的坪效，機能不減 同時也模糊了間隔界線 讓它， 在任何空間裡都保有流暢的互動性 ‧ 可自由 決定方向的旋轉型桌面設計 一字排開除了讓桌面更延伸 ‧ 可搭配空間格局旋轉成 L型 看似簡約的設計 好收納也能製造區域隔間感 ‧ 多格多抽的強大收納空間 滿足了所有雜物收盡整齊的概念 完全無法被設限的它 將為你帶來最強大的工作效用，量能滿載💪 點此了解圖中的 : ●實木雙抽玻璃收納衣櫃 https://reurl.cc/kaq5jb ●看更多實木訂製櫃款 https://reurl.cc/MyX7Qm . 這套質感絕佳的房間組合 組合後的價格大約會落在十萬上下 是不是很令人無法相信!! 拓家的Belgium系列 當初推出的最大宗旨 就是期待能讓每個愛家愛品味的你們 能使用最不咬牙的方式 就能得到心目中那最想要的絕對品味! 歡迎你來拓家 找到符合你生活中那最想要的 美感"
+              - generic [ref=e1071]: 閱讀內文
+          - link [ref=e1075] [cursor=pointer]:
+            - /url: blog/posts/industrial-loft-style-trohome
+            - generic [ref=e1078]:
+              - generic [ref=e1080]: 2023-10-02
+              - heading "工業風的空間「放大術」，這樣選更到位！" [level=5] [ref=e1081]
+              - paragraph [ref=e1082]: "當空間遇上了拓家， 是家，是港灣，是生活，是平凡的浪漫 感謝台中張先生提供實拍照 今天就讓他， 帶給你每一瞬間的溫柔與浪漫 也請你，替你自己 找到屬於自己的美好歸宿的模樣 陪你宅在家享舒適，人人看到都讚的 : · 可訂製 Rekke 拉釦皮革鐵腳單椅 https://reurl.cc/K0M8dp 從生活中挪出一點空暇， 把日常活成一門精彩人生的課題 便是常保活力的源泉 內心深處有著老靈魂的它 其實，比你更懂得享受生活 是你伴著喝茶、看書一整天的好夥伴 在客廳，它絕對不會讓你孤單的 : · 可訂製 The Stroll漫步 可調式頭枕滑動沙發 https://reurl.cc/K0M82n 它能頂住90%的使用者的腰 解決你勞累一天腰痠背痛的問題 也能撐住80%使用者的頸部 雖然是坐著，也能全身體感完全放鬆 超薄扶手更能為你省下幾十公分的沙發體積 獲得更大的舒適乘坐空間 走進拓家找沙發的人客們，最終有70%都會選擇漫步 可以承托你全身，讓你心靈慢下來 不論你是爸爸媽媽還是搖滾樂手 各種生活型態的人 都會覺得漫步所帶來的舒適體感 真的很像在雲端上漫步一樣! 拯救強迫症 與 不能沒有紅酒相伴的 : · 可訂製 紅酒杯架實木方格收納櫃 https://reurl.cc/51MKXn 為小空間置入紅酒櫃，為辛苦的你 存放多瓶紅酒 彈性擺設展示 讓人難已抗拒令人陶醉的收納櫃裡 讓每一瓶酒的餘溫與香氣 蔓延在空間中 它，給的陪伴 是不同於別人的浪漫 臥室輕鬆打造 雙倍放大衣帽間的格局與收納是 : · 可訂製 實木抽屜收納櫃 https://reurl.cc/65NK9r 每天都必須要使用的東西 應該是它要將就我們 而不是我們要去將就它們 所以， 當【多對自己好一點】的觀念越來越盛行 大家就也都愛上了 訂製屬於自己的家具 這件事😃 拓家 訂製衣櫃 的優點包括了: · 多抽多格符合你要的收納層格 · 能符合自己所喜愛的生活習慣 · 不會用塑立康黏住牆壁再也搬不走 我們的實木訂製都可拆解可移動 搬家或哪天想給其他房間使用，都辦的到! · 不會在你的空間裡鋸木頭或開洞 造成木屑粉塵一大堆 造成生活汙染與嚴重不便 同色冷調的地面和牆面 張先生的家佈滿了實木訂製 於家中各個角落 其實仔細一看 每一角都自帶溫度 也散發著清爽木質香氛感 . 在挑選 家 的味道時 除了實用性、功能性之外 更多的考量是 我 的 風 格 ! 看似麻煩的購物理念 請你來拓家，你會慢慢發現 這個空間愈來愈像你自己 —————————— 張先生的訂製規劃師：蓋瑞 —————————— 張先生的選購清單: · 可訂製 Rekke 拉釦皮革鐵腳單椅 https://reurl.cc/K0M8dp · 可訂製 鐵網滑門雙抽屜電視櫃 https://reurl.cc/mDlxRW · 可訂製 實木多層水管層架 https://reurl.cc/94VDDj · 可訂製 胡桃木皮升降大茶几 https://reurl.cc/aV1eM4 · 可訂製 The Stroll漫步 可調式頭枕滑動沙發 https://reurl.cc/K0M82n · 可訂製 紅酒杯架實木方格收納櫃 https://reurl.cc/51MKXn · 可訂製 實木抽屜收納櫃 https://reurl.cc/65NK9r"
+              - generic [ref=e1083]: 閱讀內文
+          - link "2023-09-21 拓家全實木桌款《原點》，伴你享受生活的圓滿 實木訂製一直是拓家所主打的產品， 即使我們無所不能 但我們仍不斷地 努力延伸出家具新型態的構造與調性 因為，我們從沒忘記 實木訂製，是拓家的根 而不論空間流行趨勢如何變化 實木也一直都是家具業界裡 總能佔有一席之地的家具關鍵素材 2023年拓家全實木全新桌款 • 可訂製 原點 圓柱桌腳實木桌 圓柱、圓角、圓邊 我們以嶄新的「圓」 突破固有的方正造型印象 每處轉角都圓融自然 帶出視覺和諧 也呈現出詩意般的文青極簡 「圓邊」 桌邊採弧線型圓潤設計 有效柔化空間視覺僵硬感 強化了圓應有的優雅與精緻 「圓角」 圓潤的曲線，安全防撞 家中有小孩必備 在正值跌跌撞撞走路像喝醉酒的學步時期 減少受傷的可能性 「圓柱」 不退流行的桌腳 讓整張桌能穩定支撐 以經典造型 呈現生活的無拘無束 不追趕流行，做自己，莫忘初衷 全實木的它， 透過自身的肌理本質 與 匠人手工藝的溫潤 散發出天然柔和色調的魅力 桌面隱約的中縫設計 近看有拼接感 遠看 則讓人沉浸於 它的圓滿 不論餐桌，工作桌，吧台桌，茶几… 各種桌款 其實都是 我們生活中非常重要的使用工具 我們相信， 只有用心的設計 才能真正做到讓你如願以償 請你無須再屈就現成規格品的固定尺寸 你的桌子， 當然要是你那最想要的樣貌 自己替自己設計一張 最符合實用需求的桌款 讓自己每天的方便度大提升 食慾或靈感也會節節升高喔!! 請來拓家 讓我們用訂製 讓你的家 不再將就 ✅點這裡更了解你可以在拓家，創造出甚麼? ✅原來實木訂製還有這些！ 閱讀內文" [ref=e1087] [cursor=pointer]:
+            - /url: blog/posts/all-solid-wood-table
+            - generic [ref=e1090]:
+              - generic [ref=e1092]: 2023-09-21
+              - heading "拓家全實木桌款《原點》，伴你享受生活的圓滿" [level=5] [ref=e1093]
+              - paragraph [ref=e1094]: 實木訂製一直是拓家所主打的產品， 即使我們無所不能 但我們仍不斷地 努力延伸出家具新型態的構造與調性 因為，我們從沒忘記 實木訂製，是拓家的根 而不論空間流行趨勢如何變化 實木也一直都是家具業界裡 總能佔有一席之地的家具關鍵素材 2023年拓家全實木全新桌款 • 可訂製 原點 圓柱桌腳實木桌 圓柱、圓角、圓邊 我們以嶄新的「圓」 突破固有的方正造型印象 每處轉角都圓融自然 帶出視覺和諧 也呈現出詩意般的文青極簡 「圓邊」 桌邊採弧線型圓潤設計 有效柔化空間視覺僵硬感 強化了圓應有的優雅與精緻 「圓角」 圓潤的曲線，安全防撞 家中有小孩必備 在正值跌跌撞撞走路像喝醉酒的學步時期 減少受傷的可能性 「圓柱」 不退流行的桌腳 讓整張桌能穩定支撐 以經典造型 呈現生活的無拘無束 不追趕流行，做自己，莫忘初衷 全實木的它， 透過自身的肌理本質 與 匠人手工藝的溫潤 散發出天然柔和色調的魅力 桌面隱約的中縫設計 近看有拼接感 遠看 則讓人沉浸於 它的圓滿 不論餐桌，工作桌，吧台桌，茶几… 各種桌款 其實都是 我們生活中非常重要的使用工具 我們相信， 只有用心的設計 才能真正做到讓你如願以償 請你無須再屈就現成規格品的固定尺寸 你的桌子， 當然要是你那最想要的樣貌 自己替自己設計一張 最符合實用需求的桌款 讓自己每天的方便度大提升 食慾或靈感也會節節升高喔!! 請來拓家 讓我們用訂製 讓你的家 不再將就 ✅點這裡更了解你可以在拓家，創造出甚麼? ✅原來實木訂製還有這些！
+              - generic [ref=e1095]: 閱讀內文
+          - link [ref=e1099] [cursor=pointer]:
+            - /url: blog/posts/aesthetic-home
+            - generic [ref=e1102]:
+              - generic [ref=e1104]: 2023-09-19
+              - heading "沙發與餐桌這樣挑，為日常添上輕盈與節奏" [level=5] [ref=e1105]
+              - paragraph [ref=e1106]: "關於空間的佈局 可以用裝潢來進行結構重組 但「家」 卻不只是磚頭水泥的簡單組合 它需要注入家具，來成就風格 感謝 苗栗邱先生 選擇拓家 讓每一個能放鬆的早晨 除了蛋糕與咖啡相互作伴 還有拓家的美感家具 陪你揭開一天的序幕! 邱先生的家，走的是現代風尚甜蜜家居風 客廳搭配的沙發是 : 有顏值，有腦袋，值得依賴的 • 《Monroe夢露沙發》 她，有著超級可靠的肩膀 化繁為簡的精品感弧線薄型扶手 能解決格局上的缺陷 完整貼合空間剛剛好的特性 把扶手省下來的空間 增加更多的座位面積 同時，也幫你爭取到更多的走道空間 頭等艙級的可滑動座墊設計 可坐可躺，讓你即使在家 也能天天都像乘坐頭等艙的頂級VIP 高個人更是再也不怕將大腿流落在外 夢露全部都能 幫你撐住！ 是能給予無與倫比安全感的完美女人 並撫平你內心所有一切疲憊的辛勞👍 你總能在她身上 發現她比你更在乎生活上的細節 她擁有， 自由調節分離的背枕與腰枕 搭配可滑動座墊設計後 可變化出三種不同坐感與造型 「背墊」 擁有不惜重本的鍍鈦連結五金 讓你輕鬆就能將 充滿時尚感的低背視感 瞬間變身成能強大支撐肩頸的高背靠感!! 「背墊內」 秉持最高規格的概念 特別添加了高通風性的羽絨 讓裡面的水氣可以蒸散開來 達到降低塵螨的含量 在舒適乘坐的同時， 也同時降低家中過敏源👍 餐廳搭配的是： 切不壞，超耐重，不怕熱，不吃色的 • 《西班牙陶瓷板餐桌/秘境實木桌腳》 拓家在三年前其實就開始推出， 榮獲英國皇室指定御用精品建材 全球最大西班牙代理商所引進 👉義大利生產製造的陶瓷板 陶瓷板一直是拓家最暢銷的產品之一 但其實我們從沒特別宣傳過它， 購買的顧客除了很多是已到處比較過， 已深入了解板材之間的差別後而購買 還有很大一群購買者， 則是經由 已買過這款桌子的親朋好友介紹而來! 這款陶瓷板到底強在哪? • 吸水率小於0.3%趨近於零 經由高溫燒結將表面毛細孔去蕪存菁 防止液體和氣體的吸收與氣味的累積 • 高耐刮耐磨 為市面上最耐刮耐磨的表材之一 刀片划過頻繁使用皆不易留下痕跡 • 高耐凍、防焰耐熱不燃燒 經+5~-5C低溫測試不破裂 高溫亦不會釋放有毒物質 • 耐衝擊 通過直徑19mm鋼球測試 符合歐盟磁磚衝擊檢測規 • 100%天然原料 及 可完全回收再利用 達到降低對環境的污染環保與衝擊 • 可完全防止汙漬滲入表層 達到5級ISO10545-4規範 通過5級的標準代表的是極高肯定 NH、希爾頓、萬豪等知名飯店連鎖集團 甚至 澳洲雪梨機場、杜拜阿布達比 皆能看見它的身影 它也經常性的被使用於 豪宅建築外觀牆面 它的耐用與堅韌度，可想而知 經由拓家工廠全程組裝與製造 不但有高達14色可選擇 尺寸與形狀更皆可訂製 還能自由搭配拓家數十款桌腳 沒有風格，搭不了!! 特別感謝 曜嘉室內裝修設計 謝謝你們提供這些超美照片，讓作品精彩呈現 . 每個人都希望自己的家 與眾不同、獨具匠心 把自己全心投入於事業打拼的同時 卻忘了努力的動力來源 最終 是為了優化 家 的內在 其實， 除了選擇花費大預算的裝潢 另一種 聰明的選擇是 請你來拓家，放心的買 用最小的預算 成就你努力換來的美好居家 —————————— 邱先生的訂製規劃師：阿琇 —————————— 苗栗邱先生的購物清單: ●可訂製 Monroe夢露 可調式頭枕滑動沙發 ●可訂製 西班牙陶瓷板餐桌/秘境實木桌腳 ●宛如漫步雲端/秒睡床墊 ●Ollie 奧利木紋單人收納床底 ●更多 餐椅看這裡 ●更多 單人椅/長凳/椅凳這裡買"
+              - generic [ref=e1107]: 閱讀內文
+        - generic:
+          - img [ref=e1109]
+          - img [ref=e1112] [cursor=pointer]
+      - link "查看更多" [ref=e1114] [cursor=pointer]:
+        - /url: /blog/posts
+        - generic [ref=e1115]: 查看更多
+    - generic [ref=e1118]:
+      - link "關於拓家" [ref=e1120] [cursor=pointer]:
+        - /url: https://www.trohome.com/pages/about-trohome-%E9%97%9C%E6%96%BC%E6%8B%93%E5%AE%B6-1
+        - heading "關於拓家" [level=3] [ref=e1123]
+      - link "拓家的堅持與信念" [ref=e1125] [cursor=pointer]:
+        - /url: https://www.trohome.com/pages/%E6%96%B0%E7%9A%84%E5%88%86%E9%A0%81-1-1-2-2
+        - heading "拓家的堅持與信念" [level=3] [ref=e1128]
+      - link "購物須知" [ref=e1130] [cursor=pointer]:
+        - /url: https://www.trohome.com/pages/%E6%96%B0%E7%9A%84%E5%88%86%E9%A0%81-1-1
+        - heading "購物須知" [level=3] [ref=e1133]
+    - generic [ref=e1137]:
+      - heading "▸民生門市" [level=3] [ref=e1138]
+      - generic [ref=e1139]:
+        - paragraph [ref=e1140]:
+          - link "【 Google導航請點我 】" [ref=e1141] [cursor=pointer]:
+            - /url: https://maps.app.goo.gl/2WRXVb5tpDVxhCfB9
+        - paragraph [ref=e1142]: 台北市中山區松江路206號13樓之4 惠群大廈
+        - paragraph [ref=e1143]: (捷運行天宮站一號出口30秒）
+        - paragraph [ref=e1144]: 服務電話 ▸
+        - paragraph [ref=e1145]: 02-2100-1020
+        - paragraph [ref=e1146]: 營業時間 ▸
+        - paragraph [ref=e1147]: "◉平日 : 11:00~19:00 (週二早上教育訓練，14:00開始營業 )"
+        - paragraph [ref=e1148]: ※固定週三店休
+        - paragraph [ref=e1149]
+        - paragraph [ref=e1150]: 【 停車資訊 】
+        - paragraph [ref=e1151]:
+          - link "▸中興嘟嘟房" [ref=e1152] [cursor=pointer]:
+            - /url: https://maps.app.goo.gl/G3YBfuCb8XCr5yuF7
+        - paragraph [ref=e1153]: 台北市中山區松江路170巷12號
+        - paragraph [ref=e1154]:
+          - link "▸台灣聯通停車場-大松江場" [ref=e1155] [cursor=pointer]:
+            - /url: https://maps.app.goo.gl/ZJBMmdBPRHKo4A2PA
+        - paragraph [ref=e1156]: 台北市中山區松江路253號
+        - paragraph [ref=e1157]:
+          - link "▸露天停車場" [ref=e1158] [cursor=pointer]:
+            - /url: https://maps.app.goo.gl/J14T5UbnwYyb1JN26
+        - paragraph [ref=e1159]: 台北市中山區建國北路二段96巷6弄2號
+        - paragraph [ref=e1160]:
+          - link "▸露天停車場" [ref=e1161] [cursor=pointer]:
+            - /url: https://maps.app.goo.gl/R6yvyXSLPjrEHHbw9
+        - paragraph [ref=e1162]: 台北市中山區長春路163巷12號
+    - generic [ref=e1168]:
+      - heading "▸新莊門市" [level=3] [ref=e1169]
+      - generic [ref=e1170]:
+        - paragraph [ref=e1171]:
+          - link "【 Google導航請點我 】" [ref=e1172] [cursor=pointer]:
+            - /url: https://maps.app.goo.gl/xvtXbzezYkeeS6ZK9
+          - text: 新北市新莊區思源路488號 (捷運幸福站一號出口6分鐘）
+        - paragraph [ref=e1173]: 服務電話 ▸02-8522-9580
+        - paragraph [ref=e1174]:
+          - text: 營業時間 ▸
+          - text: "◉平日 : 12:00~20:00 (週二早上教育訓練，14:00開始營業 )"
+        - paragraph [ref=e1175]: "週六週日與假日 : 11:00~19:00"
+        - paragraph [ref=e1176]: ※固定週三店休
+        - paragraph [ref=e1177]
+        - paragraph [ref=e1178]
+        - paragraph [ref=e1179]
+        - paragraph [ref=e1180]: 【 停車資訊 】
+        - paragraph [ref=e1181]:
+          - link "▸Times 新莊中原東福前停車場" [ref=e1182] [cursor=pointer]:
+            - /url: https://maps.app.goo.gl/rwGsq1pbbYe9hNbKA
+        - paragraph [ref=e1183]: 242新北市新莊區中原東路80號
+        - paragraph [ref=e1184]:
+          - link "▸Times 新莊福德一街停車場" [ref=e1185] [cursor=pointer]:
+            - /url: https://maps.app.goo.gl/sk1Y1TGADtYquahJ6
+        - paragraph [ref=e1186]: 242新北市新莊區福前街135巷口
+        - paragraph [ref=e1187]
+    - generic [ref=e1193]:
+      - heading "▸台中門市" [level=3] [ref=e1194]
+      - generic [ref=e1195]:
+        - paragraph [ref=e1196]:
+          - link "【 Google導航請點我 】" [ref=e1197] [cursor=pointer]:
+            - /url: https://maps.app.goo.gl/otBMLfqVQUKmAyqU8
+        - paragraph [ref=e1198]: 平日如有訂製洽談需求，建議預約，無預約直接前往亦可
+        - paragraph [ref=e1199]: 台中市南屯區龍德路一段28號3F (下五權西路交流道兩分鐘就到 )
+        - paragraph [ref=e1200]: 服務電話 ▸04-2380-1920
+        - paragraph [ref=e1201]: "◉平日 : 11:00~19:00 (週二早上教育訓練，14:00開始營業 )"
+        - paragraph [ref=e1202]: ※固定週三店休
+        - paragraph [ref=e1203]
+        - paragraph [ref=e1204]
+        - paragraph [ref=e1205]
+        - paragraph [ref=e1206]: 【 停車資訊 】
+        - paragraph [ref=e1207]: ▸路邊停車格
+        - paragraph [ref=e1208]: 台中市南屯區龍德路一段路邊兩側(數量充裕，幾乎都是有位子的）
+  - generic [ref=e1211]:
+    - generic [ref=e1214]:
+      - generic [ref=e1215]:
+        - generic [ref=e1216]:
+          - paragraph [ref=e1217]: 關於我們 | 顧客服務
+          - paragraph [ref=e1218]:
+            - link "品牌故事" [ref=e1219] [cursor=pointer]:
+              - /url: https://www.trohome.com/pages/about-trohome-%E9%97%9C%E6%96%BC%E6%8B%93%E5%AE%B6-1
+            - link "拓家的堅持與信念" [ref=e1220] [cursor=pointer]:
+              - /url: https://www.trohome.com/pages/%E6%96%B0%E7%9A%84%E5%88%86%E9%A0%81-1-1-2-2
+            - link "我們可以訂製甚麼?" [ref=e1221] [cursor=pointer]:
+              - /url: https://www.trohome.com/pages/%E6%96%B0%E7%9A%84%E5%88%86%E9%A0%81-1-1-1-1
+          - paragraph [ref=e1222]:
+            - link "商業合作" [ref=e1223] [cursor=pointer]:
+              - /url: https://www.trohome.com/forms/business-collaboration
+          - paragraph [ref=e1224]:
+            - link "購物說明" [ref=e1225] [cursor=pointer]:
+              - /url: https://www.trohome.com/pages/%E6%96%B0%E7%9A%84%E5%88%86%E9%A0%81-1-1
+          - paragraph [ref=e1226]:
+            - link "無卡分期" [ref=e1227] [cursor=pointer]:
+              - /url: https://www.trohome.com/pages/%E7%84%A1%E5%8D%A1%E5%88%86%E6%9C%9F
+          - paragraph [ref=e1228]:
+            - link "隱私權政策" [ref=e1229] [cursor=pointer]:
+              - /url: https://www.trohome.com/pages/%E9%9A%B1%E7%A7%81%E6%AC%8A%E6%94%BF%E7%AD%96
+        - generic [ref=e1230]:
+          - paragraph [ref=e1231]: 拓家展間
+          - paragraph [ref=e1232]:
+            - strong [ref=e1233]:
+              - link "▸點此預約各門市參觀" [ref=e1234] [cursor=pointer]:
+                - /url: https://docs.google.com/forms/d/e/1FAIpQLSdSHi1r6YlyNRaoFXrxB1Q9K-3wTzV3nHoQ-PFFKGyJ8exufw/viewform
+          - paragraph [ref=e1235]:
+            - link "台北民生店 | 台北市中山區松江路206號惠群大廈1" [ref=e1236] [cursor=pointer]:
+              - /url: https://maps.app.goo.gl/zcu9Nqov6kGR9pKB9
+              - strong [ref=e1237]: 台北民生店
+              - text: "| 台北市中山區松江路206號惠群大廈1"
+            - text: 3F-4
+          - paragraph [ref=e1238]: "TEL : 02-2100-1020"
+          - paragraph [ref=e1239]:
+            - link "新北新莊店 | 新北市新莊區思源路488號" [ref=e1240] [cursor=pointer]:
+              - /url: https://maps.app.goo.gl/3ZC85CyNTN4WPTnn7
+              - strong [ref=e1241]: 新北新莊店
+              - text: "| 新北市新莊區思源路488號"
+          - paragraph [ref=e1242]: "TEL : 02-8522-9580"
+          - paragraph [ref=e1243]:
+            - link "台中南屯店 | 台中市南屯區龍德路一段28號3樓" [ref=e1244] [cursor=pointer]:
+              - /url: https://maps.app.goo.gl/j8As4AHdcmfbQ26W8
+              - strong [ref=e1245]: 台中南屯店
+              - text: "| 台中市南屯區龍德路一段28號3樓"
+          - paragraph [ref=e1246]: "TEL : 04-2380-1920"
+        - generic [ref=e1247]:
+          - paragraph [ref=e1248]: 聯絡我們
+          - generic [ref=e1249]:
+            - link [ref=e1250] [cursor=pointer]:
+              - /url: https://www.facebook.com/HomePlusNO1
+              - img [ref=e1251]
+            - link [ref=e1253] [cursor=pointer]:
+              - /url: https://www.instagram.com/trohome/
+              - img [ref=e1254]
+            - link [ref=e1257] [cursor=pointer]:
+              - /url: https://line.me/ti/p/~@trohome
+              - img [ref=e1258]
+      - generic [ref=e1261]:
+        - generic [ref=e1263] [cursor=pointer]:
+          - generic [ref=e1264]: $ TWD
+          - generic [ref=e1265]: 
+        - generic [ref=e1267] [cursor=pointer]:
+          - img [ref=e1268]
+          - text: 繁體中文
+          - generic [ref=e1270]: 
+    - paragraph [ref=e1273]: Copyright © 2024 拓家設計家具 | All Rights Reserved

@@ -1,0 +1,494 @@
+[    1372ms] [LOG] momo-app-bridge has been loaded @ https://www.momoshop.com.tw/search/_next/static/chunks/6896-da8edd40ef7a57b9.js:0
+[    1379ms] [LOG] init momoWaTrack @ https://www.momoshop.com.tw/search/_next/static/chunks/6083-33b920aede587894.js:0
+[    1438ms] [WARNING] [sentry-loader][member-info] member info unavailable; proceeding without whitelist override @ https://sentry-script.s3.ap-east-2.amazonaws.com/loader/sentry-loader@1.x-latest.js:0
+[    1513ms] [LOG] web rc status:200 @ https://momowa.momoshop.com.tw/momowa/rc/js/momowa.js?t=20250321001:10
+[    1513ms] [LOG] web rc status:200 @ https://momowa.momoshop.com.tw/momowa/rc/js/momowa.js?t=20250321001:10
+[    1719ms] [WARNING] [Meta Pixel] - Unable to parse JSON-LD tag. Malformed JSON found: '
+        {
+          "@context": "https://schema.org",
+          "@type": "WebPage",
+          "name":"momo購物網",
+          "url": "https://www.momoshop.com.tw"
+          ,"breadcrumb": {
+            "@type": "BreadcrumbList",
+            "itemListElement":
+            [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "item":
+                {
+                "@id": "https://www.momoshop.com.tw",
+                "name": "momo購物網"
+                }
+              },
+              {
+                "@type": "ListItem",
+              "position": 2,
+              "item":
+                {
+                  "@id": "https://www.momoshop.com.tw/search/吧台桌 150",
+                  "name": "吧台桌 150"
+                }
+              }
+              ,
+            ]
+          }
+          ,
+            "mainEntity": {
+              "@type": "ItemList",
+              "name": "吧台桌 150",
+              "numberOfItems": "20",
+              "itemListElement": [
+        {
+          "@type": "Product",
+          "name": "【Trohome 拓家設計家具】可訂製 松木三層收納吧台桌150cm",
+          "position":"1",
+          "image": "https://img4.momoshop.com.tw/goodsimg/0014/618/568/14618568_OL.jpg?t=1761887438",
+          "description": "真材實料真實木 文青質感首選",
+          "url": "https://www.momoshop.com.tw/goods/GoodsDetail.jsp?i_code=14618568&Area=search&mdiv=403&oid=1_1&cid=index&kw=%E5%90%A7%E5%8F%B0%E6%A1%8C+150",
+          "offers": {
+            "@type": "Offer",
+            "price": "37300",
+            "priceCurrency": "TWD",
+            "availability": "https://schema.org/InStock"
+          }
+          
+          ,
+          "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": 4.7,
+            
+                "reviewCount": 10
+          }
+        },
+        {
+          "@type": "Product",
+          "name": "【雨辰時尚家居】150公分巖板吧臺桌餐廳隔斷櫃/預計10-15個工作日左右送達(安全無異味/圓角設計/防刮耐磨)",
+          "position":"2",
+          "image": "https://img4.momoshop.com.tw/goodsimg/0013/616/256/13616256_OL.jpg?t=1736399113",
+          "description": "巖板吧臺桌耐高溫防刮耐磨",
+          "url": "https://www.momoshop.com.tw/goods/GoodsDetail.jsp?i_code=13616256&Area=search&mdiv=403&oid=1_2&cid=index&kw=%E5%90%A7%E5%8F%B0%E6%A1%8C+150",
+          "offers": {
+            "@type": "Offer",
+            "price": "19775",
+            "priceCurrency": "TWD",
+            "availability": "https://schema.org/InStock"
+          }
+          
+          ,
+          "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": 4.7,
+            
+                "reviewCount": 10
+          }
+        },
+        {
+          "@type": "Product",
+          "name": "150*40(吧台桌 實木折疊桌 壁掛吧台桌 簡易書桌 墻上懸掛桌 預售12天)",
+          "position":"3",
+          "image": "https://img4.momoshop.com.tw/goodsimg/0014/245/814/14245814_OL.jpg?t=1753151124",
+          "description": "實木壁掛折疊桌",
+          "url": "https://www.momoshop.com.tw/goods/GoodsDetail.jsp?i_code=14245814&Area=search&mdiv=403&oid=1_3&cid=index&kw=%E5%90%A7%E5%8F%B0%E6%A1%8C+150",
+          "offers": {
+            "@type": "Offer",
+            "price": "7630",
+            "priceCurrency": "TWD",
+            "availability": "https://schema.org/InStock"
+          }
+          
+          ,
+          "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": 4.7,
+            
+                "reviewCount": 10
+          }
+        },
+        {
+          "@type": "Product",
+          "name": "【p瑞凱諾】150*35*100cm(吧台桌 高腳桌 長條桌 工作桌 書桌 餐桌 咖啡桌 預售12天)",
+          "position":"4",
+          "image": "https://img4.momoshop.com.tw/goodsimg/0014/388/482/14388482_OL.jpg?t=1756372047",
+          "description": "加寬桌面，可隨心放置",
+          "url": "https://www.momoshop.com.tw/goods/GoodsDetail.jsp?i_code=14388482&Area=search&mdiv=403&oid=1_4&cid=index&kw=%E5%90%A7%E5%8F%B0%E6%A1%8C+150",
+          "offers": {
+            "@type": "Offer",
+            "price": "7875",
+            "priceCurrency": "TWD",
+            "availability": "https://schema.org/InStock"
+          }
+          
+          ,
+          "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": 4.7,
+            
+                "reviewCount": 10
+          }
+        },
+        {
+          "@type": "Product",
+          "name": "【p檸檬樹家居】150*40*75cm(吧台桌 長條桌 高腳桌 單層長桌 家用吧檯桌 預售12天)",
+          "position":"5",
+          "image": "https://img4.momoshop.com.tw/goodsimg/0014/227/578/14227578_OL.jpg?t=1752716666",
+          "description": "單層長條吧台桌",
+          "url": "https://www.momoshop.com.tw/goods/GoodsDetail.jsp?i_code=14227578&Area=search&mdiv=403&oid=1_5&cid=index&kw=%E5%90%A7%E5%8F%B0%E6%A1%8C+150",
+          "offers": {
+            "@type": "Offer",
+            "price": "6923",
+            "priceCurrency": "TWD",
+            "availability": "https://schema.org/InStock"
+          }
+          
+          ,
+          "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": 4.7,
+            
+                "reviewCount": 10
+          }
+        },
+        {
+          "@type": "Product",
+          "name": "【CJY】L型吧臺櫃 150*50*105cm(前臺櫃桌/小戶型吧臺桌/簡約接待臺/大容量含燈帶)",
+          "position":"6",
+          "image": "https://img4.momoshop.com.tw/goodsimg/0014/658/751/14658751_OL.jpg?t=1762756914",
+          "description": "簡約收銀台 大容量風格百搭",
+          "url": "https://www.momoshop.com.tw/goods/GoodsDetail.jsp?i_code=14658751&Area=search&mdiv=403&oid=1_6&cid=index&kw=%E5%90%A7%E5%8F%B0%E6%A1%8C+150",
+          "offers": {
+            "@type": "Offer",
+            "price": "13691",
+            "priceCurrency": "TWD",
+            "availability": "https://schema.org/InStock"
+          }
+          
+          ,
+          "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": 4.7,
+            
+                "reviewCount": 10
+          }
+        },
+        {
+          "@type": "Product",
+          "name": "150*30(吧台桌 壁掛折疊桌 長條桌 靠墻壁桌 家用廚房吧台桌 預售12天)",
+          "position":"7",
+          "image": "https://img4.momoshop.com.tw/goodsimg/0014/245/794/14245794_OL.jpg?t=1753151083",
+          "description": "壁掛折疊吧台桌",
+          "url": "https://www.momoshop.com.tw/goods/GoodsDetail.jsp?i_code=14245794&Area=search&mdiv=403&oid=1_7&cid=index&kw=%E5%90%A7%E5%8F%B0%E6%A1%8C+150",
+          "offers": {
+            "@type": "Offer",
+            "price": "4407",
+            "priceCurrency": "TWD",
+            "availability": "https://schema.org/InStock"
+          }
+          
+          ,
+          "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": 4.7,
+            
+                "reviewCount": 10
+          }
+        },
+        {
+          "@type": "Product",
+          "name": "【p檸檬樹家居】150*35*75cm(吧台桌 長條桌 高腳桌 單層長桌 家用吧檯桌 預售12天)",
+          "position":"8",
+          "image": "https://img4.momoshop.com.tw/goodsimg/0014/227/576/14227576_OL.jpg?t=1752716653",
+          "description": "單層長條吧台桌",
+          "url": "https://www.momoshop.com.tw/goods/GoodsDetail.jsp?i_code=14227576&Area=search&mdiv=403&oid=1_8&cid=index&kw=%E5%90%A7%E5%8F%B0%E6%A1%8C+150",
+          "offers": {
+            "@type": "Offer",
+            "price": "6792",
+            "priceCurrency": "TWD",
+            "availability": "https://schema.org/InStock"
+          }
+          
+          ,
+          "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": 4.7,
+            
+                "reviewCount": 10
+          }
+        },
+        {
+          "@type": "Product",
+          "name": "150*45(吧台桌 實木折疊桌 壁掛吧台桌 簡易書桌 墻上懸掛桌 預售12天)",
+          "position":"9",
+          "image": "https://img4.momoshop.com.tw/goodsimg/0014/245/865/14245865_OL.jpg?t=1753151126",
+          "description": "實木壁掛折疊桌",
+          "url": "https://www.momoshop.com.tw/goods/GoodsDetail.jsp?i_code=14245865&Area=search&mdiv=403&oid=1_9&cid=index&kw=%E5%90%A7%E5%8F%B0%E6%A1%8C+150",
+          "offers": {
+            "@type": "Offer",
+            "price": "8437",
+            "priceCurrency": "TWD",
+            "availability": "https://schema.org/InStock"
+          }
+          
+          ,
+          "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": 4.7,
+            
+                "reviewCount": 10
+          }
+        },
+        {
+          "@type": "Product",
+          "name": "150*35(吧台桌 實木折疊桌 壁掛吧台桌 簡易書桌 墻上懸掛桌 預售12天)",
+          "position":"10",
+          "image": "https://img4.momoshop.com.tw/goodsimg/0014/245/813/14245813_OL.jpg?t=1753151124",
+          "description": "實木壁掛折疊桌",
+          "url": "https://www.momoshop.com.tw/goods/GoodsDetail.jsp?i_code=14245813&Area=search&mdiv=403&oid=1_10&cid=index&kw=%E5%90%A7%E5%8F%B0%E6%A1%8C+150",
+          "offers": {
+            "@type": "Offer",
+            "price": "6955",
+            "priceCurrency": "TWD",
+            "availability": "https://schema.org/InStock"
+          }
+          
+          ,
+          "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": 4.7,
+            
+                "reviewCount": 10
+          }
+        },
+        {
+          "@type": "Product",
+          "name": "150*40(吧台桌 壁掛折疊桌 長條桌 靠墻壁桌 家用廚房吧台桌 預售12天)",
+          "position":"11",
+          "image": "https://img4.momoshop.com.tw/goodsimg/0014/245/795/14245795_OL.jpg?t=1753151085",
+          "description": "壁掛折疊吧台桌",
+          "url": "https://www.momoshop.com.tw/goods/GoodsDetail.jsp?i_code=14245795&Area=search&mdiv=403&oid=1_11&cid=index&kw=%E5%90%A7%E5%8F%B0%E6%A1%8C+150",
+          "offers": {
+            "@type": "Offer",
+            "price": "4572",
+            "priceCurrency": "TWD",
+            "availability": "https://schema.org/InStock"
+          }
+          
+          ,
+          "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": 4.7,
+            
+                "reviewCount": 10
+          }
+        },
+        {
+          "@type": "Product",
+          "name": "【品愛生活】簡約櫻桃木色5尺中島桌(150cm)",
+          "position":"12",
+          "image": "https://img4.momoshop.com.tw/goodsimg/0011/624/434/11624434_OL.jpg?t=1692557631",
+          "description": "滿1件享82折",
+          "url": "https://www.momoshop.com.tw/goods/GoodsDetail.jsp?i_code=11624434&Area=search&mdiv=403&oid=1_12&cid=index&kw=%E5%90%A7%E5%8F%B0%E6%A1%8C+150",
+          "offers": {
+            "@type": "Offer",
+            "price": "14596",
+            "priceCurrency": "TWD",
+            "availability": "https://schema.org/InStock"
+          }
+          
+          ,
+          "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": 4.7,
+            
+                "reviewCount": 10
+          }
+        },
+        {
+          "@type": "Product",
+          "name": "【Taoshop 淘家舖】奶油侘寂原木風一體｜｜可伸縮岩板中島餐桌 J-7D193(105cm拉伸150cm)",
+          "position":"13",
+          "image": "https://img4.momoshop.com.tw/goodsimg/0012/474/641/12474641_OL.jpg?t=1711072772",
+          "description": "105cm拉伸150cm",
+          "url": "https://www.momoshop.com.tw/goods/GoodsDetail.jsp?i_code=12474641&Area=search&mdiv=403&oid=1_13&cid=index&kw=%E5%90%A7%E5%8F%B0%E6%A1%8C+150",
+          "offers": {
+            "@type": "Offer",
+            "price": "38900",
+            "priceCurrency": "TWD",
+            "availability": "https://schema.org/InStock"
+          }
+          
+          ,
+          "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": 4.7,
+            
+                "reviewCount": 10
+          }
+        },
+        {
+          "@type": "Product",
+          "name": "【Taoshop 淘家舖】奶油侘寂風｜皇冠高級感｜可伸縮岩板中島餐桌J -  7D198(105cm拉伸150cm)",
+          "position":"14",
+          "image": "https://img4.momoshop.com.tw/goodsimg/0012/474/640/12474640_OL.jpg?t=1742533297",
+          "description": "105cm拉伸150cm",
+          "url": "https://www.momoshop.com.tw/goods/GoodsDetail.jsp?i_code=12474640&Area=search&mdiv=403&oid=1_14&cid=index&kw=%E5%90%A7%E5%8F%B0%E6%A1%8C+150",
+          "offers": {
+            "@type": "Offer",
+            "price": "37900",
+            "priceCurrency": "TWD",
+            "availability": "https://schema.org/InStock"
+          }
+          
+          ,
+          "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": 4.7,
+            
+                "reviewCount": 10
+          }
+        },
+        {
+          "@type": "Product",
+          "name": "【H瑞凱諾】150*40*100cm 加厚板材 圓潤邊角(吧臺桌 高腳桌 酒吧桌 長條桌 靠牆窄桌 隔斷酒櫃桌 預購15天)",
+          "position":"15",
+          "image": "https://img4.momoshop.com.tw/goodsimg/0014/124/853/14124853_OL.jpg?t=1750129716",
+          "description": "寬大置物桌面，加寬桌面可隨心放",
+          "url": "https://www.momoshop.com.tw/goods/GoodsDetail.jsp?i_code=14124853&Area=search&mdiv=403&oid=1_15&cid=index&kw=%E5%90%A7%E5%8F%B0%E6%A1%8C+150",
+          "offers": {
+            "@type": "Offer",
+            "price": "7250",
+            "priceCurrency": "TWD",
+            "availability": "https://schema.org/InStock"
+          }
+          
+          ,
+          "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": 4.7,
+            
+                "reviewCount": 10
+          }
+        },
+        {
+          "@type": "Product",
+          "name": "150*30(吧台桌 實木折疊桌 壁掛吧台桌 簡易書桌 墻上懸掛桌 預售12天)",
+          "position":"16",
+          "image": "https://img4.momoshop.com.tw/goodsimg/0014/245/812/14245812_OL.jpg?t=1753151120",
+          "description": "實木壁掛折疊桌",
+          "url": "https://www.momoshop.com.tw/goods/GoodsDetail.jsp?i_code=14245812&Area=search&mdiv=403&oid=1_16&cid=index&kw=%E5%90%A7%E5%8F%B0%E6%A1%8C+150",
+          "offers": {
+            "@type": "Offer",
+            "price": "6228",
+            "priceCurrency": "TWD",
+            "availability": "https://schema.org/InStock"
+          }
+          
+          ,
+          "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": 4.7,
+            
+                "reviewCount": 10
+          }
+        },
+        {
+          "@type": "Product",
+          "name": "【品愛生活】極簡白楓木色5尺中島桌(150cm)",
+          "position":"17",
+          "image": "https://img4.momoshop.com.tw/goodsimg/0011/624/435/11624435_OL.jpg?t=1692557368",
+          "description": "滿1件享82折",
+          "url": "https://www.momoshop.com.tw/goods/GoodsDetail.jsp?i_code=11624435&Area=search&mdiv=403&oid=1_17&cid=index&kw=%E5%90%A7%E5%8F%B0%E6%A1%8C+150",
+          "offers": {
+            "@type": "Offer",
+            "price": "14596",
+            "priceCurrency": "TWD",
+            "availability": "https://schema.org/InStock"
+          }
+          
+          ,
+          "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": 4.7,
+            
+                "reviewCount": 10
+          }
+        },
+        {
+          "@type": "Product",
+          "name": "電競桌網吧電腦桌椅組合遊戲桌臺式家用電腦桌椅套裝電競椅 150",
+          "position":"18",
+          "image": "https://i8.momoshop.com.tw/1763984128/goodsimg/TP000/8533/0010/365/TP00085330010365_O_m.jpg",
+          "description": "全台免運  破損包賠",
+          "url": " https://www.momoshop.com.tw/TP/TP0008533/goodsDetail/TP00085330010365",
+          "offers": {
+            "@type": "Offer",
+            "price": "$1,795",
+            "priceCurrency": "TWD",
+            "availability": "https://schema.org/InStock"
+          }
+          
+          ,
+          "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": 4.7,
+            
+                "reviewCount": 10
+          }
+        },
+        {
+          "@type": "Product",
+          "name": "【H時光花園TiMe】長150CM 可折疊 自由調節(掛桌 欄桿桌 休閑小吧臺 壁掛桌 懸掛吧臺 餐桌 預購15天)",
+          "position":"19",
+          "image": "https://img4.momoshop.com.tw/goodsimg/0014/120/359/14120359_OL.jpg?t=1750041669",
+          "description": "自由調節 可折疊設計",
+          "url": "https://www.momoshop.com.tw/goods/GoodsDetail.jsp?i_code=14120359&Area=search&mdiv=403&oid=1_18&cid=index&kw=%E5%90%A7%E5%8F%B0%E6%A1%8C+150",
+          "offers": {
+            "@type": "Offer",
+            "price": "4452",
+            "priceCurrency": "TWD",
+            "availability": "https://schema.org/InStock"
+          }
+          
+          ,
+          "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": 4.7,
+            
+                "reviewCount": 10
+          }
+        },
+        {
+          "@type": "Product",
+          "name": "【Taoshop 淘家舖】可伸縮岩板中島餐桌｜奶油侘寂風｜皇冠高級感  （不含椅） J - 7D198　寬105拉伸至150cm",
+          "position":"20",
+          "image": "https://i7.momoshop.com.tw/1757576628/goodsimg/TP000/1022/0001/060/TP00010220001060_O_m.jpg",
+          "description": "",
+          "url": " https://www.momoshop.com.tw/TP/TP0001022/goodsDetail/TP00010220001060",
+          "offers": {
+            "@type": "Offer",
+            "price": "$37,900",
+            "priceCurrency": "TWD",
+            "availability": "https://schema.org/InStock"
+          }
+          
+          ,
+          "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": 4.7,
+            
+                "reviewCount": 10
+          }
+        }
+              ]
+            }
+        }'. @ https://connect.facebook.net/en_US/fbevents.js:177
+[    2172ms] [WARNING] Blocked message from untrusted origin: https://gum.criteo.com @ https://www.momoshop.com.tw/search/_next/static/chunks/app/layout-2f1be244709d40f0.js:0
+[   12341ms] [ERROR] [Server] getAPIConfigServer error: AxiosError @ https://www.momoshop.com.tw/search/_next/static/chunks/2472-f250bb633fc4aac1.js:0
+[   12352ms] [ERROR] [Server] getAPIConfigServer error: AxiosError @ https://www.momoshop.com.tw/search/_next/static/chunks/2472-f250bb633fc4aac1.js:0
+[   13135ms] [LOG] init momoWaTrack @ https://www.momoshop.com.tw/search/_next/static/chunks/6083-33b920aede587894.js:0
+[   13199ms] [LOG] web rc status:200 @ https://momowa.momoshop.com.tw/momowa/rc/js/momowa.js?t=20250321001:10
+[   13205ms] [LOG] web rc status:200 @ https://momowa.momoshop.com.tw/momowa/rc/js/momowa.js?t=20250321001:10
+[   13369ms] [LOG] init momoWaTrack @ https://www.momoshop.com.tw/search/_next/static/chunks/6083-33b920aede587894.js:0
+[   13392ms] [LOG] web rc status:200 @ https://momowa.momoshop.com.tw/momowa/rc/js/momowa.js?t=20250321001:10
+[   13393ms] [LOG] web rc status:200 @ https://momowa.momoshop.com.tw/momowa/rc/js/momowa.js?t=20250321001:10

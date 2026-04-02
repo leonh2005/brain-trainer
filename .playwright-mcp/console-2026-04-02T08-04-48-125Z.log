@@ -1,0 +1,2 @@
+[     701ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://www.ikea.com/not-found/:0
+[    4533ms] [WARNING] The resource https://www.ikea.com/global/assets/fonts/woff2/noto-ikea-700.latin.a3f10ed8.woff2 was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ https://www.ikea.com/not-found/:0

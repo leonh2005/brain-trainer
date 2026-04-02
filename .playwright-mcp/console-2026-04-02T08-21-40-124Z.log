@@ -1,0 +1,121 @@
+[     886ms] [LOG] init momoWaTrack @ https://www.momoshop.com.tw/search/_next/static/chunks/6083-33b920aede587894.js:0
+[     908ms] [LOG] web rc status:200 @ https://momowa.momoshop.com.tw/momowa/rc/js/momowa.js?t=20250321001:10
+[     908ms] [LOG] web rc status:200 @ https://momowa.momoshop.com.tw/momowa/rc/js/momowa.js?t=20250321001:10
+[     912ms] [WARNING] [sentry-loader][member-info] member info unavailable; proceeding without whitelist override @ https://sentry-script.s3.ap-east-2.amazonaws.com/loader/sentry-loader@1.x-latest.js:0
+[     980ms] [LOG] web rc status:200 @ https://momowa.momoshop.com.tw/momowa/rc/js/momowa.js?t=20250321001:10
+[     982ms] [LOG] momo-app-bridge has been loaded @ https://www.momoshop.com.tw/search/_next/static/chunks/6896-da8edd40ef7a57b9.js:0
+[    1031ms] [WARNING] [Meta Pixel] - Unable to parse JSON-LD tag. Malformed JSON found: '
+        {
+          "@context": "https://schema.org",
+          "@type": "WebPage",
+          "name":"momo購物網",
+          "url": "https://www.momoshop.com.tw"
+          ,"breadcrumb": {
+            "@type": "BreadcrumbList",
+            "itemListElement":
+            [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "item":
+                {
+                "@id": "https://www.momoshop.com.tw",
+                "name": "momo購物網"
+                }
+              },
+              {
+                "@type": "ListItem",
+              "position": 2,
+              "item":
+                {
+                  "@id": "https://www.momoshop.com.tw/search/吧台桌 150 115高",
+                  "name": "吧台桌 150 115高"
+                }
+              }
+              ,
+            ]
+          }
+          ,
+            "mainEntity": {
+              "@type": "ItemList",
+              "name": "吧台桌 150 115高",
+              "numberOfItems": "3",
+              "itemListElement": [
+        {
+          "@type": "Product",
+          "name": "【Trohome 拓家設計家具】可訂製 松木三層收納吧台桌150cm",
+          "position":"1",
+          "image": "https://img4.momoshop.com.tw/goodsimg/0014/618/568/14618568_OL.jpg?t=1761887438",
+          "description": "真材實料真實木 文青質感首選",
+          "url": "https://www.momoshop.com.tw/goods/GoodsDetail.jsp?i_code=14618568&Area=search&mdiv=403&oid=1_1&cid=index&kw=%E5%90%A7%E5%8F%B0%E6%A1%8C+150+115%E9%AB%98",
+          "offers": {
+            "@type": "Offer",
+            "price": "37300",
+            "priceCurrency": "TWD",
+            "availability": "https://schema.org/InStock"
+          }
+          
+          ,
+          "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": 4.7,
+            
+                "reviewCount": 10
+          }
+        },
+        {
+          "@type": "Product",
+          "name": "【品愛生活】簡約櫻桃木色5尺中島桌(150cm)",
+          "position":"2",
+          "image": "https://img4.momoshop.com.tw/goodsimg/0011/624/434/11624434_OL.jpg?t=1692557631",
+          "description": "滿1件享82折",
+          "url": "https://www.momoshop.com.tw/goods/GoodsDetail.jsp?i_code=11624434&Area=search&mdiv=403&oid=1_2&cid=index&kw=%E5%90%A7%E5%8F%B0%E6%A1%8C+150+115%E9%AB%98",
+          "offers": {
+            "@type": "Offer",
+            "price": "14596",
+            "priceCurrency": "TWD",
+            "availability": "https://schema.org/InStock"
+          }
+          
+          ,
+          "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": 4.7,
+            
+                "reviewCount": 10
+          }
+        },
+        {
+          "@type": "Product",
+          "name": "【品愛生活】極簡白楓木色5尺中島桌(150cm)",
+          "position":"3",
+          "image": "https://img4.momoshop.com.tw/goodsimg/0011/624/435/11624435_OL.jpg?t=1692557368",
+          "description": "滿1件享82折",
+          "url": "https://www.momoshop.com.tw/goods/GoodsDetail.jsp?i_code=11624435&Area=search&mdiv=403&oid=1_3&cid=index&kw=%E5%90%A7%E5%8F%B0%E6%A1%8C+150+115%E9%AB%98",
+          "offers": {
+            "@type": "Offer",
+            "price": "14596",
+            "priceCurrency": "TWD",
+            "availability": "https://schema.org/InStock"
+          }
+          
+          ,
+          "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": 4.7,
+            
+                "reviewCount": 10
+          }
+        }
+              ]
+            }
+        }'. @ https://connect.facebook.net/en_US/fbevents.js:177
+[    1262ms] [WARNING] Blocked message from untrusted origin: https://gum.criteo.com @ https://www.momoshop.com.tw/search/_next/static/chunks/app/layout-2f1be244709d40f0.js:0
+[   11902ms] [ERROR] [Server] getAPIConfigServer error: AxiosError @ https://www.momoshop.com.tw/search/_next/static/chunks/2472-f250bb633fc4aac1.js:0
+[   11911ms] [ERROR] [Server] getAPIConfigServer error: AxiosError @ https://www.momoshop.com.tw/search/_next/static/chunks/2472-f250bb633fc4aac1.js:0
+[   12455ms] [LOG] init momoWaTrack @ https://www.momoshop.com.tw/search/_next/static/chunks/6083-33b920aede587894.js:0
+[   12470ms] [LOG] web rc status:200 @ https://momowa.momoshop.com.tw/momowa/rc/js/momowa.js?t=20250321001:10
+[   12479ms] [LOG] web rc status:200 @ https://momowa.momoshop.com.tw/momowa/rc/js/momowa.js?t=20250321001:10
+[   12479ms] [LOG] init momoWaTrack @ https://www.momoshop.com.tw/search/_next/static/chunks/6083-33b920aede587894.js:0
+[   12492ms] [LOG] web rc status:200 @ https://momowa.momoshop.com.tw/momowa/rc/js/momowa.js?t=20250321001:10
+[   12495ms] [LOG] web rc status:200 @ https://momowa.momoshop.com.tw/momowa/rc/js/momowa.js?t=20250321001:10

@@ -1,0 +1,14 @@
+[    1607ms] [ERROR] Access to XMLHttpRequest at 'https://events.shoplytics.com/api/v2/event/web' from origin 'https://www.trohome.com' has been blocked by CORS policy: Response to preflight request doesn't pass access control check: No 'Access-Control-Allow-Origin' header is present on the requested resource. @ https://www.trohome.com/products:0
+[    1607ms] [ERROR] Failed to load resource: net::ERR_FAILED @ https://events.shoplytics.com/api/v2/event/web:0
+[    1607ms] [ERROR] Access to XMLHttpRequest at 'https://events.shoplytics.com/api/v2/event/web' from origin 'https://www.trohome.com' has been blocked by CORS policy: Response to preflight request doesn't pass access control check: No 'Access-Control-Allow-Origin' header is present on the requested resource. @ https://www.trohome.com/products:0
+[    1607ms] [ERROR] Failed to load resource: net::ERR_FAILED @ https://events.shoplytics.com/api/v2/event/web:0
+[    1881ms] [LOG] > longCodeInit @ https://browser.sentry-cdn.com/6.8.0/bundle.tracing.min.js:1
+[    1881ms] [LOG] > try @ https://browser.sentry-cdn.com/6.8.0/bundle.tracing.min.js:1
+[    1881ms] [LOG] config loading.. 10 @ https://browser.sentry-cdn.com/6.8.0/bundle.tracing.min.js:1
+[    1881ms] [LOG] validation... false @ https://browser.sentry-cdn.com/6.8.0/bundle.tracing.min.js:1
+[    1888ms] [LOG] > longCodeInit @ https://browser.sentry-cdn.com/6.8.0/bundle.tracing.min.js:1
+[    1888ms] [LOG] > try @ https://browser.sentry-cdn.com/6.8.0/bundle.tracing.min.js:1
+[    1888ms] [LOG] config loading.. 10 @ https://browser.sentry-cdn.com/6.8.0/bundle.tracing.min.js:1
+[    1890ms] [LOG] validation... false @ https://browser.sentry-cdn.com/6.8.0/bundle.tracing.min.js:1
+[    2384ms] [LOG] config loading.. 500 @ https://browser.sentry-cdn.com/6.8.0/bundle.tracing.min.js:1
+[    2405ms] [LOG] config loading.. 500 @ https://browser.sentry-cdn.com/6.8.0/bundle.tracing.min.js:1

@@ -1,0 +1,13 @@
+[   18609ms] [ERROR] Failed to load resource: net::ERR_TIMED_OUT @ https://assets.pchome.com.tw/production/nextjs/main/_next/static/chunks/76af1d31-2d54a6c5656e00d4.js:0
+[   18609ms] [ERROR] Failed to load resource: net::ERR_TIMED_OUT @ https://assets.pchome.com.tw/production/nextjs/main/_next/static/chunks/main-app-e39b8605201abc1d.js:0
+[   18609ms] [ERROR] Failed to load resource: net::ERR_TIMED_OUT @ https://assets.pchome.com.tw/production/nextjs/main/_next/static/chunks/app/store/%5BstoreId%5D/layout-a91ab085ef9b6563.js:0
+[   18609ms] [ERROR] Failed to load resource: net::ERR_TIMED_OUT @ https://assets.pchome.com.tw/production/nextjs/main/_next/static/chunks/111-dd2837c637c2ac05.js:0
+[   18610ms] [ERROR] Failed to load resource: net::ERR_TIMED_OUT @ https://assets.pchome.com.tw/production/nextjs/main/_next/static/chunks/app/layout-5cf1569d4eb67b85.js:0
+[   18610ms] [ERROR] Failed to load resource: net::ERR_TIMED_OUT @ https://assets.pchome.com.tw/production/nextjs/main/_next/static/chunks/app/error-99d314fd5fcea3de.js:0
+[   18610ms] [ERROR] Failed to load resource: net::ERR_TIMED_OUT @ https://assets.pchome.com.tw/production/nextjs/main/_next/static/chunks/3762-24f18f5a878bcb5e.js:0
+[   18610ms] [ERROR] Failed to load resource: net::ERR_TIMED_OUT @ https://assets.pchome.com.tw/production/nextjs/main/_next/static/chunks/5851-96966cd79927fac5.js:0
+[   18610ms] [ERROR] Failed to load resource: net::ERR_TIMED_OUT @ https://assets.pchome.com.tw/production/nextjs/main/_next/static/chunks/1160-d8ad0aa2eb496172.js:0
+[   18610ms] [ERROR] Failed to load resource: net::ERR_TIMED_OUT @ https://assets.pchome.com.tw/production/nextjs/main/_next/static/chunks/8820-5fed356d885c707a.js:0
+[   18610ms] [ERROR] Failed to load resource: net::ERR_TIMED_OUT @ https://assets.pchome.com.tw/production/nextjs/main/_next/static/chunks/app/store/%5BstoreId%5D/loading-8895bd9b461c4a1e.js:0
+[   18611ms] [ERROR] Failed to load resource: net::ERR_TIMED_OUT @ https://assets.pchome.com.tw/production/nextjs/main/_next/static/chunks/7963-3b1b96530e79b9f9.js:0
+[   21642ms] [WARNING] The resource https://www.googletagmanager.com/gtm.js?id=GTM-TKSM5PF was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ https://24h.pchome.com.tw/store/DQCB15?q=%E5%90%A7%E5%8F%B0%E6%A1%8C&sort=P&range=0,3000:0

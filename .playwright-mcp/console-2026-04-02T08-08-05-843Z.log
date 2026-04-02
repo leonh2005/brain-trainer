@@ -1,0 +1,12 @@
+[     773ms] [WARNING] The resource https://www.ikea.com/global/assets/fonts/woff2/noto-ikea-700.latin.a3f10ed8.woff2 was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ https://www.ikea.com/not-found/:0
+[    2384ms] [WARNING] Invalid version: null (waiting: 3.2) @ https://www.ikea.com.tw/webroot/js/vendor/@bitbox/taiwan/dist/commons/commons.umd.min.js:0
+[    2703ms] [LOG] Invalid Measurement ID for the GA4 Configuration tag: 16954751125 @ https://www.googletagmanager.com/gtm.js?id=GTM-WR9BJZR&gtm_auth=oZalyndja9nMbV_74amp0g&gtm_preview=env-2&gtm_cookies_win=x:996
+[    2965ms] Uncaught Error: Loading multiple times for pixel.js
+    at <anonymous> (https://img.scupio.com/js/pixel.js:0:3893)
+    at <anonymous> (https://img.scupio.com/js/pixel.js:0:51633)
+[    2967ms] [WARNING] AhrefsAnalytics script is already initialized, exiting... Did you install it twice? Please fix. @ https://analytics.ahrefs.com/analytics.js:0
+[    3103ms] [WARNING] [Meta Pixel] - Duplicate Pixel ID: 1255629962335117. @ https://connect.facebook.net/en_US/fbevents.js:177
+[    3379ms] [ERROR] Access to XMLHttpRequest at 'https://hit.api.useinsider.com/hit' from origin 'https://www.ikea.com.tw' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource. @ https://www.ikea.com.tw/zh/products/dining-tables/high-tables:0
+[    3379ms] [ERROR] Failed to load resource: net::ERR_FAILED @ https://hit.api.useinsider.com/hit:0
+[    3380ms] [ERROR] Access to XMLHttpRequest at 'https://hit.api.useinsider.com/hit' from origin 'https://www.ikea.com.tw' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource. @ https://www.ikea.com.tw/zh/products/dining-tables/high-tables:0
+[    3380ms] [ERROR] Failed to load resource: net::ERR_FAILED @ https://hit.api.useinsider.com/hit:0
