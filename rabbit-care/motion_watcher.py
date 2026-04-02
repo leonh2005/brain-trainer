@@ -84,7 +84,7 @@ def analyze_frames(frames: list):
             pil_images = frames_to_pil(frames)
             contents = pil_images + [PROMPT]
             response = client.models.generate_content(
-                model='gemini-2.0-flash',
+                model='gemini-1.5-flash-latest',
                 contents=contents
             )
             raw = response.text.strip()
