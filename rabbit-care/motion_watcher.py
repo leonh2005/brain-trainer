@@ -78,29 +78,37 @@ def analyze_frames(frames: list):
     送 4 張影格給 Gemini Vision 分析。
     回傳 (action, confidence) 或 None（若 other 或信心不足）。
     """
-    try:
-        client = _get_gemini_client()
-        pil_images = frames_to_pil(frames)
-        contents = pil_images + [PROMPT]
-        response = client.models.generate_content(
-            model='gemini-2.5-flash',
-            contents=contents
-        )
-        raw = response.text.strip()
-        if raw.startswith('```'):
-            raw = raw.split('```')[1]
-            if raw.startswith('json'):
-                raw = raw[4:]
-        data = json.loads(raw)
-        action = data.get('action', 'other')
-        confidence = float(data.get('confidence', 0))
+    for attempt in range(3):
+        try:
+            client = _get_gemini_client()
+            pil_images = frames_to_pil(frames)
+            contents = pil_images + [PROMPT]
+            response = client.models.generate_content(
+                model='gemini-2.0-flash',
+                contents=contents
+            )
+            raw = response.text.strip()
+            if raw.startswith('```'):
+                raw = raw.split('```')[1]
+                if raw.startswith('json'):
+                    raw = raw[4:]
+            data = json.loads(raw)
+            action = data.get('action', 'other')
+            confidence = float(data.get('confidence', 0))
 
-        if action == 'other' or confidence < MIN_CONFIDENCE:
-            return None
-        return (action, confidence)
-    except Exception as e:
-        logger.error(f'Gemini 分析失敗: {e}')
-        return None
+            if action == 'other' or confidence < MIN_CONFIDENCE:
+                return None
+            return (action, confidence)
+        except Exception as e:
+            err_str = str(e)
+            if '429' in err_str and attempt < 2:
+                wait = 60 * (attempt + 1)
+                logger.warning(f'Gemini 429，等待 {wait}s 後重試（第 {attempt+1} 次）')
+                time.sleep(wait)
+            else:
+                logger.error(f'Gemini 分析失敗: {e}')
+                return None
+    return None
 
 
 ACTION_EMOJI = {'eating': '🍽', 'drinking': '💧', 'stretching': '🐇', 'sleeping': '😴', 'resting': '🐰'}
