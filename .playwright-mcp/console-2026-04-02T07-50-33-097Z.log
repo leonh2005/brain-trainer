@@ -1,0 +1,139 @@
+[     687ms] [LOG] init momoWaTrack @ https://www.momoshop.com.tw/search/_next/static/chunks/6083-33b920aede587894.js:0
+[     711ms] [LOG] web rc status:200 @ https://momowa.momoshop.com.tw/momowa/rc/js/momowa.js?t=20250321001:10
+[     711ms] [LOG] web rc status:200 @ https://momowa.momoshop.com.tw/momowa/rc/js/momowa.js?t=20250321001:10
+[     714ms] [WARNING] [sentry-loader][member-info] member info unavailable; proceeding without whitelist override @ https://sentry-script.s3.ap-east-2.amazonaws.com/loader/sentry-loader@1.x-latest.js:0
+[     774ms] [LOG] web rc status:200 @ https://momowa.momoshop.com.tw/momowa/rc/js/momowa.js?t=20250321001:10
+[     785ms] [LOG] momo-app-bridge has been loaded @ https://www.momoshop.com.tw/search/_next/static/chunks/6896-da8edd40ef7a57b9.js:0
+[     829ms] [WARNING] [Meta Pixel] - Unable to parse JSON-LD tag. Malformed JSON found: '
+        {
+          "@context": "https://schema.org",
+          "@type": "WebPage",
+          "name":"momo購物網",
+          "url": "https://www.momoshop.com.tw"
+          ,"breadcrumb": {
+            "@type": "BreadcrumbList",
+            "itemListElement":
+            [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "item":
+                {
+                "@id": "https://www.momoshop.com.tw",
+                "name": "momo購物網"
+                }
+              },
+              {
+                "@type": "ListItem",
+              "position": 2,
+              "item":
+                {
+                  "@id": "https://www.momoshop.com.tw/search/高腳桌 150",
+                  "name": "高腳桌 150"
+                }
+              }
+              ,
+            ]
+          }
+          ,
+            "mainEntity": {
+              "@type": "ItemList",
+              "name": "高腳桌 150",
+              "numberOfItems": "4",
+              "itemListElement": [
+        {
+          "@type": "Product",
+          "name": "【p檸檬樹家居】150*40*75cm(吧台桌 長條桌 高腳桌 單層長桌 家用吧檯桌 預售12天)",
+          "position":"1",
+          "image": "https://img4.momoshop.com.tw/goodsimg/0014/227/578/14227578_OL.jpg?t=1752716666",
+          "description": "單層長條吧台桌",
+          "url": "https://www.momoshop.com.tw/goods/GoodsDetail.jsp?i_code=14227578&Area=search&mdiv=403&oid=1_1&cid=index&kw=%E9%AB%98%E8%85%B3%E6%A1%8C+150",
+          "offers": {
+            "@type": "Offer",
+            "price": "6923",
+            "priceCurrency": "TWD",
+            "availability": "https://schema.org/InStock"
+          }
+          
+          ,
+          "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": 4.7,
+            
+                "reviewCount": 10
+          }
+        },
+        {
+          "@type": "Product",
+          "name": "【p瑞凱諾】150*35*100cm(吧台桌 高腳桌 長條桌 工作桌 書桌 餐桌 咖啡桌 預售12天)",
+          "position":"2",
+          "image": "https://img4.momoshop.com.tw/goodsimg/0014/388/482/14388482_OL.jpg?t=1756372047",
+          "description": "加寬桌面，可隨心放置",
+          "url": "https://www.momoshop.com.tw/goods/GoodsDetail.jsp?i_code=14388482&Area=search&mdiv=403&oid=1_2&cid=index&kw=%E9%AB%98%E8%85%B3%E6%A1%8C+150",
+          "offers": {
+            "@type": "Offer",
+            "price": "7875",
+            "priceCurrency": "TWD",
+            "availability": "https://schema.org/InStock"
+          }
+          
+          ,
+          "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": 4.7,
+            
+                "reviewCount": 10
+          }
+        },
+        {
+          "@type": "Product",
+          "name": "【p檸檬樹家居】150*35*75cm(吧台桌 長條桌 高腳桌 單層長桌 家用吧檯桌 預售12天)",
+          "position":"3",
+          "image": "https://img4.momoshop.com.tw/goodsimg/0014/227/576/14227576_OL.jpg?t=1752716653",
+          "description": "單層長條吧台桌",
+          "url": "https://www.momoshop.com.tw/goods/GoodsDetail.jsp?i_code=14227576&Area=search&mdiv=403&oid=1_3&cid=index&kw=%E9%AB%98%E8%85%B3%E6%A1%8C+150",
+          "offers": {
+            "@type": "Offer",
+            "price": "6792",
+            "priceCurrency": "TWD",
+            "availability": "https://schema.org/InStock"
+          }
+          
+          ,
+          "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": 4.7,
+            
+                "reviewCount": 10
+          }
+        },
+        {
+          "@type": "Product",
+          "name": "【H瑞凱諾】150*40*100cm 加厚板材 圓潤邊角(吧臺桌 高腳桌 酒吧桌 長條桌 靠牆窄桌 隔斷酒櫃桌 預購15天)",
+          "position":"4",
+          "image": "https://img4.momoshop.com.tw/goodsimg/0014/124/853/14124853_OL.jpg?t=1750129716",
+          "description": "寬大置物桌面，加寬桌面可隨心放",
+          "url": "https://www.momoshop.com.tw/goods/GoodsDetail.jsp?i_code=14124853&Area=search&mdiv=403&oid=1_4&cid=index&kw=%E9%AB%98%E8%85%B3%E6%A1%8C+150",
+          "offers": {
+            "@type": "Offer",
+            "price": "7250",
+            "priceCurrency": "TWD",
+            "availability": "https://schema.org/InStock"
+          }
+          
+          ,
+          "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": 4.7,
+            
+                "reviewCount": 10
+          }
+        }
+              ]
+            }
+        }'. @ https://connect.facebook.net/en_US/fbevents.js:177
+[    1033ms] [WARNING] Blocked message from untrusted origin: https://gum.criteo.com @ https://www.momoshop.com.tw/search/_next/static/chunks/app/layout-2f1be244709d40f0.js:0
+[   11704ms] [ERROR] [Server] getAPIConfigServer error: AxiosError @ https://www.momoshop.com.tw/search/_next/static/chunks/2472-f250bb633fc4aac1.js:0
+[   12134ms] [LOG] init momoWaTrack @ https://www.momoshop.com.tw/search/_next/static/chunks/6083-33b920aede587894.js:0
+[   12155ms] [LOG] web rc status:200 @ https://momowa.momoshop.com.tw/momowa/rc/js/momowa.js?t=20250321001:10
+[   12156ms] [LOG] web rc status:200 @ https://momowa.momoshop.com.tw/momowa/rc/js/momowa.js?t=20250321001:10

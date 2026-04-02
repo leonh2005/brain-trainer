@@ -1,0 +1,340 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - text:         
+    - navigation [ref=e3]:
+      - generic [ref=e5]:
+        - link [ref=e6] [cursor=pointer]:
+          - /url: /
+          - img [ref=e7]
+        - list [ref=e8]:
+          - listitem [ref=e9]:
+            - img [ref=e11] [cursor=pointer]
+          - listitem [ref=e13]:
+            - link [ref=e14] [cursor=pointer]:
+              - /url: /users/sign_in
+              - img [ref=e15]
+          - listitem [ref=e17]:
+            - img [ref=e19] [cursor=pointer]
+          - listitem [ref=e21]
+  - text:                                                                                    
+  - generic [ref=e27]:
+    - text:                        
+    - generic [ref=e28]:
+      - generic [ref=e29]:
+        - heading "全部商品" [level=1] [ref=e30]
+        - generic [ref=e31]:
+          - generic [ref=e32]:
+            - generic [ref=e33] [cursor=pointer]: 商品排序
+            - text: 
+          - generic [ref=e34]:
+            - generic [ref=e35] [cursor=pointer]: 每頁顯示 24 個
+            - text: 
+        - text:  
+      - generic [ref=e36]:
+        - generic [ref=e37]:
+          - link "Elmo 木紋岩板托盤餐櫃 Elmo 木紋岩板托盤餐櫃 NT$2,480 ~ NT$7,980 NT$9,980 " [ref=e40] [cursor=pointer]:
+            - /url: https://www.trohome.com/products/elmo-木紋岩板托盤餐櫃
+            - img "Elmo 木紋岩板托盤餐櫃" [ref=e44]
+            - generic [ref=e46]:
+              - generic [ref=e47]: Elmo 木紋岩板托盤餐櫃
+              - generic [ref=e48]:
+                - generic [ref=e49]: NT$2,480 ~ NT$7,980
+                - generic [ref=e51]: NT$9,980
+              - generic [ref=e53]: 
+          - link "Elmo 木紋木面中島櫃 Elmo 木紋木面中島櫃 NT$12,580 NT$14,580 " [ref=e56] [cursor=pointer]:
+            - /url: https://www.trohome.com/products/tf12805
+            - img "Elmo 木紋木面中島櫃" [ref=e60]
+            - generic [ref=e62]:
+              - generic [ref=e63]: Elmo 木紋木面中島櫃
+              - generic [ref=e64]:
+                - generic [ref=e65]: NT$12,580
+                - generic [ref=e67]: NT$14,580
+              - generic [ref=e69]: 
+          - link "Elmo 木紋岩板中島櫃 Elmo 木紋岩板中島櫃 NT$17,180 NT$19,180 " [ref=e72] [cursor=pointer]:
+            - /url: https://www.trohome.com/products/tf12804
+            - img "Elmo 木紋岩板中島櫃" [ref=e76]
+            - generic [ref=e78]:
+              - generic [ref=e79]: Elmo 木紋岩板中島櫃
+              - generic [ref=e80]:
+                - generic [ref=e81]: NT$17,180
+                - generic [ref=e83]: NT$19,180
+              - generic [ref=e85]: 
+          - link "Elmo 木紋岩板收納電器餐櫃 Elmo 木紋岩板收納電器餐櫃 NT$10,180 ~ NT$15... NT$17,380 " [ref=e88] [cursor=pointer]:
+            - /url: https://www.trohome.com/products/elmo-木紋岩板收納電器餐櫃
+            - img "Elmo 木紋岩板收納電器餐櫃" [ref=e92]
+            - generic [ref=e94]:
+              - generic [ref=e95]: Elmo 木紋岩板收納電器餐櫃
+              - generic [ref=e96]:
+                - generic [ref=e97]: NT$10,180 ~ NT$15...
+                - generic [ref=e99]: NT$17,380
+              - generic [ref=e101]: 
+          - link "Elmo 美耐皿木紋中島櫃 Elmo 美耐皿木紋中島櫃 NT$20,880 NT$22,880 " [ref=e104] [cursor=pointer]:
+            - /url: https://www.trohome.com/products/tf12800
+            - img "Elmo 美耐皿木紋中島櫃" [ref=e108]
+            - generic [ref=e110]:
+              - generic [ref=e111]: Elmo 美耐皿木紋中島櫃
+              - generic [ref=e112]:
+                - generic [ref=e113]: NT$20,880
+                - generic [ref=e115]: NT$22,880
+              - generic [ref=e117]: 
+          - link "Elmo 木紋三抽收納餐櫃 Elmo 木紋三抽收納餐櫃 NT$10,480 NT$12,480 " [ref=e120] [cursor=pointer]:
+            - /url: https://www.trohome.com/products/ca12799
+            - img "Elmo 木紋三抽收納餐櫃" [ref=e124]
+            - generic [ref=e126]:
+              - generic [ref=e127]: Elmo 木紋三抽收納餐櫃
+              - generic [ref=e128]:
+                - generic [ref=e129]: NT$10,480
+                - generic [ref=e131]: NT$12,480
+              - generic [ref=e133]: 
+          - link "Elmo 木紋組合功能收納餐櫃 Elmo 木紋組合功能收納餐櫃 NT$12,380 ~ NT$14... NT$16,680 " [ref=e136] [cursor=pointer]:
+            - /url: https://www.trohome.com/products/elmo-木紋組合功能收納餐櫃
+            - img "Elmo 木紋組合功能收納餐櫃" [ref=e140]
+            - generic [ref=e142]:
+              - generic [ref=e143]: Elmo 木紋組合功能收納餐櫃
+              - generic [ref=e144]:
+                - generic [ref=e145]: NT$12,380 ~ NT$14...
+                - generic [ref=e147]: NT$16,680
+              - generic [ref=e149]: 
+          - link "Elmo 美耐皿石紋功能桌櫃 Elmo 美耐皿石紋功能桌櫃 NT$16,380 NT$18,380 " [ref=e152] [cursor=pointer]:
+            - /url: https://www.trohome.com/products/tf12795
+            - img "Elmo 美耐皿石紋功能桌櫃" [ref=e156]
+            - generic [ref=e158]:
+              - generic [ref=e159]: Elmo 美耐皿石紋功能桌櫃
+              - generic [ref=e160]:
+                - generic [ref=e161]: NT$16,380
+                - generic [ref=e163]: NT$18,380
+              - generic [ref=e165]: 
+          - link "Elmo 石紋收納功能茶几 Elmo 石紋收納功能茶几 NT$10,480 NT$12,480 " [ref=e168] [cursor=pointer]:
+            - /url: https://www.trohome.com/products/tg12122
+            - img "Elmo 石紋收納功能茶几" [ref=e172]
+            - generic [ref=e174]:
+              - generic [ref=e175]: Elmo 石紋收納功能茶几
+              - generic [ref=e176]:
+                - generic [ref=e177]: NT$10,480
+                - generic [ref=e179]: NT$12,480
+              - generic [ref=e181]: 
+          - link "Elmo 美耐皿石紋移動式餐桌櫃 Elmo 美耐皿石紋移動式餐桌櫃 NT$23,780 NT$25,780 " [ref=e184] [cursor=pointer]:
+            - /url: https://www.trohome.com/products/ca12794
+            - img "Elmo 美耐皿石紋移動式餐桌櫃" [ref=e188]
+            - generic [ref=e190]:
+              - generic [ref=e191]: Elmo 美耐皿石紋移動式餐桌櫃
+              - generic [ref=e192]:
+                - generic [ref=e193]: NT$23,780
+                - generic [ref=e195]: NT$25,780
+              - generic [ref=e197]: 
+          - link "Elmo 美耐皿石紋中島櫃 Elmo 美耐皿石紋中島櫃 NT$20,780 NT$22,780 " [ref=e200] [cursor=pointer]:
+            - /url: https://www.trohome.com/products/tf12793
+            - img "Elmo 美耐皿石紋中島櫃" [ref=e204]
+            - generic [ref=e206]:
+              - generic [ref=e207]: Elmo 美耐皿石紋中島櫃
+              - generic [ref=e208]:
+                - generic [ref=e209]: NT$20,780
+                - generic [ref=e211]: NT$22,780
+              - generic [ref=e213]: 
+          - link "Elmo 木紋組合收納餐櫃 Elmo 木紋組合收納餐櫃 NT$12,280 ~ NT$14... NT$16,680 " [ref=e216] [cursor=pointer]:
+            - /url: https://www.trohome.com/products/ca12789
+            - img "Elmo 木紋組合收納餐櫃" [ref=e220]
+            - generic [ref=e222]:
+              - generic [ref=e223]: Elmo 木紋組合收納餐櫃
+              - generic [ref=e224]:
+                - generic [ref=e225]: NT$12,280 ~ NT$14...
+                - generic [ref=e227]: NT$16,680
+              - generic [ref=e229]: 
+          - link "Elmo 木紋三抽收納餐櫃 Elmo 木紋三抽收納餐櫃 NT$10,180 ~ NT$17... NT$20,580 " [ref=e232] [cursor=pointer]:
+            - /url: https://www.trohome.com/products/ca8474
+            - img "Elmo 木紋三抽收納餐櫃" [ref=e236]
+            - generic [ref=e238]:
+              - generic [ref=e239]: Elmo 木紋三抽收納餐櫃
+              - generic [ref=e240]:
+                - generic [ref=e241]: NT$10,180 ~ NT$17...
+                - generic [ref=e243]: NT$20,580
+              - generic [ref=e245]: 
+          - link "Elmo 木紋四抽收納餐櫃 Elmo 木紋四抽收納餐櫃 NT$11,980 ~ NT$20... NT$23,780 " [ref=e248] [cursor=pointer]:
+            - /url: https://www.trohome.com/products/ca12788
+            - img "Elmo 木紋四抽收納餐櫃" [ref=e252]
+            - generic [ref=e254]:
+              - generic [ref=e255]: Elmo 木紋四抽收納餐櫃
+              - generic [ref=e256]:
+                - generic [ref=e257]: NT$11,980 ~ NT$20...
+                - generic [ref=e259]: NT$23,780
+              - generic [ref=e261]: 
+          - link "Elmo 岩板三抽收納餐櫃 Elmo 岩板三抽收納餐櫃 NT$12,280 ~ NT$19... NT$22,580 " [ref=e264] [cursor=pointer]:
+            - /url: https://www.trohome.com/products/ca12786
+            - img "Elmo 岩板三抽收納餐櫃" [ref=e268]
+            - generic [ref=e270]:
+              - generic [ref=e271]: Elmo 岩板三抽收納餐櫃
+              - generic [ref=e272]:
+                - generic [ref=e273]: NT$12,280 ~ NT$19...
+                - generic [ref=e275]: NT$22,580
+              - generic [ref=e277]: 
+          - link "Elmo 岩板5尺收納餐櫃 Elmo 岩板5尺收納餐櫃 NT$14,480 NT$16,480 " [ref=e280] [cursor=pointer]:
+            - /url: https://www.trohome.com/products/ca12785
+            - img "Elmo 岩板5尺收納餐櫃" [ref=e284]
+            - generic [ref=e286]:
+              - generic [ref=e287]: Elmo 岩板5尺收納餐櫃
+              - generic [ref=e288]:
+                - generic [ref=e289]: NT$14,480
+                - generic [ref=e291]: NT$16,480
+              - generic [ref=e293]: 
+          - link "Elmo 木紋組合收納餐櫃 Elmo 木紋組合收納餐櫃 NT$10,680 ~ NT$10... NT$12,980 " [ref=e296] [cursor=pointer]:
+            - /url: https://www.trohome.com/products/ca12783
+            - img "Elmo 木紋組合收納餐櫃" [ref=e300]
+            - generic [ref=e302]:
+              - generic [ref=e303]: Elmo 木紋組合收納餐櫃
+              - generic [ref=e304]:
+                - generic [ref=e305]: NT$10,680 ~ NT$10...
+                - generic [ref=e307]: NT$12,980
+              - generic [ref=e309]: 
+          - link "Elmo 木紋多功能三抽餐櫃 Elmo 木紋多功能三抽餐櫃 NT$19,980 NT$22,980 " [ref=e312] [cursor=pointer]:
+            - /url: https://www.trohome.com/products/ca12781
+            - img "Elmo 木紋多功能三抽餐櫃" [ref=e316]
+            - generic [ref=e318]:
+              - generic [ref=e319]: Elmo 木紋多功能三抽餐櫃
+              - generic [ref=e320]:
+                - generic [ref=e321]: NT$19,980
+                - generic [ref=e323]: NT$22,980
+              - generic [ref=e325]: 
+          - link "Elmo 木紋多功能收納餐櫃 Elmo 木紋多功能收納餐櫃 NT$25,380 NT$28,380 " [ref=e328] [cursor=pointer]:
+            - /url: https://www.trohome.com/products/ca12779
+            - img "Elmo 木紋多功能收納餐櫃" [ref=e332]
+            - generic [ref=e334]:
+              - generic [ref=e335]: Elmo 木紋多功能收納餐櫃
+              - generic [ref=e336]:
+                - generic [ref=e337]: NT$25,380
+                - generic [ref=e339]: NT$28,380
+              - generic [ref=e341]: 
+          - link "Elmo 木紋可拉式電器櫃 Elmo 木紋可拉式電器櫃 NT$9,680 NT$11,680 " [ref=e344] [cursor=pointer]:
+            - /url: https://www.trohome.com/products/ca12778
+            - img "Elmo 木紋可拉式電器櫃" [ref=e348]
+            - generic [ref=e350]:
+              - generic [ref=e351]: Elmo 木紋可拉式電器櫃
+              - generic [ref=e352]:
+                - generic [ref=e353]: NT$9,680
+                - generic [ref=e355]: NT$11,680
+              - generic [ref=e357]: 
+          - link "展示品六折出清!! 原價1780元 千鳥紋皮面質感圓凳 展示品六折出清!! 原價1780元 千鳥紋皮面質感圓凳 NT$980 NT$1,780 " [ref=e360] [cursor=pointer]:
+            - /url: https://www.trohome.com/products/trob-20221216-001
+            - img "展示品六折出清!! 原價1780元 千鳥紋皮面質感圓凳" [ref=e364]
+            - generic [ref=e366]:
+              - generic [ref=e367]: 展示品六折出清!! 原價1780元 千鳥紋皮面質感圓凳
+              - generic [ref=e368]:
+                - generic [ref=e369]: NT$980
+                - generic [ref=e371]: NT$1,780
+              - generic [ref=e373]: 
+          - link "展示品六折出清!! 原價19800元 陶瓷板茶几 展示品六折出清!! 原價19800元 陶瓷板茶几 NT$11,880 NT$19,800 " [ref=e376] [cursor=pointer]:
+            - /url: https://www.trohome.com/products/trob-20241106-002
+            - img "展示品六折出清!! 原價19800元 陶瓷板茶几" [ref=e380]
+            - generic [ref=e382]:
+              - generic [ref=e383]: 展示品六折出清!! 原價19800元 陶瓷板茶几
+              - generic [ref=e384]:
+                - generic [ref=e385]: NT$11,880
+                - generic [ref=e387]: NT$19,800
+              - generic [ref=e389]: 
+          - link "展示品七折出清!! 原價43800元 Belgium全台獨家 ❙ 流動微光 黃金砂木腳餐桌 展示品七折出清!! 原價43800元 Belgium全台獨家 ❙ 流動微光 黃金砂木腳餐桌 NT$30,660 NT$43,800 " [ref=e392] [cursor=pointer]:
+            - /url: https://www.trohome.com/products/trob-20250513-012
+            - img "展示品七折出清!! 原價43800元 Belgium全台獨家 ❙ 流動微光 黃金砂木腳餐桌" [ref=e396]
+            - generic [ref=e398]:
+              - generic [ref=e399]: 展示品七折出清!! 原價43800元 Belgium全台獨家 ❙ 流動微光 黃金砂木腳餐桌
+              - generic [ref=e400]:
+                - generic [ref=e401]: NT$30,660
+                - generic [ref=e403]: NT$43,800
+              - generic [ref=e405]: 
+          - link "展示品七折出清!! 原價16800元 實木圓形儲物胖胖几 展示品七折出清!! 原價16800元 實木圓形儲物胖胖几 NT$11,760 NT$16,800 " [ref=e408] [cursor=pointer]:
+            - /url: https://www.trohome.com/products/trob-20240916-001
+            - img "展示品七折出清!! 原價16800元 實木圓形儲物胖胖几" [ref=e412]
+            - generic [ref=e414]:
+              - generic [ref=e415]: 展示品七折出清!! 原價16800元 實木圓形儲物胖胖几
+              - generic [ref=e416]:
+                - generic [ref=e417]: NT$11,760
+                - generic [ref=e419]: NT$16,800
+              - generic [ref=e421]: 
+        - list [ref=e423]:
+          - listitem:
+            - link "1" [ref=e424]:
+              - /url: /products?page=1&sort_by=&order_by=&limit=24
+          - listitem:
+            - link "2" [ref=e425] [cursor=pointer]:
+              - /url: /products?page=2&sort_by=&order_by=&limit=24
+          - listitem:
+            - link "3" [ref=e426] [cursor=pointer]:
+              - /url: /products?page=3&sort_by=&order_by=&limit=24
+          - listitem:
+            - link "4" [ref=e427] [cursor=pointer]:
+              - /url: /products?page=4&sort_by=&order_by=&limit=24
+          - listitem:
+            - link "5" [ref=e428] [cursor=pointer]:
+              - /url: /products?page=5&sort_by=&order_by=&limit=24
+          - listitem:
+            - link [ref=e429] [cursor=pointer]:
+              - /url: https://www.trohome.com/products?page=2&sort_by=&order_by=&limit=24
+              - generic [ref=e430]: 
+  - generic [ref=e431]:
+    - generic [ref=e434]:
+      - generic [ref=e435]:
+        - generic [ref=e436]:
+          - paragraph [ref=e437]: 關於我們 | 顧客服務
+          - paragraph [ref=e438]:
+            - link "品牌故事" [ref=e439] [cursor=pointer]:
+              - /url: https://www.trohome.com/pages/about-trohome-%E9%97%9C%E6%96%BC%E6%8B%93%E5%AE%B6-1
+            - link "拓家的堅持與信念" [ref=e440] [cursor=pointer]:
+              - /url: https://www.trohome.com/pages/%E6%96%B0%E7%9A%84%E5%88%86%E9%A0%81-1-1-2-2
+            - link "我們可以訂製甚麼?" [ref=e441] [cursor=pointer]:
+              - /url: https://www.trohome.com/pages/%E6%96%B0%E7%9A%84%E5%88%86%E9%A0%81-1-1-1-1
+          - paragraph [ref=e442]:
+            - link "商業合作" [ref=e443] [cursor=pointer]:
+              - /url: https://www.trohome.com/forms/business-collaboration
+          - paragraph [ref=e444]:
+            - link "購物說明" [ref=e445] [cursor=pointer]:
+              - /url: https://www.trohome.com/pages/%E6%96%B0%E7%9A%84%E5%88%86%E9%A0%81-1-1
+          - paragraph [ref=e446]:
+            - link "無卡分期" [ref=e447] [cursor=pointer]:
+              - /url: https://www.trohome.com/pages/%E7%84%A1%E5%8D%A1%E5%88%86%E6%9C%9F
+          - paragraph [ref=e448]:
+            - link "隱私權政策" [ref=e449] [cursor=pointer]:
+              - /url: https://www.trohome.com/pages/%E9%9A%B1%E7%A7%81%E6%AC%8A%E6%94%BF%E7%AD%96
+        - generic [ref=e450]:
+          - paragraph [ref=e451]: 拓家展間
+          - paragraph [ref=e452]:
+            - strong [ref=e453]:
+              - link "▸點此預約各門市參觀" [ref=e454] [cursor=pointer]:
+                - /url: https://docs.google.com/forms/d/e/1FAIpQLSdSHi1r6YlyNRaoFXrxB1Q9K-3wTzV3nHoQ-PFFKGyJ8exufw/viewform
+          - paragraph [ref=e455]:
+            - link "台北民生店 | 台北市中山區松江路206號惠群大廈1" [ref=e456] [cursor=pointer]:
+              - /url: https://maps.app.goo.gl/zcu9Nqov6kGR9pKB9
+              - strong [ref=e457]: 台北民生店
+              - text: "| 台北市中山區松江路206號惠群大廈1"
+            - text: 3F-4
+          - paragraph [ref=e458]: "TEL : 02-2100-1020"
+          - paragraph [ref=e459]:
+            - link "新北新莊店 | 新北市新莊區思源路488號" [ref=e460] [cursor=pointer]:
+              - /url: https://maps.app.goo.gl/3ZC85CyNTN4WPTnn7
+              - strong [ref=e461]: 新北新莊店
+              - text: "| 新北市新莊區思源路488號"
+          - paragraph [ref=e462]: "TEL : 02-8522-9580"
+          - paragraph [ref=e463]:
+            - link "台中南屯店 | 台中市南屯區龍德路一段28號3樓" [ref=e464] [cursor=pointer]:
+              - /url: https://maps.app.goo.gl/j8As4AHdcmfbQ26W8
+              - strong [ref=e465]: 台中南屯店
+              - text: "| 台中市南屯區龍德路一段28號3樓"
+          - paragraph [ref=e466]: "TEL : 04-2380-1920"
+        - generic [ref=e467]:
+          - paragraph [ref=e468]: 聯絡我們
+          - generic [ref=e469]:
+            - link [ref=e470] [cursor=pointer]:
+              - /url: https://www.facebook.com/HomePlusNO1
+              - img [ref=e471]
+            - link [ref=e473] [cursor=pointer]:
+              - /url: https://www.instagram.com/trohome/
+              - img [ref=e474]
+            - link [ref=e477] [cursor=pointer]:
+              - /url: https://line.me/ti/p/~@trohome
+              - img [ref=e478]
+      - generic [ref=e481]:
+        - generic [ref=e483] [cursor=pointer]:
+          - generic [ref=e484]: $ TWD
+          - generic [ref=e485]: 
+        - generic [ref=e487] [cursor=pointer]:
+          - img [ref=e488]
+          - text: 繁體中文
+          - generic [ref=e490]: 
+    - paragraph [ref=e493]: Copyright © 2024 拓家設計家具 | All Rights Reserved

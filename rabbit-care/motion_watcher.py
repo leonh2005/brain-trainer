@@ -242,7 +242,10 @@ def run():
                         result = analyze_frames(selected)
                         if result:
                             action, confidence = result
-                            post_action(action, confidence, screenshot_frames[:4])
+                            if action != 'resting':
+                                post_action(action, confidence, screenshot_frames[:4])
+                            else:
+                                logger.info(f'識別為休息，略過記錄 (信心: {confidence:.2f})')
                             last_action_time = now
                     motion_frames = []
                     screenshot_frames = []

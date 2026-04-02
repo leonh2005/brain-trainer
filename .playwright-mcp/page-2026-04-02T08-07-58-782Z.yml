@@ -1,0 +1,62 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e3]:
+    - link "Skip to main content" [ref=e5] [cursor=pointer]:
+      - /url: "#main"
+    - generic [ref=e6]:
+      - link "IKEA, home." [ref=e8] [cursor=pointer]:
+        - /url: https://www.ikea.com
+        - img "IKEA logotype" [ref=e9]
+      - button "Open main menu" [ref=e14] [cursor=pointer]:
+        - generic [ref=e20]: Open main menu
+  - main [ref=e23]:
+    - generic [ref=e25]:
+      - generic [ref=e28]:
+        - heading "Oops, you've gone off track." [level=1] [ref=e29]
+        - heading "404 - Page not found" [level=2] [ref=e30]
+        - paragraph [ref=e31]: This page isn't on the route, but every great journey has its share of surprises. Try heading back a step.
+      - img "A toy train displayed on a wooden train track arranged in a figure-of-eight shape." [ref=e34]
+  - contentinfo [ref=e36]:
+    - generic [ref=e37]:
+      - img [ref=e42]
+      - generic [ref=e48]:
+        - navigation "Main links" [ref=e51]:
+          - list [ref=e52]:
+            - listitem [ref=e53]:
+              - link "International Sales" [ref=e54] [cursor=pointer]:
+                - /url: https://www.ikea.com/global/en/international-sales/
+            - listitem [ref=e55]:
+              - link "Inter IKEA Group" [ref=e56] [cursor=pointer]:
+                - /url: https://www.inter.ikea.com/
+            - listitem [ref=e57]:
+              - link "IKEA Foundation" [ref=e58] [cursor=pointer]:
+                - /url: https://ikeafoundation.org/
+            - listitem [ref=e59]:
+              - link "IKEA Museum" [ref=e60] [cursor=pointer]:
+                - /url: https://ikeamuseum.com/en/
+            - listitem [ref=e61]:
+              - link "IKEA Social Entrepreneurship" [ref=e62] [cursor=pointer]:
+                - /url: https://www.ikeasocialentrepreneurship.org/
+            - listitem [ref=e63]:
+              - link "FAQs" [ref=e64] [cursor=pointer]:
+                - /url: https://www.ikea.com/global/en/more-information/
+        - navigation "Secondary links" [ref=e67]:
+          - list [ref=e68]:
+            - listitem [ref=e69]:
+              - button "Cookie settings" [ref=e71] [cursor=pointer]
+            - listitem [ref=e72]: •
+            - listitem [ref=e73]:
+              - link "Privacy & Cookie statement" [ref=e74] [cursor=pointer]:
+                - /url: https://www.ikea.com/global/en/privacy/privacy-cookie-statement/
+            - listitem [ref=e75]: •
+            - listitem [ref=e76]:
+              - link "Contact IKEA / Submit complaint" [ref=e77] [cursor=pointer]:
+                - /url: https://www.ikea.com/global/en/contact-ikea-submit-complaint/
+            - listitem [ref=e78]: •
+            - listitem [ref=e79]:
+              - link "Sitemap" [ref=e80] [cursor=pointer]:
+                - /url: https://www.ikea.com/global/en/sitemap/
+            - listitem [ref=e81]: •
+            - listitem [ref=e82]:
+              - link "Accessibility" [ref=e83] [cursor=pointer]:
+                - /url: https://www.ikea.com/global/en/accessibility/
+        - generic [ref=e85]: © Inter IKEA Systems B.V. 1999 - 2026

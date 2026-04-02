@@ -1,0 +1,33 @@
+- generic [ref=e1]:
+  - generic [ref=e3]:
+    - generic [active]:
+      - button "跳到主要內容":
+        - generic: 跳到主要內容
+    - generic [ref=e8]:
+      - navigation [ref=e9]:
+        - generic [ref=e10]:
+          - link [ref=e12] [cursor=pointer]:
+            - /url: /
+            - img [ref=e13]
+          - link "需要幫助？" [ref=e18] [cursor=pointer]:
+            - /url: https://help.shopee.tw/tw/s
+      - generic [ref=e20]:
+        - generic [ref=e21]:
+          - img [ref=e22]
+          - generic [ref=e34]: 頁面無法顯示
+          - generic [ref=e35]: 發生錯誤！請登入並再試一次或回到主頁。
+          - generic [ref=e36]:
+            - button "登入" [ref=e37] [cursor=pointer]
+            - button "返回首頁" [ref=e38] [cursor=pointer]
+        - generic [ref=e39]: "ID: 311ad710cc2-bf73-4c42-9f71-347ca4330385"
+  - dialog [ref=e41]:
+    - generic [ref=e42]:
+      - img "Worldmap" [ref=e44]
+      - generic [ref=e45]: 選擇語言
+      - generic [ref=e46]:
+        - button "繁體中文" [ref=e48] [cursor=pointer]
+        - button "简体中文" [ref=e50] [cursor=pointer]
+        - button "English*" [ref=e52] [cursor=pointer]
+      - generic [ref=e53]: "* 自動翻譯結果由第三方提供，未涵蓋圖片及系統文字，並可能存在誤差，若有差異請以原文為準。"
+  - generic:
+    - img

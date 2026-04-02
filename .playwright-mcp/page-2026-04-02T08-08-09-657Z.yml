@@ -1,0 +1,629 @@
+- generic [active] [ref=e1]:
+  - status:
+    - generic:
+      - generic:
+        - button:
+          - generic:
+            - generic: 查看
+    - generic:
+      - button:
+        - generic:
+          - img
+  - status:
+    - generic:
+      - generic:
+        - paragraph: 已加到購物車
+      - generic:
+        - button:
+          - generic:
+            - generic: 查看
+    - generic:
+      - button:
+        - generic:
+          - img
+  - status:
+    - generic:
+      - generic:
+        - paragraph: 已從購物車移除
+    - generic:
+      - button:
+        - generic:
+          - img
+  - status:
+    - generic:
+      - generic:
+        - paragraph: 你所需要的數量超出庫存上限
+    - generic:
+      - button:
+        - generic:
+          - img
+  - status:
+    - generic:
+      - generic:
+        - paragraph: 抱歉，將商品添加到購物車時出現一些問題 但我們正在努力修復它！ 請稍後再試。
+    - generic:
+      - button:
+        - generic:
+          - img
+  - generic [ref=e3]:
+    - generic [ref=e4]:
+      - button "Close" [ref=e5] [cursor=pointer]:
+        - generic [ref=e7]: 
+      - text: 篩選
+    - generic [ref=e11]:
+      - generic [ref=e15]:
+        - generic [ref=e16] [cursor=pointer]:
+          - checkbox "可供線上購買" [ref=e17]
+          - insertion [ref=e18]
+        - generic [ref=e19] [cursor=pointer]: 可供線上購買
+      - navigation [ref=e22]:
+        - generic [ref=e24]:
+          - button "排列方式 " [ref=e26] [cursor=pointer]:
+            - generic [ref=e28]: 排列方式
+            - text: 
+          - button "售價範圍 " [ref=e30] [cursor=pointer]
+          - button "系列 " [ref=e32] [cursor=pointer]
+          - button "顏色 " [ref=e34] [cursor=pointer]
+          - button "尺寸 " [ref=e36] [cursor=pointer]
+    - generic [ref=e37]:
+      - button "清除" [disabled] [ref=e38]
+      - button "查看 (14)" [ref=e39] [cursor=pointer]:
+        - text: 查看
+        - generic [ref=e40]: (14)
+  - generic [ref=e41]:
+    - complementary [ref=e42]:
+      - generic [ref=e43]:
+        - link "IKEA" [ref=e45] [cursor=pointer]:
+          - /url: /zh
+          - img "IKEA" [ref=e46]
+        - generic [ref=e48] [cursor=pointer]: 
+        - text: 
+      - generic [ref=e49]:
+        - list [ref=e52]:
+          - listitem [ref=e53]:
+            - heading "產品" [level=3] [ref=e54]:
+              - generic [ref=e56] [cursor=pointer]: 產品
+          - listitem [ref=e57]:
+            - heading "空間" [level=3] [ref=e58]:
+              - generic [ref=e59] [cursor=pointer]: 空間
+          - listitem [ref=e60]:
+            - link "佈置靈感" [ref=e62] [cursor=pointer]:
+              - /url: /zh/inspirations
+          - listitem [ref=e63]:
+            - link "新品專區" [ref=e65] [cursor=pointer]:
+              - /url: /zh/page/newitems
+          - listitem [ref=e66]:
+            - link "再創低價專區" [ref=e68] [cursor=pointer]:
+              - /url: /zh/new-lower-price
+          - listitem [ref=e69]:
+            - link "宜家卡" [ref=e70] [cursor=pointer]:
+              - /url: /zh/family/index
+          - listitem [ref=e71]:
+            - link "IKEA 企業業務" [ref=e72] [cursor=pointer]:
+              - /url: /zh/ikea-for-business/index
+          - listitem [ref=e73]:
+            - link "分店資訊" [ref=e74] [cursor=pointer]:
+              - /url: /zh/store/index/
+          - listitem [ref=e75]:
+            - link "瑞典餐廳" [ref=e76] [cursor=pointer]:
+              - /url: /zh/ikea-food/restaurant
+        - generic [ref=e78]:
+          - list [ref=e79]:
+            - listitem [ref=e80]:
+              - link "登入或註冊/購物清單" [ref=e81] [cursor=pointer]:
+                - /url: /zh/client
+          - list [ref=e82]:
+            - listitem [ref=e83]:
+              - button " 中文 " [ref=e84] [cursor=pointer]
+    - text: "|    "
+    - banner [ref=e86]:
+      - navigation [ref=e87]:
+        - generic [ref=e88]:
+          - link "IKEA" [ref=e89] [cursor=pointer]:
+            - /url: /
+            - img "IKEA" [ref=e90]
+          - generic [ref=e91] [cursor=pointer]:
+            - generic [ref=e92]: 
+            - text: 
+          - link "" [ref=e94] [cursor=pointer]:
+            - /url: /zh/client
+            - generic [ref=e95]: 
+          - text: 
+          - link "" [ref=e97] [cursor=pointer]:
+            - /url: /shoppingcart
+            - generic [ref=e98]: 
+          - button [ref=e99] [cursor=pointer]
+          - text:     
+    - generic: 
+    - generic [ref=e104]:
+      - navigation "breadcrumb" [ref=e107]:
+        - list [ref=e108]:
+          - text: 
+          - listitem [ref=e109]:
+            - link "餐桌/折疊桌/延伸桌/吧台桌" [ref=e110] [cursor=pointer]:
+              - /url: /zh/products/dining-tables
+          - listitem [ref=e111]:
+            - text: 
+            - link "吧台桌" [ref=e112] [cursor=pointer]:
+              - /url: /zh/products/dining-tables/high-tables
+      - generic [ref=e113]:
+        - heading "吧台桌" [level=1] [ref=e117]
+        - generic [ref=e119]:
+          - generic [ref=e121]:
+            - heading "兼顧風味和品味" [level=3] [ref=e122]
+            - text: 吧台桌及吧台椅讓整體用餐氣氛馬上提升。我們提供適合吧台高度的椅子及高腳椅，也有設計配合廚房檯面及中島高度的椅子，讓你一邊料理美味食材，一邊與家人朋友談天說地！
+          - generic [ref=e125]:
+            - img [ref=e128]
+            - navigation [ref=e134]:
+              - link "STENSELE 吧台桌, 碳黑色/碳黑色, 70 公分 $3,499" [ref=e137] [cursor=pointer]:
+                - /url: https://www.ikea.com.tw/zh/products/dining-tables/high-tables/stensele-spr-79288225
+                - generic [ref=e138]:
+                  - strong [ref=e139]: STENSELE
+                  - text: 吧台桌, 碳黑色/碳黑色, 70 公分
+                  - strong [ref=e140]:
+                    - generic [ref=e141]: $3,499
+          - img [ref=e147]
+        - generic [ref=e152]:
+          - generic [ref=e157]:
+            - heading "項目總計 14" [level=5] [ref=e159]
+            - generic [ref=e161]:
+              - navigation [ref=e164]:
+                - button "排列方式 " [ref=e168] [cursor=pointer]:
+                  - generic [ref=e170]: 排列方式
+                  - text: 
+              - generic [ref=e174] [cursor=pointer]:
+                - generic [ref=e175]: 篩選
+                - text: 
+          - generic [ref=e177]:
+            - generic [ref=e186] [cursor=pointer]:
+              - text: 只顯示
+              - generic [ref=e187]: 
+            - generic [ref=e189]:
+              - generic [ref=e191]:
+                - generic [ref=e192]:
+                  - checkbox [ref=e194] [cursor=pointer]
+                  - img [ref=e197] [cursor=pointer]
+                  - link "人類與地球 VADHOLMA - 廚房中島, 黑色/橡木, 126x79x90 公分 | IKEA 線上購物 - PE740762_S4" [ref=e199] [cursor=pointer]:
+                    - /url: /zh/products/freestanding-kitchens-and-kitchen-furniture/kitchen-furniture/vadholma-art-80359189
+                    - generic [ref=e201]: 人類與地球
+                    - img "VADHOLMA - 廚房中島, 黑色/橡木, 126x79x90 公分 | IKEA 線上購物 - PE740762_S4" [ref=e203]
+                - generic [ref=e204]:
+                  - generic [ref=e205]:
+                    - link "VADHOLMA" [ref=e207] [cursor=pointer]:
+                      - /url: /zh/products/freestanding-kitchens-and-kitchen-furniture/kitchen-furniture/vadholma-art-80359189
+                      - heading "VADHOLMA" [level=3] [ref=e208]
+                    - heading "廚房中島, 黑色/橡木, 126x79x90 公分" [level=4] [ref=e210]
+                    - paragraph [ref=e213]:
+                      - generic [ref=e214]:
+                        - generic [ref=e215]: $
+                        - text: 19,990
+                  - generic [ref=e217]:
+                    - generic [ref=e218]: 
+                    - generic [ref=e219]: 
+                    - generic [ref=e220]: 
+                    - generic [ref=e221]: 
+                    - generic [ref=e222]: 
+                    - paragraph [ref=e223]: 5(7)
+              - generic [ref=e225]:
+                - generic [ref=e226]:
+                  - checkbox [ref=e228] [cursor=pointer]
+                  - img [ref=e231] [cursor=pointer]
+                  - link "STENSELE - 吧台桌, 碳黑色/碳黑色, 70 公分 | IKEA 線上購物 - PE711686_S4" [ref=e233] [cursor=pointer]:
+                    - /url: /zh/products/dining-tables/high-tables/stensele-spr-79288225
+                    - img "STENSELE - 吧台桌, 碳黑色/碳黑色, 70 公分 | IKEA 線上購物 - PE711686_S4" [ref=e235]
+                - generic [ref=e236]:
+                  - generic [ref=e237]:
+                    - link "STENSELE" [ref=e239] [cursor=pointer]:
+                      - /url: /zh/products/dining-tables/high-tables/stensele-spr-79288225
+                      - heading "STENSELE" [level=3] [ref=e240]
+                    - heading "吧台桌, 碳黑色/碳黑色, 70 公分" [level=4] [ref=e242]
+                    - paragraph [ref=e245]:
+                      - generic [ref=e246]:
+                        - generic [ref=e247]: $
+                        - text: 3,499
+                  - generic [ref=e249]:
+                    - generic [ref=e250]: 
+                    - generic [ref=e251]: 
+                    - generic [ref=e252]: 
+                    - generic [ref=e253]: 
+                    - generic [ref=e254]:  
+                    - paragraph [ref=e255]: 4.5(2)
+              - generic [ref=e257]:
+                - generic [ref=e258]:
+                  - checkbox [ref=e260] [cursor=pointer]
+                  - img [ref=e263] [cursor=pointer]
+                  - link "MITTZON - 會議桌, 實木貼皮, 樺木/白色 140x68x105 公分 | IKEA 線上購物 - PE912240_S4" [ref=e265] [cursor=pointer]:
+                    - /url: /zh/products/office-workspace/office-desks-and-tables/mittzon-spr-39533059
+                    - img "MITTZON - 會議桌, 實木貼皮, 樺木/白色 140x68x105 公分 | IKEA 線上購物 - PE912240_S4" [ref=e267]
+                - generic [ref=e268]:
+                  - generic [ref=e269]:
+                    - link "MITTZON" [ref=e271] [cursor=pointer]:
+                      - /url: /zh/products/office-workspace/office-desks-and-tables/mittzon-spr-39533059
+                      - heading "MITTZON" [level=3] [ref=e272]
+                    - heading "會議桌, 實木貼皮, 樺木/白色 140x68x105 公分" [level=4] [ref=e274]
+                    - paragraph [ref=e277]:
+                      - generic [ref=e278]:
+                        - generic [ref=e279]: $
+                        - text: 4,699
+                  - generic [ref=e281]:
+                    - generic [ref=e282]: 
+                    - generic [ref=e283]: 
+                    - generic [ref=e284]: 
+                    - generic [ref=e285]: 
+                    - generic [ref=e286]: 
+                    - paragraph [ref=e287]: 0 (0)
+              - generic [ref=e289]:
+                - generic [ref=e290]:
+                  - checkbox [ref=e292] [cursor=pointer]
+                  - img [ref=e295] [cursor=pointer]
+                  - link "MITTZON - 會議桌, 白色, 140x68x105 公分 | IKEA 線上購物 - PE912238_S4" [ref=e297] [cursor=pointer]:
+                    - /url: /zh/products/office-workspace/office-desks-and-tables/mittzon-spr-19533055
+                    - img "MITTZON - 會議桌, 白色, 140x68x105 公分 | IKEA 線上購物 - PE912238_S4" [ref=e299]
+                - generic [ref=e300]:
+                  - generic [ref=e301]:
+                    - link "MITTZON" [ref=e303] [cursor=pointer]:
+                      - /url: /zh/products/office-workspace/office-desks-and-tables/mittzon-spr-19533055
+                      - heading "MITTZON" [level=3] [ref=e304]
+                    - heading "會議桌, 白色, 140x68x105 公分" [level=4] [ref=e306]
+                    - paragraph [ref=e309]:
+                      - generic [ref=e310]:
+                        - generic [ref=e311]: $
+                        - text: 3,899
+                  - generic [ref=e313]:
+                    - generic [ref=e314]: 
+                    - generic [ref=e315]: 
+                    - generic [ref=e316]: 
+                    - generic [ref=e317]: 
+                    - generic [ref=e318]: 
+                    - paragraph [ref=e319]: 0 (0)
+              - generic [ref=e321]:
+                - generic [ref=e322]:
+                  - checkbox [ref=e324] [cursor=pointer]
+                  - img [ref=e327] [cursor=pointer]
+                  - link "MITTZON - 會議桌, 實木貼皮, 胡桃木/黑色 140x68x105 公分 | IKEA 線上購物 - PE912241_S4" [ref=e329] [cursor=pointer]:
+                    - /url: /zh/products/office-workspace/office-desks-and-tables/mittzon-spr-99533042
+                    - img "MITTZON - 會議桌, 實木貼皮, 胡桃木/黑色 140x68x105 公分 | IKEA 線上購物 - PE912241_S4" [ref=e331]
+                - generic [ref=e332]:
+                  - generic [ref=e333]:
+                    - link "MITTZON" [ref=e335] [cursor=pointer]:
+                      - /url: /zh/products/office-workspace/office-desks-and-tables/mittzon-spr-99533042
+                      - heading "MITTZON" [level=3] [ref=e336]
+                    - heading "會議桌, 實木貼皮, 胡桃木/黑色 140x68x105 公分" [level=4] [ref=e338]
+                    - paragraph [ref=e341]:
+                      - generic [ref=e342]:
+                        - generic [ref=e343]: $
+                        - text: 4,699
+                  - generic [ref=e345]:
+                    - generic [ref=e346]: 
+                    - generic [ref=e347]: 
+                    - generic [ref=e348]: 
+                    - generic [ref=e349]: 
+                    - generic [ref=e350]: 
+                    - paragraph [ref=e351]: 0 (0)
+              - generic [ref=e353]:
+                - generic [ref=e354]:
+                  - checkbox [ref=e356] [cursor=pointer]
+                  - img [ref=e359] [cursor=pointer]
+                  - link "MITTZON - 會議桌, 實木貼皮, 橡木/白色 140x68x105 公分 | IKEA 線上購物 - PE912244_S4" [ref=e361] [cursor=pointer]:
+                    - /url: /zh/products/office-workspace/office-desks-and-tables/mittzon-spr-09533065
+                    - img "MITTZON - 會議桌, 實木貼皮, 橡木/白色 140x68x105 公分 | IKEA 線上購物 - PE912244_S4" [ref=e363]
+                - generic [ref=e364]:
+                  - generic [ref=e365]:
+                    - link "MITTZON" [ref=e367] [cursor=pointer]:
+                      - /url: /zh/products/office-workspace/office-desks-and-tables/mittzon-spr-09533065
+                      - heading "MITTZON" [level=3] [ref=e368]
+                    - heading "會議桌, 實木貼皮, 橡木/白色 140x68x105 公分" [level=4] [ref=e370]
+                    - paragraph [ref=e373]:
+                      - generic [ref=e374]:
+                        - generic [ref=e375]: $
+                        - text: 4,699
+                  - generic [ref=e377]:
+                    - generic [ref=e378]: 
+                    - generic [ref=e379]: 
+                    - generic [ref=e380]: 
+                    - generic [ref=e381]: 
+                    - generic [ref=e382]: 
+                    - paragraph [ref=e383]: 0 (0)
+              - generic [ref=e385]:
+                - generic [ref=e386]:
+                  - checkbox [ref=e388] [cursor=pointer]
+                  - img [ref=e391] [cursor=pointer]
+                  - link "MITTZON - 會議桌, 黑色/實木貼皮 梣木/黑色, 140x68x105 公分 | IKEA 線上購物 - PE912235_S4" [ref=e393] [cursor=pointer]:
+                    - /url: /zh/products/office-workspace/office-desks-and-tables/mittzon-spr-69533029
+                    - img "MITTZON - 會議桌, 黑色/實木貼皮 梣木/黑色, 140x68x105 公分 | IKEA 線上購物 - PE912235_S4" [ref=e395]
+                - generic [ref=e396]:
+                  - generic [ref=e397]:
+                    - link "MITTZON" [ref=e399] [cursor=pointer]:
+                      - /url: /zh/products/office-workspace/office-desks-and-tables/mittzon-spr-69533029
+                      - heading "MITTZON" [level=3] [ref=e400]
+                    - heading "會議桌, 黑色/實木貼皮 梣木/黑色, 140x68x105 公分" [level=4] [ref=e402]
+                    - paragraph [ref=e405]:
+                      - generic [ref=e406]:
+                        - generic [ref=e407]: $
+                        - text: 4,699
+                  - generic [ref=e409]:
+                    - generic [ref=e410]: 
+                    - generic [ref=e411]: 
+                    - generic [ref=e412]: 
+                    - generic [ref=e413]: 
+                    - generic [ref=e414]: 
+                    - paragraph [ref=e415]: 0 (0)
+              - generic [ref=e417]:
+                - generic [ref=e418]:
+                  - checkbox [ref=e420] [cursor=pointer]
+                  - img [ref=e423] [cursor=pointer]
+                  - link "MITTZON - 會議桌, 白色/黑色, 140x68x105 公分 | IKEA 線上購物 - PE912237_S4" [ref=e425] [cursor=pointer]:
+                    - /url: /zh/products/office-workspace/office-desks-and-tables/mittzon-spr-89533033
+                    - img "MITTZON - 會議桌, 白色/黑色, 140x68x105 公分 | IKEA 線上購物 - PE912237_S4" [ref=e427]
+                - generic [ref=e428]:
+                  - generic [ref=e429]:
+                    - link "MITTZON" [ref=e431] [cursor=pointer]:
+                      - /url: /zh/products/office-workspace/office-desks-and-tables/mittzon-spr-89533033
+                      - heading "MITTZON" [level=3] [ref=e432]
+                    - heading "會議桌, 白色/黑色, 140x68x105 公分" [level=4] [ref=e434]
+                    - paragraph [ref=e437]:
+                      - generic [ref=e438]:
+                        - generic [ref=e439]: $
+                        - text: 3,899
+                  - generic [ref=e441]:
+                    - generic [ref=e442]: 
+                    - generic [ref=e443]: 
+                    - generic [ref=e444]: 
+                    - generic [ref=e445]: 
+                    - generic [ref=e446]: 
+                    - paragraph [ref=e447]: 0 (0)
+              - generic [ref=e450]:
+                - navigation [ref=e456]:
+                  - generic [ref=e457]:
+                    - link "TROTTEN 桌子, 白色, 80x80 公分 $3,999," [ref=e459] [cursor=pointer]:
+                      - /url: /zh/products/office-workspace/office-desks-and-tables/trotten-spr-89429606
+                      - generic [ref=e460]:
+                        - strong [ref=e461]: TROTTEN
+                        - text: 桌子, 白色, 80x80 公分
+                        - strong [ref=e462]:
+                          - generic [ref=e463]: $3,999
+                      - text: ","
+                    - link "LIDKULLEN 椅凳, gunnared 米色 $2,799" [ref=e465] [cursor=pointer]:
+                      - /url: /zh/products/office-workspace/office-chairs/lidkullen-art-80445781
+                      - generic [ref=e466]:
+                        - strong [ref=e467]: LIDKULLEN
+                        - text: 椅凳, gunnared 米色
+                        - strong [ref=e468]:
+                          - generic [ref=e469]: $2,799
+                - paragraph
+                - heading "隨時開會，隨心享受美食！" [level=3] [ref=e470]
+                - text: TROTTEN會議桌方便隨時開會、進行集思討創作會議或作短暫的工作坊。產品易於搬運卻又很堅固。可以獨立使用或將數張放在一起使用。
+                - button "看更多吧台椅系列" [ref=e472] [cursor=pointer]:
+                  - generic [ref=e473]: 看更多吧台椅系列
+                - paragraph
+              - generic [ref=e475]:
+                - generic [ref=e476]:
+                  - checkbox [ref=e478] [cursor=pointer]
+                  - img [ref=e481] [cursor=pointer]
+                  - link "MITTZON - 會議桌, 實木貼皮, 橡木/黑色 140x68x105 公分 | IKEA 線上購物 - PE912243_S4" [ref=e483] [cursor=pointer]:
+                    - /url: /zh/products/office-workspace/office-desks-and-tables/mittzon-spr-39533040
+                    - img "MITTZON - 會議桌, 實木貼皮, 橡木/黑色 140x68x105 公分 | IKEA 線上購物 - PE912243_S4" [ref=e485]
+                - generic [ref=e486]:
+                  - generic [ref=e487]:
+                    - link "MITTZON" [ref=e489] [cursor=pointer]:
+                      - /url: /zh/products/office-workspace/office-desks-and-tables/mittzon-spr-39533040
+                      - heading "MITTZON" [level=3] [ref=e490]
+                    - heading "會議桌, 實木貼皮, 橡木/黑色 140x68x105 公分" [level=4] [ref=e492]
+                    - paragraph [ref=e495]:
+                      - generic [ref=e496]:
+                        - generic [ref=e497]: $
+                        - text: 4,699
+                  - generic [ref=e499]:
+                    - generic [ref=e500]: 
+                    - generic [ref=e501]: 
+                    - generic [ref=e502]: 
+                    - generic [ref=e503]: 
+                    - generic [ref=e504]: 
+                    - paragraph [ref=e505]: 0 (0)
+              - generic [ref=e507]:
+                - generic [ref=e508]:
+                  - checkbox [ref=e510] [cursor=pointer]
+                  - img [ref=e513] [cursor=pointer]
+                  - link "MITTZON - 會議桌, 實木貼皮, 樺木/黑色 140x68x105 公分 | IKEA 線上購物 - PE912236_S4" [ref=e515] [cursor=pointer]:
+                    - /url: /zh/products/office-workspace/office-desks-and-tables/mittzon-spr-49533030
+                    - img "MITTZON - 會議桌, 實木貼皮, 樺木/黑色 140x68x105 公分 | IKEA 線上購物 - PE912236_S4" [ref=e517]
+                - generic [ref=e518]:
+                  - generic [ref=e519]:
+                    - link "MITTZON" [ref=e521] [cursor=pointer]:
+                      - /url: /zh/products/office-workspace/office-desks-and-tables/mittzon-spr-49533030
+                      - heading "MITTZON" [level=3] [ref=e522]
+                    - heading "會議桌, 實木貼皮, 樺木/黑色 140x68x105 公分" [level=4] [ref=e524]
+                    - paragraph [ref=e527]:
+                      - generic [ref=e528]:
+                        - generic [ref=e529]: $
+                        - text: 4,699
+                  - generic [ref=e531]:
+                    - generic [ref=e532]: 
+                    - generic [ref=e533]: 
+                    - generic [ref=e534]: 
+                    - generic [ref=e535]: 
+                    - generic [ref=e536]: 
+                    - paragraph [ref=e537]: 0 (0)
+              - generic [ref=e539]:
+                - generic [ref=e540]:
+                  - checkbox [ref=e542] [cursor=pointer]
+                  - img [ref=e545] [cursor=pointer]
+                  - link "MITTZON - 會議桌, 實木貼皮, 胡桃木/白色 140x68x105 公分 | IKEA 線上購物 - PE912242_S4" [ref=e547] [cursor=pointer]:
+                    - /url: /zh/products/office-workspace/office-desks-and-tables/mittzon-spr-69533067
+                    - img "MITTZON - 會議桌, 實木貼皮, 胡桃木/白色 140x68x105 公分 | IKEA 線上購物 - PE912242_S4" [ref=e549]
+                - generic [ref=e550]:
+                  - generic [ref=e551]:
+                    - link "MITTZON" [ref=e553] [cursor=pointer]:
+                      - /url: /zh/products/office-workspace/office-desks-and-tables/mittzon-spr-69533067
+                      - heading "MITTZON" [level=3] [ref=e554]
+                    - heading "會議桌, 實木貼皮, 胡桃木/白色 140x68x105 公分" [level=4] [ref=e556]
+                    - paragraph [ref=e559]:
+                      - generic [ref=e560]:
+                        - generic [ref=e561]: $
+                        - text: 4,699
+                  - generic [ref=e563]:
+                    - generic [ref=e564]: 
+                    - generic [ref=e565]: 
+                    - generic [ref=e566]: 
+                    - generic [ref=e567]: 
+                    - generic [ref=e568]: 
+                    - paragraph [ref=e569]: 0 (0)
+              - generic [ref=e571]:
+                - generic [ref=e572]:
+                  - checkbox [ref=e574] [cursor=pointer]
+                  - img [ref=e577] [cursor=pointer]
+                  - link "MITTZON - 會議桌, 黑色/實木貼皮 梣木/白色, 140x68x105 公分 | IKEA 線上購物 - PE912239_S4" [ref=e579] [cursor=pointer]:
+                    - /url: /zh/products/office-workspace/office-desks-and-tables/mittzon-spr-79533062
+                    - img "MITTZON - 會議桌, 黑色/實木貼皮 梣木/白色, 140x68x105 公分 | IKEA 線上購物 - PE912239_S4" [ref=e581]
+                - generic [ref=e582]:
+                  - generic [ref=e583]:
+                    - link "MITTZON" [ref=e585] [cursor=pointer]:
+                      - /url: /zh/products/office-workspace/office-desks-and-tables/mittzon-spr-79533062
+                      - heading "MITTZON" [level=3] [ref=e586]
+                    - heading "會議桌, 黑色/實木貼皮 梣木/白色, 140x68x105 公分" [level=4] [ref=e588]
+                    - paragraph [ref=e591]:
+                      - generic [ref=e592]:
+                        - generic [ref=e593]: $
+                        - text: 4,699
+                  - generic [ref=e595]:
+                    - generic [ref=e596]: 
+                    - generic [ref=e597]: 
+                    - generic [ref=e598]: 
+                    - generic [ref=e599]: 
+                    - generic [ref=e600]: 
+                    - paragraph [ref=e601]: 0 (0)
+              - generic [ref=e603]:
+                - generic [ref=e604]:
+                  - checkbox [ref=e606] [cursor=pointer]
+                  - img [ref=e609] [cursor=pointer]
+                  - link "TROTTEN - 桌子, 米色/白色, 80x80 公分 | IKEA 線上購物 - PE834672_S4" [ref=e611] [cursor=pointer]:
+                    - /url: /zh/products/office-workspace/office-desks-and-tables/trotten-spr-69436976
+                    - img "TROTTEN - 桌子, 米色/白色, 80x80 公分 | IKEA 線上購物 - PE834672_S4" [ref=e613]
+                - generic [ref=e614]:
+                  - generic [ref=e615]:
+                    - link "TROTTEN" [ref=e617] [cursor=pointer]:
+                      - /url: /zh/products/office-workspace/office-desks-and-tables/trotten-spr-69436976
+                      - heading "TROTTEN" [level=3] [ref=e618]
+                    - heading "桌子, 米色/白色, 80x80 公分" [level=4] [ref=e620]
+                    - paragraph [ref=e623]:
+                      - generic [ref=e624]:
+                        - generic [ref=e625]: $
+                        - text: 3,999
+                  - generic [ref=e626]: 線上暫時缺貨，點擊查詢分店貨況
+                  - generic [ref=e628]:
+                    - generic [ref=e629]: 
+                    - generic [ref=e630]: 
+                    - generic [ref=e631]: 
+                    - generic [ref=e632]: 
+                    - generic [ref=e633]: 
+                    - paragraph [ref=e634]: 0 (0)
+              - generic [ref=e636]:
+                - generic [ref=e637]:
+                  - checkbox [ref=e639] [cursor=pointer]
+                  - img [ref=e642] [cursor=pointer]
+                  - link "TROTTEN - 桌子, 白色, 80x80 公分 | IKEA 線上購物 - PE832027_S4" [ref=e644] [cursor=pointer]:
+                    - /url: /zh/products/office-workspace/office-desks-and-tables/trotten-spr-89429606
+                    - img "TROTTEN - 桌子, 白色, 80x80 公分 | IKEA 線上購物 - PE832027_S4" [ref=e646]
+                - generic [ref=e647]:
+                  - generic [ref=e648]:
+                    - link "TROTTEN" [ref=e650] [cursor=pointer]:
+                      - /url: /zh/products/office-workspace/office-desks-and-tables/trotten-spr-89429606
+                      - heading "TROTTEN" [level=3] [ref=e651]
+                    - heading "桌子, 白色, 80x80 公分" [level=4] [ref=e653]
+                    - paragraph [ref=e656]:
+                      - generic [ref=e657]:
+                        - generic [ref=e658]: $
+                        - text: 3,999
+                  - generic [ref=e659]: 線上暫時缺貨，點擊查詢分店貨況
+                  - generic [ref=e661]:
+                    - generic [ref=e662]: 
+                    - generic [ref=e663]: 
+                    - generic [ref=e664]: 
+                    - generic [ref=e665]: 
+                    - generic [ref=e666]: 
+                    - paragraph [ref=e667]: 0 (0)
+            - separator [ref=e673]
+    - generic [ref=e674]:  
+    - generic [ref=e675]:
+      - contentinfo [ref=e676]:
+        - generic [ref=e677]:
+          - generic [ref=e678]:
+            - generic [ref=e679]:
+              - generic [ref=e680]:
+                - paragraph [ref=e681]: IKEA Family 宜家卡卡友
+                - paragraph [ref=e682]: IKEA Family隨時歡迎你加入！我們不定期提供卡友優惠價格、生日優惠及各類驚喜贈品！
+                - button "了解更多" [ref=e683] [cursor=pointer]
+              - generic [ref=e684]:
+                - paragraph [ref=e685]: IKEA 企業業務
+                - paragraph [ref=e686]: 免費加入IKEA企業卡卡友，即享專屬優惠。讓我們成為你事業的強力後援！
+                - button "了解更多" [ref=e687] [cursor=pointer]
+            - paragraph [ref=e690] [cursor=pointer]:  IKEA 購物指南
+            - paragraph [ref=e693] [cursor=pointer]:  客服中心
+            - paragraph [ref=e696] [cursor=pointer]:  關於IKEA
+            - paragraph [ref=e699] [cursor=pointer]:  熱門產品
+          - generic [ref=e700]:
+            - generic [ref=e701]:
+              - navigation [ref=e703]:
+                - link "" [ref=e704] [cursor=pointer]:
+                  - /url: https://www.facebook.com/IKEA.Taiwan/
+                  - generic [ref=e705]: 
+                - link "" [ref=e706] [cursor=pointer]:
+                  - /url: https://www.instagram.com/ikea_taiwan/
+                  - generic [ref=e707]: 
+                - link "" [ref=e708] [cursor=pointer]:
+                  - /url: https://www.youtube.com/user/IKEAtaiwan
+                  - generic [ref=e709]: 
+                - link "" [ref=e710] [cursor=pointer]:
+                  - /url: https://line.me/R/ti/p/%40ikeataiwan
+                  - generic [ref=e711]: 
+              - generic [ref=e712]:
+                - link "Visa" [ref=e713] [cursor=pointer]:
+                  - /url: /customerservice/about-shopping/financing
+                  - img "Visa" [ref=e714]
+                - link "MasterCard" [ref=e715] [cursor=pointer]:
+                  - /url: /customerservice/about-shopping/financing
+                  - img "MasterCard" [ref=e716]
+                - link "JCB" [ref=e717] [cursor=pointer]:
+                  - /url: /customerservice/about-shopping/financing
+                  - img "JCB" [ref=e718]
+                - link "Amex" [ref=e719] [cursor=pointer]:
+                  - /url: /customerservice/about-shopping/financing
+                  - img "Amex" [ref=e720]
+                - link "LinePay" [ref=e721] [cursor=pointer]:
+                  - /url: /customerservice/about-shopping/financing
+                  - img "LinePay" [ref=e722]
+                - link "TSPay" [ref=e723] [cursor=pointer]:
+                  - /url: /customerservice/about-shopping/financing
+                  - img "TSPay" [ref=e724]
+                - link "PxPay" [ref=e725] [cursor=pointer]:
+                  - /url: /customerservice/about-shopping/financing
+                  - img "PxPay" [ref=e726]
+                - link "ApplePay" [ref=e727] [cursor=pointer]:
+                  - /url: /customerservice/about-shopping/financing
+                  - img "ApplePay" [ref=e728]
+                - link "JKOPay" [ref=e729] [cursor=pointer]:
+                  - /url: /customerservice/about-shopping/financing
+                  - img "JKOPay" [ref=e730]
+            - list [ref=e732]:
+              - listitem [ref=e733]:
+                - button "中文 " [ref=e734] [cursor=pointer]
+      - contentinfo [ref=e735]:
+        - navigation [ref=e736]:
+          - paragraph [ref=e737]: © Inter IKEA Systems B.V. 2010 – 2026
+          - list [ref=e738]:
+            - listitem [ref=e739]:
+              - link "隱私政策" [ref=e740] [cursor=pointer]:
+                - /url: /zh/customerservice/about-shopping/terms-and-conditions/privacy-policy
+            - listitem [ref=e741]:
+              - link "使用條款" [ref=e742] [cursor=pointer]:
+                - /url: /zh/customerservice/about-shopping/terms-and-conditions/terms-of-use
+            - listitem [ref=e743]:
+              - link "Cookie 政策" [ref=e744] [cursor=pointer]:
+                - /url: /zh/cookie-policy
+  - img "cross" [ref=e747]
+  - text:  
+  - dialog "cookieconsent" [ref=e749]:
+    - generic [ref=e750]:
+      - text: 我們使用cookie統計資料確保你的使用體驗，點擊「我明白」或繼續瀏覽，表示你同意我們的cookie政策。你也可以隨時更改並刪除cookie。
+      - button "learn more about cookies" [ref=e751] [cursor=pointer]: 按此參閱更多訊息
+    - button "dismiss cookie message" [ref=e753] [cursor=pointer]: 我明白

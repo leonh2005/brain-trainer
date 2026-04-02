@@ -1,0 +1,303 @@
+- generic [active] [ref=e1]:
+  - alert [ref=e2]
+  - img "loading..." [ref=e6]
+  - generic [ref=e7]:
+    - banner [ref=e8]:
+      - generic [ref=e10]:
+        - generic [ref=e11]:
+          - button [ref=e12] [cursor=pointer]:
+            - img [ref=e13]
+          - link [ref=e19] [cursor=pointer]:
+            - /url: https://m.momoshop.com.tw/main.momo
+            - img [ref=e21]
+          - link "banner" [ref=e23] [cursor=pointer]:
+            - /url: https://www.momoshop.com.tw/edm/cmmedm.jsp?lpn=O7Ascr4f5bQ&n=1&mdiv=8102000000-bt_7_919_01-bt_7_919_01_e6&ctype=B
+            - img "banner" [ref=e24]
+        - generic [ref=e26]:
+          - heading "高腳桌 150" [level=1] [ref=e27]
+          - button "Clear search input" [ref=e28] [cursor=pointer]:
+            - img "delete icon" [ref=e29]
+        - button [ref=e31] [cursor=pointer]:
+          - img [ref=e33]
+    - generic [ref=e36]:
+      - generic [ref=e37]:
+        - article [ref=e38]:
+          - list [ref=e40]:
+            - listitem [ref=e41]: 綜合推薦
+            - listitem [ref=e42]: 新上市
+            - listitem [ref=e43]: 月銷量
+            - listitem [ref=e44]: 價格
+            - listitem [ref=e47]: 評價
+            - listitem [ref=e50]
+            - listitem [ref=e51]
+        - article [ref=e53]:
+          - list [ref=e56]:
+            - listitem [ref=e57]:
+              - generic [ref=e58] [cursor=pointer]: 商品分類
+            - listitem [ref=e60]:
+              - generic [ref=e61] [cursor=pointer]: mo點加碼
+            - listitem [ref=e62]:
+              - generic [ref=e63] [cursor=pointer]: 商店免運券
+            - listitem [ref=e64]:
+              - generic [ref=e65] [cursor=pointer]: 折價券
+            - listitem [ref=e66]:
+              - generic [ref=e67] [cursor=pointer]:
+                - text: 尺寸
+                - paragraph
+            - listitem [ref=e69]:
+              - generic [ref=e70] [cursor=pointer]:
+                - text: 材質
+                - paragraph
+            - listitem [ref=e72]:
+              - generic [ref=e73] [cursor=pointer]:
+                - text: 顏色
+                - paragraph
+            - listitem [ref=e75]:
+              - generic [ref=e76] [cursor=pointer]:
+                - text: 組裝方式
+                - paragraph
+      - article [ref=e78]:
+        - list [ref=e79]:
+          - listitem [ref=e80] [cursor=pointer]:
+            - generic [ref=e81]:
+              - generic "【p檸檬樹家居】150*40*75cm(吧台桌 長條桌 高腳桌 單層長桌 家用吧檯桌 預售12天)" [ref=e82]:
+                - generic [ref=e85]:
+                  - generic "【p檸檬樹家居】150*40*75cm(吧台桌 長條桌 高腳桌 單層長桌 家用吧檯桌 預售12天)" [ref=e87]:
+                    - img "【p檸檬樹家居】150*40*75cm(吧台桌 長條桌 高腳桌 單層長桌 家用吧檯桌 預售12天)" [ref=e90]
+                  - generic "【p檸檬樹家居】150*40*75cm(吧台桌 長條桌 高腳桌 單層長桌 家用吧檯桌 預售12天)" [ref=e92]:
+                    - img "【p檸檬樹家居】150*40*75cm(吧台桌 長條桌 高腳桌 單層長桌 家用吧檯桌 預售12天)" [ref=e95]
+                  - generic "【p檸檬樹家居】150*40*75cm(吧台桌 長條桌 高腳桌 單層長桌 家用吧檯桌 預售12天)" [ref=e97]:
+                    - img "【p檸檬樹家居】150*40*75cm(吧台桌 長條桌 高腳桌 單層長桌 家用吧檯桌 預售12天)" [ref=e100]
+                  - generic "【p檸檬樹家居】150*40*75cm(吧台桌 長條桌 高腳桌 單層長桌 家用吧檯桌 預售12天)" [ref=e102]:
+                    - img "【p檸檬樹家居】150*40*75cm(吧台桌 長條桌 高腳桌 單層長桌 家用吧檯桌 預售12天)" [ref=e105]
+                  - generic "【p檸檬樹家居】150*40*75cm(吧台桌 長條桌 高腳桌 單層長桌 家用吧檯桌 預售12天)" [ref=e107]:
+                    - img "【p檸檬樹家居】150*40*75cm(吧台桌 長條桌 高腳桌 單層長桌 家用吧檯桌 預售12天)" [ref=e110]
+                  - generic "【p檸檬樹家居】150*40*75cm(吧台桌 長條桌 高腳桌 單層長桌 家用吧檯桌 預售12天)" [ref=e112]:
+                    - img "【p檸檬樹家居】150*40*75cm(吧台桌 長條桌 高腳桌 單層長桌 家用吧檯桌 預售12天)" [ref=e115]
+                  - generic "【p檸檬樹家居】150*40*75cm(吧台桌 長條桌 高腳桌 單層長桌 家用吧檯桌 預售12天)" [ref=e117]:
+                    - img "【p檸檬樹家居】150*40*75cm(吧台桌 長條桌 高腳桌 單層長桌 家用吧檯桌 預售12天)" [ref=e120]
+              - generic [ref=e129]:
+                - generic [ref=e130]:
+                  - paragraph [ref=e131]: 單層長條吧台桌
+                  - generic "【p檸檬樹家居】150*40*75cm(吧台桌 長條桌 高腳桌 單層長桌 家用吧檯桌 預售12天)" [ref=e132]:
+                    - heading "【p檸檬樹家居】150*40*75cm(吧台桌 長條桌 高腳桌 單層長桌 家用吧檯桌 預售12天)" [level=3] [ref=e134]
+                  - generic [ref=e135]:
+                    - generic [ref=e137]:
+                      - generic [ref=e138]:
+                        - generic [ref=e139]: $
+                        - generic [ref=e140]: 6,923
+                      - generic [ref=e141]:
+                        - generic [ref=e142]: $
+                        - generic [ref=e143]: 7,499
+                    - generic [ref=e144]:
+                      - generic [ref=e145]:
+                        - img [ref=e146]: 
+                        - img [ref=e147]: 
+                        - img [ref=e148]: 
+                        - img [ref=e149]: 
+                        - img [ref=e150]: 
+                      - generic [ref=e152]: (10)
+                    - generic "商品圖示列表" [ref=e153]:
+                      - generic [ref=e155]: 折價券
+                      - generic [ref=e157]: 登記
+                - generic [ref=e159]:
+                  - img [ref=e161]: 
+                  - generic "加入追蹤清單" [ref=e162]:
+                    - img [ref=e163]: 
+          - listitem [ref=e164] [cursor=pointer]:
+            - generic [ref=e165]:
+              - generic "【p瑞凱諾】150*35*100cm(吧台桌 高腳桌 長條桌 工作桌 書桌 餐桌 咖啡桌 預售12天)" [ref=e166]:
+                - generic [ref=e169]:
+                  - generic "【p瑞凱諾】150*35*100cm(吧台桌 高腳桌 長條桌 工作桌 書桌 餐桌 咖啡桌 預售12天)" [ref=e171]:
+                    - img "【p瑞凱諾】150*35*100cm(吧台桌 高腳桌 長條桌 工作桌 書桌 餐桌 咖啡桌 預售12天)" [ref=e174]
+                  - generic "【p瑞凱諾】150*35*100cm(吧台桌 高腳桌 長條桌 工作桌 書桌 餐桌 咖啡桌 預售12天)" [ref=e176]:
+                    - img "【p瑞凱諾】150*35*100cm(吧台桌 高腳桌 長條桌 工作桌 書桌 餐桌 咖啡桌 預售12天)" [ref=e179]
+                  - generic "【p瑞凱諾】150*35*100cm(吧台桌 高腳桌 長條桌 工作桌 書桌 餐桌 咖啡桌 預售12天)" [ref=e181]:
+                    - img "【p瑞凱諾】150*35*100cm(吧台桌 高腳桌 長條桌 工作桌 書桌 餐桌 咖啡桌 預售12天)" [ref=e184]
+                  - generic "【p瑞凱諾】150*35*100cm(吧台桌 高腳桌 長條桌 工作桌 書桌 餐桌 咖啡桌 預售12天)" [ref=e186]:
+                    - img "【p瑞凱諾】150*35*100cm(吧台桌 高腳桌 長條桌 工作桌 書桌 餐桌 咖啡桌 預售12天)" [ref=e189]
+                  - generic "【p瑞凱諾】150*35*100cm(吧台桌 高腳桌 長條桌 工作桌 書桌 餐桌 咖啡桌 預售12天)" [ref=e191]:
+                    - img "【p瑞凱諾】150*35*100cm(吧台桌 高腳桌 長條桌 工作桌 書桌 餐桌 咖啡桌 預售12天)" [ref=e194]
+                  - generic "【p瑞凱諾】150*35*100cm(吧台桌 高腳桌 長條桌 工作桌 書桌 餐桌 咖啡桌 預售12天)" [ref=e196]:
+                    - img "【p瑞凱諾】150*35*100cm(吧台桌 高腳桌 長條桌 工作桌 書桌 餐桌 咖啡桌 預售12天)" [ref=e199]
+                  - generic "【p瑞凱諾】150*35*100cm(吧台桌 高腳桌 長條桌 工作桌 書桌 餐桌 咖啡桌 預售12天)" [ref=e201]:
+                    - img "【p瑞凱諾】150*35*100cm(吧台桌 高腳桌 長條桌 工作桌 書桌 餐桌 咖啡桌 預售12天)" [ref=e204]
+                  - generic "【p瑞凱諾】150*35*100cm(吧台桌 高腳桌 長條桌 工作桌 書桌 餐桌 咖啡桌 預售12天)" [ref=e206]:
+                    - img "【p瑞凱諾】150*35*100cm(吧台桌 高腳桌 長條桌 工作桌 書桌 餐桌 咖啡桌 預售12天)" [ref=e209]
+              - generic [ref=e219]:
+                - generic [ref=e220]:
+                  - paragraph [ref=e221]: 加寬桌面，可隨心放置
+                  - generic "【p瑞凱諾】150*35*100cm(吧台桌 高腳桌 長條桌 工作桌 書桌 餐桌 咖啡桌 預售12天)" [ref=e222]:
+                    - heading "【p瑞凱諾】150*35*100cm(吧台桌 高腳桌 長條桌 工作桌 書桌 餐桌 咖啡桌 預售12天)" [level=3] [ref=e224]
+                  - generic [ref=e225]:
+                    - generic [ref=e227]:
+                      - generic [ref=e228]:
+                        - generic [ref=e229]: $
+                        - generic [ref=e230]: 7,875
+                      - generic [ref=e231]:
+                        - generic [ref=e232]: $
+                        - generic [ref=e233]: 8,099
+                    - generic [ref=e234]:
+                      - generic [ref=e235]:
+                        - img [ref=e236]: 
+                        - img [ref=e237]: 
+                        - img [ref=e238]: 
+                        - img [ref=e239]: 
+                        - img [ref=e240]: 
+                      - generic [ref=e242]: (10)
+                    - generic "商品圖示列表" [ref=e243]:
+                      - generic [ref=e245]: 折價券
+                      - generic [ref=e247]: 登記
+                - generic [ref=e249]:
+                  - img [ref=e251]: 
+                  - generic "加入追蹤清單" [ref=e252]:
+                    - img [ref=e253]: 
+          - listitem [ref=e254] [cursor=pointer]:
+            - generic [ref=e255]:
+              - generic "【p檸檬樹家居】150*35*75cm(吧台桌 長條桌 高腳桌 單層長桌 家用吧檯桌 預售12天)" [ref=e256]:
+                - generic [ref=e259]:
+                  - generic "【p檸檬樹家居】150*35*75cm(吧台桌 長條桌 高腳桌 單層長桌 家用吧檯桌 預售12天)" [ref=e261]:
+                    - img "【p檸檬樹家居】150*35*75cm(吧台桌 長條桌 高腳桌 單層長桌 家用吧檯桌 預售12天)" [ref=e264]
+                  - generic "【p檸檬樹家居】150*35*75cm(吧台桌 長條桌 高腳桌 單層長桌 家用吧檯桌 預售12天)" [ref=e266]:
+                    - img "【p檸檬樹家居】150*35*75cm(吧台桌 長條桌 高腳桌 單層長桌 家用吧檯桌 預售12天)" [ref=e269]
+                  - generic "【p檸檬樹家居】150*35*75cm(吧台桌 長條桌 高腳桌 單層長桌 家用吧檯桌 預售12天)" [ref=e271]:
+                    - img "【p檸檬樹家居】150*35*75cm(吧台桌 長條桌 高腳桌 單層長桌 家用吧檯桌 預售12天)" [ref=e274]
+                  - generic "【p檸檬樹家居】150*35*75cm(吧台桌 長條桌 高腳桌 單層長桌 家用吧檯桌 預售12天)" [ref=e276]:
+                    - img "【p檸檬樹家居】150*35*75cm(吧台桌 長條桌 高腳桌 單層長桌 家用吧檯桌 預售12天)" [ref=e279]
+                  - generic "【p檸檬樹家居】150*35*75cm(吧台桌 長條桌 高腳桌 單層長桌 家用吧檯桌 預售12天)" [ref=e281]:
+                    - img "【p檸檬樹家居】150*35*75cm(吧台桌 長條桌 高腳桌 單層長桌 家用吧檯桌 預售12天)" [ref=e284]
+                  - generic "【p檸檬樹家居】150*35*75cm(吧台桌 長條桌 高腳桌 單層長桌 家用吧檯桌 預售12天)" [ref=e286]:
+                    - img "【p檸檬樹家居】150*35*75cm(吧台桌 長條桌 高腳桌 單層長桌 家用吧檯桌 預售12天)" [ref=e289]
+                  - generic "【p檸檬樹家居】150*35*75cm(吧台桌 長條桌 高腳桌 單層長桌 家用吧檯桌 預售12天)" [ref=e291]:
+                    - img "【p檸檬樹家居】150*35*75cm(吧台桌 長條桌 高腳桌 單層長桌 家用吧檯桌 預售12天)" [ref=e294]
+              - generic [ref=e303]:
+                - generic [ref=e304]:
+                  - paragraph [ref=e305]: 單層長條吧台桌
+                  - generic "【p檸檬樹家居】150*35*75cm(吧台桌 長條桌 高腳桌 單層長桌 家用吧檯桌 預售12天)" [ref=e306]:
+                    - heading "【p檸檬樹家居】150*35*75cm(吧台桌 長條桌 高腳桌 單層長桌 家用吧檯桌 預售12天)" [level=3] [ref=e308]
+                  - generic [ref=e309]:
+                    - generic [ref=e311]:
+                      - generic [ref=e312]:
+                        - generic [ref=e313]: $
+                        - generic [ref=e314]: 6,792
+                      - generic [ref=e315]:
+                        - generic [ref=e316]: $
+                        - generic [ref=e317]: 7,199
+                    - generic [ref=e318]:
+                      - generic [ref=e319]:
+                        - img [ref=e320]: 
+                        - img [ref=e321]: 
+                        - img [ref=e322]: 
+                        - img [ref=e323]: 
+                        - img [ref=e324]: 
+                      - generic [ref=e326]: (10)
+                    - generic "商品圖示列表" [ref=e327]:
+                      - generic [ref=e329]: 折價券
+                      - generic [ref=e331]: 登記
+                - generic [ref=e333]:
+                  - img [ref=e335]: 
+                  - generic "加入追蹤清單" [ref=e336]:
+                    - img [ref=e337]: 
+          - listitem [ref=e338] [cursor=pointer]:
+            - generic [ref=e339]:
+              - generic "【H瑞凱諾】150*40*100cm 加厚板材 圓潤邊角(吧臺桌 高腳桌 酒吧桌 長條桌 靠牆窄桌 隔斷酒櫃桌 預購15天)" [ref=e340]:
+                - generic [ref=e343]:
+                  - generic "【H瑞凱諾】150*40*100cm 加厚板材 圓潤邊角(吧臺桌 高腳桌 酒吧桌 長條桌 靠牆窄桌 隔斷酒櫃桌 預購15天)" [ref=e345]:
+                    - img "【H瑞凱諾】150*40*100cm 加厚板材 圓潤邊角(吧臺桌 高腳桌 酒吧桌 長條桌 靠牆窄桌 隔斷酒櫃桌 預購15天)" [ref=e348]
+                  - generic "【H瑞凱諾】150*40*100cm 加厚板材 圓潤邊角(吧臺桌 高腳桌 酒吧桌 長條桌 靠牆窄桌 隔斷酒櫃桌 預購15天)" [ref=e350]:
+                    - img "【H瑞凱諾】150*40*100cm 加厚板材 圓潤邊角(吧臺桌 高腳桌 酒吧桌 長條桌 靠牆窄桌 隔斷酒櫃桌 預購15天)" [ref=e353]
+                  - generic "【H瑞凱諾】150*40*100cm 加厚板材 圓潤邊角(吧臺桌 高腳桌 酒吧桌 長條桌 靠牆窄桌 隔斷酒櫃桌 預購15天)" [ref=e355]:
+                    - img "【H瑞凱諾】150*40*100cm 加厚板材 圓潤邊角(吧臺桌 高腳桌 酒吧桌 長條桌 靠牆窄桌 隔斷酒櫃桌 預購15天)" [ref=e358]
+                  - generic "【H瑞凱諾】150*40*100cm 加厚板材 圓潤邊角(吧臺桌 高腳桌 酒吧桌 長條桌 靠牆窄桌 隔斷酒櫃桌 預購15天)" [ref=e360]:
+                    - img "【H瑞凱諾】150*40*100cm 加厚板材 圓潤邊角(吧臺桌 高腳桌 酒吧桌 長條桌 靠牆窄桌 隔斷酒櫃桌 預購15天)" [ref=e363]
+                  - generic "【H瑞凱諾】150*40*100cm 加厚板材 圓潤邊角(吧臺桌 高腳桌 酒吧桌 長條桌 靠牆窄桌 隔斷酒櫃桌 預購15天)" [ref=e365]:
+                    - img "【H瑞凱諾】150*40*100cm 加厚板材 圓潤邊角(吧臺桌 高腳桌 酒吧桌 長條桌 靠牆窄桌 隔斷酒櫃桌 預購15天)" [ref=e368]
+                  - generic "【H瑞凱諾】150*40*100cm 加厚板材 圓潤邊角(吧臺桌 高腳桌 酒吧桌 長條桌 靠牆窄桌 隔斷酒櫃桌 預購15天)" [ref=e370]:
+                    - img "【H瑞凱諾】150*40*100cm 加厚板材 圓潤邊角(吧臺桌 高腳桌 酒吧桌 長條桌 靠牆窄桌 隔斷酒櫃桌 預購15天)" [ref=e373]
+                  - generic "【H瑞凱諾】150*40*100cm 加厚板材 圓潤邊角(吧臺桌 高腳桌 酒吧桌 長條桌 靠牆窄桌 隔斷酒櫃桌 預購15天)" [ref=e375]:
+                    - img "【H瑞凱諾】150*40*100cm 加厚板材 圓潤邊角(吧臺桌 高腳桌 酒吧桌 長條桌 靠牆窄桌 隔斷酒櫃桌 預購15天)" [ref=e378]
+                  - generic "【H瑞凱諾】150*40*100cm 加厚板材 圓潤邊角(吧臺桌 高腳桌 酒吧桌 長條桌 靠牆窄桌 隔斷酒櫃桌 預購15天)" [ref=e380]:
+                    - img "【H瑞凱諾】150*40*100cm 加厚板材 圓潤邊角(吧臺桌 高腳桌 酒吧桌 長條桌 靠牆窄桌 隔斷酒櫃桌 預購15天)" [ref=e383]
+              - generic [ref=e393]:
+                - generic [ref=e394]:
+                  - paragraph [ref=e395]: 寬大置物桌面，加寬桌面可隨心放
+                  - generic "【H瑞凱諾】150*40*100cm 加厚板材 圓潤邊角(吧臺桌 高腳桌 酒吧桌 長條桌 靠牆窄桌 隔斷酒櫃桌 預購15天)" [ref=e396]:
+                    - heading "【H瑞凱諾】150*40*100cm 加厚板材 圓潤邊角(吧臺桌 高腳桌 酒吧桌 長條桌 靠牆窄桌 隔斷酒櫃桌 預購15天)" [level=3] [ref=e398]
+                  - generic [ref=e399]:
+                    - generic [ref=e401]:
+                      - generic [ref=e402]:
+                        - generic [ref=e403]: $
+                        - generic [ref=e404]: 7,250
+                      - generic [ref=e405]:
+                        - generic [ref=e406]: $
+                        - generic [ref=e407]: 7,589
+                    - generic [ref=e408]:
+                      - generic [ref=e409]:
+                        - img [ref=e410]: 
+                        - img [ref=e411]: 
+                        - img [ref=e412]: 
+                        - img [ref=e413]: 
+                        - img [ref=e414]: 
+                      - generic [ref=e416]: (10)
+                    - generic "商品圖示列表" [ref=e417]:
+                      - generic [ref=e419]: 登記
+                - generic [ref=e421]:
+                  - img [ref=e423]: 
+                  - generic "加入追蹤清單" [ref=e424]:
+                    - img [ref=e425]: 
+      - generic [ref=e427]: 已經到底了
+    - contentinfo [ref=e429]:
+      - article [ref=e430]:
+        - generic [ref=e431]:
+          - definition [ref=e432]:
+            - link "APP下載" [ref=e433] [cursor=pointer]:
+              - /url: https://www.momoshop.com.tw/edm/cmmedm.jsp?lpn=Nzpe4YTLgeM&n=1
+          - definition [ref=e434]:
+            - link "隱私權政策" [ref=e435] [cursor=pointer]:
+              - /url: https://m.momoshop.com.tw/mymomo/privacy.momo?memb=memb
+          - definition [ref=e436]:
+            - link "服務條款" [ref=e437] [cursor=pointer]:
+              - /url: https://m.momoshop.com.tw/mymomo/bill.momo?memb=memb
+          - definition [ref=e438]:
+            - link "電腦版" [ref=e439] [cursor=pointer]:
+              - /url: //www.momoshop.com.tw/main/Main.jsp?momo=1
+          - definition [ref=e440]:
+            - link "登入/註冊" [ref=e441] [cursor=pointer]:
+              - /url: https://m.momoshop.com.tw/mymomo/login.momo
+          - term [ref=e442]: 富邦媒體科技股份有限公司 統編：27365925
+    - generic [ref=e444]:
+      - img "momo logo" [ref=e447]
+      - generic [ref=e448]:
+        - paragraph [ref=e449]: momo購物
+        - paragraph [ref=e450]: 生活大小事都是momo的事
+      - generic [ref=e451]:
+        - button "開啟「momo購物」APP" [ref=e452] [cursor=pointer]
+        - button "繼續使用網頁版" [ref=e453] [cursor=pointer]
+    - generic [ref=e454]:
+      - main [ref=e455]
+      - navigation [ref=e456]:
+        - link "首頁" [ref=e457] [cursor=pointer]:
+          - /url: /main/Main.jsp
+          - generic [ref=e458]:
+            - img [ref=e461]
+            - generic [ref=e465]: 首頁
+        - link "逛逛" [ref=e466] [cursor=pointer]:
+          - /url: /discover
+          - generic [ref=e467]:
+            - img [ref=e470]
+            - generic [ref=e473]: 逛逛
+        - link "追蹤清單" [ref=e474] [cursor=pointer]:
+          - /url: https://m.momoshop.com.tw/mymomo/wishList.momo
+          - generic [ref=e475]:
+            - img [ref=e478]
+            - generic [ref=e481]: 追蹤清單
+        - link "購物車" [ref=e482] [cursor=pointer]:
+          - /url: https://cart.momoshop.com.tw/view/cart/MOBILE/
+          - generic [ref=e483]:
+            - img [ref=e485]
+            - generic [ref=e488]: 購物車
+        - link "會員中心" [ref=e489] [cursor=pointer]:
+          - /url: https://m.momoshop.com.tw/mymomo/membercenter.momo
+          - generic [ref=e490]:
+            - img [ref=e493]
+            - generic [ref=e496]: 會員中心

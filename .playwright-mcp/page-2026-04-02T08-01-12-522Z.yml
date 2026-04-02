@@ -1,0 +1,537 @@
+- generic [ref=e3]:
+  - generic [ref=e4]:
+    - navigation [ref=e5]:
+      - generic [ref=e7]:
+        - generic [ref=e10]:
+          - button "比比昂日本購物" [ref=e13] [cursor=pointer]:
+            - link "比比昂日本購物" [ref=e14]:
+              - /url: https://24h.pchome.com.tw/extenal/v1/bibian/url?op=redirect
+              - generic [ref=e15]: 比比昂日本購物
+          - button "綜合服務 " [ref=e18] [cursor=pointer]:
+            - generic [ref=e19]: 綜合服務
+            - generic [ref=e21]: 
+        - generic [ref=e24]:
+          - generic [ref=e26]:
+            - button "最近看過" [ref=e27] [cursor=pointer]:
+              - link "最近看過" [ref=e28]:
+                - /url: https://ecvip.pchome.com.tw/?0x15eb23c5ce89a61773cc2380c86d48d7618a3ed640480499691d4ffeab8ba45ea1db1015ce8b5d9afcda85fc6e6d1c41
+                - generic [ref=e29]: 最近看過
+            - button "購物車" [ref=e30] [cursor=pointer]:
+              - link "購物車" [ref=e31]:
+                - /url: https://ecssl.pchome.com.tw/sys/cflow/fsindex/BigCar/BIGCAR/ItemList
+            - button "我的訂單" [ref=e32] [cursor=pointer]:
+              - link "我的訂單" [ref=e33]:
+                - /url: https://ecvip.pchome.com.tw/web/order/all
+                - generic [ref=e34]: 我的訂單
+            - button "顧客中心" [ref=e35] [cursor=pointer]:
+              - link "顧客中心" [ref=e36]:
+                - /url: https://ecvip.pchome.com.tw/
+                - generic [ref=e37]: 顧客中心
+            - button "下載 APP" [ref=e38] [cursor=pointer]:
+              - link "下載 APP" [ref=e39]:
+                - /url: " "
+                - generic [ref=e40]: 下載 APP
+          - generic [ref=e42]:
+            - button "註冊" [ref=e43] [cursor=pointer]:
+              - generic [ref=e44]: 註冊
+            - button "登入" [ref=e45] [cursor=pointer]:
+              - generic [ref=e46]: 登入
+    - generic [ref=e50]:
+      - link "PChome 24h購物" [ref=e51] [cursor=pointer]:
+        - /url: /
+        - img "PChome 24h購物" [ref=e52]
+      - generic [ref=e53]:
+        - generic [ref=e55]:
+          - button "search button" [ref=e57] [cursor=pointer]:
+            - generic [ref=e58]:
+              - generic [ref=e59]: 全站
+              - generic [ref=e60]: 
+          - combobox [ref=e61]:
+            - searchbox "輸入你想找的商品" [ref=e62]
+          - button "search button" [ref=e64] [cursor=pointer]:
+            - generic [ref=e66]: 
+        - generic [ref=e67]:
+          - list
+  - main [ref=e72]:
+    - list [ref=e80]:
+      - listitem [ref=e81]:
+        - link "" [ref=e82] [cursor=pointer]:
+          - /url: /
+          - generic [ref=e83]: 
+      - listitem [ref=e84]:
+        - link "居家" [ref=e85] [cursor=pointer]:
+          - /url: /sign/home
+      - listitem [ref=e86]:
+        - link "桌子/茶几" [ref=e87] [cursor=pointer]:
+          - /url: /region/DQCB
+      - listitem [ref=e88]:
+        - link "其他" [ref=e89] [cursor=pointer]:
+          - /url: /category/DQCB08C
+      - heading "吧檯／吧台桌" [level=1] [ref=e90]
+    - generic [ref=e95]:
+      - navigation [ref=e98]:
+        - generic [ref=e102]: 桌子/茶几
+        - generic [ref=e103]:
+          - list [ref=e106]:
+            - listitem [ref=e107]:
+              - list [ref=e108]:
+                - listitem [ref=e109]:
+                  - link "Top 30 推薦" [ref=e110] [cursor=pointer]:
+                    - /url: /region/DQCB/bestsellers
+          - list [ref=e113]:
+            - listitem [ref=e114]:
+              - generic [ref=e115]: 活動專區
+              - list [ref=e116]:
+                - listitem [ref=e117]:
+                  - link "Homelike下殺再95折" [ref=e118] [cursor=pointer]:
+                    - /url: /promotion/PR26040200065039?region=DQCB
+                - listitem [ref=e119]:
+                  - link "家具下殺再折扣" [ref=e120] [cursor=pointer]:
+                    - /url: /promotion/PR26040200065033?region=DQCB
+                - listitem [ref=e121]:
+                  - link "亞梭超級會員日" [ref=e122] [cursor=pointer]:
+                    - /url: /promotion/PR26022600053446?region=DQCB
+          - list [ref=e125]:
+            - listitem [ref=e126]:
+              - generic [ref=e127]: 折價券專區
+              - list [ref=e128]:
+                - listitem [ref=e129]:
+                  - link "桌子/茶几折價券商品" [ref=e130] [cursor=pointer]:
+                    - /url: /store/?fq=/R/DQCB/coupon
+          - list [ref=e133]:
+            - listitem [ref=e134]:
+              - generic [ref=e135]: 新品上架專區
+              - list [ref=e136]:
+                - listitem [ref=e137]:
+                  - link "桌子/茶几新上架商品" [ref=e138] [cursor=pointer]:
+                    - /url: /store/?fq=/R/DQCB/new
+          - list [ref=e141]:
+            - listitem [ref=e142]:
+              - link "★本月活動專區" [ref=e143] [cursor=pointer]:
+                - /url: /category/DQCB15C
+              - list [ref=e144]:
+                - listitem [ref=e145]:
+                  - link "暢銷家具 創新低" [ref=e146] [cursor=pointer]:
+                    - /url: /store/DQCB5G
+          - list [ref=e149]:
+            - listitem [ref=e150]:
+              - link "書桌/工作桌" [ref=e151] [cursor=pointer]:
+                - /url: /category/DQCB01C
+              - list [ref=e152]:
+                - listitem [ref=e153]:
+                  - link "電腦桌/工作桌" [ref=e154] [cursor=pointer]:
+                    - /url: /store/DQCBAP
+                - listitem [ref=e155]:
+                  - link "書桌" [ref=e156] [cursor=pointer]:
+                    - /url: /store/DQCB40
+                - listitem [ref=e157]:
+                  - link "電競桌" [ref=e158] [cursor=pointer]:
+                    - /url: /store/DQCBEM
+          - list [ref=e161]:
+            - listitem [ref=e162]:
+              - link "折疊桌/升降桌" [ref=e163] [cursor=pointer]:
+                - /url: /category/DQCB02C
+              - list [ref=e164]:
+                - listitem [ref=e165]:
+                  - link "折疊/升降桌" [ref=e166] [cursor=pointer]:
+                    - /url: /store/DQCBDE
+                - listitem [ref=e167]:
+                  - link "邊桌" [ref=e168] [cursor=pointer]:
+                    - /url: /store/DQCB69
+                - listitem [ref=e169]:
+                  - link "和室桌" [ref=e170] [cursor=pointer]:
+                    - /url: /store/DQCB0E
+                - listitem [ref=e171]:
+                  - link "懶人桌" [ref=e172] [cursor=pointer]:
+                    - /url: /store/DQCB0D
+          - list [ref=e175]:
+            - listitem [ref=e176]:
+              - link "餐桌" [ref=e177] [cursor=pointer]:
+                - /url: /category/DQCB03C
+              - list [ref=e178]:
+                - listitem [ref=e179]:
+                  - link "餐桌" [ref=e180] [cursor=pointer]:
+                    - /url: /store/DQCB2Z
+                - listitem [ref=e181]:
+                  - link "餐桌椅組" [ref=e182] [cursor=pointer]:
+                    - /url: /store/DQCBB8
+                - listitem [ref=e183]:
+                  - link "吧台桌" [ref=e184] [cursor=pointer]:
+                    - /url: /store/DQCB4D
+          - list [ref=e187]:
+            - listitem [ref=e188]:
+              - link "客廳桌/茶几" [ref=e189] [cursor=pointer]:
+                - /url: /category/DQCB04C
+              - list [ref=e190]:
+                - listitem [ref=e191]:
+                  - link "客廳桌/茶几" [ref=e192] [cursor=pointer]:
+                    - /url: /store/DQCBDJ
+          - list [ref=e195]:
+            - listitem [ref=e196]:
+              - link "化妝桌／車" [ref=e197] [cursor=pointer]:
+                - /url: /category/DQCB05C
+              - list [ref=e198]:
+                - listitem [ref=e199]:
+                  - link "化妝桌/車" [ref=e200] [cursor=pointer]:
+                    - /url: /store/DQCB2D
+                - listitem [ref=e201]:
+                  - link "化妝桌椅組" [ref=e202] [cursor=pointer]:
+                    - /url: /store/DQCB0F
+          - list [ref=e205]:
+            - listitem [ref=e206]:
+              - link "麻將桌" [ref=e207] [cursor=pointer]:
+                - /url: /category/DQCB06C
+              - list [ref=e208]:
+                - listitem [ref=e209]:
+                  - link "麻將桌" [ref=e210] [cursor=pointer]:
+                    - /url: /store/DQCBCS
+          - list [ref=e213]:
+            - listitem [ref=e214]:
+              - link "品牌總覽" [ref=e215] [cursor=pointer]:
+                - /url: /category/DQCB07C
+              - list [ref=e216]:
+                - listitem [ref=e217]:
+                  - link "A FACTORY傢俱工場" [ref=e218] [cursor=pointer]:
+                    - /url: /store/DQCBHO
+                - listitem [ref=e219]:
+                  - link "aka" [ref=e220] [cursor=pointer]:
+                    - /url: /store/DQCB03
+                - listitem [ref=e221]:
+                  - link "Amos" [ref=e222] [cursor=pointer]:
+                    - /url: /store/DQCBG1
+                - listitem [ref=e223]:
+                  - link "Artso亞梭" [ref=e224] [cursor=pointer]:
+                    - /url: /store/DQCB5R
+                - listitem [ref=e225]:
+                  - link "ASSARI" [ref=e226] [cursor=pointer]:
+                    - /url: /store/DQCBFV
+              - button "更多" [ref=e227] [cursor=pointer]:
+                - generic [ref=e229]: 更多
+      - generic [ref=e230]:
+        - list [ref=e235]:
+          - button "材質 木質 (6) 金屬 (5)" [ref=e236]:
+            - generic [ref=e238]:
+              - generic [ref=e239]: 材質
+              - list [ref=e241]:
+                - listitem [ref=e242]:
+                  - list [ref=e243]:
+                    - listitem [ref=e244]:
+                      - list [ref=e246]:
+                        - listitem [ref=e247]:
+                          - generic [ref=e248] [cursor=pointer]:
+                            - checkbox "木質 (6)" [ref=e251]
+                            - generic: 木質
+                            - generic [ref=e253]: (6)
+                        - listitem [ref=e254]:
+                          - generic [ref=e255] [cursor=pointer]:
+                            - checkbox "金屬 (5)" [ref=e258]
+                            - generic: 金屬
+                            - generic [ref=e260]: (5)
+          - button "組裝方式 免組裝 (1) 自行組裝 (5)" [ref=e261]:
+            - generic [ref=e263]:
+              - generic [ref=e264]: 組裝方式
+              - list [ref=e266]:
+                - listitem [ref=e267]:
+                  - list [ref=e268]:
+                    - listitem [ref=e269]:
+                      - list [ref=e271]:
+                        - listitem [ref=e272]:
+                          - generic [ref=e273] [cursor=pointer]:
+                            - checkbox "免組裝 (1)" [ref=e276]
+                            - generic: 免組裝
+                            - generic [ref=e278]: (1)
+                        - listitem [ref=e279]:
+                          - generic [ref=e280] [cursor=pointer]:
+                            - checkbox "自行組裝 (5)" [ref=e283]
+                            - generic: 自行組裝
+                            - generic [ref=e285]: (5)
+        - generic [ref=e289]:
+          - generic [ref=e291]:
+            - generic [ref=e293]:
+              - list [ref=e294]:
+                - button "推薦排序" [ref=e295]:
+                  - button "推薦排序" [ref=e296] [cursor=pointer]:
+                    - generic [ref=e298]: 推薦排序
+                - button "熱銷度" [ref=e299]:
+                  - button "熱銷度" [ref=e300] [cursor=pointer]:
+                    - generic [ref=e302]: 熱銷度
+                - button "新上架" [ref=e303]:
+                  - button "新上架" [ref=e304] [cursor=pointer]:
+                    - generic [ref=e306]: 新上架
+                - button "價格 " [ref=e307]:
+                  - button "價格 " [ref=e308] [cursor=pointer]:
+                    - generic [ref=e309]:
+                      - generic [ref=e310]: 價格
+                      - generic [ref=e311]: 
+              - list [ref=e312]:
+                - button "-" [ref=e313]:
+                  - textbox "最低價" [ref=e316]
+                  - text: "-"
+                - button [ref=e317]:
+                  - textbox "最高價" [ref=e320]
+                - button "確定" [ref=e321]:
+                  - button "確定" [ref=e322] [cursor=pointer]:
+                    - generic [ref=e324]: 確定
+            - generic [ref=e326]:
+              - button "配送方式" [ref=e327]:
+                - generic [ref=e329] [cursor=pointer]:
+                  - generic [ref=e331]: 配送方式
+                  - generic [ref=e333]: 
+              - list [ref=e334]:
+                - button "" [ref=e335]:
+                  - button "" [ref=e336] [cursor=pointer]:
+                    - generic [ref=e338]: 
+                - button "" [ref=e339]:
+                  - button "" [ref=e340] [cursor=pointer]:
+                    - generic [ref=e342]: 
+          - list [ref=e347]:
+            - listitem [ref=e348]:
+              - generic [ref=e349]:
+                - link "【美佳居】正方形吧台桌/高腳餐桌(四色可選)-80x80x高98cm 滿5999折300 MIT台灣製造 桌高98公分 【美佳居】正方形吧台桌/高腳餐桌(三色可選)-80x高98cm $1,498 $3,099 P幣 折扣" [ref=e350] [cursor=pointer]:
+                  - /url: /prod/DQCB15-A900HQS90?fq=/S/DQCB15
+                  - generic [ref=e351]:
+                    - img "【美佳居】正方形吧台桌/高腳餐桌(四色可選)-80x80x高98cm" [ref=e354]
+                    - generic [ref=e355]:
+                      - generic [ref=e356]:
+                        - generic [ref=e358]: 滿5999折300
+                        - generic [ref=e359]:
+                          - generic [ref=e360]: MIT台灣製造 桌高98公分
+                          - heading "【美佳居】正方形吧台桌/高腳餐桌(三色可選)-80x高98cm" [level=3] [ref=e361]
+                        - generic [ref=e364]: $1,498
+                        - generic [ref=e366]: $3,099
+                      - list [ref=e368]:
+                        - listitem [ref=e369]:
+                          - generic [ref=e371]: P幣
+                        - listitem [ref=e372]:
+                          - generic [ref=e374]: 折扣
+                - list [ref=e376]:
+                  - listitem [ref=e377]:
+                    - button "" [ref=e378] [cursor=pointer]:
+                      - generic [ref=e380]: 
+                  - listitem [ref=e381]:
+                    - button "" [ref=e382] [cursor=pointer]:
+                      - generic [ref=e384]: 
+            - listitem [ref=e385]:
+              - generic [ref=e386]:
+                - link "【美佳居】長型吧台桌/高腳餐桌(三色可選)-120x40x高98cm 滿5999折300 MIT台灣製造 桌高98公分 【美佳居】長型吧台桌/高腳餐桌(三色可選)-120x40x高98cm      (1) $1,592 $3,299 P幣 折扣" [ref=e387] [cursor=pointer]:
+                  - /url: /prod/DQCB15-A900HQSTD?fq=/S/DQCB15
+                  - generic [ref=e388]:
+                    - img "【美佳居】長型吧台桌/高腳餐桌(三色可選)-120x40x高98cm" [ref=e391]
+                    - generic [ref=e392]:
+                      - generic [ref=e393]:
+                        - generic [ref=e395]: 滿5999折300
+                        - generic [ref=e396]:
+                          - generic [ref=e397]: MIT台灣製造 桌高98公分
+                          - heading "【美佳居】長型吧台桌/高腳餐桌(三色可選)-120x40x高98cm" [level=3] [ref=e398]
+                          - generic [ref=e399]:
+                            - generic [ref=e403]:
+                              - generic [ref=e405]:
+                                - text: 
+                                - generic [ref=e406]: 
+                              - generic [ref=e408]:
+                                - text: 
+                                - generic [ref=e409]: 
+                              - generic [ref=e411]:
+                                - text: 
+                                - generic [ref=e412]: 
+                              - generic [ref=e414]:
+                                - text: 
+                                - generic [ref=e415]: 
+                              - generic [ref=e417]:
+                                - text: 
+                                - generic [ref=e418]: 
+                            - generic [ref=e419]: (1)
+                        - generic [ref=e422]: $1,592
+                        - generic [ref=e424]: $3,299
+                      - list [ref=e426]:
+                        - listitem [ref=e427]:
+                          - generic [ref=e429]: P幣
+                        - listitem [ref=e430]:
+                          - generic [ref=e432]: 折扣
+                - list [ref=e434]:
+                  - listitem [ref=e435]:
+                    - button "" [ref=e436] [cursor=pointer]:
+                      - generic [ref=e438]: 
+                  - listitem [ref=e439]:
+                    - button "" [ref=e440] [cursor=pointer]:
+                      - generic [ref=e442]: 
+            - listitem [ref=e443]:
+              - generic [ref=e444]:
+                - link "【美佳居】中型吧台桌/高腳餐桌(三色可選)-80x60x高98cm 滿5999折300 MIT台灣製造 桌高98公分 美佳居 【美佳居】中型吧台桌/高腳餐桌(三色可選)-80x60x高98cm $1,638 $3,449 P幣 折扣" [ref=e445] [cursor=pointer]:
+                  - /url: /prod/DQCB15-A900HQSD7?fq=/S/DQCB15
+                  - generic [ref=e446]:
+                    - img "【美佳居】中型吧台桌/高腳餐桌(三色可選)-80x60x高98cm" [ref=e449]
+                    - generic [ref=e450]:
+                      - generic [ref=e451]:
+                        - generic [ref=e453]: 滿5999折300
+                        - generic [ref=e454]:
+                          - generic [ref=e455]: MIT台灣製造 桌高98公分
+                          - heading "美佳居 【美佳居】中型吧台桌/高腳餐桌(三色可選)-80x60x高98cm" [level=3] [ref=e456]
+                        - generic [ref=e459]: $1,638
+                        - generic [ref=e461]: $3,449
+                      - list [ref=e463]:
+                        - listitem [ref=e464]:
+                          - generic [ref=e466]: P幣
+                        - listitem [ref=e467]:
+                          - generic [ref=e469]: 折扣
+                - list [ref=e471]:
+                  - listitem [ref=e472]:
+                    - button "" [ref=e473] [cursor=pointer]:
+                      - generic [ref=e475]: 
+                  - listitem [ref=e476]:
+                    - button "" [ref=e477] [cursor=pointer]:
+                      - generic [ref=e479]: 
+            - listitem [ref=e480]:
+              - generic [ref=e481]:
+                - link "【美佳居】大型吧台桌/高腳餐桌(四色可選)-120x60x高98cm 滿5999折300 MIT台灣製造 桌高98公分 【美佳居】長方形吧台桌/高腳餐桌(四色可選)-120x60x高98cm $1,686 $3,499 P幣 折扣" [ref=e482] [cursor=pointer]:
+                  - /url: /prod/DQCB15-A900HQSSN?fq=/S/DQCB15
+                  - generic [ref=e483]:
+                    - img "【美佳居】大型吧台桌/高腳餐桌(四色可選)-120x60x高98cm" [ref=e486]
+                    - generic [ref=e487]:
+                      - generic [ref=e488]:
+                        - generic [ref=e490]: 滿5999折300
+                        - generic [ref=e491]:
+                          - generic [ref=e492]: MIT台灣製造 桌高98公分
+                          - heading "【美佳居】長方形吧台桌/高腳餐桌(四色可選)-120x60x高98cm" [level=3] [ref=e493]
+                        - generic [ref=e496]: $1,686
+                        - generic [ref=e498]: $3,499
+                      - list [ref=e500]:
+                        - listitem [ref=e501]:
+                          - generic [ref=e503]: P幣
+                        - listitem [ref=e504]:
+                          - generic [ref=e506]: 折扣
+                - list [ref=e508]:
+                  - listitem [ref=e509]:
+                    - button "" [ref=e510] [cursor=pointer]:
+                      - generic [ref=e512]: 
+                  - listitem [ref=e513]:
+                    - button "" [ref=e514] [cursor=pointer]:
+                      - generic [ref=e516]: 
+            - listitem [ref=e517]:
+              - generic [ref=e518]:
+                - link "【美佳居】小型吧台桌/高腳餐桌(四色可選)-80x40x高98cm 滿5999折300 MIT台灣製造 桌高98公分 【美佳居】小型吧台桌/高腳餐桌(四色可選)-80x40x高98cm $1,592 $3,299 P幣 折扣" [ref=e519] [cursor=pointer]:
+                  - /url: /prod/DQCB15-A900HQRMP?fq=/S/DQCB15
+                  - generic [ref=e520]:
+                    - img "【美佳居】小型吧台桌/高腳餐桌(四色可選)-80x40x高98cm" [ref=e523]
+                    - generic [ref=e524]:
+                      - generic [ref=e525]:
+                        - generic [ref=e527]: 滿5999折300
+                        - generic [ref=e528]:
+                          - generic [ref=e529]: MIT台灣製造 桌高98公分
+                          - heading "【美佳居】小型吧台桌/高腳餐桌(四色可選)-80x40x高98cm" [level=3] [ref=e530]
+                        - generic [ref=e533]: $1,592
+                        - generic [ref=e535]: $3,299
+                      - list [ref=e537]:
+                        - listitem [ref=e538]:
+                          - generic [ref=e540]: P幣
+                        - listitem [ref=e541]:
+                          - generic [ref=e543]: 折扣
+                - list [ref=e545]:
+                  - listitem [ref=e546]:
+                    - button "" [ref=e547] [cursor=pointer]:
+                      - generic [ref=e549]: 
+                  - listitem [ref=e550]:
+                    - button "" [ref=e551] [cursor=pointer]:
+                      - generic [ref=e553]: 
+            - listitem [ref=e554]:
+              - generic [ref=e555]:
+                - link "鐮倉胡桃色吧台桌 滿5999折300 Obis 歐必斯 鐮倉胡桃色吧台桌 $5,699 (售價已折) $5,999 折價券 P幣 折扣" [ref=e556] [cursor=pointer]:
+                  - /url: /prod/DEDD7J-A900G0EW5?fq=/S/DQCB15
+                  - generic [ref=e557]:
+                    - img "鐮倉胡桃色吧台桌" [ref=e560]
+                    - generic [ref=e561]:
+                      - generic [ref=e562]:
+                        - generic [ref=e564]: 滿5999折300
+                        - heading "Obis 歐必斯 鐮倉胡桃色吧台桌" [level=3] [ref=e566]
+                        - generic [ref=e567]:
+                          - generic [ref=e569]: $5,699
+                          - generic [ref=e570]: (售價已折)
+                        - generic [ref=e572]: $5,999
+                      - list [ref=e574]:
+                        - listitem [ref=e575]:
+                          - generic [ref=e577]: 折價券
+                        - listitem [ref=e578]:
+                          - generic [ref=e580]: P幣
+                        - listitem [ref=e581]:
+                          - generic [ref=e583]: 折扣
+                - list [ref=e585]:
+                  - listitem [ref=e586]:
+                    - button "" [ref=e587] [cursor=pointer]:
+                      - generic [ref=e589]: 
+                  - listitem [ref=e590]:
+                    - button "" [ref=e591] [cursor=pointer]:
+                      - generic [ref=e593]: 
+        - generic [ref=e596]:
+          - insertion
+    - article [ref=e603]:
+      - generic [ref=e605]:
+        - heading "吧台桌/高腳餐桌熱賣中！" [level=2] [ref=e606]
+        - paragraph [ref=e608]: 這款吧台桌/高腳餐桌系列商品擁有多款式可選，包括小型、中型、大型各種尺寸，還有正方形、長方形、長型等不同形狀，適用於家居或商業使用。產品採用北歐風格設計，簡約時尚，搭配不同色彩可選擇，滿足您的個性需求。特殊的大理石紋設計，讓桌面更加美觀大方。部分產品還具備儲物功能，可滿足您的收納需求。 現在正進行優惠活動，這些產品深受用戶喜愛，是熱賣商品之一。不僅如此，我們也提供多種促銷活動，讓您能以優惠的價格購買到您喜愛的產品。無論您是想為家居裝潢增添一份美觀與實用，還是為您的商業場所添置新家具，我們都能滿足您的需求。快來選購吧，給生活空間帶來新的驚喜！ 這款吧台桌/高腳餐桌系列商品提供多款式可選，包括小型、中型、大型各種尺寸，還有正方形、長方形、長型等不同形狀，適用於家居或商業使用。產品採用北歐風格設計，簡約時尚，搭配不同色彩可選擇，滿足您的個性需求。特殊的大理石紋設計，讓桌面更加美觀大方。部分產品還具備儲物功能，可滿足您的收納需求。 現在正進行優惠活動，這些產品深受用戶喜愛，是熱賣商品之一。不僅如此，我們也提供多種促銷活動，讓您能以優惠的價格購買到您喜愛的產品。無論您是想為家居裝潢增添一份美觀與實用，還是為您的商業場所添置新家具，我們都能滿足您的需求。快來選購吧，給生活空間帶來新的驚喜！
+  - generic [ref=e613]:
+    - generic [ref=e614]:
+      - generic [ref=e615]:
+        - button "24hlogo" [ref=e616] [cursor=pointer]
+        - generic [ref=e618]:
+          - button "facebook" [ref=e619] [cursor=pointer]:
+            - generic [ref=e620]: 
+          - button "instagram" [ref=e621] [cursor=pointer]:
+            - generic [ref=e622]: 
+          - button "line" [ref=e623] [cursor=pointer]:
+            - generic [ref=e624]: 
+          - button "youtube" [ref=e625] [cursor=pointer]:
+            - generic [ref=e626]: 
+        - generic [ref=e627]:
+          - text: 106 台北市大安區敦化南路二段105號12樓
+          - generic [ref=e628]: 統一編號：16606102
+          - generic [ref=e629]: 本網站產品已投保國泰產物產品責任險$250,000,000元。
+          - text: 保險證號：1516字第14PD04516號
+      - list [ref=e633]:
+        - listitem [ref=e634]:
+          - generic [ref=e635]: 關於PChome24h
+          - button "榮耀時刻" [ref=e637] [cursor=pointer]:
+            - generic [ref=e638]: 榮耀時刻
+          - button "大事記" [ref=e640] [cursor=pointer]:
+            - generic [ref=e641]: 大事記
+          - button "人才招募" [ref=e643] [cursor=pointer]:
+            - generic [ref=e644]: 人才招募
+          - button "隱私權聲明" [ref=e646] [cursor=pointer]:
+            - generic [ref=e647]: 隱私權聲明
+          - button "服務條款" [ref=e649] [cursor=pointer]:
+            - generic [ref=e650]: 服務條款
+          - button "商品專櫃總覽" [ref=e652] [cursor=pointer]:
+            - generic [ref=e653]: 商品專櫃總覽
+        - listitem [ref=e654]:
+          - generic [ref=e655]: 顧客權益
+          - button "聯絡我們" [ref=e657] [cursor=pointer]:
+            - generic [ref=e658]: 聯絡我們
+          - button "常見Q&A" [ref=e660] [cursor=pointer]:
+            - generic [ref=e661]: 常見Q&A
+          - button "防詐騙宣導" [ref=e663] [cursor=pointer]:
+            - generic [ref=e664]: 防詐騙宣導
+          - button "退換貨說明" [ref=e666] [cursor=pointer]:
+            - generic [ref=e667]: 退換貨說明
+          - button "24h到貨說明" [ref=e669] [cursor=pointer]:
+            - generic [ref=e670]: 24h到貨說明
+          - button "政令宣導" [ref=e672] [cursor=pointer]:
+            - generic [ref=e673]: 政令宣導
+        - listitem [ref=e674]:
+          - generic [ref=e675]: 其他服務
+          - button "PChome" [ref=e677] [cursor=pointer]:
+            - generic [ref=e678]: PChome
+          - button "書店" [ref=e680] [cursor=pointer]:
+            - generic [ref=e681]: 書店
+          - button "比比昂日本購物" [ref=e683] [cursor=pointer]:
+            - generic [ref=e684]: 比比昂日本購物
+          - button "旅遊" [ref=e686] [cursor=pointer]:
+            - generic [ref=e687]: 旅遊
+        - listitem [ref=e688]:
+          - generic [ref=e689]: 企業合作
+          - button "招商專區" [ref=e691] [cursor=pointer]:
+            - generic [ref=e692]: 招商專區
+          - button "媒體聯繫" [ref=e694] [cursor=pointer]:
+            - generic [ref=e695]: 媒體聯繫
+          - button "企業／大型採購" [ref=e697] [cursor=pointer]:
+            - generic [ref=e698]: 企業／大型採購
+    - generic [ref=e699]:
+      - generic [ref=e700]: 網路家庭國際資訊股份有限公司 版權所有 轉載必究
+      - generic [ref=e701]: PChome and PChome Online are trademarks of PChome Online Inc.

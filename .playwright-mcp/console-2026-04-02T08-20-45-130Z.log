@@ -1,0 +1,18 @@
+[     896ms] Uncaught Error: Minified React error #418; visit https://react.dev/errors/418 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
+    at t5 (https://assets.pchome.com.tw/production/nextjs/main/_next/static/chunks/76af1d31-2d54a6c5656e00d4.js:0:25015)
+    at iZ (https://assets.pchome.com.tw/production/nextjs/main/_next/static/chunks/76af1d31-2d54a6c5656e00d4.js:0:120880)
+    at ia (https://assets.pchome.com.tw/production/nextjs/main/_next/static/chunks/76af1d31-2d54a6c5656e00d4.js:0:95507)
+    at <anonymous> (https://assets.pchome.com.tw/production/nextjs/main/_next/static/chunks/76af1d31-2d54a6c5656e00d4.js:0:91433)
+    at <anonymous> (https://assets.pchome.com.tw/production/nextjs/main/_next/static/chunks/76af1d31-2d54a6c5656e00d4.js:0:91440)
+    at oZ (https://assets.pchome.com.tw/production/nextjs/main/_next/static/chunks/76af1d31-2d54a6c5656e00d4.js:0:91545)
+    at x (https://assets.pchome.com.tw/production/nextjs/main/_next/static/chunks/7963-3b1b96530e79b9f9.js:0:121040)
+[     896ms] Uncaught Error: Minified React error #422; visit https://react.dev/errors/422 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
+    at <anonymous> (https://assets.pchome.com.tw/production/nextjs/main/_next/static/chunks/76af1d31-2d54a6c5656e00d4.js:0:64332)
+    at lZ (https://assets.pchome.com.tw/production/nextjs/main/_next/static/chunks/76af1d31-2d54a6c5656e00d4.js:0:65683)
+    at iZ (https://assets.pchome.com.tw/production/nextjs/main/_next/static/chunks/76af1d31-2d54a6c5656e00d4.js:0:121478)
+    at ia (https://assets.pchome.com.tw/production/nextjs/main/_next/static/chunks/76af1d31-2d54a6c5656e00d4.js:0:95507)
+    at <anonymous> (https://assets.pchome.com.tw/production/nextjs/main/_next/static/chunks/76af1d31-2d54a6c5656e00d4.js:0:91433)
+    at <anonymous> (https://assets.pchome.com.tw/production/nextjs/main/_next/static/chunks/76af1d31-2d54a6c5656e00d4.js:0:91440)
+    at oZ (https://assets.pchome.com.tw/production/nextjs/main/_next/static/chunks/76af1d31-2d54a6c5656e00d4.js:0:91545)
+    at x (https://assets.pchome.com.tw/production/nextjs/main/_next/static/chunks/7963-3b1b96530e79b9f9.js:0:121040)
+[     934ms] [ERROR] {message: searchTracking searchId 遺失, url: https://24h.pchome.com.tw/search/?q=%E5%90%A7%E5%8…=rnk&cateName=%E5%90%A7%E5%8F%B0%E6%A1%8C&size=24} @ https://assets.pchome.com.tw/production/nextjs/main/_next/static/chunks/7963-3b1b96530e79b9f9.js:14
