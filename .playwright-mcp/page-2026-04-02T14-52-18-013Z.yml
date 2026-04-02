@@ -1,0 +1,250 @@
+- generic [ref=e1]:
+  - generic [ref=e3]:
+    - generic [active]:
+      - button "跳到主要內容":
+        - generic: 跳到主要內容
+    - generic [ref=e5]:
+      - banner [ref=e6]:
+        - navigation [ref=e8]:
+          - generic [ref=e9]:
+            - link "賣家中心" [ref=e10] [cursor=pointer]:
+              - /url: //seller.shopee.tw
+            - link "開始隨拍即賣囉!" [ref=e11] [cursor=pointer]:
+              - /url: /seller/signup
+            - link "下載" [ref=e13] [cursor=pointer]:
+              - /url: /web/
+            - generic [ref=e14]: 追蹤我們
+            - generic [ref=e15]:
+              - link "追蹤我們 Facebook" [ref=e16] [cursor=pointer]:
+                - /url: https://facebook.com/ShopeeTW
+              - link "追蹤我們 Instagram!" [ref=e17] [cursor=pointer]:
+                - /url: https://instagram.com/Shopee_TW
+              - link "追蹤我們 Line" [ref=e18] [cursor=pointer]:
+                - /url: https://line.me/R/ti/p/@shopee
+          - list [ref=e19]:
+            - listitem [ref=e20] [cursor=pointer]:
+              - button "通知總覽" [ref=e23]:
+                - link "通知總覽":
+                  - /url: /user/notifications/order
+                  - img
+                  - generic: 通知總覽
+            - link "幫助中心" [ref=e24] [cursor=pointer]:
+              - /url: https://help.shopee.tw/tw/s
+              - img [ref=e26]
+              - generic [ref=e30]: 幫助中心
+            - listitem [ref=e31] [cursor=pointer]:
+              - button "繁體中文" [ref=e33]:
+                - generic [ref=e34]:
+                  - img [ref=e36]
+                  - generic [ref=e39]: 繁體中文
+                  - img [ref=e40]
+            - link "註冊" [ref=e42] [cursor=pointer]:
+              - /url: /buyer/signup?keyword=%E9%A4%90%E6%A1%8C%20150%E5%85%AC%E5%88%86&next=https%3A%2F%2Fshopee.tw%2Fsearch%3Fkeyword%3D%25E9%25A4%2590%25E6%25A1%258C%2B150%25E5%2585%25AC%25E5%2588%2586%26price_min%3D0%26price_max%3D3000%26sortBy%3Dsales&price_max=3000&price_min=0&sortBy=sales
+            - link "登入" [ref=e44] [cursor=pointer]:
+              - /url: /buyer/login?keyword=%E9%A4%90%E6%A1%8C%20150%E5%85%AC%E5%88%86&next=https%3A%2F%2Fshopee.tw%2Fsearch%3Fkeyword%3D%25E9%25A4%2590%25E6%25A1%258C%2B150%25E5%2585%25AC%25E5%2588%2586%26price_min%3D0%26price_max%3D3000%26sortBy%3Dsales&price_max=3000&price_min=0&sortBy=sales
+        - generic [ref=e46]:
+          - link [ref=e47] [cursor=pointer]:
+            - /url: /
+            - img [ref=e49]
+          - search [ref=e55]:
+            - combobox "搜尋商品、品牌或賣場" [ref=e58]: 餐桌 150公分
+            - button [ref=e59] [cursor=pointer]:
+              - img [ref=e60]
+          - button "Shopping Cart Icon Shopping Cart Please log in to view cart / add items to cart" [ref=e70]:
+            - link "Shopping Cart Icon Shopping Cart Please log in to view cart / add items to cart" [ref=e72] [cursor=pointer]:
+              - /url: /buyer/login?from_source=mini_cart_btn&keyword=%E9%A4%90%E6%A1%8C%20150%E5%85%AC%E5%88%86&next=https%3A%2F%2Fshopee.tw%2Fsearch%3Fkeyword%3D%25E9%25A4%2590%25E6%25A1%258C%2B150%25E5%2585%25AC%25E5%2588%2586%26price_min%3D0%26price_max%3D3000%26sortBy%3Dsales&price_max=3000&price_min=0&sortBy=sales
+              - img "Shopping Cart Icon" [ref=e73]
+              - generic [ref=e77]: Shopping Cart Please log in to view cart / add items to cart
+      - contentinfo [ref=e82]:
+        - generic [ref=e85]:
+          - generic [ref=e86]:
+            - generic [ref=e87]:
+              - generic [ref=e88]: 客服中心
+              - list [ref=e89]:
+                - listitem [ref=e90]:
+                  - link "幫助中心" [ref=e91] [cursor=pointer]:
+                    - /url: https://help.shopee.tw/tw/s
+                    - generic [ref=e92]: 幫助中心
+                - listitem [ref=e93]:
+                  - link "蝦皮商城" [ref=e94] [cursor=pointer]:
+                    - /url: https://help.shopee.tw/portal/article/83489-[%E6%96%B0%E6%89%8B%E4%B8%8A%E8%B7%AF]-%E4%BB%80%E9%BA%BC%E6%98%AF%E8%9D%A6%E7%9A%AE%E5%95%86%E5%9F%8E?
+                    - generic [ref=e95]: 蝦皮商城
+                - listitem [ref=e96]:
+                  - link "付款方式" [ref=e97] [cursor=pointer]:
+                    - /url: https://help.shopee.tw/portal/article/80089-[%E6%96%B0%E6%89%8B%E4%B8%8A%E8%B7%AF]-%E8%9D%A6%E7%9A%AE%E8%B3%BC%E7%89%A9%E6%94%AF%E6%8F%B4%E5%93%AA%E4%BA%9B%E4%BB%98%E6%AC%BE%E6%96%B9%E5%BC%8F%E8%88%87%E4%BB%98%E6%AC%BE%E9%87%91%E9%A1%8D%E4%B8%8A%E9%99%90?
+                    - generic [ref=e98]: 付款方式
+                - listitem [ref=e99]:
+                  - link "蝦皮錢包" [ref=e100] [cursor=pointer]:
+                    - /url: https://help.shopee.tw/portal/article/79770-[%E8%9D%A6%E7%9A%AE%E9%8C%A2%E5%8C%85]-%E4%BB%80%E9%BA%BC%E6%98%AF%E8%9D%A6%E7%9A%AE%E9%8C%A2%E5%8C%85
+                    - generic [ref=e101]: 蝦皮錢包
+                - listitem [ref=e102]:
+                  - link "蝦幣" [ref=e103] [cursor=pointer]:
+                    - /url: https://help.shopee.tw/portal/4/article/79809
+                    - generic [ref=e104]: 蝦幣
+                - listitem [ref=e105]:
+                  - link "運費補助" [ref=e106] [cursor=pointer]:
+                    - /url: https://help.shopee.tw/portal/4/article/79786
+                    - generic [ref=e107]: 運費補助
+                - listitem [ref=e108]:
+                  - link "退貨退款" [ref=e109] [cursor=pointer]:
+                    - /url: https://help.shopee.tw/portal/4/article/79905
+                    - generic [ref=e110]: 退貨退款
+                - listitem [ref=e111]:
+                  - link "物流方式" [ref=e112] [cursor=pointer]:
+                    - /url: https://help.shopee.tw/portal/4/article/79726
+                    - generic [ref=e113]: 物流方式
+                - listitem [ref=e114]:
+                  - link "聯絡客服" [ref=e115] [cursor=pointer]:
+                    - /url: https://help.shopee.tw/portal/article/79725-[%e8%81%af%e7%b5%a1%e5%ae%a2%e6%9c%8d]-%e5%a6%82%e4%bd%95%e8%81%af%e7%b5%a1%e8%9d%a6%e7%9a%ae%e5%ae%a2%e6%9c%8d%3F
+                    - generic [ref=e116]: 聯絡客服
+                - listitem [ref=e117]:
+                  - link "防詐騙宣傳" [ref=e118] [cursor=pointer]:
+                    - /url: https://shopee.tw/m/Anti-fraud-advocacy
+                    - generic [ref=e119]: 防詐騙宣傳
+            - generic [ref=e120]:
+              - generic [ref=e121]: 關於蝦皮
+              - list [ref=e122]:
+                - listitem [ref=e123]:
+                  - link "關於蝦皮" [ref=e124] [cursor=pointer]:
+                    - /url: https://careers.shopee.com/about/
+                    - generic [ref=e125]: 關於蝦皮
+                - listitem [ref=e126]:
+                  - link "加入我們" [ref=e127] [cursor=pointer]:
+                    - /url: https://careers.shopee.com/jobs
+                    - generic [ref=e128]: 加入我們
+                - listitem [ref=e129]:
+                  - link "政策" [ref=e130] [cursor=pointer]:
+                    - /url: https://help.shopee.tw/portal/4/category/17521
+                    - generic [ref=e131]: 政策
+                - listitem [ref=e132]:
+                  - link "蝦皮隱私權政策" [ref=e133] [cursor=pointer]:
+                    - /url: https://help.shopee.tw/portal/article/77271
+                    - generic [ref=e134]: 蝦皮隱私權政策
+                - listitem [ref=e135]:
+                  - link "蝦皮商城" [ref=e136] [cursor=pointer]:
+                    - /url: https://shopee.tw/mall/
+                    - generic [ref=e137]: 蝦皮商城
+                - listitem [ref=e138]:
+                  - link "賣家中心" [ref=e139] [cursor=pointer]:
+                    - /url: https://seller.shopee.tw/
+                    - generic [ref=e140]: 賣家中心
+                - listitem [ref=e141]:
+                  - link "限時特賣" [ref=e142] [cursor=pointer]:
+                    - /url: https://shopee.tw/flash_sale/
+                    - generic [ref=e143]: 限時特賣
+                - listitem [ref=e144]:
+                  - link "聯絡媒體" [ref=e145] [cursor=pointer]:
+                    - /url: mailto:media.tw%40shopee.com
+                    - generic [ref=e146]: 聯絡媒體
+            - generic [ref=e147]:
+              - generic [ref=e148]: 付款
+              - list [ref=e149]:
+                - listitem [ref=e150]:
+                  - img "logo" [ref=e152]
+                - listitem [ref=e153]:
+                  - img "logo" [ref=e155]
+                - listitem [ref=e156]:
+                  - img "logo" [ref=e158]
+              - generic [ref=e159]: 物流合作
+              - list [ref=e160]:
+                - listitem [ref=e161]:
+                  - img "logo" [ref=e163]
+                - listitem [ref=e164]:
+                  - img "logo" [ref=e166]
+                - listitem [ref=e167]:
+                  - img "logo" [ref=e169]
+                - listitem [ref=e170]:
+                  - img "logo" [ref=e172]
+                - listitem [ref=e173]:
+                  - img "logo" [ref=e175]
+                - listitem [ref=e176]:
+                  - img "logo" [ref=e178]
+                - listitem [ref=e179]:
+                  - img "logo" [ref=e181]
+                - listitem [ref=e182]:
+                  - img "logo" [ref=e184]
+                - listitem [ref=e185]:
+                  - img "logo" [ref=e187]
+              - generic [ref=e188]: 蝦皮直送包裝減量標章
+              - list [ref=e189]:
+                - listitem [ref=e190]:
+                  - img "logo" [ref=e192]
+            - generic [ref=e193]:
+              - generic [ref=e194]: 關注我們
+              - list [ref=e195]:
+                - listitem [ref=e196]:
+                  - link "Facebook" [ref=e197] [cursor=pointer]:
+                    - /url: https://facebook.com/ShopeeTW
+                    - img [ref=e198]
+                    - generic [ref=e199]: Facebook
+                - listitem [ref=e200]:
+                  - link "Instagram" [ref=e201] [cursor=pointer]:
+                    - /url: https://instagram.com/Shopee_TW
+                    - img [ref=e202]
+                    - generic [ref=e203]: Instagram
+                - listitem [ref=e204]:
+                  - link "Line" [ref=e205] [cursor=pointer]:
+                    - /url: https://page.line.me/shopee?openQrModal=true
+                    - img [ref=e206]
+                    - generic [ref=e207]: Line
+                - listitem [ref=e208]:
+                  - link "LinkedIn" [ref=e209] [cursor=pointer]:
+                    - /url: https://linkedin.com/company/shopee
+                    - img [ref=e210]
+                    - generic [ref=e211]: LinkedIn
+                - listitem [ref=e212]:
+                  - link "蝦品輯部落格" [ref=e213] [cursor=pointer]:
+                    - /url: https://shopee.tw/blog
+                    - img [ref=e214]
+                    - generic [ref=e215]: 蝦品輯部落格
+            - generic [ref=e216]:
+              - generic [ref=e217]: 下載蝦皮
+              - generic [ref=e218]:
+                - link "download_qr_code" [ref=e219] [cursor=pointer]:
+                  - /url: https://shopee.tw/web
+                  - img "download_qr_code" [ref=e220]
+                - generic [ref=e221]:
+                  - link "app" [ref=e222] [cursor=pointer]:
+                    - /url: https://shopee.tw/web
+                    - img "app" [ref=e223]
+                  - link "app" [ref=e224] [cursor=pointer]:
+                    - /url: https://shopee.tw/web
+                    - img "app" [ref=e225]
+                  - link "app" [ref=e226] [cursor=pointer]:
+                    - /url: https://shopee.tw/web
+                    - img "app" [ref=e227]
+          - generic [ref=e228]:
+            - generic [ref=e229]: 新加坡商蝦皮娛樂電商有限公司台灣分公司 統一編號：56801904
+            - generic [ref=e230]: © 2026 Shopee. 版權所有。
+            - generic [ref=e231]:
+              - link "阿根廷" [ref=e233] [cursor=pointer]:
+                - /url: https://shopee.com.ar
+              - link "新加坡" [ref=e235] [cursor=pointer]:
+                - /url: https://shopee.sg
+              - link "印尼" [ref=e237] [cursor=pointer]:
+                - /url: https://shopee.co.id
+              - link "泰國" [ref=e239] [cursor=pointer]:
+                - /url: https://shopee.co.th
+              - link "馬來西亞" [ref=e241] [cursor=pointer]:
+                - /url: https://shopee.com.my
+              - link "越南" [ref=e243] [cursor=pointer]:
+                - /url: https://shopee.vn
+              - link "菲律賓" [ref=e245] [cursor=pointer]:
+                - /url: https://shopee.ph
+              - link "巴西" [ref=e247] [cursor=pointer]:
+                - /url: https://shopee.com.br
+              - link "墨西哥" [ref=e249] [cursor=pointer]:
+                - /url: https://shopee.com.mx
+              - link "台灣" [ref=e251] [cursor=pointer]:
+                - /url: https://shopee.tw
+  - dialog [ref=e253]:
+    - generic [ref=e254]:
+      - img "Worldmap" [ref=e256]
+      - generic [ref=e257]: 選擇語言
+      - generic [ref=e258]:
+        - button "繁體中文" [ref=e260] [cursor=pointer]
+        - button "简体中文" [ref=e262] [cursor=pointer]
+        - button "English*" [ref=e264] [cursor=pointer]
+      - generic [ref=e265]: "* 自動翻譯結果由第三方提供，未涵蓋圖片及系統文字，並可能存在誤差，若有差異請以原文為準。"
+  - generic:
+    - img

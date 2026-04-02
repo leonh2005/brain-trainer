@@ -1,0 +1,20 @@
+[     128ms] [LOG] trigger_leave_storage @ https://rhea-cache.advividnetwork.com/tracker/event_tracker_gtm.js:1544
+[     194ms] [LOG] LINE BaseCode @ :0
+[     208ms] [LOG] Preload CSS injected @ https://cdn.chichat.tw/clients/c7ac82b9-beb6-45f4-8d45-62e807f1ec9a/public/scripts/script.js:40
+[     209ms] [WARNING] <meta name="apple-mobile-web-app-capable" content="yes"> is deprecated. Please include <meta name="mobile-web-app-capable" content="yes"> @ https://www.nitori-net.tw/category/25?sort=price_asc&max_price=3000&min_price=1000:0
+[     224ms] [LOG] ***[error] paraArray['txid'] is null @ https://adc.tamedia.com.tw/tr/pixel.js:0
+[     224ms] [LOG] ***[error] parse queryString fail. [@parseUrl()] @ https://adc.tamedia.com.tw/tr/pixel.js:0
+[     259ms] [LOG] document.browsingTopics() is supported @ https://adc.tamedia.com.tw/idg/topics/topics.html:12
+[     262ms] [LOG] Called from in iframe:  <br> Number of topics:
+							0  <br>  current time: Thu Apr 02 2026 22:46:51 GMT+0800 (台北標準時間) @ https://adc.tamedia.com.tw/idg/topics/topics.html:35
+[     455ms] [WARNING] An iframe which has both allow-scripts and allow-same-origin for its sandbox attribute can escape its sandboxing. @ https://static.aottercdn.com/trek/sdk/3.5.4/sdk.js:1
+[     494ms] [LOG] [UUID] 本地已有有效 Cookie，跳過伺服器請求： bec9691d-4581-48cd-b67e-3a7680a72839 @ https://avivid.likr.tw/api/ios_water_webpush_v21.js:4786
+[     500ms] [LOG] MessagingService @ :35
+[     537ms] [ERROR] Connecting to 'https://www.google.com.tw/rmkt/collect/434508138/?random=1775141211508&cv=11&fst=1775141211508&fmt=8&bg=ffffff&guid=ON&async=1&gtm=45be63v0h1v892247489z8889994123za20gzb889994123zd889994123xea&gcd=13l3l3l3l1l1&dma=0&tag_exp=0~115938465~115938468~116991816~117266401&u_w=390&u_h=844&url=https%3A%2F%2Fwww.nitori-net.tw%2Fcategory%2F25%3Fsort%3Dprice_asc%26max_price%3D3000%26min_price%3D1000&frm=0&tiba=%E9%A4%90%E6%A1%8C%EF%BC%8E%E9%A4%90%E6%A1%8C%E6%A4%85%E7%B5%84%EF%BD%9CNITORI%20%E5%AE%9C%E5%BE%97%E5%88%A9%E5%AE%B6%E5%B1%85%E7%B7%9A%E4%B8%8A%E8%B3%BC%E7%89%A9%E7%B6%B2&hn=www.googleadservices.com&npa=0&pscdl=noapi&auid=1026695612.1775141089&uaa=arm&uab=64&uafvl=Chromium%3B147.0.7727.15%7CNot.A%252FBrand%3B8.0.0.0&uamb=0&uam=&uap=macOS&uapv=26.3.1&uaw=0&_tu=CA&gcp=5&ipr=y' violates the following Content Security Policy directive: "connect-src 'self' *.useinsider.com FrontendAPI-ggazgncacwcqc8bt.z01.azurefd.net loginapi-c6gnd0a7fefsh3ha.z01.azurefd.net frontAPItest-dadrbagufza9hka7.z01.azurefd.net login4test-bfcjard3dtewf8hd.z01.azurefd.net www.google-analytics.com s.yimg.com *.doubleclick.net *.google.com *.facebook.com bat.bing.com *.ai-ad.net.tw accounts.google.com/gsi/ api.line.me/oauth2/v2.1/ asia-east1-chichat-cat.cloudfunctions.net *.chichat.tw pixel-api.scupio.com/ c3po.aotter.net *.creativecdn.com *.taboola.com *.appier.net *.criteo.com *.criteo.net *.awoo.org *.youtube.com u-dsp.vpadn.com ids-dmp.vpadn.com c-dsp.vpon.com api.tigerfly.tw *.popin.cc *.rixbeedesk.com auto-load-balancer.likr.com.tw auto-load-balancer.likr.tw auto-satellite.advividnetwork.com avivid.likr.tw www.gstatic.com kinesis.ap-southeast-1.amazonaws.com objectstorage.ap-tokyo-1.oraclecloud.com t.ssp.hinet.net tls-ap-southeast-1.bytepluses.com rhea-cache.advividnetwork.com *.googleapis.com *.clarity.ms". The action has been blocked. @ https://www.nitori-net.tw/category/25?sort=price_asc&max_price=3000&min_price=1000:0
+[     672ms] [LOG] Notification permission denied. @ :79
+[     962ms] [LOG] trigger load @ https://rhea-cache.advividnetwork.com/tracker/event_tracker_gtm.js:708
+[     963ms] [LOG] trigger leave @ https://rhea-cache.advividnetwork.com/tracker/event_tracker_gtm.js:1533
+[     963ms] [LOG] trigger member @ https://rhea-cache.advividnetwork.com/tracker/event_tracker_gtm.js:902
+[    1727ms] [LOG] criteo Listing @ :2
+[    1993ms] [LOG] [track] pid not found @ https://api.ai-ad.net.tw/aiad/public/productfeed/track.js?v=1775141211465:63
+[   30602ms] [LOG] block AviviD.settings @ https://avivid.likr.tw/api/ios_water_webpush_v21.js:643
