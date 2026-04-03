@@ -1,32 +1,31 @@
-2026-04-03 02:39:45 UTC
+2026-04-03 18:00:01 UTC
 macOS-26.3.1-arm64-arm-64bit
 Ren'Py 8.5.2.26010301
 
-Early init took 17 ms
-Loading error handling took 12 ms
-Loading script took 277 ms
-Loading save slot metadata took 9 ms
+Early init took 51 ms
+Loading error handling took 22 ms
+Loading script took 90 ms
+Loading save slot metadata took 24 ms
 Loading persistent took 0 ms
-Running init code took 25 ms
-Loading analysis data took 0 ms
-Analyze and compile ATL took 3 ms
-Reloading save slot metadata took 2 ms
-Backing up script files to '/Users/steven/Library/RenPy/backups/sl_vn_demo':
+Running init code took 42 ms
+Loading analysis data took 3 ms
+Analyze and compile ATL took 1 ms
+Reloading save slot metadata took 7 ms
 Dump and make backups took 0 ms
 Cleaning cache took 0 ms
 Making clean stores took 0 ms
-Initial gc took 12 ms
+Initial gc took 46 ms
 DPI scale factor: 1.000000
-Creating interface object took 0 ms
+Creating interface object took 2 ms
 Init translation took 0 ms
 Cleaning stores took 0 ms
-Load screen analysis took 0 ms
-Analyze screens took 7 ms
-Save screen analysis took 4 ms
-Save pyanalysis took 2 ms
-Save bytecode took 11 ms
-Running _start took 0 ms
-Interface start took 187 ms
+Load screen analysis took 15 ms
+Analyze screens took 1 ms
+Save screen analysis took 0 ms
+Save pyanalysis took 0 ms
+Save bytecode took 0 ms
+Running _start took 1 ms
+Interface start took 874 ms
 
 Initializing gl2 renderer:
 primary display bounds: (0, 0, 1920, 1080)
@@ -38,4 +37,3 @@ Version: '2.1 Metal - 90.5'
 Display Info: <Info({'bitsize': 32, 'bytesize': 4, 'masks': (16711680, 65280, 255, 4278190080), 'shifts': (16, 8, 0, 24), 'losses': (0, 0, 0, 0), 'current_w': 1920, 'current_h': 1080, 'refresh_rate': 60, 'hw': False, 'wm': True, 'video_mem': 268435456, 'blit_hw': False, 'blit_hw_CC': False, 'blit_hw_A': False, 'blit_sw': False, 'blit_sw_CC': False, 'blit_sw_A': False})>
 Screen sizes: virtual=(1280, 720) physical=(1280, 720) drawable=(1280, 720)
 Maximum texture size: 4096x4096
-Could not open 'cache/shaders.txt':
