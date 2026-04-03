@@ -27,3 +27,4 @@
 [Fri Apr  3 06:50:35 CST 2026] 2026-04-02T22:50:35Z ERR Failed to refresh DNS local resolver error="lookup region1.v2.argotunnel.com: i/o timeout"
 [Fri Apr  3 07:25:40 CST 2026] 2026-04-02T23:25:40Z ERR Failed to refresh DNS local resolver error="lookup region1.v2.argotunnel.com: i/o timeout"
 [Fri Apr  3 07:30:11 CST 2026] 2026-04-02T23:30:11Z ERR update check failed error="no release found"
+[Fri Apr  3 11:45:46 CST 2026] 2026-04-03T03:45:46Z ERR Failed to refresh DNS local resolver error="lookup region1.v2.argotunnel.com: i/o timeout"

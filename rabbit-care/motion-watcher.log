@@ -32892,3 +32892,55 @@ ModuleNotFoundError: No module named 'cv2'
 2026-04-03 11:38:45,194 INFO AFC is enabled with max remote calls: 10.
 2026-04-03 11:38:47,557 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 429 Too Many Requests"
 2026-04-03 11:38:47,558 WARNING Gemini 429，等待 120s 後重試（第 2 次）
+2026-04-03 11:40:47,684 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 11:40:49,847 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 429 Too Many Requests"
+2026-04-03 11:40:49,849 ERROR Gemini 分析失敗: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.0-flash\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash\nPlease retry in 10.157649503s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_input_token_count', 'quotaId': 'GenerateContentInputTokensPerModelPerMinute-FreeTier', 'quotaDimensions': {'model': 'gemini-2.0-flash', 'location': 'global'}}, {'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerMinutePerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.0-flash'}}, {'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.0-flash'}}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '10s'}]}}
+2026-04-03 11:40:50,160 INFO 偵測到移動，開始收集影格
+2026-04-03 11:40:55,442 WARNING 讀取影格失敗，重新連線
+2026-04-03 11:40:56,710 INFO RTSP 串流連線成功
+2026-04-03 11:41:07,541 INFO 靜止 30 幀，觸發分析
+2026-04-03 11:41:07,542 INFO 分析條件: motion_frames=25 cooldown剩餘=0s
+2026-04-03 11:41:07,590 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 11:41:09,716 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 429 Too Many Requests"
+2026-04-03 11:41:09,717 WARNING Gemini 429，等待 60s 後重試（第 1 次）
+2026-04-03 11:42:09,837 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 11:42:12,081 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 429 Too Many Requests"
+2026-04-03 11:42:12,091 WARNING Gemini 429，等待 120s 後重試（第 2 次）
+2026-04-03 11:44:12,171 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 11:44:14,419 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 429 Too Many Requests"
+2026-04-03 11:44:14,421 ERROR Gemini 分析失敗: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.0-flash\nPlease retry in 45.587854744s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.0-flash'}}, {'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerMinutePerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.0-flash'}}, {'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_input_token_count', 'quotaId': 'GenerateContentInputTokensPerModelPerMinute-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.0-flash'}}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '45s'}]}}
+2026-04-03 11:44:17,019 INFO 偵測到移動，開始收集影格
+[h264 @ 0xb8e34dc00] error while decoding MB 96 67, bytestream -5
+2026-04-03 11:44:30,049 WARNING 讀取影格失敗，重新連線
+2026-04-03 11:44:31,381 INFO RTSP 串流連線成功
+2026-04-03 11:44:34,416 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 11:44:34,416 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-03 11:44:40,941 INFO 偵測到移動，開始收集影格
+2026-04-03 11:44:58,174 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 11:44:58,175 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-03 11:45:00,715 INFO 偵測到移動，開始收集影格
+2026-04-03 11:45:19,996 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 11:45:19,997 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-03 11:45:24,078 INFO 偵測到移動，開始收集影格
+2026-04-03 11:45:40,259 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 11:45:40,260 INFO 分析條件: motion_frames=26 cooldown剩餘=0s
+2026-04-03 11:45:40,304 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 11:45:42,587 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 429 Too Many Requests"
+2026-04-03 11:45:42,588 WARNING Gemini 429，等待 60s 後重試（第 1 次）
+2026-04-03 11:46:42,696 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 11:46:44,876 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 429 Too Many Requests"
+2026-04-03 11:46:44,878 WARNING Gemini 429，等待 120s 後重試（第 2 次）
+2026-04-03 11:48:45,008 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 11:48:47,448 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 429 Too Many Requests"
+2026-04-03 11:48:47,450 ERROR Gemini 分析失敗: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.0-flash\nPlease retry in 12.556896286s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.0-flash'}}, {'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerMinutePerProjectPerModel-FreeTier', 'quotaDimensions': {'model': 'gemini-2.0-flash', 'location': 'global'}}, {'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_input_token_count', 'quotaId': 'GenerateContentInputTokensPerModelPerMinute-FreeTier', 'quotaDimensions': {'model': 'gemini-2.0-flash', 'location': 'global'}}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '12s'}]}}
+2026-04-03 11:48:53,925 INFO 偵測到移動，開始收集影格
+2026-04-03 11:48:59,967 WARNING 讀取影格失敗，重新連線
+2026-04-03 11:49:01,378 INFO RTSP 串流連線成功
+2026-04-03 11:49:09,013 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 11:49:09,014 INFO 分析條件: motion_frames=29 cooldown剩餘=0s
+2026-04-03 11:49:09,043 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 11:49:11,420 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 429 Too Many Requests"
+2026-04-03 11:49:11,421 WARNING Gemini 429，等待 60s 後重試（第 1 次）
+2026-04-03 11:50:11,552 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 11:50:13,728 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 429 Too Many Requests"
+2026-04-03 11:50:13,730 WARNING Gemini 429，等待 120s 後重試（第 2 次）
