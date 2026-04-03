@@ -30158,3 +30158,2394 @@ ModuleNotFoundError: No module named 'cv2'
 2026-04-03 06:39:58,393 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
 2026-04-03 06:39:58,394 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
 2026-04-03 06:39:59,724 INFO 偵測到移動，開始收集影格
+2026-04-03 06:40:14,904 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 06:40:14,905 INFO 分析條件: motion_frames=33 cooldown剩餘=0s
+2026-04-03 06:40:14,969 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 06:40:16,921 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 06:40:16,923 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 06:40:17,270 INFO 偵測到移動，開始收集影格
+2026-04-03 06:40:32,917 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 06:40:32,919 INFO 分析條件: motion_frames=10 cooldown剩餘=0s
+2026-04-03 06:40:32,970 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 06:40:34,978 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 06:40:34,980 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 06:40:36,057 INFO 偵測到移動，開始收集影格
+2026-04-03 06:40:53,068 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 06:40:53,069 INFO 分析條件: motion_frames=14 cooldown剩餘=0s
+2026-04-03 06:40:53,112 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 06:40:55,476 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 06:40:55,479 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 06:40:55,837 INFO 偵測到移動，開始收集影格
+2026-04-03 06:41:11,876 INFO 靜止 30 幀，觸發分析
+2026-04-03 06:41:11,877 INFO 分析條件: motion_frames=20 cooldown剩餘=0s
+2026-04-03 06:41:11,912 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 06:41:14,152 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 06:41:14,153 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 06:41:19,697 INFO 偵測到移動，開始收集影格
+2026-04-03 06:41:36,705 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 06:41:36,706 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 06:41:38,991 INFO 偵測到移動，開始收集影格
+2026-04-03 06:41:48,797 INFO 靜止 30 幀，觸發分析
+2026-04-03 06:41:48,798 INFO 分析條件: motion_frames=1 cooldown剩餘=0s
+2026-04-03 06:41:53,083 INFO 偵測到移動，開始收集影格
+2026-04-03 06:42:08,941 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 06:42:08,943 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-03 06:42:12,420 INFO 偵測到移動，開始收集影格
+2026-04-03 06:42:28,068 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 06:42:28,069 INFO 分析條件: motion_frames=34 cooldown剩餘=0s
+2026-04-03 06:42:28,116 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 06:42:31,567 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 06:42:31,569 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 06:42:41,098 INFO 偵測到移動，開始收集影格
+2026-04-03 06:43:01,051 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 06:43:01,053 INFO 分析條件: motion_frames=25 cooldown剩餘=0s
+2026-04-03 06:43:01,100 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 06:43:03,246 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 06:43:03,247 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 06:43:04,221 INFO 偵測到移動，開始收集影格
+2026-04-03 06:43:19,358 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 06:43:19,359 INFO 分析條件: motion_frames=6 cooldown剩餘=0s
+2026-04-03 06:43:19,720 INFO 偵測到移動，開始收集影格
+2026-04-03 06:43:37,282 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 06:43:37,283 INFO 分析條件: motion_frames=12 cooldown剩餘=0s
+2026-04-03 06:43:37,336 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 06:43:39,080 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 06:43:39,081 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 06:43:42,521 INFO 偵測到移動，開始收集影格
+2026-04-03 06:43:57,694 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 06:43:57,695 INFO 分析條件: motion_frames=25 cooldown剩餘=0s
+2026-04-03 06:43:57,739 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 06:43:59,103 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 06:43:59,105 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 06:43:59,377 INFO 偵測到移動，開始收集影格
+2026-04-03 06:44:14,662 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 06:44:14,664 INFO 分析條件: motion_frames=49 cooldown剩餘=0s
+2026-04-03 06:44:14,716 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 06:44:16,067 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 06:44:16,068 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 06:44:16,404 INFO 偵測到移動，開始收集影格
+2026-04-03 06:44:31,588 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 06:44:31,590 INFO 分析條件: motion_frames=48 cooldown剩餘=0s
+2026-04-03 06:44:31,638 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 06:44:32,889 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 06:44:32,890 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 06:44:33,222 INFO 偵測到移動，開始收集影格
+2026-04-03 06:44:49,934 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 06:44:49,936 INFO 分析條件: motion_frames=43 cooldown剩餘=0s
+2026-04-03 06:44:49,988 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 06:44:51,325 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 06:44:51,327 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 06:44:51,680 INFO 偵測到移動，開始收集影格
+2026-04-03 06:45:07,488 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 06:45:07,489 INFO 分析條件: motion_frames=12 cooldown剩餘=0s
+2026-04-03 06:45:07,550 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 06:45:09,003 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 06:45:09,006 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 06:45:09,365 INFO 偵測到移動，開始收集影格
+2026-04-03 06:45:24,596 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 06:45:24,599 INFO 分析條件: motion_frames=39 cooldown剩餘=0s
+2026-04-03 06:45:24,657 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 06:45:26,052 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 06:45:26,054 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 06:45:26,379 INFO 偵測到移動，開始收集影格
+2026-04-03 06:45:37,031 INFO 靜止 30 幀，觸發分析
+2026-04-03 06:45:37,032 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 06:45:39,078 INFO 偵測到移動，開始收集影格
+2026-04-03 06:45:55,531 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 06:45:55,532 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 06:45:56,164 INFO 偵測到移動，開始收集影格
+2026-04-03 06:46:11,238 INFO 靜止 30 幀，觸發分析
+2026-04-03 06:46:11,238 INFO 分析條件: motion_frames=6 cooldown剩餘=0s
+2026-04-03 06:46:13,589 INFO 偵測到移動，開始收集影格
+2026-04-03 06:46:29,872 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 06:46:29,873 INFO 分析條件: motion_frames=7 cooldown剩餘=0s
+2026-04-03 06:46:34,239 INFO 偵測到移動，開始收集影格
+2026-04-03 06:46:50,392 INFO 靜止 30 幀，觸發分析
+2026-04-03 06:46:50,393 INFO 分析條件: motion_frames=6 cooldown剩餘=0s
+2026-04-03 06:46:51,817 INFO 偵測到移動，開始收集影格
+2026-04-03 06:47:07,905 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 06:47:07,906 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 06:47:11,373 INFO 偵測到移動，開始收集影格
+2026-04-03 06:47:27,823 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 06:47:27,824 INFO 分析條件: motion_frames=12 cooldown剩餘=0s
+2026-04-03 06:47:27,869 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 06:47:29,272 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 06:47:29,275 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 06:47:36,972 INFO 偵測到移動，開始收集影格
+2026-04-03 06:47:52,145 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 06:47:52,146 INFO 分析條件: motion_frames=9 cooldown剩餘=0s
+2026-04-03 06:47:52,373 INFO 偵測到移動，開始收集影格
+2026-04-03 06:48:07,025 INFO 靜止 30 幀，觸發分析
+2026-04-03 06:48:07,026 INFO 分析條件: motion_frames=7 cooldown剩餘=0s
+2026-04-03 06:48:08,478 INFO 偵測到移動，開始收集影格
+2026-04-03 06:48:25,334 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 06:48:25,335 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-03 06:48:29,438 INFO 偵測到移動，開始收集影格
+2026-04-03 06:48:38,898 INFO 靜止 30 幀，觸發分析
+2026-04-03 06:48:38,899 INFO 分析條件: motion_frames=1 cooldown剩餘=0s
+2026-04-03 06:48:40,371 INFO 偵測到移動，開始收集影格
+2026-04-03 06:48:55,117 INFO 靜止 30 幀，觸發分析
+2026-04-03 06:48:55,119 INFO 分析條件: motion_frames=6 cooldown剩餘=0s
+2026-04-03 06:48:57,320 INFO 偵測到移動，開始收集影格
+2026-04-03 06:49:14,197 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 06:49:14,197 INFO 分析條件: motion_frames=6 cooldown剩餘=0s
+2026-04-03 06:49:18,382 INFO 偵測到移動，開始收集影格
+2026-04-03 06:49:27,562 INFO 靜止 30 幀，觸發分析
+2026-04-03 06:49:27,563 INFO 分析條件: motion_frames=1 cooldown剩餘=0s
+2026-04-03 06:49:29,565 INFO 偵測到移動，開始收集影格
+2026-04-03 06:49:47,576 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 06:49:47,577 INFO 分析條件: motion_frames=9 cooldown剩餘=0s
+2026-04-03 06:49:52,194 INFO 偵測到移動，開始收集影格
+2026-04-03 06:50:02,049 INFO 靜止 30 幀，觸發分析
+2026-04-03 06:50:02,050 INFO 分析條件: motion_frames=1 cooldown剩餘=0s
+2026-04-03 06:50:04,051 INFO 偵測到移動，開始收集影格
+2026-04-03 06:50:20,819 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 06:50:20,820 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-03 06:50:25,365 INFO 偵測到移動，開始收集影格
+2026-04-03 06:50:41,393 INFO 靜止 30 幀，觸發分析
+2026-04-03 06:50:41,394 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-03 06:50:43,014 INFO 偵測到移動，開始收集影格
+2026-04-03 06:50:58,856 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 06:50:58,857 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 06:50:59,571 INFO 偵測到移動，開始收集影格
+2026-04-03 06:51:14,799 INFO 靜止 30 幀，觸發分析
+2026-04-03 06:51:14,800 INFO 分析條件: motion_frames=6 cooldown剩餘=0s
+2026-04-03 06:51:15,799 INFO 偵測到移動，開始收集影格
+2026-04-03 06:51:32,811 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 06:51:32,812 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-03 06:51:37,523 INFO 偵測到移動，開始收集影格
+2026-04-03 06:51:47,477 INFO 靜止 30 幀，觸發分析
+2026-04-03 06:51:47,478 INFO 分析條件: motion_frames=2 cooldown剩餘=0s
+2026-04-03 06:51:49,416 INFO 偵測到移動，開始收集影格
+2026-04-03 06:52:06,337 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 06:52:06,337 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-03 06:52:10,595 INFO 偵測到移動，開始收集影格
+2026-04-03 06:52:21,053 INFO 靜止 30 幀，觸發分析
+2026-04-03 06:52:21,053 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 06:52:23,140 INFO 偵測到移動，開始收集影格
+2026-04-03 06:52:38,445 INFO 靜止 30 幀，觸發分析
+2026-04-03 06:52:38,446 INFO 分析條件: motion_frames=6 cooldown剩餘=0s
+2026-04-03 06:52:40,546 INFO 偵測到移動，開始收集影格
+2026-04-03 06:52:54,435 INFO 靜止 30 幀，觸發分析
+2026-04-03 06:52:54,436 INFO 分析條件: motion_frames=3 cooldown剩餘=0s
+2026-04-03 06:52:54,697 INFO 偵測到移動，開始收集影格
+2026-04-03 06:53:12,894 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 06:53:12,894 INFO 分析條件: motion_frames=6 cooldown剩餘=0s
+2026-04-03 06:53:17,203 INFO 偵測到移動，開始收集影格
+2026-04-03 06:53:26,736 INFO 靜止 30 幀，觸發分析
+2026-04-03 06:53:26,736 INFO 分析條件: motion_frames=1 cooldown剩餘=0s
+2026-04-03 06:53:29,046 INFO 偵測到移動，開始收集影格
+2026-04-03 06:53:43,315 INFO 靜止 30 幀，觸發分析
+2026-04-03 06:53:43,315 INFO 分析條件: motion_frames=3 cooldown剩餘=0s
+2026-04-03 06:53:45,421 INFO 偵測到移動，開始收集影格
+2026-04-03 06:54:03,357 INFO 靜止 30 幀，觸發分析
+2026-04-03 06:54:03,358 INFO 分析條件: motion_frames=3 cooldown剩餘=0s
+2026-04-03 06:54:06,310 INFO 偵測到移動，開始收集影格
+2026-04-03 06:54:22,764 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 06:54:22,765 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 06:54:22,982 INFO 偵測到移動，開始收集影格
+2026-04-03 06:54:38,244 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 06:54:38,244 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 06:54:38,602 INFO 偵測到移動，開始收集影格
+2026-04-03 06:54:53,662 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 06:54:53,663 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 06:54:53,917 INFO 偵測到移動，開始收集影格
+2026-04-03 06:55:09,563 INFO 靜止 30 幀，觸發分析
+2026-04-03 06:55:09,564 INFO 分析條件: motion_frames=16 cooldown剩餘=0s
+2026-04-03 06:55:09,604 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 06:55:11,115 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 06:55:11,117 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 06:55:12,770 INFO 偵測到移動，開始收集影格
+2026-04-03 06:55:26,629 INFO 靜止 30 幀，觸發分析
+2026-04-03 06:55:26,630 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 06:55:28,521 INFO 偵測到移動，開始收集影格
+2026-04-03 06:55:44,004 INFO 靜止 30 幀，觸發分析
+2026-04-03 06:55:44,005 INFO 分析條件: motion_frames=3 cooldown剩餘=0s
+2026-04-03 06:55:45,835 INFO 偵測到移動，開始收集影格
+2026-04-03 06:56:01,750 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 06:56:01,750 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 06:56:05,744 INFO 偵測到移動，開始收集影格
+2026-04-03 06:56:21,921 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 06:56:21,921 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-03 06:56:25,232 INFO 偵測到移動，開始收集影格
+2026-04-03 06:56:34,893 INFO 靜止 30 幀，觸發分析
+2026-04-03 06:56:34,893 INFO 分析條件: motion_frames=1 cooldown剩餘=0s
+2026-04-03 06:56:37,769 INFO 偵測到移動，開始收集影格
+2026-04-03 06:56:54,012 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 06:56:54,012 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 06:56:54,375 INFO 偵測到移動，開始收集影格
+2026-04-03 06:57:04,138 INFO 靜止 30 幀，觸發分析
+2026-04-03 06:57:04,138 INFO 分析條件: motion_frames=1 cooldown剩餘=0s
+2026-04-03 06:57:05,999 INFO 偵測到移動，開始收集影格
+2026-04-03 06:57:20,572 INFO 靜止 30 幀，觸發分析
+2026-04-03 06:57:20,572 INFO 分析條件: motion_frames=3 cooldown剩餘=0s
+2026-04-03 06:57:22,360 INFO 偵測到移動，開始收集影格
+2026-04-03 06:57:41,896 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 06:57:41,897 INFO 分析條件: motion_frames=6 cooldown剩餘=0s
+2026-04-03 06:57:42,262 INFO 偵測到移動，開始收集影格
+2026-04-03 06:57:52,920 INFO 靜止 30 幀，觸發分析
+2026-04-03 06:57:52,922 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 06:57:55,273 INFO 偵測到移動，開始收集影格
+2026-04-03 06:58:13,318 INFO 靜止 30 幀，觸發分析
+2026-04-03 06:58:13,319 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 06:58:16,154 INFO 偵測到移動，開始收集影格
+2026-04-03 06:58:28,430 INFO 靜止 30 幀，觸發分析
+2026-04-03 06:58:28,431 INFO 分析條件: motion_frames=2 cooldown剩餘=0s
+2026-04-03 06:58:30,341 INFO 偵測到移動，開始收集影格
+2026-04-03 06:58:49,314 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 06:58:49,315 INFO 分析條件: motion_frames=6 cooldown剩餘=0s
+2026-04-03 06:58:53,649 INFO 偵測到移動，開始收集影格
+2026-04-03 06:59:09,299 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 06:59:09,299 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-03 06:59:12,825 INFO 偵測到移動，開始收集影格
+2026-04-03 06:59:28,072 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 06:59:28,072 INFO 分析條件: motion_frames=9 cooldown剩餘=0s
+2026-04-03 06:59:28,436 INFO 偵測到移動，開始收集影格
+2026-04-03 06:59:48,744 INFO 靜止 30 幀，觸發分析
+2026-04-03 06:59:48,746 INFO 分析條件: motion_frames=12 cooldown剩餘=0s
+2026-04-03 06:59:48,819 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 06:59:50,279 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 06:59:50,281 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 06:59:52,113 INFO 偵測到移動，開始收集影格
+2026-04-03 07:00:08,142 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:00:08,143 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 07:00:12,784 INFO 偵測到移動，開始收集影格
+2026-04-03 07:00:28,982 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:00:28,983 INFO 分析條件: motion_frames=11 cooldown剩餘=0s
+2026-04-03 07:00:29,033 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 07:00:30,512 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 07:00:30,513 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 07:00:31,775 INFO 偵測到移動，開始收集影格
+2026-04-03 07:00:46,918 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:00:46,919 INFO 分析條件: motion_frames=45 cooldown剩餘=0s
+2026-04-03 07:00:46,963 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 07:00:48,447 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 07:00:48,448 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 07:00:49,120 INFO 偵測到移動，開始收集影格
+2026-04-03 07:01:04,306 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:01:04,307 INFO 分析條件: motion_frames=17 cooldown剩餘=0s
+2026-04-03 07:01:04,344 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 07:01:05,784 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 07:01:05,785 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 07:01:06,075 INFO 偵測到移動，開始收集影格
+2026-04-03 07:01:21,160 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:01:21,161 INFO 分析條件: motion_frames=17 cooldown剩餘=0s
+2026-04-03 07:01:21,203 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 07:01:22,597 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 07:01:22,598 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 07:01:22,919 INFO 偵測到移動，開始收集影格
+2026-04-03 07:01:38,496 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:01:38,497 INFO 分析條件: motion_frames=12 cooldown剩餘=0s
+2026-04-03 07:01:38,548 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 07:01:40,056 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 07:01:40,057 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 07:01:40,416 INFO 偵測到移動，開始收集影格
+2026-04-03 07:01:57,190 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:01:57,190 INFO 分析條件: motion_frames=8 cooldown剩餘=0s
+2026-04-03 07:02:01,947 INFO 偵測到移動，開始收集影格
+2026-04-03 07:02:18,750 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:02:18,751 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-03 07:02:19,090 INFO 偵測到移動，開始收集影格
+2026-04-03 07:02:37,422 INFO 靜止 30 幀，觸發分析
+2026-04-03 07:02:37,424 INFO 分析條件: motion_frames=6 cooldown剩餘=0s
+2026-04-03 07:02:39,368 INFO 偵測到移動，開始收集影格
+2026-04-03 07:02:55,027 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:02:55,027 INFO 分析條件: motion_frames=6 cooldown剩餘=0s
+2026-04-03 07:02:59,143 INFO 偵測到移動，開始收集影格
+2026-04-03 07:03:15,963 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:03:15,963 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-03 07:03:16,325 INFO 偵測到移動，開始收集影格
+2026-04-03 07:03:25,958 INFO 靜止 30 幀，觸發分析
+2026-04-03 07:03:25,958 INFO 分析條件: motion_frames=1 cooldown剩餘=0s
+2026-04-03 07:03:27,975 INFO 偵測到移動，開始收集影格
+2026-04-03 07:03:44,018 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:03:44,019 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 07:03:47,525 INFO 偵測到移動，開始收集影格
+2026-04-03 07:04:09,842 INFO 靜止 30 幀，觸發分析
+2026-04-03 07:04:09,843 INFO 分析條件: motion_frames=8 cooldown剩餘=0s
+2026-04-03 07:04:11,705 INFO 偵測到移動，開始收集影格
+2026-04-03 07:04:27,884 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:04:27,885 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 07:04:32,267 INFO 偵測到移動，開始收集影格
+2026-04-03 07:04:45,218 INFO 靜止 30 幀，觸發分析
+2026-04-03 07:04:45,219 INFO 分析條件: motion_frames=3 cooldown剩餘=0s
+2026-04-03 07:04:48,054 INFO 偵測到移動，開始收集影格
+2026-04-03 07:05:04,762 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:05:04,763 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-03 07:05:05,096 INFO 偵測到移動，開始收集影格
+2026-04-03 07:05:18,959 INFO 靜止 30 幀，觸發分析
+2026-04-03 07:05:18,960 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-03 07:05:21,731 INFO 偵測到移動，開始收集影格
+2026-04-03 07:05:39,719 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:05:39,720 INFO 分析條件: motion_frames=13 cooldown剩餘=0s
+2026-04-03 07:05:39,763 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 07:05:41,236 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 07:05:41,238 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 07:05:45,742 INFO 偵測到移動，開始收集影格
+2026-04-03 07:05:56,505 INFO 靜止 30 幀，觸發分析
+2026-04-03 07:05:56,507 INFO 分析條件: motion_frames=3 cooldown剩餘=0s
+2026-04-03 07:06:02,554 INFO 偵測到移動，開始收集影格
+2026-04-03 07:06:17,734 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:06:17,737 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 07:06:17,995 INFO 偵測到移動，開始收集影格
+2026-04-03 07:06:33,797 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:06:33,798 INFO 分析條件: motion_frames=34 cooldown剩餘=0s
+2026-04-03 07:06:33,849 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 07:06:36,139 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 07:06:36,140 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 07:06:36,382 INFO 偵測到移動，開始收集影格
+2026-04-03 07:07:01,475 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:07:01,477 INFO 分析條件: motion_frames=46 cooldown剩餘=0s
+2026-04-03 07:07:01,531 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 07:07:03,850 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 07:07:03,853 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 07:07:10,515 INFO 偵測到移動，開始收集影格
+2026-04-03 07:07:26,800 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:07:26,801 INFO 分析條件: motion_frames=10 cooldown剩餘=0s
+2026-04-03 07:07:26,860 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 07:07:29,240 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 07:07:29,242 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 07:07:35,714 INFO 偵測到移動，開始收集影格
+2026-04-03 07:08:01,737 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:08:01,739 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 07:08:04,620 INFO 偵測到移動，開始收集影格
+2026-04-03 07:08:27,935 INFO 靜止 30 幀，觸發分析
+2026-04-03 07:08:27,937 INFO 分析條件: motion_frames=3 cooldown剩餘=0s
+2026-04-03 07:08:33,313 INFO 偵測到移動，開始收集影格
+2026-04-03 07:08:49,727 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:08:49,728 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 07:08:49,943 INFO 偵測到移動，開始收集影格
+2026-04-03 07:08:59,776 INFO 靜止 30 幀，觸發分析
+2026-04-03 07:08:59,776 INFO 分析條件: motion_frames=2 cooldown剩餘=0s
+2026-04-03 07:09:00,784 INFO 偵測到移動，開始收集影格
+2026-04-03 07:09:22,402 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:09:22,402 INFO 分析條件: motion_frames=11 cooldown剩餘=0s
+2026-04-03 07:09:22,445 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 07:09:24,900 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 07:09:24,901 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 07:09:33,694 INFO 偵測到移動，開始收集影格
+2026-04-03 07:09:49,401 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:09:49,403 INFO 分析條件: motion_frames=14 cooldown剩餘=0s
+2026-04-03 07:09:49,450 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 07:09:51,815 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 07:09:51,816 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 07:09:52,036 INFO 偵測到移動，開始收集影格
+2026-04-03 07:10:08,894 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:10:08,895 INFO 分析條件: motion_frames=8 cooldown剩餘=0s
+2026-04-03 07:10:13,664 INFO 偵測到移動，開始收集影格
+2026-04-03 07:10:29,883 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:10:29,884 INFO 分析條件: motion_frames=12 cooldown剩餘=0s
+2026-04-03 07:10:29,931 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 07:10:32,180 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 07:10:32,181 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 07:10:35,597 INFO 偵測到移動，開始收集影格
+2026-04-03 07:10:51,545 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:10:51,546 INFO 分析條件: motion_frames=14 cooldown剩餘=0s
+2026-04-03 07:10:51,602 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 07:10:54,006 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 07:10:54,008 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 07:10:57,203 INFO 偵測到移動，開始收集影格
+2026-04-03 07:11:13,525 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:11:13,526 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 07:11:15,592 INFO 偵測到移動，開始收集影格
+2026-04-03 07:11:31,376 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:11:31,377 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 07:11:34,430 INFO 偵測到移動，開始收集影格
+2026-04-03 07:11:50,751 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:11:50,752 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-03 07:12:00,736 INFO 偵測到移動，開始收集影格
+2026-04-03 07:12:16,182 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:12:16,182 INFO 分析條件: motion_frames=19 cooldown剩餘=0s
+2026-04-03 07:12:16,230 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 07:12:18,604 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 07:12:18,606 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 07:12:18,967 INFO 偵測到移動，開始收集影格
+2026-04-03 07:12:43,653 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:12:43,655 INFO 分析條件: motion_frames=26 cooldown剩餘=0s
+2026-04-03 07:12:43,704 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 07:12:46,008 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 07:12:46,009 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 07:12:52,104 INFO 偵測到移動，開始收集影格
+2026-04-03 07:13:04,921 INFO 靜止 30 幀，觸發分析
+2026-04-03 07:13:04,922 INFO 分析條件: motion_frames=2 cooldown剩餘=0s
+2026-04-03 07:13:08,401 INFO 偵測到移動，開始收集影格
+2026-04-03 07:13:24,540 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:13:24,541 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 07:13:40,834 INFO 偵測到移動，開始收集影格
+2026-04-03 07:13:57,080 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:13:57,081 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 07:13:57,325 INFO 偵測到移動，開始收集影格
+2026-04-03 07:14:07,287 INFO 靜止 30 幀，觸發分析
+2026-04-03 07:14:07,288 INFO 分析條件: motion_frames=1 cooldown剩餘=0s
+2026-04-03 07:14:13,408 INFO 偵測到移動，開始收集影格
+2026-04-03 07:14:28,524 INFO 靜止 30 幀，觸發分析
+2026-04-03 07:14:28,526 INFO 分析條件: motion_frames=9 cooldown剩餘=0s
+2026-04-03 07:14:31,437 INFO 偵測到移動，開始收集影格
+2026-04-03 07:14:41,512 INFO 靜止 30 幀，觸發分析
+2026-04-03 07:14:41,512 INFO 分析條件: motion_frames=2 cooldown剩餘=0s
+2026-04-03 07:14:47,416 INFO 偵測到移動，開始收集影格
+2026-04-03 07:15:03,512 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:15:03,513 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 07:15:06,568 INFO 偵測到移動，開始收集影格
+2026-04-03 07:15:16,214 INFO 靜止 30 幀，觸發分析
+2026-04-03 07:15:16,215 INFO 分析條件: motion_frames=1 cooldown剩餘=0s
+2026-04-03 07:15:19,782 INFO 偵測到移動，開始收集影格
+2026-04-03 07:15:35,280 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:15:35,280 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 07:15:51,837 INFO 偵測到移動，開始收集影格
+2026-04-03 07:16:12,272 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:16:12,274 INFO 分析條件: motion_frames=12 cooldown剩餘=0s
+2026-04-03 07:16:12,316 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 07:16:14,948 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 07:16:14,951 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 07:16:21,513 INFO 偵測到移動，開始收集影格
+2026-04-03 07:16:31,201 INFO 靜止 30 幀，觸發分析
+2026-04-03 07:16:31,202 INFO 分析條件: motion_frames=1 cooldown剩餘=0s
+2026-04-03 07:16:34,268 INFO 偵測到移動，開始收集影格
+2026-04-03 07:16:53,417 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:16:53,418 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-03 07:17:06,040 INFO 偵測到移動，開始收集影格
+2026-04-03 07:17:25,429 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:17:25,432 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 07:17:25,751 INFO 偵測到移動，開始收集影格
+2026-04-03 07:17:35,265 INFO 靜止 30 幀，觸發分析
+2026-04-03 07:17:35,266 INFO 分析條件: motion_frames=1 cooldown剩餘=0s
+2026-04-03 07:17:41,651 INFO 偵測到移動，開始收集影格
+2026-04-03 07:18:02,275 INFO 靜止 30 幀，觸發分析
+2026-04-03 07:18:02,277 INFO 分析條件: motion_frames=9 cooldown剩餘=0s
+2026-04-03 07:18:02,951 INFO 偵測到移動，開始收集影格
+2026-04-03 07:18:25,412 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:18:25,412 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-03 07:18:34,966 INFO 偵測到移動，開始收集影格
+2026-04-03 07:18:54,082 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:18:54,083 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 07:18:57,244 INFO 偵測到移動，開始收集影格
+2026-04-03 07:19:07,389 INFO 靜止 30 幀，觸發分析
+2026-04-03 07:19:07,390 INFO 分析條件: motion_frames=1 cooldown剩餘=0s
+2026-04-03 07:19:13,642 INFO 偵測到移動，開始收集影格
+2026-04-03 07:19:28,814 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:19:28,814 INFO 分析條件: motion_frames=13 cooldown剩餘=0s
+2026-04-03 07:19:28,855 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 07:19:31,097 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 07:19:31,098 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 07:19:31,399 INFO 偵測到移動，開始收集影格
+2026-04-03 07:19:57,500 INFO 靜止 30 幀，觸發分析
+2026-04-03 07:19:57,502 INFO 分析條件: motion_frames=3 cooldown剩餘=0s
+2026-04-03 07:19:57,869 INFO 偵測到移動，開始收集影格
+2026-04-03 07:20:14,067 INFO 靜止 30 幀，觸發分析
+2026-04-03 07:20:14,068 INFO 分析條件: motion_frames=3 cooldown剩餘=0s
+2026-04-03 07:20:17,570 INFO 偵測到移動，開始收集影格
+2026-04-03 07:20:36,876 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:20:36,876 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 07:20:46,045 INFO 偵測到移動，開始收集影格
+2026-04-03 07:21:05,485 INFO 靜止 30 幀，觸發分析
+2026-04-03 07:21:05,486 INFO 分析條件: motion_frames=3 cooldown剩餘=0s
+2026-04-03 07:21:08,642 INFO 偵測到移動，開始收集影格
+2026-04-03 07:21:24,796 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:21:24,796 INFO 分析條件: motion_frames=6 cooldown剩餘=0s
+2026-04-03 07:21:25,833 INFO 偵測到移動，開始收集影格
+2026-04-03 07:21:40,658 INFO 靜止 30 幀，觸發分析
+2026-04-03 07:21:40,659 INFO 分析條件: motion_frames=7 cooldown剩餘=0s
+2026-04-03 07:21:43,341 INFO 偵測到移動，開始收集影格
+2026-04-03 07:21:59,224 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:21:59,225 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 07:22:02,466 INFO 偵測到移動，開始收集影格
+2026-04-03 07:22:21,595 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:22:21,595 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 07:22:30,980 INFO 偵測到移動，開始收集影格
+2026-04-03 07:22:50,570 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:22:50,571 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 07:23:03,007 INFO 偵測到移動，開始收集影格
+2026-04-03 07:23:20,265 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:23:20,265 INFO 分析條件: motion_frames=6 cooldown剩餘=0s
+2026-04-03 07:23:29,940 INFO 偵測到移動，開始收集影格
+2026-04-03 07:23:40,983 INFO 靜止 30 幀，觸發分析
+2026-04-03 07:23:40,984 INFO 分析條件: motion_frames=6 cooldown剩餘=0s
+2026-04-03 07:23:47,555 INFO 偵測到移動，開始收集影格
+2026-04-03 07:24:10,889 INFO 靜止 30 幀，觸發分析
+2026-04-03 07:24:10,890 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-03 07:24:17,378 INFO 偵測到移動，開始收集影格
+2026-04-03 07:24:33,565 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:24:33,565 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 07:24:49,260 INFO 偵測到移動，開始收集影格
+2026-04-03 07:25:06,131 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:25:06,131 INFO 分析條件: motion_frames=8 cooldown剩餘=0s
+2026-04-03 07:25:14,817 INFO 偵測到移動，開始收集影格
+2026-04-03 07:25:34,760 INFO 靜止 30 幀，觸發分析
+2026-04-03 07:25:34,761 INFO 分析條件: motion_frames=10 cooldown剩餘=0s
+2026-04-03 07:25:34,801 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 07:25:37,068 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 07:25:37,070 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 07:25:41,740 INFO 偵測到移動，開始收集影格
+2026-04-03 07:25:57,996 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:25:57,998 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 07:25:58,312 INFO 偵測到移動，開始收集影格
+2026-04-03 07:26:08,168 INFO 靜止 30 幀，觸發分析
+2026-04-03 07:26:08,168 INFO 分析條件: motion_frames=1 cooldown剩餘=0s
+2026-04-03 07:26:11,488 INFO 偵測到移動，開始收集影格
+2026-04-03 07:26:30,558 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:26:30,559 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-03 07:26:30,904 INFO 偵測到移動，開始收集影格
+2026-04-03 07:26:40,669 INFO 靜止 30 幀，觸發分析
+2026-04-03 07:26:40,670 INFO 分析條件: motion_frames=1 cooldown剩餘=0s
+2026-04-03 07:26:47,070 INFO 偵測到移動，開始收集影格
+2026-04-03 07:27:04,031 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:27:04,031 INFO 分析條件: motion_frames=7 cooldown剩餘=0s
+2026-04-03 07:27:04,381 INFO 偵測到移動，開始收集影格
+2026-04-03 07:27:20,712 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:27:20,713 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 07:27:21,030 INFO 偵測到移動，開始收集影格
+2026-04-03 07:27:31,117 INFO 靜止 30 幀，觸發分析
+2026-04-03 07:27:31,118 INFO 分析條件: motion_frames=3 cooldown剩餘=0s
+2026-04-03 07:27:37,755 INFO 偵測到移動，開始收集影格
+2026-04-03 07:27:54,005 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:27:54,007 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 07:27:54,337 INFO 偵測到移動，開始收集影格
+2026-04-03 07:28:19,704 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:28:19,705 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 07:28:26,663 INFO 偵測到移動，開始收集影格
+2026-04-03 07:28:36,395 INFO 靜止 30 幀，觸發分析
+2026-04-03 07:28:36,396 INFO 分析條件: motion_frames=1 cooldown剩餘=0s
+2026-04-03 07:28:39,083 INFO 偵測到移動，開始收集影格
+2026-04-03 07:28:58,444 INFO 靜止 30 幀，觸發分析
+2026-04-03 07:28:58,444 INFO 分析條件: motion_frames=3 cooldown剩餘=0s
+2026-04-03 07:28:59,124 INFO 偵測到移動，開始收集影格
+2026-04-03 07:29:17,895 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:29:17,896 INFO 分析條件: motion_frames=6 cooldown剩餘=0s
+2026-04-03 07:29:18,203 INFO 偵測到移動，開始收集影格
+2026-04-03 07:29:32,488 INFO 靜止 30 幀，觸發分析
+2026-04-03 07:29:32,488 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-03 07:29:35,915 INFO 偵測到移動，開始收集影格
+2026-04-03 07:29:51,596 INFO 靜止 30 幀，觸發分析
+2026-04-03 07:29:51,598 INFO 分析條件: motion_frames=3 cooldown剩餘=0s
+2026-04-03 07:29:51,956 INFO 偵測到移動，開始收集影格
+2026-04-03 07:30:08,478 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:30:08,479 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 07:30:20,473 INFO 偵測到移動，開始收集影格
+2026-04-03 07:30:39,899 INFO 靜止 30 幀，觸發分析
+2026-04-03 07:30:39,899 INFO 分析條件: motion_frames=3 cooldown剩餘=0s
+2026-04-03 07:30:40,834 INFO 偵測到移動，開始收集影格
+2026-04-03 07:31:00,523 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:31:00,524 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-03 07:31:05,499 INFO 偵測到移動，開始收集影格
+2026-04-03 07:31:15,671 INFO 靜止 30 幀，觸發分析
+2026-04-03 07:31:15,671 INFO 分析條件: motion_frames=3 cooldown剩餘=0s
+2026-04-03 07:31:16,668 INFO 偵測到移動，開始收集影格
+2026-04-03 07:31:37,547 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:31:37,547 INFO 分析條件: motion_frames=8 cooldown剩餘=0s
+2026-04-03 07:31:37,793 INFO 偵測到移動，開始收集影格
+2026-04-03 07:31:53,703 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:31:53,705 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 07:31:59,604 INFO 偵測到移動，開始收集影格
+2026-04-03 07:32:20,152 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:32:20,153 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 07:32:21,285 INFO 偵測到移動，開始收集影格
+2026-04-03 07:32:30,503 INFO 靜止 30 幀，觸發分析
+2026-04-03 07:32:30,503 INFO 分析條件: motion_frames=1 cooldown剩餘=0s
+2026-04-03 07:32:37,005 INFO 偵測到移動，開始收集影格
+2026-04-03 07:32:52,882 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:32:52,882 INFO 分析條件: motion_frames=6 cooldown剩餘=0s
+2026-04-03 07:32:53,913 INFO 偵測到移動，開始收集影格
+2026-04-03 07:33:09,209 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:33:09,210 INFO 分析條件: motion_frames=10 cooldown剩餘=0s
+2026-04-03 07:33:09,253 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 07:33:11,425 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 07:33:11,427 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 07:33:26,649 INFO 偵測到移動，開始收集影格
+2026-04-03 07:33:43,219 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:33:43,221 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 07:33:43,546 INFO 偵測到移動，開始收集影格
+2026-04-03 07:33:55,408 INFO 靜止 30 幀，觸發分析
+2026-04-03 07:33:55,409 INFO 分析條件: motion_frames=2 cooldown剩餘=0s
+2026-04-03 07:33:59,826 INFO 偵測到移動，開始收集影格
+2026-04-03 07:34:15,433 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:34:15,434 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 07:34:31,317 INFO 偵測到移動，開始收集影格
+2026-04-03 07:34:46,673 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:34:46,674 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 07:34:47,026 INFO 偵測到移動，開始收集影格
+2026-04-03 07:34:57,247 INFO 靜止 30 幀，觸發分析
+2026-04-03 07:34:57,248 INFO 分析條件: motion_frames=3 cooldown剩餘=0s
+2026-04-03 07:35:01,273 INFO 偵測到移動，開始收集影格
+2026-04-03 07:35:21,041 INFO 靜止 30 幀，觸發分析
+2026-04-03 07:35:21,041 INFO 分析條件: motion_frames=6 cooldown剩餘=0s
+2026-04-03 07:35:27,170 INFO 偵測到移動，開始收集影格
+2026-04-03 07:35:37,243 INFO 靜止 30 幀，觸發分析
+2026-04-03 07:35:37,244 INFO 分析條件: motion_frames=3 cooldown剩餘=0s
+2026-04-03 07:35:43,619 INFO 偵測到移動，開始收集影格
+2026-04-03 07:35:59,662 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:35:59,662 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 07:36:06,354 INFO 偵測到移動，開始收集影格
+2026-04-03 07:36:22,091 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:36:22,093 INFO 分析條件: motion_frames=27 cooldown剩餘=0s
+2026-04-03 07:36:22,146 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 07:36:24,361 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 07:36:24,363 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 07:36:24,988 INFO 偵測到移動，開始收集影格
+2026-04-03 07:36:44,157 INFO 靜止 30 幀，觸發分析
+2026-04-03 07:36:44,157 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-03 07:36:50,356 INFO 偵測到移動，開始收集影格
+2026-04-03 07:37:00,404 INFO 靜止 30 幀，觸發分析
+2026-04-03 07:37:00,405 INFO 分析條件: motion_frames=2 cooldown剩餘=0s
+2026-04-03 07:37:01,018 INFO 偵測到移動，開始收集影格
+2026-04-03 07:37:16,944 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:37:16,945 INFO 分析條件: motion_frames=8 cooldown剩餘=0s
+2026-04-03 07:37:23,806 INFO 偵測到移動，開始收集影格
+2026-04-03 07:37:34,100 INFO 靜止 30 幀，觸發分析
+2026-04-03 07:37:34,101 INFO 分析條件: motion_frames=2 cooldown剩餘=0s
+2026-04-03 07:37:36,018 INFO 偵測到移動，開始收集影格
+2026-04-03 07:37:50,676 INFO 靜止 30 幀，觸發分析
+2026-04-03 07:37:50,678 INFO 分析條件: motion_frames=3 cooldown剩餘=0s
+2026-04-03 07:37:55,400 INFO 偵測到移動，開始收集影格
+2026-04-03 07:38:12,797 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:38:12,799 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 07:38:23,919 INFO 偵測到移動，開始收集影格
+2026-04-03 07:38:42,608 INFO 靜止 30 幀，觸發分析
+2026-04-03 07:38:42,608 INFO 分析條件: motion_frames=3 cooldown剩餘=0s
+2026-04-03 07:38:44,712 INFO 偵測到移動，開始收集影格
+2026-04-03 07:39:01,402 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:39:01,403 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 07:39:01,753 INFO 偵測到移動，開始收集影格
+2026-04-03 07:39:11,552 INFO 靜止 30 幀，觸發分析
+2026-04-03 07:39:11,552 INFO 分析條件: motion_frames=1 cooldown剩餘=0s
+2026-04-03 07:39:12,169 INFO 偵測到移動，開始收集影格
+2026-04-03 07:39:28,483 INFO 靜止 30 幀，觸發分析
+2026-04-03 07:39:28,484 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-03 07:39:30,807 INFO 偵測到移動，開始收集影格
+2026-04-03 07:39:50,107 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:39:50,108 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-03 07:39:51,378 INFO 偵測到移動，開始收集影格
+2026-04-03 07:40:07,822 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:40:07,822 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 07:40:08,167 INFO 偵測到移動，開始收集影格
+2026-04-03 07:40:17,855 INFO 靜止 30 幀，觸發分析
+2026-04-03 07:40:17,855 INFO 分析條件: motion_frames=1 cooldown剩餘=0s
+2026-04-03 07:40:18,796 INFO 偵測到移動，開始收集影格
+2026-04-03 07:40:37,595 INFO 靜止 30 幀，觸發分析
+2026-04-03 07:40:37,595 INFO 分析條件: motion_frames=3 cooldown剩餘=0s
+2026-04-03 07:40:39,796 INFO 偵測到移動，開始收集影格
+2026-04-03 07:40:49,815 INFO 靜止 30 幀，觸發分析
+2026-04-03 07:40:49,816 INFO 分析條件: motion_frames=3 cooldown剩餘=0s
+2026-04-03 07:40:55,948 INFO 偵測到移動，開始收集影格
+2026-04-03 07:41:11,976 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:41:11,977 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 07:41:12,324 INFO 偵測到移動，開始收集影格
+2026-04-03 07:41:28,365 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:41:28,365 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 07:41:28,644 INFO 偵測到移動，開始收集影格
+2026-04-03 07:41:45,128 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:41:45,128 INFO 分析條件: motion_frames=14 cooldown剩餘=0s
+2026-04-03 07:41:45,168 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 07:41:47,368 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 07:41:47,371 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 07:41:48,952 INFO 偵測到移動，開始收集影格
+2026-04-03 07:42:04,216 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:42:04,217 INFO 分析條件: motion_frames=12 cooldown剩餘=0s
+2026-04-03 07:42:04,253 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 07:42:06,421 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 07:42:06,423 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 07:42:07,432 INFO 偵測到移動，開始收集影格
+2026-04-03 07:42:22,599 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:42:22,600 INFO 分析條件: motion_frames=19 cooldown剩餘=0s
+2026-04-03 07:42:22,648 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 07:42:24,807 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 07:42:24,808 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 07:42:25,175 INFO 偵測到移動，開始收集影格
+2026-04-03 07:42:40,788 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:42:40,789 INFO 分析條件: motion_frames=19 cooldown剩餘=0s
+2026-04-03 07:42:40,839 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 07:42:43,044 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 07:42:43,045 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 07:42:43,411 INFO 偵測到移動，開始收集影格
+2026-04-03 07:42:58,996 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:42:58,997 INFO 分析條件: motion_frames=29 cooldown剩餘=0s
+2026-04-03 07:42:59,057 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 07:43:01,202 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 07:43:01,205 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 07:43:02,674 INFO 偵測到移動，開始收集影格
+2026-04-03 07:43:18,574 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:43:18,576 INFO 分析條件: motion_frames=8 cooldown剩餘=0s
+2026-04-03 07:43:18,896 INFO 偵測到移動，開始收集影格
+2026-04-03 07:43:34,262 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:43:34,263 INFO 分析條件: motion_frames=10 cooldown剩餘=0s
+2026-04-03 07:43:34,332 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 07:43:36,614 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 07:43:36,615 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 07:43:36,836 INFO 偵測到移動，開始收集影格
+2026-04-03 07:43:54,693 INFO 靜止 30 幀，觸發分析
+2026-04-03 07:43:54,694 INFO 分析條件: motion_frames=13 cooldown剩餘=0s
+2026-04-03 07:43:54,736 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 07:43:56,901 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 07:43:56,903 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 07:43:57,531 INFO 偵測到移動，開始收集影格
+2026-04-03 07:44:12,866 INFO 靜止 30 幀，觸發分析
+2026-04-03 07:44:12,867 INFO 分析條件: motion_frames=3 cooldown剩餘=0s
+2026-04-03 07:44:13,938 INFO 偵測到移動，開始收集影格
+2026-04-03 07:44:30,111 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:44:30,113 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-03 07:44:43,143 INFO 偵測到移動，開始收集影格
+2026-04-03 07:45:00,918 INFO 靜止 30 幀，觸發分析
+2026-04-03 07:45:00,919 INFO 分析條件: motion_frames=3 cooldown剩餘=0s
+2026-04-03 07:45:02,226 INFO 偵測到移動，開始收集影格
+2026-04-03 07:45:18,004 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:45:18,005 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 07:45:18,270 INFO 偵測到移動，開始收集影格
+2026-04-03 07:45:38,546 INFO 靜止 30 幀，觸發分析
+2026-04-03 07:45:38,546 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 07:45:41,796 INFO 偵測到移動，開始收集影格
+2026-04-03 07:46:06,324 INFO 靜止 30 幀，觸發分析
+2026-04-03 07:46:06,325 INFO 分析條件: motion_frames=8 cooldown剩餘=0s
+2026-04-03 07:46:09,783 INFO 偵測到移動，開始收集影格
+2026-04-03 07:46:27,472 INFO 靜止 30 幀，觸發分析
+2026-04-03 07:46:27,472 INFO 分析條件: motion_frames=3 cooldown剩餘=0s
+2026-04-03 07:46:28,734 INFO 偵測到移動，開始收集影格
+2026-04-03 07:46:44,915 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:46:44,916 INFO 分析條件: motion_frames=6 cooldown剩餘=0s
+2026-04-03 07:46:45,167 INFO 偵測到移動，開始收集影格
+2026-04-03 07:47:00,775 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:47:00,775 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 07:47:14,300 INFO 偵測到移動，開始收集影格
+2026-04-03 07:47:30,350 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:47:30,352 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-03 07:47:37,967 INFO 偵測到移動，開始收集影格
+2026-04-03 07:47:55,000 INFO 靜止 30 幀，觸發分析
+2026-04-03 07:47:55,002 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 07:47:56,300 INFO 偵測到移動，開始收集影格
+2026-04-03 07:48:12,801 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:48:12,801 INFO 分析條件: motion_frames=6 cooldown剩餘=0s
+2026-04-03 07:48:13,163 INFO 偵測到移動，開始收集影格
+2026-04-03 07:48:28,275 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:48:28,276 INFO 分析條件: motion_frames=15 cooldown剩餘=0s
+2026-04-03 07:48:28,333 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 07:48:30,641 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 07:48:30,643 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 07:48:30,904 INFO 偵測到移動，開始收集影格
+2026-04-03 07:48:48,057 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:48:48,058 INFO 分析條件: motion_frames=8 cooldown剩餘=0s
+2026-04-03 07:49:01,675 INFO 偵測到移動，開始收集影格
+2026-04-03 07:49:14,673 INFO 靜止 30 幀，觸發分析
+2026-04-03 07:49:14,673 INFO 分析條件: motion_frames=3 cooldown剩餘=0s
+2026-04-03 07:49:20,988 INFO 偵測到移動，開始收集影格
+2026-04-03 07:49:36,805 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:49:36,805 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 07:49:40,668 INFO 偵測到移動，開始收集影格
+2026-04-03 07:49:50,346 INFO 靜止 30 幀，觸發分析
+2026-04-03 07:49:50,346 INFO 分析條件: motion_frames=1 cooldown剩餘=0s
+2026-04-03 07:49:52,935 INFO 偵測到移動，開始收集影格
+2026-04-03 07:50:04,527 INFO 靜止 30 幀，觸發分析
+2026-04-03 07:50:04,527 INFO 分析條件: motion_frames=6 cooldown剩餘=0s
+2026-04-03 07:50:09,724 INFO 偵測到移動，開始收集影格
+2026-04-03 07:50:26,543 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:50:26,544 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-03 07:50:26,894 INFO 偵測到移動，開始收集影格
+2026-04-03 07:50:37,577 INFO 靜止 30 幀，觸發分析
+2026-04-03 07:50:37,579 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 07:50:42,257 INFO 偵測到移動，開始收集影格
+2026-04-03 07:50:54,200 INFO 靜止 30 幀，觸發分析
+2026-04-03 07:50:54,201 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 07:51:00,796 INFO 偵測到移動，開始收集影格
+2026-04-03 07:51:17,778 INFO 靜止 30 幀，觸發分析
+2026-04-03 07:51:17,779 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 07:51:23,953 INFO 偵測到移動，開始收集影格
+2026-04-03 07:51:40,445 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:51:40,446 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 07:51:56,108 INFO 偵測到移動，開始收集影格
+2026-04-03 07:52:12,460 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:52:12,461 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 07:52:25,049 INFO 偵測到移動，開始收集影格
+2026-04-03 07:52:40,989 INFO 靜止 30 幀，觸發分析
+2026-04-03 07:52:40,990 INFO 分析條件: motion_frames=3 cooldown剩餘=0s
+2026-04-03 07:52:46,752 INFO 偵測到移動，開始收集影格
+2026-04-03 07:53:04,821 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:53:04,823 INFO 分析條件: motion_frames=11 cooldown剩餘=0s
+2026-04-03 07:53:04,867 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 07:53:07,178 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 07:53:07,180 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 07:53:16,155 INFO 偵測到移動，開始收集影格
+2026-04-03 07:53:33,603 INFO 靜止 30 幀，觸發分析
+2026-04-03 07:53:33,605 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 07:53:39,668 INFO 偵測到移動，開始收集影格
+2026-04-03 07:53:56,582 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:53:56,583 INFO 分析條件: motion_frames=8 cooldown剩餘=0s
+2026-04-03 07:53:57,654 INFO 偵測到移動，開始收集影格
+2026-04-03 07:54:08,321 INFO 靜止 30 幀，觸發分析
+2026-04-03 07:54:08,321 INFO 分析條件: motion_frames=2 cooldown剩餘=0s
+2026-04-03 07:54:08,682 INFO 偵測到移動，開始收集影格
+2026-04-03 07:54:28,564 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:54:28,565 INFO 分析條件: motion_frames=8 cooldown剩餘=0s
+2026-04-03 07:54:28,848 INFO 偵測到移動，開始收集影格
+2026-04-03 07:54:45,446 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:54:45,447 INFO 分析條件: motion_frames=8 cooldown剩餘=0s
+2026-04-03 07:54:48,459 INFO 偵測到移動，開始收集影格
+2026-04-03 07:55:00,328 INFO 靜止 30 幀，觸發分析
+2026-04-03 07:55:00,329 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 07:55:01,190 INFO 偵測到移動，開始收集影格
+2026-04-03 07:55:21,659 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:55:21,659 INFO 分析條件: motion_frames=9 cooldown剩餘=0s
+2026-04-03 07:55:22,637 INFO 偵測到移動，開始收集影格
+2026-04-03 07:55:38,484 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:55:38,484 INFO 分析條件: motion_frames=12 cooldown剩餘=0s
+2026-04-03 07:55:38,533 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 07:55:40,769 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 07:55:40,770 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 07:55:43,339 INFO 偵測到移動，開始收集影格
+2026-04-03 07:55:59,385 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:55:59,386 INFO 分析條件: motion_frames=6 cooldown剩餘=0s
+2026-04-03 07:56:02,860 INFO 偵測到移動，開始收集影格
+2026-04-03 07:56:19,678 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:56:19,679 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-03 07:56:31,280 INFO 偵測到移動，開始收集影格
+2026-04-03 07:56:46,742 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:56:46,743 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-03 07:56:56,620 INFO 偵測到移動，開始收集影格
+2026-04-03 07:57:12,907 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:57:12,908 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 07:57:21,880 INFO 偵測到移動，開始收集影格
+2026-04-03 07:57:32,617 INFO 靜止 30 幀，觸發分析
+2026-04-03 07:57:32,617 INFO 分析條件: motion_frames=2 cooldown剩餘=0s
+2026-04-03 07:57:38,051 INFO 偵測到移動，開始收集影格
+2026-04-03 07:57:53,451 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:57:53,451 INFO 分析條件: motion_frames=7 cooldown剩餘=0s
+2026-04-03 07:57:54,423 INFO 偵測到移動，開始收集影格
+2026-04-03 07:58:12,459 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:58:12,460 INFO 分析條件: motion_frames=8 cooldown剩餘=0s
+2026-04-03 07:58:12,715 INFO 偵測到移動，開始收集影格
+2026-04-03 07:58:22,536 INFO 靜止 30 幀，觸發分析
+2026-04-03 07:58:22,538 INFO 分析條件: motion_frames=1 cooldown剩餘=0s
+2026-04-03 07:58:28,361 INFO 偵測到移動，開始收集影格
+2026-04-03 07:58:44,114 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:58:44,115 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 07:58:44,422 INFO 偵測到移動，開始收集影格
+2026-04-03 07:59:03,289 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 07:59:03,290 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 07:59:16,230 INFO 偵測到移動，開始收集影格
+2026-04-03 07:59:42,119 INFO 靜止 30 幀，觸發分析
+2026-04-03 07:59:42,121 INFO 分析條件: motion_frames=3 cooldown剩餘=0s
+2026-04-03 07:59:48,761 INFO 偵測到移動，開始收集影格
+2026-04-03 08:00:03,016 INFO 靜止 30 幀，觸發分析
+2026-04-03 08:00:03,016 INFO 分析條件: motion_frames=6 cooldown剩餘=0s
+2026-04-03 08:00:08,213 INFO 偵測到移動，開始收集影格
+2026-04-03 08:00:27,689 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:00:27,690 INFO 分析條件: motion_frames=10 cooldown剩餘=0s
+2026-04-03 08:00:27,741 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 08:00:29,925 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 08:00:29,927 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 08:00:42,266 INFO 偵測到移動，開始收集影格
+2026-04-03 08:01:01,537 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:01:01,539 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 08:01:01,759 INFO 偵測到移動，開始收集影格
+2026-04-03 08:01:11,227 INFO 靜止 30 幀，觸發分析
+2026-04-03 08:01:11,227 INFO 分析條件: motion_frames=2 cooldown剩餘=0s
+2026-04-03 08:01:17,014 INFO 偵測到移動，開始收集影格
+2026-04-03 08:01:34,079 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:01:34,079 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 08:01:46,052 INFO 偵測到移動，開始收集影格
+2026-04-03 08:02:04,717 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:02:04,718 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 08:02:05,609 INFO 偵測到移動，開始收集影格
+2026-04-03 08:02:15,552 INFO 靜止 30 幀，觸發分析
+2026-04-03 08:02:15,553 INFO 分析條件: motion_frames=1 cooldown剩餘=0s
+2026-04-03 08:02:16,223 INFO 偵測到移動，開始收集影格
+2026-04-03 08:02:37,428 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:02:37,430 INFO 分析條件: motion_frames=18 cooldown剩餘=0s
+2026-04-03 08:02:37,477 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 08:02:39,813 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 08:02:39,817 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 08:02:40,079 INFO 偵測到移動，開始收集影格
+2026-04-03 08:02:51,163 INFO 靜止 30 幀，觸發分析
+2026-04-03 08:02:51,164 INFO 分析條件: motion_frames=6 cooldown剩餘=0s
+2026-04-03 08:02:53,090 INFO 偵測到移動，開始收集影格
+2026-04-03 08:03:12,220 INFO 靜止 30 幀，觸發分析
+2026-04-03 08:03:12,221 INFO 分析條件: motion_frames=3 cooldown剩餘=0s
+2026-04-03 08:03:13,462 INFO 偵測到移動，開始收集影格
+2026-04-03 08:03:28,788 INFO 靜止 30 幀，觸發分析
+2026-04-03 08:03:28,789 INFO 分析條件: motion_frames=2 cooldown剩餘=0s
+2026-04-03 08:03:33,313 INFO 偵測到移動，開始收集影格
+2026-04-03 08:03:51,555 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:03:51,557 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 08:04:02,869 INFO 偵測到移動，開始收集影格
+2026-04-03 08:04:21,877 INFO 靜止 30 幀，觸發分析
+2026-04-03 08:04:21,879 INFO 分析條件: motion_frames=3 cooldown剩餘=0s
+2026-04-03 08:04:23,878 INFO 偵測到移動，開始收集影格
+2026-04-03 08:04:41,372 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:04:41,373 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 08:04:41,688 INFO 偵測到移動，開始收集影格
+2026-04-03 08:04:54,339 INFO 靜止 30 幀，觸發分析
+2026-04-03 08:04:54,341 INFO 分析條件: motion_frames=3 cooldown剩餘=0s
+2026-04-03 08:04:57,366 INFO 偵測到移動，開始收集影格
+2026-04-03 08:05:12,789 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:05:12,790 INFO 分析條件: motion_frames=7 cooldown剩餘=0s
+2026-04-03 08:05:13,111 INFO 偵測到移動，開始收集影格
+2026-04-03 08:05:27,070 INFO 靜止 30 幀，觸發分析
+2026-04-03 08:05:27,071 INFO 分析條件: motion_frames=3 cooldown剩餘=0s
+2026-04-03 08:05:29,308 INFO 偵測到移動，開始收集影格
+2026-04-03 08:05:55,112 INFO 靜止 30 幀，觸發分析
+2026-04-03 08:05:55,113 INFO 分析條件: motion_frames=3 cooldown剩餘=0s
+2026-04-03 08:06:01,583 INFO 偵測到移動，開始收集影格
+2026-04-03 08:06:11,206 INFO 靜止 30 幀，觸發分析
+2026-04-03 08:06:11,207 INFO 分析條件: motion_frames=1 cooldown剩餘=0s
+2026-04-03 08:06:11,824 INFO 偵測到移動，開始收集影格
+2026-04-03 08:06:30,832 INFO 靜止 30 幀，觸發分析
+2026-04-03 08:06:30,833 INFO 分析條件: motion_frames=3 cooldown剩餘=0s
+2026-04-03 08:06:33,354 INFO 偵測到移動，開始收集影格
+2026-04-03 08:06:50,012 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:06:50,012 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 08:07:05,459 INFO 偵測到移動，開始收集影格
+2026-04-03 08:07:29,765 INFO 靜止 30 幀，觸發分析
+2026-04-03 08:07:29,767 INFO 分析條件: motion_frames=10 cooldown剩餘=0s
+2026-04-03 08:07:29,810 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 08:07:32,880 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 08:07:32,883 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 08:07:38,754 INFO 偵測到移動，開始收集影格
+2026-04-03 08:07:49,762 INFO 靜止 30 幀，觸發分析
+2026-04-03 08:07:49,763 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 08:07:55,913 INFO 偵測到移動，開始收集影格
+2026-04-03 08:08:11,961 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:08:11,961 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 08:08:27,324 INFO 偵測到移動，開始收集影格
+2026-04-03 08:08:44,098 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:08:44,098 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 08:08:54,907 INFO 偵測到移動，開始收集影格
+2026-04-03 08:09:13,701 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:09:13,702 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 08:09:14,898 INFO 偵測到移動，開始收集影格
+2026-04-03 08:09:31,080 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:09:31,082 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-03 08:09:45,370 INFO 偵測到移動，開始收集影格
+2026-04-03 08:10:01,235 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:10:01,237 INFO 分析條件: motion_frames=11 cooldown剩餘=0s
+2026-04-03 08:10:01,279 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 08:10:03,464 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 08:10:03,466 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 08:10:07,860 INFO 偵測到移動，開始收集影格
+2026-04-03 08:10:18,109 INFO 靜止 30 幀，觸發分析
+2026-04-03 08:10:18,110 INFO 分析條件: motion_frames=3 cooldown剩餘=0s
+2026-04-03 08:10:22,573 INFO 偵測到移動，開始收集影格
+2026-04-03 08:10:40,762 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:10:40,763 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 08:10:51,664 INFO 偵測到移動，開始收集影格
+2026-04-03 08:11:11,229 INFO 靜止 30 幀，觸發分析
+2026-04-03 08:11:11,230 INFO 分析條件: motion_frames=3 cooldown剩餘=0s
+2026-04-03 08:11:13,390 INFO 偵測到移動，開始收集影格
+2026-04-03 08:11:29,651 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:11:29,651 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 08:11:39,055 INFO 偵測到移動，開始收集影格
+2026-04-03 08:11:52,619 INFO 靜止 30 幀，觸發分析
+2026-04-03 08:11:52,619 INFO 分析條件: motion_frames=2 cooldown剩餘=0s
+2026-04-03 08:11:56,429 INFO 偵測到移動，開始收集影格
+2026-04-03 08:12:14,418 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:12:14,420 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 08:12:14,780 INFO 偵測到移動，開始收集影格
+2026-04-03 08:12:31,454 INFO 靜止 30 幀，觸發分析
+2026-04-03 08:12:31,455 INFO 分析條件: motion_frames=3 cooldown剩餘=0s
+2026-04-03 08:12:31,678 INFO 偵測到移動，開始收集影格
+2026-04-03 08:12:49,785 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:12:49,786 INFO 分析條件: motion_frames=11 cooldown剩餘=0s
+2026-04-03 08:12:49,828 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 08:12:51,976 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 08:12:51,978 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 08:12:58,599 INFO 偵測到移動，開始收集影格
+2026-04-03 08:13:14,578 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:13:14,579 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 08:13:23,844 INFO 偵測到移動，開始收集影格
+2026-04-03 08:13:33,691 INFO 靜止 30 幀，觸發分析
+2026-04-03 08:13:33,692 INFO 分析條件: motion_frames=2 cooldown剩餘=0s
+2026-04-03 08:13:40,665 INFO 偵測到移動，開始收集影格
+2026-04-03 08:13:56,615 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:13:56,616 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 08:14:02,401 INFO 偵測到移動，開始收集影格
+2026-04-03 08:14:11,682 INFO 靜止 30 幀，觸發分析
+2026-04-03 08:14:11,682 INFO 分析條件: motion_frames=1 cooldown剩餘=0s
+2026-04-03 08:14:12,386 INFO 偵測到移動，開始收集影格
+2026-04-03 08:14:30,946 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:14:30,947 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 08:14:35,705 INFO 偵測到移動，開始收集影格
+2026-04-03 08:14:52,152 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:14:52,154 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-03 08:14:52,516 INFO 偵測到移動，開始收集影格
+2026-04-03 08:15:09,904 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:15:09,904 INFO 分析條件: motion_frames=9 cooldown剩餘=0s
+2026-04-03 08:15:12,193 INFO 偵測到移動，開始收集影格
+2026-04-03 08:15:21,785 INFO 靜止 30 幀，觸發分析
+2026-04-03 08:15:21,785 INFO 分析條件: motion_frames=1 cooldown剩餘=0s
+2026-04-03 08:15:26,017 INFO 偵測到移動，開始收集影格
+2026-04-03 08:15:42,264 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:15:42,265 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-03 08:15:57,018 INFO 偵測到移動，開始收集影格
+2026-04-03 08:16:14,134 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:16:14,135 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 08:16:15,785 INFO 偵測到移動，開始收集影格
+2026-04-03 08:16:25,047 INFO 靜止 30 幀，觸發分析
+2026-04-03 08:16:25,048 INFO 分析條件: motion_frames=1 cooldown剩餘=0s
+2026-04-03 08:16:29,904 INFO 偵測到移動，開始收集影格
+2026-04-03 08:16:45,964 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:16:45,965 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 08:17:01,567 INFO 偵測到移動，開始收集影格
+2026-04-03 08:17:17,671 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:17:17,672 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 08:17:18,806 INFO 偵測到移動，開始收集影格
+2026-04-03 08:17:28,261 INFO 靜止 30 幀，觸發分析
+2026-04-03 08:17:28,261 INFO 分析條件: motion_frames=1 cooldown剩餘=0s
+2026-04-03 08:17:31,474 INFO 偵測到移動，開始收集影格
+2026-04-03 08:17:48,044 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:17:48,044 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-03 08:17:48,394 INFO 偵測到移動，開始收集影格
+2026-04-03 08:18:07,853 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:18:07,853 INFO 分析條件: motion_frames=10 cooldown剩餘=0s
+2026-04-03 08:18:07,895 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 08:18:09,997 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 08:18:09,999 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 08:18:10,358 INFO 偵測到移動，開始收集影格
+2026-04-03 08:18:19,744 INFO 靜止 30 幀，觸發分析
+2026-04-03 08:18:19,744 INFO 分析條件: motion_frames=1 cooldown剩餘=0s
+2026-04-03 08:18:22,058 INFO 偵測到移動，開始收集影格
+2026-04-03 08:18:41,466 INFO 靜止 30 幀，觸發分析
+2026-04-03 08:18:41,467 INFO 分析條件: motion_frames=3 cooldown剩餘=0s
+2026-04-03 08:18:42,432 INFO 偵測到移動，開始收集影格
+2026-04-03 08:19:00,457 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:19:00,459 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 08:19:14,352 INFO 偵測到移動，開始收集影格
+2026-04-03 08:19:30,110 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:19:30,111 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 08:19:38,567 INFO 偵測到移動，開始收集影格
+2026-04-03 08:19:57,271 INFO 靜止 30 幀，觸發分析
+2026-04-03 08:19:57,272 INFO 分析條件: motion_frames=3 cooldown剩餘=0s
+2026-04-03 08:19:58,810 INFO 偵測到移動，開始收集影格
+2026-04-03 08:20:15,911 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:20:15,911 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 08:20:16,268 INFO 偵測到移動，開始收集影格
+2026-04-03 08:20:26,472 INFO 靜止 30 幀，觸發分析
+2026-04-03 08:20:26,472 INFO 分析條件: motion_frames=2 cooldown剩餘=0s
+2026-04-03 08:20:32,054 INFO 偵測到移動，開始收集影格
+2026-04-03 08:20:53,161 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:20:53,162 INFO 分析條件: motion_frames=10 cooldown剩餘=0s
+2026-04-03 08:20:53,197 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 08:20:55,335 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 08:20:55,336 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 08:20:57,753 INFO 偵測到移動，開始收集影格
+2026-04-03 08:21:15,821 INFO 靜止 30 幀，觸發分析
+2026-04-03 08:21:15,822 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 08:21:16,708 INFO 偵測到移動，開始收集影格
+2026-04-03 08:21:31,981 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:21:31,981 INFO 分析條件: motion_frames=7 cooldown剩餘=0s
+2026-04-03 08:21:32,209 INFO 偵測到移動，開始收集影格
+2026-04-03 08:21:47,688 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:21:47,689 INFO 分析條件: motion_frames=35 cooldown剩餘=0s
+2026-04-03 08:21:47,735 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 08:21:49,924 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 08:21:49,926 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 08:21:50,627 INFO 偵測到移動，開始收集影格
+2026-04-03 08:22:07,480 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:22:07,481 INFO 分析條件: motion_frames=16 cooldown剩餘=0s
+2026-04-03 08:22:07,517 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 08:22:09,760 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 08:22:09,761 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 08:22:10,045 INFO 偵測到移動，開始收集影格
+2026-04-03 08:22:25,757 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:22:25,758 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 08:22:26,119 INFO 偵測到移動，開始收集影格
+2026-04-03 08:22:46,138 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:22:46,140 INFO 分析條件: motion_frames=6 cooldown剩餘=0s
+2026-04-03 08:22:49,235 INFO 偵測到移動，開始收集影格
+2026-04-03 08:23:06,114 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:23:06,115 INFO 分析條件: motion_frames=7 cooldown剩餘=0s
+2026-04-03 08:23:06,469 INFO 偵測到移動，開始收集影格
+2026-04-03 08:23:21,550 INFO 靜止 30 幀，觸發分析
+2026-04-03 08:23:21,551 INFO 分析條件: motion_frames=2 cooldown剩餘=0s
+2026-04-03 08:23:22,937 INFO 偵測到移動，開始收集影格
+2026-04-03 08:23:39,165 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:23:39,166 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 08:23:52,293 INFO 偵測到移動，開始收集影格
+2026-04-03 08:24:07,434 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:24:07,435 INFO 分析條件: motion_frames=32 cooldown剩餘=0s
+2026-04-03 08:24:07,490 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 08:24:10,558 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 08:24:10,560 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 08:24:10,843 INFO 偵測到移動，開始收集影格
+2026-04-03 08:24:34,145 INFO 靜止 30 幀，觸發分析
+2026-04-03 08:24:34,146 INFO 分析條件: motion_frames=23 cooldown剩餘=0s
+2026-04-03 08:24:34,195 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 08:24:36,328 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 08:24:36,329 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 08:24:37,562 INFO 偵測到移動，開始收集影格
+2026-04-03 08:24:56,308 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:24:56,309 INFO 分析條件: motion_frames=7 cooldown剩餘=0s
+2026-04-03 08:24:59,193 INFO 偵測到移動，開始收集影格
+2026-04-03 08:25:14,840 INFO 靜止 30 幀，觸發分析
+2026-04-03 08:25:14,840 INFO 分析條件: motion_frames=6 cooldown剩餘=0s
+2026-04-03 08:25:16,420 INFO 偵測到移動，開始收集影格
+2026-04-03 08:25:31,052 INFO 靜止 30 幀，觸發分析
+2026-04-03 08:25:31,053 INFO 分析條件: motion_frames=3 cooldown剩餘=0s
+2026-04-03 08:25:32,330 INFO 偵測到移動，開始收集影格
+2026-04-03 08:25:51,156 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:25:51,157 INFO 分析條件: motion_frames=19 cooldown剩餘=0s
+2026-04-03 08:25:51,205 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 08:25:53,370 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 08:25:53,371 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 08:26:01,832 INFO 偵測到移動，開始收集影格
+2026-04-03 08:26:14,606 INFO 靜止 30 幀，觸發分析
+2026-04-03 08:26:14,607 INFO 分析條件: motion_frames=2 cooldown剩餘=0s
+2026-04-03 08:26:17,678 INFO 偵測到移動，開始收集影格
+2026-04-03 08:26:35,106 INFO 靜止 30 幀，觸發分析
+2026-04-03 08:26:35,108 INFO 分析條件: motion_frames=3 cooldown剩餘=0s
+2026-04-03 08:26:36,623 INFO 偵測到移動，開始收集影格
+2026-04-03 08:26:51,546 INFO 靜止 30 幀，觸發分析
+2026-04-03 08:26:51,547 INFO 分析條件: motion_frames=3 cooldown剩餘=0s
+2026-04-03 08:26:53,537 INFO 偵測到移動，開始收集影格
+2026-04-03 08:27:10,145 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:27:10,146 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-03 08:27:10,508 INFO 偵測到移動，開始收集影格
+2026-04-03 08:27:26,725 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:27:26,727 INFO 分析條件: motion_frames=13 cooldown剩餘=0s
+2026-04-03 08:27:26,812 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 08:27:29,118 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 08:27:29,120 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 08:27:30,784 INFO 偵測到移動，開始收集影格
+2026-04-03 08:27:46,480 INFO 靜止 30 幀，觸發分析
+2026-04-03 08:27:46,481 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-03 08:27:48,582 INFO 偵測到移動，開始收集影格
+2026-04-03 08:28:02,809 INFO 靜止 30 幀，觸發分析
+2026-04-03 08:28:02,811 INFO 分析條件: motion_frames=3 cooldown剩餘=0s
+2026-04-03 08:28:04,969 INFO 偵測到移動，開始收集影格
+2026-04-03 08:28:19,251 INFO 靜止 30 幀，觸發分析
+2026-04-03 08:28:19,251 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 08:28:21,366 INFO 偵測到移動，開始收集影格
+2026-04-03 08:28:37,949 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:28:37,950 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-03 08:28:50,055 INFO 偵測到移動，開始收集影格
+2026-04-03 08:29:06,295 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:29:06,296 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-03 08:29:10,513 INFO 偵測到移動，開始收集影格
+2026-04-03 08:29:26,332 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:29:26,334 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-03 08:29:29,050 INFO 偵測到移動，開始收集影格
+2026-04-03 08:29:42,934 INFO 靜止 30 幀，觸發分析
+2026-04-03 08:29:42,935 INFO 分析條件: motion_frames=3 cooldown剩餘=0s
+2026-04-03 08:29:45,659 INFO 偵測到移動，開始收集影格
+2026-04-03 08:30:02,173 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:30:02,174 INFO 分析條件: motion_frames=6 cooldown剩餘=0s
+2026-04-03 08:30:02,538 INFO 偵測到移動，開始收集影格
+2026-04-03 08:30:12,170 INFO 靜止 30 幀，觸發分析
+2026-04-03 08:30:12,170 INFO 分析條件: motion_frames=1 cooldown剩餘=0s
+2026-04-03 08:30:14,380 INFO 偵測到移動，開始收集影格
+2026-04-03 08:30:32,400 INFO 靜止 30 幀，觸發分析
+2026-04-03 08:30:32,400 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 08:30:34,885 INFO 偵測到移動，開始收集影格
+2026-04-03 08:30:50,848 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:30:50,848 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 08:30:51,182 INFO 偵測到移動，開始收集影格
+2026-04-03 08:31:06,378 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:31:06,378 INFO 分析條件: motion_frames=12 cooldown剩餘=0s
+2026-04-03 08:31:06,425 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 08:31:08,521 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 08:31:08,522 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 08:31:08,857 INFO 偵測到移動，開始收集影格
+2026-04-03 08:31:26,282 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:31:26,284 INFO 分析條件: motion_frames=8 cooldown剩餘=0s
+2026-04-03 08:31:27,974 INFO 偵測到移動，開始收集影格
+2026-04-03 08:31:44,294 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:31:44,295 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 08:31:44,641 INFO 偵測到移動，開始收集影格
+2026-04-03 08:32:01,403 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:32:01,404 INFO 分析條件: motion_frames=6 cooldown剩餘=0s
+2026-04-03 08:32:01,739 INFO 偵測到移動，開始收集影格
+2026-04-03 08:32:16,749 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:32:16,750 INFO 分析條件: motion_frames=7 cooldown剩餘=0s
+2026-04-03 08:32:17,818 INFO 偵測到移動，開始收集影格
+2026-04-03 08:32:28,387 INFO 靜止 30 幀，觸發分析
+2026-04-03 08:32:28,388 INFO 分析條件: motion_frames=3 cooldown剩餘=0s
+2026-04-03 08:32:33,743 INFO 偵測到移動，開始收集影格
+2026-04-03 08:32:43,527 INFO 靜止 30 幀，觸發分析
+2026-04-03 08:32:43,527 INFO 分析條件: motion_frames=2 cooldown剩餘=0s
+2026-04-03 08:32:45,196 INFO 偵測到移動，開始收集影格
+2026-04-03 08:33:05,562 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:33:05,563 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-03 08:33:05,919 INFO 偵測到移動，開始收集影格
+2026-04-03 08:33:15,599 INFO 靜止 30 幀，觸發分析
+2026-04-03 08:33:15,599 INFO 分析條件: motion_frames=1 cooldown剩餘=0s
+2026-04-03 08:33:19,545 INFO 偵測到移動，開始收集影格
+2026-04-03 08:33:38,069 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:33:38,069 INFO 分析條件: motion_frames=6 cooldown剩餘=0s
+2026-04-03 08:33:45,353 INFO 偵測到移動，開始收集影格
+2026-04-03 08:34:01,679 INFO 靜止 30 幀，觸發分析
+2026-04-03 08:34:01,681 INFO 分析條件: motion_frames=3 cooldown剩餘=0s
+2026-04-03 08:34:02,294 INFO 偵測到移動，開始收集影格
+2026-04-03 08:34:21,045 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:34:21,045 INFO 分析條件: motion_frames=8 cooldown剩餘=0s
+2026-04-03 08:34:29,110 INFO 偵測到移動，開始收集影格
+2026-04-03 08:34:50,603 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:34:50,604 INFO 分析條件: motion_frames=10 cooldown剩餘=0s
+2026-04-03 08:34:50,656 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 08:34:52,901 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 08:34:52,903 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 08:34:59,598 INFO 偵測到移動，開始收集影格
+2026-04-03 08:35:16,288 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:35:16,289 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 08:35:16,538 INFO 偵測到移動，開始收集影格
+2026-04-03 08:35:31,713 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:35:31,714 INFO 分析條件: motion_frames=41 cooldown剩餘=0s
+2026-04-03 08:35:31,769 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 08:35:33,981 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 08:35:33,984 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 08:35:34,308 INFO 偵測到移動，開始收集影格
+2026-04-03 08:35:53,457 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:35:53,457 INFO 分析條件: motion_frames=26 cooldown剩餘=0s
+2026-04-03 08:35:53,488 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 08:35:55,825 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 08:35:55,826 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 08:35:56,193 INFO 偵測到移動，開始收集影格
+2026-04-03 08:36:11,295 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:36:11,296 INFO 分析條件: motion_frames=26 cooldown剩餘=0s
+2026-04-03 08:36:11,351 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 08:36:13,497 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 08:36:13,501 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 08:36:13,826 INFO 偵測到移動，開始收集影格
+2026-04-03 08:36:32,168 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:36:32,169 INFO 分析條件: motion_frames=10 cooldown剩餘=0s
+2026-04-03 08:36:32,229 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 08:36:34,417 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 08:36:34,419 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 08:36:34,728 INFO 偵測到移動，開始收集影格
+2026-04-03 08:36:51,277 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:36:51,281 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 08:36:51,637 INFO 偵測到移動，開始收集影格
+2026-04-03 08:37:08,642 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:37:08,643 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 08:37:16,533 INFO 偵測到移動，開始收集影格
+2026-04-03 08:37:36,805 INFO 靜止 30 幀，觸發分析
+2026-04-03 08:37:36,806 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 08:37:42,076 INFO 偵測到移動，開始收集影格
+2026-04-03 08:37:57,829 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:37:57,830 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 08:37:58,189 INFO 偵測到移動，開始收集影格
+2026-04-03 08:38:13,810 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:38:13,810 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-03 08:38:29,749 INFO 偵測到移動，開始收集影格
+2026-04-03 08:38:46,194 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:38:46,195 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 08:38:46,479 INFO 偵測到移動，開始收集影格
+2026-04-03 08:39:05,602 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:39:05,602 INFO 分析條件: motion_frames=9 cooldown剩餘=0s
+2026-04-03 08:39:05,873 INFO 偵測到移動，開始收集影格
+2026-04-03 08:39:16,855 INFO 靜止 30 幀，觸發分析
+2026-04-03 08:39:16,856 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-03 08:39:22,370 INFO 偵測到移動，開始收集影格
+2026-04-03 08:39:38,680 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:39:38,681 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 08:39:46,207 INFO 偵測到移動，開始收集影格
+2026-04-03 08:40:02,625 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:40:02,626 INFO 分析條件: motion_frames=6 cooldown剩餘=0s
+2026-04-03 08:40:11,184 INFO 偵測到移動，開始收集影格
+2026-04-03 08:40:21,328 INFO 靜止 30 幀，觸發分析
+2026-04-03 08:40:21,328 INFO 分析條件: motion_frames=2 cooldown剩餘=0s
+2026-04-03 08:40:26,780 INFO 偵測到移動，開始收集影格
+2026-04-03 08:40:43,316 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:40:43,317 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 08:40:43,653 INFO 偵測到移動，開始收集影格
+2026-04-03 08:40:59,905 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:40:59,906 INFO 分析條件: motion_frames=6 cooldown剩餘=0s
+2026-04-03 08:41:00,749 INFO 偵測到移動，開始收集影格
+2026-04-03 08:41:19,517 INFO 靜止 30 幀，觸發分析
+2026-04-03 08:41:19,518 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-03 08:41:24,883 INFO 偵測到移動，開始收集影格
+2026-04-03 08:41:40,613 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:41:40,614 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 08:41:41,592 INFO 偵測到移動，開始收集影格
+2026-04-03 08:41:51,006 INFO 靜止 30 幀，觸發分析
+2026-04-03 08:41:51,006 INFO 分析條件: motion_frames=1 cooldown剩餘=0s
+2026-04-03 08:41:56,643 INFO 偵測到移動，開始收集影格
+2026-04-03 08:42:19,079 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:42:19,080 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-03 08:42:20,033 INFO 偵測到移動，開始收集影格
+2026-04-03 08:42:36,623 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:42:36,624 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 08:42:43,558 INFO 偵測到移動，開始收集影格
+[h264 @ 0xaec580e00] SEI type 23 size 245 truncated at 63
+[h264 @ 0xaec581c00] SEI type 23 size 245 truncated at 61
+2026-04-03 08:43:02,760 INFO 靜止 30 幀，觸發分析
+2026-04-03 08:43:02,761 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-03 08:43:06,999 INFO 偵測到移動，開始收集影格
+2026-04-03 08:43:22,077 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:43:22,078 INFO 分析條件: motion_frames=6 cooldown剩餘=0s
+2026-04-03 08:43:22,359 INFO 偵測到移動，開始收集影格
+2026-04-03 08:43:30,736 INFO 靜止 30 幀，觸發分析
+2026-04-03 08:43:30,737 INFO 分析條件: motion_frames=2 cooldown剩餘=0s
+2026-04-03 08:43:35,044 INFO 偵測到移動，開始收集影格
+2026-04-03 08:43:56,740 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:43:56,741 INFO 分析條件: motion_frames=6 cooldown剩餘=0s
+2026-04-03 08:44:02,395 INFO 偵測到移動，開始收集影格
+2026-04-03 08:44:22,080 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:44:22,081 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 08:44:23,378 INFO 偵測到移動，開始收集影格
+2026-04-03 08:44:31,697 INFO 靜止 30 幀，觸發分析
+2026-04-03 08:44:31,697 INFO 分析條件: motion_frames=2 cooldown剩餘=0s
+2026-04-03 08:44:35,979 INFO 偵測到移動，開始收集影格
+2026-04-03 08:44:53,623 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:44:53,624 INFO 分析條件: motion_frames=8 cooldown剩餘=0s
+2026-04-03 08:44:53,898 INFO 偵測到移動，開始收集影格
+2026-04-03 08:45:02,352 INFO 靜止 30 幀，觸發分析
+2026-04-03 08:45:02,352 INFO 分析條件: motion_frames=3 cooldown剩餘=0s
+2026-04-03 08:45:06,327 INFO 偵測到移動，開始收集影格
+2026-04-03 08:45:21,426 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:45:21,427 INFO 分析條件: motion_frames=17 cooldown剩餘=0s
+2026-04-03 08:45:21,470 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 08:45:24,201 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 08:45:24,203 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 08:45:26,588 INFO 偵測到移動，開始收集影格
+2026-04-03 08:45:42,389 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:45:42,390 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-03 08:45:49,221 INFO 偵測到移動，開始收集影格
+2026-04-03 08:45:58,625 INFO 靜止 30 幀，觸發分析
+2026-04-03 08:45:58,626 INFO 分析條件: motion_frames=2 cooldown剩餘=0s
+2026-04-03 08:46:02,649 INFO 偵測到移動，開始收集影格
+2026-04-03 08:46:20,941 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:46:20,942 INFO 分析條件: motion_frames=26 cooldown剩餘=0s
+2026-04-03 08:46:20,987 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 08:46:23,234 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 08:46:23,236 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 08:46:31,457 INFO 偵測到移動，開始收集影格
+2026-04-03 08:46:53,477 INFO 靜止 30 幀，觸發分析
+2026-04-03 08:46:53,479 INFO 分析條件: motion_frames=6 cooldown剩餘=0s
+2026-04-03 08:46:57,147 INFO 偵測到移動，開始收集影格
+2026-04-03 08:47:12,148 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:47:12,149 INFO 分析條件: motion_frames=19 cooldown剩餘=0s
+2026-04-03 08:47:12,194 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 08:47:14,354 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 08:47:14,356 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 08:47:14,645 INFO 偵測到移動，開始收集影格
+2026-04-03 08:47:32,715 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:47:32,716 INFO 分析條件: motion_frames=32 cooldown剩餘=0s
+2026-04-03 08:47:32,759 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 08:47:34,995 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 08:47:34,997 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 08:47:41,954 INFO 偵測到移動，開始收集影格
+2026-04-03 08:47:51,428 INFO 靜止 30 幀，觸發分析
+2026-04-03 08:47:51,429 INFO 分析條件: motion_frames=2 cooldown剩餘=0s
+2026-04-03 08:47:54,876 INFO 偵測到移動，開始收集影格
+2026-04-03 08:48:11,560 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:48:11,561 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-03 08:48:25,633 INFO 偵測到移動，開始收集影格
+2026-04-03 08:48:38,339 INFO 靜止 30 幀，觸發分析
+2026-04-03 08:48:38,342 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 08:48:42,672 INFO 偵測到移動，開始收集影格
+2026-04-03 08:49:01,094 INFO 靜止 30 幀，觸發分析
+2026-04-03 08:49:01,095 INFO 分析條件: motion_frames=3 cooldown剩餘=0s
+2026-04-03 08:49:01,778 INFO 偵測到移動，開始收集影格
+2026-04-03 08:49:19,090 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:49:19,090 INFO 分析條件: motion_frames=8 cooldown剩餘=0s
+2026-04-03 08:49:27,227 INFO 偵測到移動，開始收集影格
+2026-04-03 08:49:37,214 INFO 靜止 30 幀，觸發分析
+2026-04-03 08:49:37,214 INFO 分析條件: motion_frames=2 cooldown剩餘=0s
+2026-04-03 08:49:42,324 INFO 偵測到移動，開始收集影格
+2026-04-03 08:50:00,231 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:50:00,233 INFO 分析條件: motion_frames=6 cooldown剩餘=0s
+2026-04-03 08:50:07,333 INFO 偵測到移動，開始收集影格
+2026-04-03 08:50:23,803 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:50:23,804 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-03 08:50:32,911 INFO 偵測到移動，開始收集影格
+2026-04-03 08:50:51,697 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:50:51,697 INFO 分析條件: motion_frames=6 cooldown剩餘=0s
+2026-04-03 08:50:52,882 INFO 偵測到移動，開始收集影格
+2026-04-03 08:51:12,305 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:51:12,305 INFO 分析條件: motion_frames=6 cooldown剩餘=0s
+2026-04-03 08:51:12,528 INFO 偵測到移動，開始收集影格
+2026-04-03 08:51:29,541 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:51:29,541 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 08:51:35,932 INFO 偵測到移動，開始收集影格
+2026-04-03 08:51:52,525 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:51:52,526 INFO 分析條件: motion_frames=6 cooldown剩餘=0s
+2026-04-03 08:52:01,648 INFO 偵測到移動，開始收集影格
+2026-04-03 08:52:16,411 INFO 靜止 30 幀，觸發分析
+2026-04-03 08:52:16,411 INFO 分析條件: motion_frames=2 cooldown剩餘=0s
+2026-04-03 08:52:20,907 INFO 偵測到移動，開始收集影格
+2026-04-03 08:52:38,111 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:52:38,112 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 08:52:38,394 INFO 偵測到移動，開始收集影格
+2026-04-03 08:52:54,400 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:52:54,401 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-03 08:53:03,753 INFO 偵測到移動，開始收集影格
+2026-04-03 08:53:23,008 INFO 靜止 30 幀，觸發分析
+2026-04-03 08:53:23,008 INFO 分析條件: motion_frames=3 cooldown剩餘=0s
+2026-04-03 08:53:23,372 INFO 偵測到移動，開始收集影格
+2026-04-03 08:53:42,402 INFO 靜止 30 幀，觸發分析
+2026-04-03 08:53:42,404 INFO 分析條件: motion_frames=3 cooldown剩餘=0s
+2026-04-03 08:53:42,659 INFO 偵測到移動，開始收集影格
+2026-04-03 08:53:58,908 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:53:58,908 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-03 08:53:59,272 INFO 偵測到移動，開始收集影格
+[h264 @ 0xaec581f80] left block unavailable for requested intra4x4 mode -1
+[h264 @ 0xaec581f80] error while decoding MB 0 6, bytestream 32255
+2026-04-03 08:54:22,898 INFO 靜止 30 幀，觸發分析
+2026-04-03 08:54:22,899 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 08:54:23,185 INFO 偵測到移動，開始收集影格
+2026-04-03 08:54:39,376 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:54:39,377 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-03 08:54:39,735 INFO 偵測到移動，開始收集影格
+2026-04-03 08:54:54,963 INFO 靜止 30 幀，觸發分析
+2026-04-03 08:54:54,964 INFO 分析條件: motion_frames=2 cooldown剩餘=0s
+2026-04-03 08:54:55,664 INFO 偵測到移動，開始收集影格
+[h264 @ 0xaec582d80] error while decoding MB 74 77, bytestream -15
+2026-04-03 08:55:12,070 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:55:12,071 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-03 08:55:12,402 INFO 偵測到移動，開始收集影格
+2026-04-03 08:55:27,149 INFO 靜止 30 幀，觸發分析
+2026-04-03 08:55:27,150 INFO 分析條件: motion_frames=3 cooldown剩餘=0s
+2026-04-03 08:55:27,694 INFO 偵測到移動，開始收集影格
+2026-04-03 08:55:43,496 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:55:43,497 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 08:55:43,839 INFO 偵測到移動，開始收集影格
+2026-04-03 08:56:00,345 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:56:00,346 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 08:56:00,620 INFO 偵測到移動，開始收集影格
+2026-04-03 08:56:16,722 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:56:16,722 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 08:56:17,047 INFO 偵測到移動，開始收集影格
+2026-04-03 08:56:31,491 INFO 靜止 30 幀，觸發分析
+2026-04-03 08:56:31,492 INFO 分析條件: motion_frames=11 cooldown剩餘=0s
+2026-04-03 08:56:31,535 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 08:56:33,747 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 08:56:33,749 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 08:56:34,760 INFO 偵測到移動，開始收集影格
+2026-04-03 08:56:51,485 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:56:51,486 INFO 分析條件: motion_frames=13 cooldown剩餘=0s
+2026-04-03 08:56:51,540 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 08:56:53,782 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 08:56:53,783 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 08:56:56,446 INFO 偵測到移動，開始收集影格
+2026-04-03 08:57:08,768 INFO 靜止 30 幀，觸發分析
+2026-04-03 08:57:08,769 INFO 分析條件: motion_frames=2 cooldown剩餘=0s
+2026-04-03 08:57:12,834 INFO 偵測到移動，開始收集影格
+2026-04-03 08:57:33,174 INFO 靜止 30 幀，觸發分析
+2026-04-03 08:57:33,175 INFO 分析條件: motion_frames=7 cooldown剩餘=0s
+2026-04-03 08:57:34,014 INFO 偵測到移動，開始收集影格
+2026-04-03 08:57:50,856 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:57:50,858 INFO 分析條件: motion_frames=8 cooldown剩餘=0s
+2026-04-03 08:57:55,957 INFO 偵測到移動，開始收集影格
+2026-04-03 08:58:05,679 INFO 靜止 30 幀，觸發分析
+2026-04-03 08:58:05,680 INFO 分析條件: motion_frames=1 cooldown剩餘=0s
+2026-04-03 08:58:07,090 INFO 偵測到移動，開始收集影格
+2026-04-03 08:58:23,520 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:58:23,520 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 08:58:36,444 INFO 偵測到移動，開始收集影格
+2026-04-03 08:58:52,380 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:58:52,382 INFO 分析條件: motion_frames=29 cooldown剩餘=0s
+2026-04-03 08:58:52,431 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 08:58:56,399 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 08:58:56,400 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 08:58:56,766 INFO 偵測到移動，開始收集影格
+2026-04-03 08:59:18,141 INFO 靜止 30 幀，觸發分析
+2026-04-03 08:59:18,143 INFO 分析條件: motion_frames=37 cooldown剩餘=0s
+2026-04-03 08:59:18,183 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 08:59:20,436 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 08:59:20,438 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 08:59:23,780 INFO 偵測到移動，開始收集影格
+2026-04-03 08:59:40,872 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 08:59:40,873 INFO 分析條件: motion_frames=7 cooldown剩餘=0s
+2026-04-03 08:59:43,908 INFO 偵測到移動，開始收集影格
+2026-04-03 09:00:01,256 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:00:01,257 INFO 分析條件: motion_frames=8 cooldown剩餘=0s
+2026-04-03 09:00:04,548 INFO 偵測到移動，開始收集影格
+2026-04-03 09:00:18,650 INFO 靜止 30 幀，觸發分析
+2026-04-03 09:00:18,652 INFO 分析條件: motion_frames=2 cooldown剩餘=0s
+2026-04-03 09:00:20,782 INFO 偵測到移動，開始收集影格
+2026-04-03 09:00:36,693 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:00:36,694 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 09:00:37,056 INFO 偵測到移動，開始收集影格
+2026-04-03 09:00:53,231 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:00:53,232 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 09:00:57,609 INFO 偵測到移動，開始收集影格
+2026-04-03 09:01:07,320 INFO 靜止 30 幀，觸發分析
+2026-04-03 09:01:07,321 INFO 分析條件: motion_frames=1 cooldown剩餘=0s
+2026-04-03 09:01:09,279 INFO 偵測到移動，開始收集影格
+2026-04-03 09:01:25,842 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:01:25,843 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 09:01:38,703 INFO 偵測到移動，開始收集影格
+2026-04-03 09:01:53,831 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:01:53,832 INFO 分析條件: motion_frames=11 cooldown剩餘=0s
+2026-04-03 09:01:53,877 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 09:01:56,108 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 09:01:56,111 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 09:02:00,268 INFO 偵測到移動，開始收集影格
+2026-04-03 09:02:09,738 INFO 靜止 30 幀，觸發分析
+2026-04-03 09:02:09,738 INFO 分析條件: motion_frames=1 cooldown剩餘=0s
+2026-04-03 09:02:12,013 INFO 偵測到移動，開始收集影格
+2026-04-03 09:02:26,047 INFO 靜止 30 幀，觸發分析
+2026-04-03 09:02:26,048 INFO 分析條件: motion_frames=3 cooldown剩餘=0s
+2026-04-03 09:02:28,004 INFO 偵測到移動，開始收集影格
+2026-04-03 09:02:44,201 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:02:44,202 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 09:02:48,570 INFO 偵測到移動，開始收集影格
+2026-04-03 09:02:58,428 INFO 靜止 30 幀，觸發分析
+2026-04-03 09:02:58,428 INFO 分析條件: motion_frames=1 cooldown剩餘=0s
+2026-04-03 09:03:00,527 INFO 偵測到移動，開始收集影格
+2026-04-03 09:03:15,370 INFO 靜止 30 幀，觸發分析
+2026-04-03 09:03:15,371 INFO 分析條件: motion_frames=3 cooldown剩餘=0s
+2026-04-03 09:03:17,305 INFO 偵測到移動，開始收集影格
+2026-04-03 09:03:32,897 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:03:32,899 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 09:03:33,132 INFO 偵測到移動，開始收集影格
+2026-04-03 09:03:47,283 INFO 靜止 30 幀，觸發分析
+2026-04-03 09:03:47,284 INFO 分析條件: motion_frames=2 cooldown剩餘=0s
+2026-04-03 09:03:49,371 INFO 偵測到移動，開始收集影格
+2026-04-03 09:03:59,715 INFO 靜止 30 幀，觸發分析
+2026-04-03 09:03:59,716 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-03 09:04:02,209 INFO 偵測到移動，開始收集影格
+2026-04-03 09:04:20,449 INFO 靜止 30 幀，觸發分析
+2026-04-03 09:04:20,449 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-03 09:04:22,622 INFO 偵測到移動，開始收集影格
+2026-04-03 09:04:41,204 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:04:41,205 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-03 09:04:53,221 INFO 偵測到移動，開始收集影格
+2026-04-03 09:05:11,085 INFO 靜止 30 幀，觸發分析
+2026-04-03 09:05:11,087 INFO 分析條件: motion_frames=3 cooldown剩餘=0s
+2026-04-03 09:05:13,520 INFO 偵測到移動，開始收集影格
+2026-04-03 09:05:29,504 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:05:29,505 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 09:05:29,752 INFO 偵測到移動，開始收集影格
+2026-04-03 09:05:43,342 INFO 靜止 30 幀，觸發分析
+2026-04-03 09:05:43,342 INFO 分析條件: motion_frames=2 cooldown剩餘=0s
+2026-04-03 09:05:45,594 INFO 偵測到移動，開始收集影格
+2026-04-03 09:05:57,128 INFO 靜止 30 幀，觸發分析
+2026-04-03 09:05:57,130 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 09:05:59,333 INFO 偵測到移動，開始收集影格
+2026-04-03 09:06:17,198 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:06:17,199 INFO 分析條件: motion_frames=9 cooldown剩餘=0s
+2026-04-03 09:06:21,532 INFO 偵測到移動，開始收集影格
+2026-04-03 09:06:35,154 INFO 靜止 30 幀，觸發分析
+2026-04-03 09:06:35,155 INFO 分析條件: motion_frames=2 cooldown剩餘=0s
+2026-04-03 09:06:38,167 INFO 偵測到移動，開始收集影格
+2026-04-03 09:06:54,576 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:06:54,578 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 09:06:54,810 INFO 偵測到移動，開始收集影格
+2026-04-03 09:07:10,984 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:07:10,985 INFO 分析條件: motion_frames=7 cooldown剩餘=0s
+2026-04-03 09:07:14,294 INFO 偵測到移動，開始收集影格
+2026-04-03 09:07:30,077 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:07:30,079 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 09:07:34,512 INFO 偵測到移動，開始收集影格
+2026-04-03 09:07:49,885 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:07:49,887 INFO 分析條件: motion_frames=19 cooldown剩餘=0s
+2026-04-03 09:07:49,937 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 09:07:52,297 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 09:07:52,299 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 09:08:03,989 INFO 偵測到移動，開始收集影格
+2026-04-03 09:08:19,785 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:08:19,785 INFO 分析條件: motion_frames=11 cooldown剩餘=0s
+2026-04-03 09:08:19,818 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 09:08:22,260 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 09:08:22,261 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 09:08:22,583 INFO 偵測到移動，開始收集影格
+2026-04-03 09:08:40,834 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:08:40,835 INFO 分析條件: motion_frames=15 cooldown剩餘=0s
+2026-04-03 09:08:40,888 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 09:08:43,231 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 09:08:43,232 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 09:08:47,191 INFO 偵測到移動，開始收集影格
+2026-04-03 09:08:58,323 INFO 靜止 30 幀，觸發分析
+2026-04-03 09:08:58,324 INFO 分析條件: motion_frames=3 cooldown剩餘=0s
+2026-04-03 09:08:59,362 INFO 偵測到移動，開始收集影格
+2026-04-03 09:09:16,377 INFO 靜止 30 幀，觸發分析
+2026-04-03 09:09:16,378 INFO 分析條件: motion_frames=8 cooldown剩餘=0s
+2026-04-03 09:09:20,029 INFO 偵測到移動，開始收集影格
+2026-04-03 09:09:35,730 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:09:35,730 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 09:09:38,985 INFO 偵測到移動，開始收集影格
+2026-04-03 09:09:54,744 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:09:54,745 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-03 09:10:03,012 INFO 偵測到移動，開始收集影格
+2026-04-03 09:10:18,850 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:10:18,850 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-03 09:10:23,676 INFO 偵測到移動，開始收集影格
+2026-04-03 09:10:40,883 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:10:40,883 INFO 分析條件: motion_frames=6 cooldown剩餘=0s
+2026-04-03 09:10:41,234 INFO 偵測到移動，開始收集影格
+2026-04-03 09:10:58,015 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:10:58,016 INFO 分析條件: motion_frames=8 cooldown剩餘=0s
+2026-04-03 09:11:00,525 INFO 偵測到移動，開始收集影格
+2026-04-03 09:11:16,664 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:11:16,665 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 09:11:30,153 INFO 偵測到移動，開始收集影格
+2026-04-03 09:11:40,303 INFO 靜止 30 幀，觸發分析
+2026-04-03 09:11:40,303 INFO 分析條件: motion_frames=2 cooldown剩餘=0s
+2026-04-03 09:11:41,252 INFO 偵測到移動，開始收集影格
+2026-04-03 09:11:58,583 INFO 靜止 30 幀，觸發分析
+2026-04-03 09:11:58,585 INFO 分析條件: motion_frames=3 cooldown剩餘=0s
+2026-04-03 09:12:02,569 INFO 偵測到移動，開始收集影格
+2026-04-03 09:12:18,656 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:12:18,657 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 09:12:21,377 INFO 偵測到移動，開始收集影格
+2026-04-03 09:12:45,568 INFO 靜止 30 幀，觸發分析
+2026-04-03 09:12:45,569 INFO 分析條件: motion_frames=7 cooldown剩餘=0s
+2026-04-03 09:12:46,134 INFO 偵測到移動，開始收集影格
+2026-04-03 09:13:01,048 INFO 靜止 30 幀，觸發分析
+2026-04-03 09:13:01,049 INFO 分析條件: motion_frames=9 cooldown剩餘=0s
+2026-04-03 09:13:05,025 INFO 偵測到移動，開始收集影格
+2026-04-03 09:13:22,438 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:13:22,438 INFO 分析條件: motion_frames=8 cooldown剩餘=0s
+2026-04-03 09:13:24,949 INFO 偵測到移動，開始收集影格
+2026-04-03 09:13:34,598 INFO 靜止 30 幀，觸發分析
+2026-04-03 09:13:34,599 INFO 分析條件: motion_frames=1 cooldown剩餘=0s
+2026-04-03 09:13:38,317 INFO 偵測到移動，開始收集影格
+2026-04-03 09:13:54,615 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:13:54,616 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-03 09:14:08,464 INFO 偵測到移動，開始收集影格
+2026-04-03 09:14:24,920 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:14:24,921 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-03 09:14:27,117 INFO 偵測到移動，開始收集影格
+2026-04-03 09:14:36,515 INFO 靜止 30 幀，觸發分析
+2026-04-03 09:14:36,516 INFO 分析條件: motion_frames=1 cooldown剩餘=0s
+2026-04-03 09:14:40,373 INFO 偵測到移動，開始收集影格
+2026-04-03 09:14:55,875 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:14:55,876 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 09:14:56,227 INFO 偵測到移動，開始收集影格
+2026-04-03 09:15:14,773 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:15:14,773 INFO 分析條件: motion_frames=8 cooldown剩餘=0s
+2026-04-03 09:15:15,111 INFO 偵測到移動，開始收集影格
+2026-04-03 09:15:27,309 INFO 靜止 30 幀，觸發分析
+2026-04-03 09:15:27,309 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-03 09:15:31,917 INFO 偵測到移動，開始收集影格
+2026-04-03 09:15:48,088 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:15:48,089 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 09:15:57,307 INFO 偵測到移動，開始收集影格
+2026-04-03 09:16:14,774 INFO 靜止 30 幀，觸發分析
+2026-04-03 09:16:14,775 INFO 分析條件: motion_frames=3 cooldown剩餘=0s
+2026-04-03 09:16:19,109 INFO 偵測到移動，開始收集影格
+2026-04-03 09:16:35,482 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:16:35,482 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-03 09:16:37,486 INFO 偵測到移動，開始收集影格
+2026-04-03 09:16:47,003 INFO 靜止 30 幀，觸發分析
+2026-04-03 09:16:47,003 INFO 分析條件: motion_frames=1 cooldown剩餘=0s
+2026-04-03 09:16:51,452 INFO 偵測到移動，開始收集影格
+2026-04-03 09:17:07,576 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:17:07,577 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 09:17:07,939 INFO 偵測到移動，開始收集影格
+2026-04-03 09:17:25,446 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:17:25,447 INFO 分析條件: motion_frames=8 cooldown剩餘=0s
+2026-04-03 09:17:25,738 INFO 偵測到移動，開始收集影格
+2026-04-03 09:17:42,640 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:17:42,641 INFO 分析條件: motion_frames=8 cooldown剩餘=0s
+2026-04-03 09:17:44,336 INFO 偵測到移動，開始收集影格
+2026-04-03 09:18:08,546 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:18:08,547 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 09:18:15,033 INFO 偵測到移動，開始收集影格
+2026-04-03 09:18:26,609 INFO 靜止 30 幀，觸發分析
+2026-04-03 09:18:26,610 INFO 分析條件: motion_frames=2 cooldown剩餘=0s
+2026-04-03 09:18:31,233 INFO 偵測到移動，開始收集影格
+2026-04-03 09:18:47,649 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:18:47,650 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-03 09:18:49,048 INFO 偵測到移動，開始收集影格
+2026-04-03 09:18:58,872 INFO 靜止 30 幀，觸發分析
+2026-04-03 09:18:58,873 INFO 分析條件: motion_frames=1 cooldown剩餘=0s
+2026-04-03 09:19:04,122 INFO 偵測到移動，開始收集影格
+2026-04-03 09:19:20,258 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:19:20,258 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 09:19:20,588 INFO 偵測到移動，開始收集影格
+2026-04-03 09:19:38,144 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:19:38,144 INFO 分析條件: motion_frames=7 cooldown剩餘=0s
+2026-04-03 09:19:38,400 INFO 偵測到移動，開始收集影格
+2026-04-03 09:19:54,652 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:19:54,654 INFO 分析條件: motion_frames=6 cooldown剩餘=0s
+2026-04-03 09:19:55,518 INFO 偵測到移動，開始收集影格
+2026-04-03 09:20:04,878 INFO 靜止 30 幀，觸發分析
+2026-04-03 09:20:04,879 INFO 分析條件: motion_frames=1 cooldown剩餘=0s
+2026-04-03 09:20:10,330 INFO 偵測到移動，開始收集影格
+2026-04-03 09:20:25,804 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:20:25,805 INFO 分析條件: motion_frames=12 cooldown剩餘=0s
+2026-04-03 09:20:25,868 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 09:20:28,279 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 09:20:28,281 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 09:20:28,608 INFO 偵測到移動，開始收集影格
+2026-04-03 09:20:39,552 INFO 靜止 30 幀，觸發分析
+2026-04-03 09:20:39,553 INFO 分析條件: motion_frames=3 cooldown剩餘=0s
+2026-04-03 09:20:44,847 INFO 偵測到移動，開始收集影格
+2026-04-03 09:21:01,747 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:21:01,748 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-03 09:21:10,681 INFO 偵測到移動，開始收集影格
+2026-04-03 09:21:28,539 INFO 靜止 30 幀，觸發分析
+2026-04-03 09:21:28,539 INFO 分析條件: motion_frames=3 cooldown剩餘=0s
+2026-04-03 09:21:34,242 INFO 偵測到移動，開始收集影格
+2026-04-03 09:21:52,038 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:21:52,039 INFO 分析條件: motion_frames=9 cooldown剩餘=0s
+2026-04-03 09:21:52,268 INFO 偵測到移動，開始收集影格
+2026-04-03 09:22:09,755 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:22:09,756 INFO 分析條件: motion_frames=7 cooldown剩餘=0s
+2026-04-03 09:22:10,441 INFO 偵測到移動，開始收集影格
+2026-04-03 09:22:20,046 INFO 靜止 30 幀，觸發分析
+2026-04-03 09:22:20,046 INFO 分析條件: motion_frames=1 cooldown剩餘=0s
+2026-04-03 09:22:25,662 INFO 偵測到移動，開始收集影格
+2026-04-03 09:22:41,824 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:22:41,825 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 09:22:50,552 INFO 偵測到移動，開始收集影格
+2026-04-03 09:23:06,981 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:23:06,982 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 09:23:14,611 INFO 偵測到移動，開始收集影格
+2026-04-03 09:23:24,095 INFO 靜止 30 幀，觸發分析
+2026-04-03 09:23:24,095 INFO 分析條件: motion_frames=2 cooldown剩餘=0s
+2026-04-03 09:23:30,567 INFO 偵測到移動，開始收集影格
+2026-04-03 09:23:46,378 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:23:46,379 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 09:23:46,675 INFO 偵測到移動，開始收集影格
+2026-04-03 09:23:58,253 INFO 靜止 30 幀，觸發分析
+2026-04-03 09:23:58,254 INFO 分析條件: motion_frames=6 cooldown剩餘=0s
+2026-04-03 09:24:04,755 INFO 偵測到移動，開始收集影格
+2026-04-03 09:24:27,453 INFO 靜止 30 幀，觸發分析
+2026-04-03 09:24:27,454 INFO 分析條件: motion_frames=6 cooldown剩餘=0s
+2026-04-03 09:24:33,219 INFO 偵測到移動，開始收集影格
+2026-04-03 09:24:49,071 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:24:49,071 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 09:24:57,041 INFO 偵測到移動，開始收集影格
+2026-04-03 09:25:14,803 INFO 靜止 30 幀，觸發分析
+2026-04-03 09:25:14,804 INFO 分析條件: motion_frames=2 cooldown剩餘=0s
+2026-04-03 09:25:21,450 INFO 偵測到移動，開始收集影格
+2026-04-03 09:25:37,819 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:25:37,820 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 09:25:47,106 INFO 偵測到移動，開始收集影格
+2026-04-03 09:26:03,328 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:26:03,329 INFO 分析條件: motion_frames=12 cooldown剩餘=0s
+2026-04-03 09:26:03,372 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 09:26:05,585 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 09:26:05,587 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 09:26:13,934 INFO 偵測到移動，開始收集影格
+2026-04-03 09:26:30,327 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:26:30,329 INFO 分析條件: motion_frames=6 cooldown剩餘=0s
+2026-04-03 09:26:30,586 INFO 偵測到移動，開始收集影格
+2026-04-03 09:26:47,205 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:26:47,205 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 09:26:55,088 INFO 偵測到移動，開始收集影格
+2026-04-03 09:27:10,178 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:27:10,179 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 09:27:10,452 INFO 偵測到移動，開始收集影格
+2026-04-03 09:27:26,885 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:27:26,885 INFO 分析條件: motion_frames=8 cooldown剩餘=0s
+2026-04-03 09:27:35,553 INFO 偵測到移動，開始收集影格
+2026-04-03 09:27:45,239 INFO 靜止 30 幀，觸發分析
+2026-04-03 09:27:45,241 INFO 分析條件: motion_frames=2 cooldown剩餘=0s
+2026-04-03 09:27:51,536 INFO 偵測到移動，開始收集影格
+2026-04-03 09:28:07,347 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:28:07,348 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 09:28:07,710 INFO 偵測到移動，開始收集影格
+2026-04-03 09:28:29,557 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:28:29,557 INFO 分析條件: motion_frames=13 cooldown剩餘=0s
+2026-04-03 09:28:29,596 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 09:28:31,819 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 09:28:31,821 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 09:28:32,519 INFO 偵測到移動，開始收集影格
+2026-04-03 09:28:42,503 INFO 靜止 30 幀，觸發分析
+2026-04-03 09:28:42,505 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 09:28:48,333 INFO 偵測到移動，開始收集影格
+2026-04-03 09:29:07,980 INFO 靜止 30 幀，觸發分析
+2026-04-03 09:29:07,982 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 09:29:13,368 INFO 偵測到移動，開始收集影格
+2026-04-03 09:29:29,876 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:29:29,877 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 09:29:30,537 INFO 偵測到移動，開始收集影格
+2026-04-03 09:29:51,971 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:29:51,973 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-03 09:29:59,588 INFO 偵測到移動，開始收集影格
+2026-04-03 09:30:15,277 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:30:15,279 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-03 09:30:22,647 INFO 偵測到移動，開始收集影格
+2026-04-03 09:30:32,828 INFO 靜止 30 幀，觸發分析
+2026-04-03 09:30:32,828 INFO 分析條件: motion_frames=2 cooldown剩餘=0s
+2026-04-03 09:30:38,008 INFO 偵測到移動，開始收集影格
+2026-04-03 09:30:53,920 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:30:53,920 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 09:30:54,976 INFO 偵測到移動，開始收集影格
+2026-04-03 09:31:17,413 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:31:17,413 INFO 分析條件: motion_frames=9 cooldown剩餘=0s
+2026-04-03 09:31:18,424 INFO 偵測到移動，開始收集影格
+2026-04-03 09:31:30,498 INFO 靜止 30 幀，觸發分析
+2026-04-03 09:31:30,498 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 09:31:35,829 INFO 偵測到移動，開始收集影格
+2026-04-03 09:31:51,935 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:31:51,935 INFO 分析條件: motion_frames=6 cooldown剩餘=0s
+2026-04-03 09:31:53,287 INFO 偵測到移動，開始收集影格
+2026-04-03 09:32:09,275 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:32:09,275 INFO 分析條件: motion_frames=6 cooldown剩餘=0s
+2026-04-03 09:32:15,945 INFO 偵測到移動，開始收集影格
+2026-04-03 09:32:34,788 INFO 靜止 30 幀，觸發分析
+2026-04-03 09:32:34,788 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 09:32:39,996 INFO 偵測到移動，開始收集影格
+2026-04-03 09:32:57,561 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:32:57,561 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 09:32:57,923 INFO 偵測到移動，開始收集影格
+2026-04-03 09:33:12,924 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:33:12,925 INFO 分析條件: motion_frames=31 cooldown剩餘=0s
+2026-04-03 09:33:12,995 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 09:33:15,168 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 09:33:15,170 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 09:33:15,491 INFO 偵測到移動，開始收集影格
+2026-04-03 09:33:32,509 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:33:32,510 INFO 分析條件: motion_frames=28 cooldown剩餘=0s
+2026-04-03 09:33:32,556 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 09:33:34,728 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 09:33:34,730 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 09:33:43,021 INFO 偵測到移動，開始收集影格
+2026-04-03 09:33:54,239 INFO 靜止 30 幀，觸發分析
+2026-04-03 09:33:54,240 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 09:33:59,169 INFO 偵測到移動，開始收集影格
+2026-04-03 09:34:11,488 INFO 靜止 30 幀，觸發分析
+2026-04-03 09:34:11,489 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-03 09:34:16,217 INFO 偵測到移動，開始收集影格
+2026-04-03 09:34:32,317 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:34:32,319 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 09:34:33,965 INFO 偵測到移動，開始收集影格
+2026-04-03 09:34:44,301 INFO 靜止 30 幀，觸發分析
+2026-04-03 09:34:44,302 INFO 分析條件: motion_frames=2 cooldown剩餘=0s
+2026-04-03 09:34:48,989 INFO 偵測到移動，開始收集影格
+2026-04-03 09:35:04,581 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:35:04,583 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 09:35:06,384 INFO 偵測到移動，開始收集影格
+2026-04-03 09:35:22,916 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:35:22,916 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-03 09:35:36,910 INFO 偵測到移動，開始收集影格
+2026-04-03 09:35:55,924 INFO 靜止 30 幀，觸發分析
+2026-04-03 09:35:55,925 INFO 分析條件: motion_frames=6 cooldown剩餘=0s
+2026-04-03 09:36:00,354 INFO 偵測到移動，開始收集影格
+2026-04-03 09:36:13,240 INFO 靜止 30 幀，觸發分析
+2026-04-03 09:36:13,241 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 09:36:17,750 INFO 偵測到移動，開始收集影格
+2026-04-03 09:36:34,573 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:36:34,573 INFO 分析條件: motion_frames=12 cooldown剩餘=0s
+2026-04-03 09:36:34,625 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 09:36:36,825 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 09:36:36,827 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 09:36:38,415 INFO 偵測到移動，開始收集影格
+2026-04-03 09:36:54,427 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:36:54,428 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-03 09:36:56,727 INFO 偵測到移動，開始收集影格
+2026-04-03 09:37:06,663 INFO 靜止 30 幀，觸發分析
+2026-04-03 09:37:06,664 INFO 分析條件: motion_frames=2 cooldown剩餘=0s
+2026-04-03 09:37:10,824 INFO 偵測到移動，開始收集影格
+2026-04-03 09:37:28,600 INFO 靜止 30 幀，觸發分析
+2026-04-03 09:37:28,601 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 09:37:29,273 INFO 偵測到移動，開始收集影格
+2026-04-03 09:37:45,796 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:37:45,797 INFO 分析條件: motion_frames=6 cooldown剩餘=0s
+2026-04-03 09:37:50,542 INFO 偵測到移動，開始收集影格
+2026-04-03 09:38:09,691 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:38:09,693 INFO 分析條件: motion_frames=7 cooldown剩餘=0s
+2026-04-03 09:38:10,019 INFO 偵測到移動，開始收集影格
+2026-04-03 09:38:20,045 INFO 靜止 30 幀，觸發分析
+2026-04-03 09:38:20,045 INFO 分析條件: motion_frames=1 cooldown剩餘=0s
+2026-04-03 09:38:23,951 INFO 偵測到移動，開始收集影格
+2026-04-03 09:38:39,030 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:38:39,030 INFO 分析條件: motion_frames=20 cooldown剩餘=0s
+2026-04-03 09:38:39,095 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 09:38:41,227 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 09:38:41,228 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 09:38:41,459 INFO 偵測到移動，開始收集影格
+2026-04-03 09:39:00,095 INFO 靜止 30 幀，觸發分析
+2026-04-03 09:39:00,096 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-03 09:39:00,407 INFO 偵測到移動，開始收集影格
+2026-04-03 09:39:18,380 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:39:18,380 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-03 09:39:20,930 INFO 偵測到移動，開始收集影格
+2026-04-03 09:39:30,376 INFO 靜止 30 幀，觸發分析
+2026-04-03 09:39:30,377 INFO 分析條件: motion_frames=1 cooldown剩餘=0s
+2026-04-03 09:39:34,310 INFO 偵測到移動，開始收集影格
+2026-04-03 09:39:50,959 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:39:50,959 INFO 分析條件: motion_frames=14 cooldown剩餘=0s
+2026-04-03 09:39:50,999 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 09:39:53,249 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 09:39:53,250 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 09:39:55,824 INFO 偵測到移動，開始收集影格
+2026-04-03 09:40:05,520 INFO 靜止 30 幀，觸發分析
+2026-04-03 09:40:05,522 INFO 分析條件: motion_frames=1 cooldown剩餘=0s
+2026-04-03 09:40:09,421 INFO 偵測到移動，開始收集影格
+2026-04-03 09:40:25,180 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:40:25,181 INFO 分析條件: motion_frames=25 cooldown剩餘=0s
+2026-04-03 09:40:25,229 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 09:40:27,273 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 09:40:27,274 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 09:40:27,594 INFO 偵測到移動，開始收集影格
+2026-04-03 09:40:42,831 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:40:42,832 INFO 分析條件: motion_frames=27 cooldown剩餘=0s
+2026-04-03 09:40:42,890 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 09:40:44,957 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 09:40:44,959 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 09:40:45,633 INFO 偵測到移動，開始收集影格
+2026-04-03 09:41:00,723 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:41:00,724 INFO 分析條件: motion_frames=43 cooldown剩餘=0s
+2026-04-03 09:41:00,766 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 09:41:02,755 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 09:41:02,757 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 09:41:03,125 INFO 偵測到移動，開始收集影格
+2026-04-03 09:41:18,358 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:41:18,358 INFO 分析條件: motion_frames=28 cooldown剩餘=0s
+2026-04-03 09:41:18,409 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 09:41:20,369 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 09:41:20,370 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 09:41:20,729 INFO 偵測到移動，開始收集影格
+2026-04-03 09:41:35,770 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:41:35,771 INFO 分析條件: motion_frames=23 cooldown剩餘=0s
+2026-04-03 09:41:35,826 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 09:41:37,898 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 09:41:37,900 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 09:41:38,264 INFO 偵測到移動，開始收集影格
+2026-04-03 09:41:53,711 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:41:53,712 INFO 分析條件: motion_frames=27 cooldown剩餘=0s
+2026-04-03 09:41:53,759 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 09:41:55,746 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 09:41:55,747 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 09:41:56,045 INFO 偵測到移動，開始收集影格
+2026-04-03 09:42:11,204 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:42:11,205 INFO 分析條件: motion_frames=41 cooldown剩餘=0s
+2026-04-03 09:42:11,253 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 09:42:13,431 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 09:42:13,432 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 09:42:13,786 INFO 偵測到移動，開始收集影格
+2026-04-03 09:42:28,875 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:42:28,876 INFO 分析條件: motion_frames=37 cooldown剩餘=0s
+2026-04-03 09:42:28,935 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 09:42:31,073 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 09:42:31,075 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 09:42:31,437 INFO 偵測到移動，開始收集影格
+2026-04-03 09:42:46,674 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:42:46,675 INFO 分析條件: motion_frames=35 cooldown剩餘=0s
+2026-04-03 09:42:46,721 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 09:42:48,809 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 09:42:48,810 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 09:42:49,140 INFO 偵測到移動，開始收集影格
+2026-04-03 09:43:04,460 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:43:04,462 INFO 分析條件: motion_frames=49 cooldown剩餘=0s
+2026-04-03 09:43:04,520 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 09:43:06,550 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 09:43:06,552 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 09:43:06,853 INFO 偵測到移動，開始收集影格
+2026-04-03 09:43:22,132 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:43:22,133 INFO 分析條件: motion_frames=35 cooldown剩餘=0s
+2026-04-03 09:43:22,174 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 09:43:24,341 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 09:43:24,343 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 09:43:24,656 INFO 偵測到移動，開始收集影格
+2026-04-03 09:43:40,634 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:43:40,635 INFO 分析條件: motion_frames=28 cooldown剩餘=0s
+2026-04-03 09:43:40,695 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 09:43:42,775 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 09:43:42,776 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 09:43:43,459 INFO 偵測到移動，開始收集影格
+2026-04-03 09:43:59,666 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:43:59,666 INFO 分析條件: motion_frames=25 cooldown剩餘=0s
+2026-04-03 09:43:59,710 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 09:44:01,939 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 09:44:01,940 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 09:44:03,083 INFO 偵測到移動，開始收集影格
+2026-04-03 09:44:18,501 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:44:18,502 INFO 分析條件: motion_frames=37 cooldown剩餘=0s
+2026-04-03 09:44:18,566 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 09:44:20,881 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 09:44:20,884 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 09:44:21,583 INFO 偵測到移動，開始收集影格
+2026-04-03 09:44:36,591 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:44:36,592 INFO 分析條件: motion_frames=16 cooldown剩餘=0s
+2026-04-03 09:44:36,631 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 09:44:38,887 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 09:44:38,890 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 09:44:40,415 INFO 偵測到移動，開始收集影格
+2026-04-03 09:45:01,100 INFO 連線 RTSP: rtsp://stevenhung:FREDjuik12@192.168.68.109:554/stream1
+2026-04-03 09:45:03,236 INFO RTSP 串流連線成功
+2026-04-03 09:45:03,990 INFO 偵測到移動，開始收集影格
+2026-04-03 09:45:19,751 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:45:19,751 INFO 分析條件: motion_frames=14 cooldown剩餘=0s
+2026-04-03 09:45:19,842 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 09:45:21,963 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 09:45:21,965 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 09:45:23,549 INFO 偵測到移動，開始收集影格
+2026-04-03 09:45:41,559 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:45:41,559 INFO 分析條件: motion_frames=16 cooldown剩餘=0s
+2026-04-03 09:45:41,587 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 09:45:43,672 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 09:45:43,674 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 09:45:43,934 INFO 偵測到移動，開始收集影格
+2026-04-03 09:45:59,678 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:45:59,678 INFO 分析條件: motion_frames=17 cooldown剩餘=0s
+2026-04-03 09:45:59,707 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 09:46:01,912 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 09:46:01,913 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 09:46:02,978 INFO 偵測到移動，開始收集影格
+2026-04-03 09:46:19,655 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:46:19,655 INFO 分析條件: motion_frames=14 cooldown剩餘=0s
+2026-04-03 09:46:19,683 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 09:46:21,901 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 09:46:21,906 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 09:46:22,271 INFO 偵測到移動，開始收集影格
+2026-04-03 09:46:37,460 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:46:37,460 INFO 分析條件: motion_frames=29 cooldown剩餘=0s
+2026-04-03 09:46:37,488 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 09:46:39,787 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 09:46:39,789 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 09:46:40,383 INFO 偵測到移動，開始收集影格
+2026-04-03 09:46:55,576 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:46:55,577 INFO 分析條件: motion_frames=41 cooldown剩餘=0s
+2026-04-03 09:46:55,605 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 09:46:57,844 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 09:46:57,845 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 09:46:59,204 INFO 偵測到移動，開始收集影格
+[h264 @ 0xb0eec1c00] reference picture missing during reorder
+[h264 @ 0xb0eec1c00] Missing reference picture, default is 65537
+[h264 @ 0xb0eec1f80] mmco: unref short failure
+[h264 @ 0xb0eec1f80] illegal short term buffer state detected
+2026-04-03 09:47:14,359 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:47:14,360 INFO 分析條件: motion_frames=25 cooldown剩餘=0s
+2026-04-03 09:47:14,386 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 09:47:16,664 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 09:47:16,665 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 09:47:17,597 INFO 偵測到移動，開始收集影格
+2026-04-03 09:47:33,610 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:47:33,611 INFO 分析條件: motion_frames=26 cooldown剩餘=0s
+2026-04-03 09:47:33,639 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 09:47:35,848 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 09:47:35,849 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 09:47:43,030 INFO 偵測到移動，開始收集影格
+2026-04-03 09:47:59,056 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:47:59,057 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 09:47:59,396 INFO 偵測到移動，開始收集影格
+2026-04-03 09:48:15,344 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:48:15,344 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 09:48:19,319 INFO 偵測到移動，開始收集影格
+2026-04-03 09:48:35,628 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:48:35,628 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 09:48:35,983 INFO 偵測到移動，開始收集影格
+2026-04-03 09:48:45,784 INFO 靜止 30 幀，觸發分析
+2026-04-03 09:48:45,785 INFO 分析條件: motion_frames=1 cooldown剩餘=0s
+2026-04-03 09:48:47,348 INFO 偵測到移動，開始收集影格
+2026-04-03 09:49:04,453 INFO 靜止 30 幀，觸發分析
+2026-04-03 09:49:04,453 INFO 分析條件: motion_frames=3 cooldown剩餘=0s
+2026-04-03 09:49:04,781 INFO 偵測到移動，開始收集影格
+2026-04-03 09:49:17,642 INFO 靜止 30 幀，觸發分析
+2026-04-03 09:49:17,643 INFO 分析條件: motion_frames=3 cooldown剩餘=0s
+2026-04-03 09:49:20,889 INFO 偵測到移動，開始收集影格
+2026-04-03 09:49:38,300 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:49:38,300 INFO 分析條件: motion_frames=37 cooldown剩餘=0s
+2026-04-03 09:49:38,328 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 09:49:40,613 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 09:49:40,614 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 09:49:43,930 INFO 偵測到移動，開始收集影格
+2026-04-03 09:50:04,390 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:50:04,390 INFO 分析條件: motion_frames=7 cooldown剩餘=0s
+2026-04-03 09:50:12,993 INFO 偵測到移動，開始收集影格
+2026-04-03 09:50:29,508 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:50:29,508 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 09:50:36,658 INFO 偵測到移動，開始收集影格
+2026-04-03 09:50:53,889 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:50:53,890 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 09:51:09,245 INFO 偵測到移動，開始收集影格
+2026-04-03 09:51:25,356 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:51:25,356 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 09:51:25,710 INFO 偵測到移動，開始收集影格
+2026-04-03 09:51:41,945 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:51:41,945 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 09:51:42,177 INFO 偵測到移動，開始收集影格
+2026-04-03 09:52:00,237 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:52:00,237 INFO 分析條件: motion_frames=10 cooldown剩餘=0s
+2026-04-03 09:52:00,265 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 09:52:02,423 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 09:52:02,424 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 09:52:02,777 INFO 偵測到移動，開始收集影格
+2026-04-03 09:52:18,965 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:52:18,965 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 09:52:26,938 INFO 偵測到移動，開始收集影格
+2026-04-03 09:52:43,270 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:52:43,271 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 09:52:50,699 INFO 偵測到移動，開始收集影格
+2026-04-03 09:53:06,604 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:53:06,604 INFO 分析條件: motion_frames=7 cooldown剩餘=0s
+2026-04-03 09:53:06,961 INFO 偵測到移動，開始收集影格
+2026-04-03 09:53:16,665 INFO 靜止 30 幀，觸發分析
+2026-04-03 09:53:16,665 INFO 分析條件: motion_frames=1 cooldown剩餘=0s
+2026-04-03 09:53:22,495 INFO 偵測到移動，開始收集影格
+2026-04-03 09:53:38,847 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:53:38,847 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 09:53:39,205 INFO 偵測到移動，開始收集影格
+2026-04-03 09:53:48,945 INFO 靜止 30 幀，觸發分析
+2026-04-03 09:53:48,945 INFO 分析條件: motion_frames=2 cooldown剩餘=0s
+2026-04-03 09:53:54,617 INFO 偵測到移動，開始收集影格
+2026-04-03 09:54:16,782 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:54:16,782 INFO 分析條件: motion_frames=7 cooldown剩餘=0s
+2026-04-03 09:54:17,142 INFO 偵測到移動，開始收集影格
+2026-04-03 09:54:33,496 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:54:33,497 INFO 分析條件: motion_frames=34 cooldown剩餘=0s
+2026-04-03 09:54:33,526 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 09:54:35,825 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 09:54:35,826 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 09:54:38,939 INFO 偵測到移動，開始收集影格
+2026-04-03 09:54:54,809 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:54:54,810 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 09:54:56,485 INFO 偵測到移動，開始收集影格
+2026-04-03 09:55:13,923 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:55:13,923 INFO 分析條件: motion_frames=21 cooldown剩餘=0s
+2026-04-03 09:55:13,951 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 09:55:16,002 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 09:55:16,004 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 09:55:24,001 INFO 偵測到移動，開始收集影格
+2026-04-03 09:55:39,633 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:55:39,634 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-03 09:55:39,932 INFO 偵測到移動，開始收集影格
+2026-04-03 09:55:55,713 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:55:55,713 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-03 09:55:56,053 INFO 偵測到移動，開始收集影格
+2026-04-03 09:56:11,192 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:56:11,192 INFO 分析條件: motion_frames=25 cooldown剩餘=0s
+2026-04-03 09:56:11,219 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 09:56:13,542 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 09:56:13,543 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 09:56:13,902 INFO 偵測到移動，開始收集影格
+2026-04-03 09:56:28,963 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:56:28,964 INFO 分析條件: motion_frames=44 cooldown剩餘=0s
+2026-04-03 09:56:28,992 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 09:56:31,065 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 09:56:31,066 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 09:56:31,343 INFO 偵測到移動，開始收集影格
+2026-04-03 09:56:49,107 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:56:49,108 INFO 分析條件: motion_frames=34 cooldown剩餘=0s
+2026-04-03 09:56:49,136 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 09:56:51,452 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 09:56:51,454 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 09:56:57,933 INFO 偵測到移動，開始收集影格
+2026-04-03 09:57:15,847 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:57:15,847 INFO 分析條件: motion_frames=34 cooldown剩餘=0s
+2026-04-03 09:57:15,874 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 09:57:18,036 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 09:57:18,037 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 09:57:18,294 INFO 偵測到移動，開始收集影格
+2026-04-03 09:57:34,697 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:57:34,697 INFO 分析條件: motion_frames=8 cooldown剩餘=0s
+2026-04-03 09:57:35,059 INFO 偵測到移動，開始收集影格
+2026-04-03 09:57:50,063 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:57:50,063 INFO 分析條件: motion_frames=48 cooldown剩餘=0s
+2026-04-03 09:57:50,092 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 09:57:52,195 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 09:57:52,196 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 09:57:52,547 INFO 偵測到移動，開始收集影格
+2026-04-03 09:58:07,724 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:58:07,724 INFO 分析條件: motion_frames=47 cooldown剩餘=0s
+2026-04-03 09:58:07,752 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 09:58:09,900 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 09:58:09,901 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 09:58:10,267 INFO 偵測到移動，開始收集影格
+2026-04-03 09:58:26,094 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:58:26,094 INFO 分析條件: motion_frames=38 cooldown剩餘=0s
+2026-04-03 09:58:26,122 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 09:58:28,315 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 09:58:28,317 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 09:58:28,663 INFO 偵測到移動，開始收集影格
+2026-04-03 09:58:43,758 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:58:43,758 INFO 分析條件: motion_frames=38 cooldown剩餘=0s
+2026-04-03 09:58:43,788 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 09:58:45,892 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 09:58:45,893 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 09:58:47,954 INFO 偵測到移動，開始收集影格
+2026-04-03 09:59:03,213 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:59:03,214 INFO 分析條件: motion_frames=43 cooldown剩餘=0s
+2026-04-03 09:59:03,244 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 09:59:05,606 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 09:59:05,607 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 09:59:06,650 INFO 偵測到移動，開始收集影格
+2026-04-03 09:59:22,467 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:59:22,468 INFO 分析條件: motion_frames=15 cooldown剩餘=0s
+2026-04-03 09:59:22,496 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 09:59:24,584 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 09:59:24,585 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 09:59:25,230 INFO 偵測到移動，開始收集影格
+2026-04-03 09:59:40,701 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:59:40,701 INFO 分析條件: motion_frames=31 cooldown剩餘=0s
+2026-04-03 09:59:40,735 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 09:59:42,911 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 09:59:42,913 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 09:59:43,286 INFO 偵測到移動，開始收集影格
+2026-04-03 09:59:58,462 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 09:59:58,462 INFO 分析條件: motion_frames=43 cooldown剩餘=0s
+2026-04-03 09:59:58,494 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 10:00:00,583 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 10:00:00,585 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 10:00:00,919 INFO 偵測到移動，開始收集影格
+2026-04-03 10:00:16,156 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 10:00:16,156 INFO 分析條件: motion_frames=48 cooldown剩餘=0s
+2026-04-03 10:00:16,188 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 10:00:18,279 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 10:00:18,280 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 10:00:18,650 INFO 偵測到移動，開始收集影格
+2026-04-03 10:00:33,868 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 10:00:33,868 INFO 分析條件: motion_frames=48 cooldown剩餘=0s
+2026-04-03 10:00:33,901 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 10:00:36,096 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 10:00:36,097 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 10:00:36,433 INFO 偵測到移動，開始收集影格
+2026-04-03 10:00:51,837 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 10:00:51,837 INFO 分析條件: motion_frames=41 cooldown剩餘=0s
+2026-04-03 10:00:51,874 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 10:00:53,989 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 10:00:53,991 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 10:00:54,700 INFO 偵測到移動，開始收集影格
+2026-04-03 10:01:09,752 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 10:01:09,753 INFO 分析條件: motion_frames=40 cooldown剩餘=0s
+2026-04-03 10:01:09,790 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 10:01:11,992 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 10:01:11,993 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 10:01:12,340 INFO 偵測到移動，開始收集影格
+2026-04-03 10:01:27,375 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 10:01:27,376 INFO 分析條件: motion_frames=18 cooldown剩餘=0s
+2026-04-03 10:01:27,404 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 10:01:29,511 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 10:01:29,512 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 10:01:32,140 INFO 偵測到移動，開始收集影格
+2026-04-03 10:01:47,332 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 10:01:47,335 INFO 分析條件: motion_frames=44 cooldown剩餘=0s
+2026-04-03 10:01:47,394 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 10:01:49,468 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 10:01:49,469 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 10:01:49,833 INFO 偵測到移動，開始收集影格
+2026-04-03 10:02:07,049 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 10:02:07,050 INFO 分析條件: motion_frames=37 cooldown剩餘=0s
+2026-04-03 10:02:07,082 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 10:02:09,312 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 10:02:09,313 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 10:02:09,677 INFO 偵測到移動，開始收集影格
+2026-04-03 10:02:26,775 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 10:02:26,775 INFO 分析條件: motion_frames=17 cooldown剩餘=0s
+2026-04-03 10:02:26,805 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 10:02:28,942 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 10:02:28,943 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 10:02:29,211 INFO 偵測到移動，開始收集影格
+2026-04-03 10:02:44,560 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 10:02:44,561 INFO 分析條件: motion_frames=22 cooldown剩餘=0s
+2026-04-03 10:02:44,594 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 10:02:47,042 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 10:02:47,043 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 10:02:50,050 INFO 偵測到移動，開始收集影格
+2026-04-03 10:03:05,220 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 10:03:05,221 INFO 分析條件: motion_frames=39 cooldown剩餘=0s
+2026-04-03 10:03:05,259 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 10:03:07,337 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 10:03:07,339 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 10:03:07,607 INFO 偵測到移動，開始收集影格
+2026-04-03 10:03:22,859 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 10:03:22,859 INFO 分析條件: motion_frames=44 cooldown剩餘=0s
+2026-04-03 10:03:22,895 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 10:03:25,040 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 10:03:25,041 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 10:03:25,399 INFO 偵測到移動，開始收集影格
+2026-04-03 10:03:40,826 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 10:03:40,827 INFO 分析條件: motion_frames=38 cooldown剩餘=0s
+2026-04-03 10:03:40,858 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 10:03:42,952 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 10:03:42,954 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 10:03:43,213 INFO 偵測到移動，開始收集影格
+2026-04-03 10:03:59,098 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 10:03:59,099 INFO 分析條件: motion_frames=14 cooldown剩餘=0s
+2026-04-03 10:03:59,137 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 10:04:01,285 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 10:04:01,286 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 10:04:01,874 INFO 偵測到移動，開始收集影格
+2026-04-03 10:04:18,801 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 10:04:18,802 INFO 分析條件: motion_frames=13 cooldown剩餘=0s
+2026-04-03 10:04:18,837 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 10:04:21,112 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 10:04:21,114 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 10:04:21,483 INFO 偵測到移動，開始收集影格
+2026-04-03 10:04:36,775 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 10:04:36,776 INFO 分析條件: motion_frames=33 cooldown剩餘=0s
+2026-04-03 10:04:36,840 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 10:04:38,948 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 10:04:38,950 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 10:04:39,770 INFO 偵測到移動，開始收集影格
+2026-04-03 10:04:55,133 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 10:04:55,134 INFO 分析條件: motion_frames=28 cooldown剩餘=0s
+2026-04-03 10:04:55,167 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 10:04:57,261 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 10:04:57,262 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 10:04:57,591 INFO 偵測到移動，開始收集影格
+2026-04-03 10:05:15,975 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 10:05:15,976 INFO 分析條件: motion_frames=35 cooldown剩餘=0s
+2026-04-03 10:05:16,081 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 10:05:18,455 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 10:05:18,457 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 10:05:18,819 INFO 偵測到移動，開始收集影格
+2026-04-03 10:05:33,935 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 10:05:33,935 INFO 分析條件: motion_frames=47 cooldown剩餘=0s
+2026-04-03 10:05:33,996 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 10:05:36,177 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 10:05:36,179 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 10:05:36,549 INFO 偵測到移動，開始收集影格
+2026-04-03 10:05:51,785 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 10:05:51,786 INFO 分析條件: motion_frames=49 cooldown剩餘=0s
+2026-04-03 10:05:51,842 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 10:05:53,912 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 10:05:53,914 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 10:05:54,233 INFO 偵測到移動，開始收集影格
+2026-04-03 10:06:09,345 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 10:06:09,346 INFO 分析條件: motion_frames=44 cooldown剩餘=0s
+2026-04-03 10:06:09,411 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 10:06:11,747 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 10:06:11,748 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 10:06:12,044 INFO 偵測到移動，開始收集影格
+2026-04-03 10:06:30,529 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 10:06:30,530 INFO 分析條件: motion_frames=11 cooldown剩餘=0s
+2026-04-03 10:06:30,579 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 10:06:32,615 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 10:06:32,617 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 10:06:32,945 INFO 偵測到移動，開始收集影格
+2026-04-03 10:06:49,879 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 10:06:49,880 INFO 分析條件: motion_frames=12 cooldown剩餘=0s
+2026-04-03 10:06:49,918 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 10:06:52,010 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 10:06:52,012 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 10:07:01,212 INFO 偵測到移動，開始收集影格
+2026-04-03 10:07:17,339 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 10:07:17,340 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 10:07:21,797 INFO 偵測到移動，開始收集影格
+2026-04-03 10:07:42,789 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 10:07:42,790 INFO 分析條件: motion_frames=6 cooldown剩餘=0s
+2026-04-03 10:07:43,733 INFO 偵測到移動，開始收集影格
+2026-04-03 10:08:05,293 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 10:08:05,295 INFO 分析條件: motion_frames=6 cooldown剩餘=0s
+2026-04-03 10:08:06,548 INFO 偵測到移動，開始收集影格
+2026-04-03 10:08:25,075 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 10:08:25,076 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-03 10:08:25,431 INFO 偵測到移動，開始收集影格
+2026-04-03 10:08:40,438 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 10:08:40,439 INFO 分析條件: motion_frames=46 cooldown剩餘=0s
+2026-04-03 10:08:40,490 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 10:08:42,767 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 10:08:42,768 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 10:08:43,135 INFO 偵測到移動，開始收集影格
+2026-04-03 10:08:58,464 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 10:08:58,465 INFO 分析條件: motion_frames=48 cooldown剩餘=0s
+2026-04-03 10:08:58,499 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 10:09:00,965 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 10:09:00,967 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 10:09:01,284 INFO 偵測到移動，開始收集影格
+2026-04-03 10:09:16,305 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 10:09:16,305 INFO 分析條件: motion_frames=49 cooldown剩餘=0s
+2026-04-03 10:09:16,338 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 10:09:18,683 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 10:09:18,685 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 10:09:18,915 INFO 偵測到移動，開始收集影格
+2026-04-03 10:09:34,102 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 10:09:34,103 INFO 分析條件: motion_frames=51 cooldown剩餘=0s
+2026-04-03 10:09:34,142 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 10:09:36,495 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 10:09:36,497 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 10:09:36,756 INFO 偵測到移動，開始收集影格
+2026-04-03 10:09:54,487 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 10:09:54,488 INFO 分析條件: motion_frames=30 cooldown剩餘=0s
+2026-04-03 10:09:54,522 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 10:09:56,960 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 10:09:56,961 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 10:09:57,214 INFO 偵測到移動，開始收集影格
+2026-04-03 10:10:14,076 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 10:10:14,077 INFO 分析條件: motion_frames=19 cooldown剩餘=0s
+2026-04-03 10:10:14,113 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 10:10:16,463 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 10:10:16,466 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 10:10:19,815 INFO 偵測到移動，開始收集影格
+2026-04-03 10:10:37,483 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 10:10:37,483 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-03 10:10:38,831 INFO 偵測到移動，開始收集影格
+2026-04-03 10:10:54,445 INFO 移動持續 15 秒，強制觸發分析
+2026-04-03 10:10:54,449 INFO 分析條件: motion_frames=37 cooldown剩餘=0s
+2026-04-03 10:10:54,482 INFO AFC is enabled with max remote calls: 10.
+2026-04-03 10:10:57,359 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent "HTTP/1.1 404 Not Found"
+2026-04-03 10:10:57,361 ERROR Gemini 分析失敗: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-04-03 10:10:58,199 INFO 偵測到移動，開始收集影格
