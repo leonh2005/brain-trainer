@@ -1,0 +1,10 @@
+﻿I'm sorry, but errors were detected in your script. Please correct the
+errors listed below, and try again.
+
+
+File "game/gui.rpy", line 11: expected '=' not found.
+    define gui.init(1280, 720)
+                   ^
+
+Ren'Py Version: Ren'Py 8.5.2.26010301
+Fri Apr  3 10:39:21 2026
