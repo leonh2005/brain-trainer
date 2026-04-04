@@ -1,3 +1,50 @@
 Not logged in · Please run /login
 Not logged in · Please run /login
 Not logged in · Please run /login
+全部正常，輸出報告：
+
+```
+【半夜巡邏報告】2026-04-04 09:30
+
+[Mac 服務]
+✅ rabbit-care (port 5200)
+✅ stock-screener (port 5001)
+✅ youtube-monitor
+📄 今日摘要：3 支
+
+[Oracle VM]
+✅ 連線
+💾 磁碟：14% 使用（5.9G / 45G）
+🧠 記憶體：可用 279Mi
+✅ tele-bot
+✅ stock-screener
+
+[修復動作]
+無需修復
+
+[備註]
+VM 的 journalctl 最近 5 條 error 均為 SSH kex_exchange_identification（外部連線被重置），屬正常的外來掃描/探測行為，非本機服務問題。
+```
+所有服務皆正常，無需修復。輸出報告如下：
+
+---
+
+【半夜巡邏報告】2026-04-04 09:22
+
+[Mac 服務]
+✅ rabbit-care (port 5200)
+✅ stock-screener (port 5001)
+✅ youtube-monitor
+📄 今日摘要：3 支
+
+[Oracle VM]
+✅ 連線
+💾 磁碟：14% 使用
+🧠 記憶體：可用 274Mi
+✅ tele-bot
+✅ stock-screener
+
+[修復動作]
+無需修復
+
+備註：VM journalctl 有 5 條 SSH kex_exchange_identification 錯誤，均為外部連線被重置，屬正常現象（疑似網路掃描），非服務異常。
