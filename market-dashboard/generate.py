@@ -17,9 +17,30 @@ except ImportError:
     print("請安裝：pip3 install yfinance pandas")
     sys.exit(1)
 
-OUTPUT = Path(__file__).parent / "index.html"
+OUTPUT   = Path(__file__).parent / "index.html"
+FG_CACHE = Path(__file__).parent / "fg_history.json"
 BOT_TOKEN = "8666778924:AAFMAFKfsfx3opS2CfCBrDYMIx6vcJKACTk"
 CHAT_ID = "7556217543"
+
+
+def load_fg_cache() -> dict:
+    """讀取本地累積的 F&G 歷史（{date: {y, rating}}）"""
+    if FG_CACHE.exists():
+        return json.loads(FG_CACHE.read_text())
+    return {}
+
+
+def save_fg_cache(cache: dict):
+    FG_CACHE.write_text(json.dumps(cache, ensure_ascii=False, indent=2))
+
+
+def merge_fg_history(cnn_hist: list, cache: dict) -> list:
+    """合併 CNN 近期資料與本地快取，去重後按日期排序"""
+    merged = {item["x"]: item for item in cnn_hist}
+    for date, val in cache.items():
+        if date not in merged:
+            merged[date] = {"x": date, "y": val["y"], "rating": val["rating"]}
+    return sorted(merged.values(), key=lambda d: d["x"])
 
 
 def send_telegram(text):
@@ -74,14 +95,29 @@ def fetch_fear_greed():
              "rating": p.get("rating", "")}
             for p in hist_raw
         ]
+        score = round(current["score"], 1)
+        rating = current["rating"]
+
+        # 更新本地快取（今天的值）
+        cache = load_fg_cache()
+        today = datetime.now().strftime("%Y-%m-%d")
+        cache[today] = {"y": score, "rating": rating}
+        save_fg_cache(cache)
+
+        # 合併 CNN + 快取
+        full_hist = merge_fg_history(hist, cache)
+
         return {
-            "score": round(current["score"], 1),
-            "rating": current["rating"],
-            "history": hist,
+            "score": score,
+            "rating": rating,
+            "history": full_hist,
         }
     except Exception as e:
         print(f"Fear & Greed 抓取失敗: {e}")
-        return {"score": None, "rating": "N/A", "history": []}
+        # 即使 CNN 失敗，仍可從快取讀取歷史
+        cache = load_fg_cache()
+        hist = [{"x": d, "y": v["y"], "rating": v["rating"]} for d, v in sorted(cache.items())]
+        return {"score": None, "rating": "N/A", "history": hist}
 
 
 def generate_html(vix_data, sp_data, ma_data, fg_data, generated_at):

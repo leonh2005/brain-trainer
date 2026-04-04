@@ -1,0 +1,155 @@
+- generic [active] [ref=e1]:
+  - complementary [ref=e2]:
+    - list [ref=e3]:
+      - listitem [ref=e4]:
+        - link "Alpha Vantage Support" [ref=e5] [cursor=pointer]:
+          - /url: "#"
+      - listitem [ref=e6]:
+        - link "Claim your API key" [ref=e7] [cursor=pointer]:
+          - /url: "#api-key"
+      - listitem [ref=e8]:
+        - link "Support" [ref=e9] [cursor=pointer]:
+          - /url: "#support"
+  - banner [ref=e10]:
+    - navigation [ref=e11]:
+      - generic [ref=e12]:
+        - generic: 
+        - banner [ref=e13]:
+          - list [ref=e14]:
+            - listitem [ref=e15]:
+              - link "Stock API Home" [ref=e16] [cursor=pointer]:
+                - /url: https://www.alphavantage.co/
+            - listitem [ref=e17]:
+              - link "Documentation" [ref=e18] [cursor=pointer]:
+                - /url: https://www.alphavantage.co/documentation/
+            - listitem [ref=e19]:
+              - link "✨MCP + AI Agents" [ref=e20] [cursor=pointer]:
+                - /url: https://mcp.alphavantage.co/
+            - listitem [ref=e21]:
+              - link "Equity Research" [ref=e22] [cursor=pointer]:
+                - /url: https://trading-agents.ai/
+            - listitem [ref=e23]:
+              - link "Spreadsheets" [ref=e24] [cursor=pointer]:
+                - /url: https://www.alphavantage.co/spreadsheets/
+            - listitem [ref=e25]:
+              - link "Academy" [ref=e26] [cursor=pointer]:
+                - /url: https://www.alphavantage.co/academy/
+            - listitem [ref=e27]:
+              - link "Support" [ref=e28] [cursor=pointer]:
+                - /url: ""
+    - heading "Alpha Vantage Support" [level=1] [ref=e31]:
+      - strong [ref=e32]: Alpha Vantage
+      - text: Support
+  - main [ref=e33]:
+    - main [ref=e34]:
+      - generic [ref=e35]:
+        - heading "Claim your Free API Key" [level=2] [ref=e36]:
+          - link "Claim your Free API Key" [ref=e37] [cursor=pointer]:
+            - /url: "#api-key"
+        - paragraph [ref=e38]:
+          - text: Claim your free key for the
+          - link "Alpha Vantage Stock API ©" [ref=e39] [cursor=pointer]:
+            - /url: https://www.alphavantage.co/
+          - text: with lifetime access. We highly recommend that you use a legitimate email address - this is the primary way we will contact you for feature announcements or troubleshooting (e.g., if you lose your API key). By acquiring and using an Alpha Vantage API key, you agree to our
+          - link "Terms of Service" [ref=e40] [cursor=pointer]:
+            - /url: https://www.alphavantage.co/terms_of_service/
+          - text: and
+          - link "Privacy Policy" [ref=e41] [cursor=pointer]:
+            - /url: https://www.alphavantage.co/privacy/
+          - text: .
+        - generic [ref=e42]:
+          - generic [ref=e43]:
+            - paragraph [ref=e44]: Which of the following best describes you?
+            - paragraph [ref=e45]:
+              - combobox [ref=e46]:
+                - option "Investor" [selected]
+                - option "Software Developer"
+                - option "Educator"
+                - option "Student"
+                - option "I am from the Trading Agents project on Github"
+                - option "Other"
+            - paragraph [ref=e47]: "Organization (e.g. company, university, etc.):"
+            - paragraph [ref=e48]:
+              - textbox [ref=e49]
+            - paragraph [ref=e50]: "Email:"
+            - paragraph [ref=e51]:
+              - textbox [ref=e52]
+          - button "Get Free API Key" [ref=e53] [cursor=pointer]
+        - paragraph
+      - generic [ref=e54]:
+        - heading "Support" [level=2] [ref=e55]:
+          - link "Support" [ref=e56] [cursor=pointer]:
+            - /url: "#support"
+        - heading "Frequently Asked Questions" [level=5] [ref=e57]
+        - paragraph [ref=e58]: I have got my API key. What's next?
+        - paragraph [ref=e59]: "Welcome to Alpha Vantage! Getting started is easy:"
+        - paragraph [ref=e60]:
+          - text: ❚ Our
+          - link "official API documentation" [ref=e61] [cursor=pointer]:
+            - /url: https://www.alphavantage.co/documentation/
+          - text: includes detailed information and sample code for our 100+ data API offerings.
+        - paragraph [ref=e62]:
+          - text: ❚ Want to power your ✨LLMs or AI agents with financial data? Please try out the
+          - link "official Alpha Vantage MCP server" [ref=e63] [cursor=pointer]:
+            - /url: https://mcp.alphavantage.co/
+          - text: today!
+        - paragraph [ref=e64]:
+          - text: ❚ Need inspirations on what to build? Check out the
+          - link "Trading Agents stock analysis tool" [ref=e65] [cursor=pointer]:
+            - /url: https://trading-agents.ai/
+          - text: (#1 trending on Github).
+        - paragraph [ref=e66]: Are there usage/frequency limits for the API service?
+        - paragraph [ref=e67]:
+          - text: We are pleased to provide free stock API service covering the majority of our datasets for up to 25 requests per day. If you would like to target a larger API call volume, please visit
+          - link "premium membership" [ref=e68] [cursor=pointer]:
+            - /url: https://www.alphavantage.co/premium/
+          - text: .
+        - paragraph [ref=e69]: Why is your realtime and 15-minute delayed US stock market data premium-only? Can I access the data for free?
+        - paragraph [ref=e70]:
+          - text: Realtime and 15-minute delayed US market data is regulated by the stock exchanges, FINRA, and the SEC. As a NASDAQ-licensed data provider, we provide one of the most affordable exchange-approved realtime and 15-minute delayed data offerings in the market. If you find other data sources that are "free", please be vigilant and ensure they are properly licensed by the exchanges to minimize the risk of opening yourself up to fees, penalties, or other legal actions from the regulatory bodies. By sourcing data from Alpha Vantage, you will enjoy our industry-leading data quality, affordability, and legal compliance all in one.
+          - link "Learn more" [ref=e71] [cursor=pointer]:
+            - /url: https://www.alphavantage.co/realtime_data_policy/
+          - text: about the key market data policies you need to know as a data consumer.
+        - paragraph [ref=e72]: You support both raw and adjusted intraday/daily/weekly/monthly time series. What adjustment method are you using?
+        - paragraph [ref=e73]: We adjust our open, high, low, close, and volume data by both splits and cash dividend events, which is considered an industry standard methodology. And for many of the API endpoints that return adjusted data, we also provide an option to return the raw, unadjusted data, so that you will have the full flexibility to apply your own adjustment logic as you see fit.
+        - paragraph [ref=e74]: I have built a library/wrapper for Alpha Vantage with a specific programming language. May I open-source it on GitHub?
+        - paragraph [ref=e75]:
+          - text: Certainly - we truly appreciate the help and support from the community to make Alpha Vantage even more accessible and developer-friendly. However, we ask that your language-specific library/wrapper preserves the content of our JSON/CSV responses in both success and error cases. We consider it a top priority that our users get the original debugging and troubleshooting information from Alpha Vantage. Optionally, if you would like to include our brand assets in your open-source repo, please use the
+          - link "official Alpha Vantage company logo" [ref=e76] [cursor=pointer]:
+            - /url: https://www.alphavantage.co/logo.png/
+          - text: .
+        - paragraph [ref=e77]: I would like to improve an existing API or propose a new technical indicator / feature to Alpha Vantage. What should I do?
+        - paragraph [ref=e78]:
+          - text: We are obsessed with delivering the best user experience with the highest technical expertise. Please share your feature requests with us at
+          - link "support@alphavantage.co" [ref=e79] [cursor=pointer]:
+            - /url: mailto:support@alphavantage.co
+          - text: .
+        - paragraph [ref=e80]: Got more questions, thoughts, or comments?
+        - paragraph [ref=e81]:
+          - text: Please reach out to
+          - link "support@alphavantage.co" [ref=e82] [cursor=pointer]:
+            - /url: mailto:support@alphavantage.co
+          - text: anytime and we will go from there! If you are looking to cancel your premium subscription, you may also use our
+          - link "self-service workflow" [ref=e83] [cursor=pointer]:
+            - /url: https://www.alphavantage.co/cancellation/
+          - text: .
+  - contentinfo [ref=e84]:
+    - generic [ref=e85]:
+      - link "" [ref=e86] [cursor=pointer]:
+        - /url: "#"
+        - generic [ref=e87]: 
+      - generic [ref=e88]:
+        - paragraph [ref=e90]: Copyright © Alpha Vantage Inc. 2017-2026
+        - list [ref=e92]:
+          - listitem [ref=e93]:
+            - link "Terms of Service" [ref=e94] [cursor=pointer]:
+              - /url: https://www.alphavantage.co/terms_of_service/
+          - listitem [ref=e95]:
+            - link "Privacy Policy" [ref=e96] [cursor=pointer]:
+              - /url: https://www.alphavantage.co/privacy/
+          - listitem [ref=e97]:
+            - link "Company Logo" [ref=e98] [cursor=pointer]:
+              - /url: https://www.alphavantage.co/logo.png/
+          - listitem [ref=e99]:
+            - link "Contact us" [ref=e100] [cursor=pointer]:
+              - /url: mailto:support@alphavantage.co
