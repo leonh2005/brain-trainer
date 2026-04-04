@@ -17,8 +17,9 @@ except ImportError:
     print("請安裝：pip3 install yfinance pandas")
     sys.exit(1)
 
-OUTPUT   = Path(__file__).parent / "index.html"
-FG_CACHE = Path(__file__).parent / "fg_history.json"
+OUTPUT    = Path(__file__).parent / "index.html"
+FG_CACHE  = Path(__file__).parent / "fg_history.json"
+SP_STATE  = Path(__file__).parent / "sp_state.json"
 BOT_TOKEN = "8666778924:AAFMAFKfsfx3opS2CfCBrDYMIx6vcJKACTk"
 CHAT_ID = "7556217543"
 
@@ -687,11 +688,14 @@ def main():
 
     vix_current = vix_data[-1]["y"] if vix_data else "N/A"
     sp_current = sp_data[-1]["y"] if sp_data else "N/A"
+    ma_current = ma_data[-1]["y"] if ma_data else "N/A"
     fg_score = fg_data["score"] or "N/A"
     fg_rating = fg_data["rating"]
 
     print(f"[{datetime.now().strftime('%H:%M:%S')}] 完成 → {OUTPUT}")
-    print(f"  VIX: {vix_current}  |  S&P: {sp_current}  |  F&G: {fg_score} ({fg_rating})")
+    sp_vs_ma_str = f"{round((sp_current/ma_current-1)*100,2):+.2f}%" if isinstance(sp_current, float) and isinstance(ma_current, float) else "N/A"
+    above_below = "高於" if isinstance(sp_current, float) and isinstance(ma_current, float) and sp_current >= ma_current else "低於"
+    print(f"  VIX: {vix_current}  |  S&P: {sp_current}  |  200MA: {ma_current}  |  {above_below} 200MA ({sp_vs_ma_str})  |  F&G: {fg_score} ({fg_rating})")
 
     send_telegram(
         f"📊 市場儀表板已更新 {generated_at}\n"
@@ -699,6 +703,28 @@ def main():
         f"Fear & Greed：{fg_score} ({fg_rating})\n"
         f"S&P 500：{sp_current:,.0f}"
     )
+
+    # S&P 500 vs 200MA 狀態變化通知（只在跌破 / 收復時各通知一次）
+    if isinstance(sp_current, float) and isinstance(ma_current, float):
+        sp_vs_ma = round((sp_current / ma_current - 1) * 100, 2)
+        current_state = "below" if sp_current < ma_current else "above"
+        prev_state = json.loads(SP_STATE.read_text()).get("state") if SP_STATE.exists() else None
+        SP_STATE.write_text(json.dumps({"state": current_state, "date": generated_at}))
+
+        if prev_state == "above" and current_state == "below":
+            send_telegram(
+                f"🚨 S&P 500 跌破 200 日均線\n"
+                f"S&P 500：{sp_current:,.0f}\n"
+                f"200MA：{ma_current:,.0f}\n"
+                f"偏離：{sp_vs_ma}%"
+            )
+        elif prev_state == "below" and current_state == "above":
+            send_telegram(
+                f"✅ S&P 500 重回 200 日均線上方\n"
+                f"S&P 500：{sp_current:,.0f}\n"
+                f"200MA：{ma_current:,.0f}\n"
+                f"偏離：+{sp_vs_ma}%"
+            )
 
 
 if __name__ == "__main__":
