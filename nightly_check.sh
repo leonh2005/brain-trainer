@@ -1,8 +1,12 @@
 #!/bin/bash
-# 半夜服務狀態檢查 + VM 自動修復 — 用 claude -p 執行並推播 Telegram
+# 半夜服務狀態檢查 — 純 bash，只在發現問題時才呼叫 claude
 
-BOT_TOKEN="8666778924:AAFMAFKfsfx3opS2CfCBrDYMIx6vcJKACTk"
+BOT_TOKEN="8666778924:AAFMAFKfsfx3opG7MIx6vcJKACTk"
 CHAT_ID="7556217543"
+SSH="ssh -i ~/.ssh/oracle_line_bot -o ConnectTimeout=10 -o BatchMode=yes ubuntu@161.33.6.190"
+CLAUDE=/Users/steven/.local/bin/claude
+LOG_DIR=~/CCProject/logs
+BOT_TOKEN="8666778924:AAFMAFKfsfx3opS2CfCBrDYMIx6vcJKACTk"
 
 send_telegram() {
     curl -s -X POST "https://api.telegram.org/bot${BOT_TOKEN}/sendMessage" \
@@ -10,64 +14,106 @@ send_telegram() {
         --data-urlencode "text=$1" > /dev/null
 }
 
-send_telegram "🌙 開始半夜服務檢查 + VM 健康巡邏..."
+PASS="✅" FAIL="❌"
+FIXES=""
+REPORT="【半夜巡邏報告】$(date '+%Y-%m-%d %H:%M')\n\n[Mac 服務]"
 
-REPORT=$(/Users/steven/.local/bin/claude --dangerously-skip-permissions -p "
-你是 Steven 的系統維護助手。請依序執行以下工作，發現問題就直接修復，不要只報告。
-
-## 一、Mac 本地服務檢查
-
-1. rabbit-care：執行 lsof -i :5200 | grep LISTEN
-2. stock-screener：執行 lsof -i :5001 | grep LISTEN
-3. youtube-monitor：執行 pgrep -f youtube_monitor.py
-4. 今日摘要數：執行 ls ~/youtube-monitor/summaries/\$(date +%Y-%m-%d)/*.txt 2>/dev/null | grep -v transcript | wc -l
-
-若服務沒在跑：
-- rabbit-care 掛了：執行 launchctl load ~/Library/LaunchAgents/com.steven.rabbit-care.plist
-- stock-screener 掛了：執行 launchctl load ~/Library/LaunchAgents/com.steven.stock-screener.plist
-- youtube-monitor 掛了：執行 cd ~/youtube-monitor && nohup python3 youtube_monitor.py &
-
-## 二、Oracle VM 檢查與修復
-
-SSH 指令前綴：ssh -i ~/.ssh/oracle_line_bot -o ConnectTimeout=10 -o BatchMode=yes ubuntu@161.33.6.190
-
-1. 連線測試：執行 echo ok
-2. 磁碟空間：執行 df -h / | tail -1（若使用率 > 85% 則清理 journalctl：sudo journalctl --vacuum-size=100M）
-3. 記憶體：執行 free -h | grep Mem
-4. tele-bot 服務：執行 systemctl is-active tele-bot.service（若非 active，執行 sudo systemctl restart tele-bot.service 並等待 10 秒確認）
-5. stock-screener 服務：執行 systemctl is-active stock-screener.service（若非 active，嘗試重啟）
-6. 檢查是否有重複服務衝突：執行 systemctl list-units --type=service --state=failed | grep -v LOAD
-7. journalctl 近期錯誤：執行 journalctl -p err -n 5 --no-pager（列出最近 5 條 error 等級以上的 log）
-
-若發現任何 failed service，直接執行 sudo systemctl restart <service名稱>。
-
-## 三、輸出報告
-
-最後輸出純文字報告（不要用 markdown 符號 * 或 #），格式如下：
-
-【半夜巡邏報告】YYYY-MM-DD HH:MM
-
-[Mac 服務]
-✅/❌ rabbit-care (port 5200)
-✅/❌ stock-screener (port 5001)
-✅/❌ youtube-monitor
-📄 今日摘要：N 支
-
-[Oracle VM]
-✅/❌ 連線
-💾 磁碟：XX% 使用
-🧠 記憶體：可用 XXG
-✅/❌ tele-bot
-✅/❌ stock-screener
-
-[修復動作]
-（列出本次自動修復了什麼，若無則寫「無需修復」）
-" 2>&1)
-
-if [ -z "$REPORT" ]; then
-    echo "[$(date '+%Y-%m-%d %H:%M')] claude 無回應"
-    send_telegram "❌ 半夜巡邏失敗：claude 無回應"
+# ── 1. rabbit-care ──────────────────────────────
+if lsof -i :5200 2>/dev/null | grep -q LISTEN; then
+    REPORT+="\n$PASS rabbit-care (port 5200)"
 else
-    echo "$REPORT"
-    send_telegram "$REPORT"
+    REPORT+="\n$FAIL rabbit-care (port 5200)"
+    launchctl load ~/Library/LaunchAgents/com.steven.rabbit-care.plist 2>/dev/null
+    sleep 3
+    if lsof -i :5200 2>/dev/null | grep -q LISTEN; then
+        FIXES+="\n- rabbit-care 自動重啟成功"
+    else
+        FIXES+="\n- rabbit-care 重啟失敗，需人工處理"
+    fi
 fi
+
+# ── 2. stock-screener ───────────────────────────
+if lsof -i :5001 2>/dev/null | grep -q LISTEN; then
+    REPORT+="\n$PASS stock-screener (port 5001)"
+else
+    REPORT+="\n$FAIL stock-screener (port 5001)"
+    launchctl load ~/Library/LaunchAgents/com.steven.stock-screener.plist 2>/dev/null
+    FIXES+="\n- stock-screener 嘗試重啟"
+fi
+
+# ── 3. youtube-monitor ──────────────────────────
+if pgrep -f youtube_monitor.py > /dev/null; then
+    REPORT+="\n$PASS youtube-monitor"
+else
+    REPORT+="\n$FAIL youtube-monitor"
+    cd ~/youtube-monitor && nohup python3 youtube_monitor.py >> ~/youtube-monitor/monitor.log 2>&1 &
+    FIXES+="\n- youtube-monitor 自動重啟"
+fi
+
+# ── 4. 今日摘要數 ────────────────────────────────
+SUMMARY_COUNT=$(ls ~/youtube-monitor/summaries/$(date +%Y-%m-%d)/*.txt 2>/dev/null | grep -v transcript | wc -l | tr -d ' ')
+REPORT+="\n📄 今日摘要：${SUMMARY_COUNT} 支"
+
+# ── 5. Oracle VM ────────────────────────────────
+REPORT+="\n\n[Oracle VM]"
+
+VM_OUT=$($SSH "df -h / | tail -1; free -h | grep Mem; systemctl is-active tele-bot.service; systemctl is-active stock-screener.service" 2>&1)
+
+if [ $? -ne 0 ]; then
+    REPORT+="\n$FAIL 連線失敗"
+else
+    REPORT+="\n$PASS 連線正常"
+
+    # 磁碟
+    DISK_PCT=$(echo "$VM_OUT" | head -1 | awk '{print $5}' | tr -d '%')
+    DISK_DISP=$(echo "$VM_OUT" | head -1 | awk '{print $5}')
+    if [ -n "$DISK_PCT" ] && [ "$DISK_PCT" -gt 85 ] 2>/dev/null; then
+        $SSH "sudo journalctl --vacuum-size=100M" > /dev/null 2>&1
+        REPORT+="\n⚠️ 磁碟：${DISK_DISP} 使用（已自動清理 journal）"
+        FIXES+="\n- VM 磁碟 ${DISK_DISP}，清理 journalctl"
+    else
+        REPORT+="\n💾 磁碟：${DISK_DISP:-N/A} 使用"
+    fi
+
+    # 記憶體
+    MEM_AVAIL=$(echo "$VM_OUT" | grep Mem | awk '{print $7}')
+    REPORT+="\n🧠 記憶體：可用 ${MEM_AVAIL:-N/A}"
+
+    # tele-bot
+    TELE_STATUS=$(echo "$VM_OUT" | tail -2 | head -1)
+    if [ "$TELE_STATUS" = "active" ]; then
+        REPORT+="\n$PASS tele-bot"
+    else
+        REPORT+="\n$FAIL tele-bot"
+        $SSH "sudo systemctl restart tele-bot.service" > /dev/null 2>&1
+        sleep 10
+        NEW_STATUS=$($SSH "systemctl is-active tele-bot.service" 2>/dev/null)
+        if [ "$NEW_STATUS" = "active" ]; then
+            FIXES+="\n- tele-bot 自動重啟成功"
+        else
+            FIXES+="\n- tele-bot 重啟失敗，需人工處理"
+        fi
+    fi
+
+    # stock-screener (VM)
+    SS_STATUS=$(echo "$VM_OUT" | tail -1)
+    if [ "$SS_STATUS" = "active" ]; then
+        REPORT+="\n$PASS stock-screener (VM)"
+    else
+        REPORT+="\n$FAIL stock-screener (VM)"
+        $SSH "sudo systemctl restart stock-screener.service" > /dev/null 2>&1
+        FIXES+="\n- VM stock-screener 嘗試重啟"
+    fi
+fi
+
+# ── 6. 修復摘要 ─────────────────────────────────
+REPORT+="\n\n[修復動作]"
+if [ -z "$FIXES" ]; then
+    REPORT+="\n無需修復"
+else
+    REPORT+="$FIXES"
+fi
+
+# ── 輸出 & 推播 ──────────────────────────────────
+echo -e "$REPORT" | tee -a "$LOG_DIR/nightly_check.log"
+send_telegram "$(echo -e "$REPORT")"

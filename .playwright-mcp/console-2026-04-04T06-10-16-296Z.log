@@ -1,0 +1,11 @@
+[     246ms] Uncaught Error: This method is not implemented: Check that a complete date adapter is provided.
+    at Ln (https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js:18:103124)
+    at formats (https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js:18:103342)
+    at init (https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js:18:153137)
+    at <anonymous> (https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js:18:92515)
+    at u (https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js:12:1236)
+    at buildOrUpdateScales (https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js:18:92240)
+    at _updateScales (https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js:18:94974)
+    at update (https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js:18:94137)
+    at An (https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js:18:90681)
+    at <anonymous> (http://localhost:8877/portfolio-monitor.html:245:18)

@@ -1,0 +1,62 @@
+[     729ms] [LOG] AdFuelError event fired: CustomEvent @ https://edition.cnn.com/media/sites/js/bundles/cnn-edition-adfuel-body-1fce5e168fb1eed920bbf774431d749437de654c05f8f151917b9d00d0a7a702.min.js:0
+[    1409ms] [LOG] Ad Slots:  {active: Array(1), adSlots: Array(1)} @ https://edition.cnn.com/media/sites/js/bundles/cnn-edition-adfuel-275d6f33a8b3e59631886f14a6ce5dda2ec37648bb4b63d7ab13f3449be68c3d.min.js:0
+[    1410ms] [LOG] Ad Slots:  {active: Array(1), adSlots: Array(2)} @ https://edition.cnn.com/media/sites/js/bundles/cnn-edition-adfuel-275d6f33a8b3e59631886f14a6ce5dda2ec37648bb4b63d7ab13f3449be68c3d.min.js:0
+[    1411ms] [LOG] Ad Slots:  {active: Array(1), adSlots: Array(3)} @ https://edition.cnn.com/media/sites/js/bundles/cnn-edition-adfuel-275d6f33a8b3e59631886f14a6ce5dda2ec37648bb4b63d7ab13f3449be68c3d.min.js:0
+[    1443ms] [LOG] CEP Topic Collection:  [Object, Object, Object, Object] @ https://edition.cnn.com/media/sites/js/bundles/cnn-edition-adfuel-275d6f33a8b3e59631886f14a6ce5dda2ec37648bb4b63d7ab13f3449be68c3d.min.js:0
+[    1854ms] [WARNING] [GPT] Using deprecated googletag.encryptedSignalProviders. Please use googletag.secureSignalProviders instead.
+https://goo.gle/gpt-message#155 @ https://securepubads.g.doubleclick.net/pagead/managed/js/gpt/m202603310101/pubads_impl.js:18
+[    1926ms] [ERROR] Attestation check for Protected Audience on https://a.teads.tv failed. @ https://edition.cnn.com/markets/fear-and-greed:0
+[    1926ms] [ERROR] Attestation check for Protected Audience on https://elb.the-ozone-project.com failed. @ https://edition.cnn.com/markets/fear-and-greed:0
+[    1926ms] [ERROR] Attestation check for Protected Audience on https://direct.adsrvr.org failed. @ https://edition.cnn.com/markets/fear-and-greed:0
+[    1926ms] [ERROR] Attestation check for Protected Audience on https://grid-bidder.criteo.com failed. @ https://edition.cnn.com/markets/fear-and-greed:0
+[    1926ms] [ERROR] Attestation check for Protected Audience on https://fastlane.rubiconproject.com failed. @ https://edition.cnn.com/markets/fear-and-greed:0
+[    1926ms] [ERROR] Attestation check for Protected Audience on https://g2.gumgum.com failed. @ https://edition.cnn.com/markets/fear-and-greed:0
+[    1926ms] [ERROR] Attestation check for Protected Audience on https://htlb.casalemedia.com failed. @ https://edition.cnn.com/markets/fear-and-greed:0
+[    1926ms] [ERROR] Attestation check for Protected Audience on https://btlr.sharethrough.com failed. @ https://edition.cnn.com/markets/fear-and-greed:0
+[    1926ms] [ERROR] Attestation check for Protected Audience on https://btlr.sharethrough.com failed. @ https://edition.cnn.com/markets/fear-and-greed:0
+[    1926ms] [ERROR] Attestation check for Protected Audience on https://ib.adnxs.com failed. @ https://edition.cnn.com/markets/fear-and-greed:0
+[    1933ms] [ERROR] Attestation check for Protected Audience on https://a.teads.tv failed. @ https://edition.cnn.com/markets/fear-and-greed:0
+[    1933ms] [ERROR] Attestation check for Protected Audience on https://btlr.sharethrough.com failed. @ https://edition.cnn.com/markets/fear-and-greed:0
+[    1933ms] [ERROR] Attestation check for Protected Audience on https://btlr.sharethrough.com failed. @ https://edition.cnn.com/markets/fear-and-greed:0
+[    1933ms] [ERROR] Attestation check for Protected Audience on https://grid-bidder.criteo.com failed. @ https://edition.cnn.com/markets/fear-and-greed:0
+[    1933ms] [ERROR] Attestation check for Protected Audience on https://elb.the-ozone-project.com failed. @ https://edition.cnn.com/markets/fear-and-greed:0
+[    1933ms] [ERROR] Attestation check for Protected Audience on https://ib.adnxs.com failed. @ https://edition.cnn.com/markets/fear-and-greed:0
+[    1933ms] [ERROR] Attestation check for Protected Audience on https://fastlane.rubiconproject.com failed. @ https://edition.cnn.com/markets/fear-and-greed:0
+[    1933ms] [ERROR] Attestation check for Protected Audience on https://g2.gumgum.com failed. @ https://edition.cnn.com/markets/fear-and-greed:0
+[    1934ms] [ERROR] Attestation check for Protected Audience on https://htlb.casalemedia.com failed. @ https://edition.cnn.com/markets/fear-and-greed:0
+[    1934ms] [ERROR] Attestation check for Protected Audience on https://direct.adsrvr.org failed. @ https://edition.cnn.com/markets/fear-and-greed:0
+[    1934ms] [ERROR] Attestation check for Protected Audience on https://hbopenbid.pubmatic.com failed. @ https://edition.cnn.com/markets/fear-and-greed:0
+[    1934ms] [ERROR] Attestation check for Protected Audience on https://hbopenbid.pubmatic.com failed. @ https://edition.cnn.com/markets/fear-and-greed:0
+[    2144ms] [ERROR] Failed to load resource: the server responded with a status of 410 (Gone) @ https://ads.stickyadstv.com/user-matching?id=185&_fw_gdpr=0&_fw_gdpr_consent=:0
+[    2151ms] [ERROR] Failed to load resource: the server responded with a status of 410 (Gone) @ https://ads.stickyadstv.com/auto-user-sync:0
+[    2663ms] [WARNING] An iframe which has both allow-scripts and allow-same-origin for its sandbox attribute can escape its sandboxing. @ https://cadmus.script.ac/d2uap9jskdzp2/script.js:0
+[    2698ms] [WARNING] An iframe which has both allow-scripts and allow-same-origin for its sandbox attribute can escape its sandboxing. @ https://cadmus.script.ac/d2uap9jskdzp2/script.js:0
+[    3064ms] [ERROR] Attestation check for Protected Audience on https://a.teads.tv failed. @ https://edition.cnn.com/markets/fear-and-greed:0
+[    3064ms] [ERROR] Attestation check for Protected Audience on https://elb.the-ozone-project.com failed. @ https://edition.cnn.com/markets/fear-and-greed:0
+[    3064ms] [ERROR] Attestation check for Protected Audience on https://fastlane.rubiconproject.com failed. @ https://edition.cnn.com/markets/fear-and-greed:0
+[    3064ms] [ERROR] Attestation check for Protected Audience on https://grid-bidder.criteo.com failed. @ https://edition.cnn.com/markets/fear-and-greed:0
+[    3064ms] [ERROR] Attestation check for Protected Audience on https://htlb.casalemedia.com failed. @ https://edition.cnn.com/markets/fear-and-greed:0
+[    3064ms] [ERROR] Attestation check for Protected Audience on https://g2.gumgum.com failed. @ https://edition.cnn.com/markets/fear-and-greed:0
+[    3064ms] [ERROR] Attestation check for Protected Audience on https://ib.adnxs.com failed. @ https://edition.cnn.com/markets/fear-and-greed:0
+[    3064ms] [ERROR] Attestation check for Protected Audience on https://btlr.sharethrough.com failed. @ https://edition.cnn.com/markets/fear-and-greed:0
+[    3064ms] [ERROR] Attestation check for Protected Audience on https://btlr.sharethrough.com failed. @ https://edition.cnn.com/markets/fear-and-greed:0
+[    3064ms] [ERROR] Attestation check for Protected Audience on https://direct.adsrvr.org failed. @ https://edition.cnn.com/markets/fear-and-greed:0
+[    3065ms] [LOG] Forcing PubMatic:   @ https://cadmus.script.ac/d2uap9jskdzp2/script.js:0
+[    3071ms] [WARNING] [GSI_LOGGER]: Your client application uses one of the Google One Tap prompt UI status methods that may stop functioning when FedCM becomes mandatory. Refer to the migration guide to update your code accordingly and opt-in to FedCM to test your changes. Learn more: https://developers.google.com/identity/gsi/web/guides/fedcm-migration?s=dc#display_moment and https://developers.google.com/identity/gsi/web/guides/fedcm-migration?s=dc#skipped_moment @ https://accounts.google.com/gsi/client:80
+[    3074ms] [ERROR] Not signed in with the identity provider. @ https://edition.cnn.com/markets/fear-and-greed:0
+[    3074ms] [ERROR] Attestation check for Protected Audience on https://hbopenbid.pubmatic.com failed. @ https://edition.cnn.com/markets/fear-and-greed:0
+[    4316ms] [ERROR] [GSI_LOGGER]: FedCM get() rejects with NetworkError: Error retrieving a token. @ https://accounts.google.com/gsi/client:81
+[    4331ms] [TIMEEND] a: 0 ms @ https://static.adsafeprotected.com/sca.17.6.4.js:31
+[    4408ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://edition.cnn.com/cdn-cgi/challenge-platform/scripts/jsd/main.js:0
+[    4449ms] [ERROR] Attestation check for Protected Audience on https://grid-bidder.criteo.com failed. @ https://edition.cnn.com/markets/fear-and-greed:0
+[    4449ms] [ERROR] Attestation check for Protected Audience on https://ib.adnxs.com failed. @ https://edition.cnn.com/markets/fear-and-greed:0
+[    4449ms] [ERROR] Attestation check for Protected Audience on https://a.teads.tv failed. @ https://edition.cnn.com/markets/fear-and-greed:0
+[    4449ms] [ERROR] Attestation check for Protected Audience on https://direct.adsrvr.org failed. @ https://edition.cnn.com/markets/fear-and-greed:0
+[    4449ms] [ERROR] Attestation check for Protected Audience on https://fastlane.rubiconproject.com failed. @ https://edition.cnn.com/markets/fear-and-greed:0
+[    4449ms] [ERROR] Attestation check for Protected Audience on https://htlb.casalemedia.com failed. @ https://edition.cnn.com/markets/fear-and-greed:0
+[    4449ms] [ERROR] Attestation check for Protected Audience on https://g2.gumgum.com failed. @ https://edition.cnn.com/markets/fear-and-greed:0
+[    4449ms] [ERROR] Attestation check for Protected Audience on https://elb.the-ozone-project.com failed. @ https://edition.cnn.com/markets/fear-and-greed:0
+[    4449ms] [ERROR] Attestation check for Protected Audience on https://btlr.sharethrough.com failed. @ https://edition.cnn.com/markets/fear-and-greed:0
+[    4449ms] [ERROR] Attestation check for Protected Audience on https://btlr.sharethrough.com failed. @ https://edition.cnn.com/markets/fear-and-greed:0
+[    4451ms] [ERROR] Attestation check for Protected Audience on https://hbopenbid.pubmatic.com failed. @ https://edition.cnn.com/markets/fear-and-greed:0
+[    7770ms] [WARNING] The resource https://www.dianomi.com/img/a/pss/5089/5.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ about:blank:0
