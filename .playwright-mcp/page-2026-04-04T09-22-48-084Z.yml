@@ -1,0 +1,43 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - heading "市場恐慌儀表板" [level=1] [ref=e3]
+    - generic [ref=e4]: 更新時間：2026-04-04 16:27
+  - generic [ref=e5]:
+    - generic [ref=e6]:
+      - generic [ref=e7]: VIX 恐慌指數
+      - generic [ref=e9]: "23.87"
+      - generic [ref=e10]: 警戒 20–30 · 標普 500 30日隱含波動率
+    - generic [ref=e11]:
+      - generic [ref=e12]: CNN 恐懼貪婪指數
+      - generic [ref=e14]: "19.3"
+      - generic [ref=e15]: 極度恐慌 · 0=極恐 / 100=極貪
+    - generic [ref=e16]:
+      - generic [ref=e17]: S&P 500 vs 200MA
+      - generic [ref=e19]: 6,583
+      - generic [ref=e20]: 200MA：6,645 · ▼ 0.93%
+  - generic [ref=e21]:
+    - generic [ref=e22]: 區間
+    - button "1Y" [ref=e23] [cursor=pointer]
+    - button "3Y" [ref=e24] [cursor=pointer]
+    - button "5Y" [ref=e25] [cursor=pointer]
+    - button "10Y" [ref=e26] [cursor=pointer]
+    - button "全部" [ref=e27] [cursor=pointer]
+  - generic [ref=e28]:
+    - generic [ref=e30]:
+      - generic [ref=e31]: VIX 波動率指數
+      - generic [ref=e32]:
+        - generic [ref=e33]: VIX
+        - generic [ref=e35]: ">30 恐慌區"
+    - generic [ref=e40]:
+      - generic [ref=e41]: Fear & Greed 恐懼貪婪指數 （近一年）
+      - generic [ref=e42]:
+        - generic [ref=e43]: <25 極恐
+        - generic [ref=e45]: ">75 極貪"
+    - generic [ref=e50]:
+      - generic [ref=e51]: S&P 500 收盤價 vs 200日均線
+      - generic [ref=e52]:
+        - generic [ref=e53]: S&P 500
+        - generic [ref=e55]: 200MA
+  - contentinfo [ref=e59]:
+    - generic [ref=e60]: 資料來源：Yahoo Finance · CNN Fear & Greed
+    - generic [ref=e61]: 每日 07:00 自動更新

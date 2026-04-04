@@ -1,0 +1,130 @@
+- generic [ref=e2]:
+  - banner [ref=e3]:
+    - generic [ref=e4]:
+      - heading "Portfolio Monitor" [level=1] [ref=e5]
+      - paragraph [ref=e6]: 黃金版 · 穩健成長配置 · 五年績效追蹤
+    - generic [ref=e7]:
+      - generic [ref=e8]: NT$ 700萬
+      - generic [ref=e9]: 總投入資產
+  - generic [ref=e10]:
+    - generic [ref=e11]: 持倉配置
+    - generic [ref=e12]:
+      - generic "006208 20.0%" [ref=e13] [cursor=pointer]
+      - generic "00881 20.0%" [ref=e14] [cursor=pointer]
+      - generic "VWRA 20.0%" [ref=e15] [cursor=pointer]
+      - generic "GRID 15.0%" [ref=e16] [cursor=pointer]
+      - generic "XLU 5.0%" [ref=e17] [cursor=pointer]
+      - generic "00864B 5.0%" [ref=e18] [cursor=pointer]
+      - generic "00635U 10.0%" [ref=e19] [cursor=pointer]
+    - generic [ref=e20]:
+      - generic [ref=e21]:
+        - generic [ref=e22]: "006208"
+        - generic [ref=e24]: 富邦台50
+        - generic [ref=e25]: NT$140萬
+        - generic [ref=e26]: 20.0% 佔比
+      - generic [ref=e27]:
+        - generic [ref=e28]: "00881"
+        - generic [ref=e30]: 國泰永續高股息
+        - generic [ref=e31]: NT$140萬
+        - generic [ref=e32]: 20.0% 佔比
+      - generic [ref=e33]:
+        - generic [ref=e34]: VWRA
+        - generic [ref=e36]: 先鋒全球（VT）
+        - generic [ref=e37]: NT$140萬
+        - generic [ref=e38]: 20.0% 佔比
+      - generic [ref=e39]:
+        - generic [ref=e40]: GRID
+        - generic [ref=e42]: 全球電力基建
+        - generic [ref=e43]: NT$105萬
+        - generic [ref=e44]: 15.0% 佔比
+      - generic [ref=e45]:
+        - generic [ref=e46]: XLU
+        - generic [ref=e48]: 美國公用事業
+        - generic [ref=e49]: NT$35萬
+        - generic [ref=e50]: 5.0% 佔比
+      - generic [ref=e51]:
+        - generic [ref=e52]: 00864B
+        - generic [ref=e54]: 中信美債0-1年
+        - generic [ref=e55]: NT$35萬
+        - generic [ref=e56]: 5.0% 佔比
+      - generic [ref=e57]:
+        - generic [ref=e58]: 00635U
+        - generic [ref=e60]: 元大黃金
+        - generic [ref=e61]: NT$70萬
+        - generic [ref=e62]: 10.0% 佔比
+  - generic [ref=e64]:
+    - generic [ref=e65]: 情境模擬
+    - generic [ref=e66]:
+      - generic [ref=e67]:
+        - generic [ref=e68]: 📈
+        - generic [ref=e69]:
+          - generic [ref=e70]: 大漲（006208 +35%）
+          - generic [ref=e71]: +24.0%
+          - generic [ref=e72]: +168萬獲利
+      - generic [ref=e73]:
+        - generic [ref=e74]: 📉
+        - generic [ref=e75]:
+          - generic [ref=e76]: 大跌（大盤 -20%）
+          - generic [ref=e77]: "-15.9%"
+          - generic [ref=e78]: "-111萬縮水"
+      - generic [ref=e79]:
+        - generic [ref=e80]: ⚖️
+        - generic [ref=e81]:
+          - generic [ref=e82]: 賺賠比
+          - generic [ref=e83]: "1.51"
+          - generic [ref=e84]: 穩健成長型最佳化
+  - generic [ref=e86]:
+    - generic [ref=e87]:
+      - generic [ref=e88]: 五年績效比較（% 報酬）
+      - generic [ref=e89]: Yahoo Finance · 月線 · 已調整股息
+    - generic [ref=e90]:
+      - button "全部" [ref=e91] [cursor=pointer]
+      - button "006208" [ref=e92] [cursor=pointer]: "006208"
+      - button "00881" [ref=e94] [cursor=pointer]: "00881"
+      - button "VWRA" [ref=e96] [cursor=pointer]: VWRA
+      - button "GRID" [ref=e98] [cursor=pointer]: GRID
+      - button "XLU" [ref=e100] [cursor=pointer]: XLU
+      - button "00864B" [ref=e102] [cursor=pointer]: 00864B
+      - button "00635U" [ref=e104] [cursor=pointer]: 00635U
+    - generic [ref=e108]: ⚠ VT / GRID / XLU 為美元計價，與台幣標的含匯率影響，僅供趨勢參考
+  - generic [ref=e109]:
+    - generic [ref=e110]: 個別標的走勢（五年）
+    - generic [ref=e111]:
+      - generic [ref=e113]:
+        - generic [ref=e114]: "006208"
+        - generic [ref=e116]:
+          - generic [ref=e117]: +149.1%
+          - generic [ref=e118]: NT$140萬
+      - generic [ref=e122]:
+        - generic [ref=e123]: "00881"
+        - generic [ref=e125]:
+          - generic [ref=e126]: +189.1%
+          - generic [ref=e127]: NT$140萬
+      - generic [ref=e131]:
+        - generic [ref=e132]: VWRA
+        - generic [ref=e134]:
+          - generic [ref=e135]: +50.0%
+          - generic [ref=e136]: NT$140萬
+      - generic [ref=e140]:
+        - generic [ref=e141]: GRID
+        - generic [ref=e143]:
+          - generic [ref=e144]: +93.2%
+          - generic [ref=e145]: NT$105萬
+      - generic [ref=e149]:
+        - generic [ref=e150]: XLU
+        - generic [ref=e152]:
+          - generic [ref=e153]: +65.6%
+          - generic [ref=e154]: NT$35萬
+      - generic [ref=e158]:
+        - generic [ref=e159]: 00864B
+        - generic [ref=e161]:
+          - generic [ref=e162]: +33.2%
+          - generic [ref=e163]: NT$35萬
+      - generic [ref=e167]:
+        - generic [ref=e168]: 00635U
+        - generic [ref=e170]:
+          - generic [ref=e171]: +93.3%
+          - generic [ref=e172]: NT$70萬
+  - contentinfo [ref=e175]:
+    - generic [ref=e176]: 資料來源：Yahoo Finance · 本頁僅供參考，不構成投資建議
+    - generic [ref=e177]: 更新：2026/04/04 下午02:13

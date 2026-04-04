@@ -1,0 +1,1117 @@
+- generic [active] [ref=e1]:
+  - link "Skip to main content":
+    - /url: "#maincontent"
+  - banner:
+    - generic [ref=e2]:
+      - generic [ref=e6]:
+        - iframe [ref=e9]:
+          - generic [active]:
+            - link [ref=f32e2] [cursor=pointer]:
+              - /url: https://googleads.g.doubleclick.net/pcs/click?xai=AKAOjsu-Xj4UFs5--UiesTFSZh3FoIU46MgVQ5d9mYiyTiAFzoycK1g6fTDI55x_QYkR1B9_5oYkKfOMvH5wd6GH1c_xXJG83yBW9V9abJmbjhGruL7jKvnP3nO82l8vF3dQg0ME-EIyI9orU_z0vx4YEEJMgw5PCVZupxIj5eMas90mnRDLjwDCtH1yqC0Nil5NVUnVkyhHLt62d9KRrOpBut6GSemH2q5FbG21zu-Fx9l6uAfbOsG6yujlnX4Bac7qFbOD590k5nxdJ_-ylKHIxbipd6B14pXJbFrp8448nhYQvTQVyUuiz-6topeWGsq79EuDxdba1qXM3xtkGqQwQv-HtqBT85mGjHRX6tuTUYvEiTjrKLUoV3xkmbfLrmUYq2SM06oypjEZA9xT_fPtsf5Z6gwpOEmjOtKBicqnpqdUvYLAx6f4Hc4z&sai=AMfl-YQ2hG-dqogyR5Wsk44WmNANlB5ITF1Ym16zbHjp2jXVMQKtRqiFCeE8DocRVM-sd8PsL0ksBkPurS2OCouGADo-2SL8llUqnFUbVkm2wtmEaQ8s241Sbh_4LxEwcCLOQtIn8zh19qiqC34zpxSKwgGHshfgkO2JgIKyRqLspGZc5EpjjP4UZtaRrS3Rtga1qZ7tGktbcdRFAtY780Y0gQf4K9_rTlT_zpvkDzMxZ02UaXmmc7XRhzoxPjePnzd2pX-yDoPXR9tYWCjMM4aFbLsnx2V2qF3ZoVHDH8SAuUS4lxQx2QfHZQlQzD1PItQOyWpfMjZE&sig=Cg0ArKJSzNOe-sfkdm-q&fbs_aeid=%5Bgw_fbsaeid%5D&adurl=https://edition.cnn.com/sport
+            - iframe
+        - generic [ref=e10]:
+          - generic [ref=e11]: Advertisement
+          - generic [ref=e13] [cursor=pointer]: Ad Feedback
+        - iframe [ref=e14]:
+          
+      - navigation [ref=e15]:
+        - generic [ref=e17]:
+          - generic [ref=e18]:
+            - generic [ref=e19]:
+              - button "Open Menu Icon" [ref=e20]:
+                - img [ref=e21]
+              - generic [ref=e23]:
+                - link "CNN logo" [ref=e24] [cursor=pointer]:
+                  - /url: https://www.cnn.com
+                  - img [ref=e26]
+                - link "Business" [ref=e29] [cursor=pointer]:
+                  - /url: https://www.cnn.com/business
+                  - generic [ref=e30]: Business
+              - navigation [ref=e31]:
+                - generic [ref=e32]:
+                  - link "Markets" [ref=e34] [cursor=pointer]:
+                    - /url: https://www.cnn.com/markets
+                  - link "Tech" [ref=e36] [cursor=pointer]:
+                    - /url: https://www.cnn.com/business/tech
+                  - link "Media" [ref=e38] [cursor=pointer]:
+                    - /url: https://www.cnn.com/business/media
+                  - link "Calculators" [ref=e40] [cursor=pointer]:
+                    - /url: https://www.cnn.com/business/financial-calculators
+                  - link "Videos" [ref=e42] [cursor=pointer]:
+                    - /url: https://www.cnn.com/business/videos
+            - generic [ref=e43]:
+              - link "Watch" [ref=e44] [cursor=pointer]:
+                - /url: https://www.cnn.com/watch
+              - link "Listen" [ref=e45] [cursor=pointer]:
+                - /url: https://www.cnn.com/audio
+              - button "Search Icon" [ref=e46]:
+                - img [ref=e47]
+              - navigation "User Account Nav" [ref=e50]:
+                - link "User Account Log In Button" [ref=e52] [cursor=pointer]: Sign in
+          - separator [ref=e53]
+  - generic [ref=e54]:
+    - generic [ref=e57]:
+      - generic [ref=e59] [cursor=pointer]:
+        - paragraph [ref=e60]:
+          - text: Markets
+          - img [ref=e61]
+        - generic [ref=e64]:
+          - generic [ref=e65]:
+            - generic [ref=e66]: DOW
+            - generic [ref=e67]: 46,504.67
+            - generic [ref=e68]: 0.13%
+          - generic [ref=e70]:
+            - generic [ref=e71]: S&P 500
+            - generic [ref=e72]: 6,582.69
+            - generic [ref=e73]: 0.11%
+          - generic [ref=e75]:
+            - generic [ref=e76]: NASDAQ
+            - generic [ref=e77]: 21,879.18
+            - generic [ref=e78]: 0.18%
+      - generic [ref=e81] [cursor=pointer]:
+        - paragraph [ref=e82]:
+          - text: Fear & Greed Index
+          - img [ref=e83]
+        - generic [ref=e86]:
+          - generic [ref=e87]:
+            - generic [ref=e89]:
+              - img "Fear & Greed Index - Investor Sentiment" [ref=e91]
+              - img [ref=e98]
+              - generic [ref=e102]: "19"
+            - link:
+              - /url: /business/markets/fear-and-greed/index.html?utm_source=business_ribbon
+          - link "extreme fear is driving the US market" [ref=e103]:
+            - /url: /markets/fear-and-greed?utm_source=business_ribbon
+      - generic [ref=e105] [cursor=pointer]:
+        - paragraph [ref=e106]:
+          - text: Latest Market News
+          - img [ref=e107]
+        - list [ref=e112]:
+          - listitem [ref=e113]:
+            - link "The global oil crisis is turning into an everything crisis" [ref=e114]:
+              - /url: /2026/04/04/business/global-oil-crisis-shortage-everything-intl-hnk-dst?utm_source=business_ribbon
+              - generic [ref=e116]: The global oil crisis is turning into an everything crisis
+          - listitem [ref=e117]:
+            - link "What a surprisingly strong March jobs report means in the face of war" [ref=e118]:
+              - /url: /2026/04/03/economy/us-jobs-report-march?utm_source=business_ribbon
+              - generic [ref=e120]: What a surprisingly strong March jobs report means in the face of war
+          - listitem [ref=e121]:
+            - link "OpenAI isn’t just buying a podcast — it’s buying influence" [ref=e122]:
+              - /url: /2026/04/03/media/openai-tbpn-podcast-sale-lehane?utm_source=business_ribbon
+              - generic [ref=e124]: OpenAI isn’t just buying a podcast — it’s buying influence
+    - generic [ref=e126]:
+      - heading "Fear & Greed Index" [level=1] [ref=e128]
+      - paragraph [ref=e130]:
+        - text: What emotion is driving the market now?
+        - link "Learn more about the index" [ref=e131] [cursor=pointer]:
+          - /url: "#fng-faq"
+    - generic [ref=e132]:
+      - generic [ref=e133]:
+        - generic [ref=e136]:
+          - generic [ref=e137]:
+            - generic [ref=e138]:
+              - generic [ref=e139] [cursor=pointer]: Overview
+              - generic [ref=e140] [cursor=pointer]: Timeline
+            - generic [ref=e141]:
+              - generic [ref=e143]:
+                - generic [ref=e144]:
+                  - generic [ref=e146]:
+                    - img "Fear & Greed Index - Investor Sentiment" [ref=e148]
+                    - img [ref=e216]
+                    - generic [ref=e220]: "19"
+                  - generic [ref=e221]:
+                    - generic [ref=e222]:
+                      - generic [ref=e223]: Previous close
+                      - generic [ref=e224]:
+                        - generic [ref=e225]: extreme fear
+                        - generic [ref=e226]: "15"
+                    - generic [ref=e227]:
+                      - generic [ref=e228]: 1 week ago
+                      - generic [ref=e229]:
+                        - generic [ref=e230]: extreme fear
+                        - generic [ref=e231]: "14"
+                    - generic [ref=e232]:
+                      - generic [ref=e233]: 1 month ago
+                      - generic [ref=e234]:
+                        - generic [ref=e235]: fear
+                        - generic [ref=e236]: "31"
+                    - generic [ref=e237]:
+                      - generic [ref=e238]: 1 year ago
+                      - generic [ref=e239]:
+                        - generic [ref=e240]: extreme fear
+                        - generic [ref=e241]: "12"
+                - generic [ref=e242]: Last updated Apr 2 at 8:59:50 PM ET
+              - generic [ref=e244]:
+                - generic [ref=e246]:
+                  - generic [ref=e247]:
+                    - generic [ref=e248]:
+                      - img "Fear & Greed Index - Investor Sentiment - Timeline" [ref=e249]
+                      - generic [ref=e261]: Extreme Greed
+                      - generic [ref=e263]: Extreme Fear
+                    - generic [ref=e265]:
+                      - paragraph [ref=e266]: "0"
+                      - paragraph [ref=e267]: "25"
+                      - paragraph [ref=e268]: "50"
+                      - paragraph [ref=e269]: "75"
+                      - paragraph [ref=e270]: "100"
+                      - paragraph
+                  - generic [ref=e271]:
+                    - paragraph [ref=e272]: Jul 2025
+                    - paragraph [ref=e273]: Oct
+                    - paragraph [ref=e274]: Jan 2026
+                    - paragraph
+                - generic [ref=e277]:
+                  - paragraph [ref=e278]: Last updated Apr 2 at 8:59:50 PM EDT
+                  - paragraph
+          - heading "7 fear & greed indicators" [level=2] [ref=e281]
+          - generic [ref=e282]:
+            - generic [ref=e283]: market momentum
+            - generic [ref=e284]: extreme fear
+            - generic [ref=e285]:
+              - generic [ref=e287]:
+                - generic [ref=e289]:
+                  - heading "S&P 500 and its 125-day moving average" [level=3] [ref=e291]
+                  - generic [ref=e292]:
+                    - generic [ref=e293]:
+                      - img [ref=e294]
+                      - paragraph [ref=e296]: S&P 500
+                    - generic [ref=e297]:
+                      - img [ref=e298]
+                      - paragraph [ref=e300]: 125-day moving average
+                  - generic [ref=e301]:
+                    - img "S&P 500 and its 125-day moving average" [ref=e303]
+                    - generic [ref=e318]:
+                      - paragraph [ref=e319]: 7,000.00
+                      - paragraph [ref=e320]: 6,500.00
+                      - paragraph [ref=e321]: 6,000.00
+                      - paragraph [ref=e322]: 5,500.00
+                      - paragraph [ref=e323]: 5,000.00
+                      - paragraph
+                  - generic [ref=e324]:
+                    - paragraph [ref=e325]: Jul 2025
+                    - paragraph [ref=e326]: Oct
+                    - paragraph [ref=e327]: Jan 2026
+                    - paragraph
+                - generic [ref=e330]:
+                  - paragraph [ref=e331]: Last updated Apr 2 at 4:40:22 PM EDT
+                  - paragraph
+              - paragraph [ref=e333]: It’s useful to look at stock market levels compared to where they’ve been over the past few months. When the S&P 500 is above its moving or rolling average of the prior 125 trading days, that’s a sign of positive momentum. But if the index is below this average, it shows investors are getting skittish. The Fear & Greed Index uses slowing momentum as a signal for Fear and a growing momentum for Greed.
+          - generic [ref=e334]:
+            - generic [ref=e335]: stock price strength
+            - generic [ref=e336]: extreme fear
+            - generic [ref=e337]:
+              - generic [ref=e339]:
+                - generic [ref=e341]:
+                  - heading "Net new 52-week highs and lows on the NYSE" [level=3] [ref=e343]
+                  - generic [ref=e344]:
+                    - img "Net new 52-week highs and lows on the NYSE" [ref=e346]
+                    - generic [ref=e358]:
+                      - paragraph [ref=e359]: 5.00%
+                      - paragraph [ref=e360]: 0.00%
+                      - paragraph [ref=e361]: "-5.00%"
+                      - paragraph [ref=e362]: "-10.00%"
+                      - paragraph
+                  - generic [ref=e363]:
+                    - paragraph [ref=e364]: Jul 2025
+                    - paragraph [ref=e365]: Oct
+                    - paragraph [ref=e366]: Jan 2026
+                    - paragraph
+                - generic [ref=e369]:
+                  - paragraph [ref=e370]: Last updated Apr 2 at 8:59:50 PM EDT
+                  - paragraph
+              - paragraph [ref=e372]: A few big stocks can skew returns for the market. It’s important to also know how many stocks are doing well versus those that are struggling. This shows the number of stocks on the NYSE at 52-week highs compared to those at 52-week lows. When there are many more highs than lows, that’s a bullish sign and signals Greed.
+          - generic [ref=e373]:
+            - generic [ref=e374]: stock price breadth
+            - generic [ref=e375]: extreme fear
+            - generic [ref=e376]:
+              - generic [ref=e378]:
+                - generic [ref=e380]:
+                  - heading "McClellan Volume Summation Index" [level=3] [ref=e382]
+                  - generic [ref=e383]:
+                    - generic [ref=e384]:
+                      - img "McClellan Volume Summation Index" [ref=e385]
+                      - generic [ref=e397]: Market breadth strong
+                      - generic [ref=e399]: Market breadth weak
+                    - generic [ref=e401]:
+                      - paragraph [ref=e402]: 1,500.00
+                      - paragraph [ref=e403]: 1,000.00
+                      - paragraph [ref=e404]: "500.00"
+                      - paragraph
+                  - generic [ref=e405]:
+                    - paragraph [ref=e406]: Jul 2025
+                    - paragraph [ref=e407]: Oct
+                    - paragraph [ref=e408]: Jan 2026
+                    - paragraph
+                - generic [ref=e411]:
+                  - paragraph [ref=e412]: Last updated Apr 2 at 8:59:50 PM EDT
+                  - paragraph
+              - paragraph [ref=e414]: The market is made up of thousands of stocks. And on any given day, investors are actively buying and selling them. This measure looks at the amount, or volume, of shares on the NYSE that are rising compared to the number of shares that are falling. A low (or even negative) number is a bearish sign. The Fear & Greed Index uses decreasing trading volume as a signal for Fear.
+          - generic [ref=e415]:
+            - generic [ref=e416]: put and call options
+            - generic [ref=e417]: extreme fear
+            - generic [ref=e418]:
+              - generic [ref=e420]:
+                - generic [ref=e422]:
+                  - heading "5-day average put/call ratio" [level=3] [ref=e424]
+                  - generic [ref=e425]:
+                    - img "5-day average put/call ratio" [ref=e427]
+                    - generic [ref=e439]:
+                      - paragraph [ref=e440]: "1.00"
+                      - paragraph [ref=e441]: "0.90"
+                      - paragraph [ref=e442]: "0.80"
+                      - paragraph [ref=e443]: "0.70"
+                      - paragraph [ref=e444]: "0.60"
+                      - paragraph
+                  - generic [ref=e445]:
+                    - paragraph [ref=e446]: Jul 2025
+                    - paragraph [ref=e447]: Oct
+                    - paragraph [ref=e448]: Jan 2026
+                    - paragraph
+                - generic [ref=e451]:
+                  - paragraph [ref=e452]: Last updated Apr 2 at 5:14:35 PM EDT
+                  - paragraph
+              - paragraph [ref=e454]: Options are contracts that give investors the right to buy or sell stocks, indexes or other financial securities at an agreed upon price and date. Puts are the option to sell while calls are the option to buy. When the ratio of puts to calls is rising, it is usually a sign investors are growing more nervous. A ratio above 1 is considered bearish. The Fear & Greed Index uses a bearish options ratio as a signal for Fear.
+          - generic [ref=e455]:
+            - generic [ref=e456]: market volatility
+            - generic [ref=e457]: neutral
+            - generic [ref=e458]:
+              - generic [ref=e460]:
+                - generic [ref=e462]:
+                  - heading "VIX and its 50-day moving average" [level=3] [ref=e464]
+                  - generic [ref=e465]:
+                    - generic [ref=e466]:
+                      - img [ref=e467]
+                      - paragraph [ref=e469]: VIX
+                    - generic [ref=e470]:
+                      - img [ref=e471]
+                      - paragraph [ref=e473]: 50-day moving average
+                  - generic [ref=e474]:
+                    - img "VIX and its 50-day moving average" [ref=e476]
+                    - generic [ref=e491]:
+                      - paragraph [ref=e492]: "50.00"
+                      - paragraph [ref=e493]: "40.00"
+                      - paragraph [ref=e494]: "30.00"
+                      - paragraph [ref=e495]: "20.00"
+                      - paragraph [ref=e496]: "10.00"
+                      - paragraph
+                  - generic [ref=e497]:
+                    - paragraph [ref=e498]: Jul 2025
+                    - paragraph [ref=e499]: Oct
+                    - paragraph [ref=e500]: Jan 2026
+                    - paragraph
+                - generic [ref=e503]:
+                  - paragraph [ref=e504]: Last updated Apr 2 at 4:15:01 PM EDT
+                  - paragraph
+              - paragraph [ref=e506]: The most well-known measure of market sentiment is the CBOE Volatility Index, or VIX. The VIX measures expected price fluctuations or volatility in the S&P 500 Index options over the next 30 days. The VIX often drops on days when the broader market rallies and soars when stocks plunge. But the key is to look at the VIX over time. It tends to be lower in bull markets and higher when the bears are in control. The Fear & Greed Index uses increasing market volatility as a signal for Fear.
+          - generic [ref=e507]:
+            - generic [ref=e508]: safe haven demand
+            - generic [ref=e509]: fear
+            - generic [ref=e510]:
+              - generic [ref=e512]:
+                - generic [ref=e514]:
+                  - heading "Difference in 20-day stock and bond returns" [level=3] [ref=e516]
+                  - generic [ref=e517]:
+                    - generic [ref=e518]:
+                      - img "Difference in 20-day stock and bond returns" [ref=e519]
+                      - generic [ref=e531]: Stocks outperforming Bonds
+                      - generic [ref=e533]: Bonds outperforming Stocks
+                    - generic [ref=e535]:
+                      - paragraph [ref=e536]: 15.00%
+                      - paragraph [ref=e537]: 10.00%
+                      - paragraph [ref=e538]: 5.00%
+                      - paragraph [ref=e539]: 0.00%
+                      - paragraph [ref=e540]: "-5.00%"
+                      - paragraph [ref=e541]: "-10.00%"
+                      - paragraph
+                  - generic [ref=e542]:
+                    - paragraph [ref=e543]: Jul 2025
+                    - paragraph [ref=e544]: Oct
+                    - paragraph [ref=e545]: Jan 2026
+                    - paragraph
+                - generic [ref=e548]:
+                  - paragraph [ref=e549]: Last updated Apr 2 at 3:59:59 PM EDT
+                  - paragraph
+              - paragraph [ref=e551]: Stocks are riskier than bonds. But the reward for investing in stocks over the long haul is greater. Still, bonds can outperform stocks over short periods. Safe Haven Demand shows the difference between Treasury bond and stock returns over the past 20 trading days. Bonds do better when investors are scared. The Fear & Greed Index uses increasing safe haven demand as a signal for Fear.
+          - generic [ref=e552]:
+            - generic [ref=e553]: junk bond demand
+            - generic [ref=e554]: extreme fear
+            - generic [ref=e555]:
+              - generic [ref=e557]:
+                - generic [ref=e559]:
+                  - 'heading "Yield spread: junk bonds vs. investment grade" [level=3] [ref=e561]'
+                  - generic [ref=e562]:
+                    - 'img "Yield spread: junk bonds vs. investment grade" [ref=e564]'
+                    - generic [ref=e576]:
+                      - paragraph [ref=e577]: 1.60%
+                      - paragraph [ref=e578]: 1.50%
+                      - paragraph [ref=e579]: 1.40%
+                      - paragraph [ref=e580]: 1.30%
+                      - paragraph [ref=e581]: 1.20%
+                      - paragraph
+                  - generic [ref=e582]:
+                    - paragraph [ref=e583]: Jul 2025
+                    - paragraph [ref=e584]: Oct
+                    - paragraph [ref=e585]: Jan 2026
+                    - paragraph
+                - generic [ref=e587]:
+                  - paragraph [ref=e588]: "Note: The frequent drops of the yield spread on the Junk Bond Demand chart usually appear on the ex-dividend date. The spread typically bounces back after the dividend is paid and normalizes over time."
+                  - generic [ref=e589]:
+                    - paragraph [ref=e590]: Last updated Apr 2 at 8:00:00 PM EDT
+                    - paragraph
+              - paragraph [ref=e592]: Junk bonds carry a higher risk of default compared to other bonds. Bond yields – or the return you get on investing in a bond - dip when prices go up. If investors crave junk bonds, the yields drop. Likewise, yields rise when people are selling. So a smaller difference (or spread) between yields for junk bonds and safer government bonds is a sign investors are taking on more risk. A wider spread shows more caution. The Fear & Greed Index uses junk bond demand as a signal for Greed.
+          - generic [ref=e593]:
+            - heading "FEAR & GREED INDEX FAQs" [level=4] [ref=e595]
+            - paragraph [ref=e596]: What is the CNN Business Fear & Greed Index?
+            - paragraph [ref=e597]: The Fear & Greed Index is a way to gauge stock market movements and whether stocks are fairly priced. The theory is based on the logic that excessive fear tends to drive down share prices, and too much greed tends to have the opposite effect.
+            - paragraph [ref=e598]: How is Fear & Greed Calculated?
+            - paragraph [ref=e599]: The Fear & Greed Index is a compilation of seven different indicators that measure some aspect of stock market behavior. They are market momentum, stock price strength, stock price breadth, put and call options, junk bond demand, market volatility, and safe haven demand. The index tracks how much these individual indicators deviate from their averages compared to how much they normally diverge. The index gives each indicator equal weighting in calculating a score from 0 to 100, with 100 representing maximum greediness and 0 signaling maximum fear.
+            - paragraph [ref=e600]: How often is the Fear & Greed Index calculated?
+            - paragraph [ref=e601]: Every component and the Index are calculated as soon as new data becomes available.
+            - paragraph [ref=e602]: How to use Fear & Greed Index?
+            - paragraph [ref=e603]: The Fear & Greed Index is used to gauge the mood of the market. Many investors are emotional and reactionary, and fear and greed sentiment indicators can alert investors to their own emotions and biases that can influence their decisions. When combined with fundamentals and other analytical tools, the Index can be a helpful way to assess market sentiment.
+            - link "Return to Fear & Greed Index" [ref=e604] [cursor=pointer]:
+              - /url: "#fng-index"
+        - generic:
+          - generic:
+            - generic [ref=e605]:
+              - generic [ref=e606]:
+                - img [ref=e608]
+                - generic [ref=e615]: Related
+                - img [ref=e617] [cursor=pointer]
+              - region [ref=e619]:
+                - img [ref=e622]
+            - generic:
+              - generic:
+                - iframe
+      - generic [ref=e624]:
+        - generic [ref=e625]:
+          - paragraph [ref=e627]: Quote Lookup
+          - generic [ref=e628]:
+            - textbox "Search" [ref=e629]:
+              - /placeholder: ""
+            - button "Search" [ref=e630]:
+              - img [ref=e632]
+        - generic [ref=e637]:
+          - iframe [ref=e640]:
+            - generic [active]:
+              - link [ref=f31e2] [cursor=pointer]:
+                - /url: https://googleads.g.doubleclick.net/pcs/click?xai=AKAOjstQhOaqrZgRvPDkkPKrNgXcCRfG4K4R8zPtIIF9jcwdT1T3-CJunsuW1DWToUTYcNWXbzoPjCl1yqC6JlQMqtHl3feECt5xsAT0zxdiATgxxXVHxzx3gToRe5BoXpj5IOHfVae6ErhaUOJH3xmC6Z-BAo85yJR4nrS31YoF5P9miImsn-g1YLDR0Bl5Cq9wcvineJWQWjlbHwm-Lq74HuBTiPv0v3Hv6UrCN4MEfXIfgQFelKJK2vkojmeQj3NlXjtm89OWw4Afz4KQdNZQWrBy8eF6zTzteTGo5zjEtSiiN5OoetnzRFrpy4FmZ2fGUch2ZLkh-VJJCmiU76yVskxg2T_D1EnLtOXbIQYUm_cS6fKVGoT1syzSB19_VeTNB2J6LJj3q7AznefFLPRJmArAVnyZGMiQGe-Tx1_cOdrgxcrtfQR6fzhO&sai=AMfl-YSVqZMiLu-6GIWafi5Zj-ta81vsIPZ4whnEI2dRJuOx92PNFOcxK7sasxoMV3gZ8AMVEL698QnhuJK45o4ntPz8WJE2fGpagbNlG_Fo31rlVB3DRmLLYYX-7yLTMq3zOdr-3BHGQHqEqkJgOOIXLdzkvUrawbs4ziS97iD5oCi2YLcglbLzZdqDwfE4PE9uqShflm0zALYwVya8FhCOVBnL34_0dZ10f7kC2QqAX60oMGTy-XJXwczKJaTyGhxo-A5tbRgevBYJZjEz1RpoBhm5DQ8Rhb8dw14fVg3lll_BsraEYxfr891LUHuVH4Hk3wvL7nK8&sig=Cg0ArKJSzI90EtKXf7WD&fbs_aeid=%5Bgw_fbsaeid%5D&adurl=https://edition.cnn.com/travel
+              - iframe
+          - generic [ref=e641]:
+            - generic [ref=e642]: Advertisement
+            - generic [ref=e644] [cursor=pointer]: Ad Feedback
+        - generic:
+          - generic:
+            - iframe
+        - generic [ref=e645]:
+          - heading "Latest Fear & Greed" [level=2] [ref=e647]
+          - list [ref=e650]:
+            - listitem [ref=e651]:
+              - link "Economists expect that 60,000 jobs were added in March and the unemployment rate held at 4.4%. Mario Tama/Getty Images" [ref=e652] [cursor=pointer]:
+                - /url: /2026/04/03/economy/us-jobs-report-march
+                - generic [ref=e655]:
+                  - img "Economists expect that 60,000 jobs were added in March and the unemployment rate held at 4.4%." [ref=e657]
+                  - generic [ref=e659]: Mario Tama/Getty Images
+              - link "What a surprisingly strong March jobs report means in the face of war" [ref=e660] [cursor=pointer]:
+                - /url: /2026/04/03/economy/us-jobs-report-march
+                - generic [ref=e662]: What a surprisingly strong March jobs report means in the face of war
+            - listitem [ref=e663]:
+              - link "Drivers wait to refuel vehicles at a Costco gas station in Sacramento, California, on March 19, 2026. Americans are searching for ways to offset rising gas prices as the effect of the war in Iran begins to hit their wallets. David Paul Morris/Bloomberg via Getty Images" [ref=e664] [cursor=pointer]:
+                - /url: /2026/04/03/economy/ev-drivers-gas-prices
+                - generic [ref=e667]:
+                  - img "Drivers wait to refuel vehicles at a Costco gas station in Sacramento, California, on March 19, 2026. Americans are searching for ways to offset rising gas prices as the effect of the war in Iran begins to hit their wallets." [ref=e669]
+                  - generic [ref=e671]: David Paul Morris/Bloomberg via Getty Images
+              - link "$4 a gallon for gas? These drivers don’t care" [ref=e672] [cursor=pointer]:
+                - /url: /2026/04/03/economy/ev-drivers-gas-prices
+                - generic [ref=e674]: $4 a gallon for gas? These drivers don’t care
+            - listitem [ref=e675]:
+              - link "Stocks were volatile Thursday after no clear exit plan emerged for the US-Israeli war with Iran. Charly Triballeau/AFP/Getty Images" [ref=e676] [cursor=pointer]:
+                - /url: /2026/04/02/investing/us-stocks-iran
+                - generic [ref=e679]:
+                  - img "Stocks were volatile Thursday after no clear exit plan emerged for the US-Israeli war with Iran." [ref=e681]
+                  - generic [ref=e683]: Charly Triballeau/AFP/Getty Images
+              - link "Stocks are volatile, oil soars as Trump rattles markets with lack of clear exit plan" [ref=e684] [cursor=pointer]:
+                - /url: /2026/04/02/investing/us-stocks-iran
+                - generic [ref=e686]: Stocks are volatile, oil soars as Trump rattles markets with lack of clear exit plan
+            - listitem [ref=e687]:
+              - link "Average mortgage rates rose for the fifth-straight week, just as springtime buying season kicks off, according to Freddie Mac. Justin Sullivan/Getty Images" [ref=e688] [cursor=pointer]:
+                - /url: /2026/04/02/economy/us-mortgage-rates-iran
+                - generic [ref=e691]:
+                  - img "Average mortgage rates rose for the fifth-straight week, just as springtime buying season kicks off, according to Freddie Mac." [ref=e693]
+                  - generic [ref=e695]: Justin Sullivan/Getty Images
+              - link "US mortgage rates climb for fifth-straight week, pushed up by Iran war worries" [ref=e696] [cursor=pointer]:
+                - /url: /2026/04/02/economy/us-mortgage-rates-iran
+                - generic [ref=e698]: US mortgage rates climb for fifth-straight week, pushed up by Iran war worries
+            - listitem [ref=e699]:
+              - link "Sharply rising gas prices can sap household income, raise costs for businesses and could push inflation and job cut risks higher. Andrew Harnik/Getty Images" [ref=e700] [cursor=pointer]:
+                - /url: /2026/04/02/economy/us-jobs-report-march-preview
+                - generic [ref=e703]:
+                  - img "Sharply rising gas prices can sap household income, raise costs for businesses and could push inflation and job cut risks higher." [ref=e705]
+                  - generic [ref=e707]: Andrew Harnik/Getty Images
+              - link "What to expect from the March jobs report — and when the war could hit hiring" [ref=e708] [cursor=pointer]:
+                - /url: /2026/04/02/economy/us-jobs-report-march-preview
+                - generic [ref=e710]: What to expect from the March jobs report — and when the war could hit hiring
+            - listitem [ref=e711]:
+              - link "A customer shops for toiletries in a supermarket in New York on January 22, 2026. Charly Triballeau/AFP/Getty Images" [ref=e712] [cursor=pointer]:
+                - /url: /2026/04/01/economy/us-retail-sales-consumer-spending-february
+                - generic [ref=e715]:
+                  - img "A customer shops for toiletries in a supermarket in New York on January 22, 2026." [ref=e717]
+                  - generic [ref=e719]: Charly Triballeau/AFP/Getty Images
+              - link "Retail sales rose more than expected in February" [ref=e720] [cursor=pointer]:
+                - /url: /2026/04/01/economy/us-retail-sales-consumer-spending-february
+                - generic [ref=e722]: Retail sales rose more than expected in February
+            - listitem [ref=e723]:
+              - link "People work on the floor at the New York Stock Exchange in New York, Tuesday, March 31, 2026. Seth Wenig/AP" [ref=e724] [cursor=pointer]:
+                - /url: /2026/03/31/investing/dow-jones-us-market-stocks-trump-iran
+                - generic [ref=e727]:
+                  - img "People work on the floor at the New York Stock Exchange in New York, Tuesday, March 31, 2026." [ref=e729]
+                  - generic [ref=e731]: Seth Wenig/AP
+              - link "What in the world just happened to the Dow?" [ref=e732] [cursor=pointer]:
+                - /url: /2026/03/31/investing/dow-jones-us-market-stocks-trump-iran
+                - generic [ref=e734]: What in the world just happened to the Dow?
+            - listitem [ref=e735]:
+              - link "The S&P 500 just had its worst quarter since March 2025. Seth Wenig/AP" [ref=e736] [cursor=pointer]:
+                - /url: /2026/03/31/investing/us-stocks-iran
+                - generic [ref=e739]:
+                  - img "The S&P 500 just had its worst quarter since March 2025." [ref=e741]
+                  - generic [ref=e743]: Seth Wenig/AP
+              - link "US stocks move higher on hopes for an end to war with Iran, but it’s been a volatile month" [ref=e744] [cursor=pointer]:
+                - /url: /2026/03/31/investing/us-stocks-iran
+                - generic [ref=e746]: US stocks move higher on hopes for an end to war with Iran, but it’s been a volatile month
+            - listitem [ref=e747]:
+              - link "Job opportunities were expected to have declined in February, as the US labor market remains in a 'low-hire, low-fire' state. Economists expected job openings to decline to 6.84 million from 6.95 million in January. David Ryder/Bloomberg/Getty Images" [ref=e748] [cursor=pointer]:
+                - /url: /2026/03/31/economy/us-jolts-job-openings-layoffs-february
+                - generic [ref=e751]:
+                  - img "Job opportunities were expected to have declined in February, as the US labor market remains in a 'low-hire, low-fire' state. Economists expected job openings to decline to 6.84 million from 6.95 million in January." [ref=e753]
+                  - generic [ref=e755]: David Ryder/Bloomberg/Getty Images
+              - link "The pace of hiring just fell to the lowest since 2011, outside of the pandemic" [ref=e756] [cursor=pointer]:
+                - /url: /2026/03/31/economy/us-jolts-job-openings-layoffs-february
+                - generic [ref=e758]: The pace of hiring just fell to the lowest since 2011, outside of the pandemic
+            - listitem [ref=e759]:
+              - link "Gas prices are seen at a gas station on Capitol Hill, amid the U.S.-Israeli war with Iran, in Washington, DC, on March 19, 2026. Nathan Howard/Reuters" [ref=e760] [cursor=pointer]:
+                - /url: /2026/03/23/economy/4-gallon-gas-economic-impact
+                - generic [ref=e763]:
+                  - img "Gas prices are seen at a gas station on Capitol Hill, amid the U.S.-Israeli war with Iran, in Washington, DC, on March 19, 2026." [ref=e765]
+                  - generic [ref=e767]: Nathan Howard/Reuters
+              - link "What $4-a-gallon gasoline means for you and the economy" [ref=e768] [cursor=pointer]:
+                - /url: /2026/03/23/economy/4-gallon-gas-economic-impact
+                - generic [ref=e770]: What $4-a-gallon gasoline means for you and the economy
+    - contentinfo [ref=e772]:
+      - generic [ref=e773]:
+        - search [ref=e775]:
+          - textbox "Search" [ref=e776]:
+            - /placeholder: Search CNN...
+          - button "Submit" [ref=e777]
+        - navigation [ref=e779]:
+          - list [ref=e780]:
+            - listitem [ref=e781]:
+              - link "US" [ref=e782] [cursor=pointer]:
+                - /url: https://www.cnn.com/us
+              - list [ref=e783]:
+                - listitem [ref=e784]:
+                  - link "US Crime & Justice" [ref=e785] [cursor=pointer]:
+                    - /url: https://www.cnn.com/us/crime-and-justice
+                    - text: Crime & Justice
+                - listitem [ref=e786]:
+                  - link "US Immigration" [ref=e787] [cursor=pointer]:
+                    - /url: https://www.cnn.com/us/immigration
+                    - text: Immigration
+                - listitem [ref=e788]:
+                  - link "US Education" [ref=e789] [cursor=pointer]:
+                    - /url: https://www.cnn.com/us/education
+                    - text: Education
+                - listitem [ref=e790]:
+                  - link "US Transportation" [ref=e791] [cursor=pointer]:
+                    - /url: https://www.cnn.com/us/transportation
+                    - text: Transportation
+                - listitem [ref=e792]:
+                  - link "US Race & Identity" [ref=e793] [cursor=pointer]:
+                    - /url: https://www.cnn.com/us/race-and-identity
+                    - text: Race & Identity
+            - listitem [ref=e794]:
+              - link "World" [ref=e795] [cursor=pointer]:
+                - /url: https://www.cnn.com/world
+              - list [ref=e796]:
+                - listitem [ref=e797]:
+                  - link "World Africa" [ref=e798] [cursor=pointer]:
+                    - /url: https://www.cnn.com/world/africa
+                    - text: Africa
+                - listitem [ref=e799]:
+                  - link "World Americas" [ref=e800] [cursor=pointer]:
+                    - /url: https://www.cnn.com/world/americas
+                    - text: Americas
+                - listitem [ref=e801]:
+                  - link "World Asia" [ref=e802] [cursor=pointer]:
+                    - /url: https://www.cnn.com/world/asia
+                    - text: Asia
+                - listitem [ref=e803]:
+                  - link "World Australia" [ref=e804] [cursor=pointer]:
+                    - /url: https://www.cnn.com/world/australia
+                    - text: Australia
+                - listitem [ref=e805]:
+                  - link "World China" [ref=e806] [cursor=pointer]:
+                    - /url: https://www.cnn.com/world/china
+                    - text: China
+                - listitem [ref=e807]:
+                  - link "World Europe" [ref=e808] [cursor=pointer]:
+                    - /url: https://www.cnn.com/world/europe
+                    - text: Europe
+                - listitem [ref=e809]:
+                  - link "World India" [ref=e810] [cursor=pointer]:
+                    - /url: https://www.cnn.com/world/india
+                    - text: India
+                - listitem [ref=e811]:
+                  - link "World Middle East" [ref=e812] [cursor=pointer]:
+                    - /url: https://www.cnn.com/world/middle-east
+                    - text: Middle East
+                - listitem [ref=e813]:
+                  - link "World United Kingdom" [ref=e814] [cursor=pointer]:
+                    - /url: https://www.cnn.com/world/united-kingdom
+                    - text: United Kingdom
+            - listitem [ref=e815]:
+              - link "Politics" [ref=e816] [cursor=pointer]:
+                - /url: https://www.cnn.com/politics
+              - list [ref=e817]:
+                - listitem [ref=e818]:
+                  - link "Politics Elections 2026" [ref=e819] [cursor=pointer]:
+                    - /url: https://www.cnn.com/election/2026
+                    - text: Elections 2026
+                - listitem [ref=e820]:
+                  - link "Politics Trump" [ref=e821] [cursor=pointer]:
+                    - /url: https://www.cnn.com/politics/president-donald-trump-47
+                    - text: Trump
+                - listitem [ref=e822]:
+                  - link "Politics Facts First" [ref=e823] [cursor=pointer]:
+                    - /url: https://www.cnn.com/politics/fact-check
+                    - text: Facts First
+                - listitem [ref=e824]:
+                  - link "Politics CNN Polls" [ref=e825] [cursor=pointer]:
+                    - /url: https://www.cnn.com/polling
+                    - text: CNN Polls
+                - listitem [ref=e826]:
+                  - link "Politics Redistricting Tracker" [ref=e827] [cursor=pointer]:
+                    - /url: https://www.cnn.com/politics/state-redistricting-maps-vis/index.html
+                    - text: Redistricting Tracker
+                - listitem [ref=e828]:
+                  - link "Politics Epstein Files" [ref=e829] [cursor=pointer]:
+                    - /url: https://www.cnn.com/politics/epstein-files
+                    - text: Epstein Files
+            - listitem [ref=e830]:
+              - link "Business" [ref=e831] [cursor=pointer]:
+                - /url: https://www.cnn.com/business
+              - list [ref=e832]:
+                - listitem [ref=e833]:
+                  - link "Business Tech" [ref=e834] [cursor=pointer]:
+                    - /url: https://www.cnn.com/business/tech
+                    - text: Tech
+                - listitem [ref=e835]:
+                  - link "Business Media" [ref=e836] [cursor=pointer]:
+                    - /url: https://www.cnn.com/business/media
+                    - text: Media
+                - listitem [ref=e837]:
+                  - link "Business Calculators" [ref=e838] [cursor=pointer]:
+                    - /url: https://www.cnn.com/business/financial-calculators
+                    - text: Calculators
+                - listitem [ref=e839]:
+                  - link "Business Videos" [ref=e840] [cursor=pointer]:
+                    - /url: https://www.cnn.com/business/videos
+                    - text: Videos
+            - listitem [ref=e841]:
+              - link "Markets" [ref=e842] [cursor=pointer]:
+                - /url: https://www.cnn.com/markets
+              - list [ref=e843]:
+                - listitem [ref=e844]:
+                  - link "Markets Pre-markets" [ref=e845] [cursor=pointer]:
+                    - /url: https://www.cnn.com/markets/premarkets
+                    - text: Pre-markets
+                - listitem [ref=e846]:
+                  - link "Markets After-Hours" [ref=e847] [cursor=pointer]:
+                    - /url: https://www.cnn.com/markets/after-hours
+                    - text: After-Hours
+                - listitem [ref=e848]:
+                  - link "Markets Fear & Greed" [ref=e849] [cursor=pointer]:
+                    - /url: https://www.cnn.com/markets/fear-and-greed
+                    - text: Fear & Greed
+                - listitem [ref=e850]:
+                  - link "Markets Investing" [ref=e851] [cursor=pointer]:
+                    - /url: https://www.cnn.com/business/investing
+                    - text: Investing
+                - listitem [ref=e852]:
+                  - link "Markets Markets Now" [ref=e853] [cursor=pointer]:
+                    - /url: https://www.cnn.com/business/markets-now
+                    - text: Markets Now
+                - listitem [ref=e854]:
+                  - link "Markets Nightcap" [ref=e855] [cursor=pointer]:
+                    - /url: https://www.cnn.com/business/markets/nightcap
+                    - text: Nightcap
+            - listitem [ref=e856]:
+              - link "Health" [ref=e857] [cursor=pointer]:
+                - /url: https://www.cnn.com/health
+              - list [ref=e858]:
+                - listitem [ref=e859]:
+                  - link "Health Life, But Better" [ref=e860] [cursor=pointer]:
+                    - /url: https://www.cnn.com/interactive/life-but-better/
+                    - text: Life, But Better
+                - listitem [ref=e861]:
+                  - link "Health Fitness" [ref=e862] [cursor=pointer]:
+                    - /url: https://www.cnn.com/health/life-but-better/fitness
+                    - text: Fitness
+                - listitem [ref=e863]:
+                  - link "Health Food" [ref=e864] [cursor=pointer]:
+                    - /url: https://www.cnn.com/health/life-but-better/food
+                    - text: Food
+                - listitem [ref=e865]:
+                  - link "Health Sleep" [ref=e866] [cursor=pointer]:
+                    - /url: https://www.cnn.com/health/life-but-better/sleep
+                    - text: Sleep
+                - listitem [ref=e867]:
+                  - link "Health Mindfulness" [ref=e868] [cursor=pointer]:
+                    - /url: https://www.cnn.com/health/life-but-better/mindfulness
+                    - text: Mindfulness
+                - listitem [ref=e869]:
+                  - link "Health Relationships" [ref=e870] [cursor=pointer]:
+                    - /url: https://www.cnn.com/health/life-but-better/relationships
+                    - text: Relationships
+            - listitem [ref=e871]:
+              - link "CNN Underscored" [ref=e872] [cursor=pointer]:
+                - /url: https://www.cnn.com/cnn-underscored
+              - list [ref=e873]:
+                - listitem [ref=e874]:
+                  - link "CNN Underscored Electronics" [ref=e875] [cursor=pointer]:
+                    - /url: https://www.cnn.com/cnn-underscored/electronics
+                    - text: Electronics
+                - listitem [ref=e876]:
+                  - link "CNN Underscored Fashion" [ref=e877] [cursor=pointer]:
+                    - /url: https://www.cnn.com/cnn-underscored/fashion
+                    - text: Fashion
+                - listitem [ref=e878]:
+                  - link "CNN Underscored Beauty" [ref=e879] [cursor=pointer]:
+                    - /url: https://www.cnn.com/cnn-underscored/beauty
+                    - text: Beauty
+                - listitem [ref=e880]:
+                  - link "CNN Underscored Health & Fitness" [ref=e881] [cursor=pointer]:
+                    - /url: https://www.cnn.com/cnn-underscored/health-fitness
+                    - text: Health & Fitness
+                - listitem [ref=e882]:
+                  - link "CNN Underscored Home" [ref=e883] [cursor=pointer]:
+                    - /url: https://www.cnn.com/cnn-underscored/home
+                    - text: Home
+                - listitem [ref=e884]:
+                  - link "CNN Underscored Reviews" [ref=e885] [cursor=pointer]:
+                    - /url: https://www.cnn.com/cnn-underscored/reviews
+                    - text: Reviews
+                - listitem [ref=e886]:
+                  - link "CNN Underscored Deals" [ref=e887] [cursor=pointer]:
+                    - /url: https://www.cnn.com/cnn-underscored/deals
+                    - text: Deals
+                - listitem [ref=e888]:
+                  - link "CNN Underscored Gifts" [ref=e889] [cursor=pointer]:
+                    - /url: https://www.cnn.com/cnn-underscored/gifts
+                    - text: Gifts
+                - listitem [ref=e890]:
+                  - link "CNN Underscored Travel" [ref=e891] [cursor=pointer]:
+                    - /url: https://www.cnn.com/cnn-underscored/travel
+                    - text: Travel
+                - listitem [ref=e892]:
+                  - link "CNN Underscored Outdoors" [ref=e893] [cursor=pointer]:
+                    - /url: https://www.cnn.com/cnn-underscored/outdoors
+                    - text: Outdoors
+                - listitem [ref=e894]:
+                  - link "CNN Underscored Pets" [ref=e895] [cursor=pointer]:
+                    - /url: https://www.cnn.com/cnn-underscored/pets
+                    - text: Pets
+            - listitem [ref=e896]:
+              - link "Entertainment" [ref=e897] [cursor=pointer]:
+                - /url: https://www.cnn.com/entertainment
+              - list [ref=e898]:
+                - listitem [ref=e899]:
+                  - link "Entertainment Movies" [ref=e900] [cursor=pointer]:
+                    - /url: https://www.cnn.com/entertainment/movies
+                    - text: Movies
+                - listitem [ref=e901]:
+                  - link "Entertainment Television" [ref=e902] [cursor=pointer]:
+                    - /url: https://www.cnn.com/entertainment/tv-shows
+                    - text: Television
+                - listitem [ref=e903]:
+                  - link "Entertainment Celebrity" [ref=e904] [cursor=pointer]:
+                    - /url: https://www.cnn.com/entertainment/celebrities
+                    - text: Celebrity
+            - listitem [ref=e905]:
+              - link "Tech" [ref=e906] [cursor=pointer]:
+                - /url: https://www.cnn.com/business/tech
+              - list [ref=e907]:
+                - listitem [ref=e908]:
+                  - link "Tech Innovate" [ref=e909] [cursor=pointer]:
+                    - /url: https://www.cnn.com/business/tech/innovate
+                    - text: Innovate
+            - listitem [ref=e910]:
+              - link "Style" [ref=e911] [cursor=pointer]:
+                - /url: https://www.cnn.com/style
+              - list [ref=e912]:
+                - listitem [ref=e913]:
+                  - link "Style Arts" [ref=e914] [cursor=pointer]:
+                    - /url: https://www.cnn.com/style/arts
+                    - text: Arts
+                - listitem [ref=e915]:
+                  - link "Style Design" [ref=e916] [cursor=pointer]:
+                    - /url: https://www.cnn.com/style/design
+                    - text: Design
+                - listitem [ref=e917]:
+                  - link "Style Fashion" [ref=e918] [cursor=pointer]:
+                    - /url: https://www.cnn.com/style/fashion
+                    - text: Fashion
+                - listitem [ref=e919]:
+                  - link "Style Architecture" [ref=e920] [cursor=pointer]:
+                    - /url: https://www.cnn.com/style/architecture
+                    - text: Architecture
+                - listitem [ref=e921]:
+                  - link "Style Luxury" [ref=e922] [cursor=pointer]:
+                    - /url: https://www.cnn.com/style/luxury
+                    - text: Luxury
+                - listitem [ref=e923]:
+                  - link "Style Beauty" [ref=e924] [cursor=pointer]:
+                    - /url: https://www.cnn.com/style/beauty
+                    - text: Beauty
+                - listitem [ref=e925]:
+                  - link "Style Video" [ref=e926] [cursor=pointer]:
+                    - /url: https://www.cnn.com/style/videos
+                    - text: Video
+            - listitem [ref=e927]:
+              - link "Travel" [ref=e928] [cursor=pointer]:
+                - /url: https://www.cnn.com/travel
+              - list [ref=e929]:
+                - listitem [ref=e930]:
+                  - link "Travel Destinations" [ref=e931] [cursor=pointer]:
+                    - /url: https://www.cnn.com/travel/destinations
+                    - text: Destinations
+                - listitem [ref=e932]:
+                  - link "Travel Food & Drink" [ref=e933] [cursor=pointer]:
+                    - /url: https://www.cnn.com/travel/food-and-drink
+                    - text: Food & Drink
+                - listitem [ref=e934]:
+                  - link "Travel Stay" [ref=e935] [cursor=pointer]:
+                    - /url: https://www.cnn.com/travel/stay
+                    - text: Stay
+                - listitem [ref=e936]:
+                  - link "Travel News" [ref=e937] [cursor=pointer]:
+                    - /url: https://www.cnn.com/travel/news
+                    - text: News
+                - listitem [ref=e938]:
+                  - link "Travel Videos" [ref=e939] [cursor=pointer]:
+                    - /url: https://www.cnn.com/travel/videos
+                    - text: Videos
+            - listitem [ref=e940]:
+              - link "Sports" [ref=e941] [cursor=pointer]:
+                - /url: https://www.cnn.com/sports
+              - list [ref=e942]:
+                - listitem [ref=e943]:
+                  - link "Sports NFL" [ref=e944] [cursor=pointer]:
+                    - /url: https://www.cnn.com/sport/nfl
+                    - text: NFL
+                - listitem [ref=e945]:
+                  - link "Sports NBA" [ref=e946] [cursor=pointer]:
+                    - /url: https://www.cnn.com/sport/nba
+                    - text: NBA
+                - listitem [ref=e947]:
+                  - link "Sports MLB" [ref=e948] [cursor=pointer]:
+                    - /url: https://www.cnn.com/sport/mlb
+                    - text: MLB
+                - listitem [ref=e949]:
+                  - link "Sports WNBA" [ref=e950] [cursor=pointer]:
+                    - /url: https://www.cnn.com/sport/wnba
+                    - text: WNBA
+                - listitem [ref=e951]:
+                  - link "Sports Golf" [ref=e952] [cursor=pointer]:
+                    - /url: https://www.cnn.com/sport/golf
+                    - text: Golf
+                - listitem [ref=e953]:
+                  - link "Sports Soccer" [ref=e954] [cursor=pointer]:
+                    - /url: https://www.cnn.com/sport/soccer
+                    - text: Soccer
+                - listitem [ref=e955]:
+                  - link "Sports Tennis" [ref=e956] [cursor=pointer]:
+                    - /url: https://www.cnn.com/sport/tennis
+                    - text: Tennis
+                - listitem [ref=e957]:
+                  - link "Sports Motorsport" [ref=e958] [cursor=pointer]:
+                    - /url: https://www.cnn.com/sport/motorsport
+                    - text: Motorsport
+                - listitem [ref=e959]:
+                  - link "Sports College Sports" [ref=e960] [cursor=pointer]:
+                    - /url: https://www.cnn.com/sport/college-sports
+                    - text: College Sports
+                - listitem [ref=e961]:
+                  - link "Sports Olympics" [ref=e962] [cursor=pointer]:
+                    - /url: https://www.cnn.com/sport/milan-cortina-winter-olympics-2026
+                    - text: Olympics
+                - listitem [ref=e963]:
+                  - link "Sports Bleacher Report" [ref=e964] [cursor=pointer]:
+                    - /url: https://bleacherreport.com/
+                    - text: Bleacher Report
+            - listitem [ref=e965]:
+              - link "Science" [ref=e966] [cursor=pointer]:
+                - /url: https://www.cnn.com/science
+              - list [ref=e967]:
+                - listitem [ref=e968]:
+                  - link "Science Space" [ref=e969] [cursor=pointer]:
+                    - /url: https://www.cnn.com/science/space
+                    - text: Space
+                - listitem [ref=e970]:
+                  - link "Science Life" [ref=e971] [cursor=pointer]:
+                    - /url: https://www.cnn.com/science/life
+                    - text: Life
+                - listitem [ref=e972]:
+                  - link "Science Unearthed" [ref=e973] [cursor=pointer]:
+                    - /url: https://www.cnn.com/science/unearthed
+                    - text: Unearthed
+            - listitem [ref=e974]:
+              - link "Climate" [ref=e975] [cursor=pointer]:
+                - /url: https://www.cnn.com/climate
+              - list [ref=e976]:
+                - listitem [ref=e977]:
+                  - link "Climate Solutions" [ref=e978] [cursor=pointer]:
+                    - /url: https://www.cnn.com/climate/solutions
+                    - text: Solutions
+                - listitem [ref=e979]:
+                  - link "Climate Weather" [ref=e980] [cursor=pointer]:
+                    - /url: https://www.cnn.com/weather
+                    - text: Weather
+            - listitem [ref=e981]:
+              - link "Weather" [ref=e982] [cursor=pointer]:
+                - /url: https://www.cnn.com/weather
+              - list [ref=e983]:
+                - listitem [ref=e984]:
+                  - link "Weather Video" [ref=e985] [cursor=pointer]:
+                    - /url: https://www.cnn.com/weather/video
+                    - text: Video
+                - listitem [ref=e986]:
+                  - link "Weather Climate" [ref=e987] [cursor=pointer]:
+                    - /url: https://www.cnn.com/climate
+                    - text: Climate
+            - listitem [ref=e988]:
+              - link "Ukraine-Russia War" [ref=e989] [cursor=pointer]:
+                - /url: https://www.cnn.com/world/europe/ukraine
+              - list
+            - listitem [ref=e990]:
+              - link "Israel-Hamas War" [ref=e991] [cursor=pointer]:
+                - /url: https://www.cnn.com/world/middleeast/israel
+              - list
+            - listitem [ref=e992]:
+              - link "Watch" [ref=e993] [cursor=pointer]:
+                - /url: https://www.cnn.com/watch
+              - list [ref=e994]:
+                - listitem [ref=e995]:
+                  - link "Watch Featured" [ref=e996] [cursor=pointer]:
+                    - /url: https://www.cnn.com/watch
+                    - text: Featured
+                - listitem [ref=e997]:
+                  - link "Watch Shows & Films" [ref=e998] [cursor=pointer]:
+                    - /url: https://www.cnn.com/watch#shows-films
+                    - text: Shows & Films
+                - listitem [ref=e999]:
+                  - link "Watch Network TV" [ref=e1000] [cursor=pointer]:
+                    - /url: https://www.cnn.com/videos/live
+                    - text: Network TV
+                - listitem [ref=e1001]:
+                  - link "Watch Clips" [ref=e1002] [cursor=pointer]:
+                    - /url: https://www.cnn.com/videos
+                    - text: Clips
+                - listitem [ref=e1003]:
+                  - link "Watch CNN Headlines" [ref=e1004] [cursor=pointer]:
+                    - /url: https://www.cnn.com/videos/fast/cnn-headlines
+                    - text: CNN Headlines
+                - listitem [ref=e1005]:
+                  - link "Watch Shows A-Z" [ref=e1006] [cursor=pointer]:
+                    - /url: https://www.cnn.com/tv/all-shows
+                    - text: Shows A-Z
+                - listitem [ref=e1007]:
+                  - link "Watch CNN 10" [ref=e1008] [cursor=pointer]:
+                    - /url: https://www.cnn10.com
+                    - text: CNN 10
+                - listitem [ref=e1009]:
+                  - link "Watch CNN TV Schedule" [ref=e1010] [cursor=pointer]:
+                    - /url: https://www.cnn.com/tv/schedule/cnn
+                    - text: CNN TV Schedule
+            - listitem [ref=e1011]:
+              - link "Listen" [ref=e1012] [cursor=pointer]:
+                - /url: https://www.cnn.com/audio
+              - list [ref=e1013]:
+                - listitem [ref=e1014]:
+                  - link "Listen CNN 5 Things" [ref=e1015] [cursor=pointer]:
+                    - /url: https://www.cnn.com/audio/podcasts/5-things
+                    - text: CNN 5 Things
+                - listitem [ref=e1016]:
+                  - link "Listen Chasing Life with Dr. Sanjay Gupta" [ref=e1017] [cursor=pointer]:
+                    - /url: https://www.cnn.com/audio/podcasts/chasing-life
+                    - text: Chasing Life with Dr. Sanjay Gupta
+                - listitem [ref=e1018]:
+                  - link "Listen The Assignment with Audie Cornish" [ref=e1019] [cursor=pointer]:
+                    - /url: https://www.cnn.com/audio/podcasts/the-assignment
+                    - text: The Assignment with Audie Cornish
+                - listitem [ref=e1020]:
+                  - link "Listen One Thing" [ref=e1021] [cursor=pointer]:
+                    - /url: https://www.cnn.com/audio/podcasts/one-thing
+                    - text: One Thing
+                - listitem [ref=e1022]:
+                  - link "Listen Tug of War" [ref=e1023] [cursor=pointer]:
+                    - /url: https://www.cnn.com/audio/podcasts/tug-of-war
+                    - text: Tug of War
+                - listitem [ref=e1024]:
+                  - link "Listen CNN Political Briefing" [ref=e1025] [cursor=pointer]:
+                    - /url: https://www.cnn.com/audio/podcasts/political-briefing
+                    - text: CNN Political Briefing
+                - listitem [ref=e1026]:
+                  - link "Listen The Axe Files" [ref=e1027] [cursor=pointer]:
+                    - /url: https://www.cnn.com/audio/podcasts/axe-files
+                    - text: The Axe Files
+                - listitem [ref=e1028]:
+                  - link "Listen All There Is with Anderson Cooper" [ref=e1029] [cursor=pointer]:
+                    - /url: https://www.cnn.com/audio/podcasts/all-there-is-with-anderson-cooper
+                    - text: All There Is with Anderson Cooper
+                - listitem [ref=e1030]:
+                  - link "Listen All CNN Audio podcasts" [ref=e1031] [cursor=pointer]:
+                    - /url: https://www.cnn.com/audio
+                    - text: All CNN Audio podcasts
+            - listitem [ref=e1032]:
+              - link "Games" [ref=e1033] [cursor=pointer]:
+                - /url: https://www.cnn.com/games
+              - list [ref=e1034]:
+                - listitem [ref=e1035]:
+                  - link "Games Daily Crossword" [ref=e1036] [cursor=pointer]:
+                    - /url: https://www.cnn.com/games/play/cnn-crossword
+                    - text: Daily Crossword
+                - listitem [ref=e1037]:
+                  - link "Games Jumble Crossword" [ref=e1038] [cursor=pointer]:
+                    - /url: https://www.cnn.com/games/play/jumble-crossword-daily
+                    - text: Jumble Crossword
+                - listitem [ref=e1039]:
+                  - link "Games Photo Shuffle" [ref=e1040] [cursor=pointer]:
+                    - /url: https://www.cnn.com/games/play/photo-shuffle
+                    - text: Photo Shuffle
+                - listitem [ref=e1041]:
+                  - link "Games Sudoblock" [ref=e1042] [cursor=pointer]:
+                    - /url: https://www.cnn.com/games/play/sudoblock
+                    - text: Sudoblock
+                - listitem [ref=e1043]:
+                  - link "Games Sudoku" [ref=e1044] [cursor=pointer]:
+                    - /url: https://www.cnn.com/games/play/daily-sudoku
+                    - text: Sudoku
+                - listitem [ref=e1045]:
+                  - link "Games 5 Things Quiz" [ref=e1046] [cursor=pointer]:
+                    - /url: https://cnn.it/5thingsquiz
+                    - text: 5 Things Quiz
+            - listitem [ref=e1047]:
+              - link "About CNN" [ref=e1048] [cursor=pointer]:
+                - /url: https://www.cnn.com/about
+              - list [ref=e1049]:
+                - listitem [ref=e1050]:
+                  - link "About CNN Subscribe" [ref=e1051] [cursor=pointer]:
+                    - /url: https://www.cnn.com/subscription?source=sub_web_footersubnav-link
+                    - text: Subscribe
+                - listitem [ref=e1052]:
+                  - link "About CNN Photos" [ref=e1053] [cursor=pointer]:
+                    - /url: https://www.cnn.com/world/photos
+                    - text: Photos
+                - listitem [ref=e1054]:
+                  - link "About CNN Investigations" [ref=e1055] [cursor=pointer]:
+                    - /url: https://www.cnn.com/us/cnn-investigates
+                    - text: Investigations
+                - listitem [ref=e1056]:
+                  - link "About CNN CNN Profiles" [ref=e1057] [cursor=pointer]:
+                    - /url: https://www.cnn.com/profiles
+                    - text: CNN Profiles
+                - listitem [ref=e1058]:
+                  - link "About CNN CNN Leadership" [ref=e1059] [cursor=pointer]:
+                    - /url: https://www.cnn.com/profiles/cnn-leadership
+                    - text: CNN Leadership
+                - listitem [ref=e1060]:
+                  - link "About CNN CNN Newsletters" [ref=e1061] [cursor=pointer]:
+                    - /url: https://www.cnn.com/newsletters
+                    - text: CNN Newsletters
+                - listitem [ref=e1062]:
+                  - link "About CNN Work for CNN" [ref=e1063] [cursor=pointer]:
+                    - /url: https://careers.wbd.com/cnnjobs
+                    - text: Work for CNN
+        - separator [ref=e1064]
+        - generic [ref=e1065]:
+          - generic [ref=e1067]:
+            - link "CNN logo" [ref=e1068] [cursor=pointer]:
+              - /url: https://www.cnn.com
+              - img [ref=e1070]
+            - link "Business" [ref=e1076] [cursor=pointer]:
+              - /url: https://www.cnn.com/business
+              - generic [ref=e1077]: Business
+          - generic [ref=e1078]:
+            - link "Video" [ref=e1079] [cursor=pointer]:
+              - /url: https://www.cnn.com/watch
+              - text: Watch
+            - link "Audio" [ref=e1080] [cursor=pointer]:
+              - /url: https://www.cnn.com/audio
+              - text: Listen
+            - separator [ref=e1081]
+            - navigation "User Account Nav" [ref=e1083]:
+              - link "User Account Log In Button" [ref=e1085] [cursor=pointer]: Sign in
+            - generic [ref=e1086]:
+              - generic [ref=e1087]:
+                - generic [ref=e1088]: Follow CNN
+                - list [ref=e1089]:
+                  - listitem [ref=e1090]:
+                    - link "Visit us on Facebook" [ref=e1091] [cursor=pointer]:
+                      - /url: https://facebook.com/CNN
+                      - img [ref=e1092]
+                  - listitem [ref=e1094]:
+                    - link "Visit us on X" [ref=e1095] [cursor=pointer]:
+                      - /url: https://twitter.com/CNN
+                      - img [ref=e1096]
+                  - listitem [ref=e1098]:
+                    - link "Visit us on Instagram" [ref=e1099] [cursor=pointer]:
+                      - /url: https://instagram.com/CNN
+                      - img [ref=e1100]
+                  - listitem [ref=e1102]:
+                    - link "TikTok" [ref=e1103] [cursor=pointer]:
+                      - /url: https://www.tiktok.com/@cnn?lang=en
+                      - img "TikTok" [ref=e1104]
+                  - listitem [ref=e1106]:
+                    - link "LinkedIn" [ref=e1107] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/company/cnn
+                      - img "LinkedIn" [ref=e1108]
+                  - listitem [ref=e1110]:
+                    - link "Visit us on Threads" [ref=e1111] [cursor=pointer]:
+                      - /url: https://www.threads.com/@cnn
+                      - img [ref=e1112]
+              - separator [ref=e1115]
+              - generic [ref=e1116]:
+                - generic [ref=e1117]: Download the CNN app
+                - generic [ref=e1118]:
+                  - link "Download on Apple App Store" [ref=e1119] [cursor=pointer]:
+                    - /url: https://cnn.onelink.me/PVpf/q9j1odhf
+                    - img [ref=e1120]
+                  - link "Get it on Google Play" [ref=e1155] [cursor=pointer]:
+                    - /url: https://cnn.onelink.me/PVpf/43qg6lsp
+                    - img [ref=e1156]
+        - separator [ref=e1171]
+        - paragraph [ref=e1172]: "Most stock quote data provided by BATS. US market indices are shown in real time, except for the S&P 500 which is refreshed every two minutes. All times are ET. Factset: FactSet Research Systems Inc. All rights reserved. Chicago Mercantile: Certain market data is the property of Chicago Mercantile Exchange Inc. and its licensors. All rights reserved. Dow Jones: The Dow Jones branded indices are proprietary to and are calculated, distributed and marketed by DJI Opco, a subsidiary of S&P Dow Jones Indices LLC and have been licensed for use to S&P Opco, LLC and CNN. Standard & Poor’s and S&P are registered trademarks of Standard & Poor’s Financial Services LLC and Dow Jones is a registered trademark of Dow Jones Trademark Holdings LLC. All content of the Dow Jones branded indices Copyright S&P Dow Jones Indices LLC and/or its affiliates. Fair value provided by IndexArb.com. Market holidays and trading hours provided by Copp Clark Limited."
+        - navigation [ref=e1173]:
+          - link "Terms of Use" [ref=e1174] [cursor=pointer]:
+            - /url: https://www.cnn.com/terms
+          - link "Privacy Policy" [ref=e1175] [cursor=pointer]:
+            - /url: https://www.cnn.com/privacy
+          - link "Manage Cookies" [ref=e1176] [cursor=pointer]:
+            - /url: "#"
+          - link "Ad Choices" [ref=e1177] [cursor=pointer]:
+            - /url: https://www.cnn.com/ad-choices
+          - link "Accessibility & CC" [ref=e1178] [cursor=pointer]:
+            - /url: https://www.cnn.com/accessibility
+          - link "About" [ref=e1179] [cursor=pointer]:
+            - /url: https://www.cnn.com/about
+          - link "Subscribe" [ref=e1180] [cursor=pointer]:
+            - /url: https://www.cnn.com/subscription?source=sub_web_footerlink-link
+          - link "Newsletters" [ref=e1181] [cursor=pointer]:
+            - /url: https://www.cnn.com/newsletters
+          - link "Transcripts" [ref=e1182] [cursor=pointer]:
+            - /url: https://www.cnn.com/transcripts
+          - link "Help Center" [ref=e1183] [cursor=pointer]:
+            - /url: https://help.cnn.com/
+        - paragraph [ref=e1184]:
+          - text: © 2026 Cable News Network. A Warner Bros. Discovery Company. All Rights Reserved.
+          - text: CNN Sans ™ & © 2016 Cable News Network.

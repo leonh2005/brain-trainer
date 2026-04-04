@@ -151,6 +151,37 @@ def analyze_frames_ollama(frames: list):
     return None
 
 
+def analyze_frames_openai(frames: list):
+    """用 OpenAI GPT-4o-mini Vision 分析影格。"""
+    import cv2
+    from openai import OpenAI
+
+    client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
+
+    content = [{"type": "text", "text": PROMPT}]
+    for frame in frames:
+        _, buf = cv2.imencode('.jpg', frame, [cv2.IMWRITE_JPEG_QUALITY, 85])
+        b64 = base64.b64encode(buf.tobytes()).decode('utf-8')
+        content.append({
+            "type": "image_url",
+            "image_url": {"url": f"data:image/jpeg;base64,{b64}", "detail": "low"}
+        })
+
+    for attempt in range(3):
+        try:
+            response = client.chat.completions.create(
+                model='gpt-4o-mini',
+                messages=[{"role": "user", "content": content}],
+                max_tokens=100,
+            )
+            return _parse_response(response.choices[0].message.content)
+        except Exception as e:
+            logger.error(f'OpenAI 分析失敗 (第 {attempt+1} 次): {e}')
+            if attempt < 2:
+                time.sleep(5)
+    return None
+
+
 def analyze_frames_gemini(frames: list):
     """備援：用 Gemini Vision 分析影格。"""
     from google import genai
@@ -184,14 +215,18 @@ def analyze_frames_gemini(frames: list):
 
 def analyze_frames(frames: list):
     """
-    主分析入口：依 VISION_BACKEND 選擇 Ollama 或 Gemini。
-    Ollama 失敗時自動 fallback 到 Gemini。
+    主分析入口：依 VISION_BACKEND 選擇後端。
+    openai: GPT-4o-mini Vision
+    ollama: 本地 Gemma 4（失敗時 fallback 至 OpenAI）
+    gemini: Gemini Vision
     """
+    if VISION_BACKEND == 'openai':
+        return analyze_frames_openai(frames)
     if VISION_BACKEND == 'ollama':
         result = analyze_frames_ollama(frames)
         if result is None:
-            logger.warning('Ollama 分析無結果，fallback 至 Gemini')
-            result = analyze_frames_gemini(frames)
+            logger.warning('Ollama 分析無結果，fallback 至 OpenAI')
+            result = analyze_frames_openai(frames)
         return result
     return analyze_frames_gemini(frames)
 
