@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portfolio Monitor</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300;0,400;0,600;1,300&family=Azeret+Mono:wght@300;400;500&family=Figtree:wght@300;400;500&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --bg:#080a0e;--surface:#0f1117;--border:#1e2130;
+      --gold:#c8a96e;--gold-dim:#8a7049;--green:#3dd68c;--red:#f87171;
+      --text:#dde1ec;--text-dim:#5a6078;
+    }
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{background:var(--bg);color:var(--text);font-family:'Figtree',sans-serif;font-weight:300;min-height:100vh}
+    .container{max-width:1400px;margin:0 auto;padding:0 32px;position:relative}
+    header{padding:40px 0 24px;border-bottom:1px solid var(--border);display:flex;align-items:flex-end;justify-content:space-between;animation:fd .7s ease both}
+    .logo h1{font-family:'Cormorant',serif;font-size:2.8rem;font-weight:300;letter-spacing:.02em;line-height:1}
+    .logo h1 span{color:var(--gold);font-style:italic}
+    .logo p{font-family:'Azeret Mono',monospace;font-size:.68rem;color:var(--text-dim);letter-spacing:.15em;text-transform:uppercase;margin-top:6px}
+    .total-v{font-family:'Azeret Mono',monospace;font-size:2rem;font-weight:500;color:var(--gold);text-align:right}
+    .total-l{font-family:'Azeret Mono',monospace;font-size:.65rem;color:var(--text-dim);letter-spacing:.15em;text-transform:uppercase;margin-top:4px;text-align:right}
+    .sec-label{font-family:'Azeret Mono',monospace;font-size:.65rem;color:var(--text-dim);letter-spacing:.2em;text-transform:uppercase;margin-bottom:16px}
+    .alloc-bar{display:flex;height:6px;border-radius:3px;overflow:hidden;margin-bottom:20px;gap:2px}
+    .alloc-seg{height:100%;border-radius:2px;transition:opacity .2s;cursor:pointer}.alloc-seg:hover{opacity:.7}
+    .alloc-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:12px}
+    .alloc-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:14px 16px;transition:border-color .2s,transform .2s}
+    .alloc-card:hover{border-color:var(--gold-dim);transform:translateY(-2px)}
+    .a-tick{font-family:'Azeret Mono',monospace;font-size:.8rem;font-weight:500;margin-bottom:6px}
+    .a-name{font-size:.7rem;color:var(--text-dim);margin-bottom:10px;line-height:1.3}
+    .a-amt{font-family:'Azeret Mono',monospace;font-size:1.1rem}
+    .a-pct{font-family:'Azeret Mono',monospace;font-size:.65rem;color:var(--text-dim);margin-top:2px}
+    .dot{width:6px;height:6px;border-radius:50%;display:inline-block;margin-right:6px;vertical-align:middle}
+    .divider{width:100%;height:1px;background:var(--border);margin:0 0 32px}
+    .sc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+    .sc-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:20px 24px;display:flex;align-items:center;gap:20px}
+    .sc-icon{font-size:1.8rem;line-height:1}
+    .sc-label{font-family:'Azeret Mono',monospace;font-size:.65rem;color:var(--text-dim);letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px}
+    .sc-val{font-family:'Azeret Mono',monospace;font-size:1.5rem;font-weight:500}
+    .sc-sub{font-family:'Azeret Mono',monospace;font-size:.7rem;color:var(--text-dim);margin-top:2px}
+    .up{color:var(--green)}.down{color:var(--red)}.gold{color:var(--gold)}
+    .chart-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+    .chart-tab{font-family:'Azeret Mono',monospace;font-size:.72rem;padding:6px 14px;border-radius:6px;border:1px solid var(--border);background:var(--surface);color:var(--text-dim);cursor:pointer;transition:all .2s;letter-spacing:.05em}
+    .chart-tab:hover{color:var(--text)}
+    .chart-box{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:24px 24px 16px}
+    .chart-note{font-family:'Azeret Mono',monospace;font-size:.62rem;color:var(--text-dim);margin-top:10px;text-align:right}
+    .mini-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:16px}
+    .mini-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;padding:14px 16px 12px;transition:border-color .2s}
+    .mini-card:hover{border-color:var(--gold-dim)}
+    .mini-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+    .mini-tick{font-family:'Azeret Mono',monospace;font-size:.82rem;font-weight:500}
+    .mini-ret{font-family:'Azeret Mono',monospace;font-size:.78rem;font-weight:500}
+    .mini-alloc{font-family:'Azeret Mono',monospace;font-size:.62rem;color:var(--text-dim)}
+    footer{border-top:1px solid var(--border);padding:20px 0;display:flex;align-items:center;justify-content:space-between}
+    .foot-note{font-family:'Azeret Mono',monospace;font-size:.62rem;color:var(--text-dim)}
+    section{animation:fd .7s ease both}
+    .s1{animation-delay:.1s}.s2{animation-delay:.2s}.s3{animation-delay:.3s}.s4{animation-delay:.4s}
+    @keyframes fd{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+    ::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+  </style>
+</head>
+<body>
+<div class="container">
+
+<header>
+  <div class="logo">
+    <h1>Portfolio <span>Monitor</span></h1>
+    <p>黃金版 · 穩健成長配置 · 五年績效追蹤</p>
+  </div>
+  <div>
+    <div class="total-v">NT$ 700萬</div>
+    <div class="total-l">總投入資產</div>
+  </div>
+</header>
+
+<section class="s1" style="padding:32px 0">
+  <div class="sec-label">持倉配置</div>
+  <div class="alloc-bar" id="aBar"></div>
+  <div class="alloc-grid" id="aGrid"></div>
+</section>
+
+<div class="divider"></div>
+
+<section class="s2" style="padding:0 0 32px">
+  <div class="sec-label">情境模擬</div>
+  <div class="sc-grid">
+    <div class="sc-card"><div class="sc-icon">📈</div><div>
+      <div class="sc-label">大漲（006208 +35%）</div>
+      <div class="sc-val up">+24.0%</div>
+      <div class="sc-sub up">+168萬獲利</div>
+    </div></div>
+    <div class="sc-card"><div class="sc-icon">📉</div><div>
+      <div class="sc-label">大跌（大盤 -20%）</div>
+      <div class="sc-val down">-15.9%</div>
+      <div class="sc-sub down">-111萬縮水</div>
+    </div></div>
+    <div class="sc-card"><div class="sc-icon">⚖️</div><div>
+      <div class="sc-label">賺賠比</div>
+      <div class="sc-val gold">1.51</div>
+      <div class="sc-sub">穩健成長型最佳化</div>
+    </div></div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section class="s3" style="padding:0 0 32px">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+    <div class="sec-label" style="margin:0">五年績效比較（% 報酬）</div>
+    <div style="font-family:'Azeret Mono',monospace;font-size:.65rem;color:var(--text-dim)">Yahoo Finance · 月線 · 已調整股息</div>
+  </div>
+  <div class="chart-tabs" id="tabs"></div>
+  <div class="chart-box"><canvas id="mainChart" height="380"></canvas></div>
+  <div class="chart-note">⚠ VT / GRID / XLU 為美元計價，與台幣標的含匯率影響，僅供趨勢參考</div>
+</section>
+
+<section class="s4" style="padding:0 0 40px">
+  <div class="sec-label">個別標的走勢（五年）</div>
+  <div class="mini-grid" id="mGrid"></div>
+</section>
+
+<footer>
+  <div class="foot-note">資料來源：Yahoo Finance · 本頁僅供參考，不構成投資建議</div>
+  <div class="foot-note" id="ts"></div>
+</footer>
+</div>
+
+<script>
+const HOLDINGS = [{"yahoo": "006208.TW", "display": "006208", "name": "富邦台50", "amount": 140, "color": "#c8a96e"}, {"yahoo": "00881.TW", "display": "00881", "name": "國泰永續高股息", "amount": 140, "color": "#3dd68c"}, {"yahoo": "VT", "display": "VWRA", "name": "先鋒全球（VT）", "amount": 140, "color": "#60a5fa"}, {"yahoo": "GRID", "display": "GRID", "name": "全球電力基建", "amount": 105, "color": "#a78bfa"}, {"yahoo": "XLU", "display": "XLU", "name": "美國公用事業", "amount": 35, "color": "#fb923c"}, {"yahoo": "00865B.TW", "display": "00864B", "name": "中信美債0-1年", "amount": 35, "color": "#94a3b8"}, {"yahoo": "00635U.TW", "display": "00635U", "name": "元大黃金", "amount": 70, "color": "#fbbf24"}];
+const DATA = {"006208": {"norm": [{"x": "2021/05", "y": 0.0}, {"x": "2021/06", "y": 1.27}, {"x": "2021/07", "y": -0.76}, {"x": "2021/08", "y": 2.81}, {"x": "2021/09", "y": -0.06}, {"x": "2021/10", "y": -0.57}, {"x": "2021/11", "y": -0.88}, {"x": "2021/12", "y": 6.3}, {"x": "2022/01", "y": 5.71}, {"x": "2022/02", "y": 3.7}, {"x": "2022/03", "y": 3.38}, {"x": "2022/04", "y": -3.57}, {"x": "2022/05", "y": -3.25}, {"x": "2022/06", "y": -13.31}, {"x": "2022/07", "y": -11.82}, {"x": "2022/08", "y": -10.4}, {"x": "2022/09", "y": -21.46}, {"x": "2022/10", "y": -24.63}, {"x": "2022/11", "y": -12.99}, {"x": "2022/12", "y": -16.51}, {"x": "2023/01", "y": -7.77}, {"x": "2023/02", "y": -7.64}, {"x": "2023/03", "y": -5.55}, {"x": "2023/04", "y": -8.64}, {"x": "2023/05", "y": -2.12}, {"x": "2023/06", "y": 0.5}, {"x": "2023/07", "y": 0.16}, {"x": "2023/08", "y": -0.64}, {"x": "2023/09", "y": -3.03}, {"x": "2023/10", "y": -4.06}, {"x": "2023/11", "y": 2.58}, {"x": "2023/12", "y": 6.81}, {"x": "2024/01", "y": 8.61}, {"x": "2024/02", "y": 16.23}, {"x": "2024/03", "y": 27.58}, {"x": "2024/04", "y": 28.34}, {"x": "2024/05", "y": 34.99}, {"x": "2024/06", "y": 51.19}, {"x": "2024/07", "y": 46.27}, {"x": "2024/08", "y": 47.41}, {"x": "2024/09", "y": 49.85}, {"x": "2024/10", "y": 56.4}, {"x": "2024/11", "y": 50.9}, {"x": "2024/12", "y": 60.33}, {"x": "2025/01", "y": 66.38}, {"x": "2025/02", "y": 59.0}, {"x": "2025/03", "y": 42.63}, {"x": "2025/04", "y": 38.98}, {"x": "2025/05", "y": 48.18}, {"x": "2025/06", "y": 58.86}, {"x": "2025/07", "y": 69.47}, {"x": "2025/08", "y": 73.96}, {"x": "2025/09", "y": 91.04}, {"x": "2025/10", "y": 115.13}, {"x": "2025/11", "y": 102.45}, {"x": "2025/12", "y": 117.91}, {"x": "2026/01", "y": 143.97}, {"x": "2026/02", "y": 172.93}, {"x": "2026/03", "y": 144.04}, {"x": "2026/04", "y": 149.12}], "ret": 149.12}, "00881": {"norm": [{"x": "2021/05", "y": 0.0}, {"x": "2021/06", "y": 0.96}, {"x": "2021/07", "y": 1.19}, {"x": "2021/08", "y": -0.4}, {"x": "2021/09", "y": 0.3}, {"x": "2021/10", "y": 1.0}, {"x": "2021/11", "y": 5.1}, {"x": "2021/12", "y": 11.19}, {"x": "2022/01", "y": 3.58}, {"x": "2022/02", "y": 4.11}, {"x": "2022/03", "y": 1.57}, {"x": "2022/04", "y": -6.95}, {"x": "2022/05", "y": -3.63}, {"x": "2022/06", "y": -14.87}, {"x": "2022/07", "y": -11.3}, {"x": "2022/08", "y": -12.45}, {"x": "2022/09", "y": -21.68}, {"x": "2022/10", "y": -23.04}, {"x": "2022/11", "y": -11.17}, {"x": "2022/12", "y": -16.7}, {"x": "2023/01", "y": -10.68}, {"x": "2023/02", "y": -7.39}, {"x": "2023/03", "y": -3.1}, {"x": "2023/04", "y": -6.82}, {"x": "2023/05", "y": 1.62}, {"x": "2023/06", "y": 5.97}, {"x": "2023/07", "y": 12.4}, {"x": "2023/08", "y": 7.55}, {"x": "2023/09", "y": 8.16}, {"x": "2023/10", "y": 4.99}, {"x": "2023/11", "y": 14.51}, {"x": "2023/12", "y": 19.88}, {"x": "2024/01", "y": 15.99}, {"x": "2024/02", "y": 29.5}, {"x": "2024/03", "y": 44.9}, {"x": "2024/04", "y": 41.93}, {"x": "2024/05", "y": 52.33}, {"x": "2024/06", "y": 72.67}, {"x": "2024/07", "y": 64.22}, {"x": "2024/08", "y": 57.53}, {"x": "2024/09", "y": 62.86}, {"x": "2024/10", "y": 72.09}, {"x": "2024/11", "y": 68.21}, {"x": "2024/12", "y": 75.62}, {"x": "2025/01", "y": 72.87}, {"x": "2025/02", "y": 73.14}, {"x": "2025/03", "y": 54.52}, {"x": "2025/04", "y": 50.74}, {"x": "2025/05", "y": 61.87}, {"x": "2025/06", "y": 72.77}, {"x": "2025/07", "y": 89.79}, {"x": "2025/08", "y": 96.55}, {"x": "2025/09", "y": 114.28}, {"x": "2025/10", "y": 139.87}, {"x": "2025/11", "y": 131.79}, {"x": "2025/12", "y": 142.03}, {"x": "2026/01", "y": 152.49}, {"x": "2026/02", "y": 206.92}, {"x": "2026/03", "y": 181.92}, {"x": "2026/04", "y": 189.05}], "ret": 189.05}, "VWRA": {"norm": [{"x": "2021/05", "y": 0.0}, {"x": "2021/06", "y": 0.68}, {"x": "2021/07", "y": 1.81}, {"x": "2021/08", "y": 4.11}, {"x": "2021/09", "y": -0.56}, {"x": "2021/10", "y": 4.97}, {"x": "2021/11", "y": 2.23}, {"x": "2021/12", "y": 5.33}, {"x": "2022/01", "y": 1.26}, {"x": "2022/02", "y": -1.55}, {"x": "2022/03", "y": 0.05}, {"x": "2022/04", "y": -7.81}, {"x": "2022/05", "y": -7.36}, {"x": "2022/06", "y": -15.49}, {"x": "2022/07", "y": -8.94}, {"x": "2022/08", "y": -12.63}, {"x": "2022/09", "y": -21.32}, {"x": "2022/10", "y": -15.91}, {"x": "2022/11", "y": -8.95}, {"x": "2022/12", "y": -13.63}, {"x": "2023/01", "y": -6.33}, {"x": "2023/02", "y": -9.31}, {"x": "2023/03", "y": -7.03}, {"x": "2023/04", "y": -5.4}, {"x": "2023/05", "y": -6.54}, {"x": "2023/06", "y": -1.77}, {"x": "2023/07", "y": 2.56}, {"x": "2023/08", "y": -0.35}, {"x": "2023/09", "y": -4.99}, {"x": "2023/10", "y": -7.38}, {"x": "2023/11", "y": 0.97}, {"x": "2023/12", "y": 5.34}, {"x": "2024/01", "y": 6.18}, {"x": "2024/02", "y": 10.94}, {"x": "2024/03", "y": 14.04}, {"x": "2024/04", "y": 10.38}, {"x": "2024/05", "y": 15.45}, {"x": "2024/06", "y": 16.69}, {"x": "2024/07", "y": 19.61}, {"x": "2024/08", "y": 22.4}, {"x": "2024/09", "y": 24.65}, {"x": "2024/10", "y": 22.36}, {"x": "2024/11", "y": 27.43}, {"x": "2024/12", "y": 22.77}, {"x": "2025/01", "y": 27.47}, {"x": "2025/02", "y": 26.94}, {"x": "2025/03", "y": 22.08}, {"x": "2025/04", "y": 23.16}, {"x": "2025/05", "y": 30.31}, {"x": "2025/06", "y": 35.75}, {"x": "2025/07", "y": 37.9}, {"x": "2025/08", "y": 41.97}, {"x": "2025/09", "y": 46.25}, {"x": "2025/10", "y": 49.73}, {"x": "2025/11", "y": 50.05}, {"x": "2025/12", "y": 50.23}, {"x": "2026/01", "y": 56.15}, {"x": "2026/02", "y": 58.71}, {"x": "2026/03", "y": 48.49}, {"x": "2026/04", "y": 49.97}], "ret": 49.97}, "GRID": {"norm": [{"x": "2021/05", "y": 0.0}, {"x": "2021/06", "y": 2.11}, {"x": "2021/07", "y": 6.76}, {"x": "2021/08", "y": 9.56}, {"x": "2021/09", "y": 2.49}, {"x": "2021/10", "y": 13.0}, {"x": "2021/11", "y": 12.15}, {"x": "2021/12", "y": 13.89}, {"x": "2022/01", "y": 2.5}, {"x": "2022/02", "y": 0.5}, {"x": "2022/03", "y": 4.37}, {"x": "2022/04", "y": -5.45}, {"x": "2022/05", "y": -4.08}, {"x": "2022/06", "y": -13.83}, {"x": "2022/07", "y": -0.18}, {"x": "2022/08", "y": -6.48}, {"x": "2022/09", "y": -15.93}, {"x": "2022/10", "y": -6.8}, {"x": "2022/11", "y": 4.56}, {"x": "2022/12", "y": -2.2}, {"x": "2023/01", "y": 7.16}, {"x": "2023/02", "y": 6.17}, {"x": "2023/03", "y": 9.83}, {"x": "2023/04", "y": 8.92}, {"x": "2023/05", "y": 10.74}, {"x": "2023/06", "y": 18.32}, {"x": "2023/07", "y": 19.82}, {"x": "2023/08", "y": 14.37}, {"x": "2023/09", "y": 6.4}, {"x": "2023/10", "y": -1.75}, {"x": "2023/11", "y": 9.79}, {"x": "2023/12", "y": 18.86}, {"x": "2024/01", "y": 13.96}, {"x": "2024/02", "y": 23.94}, {"x": "2024/03", "y": 30.55}, {"x": "2024/04", "y": 28.27}, {"x": "2024/05", "y": 36.63}, {"x": "2024/06", "y": 31.77}, {"x": "2024/07", "y": 36.66}, {"x": "2024/08", "y": 39.86}, {"x": "2024/09", "y": 45.88}, {"x": "2024/10", "y": 39.76}, {"x": "2024/11", "y": 44.76}, {"x": "2024/12", "y": 37.08}, {"x": "2025/01", "y": 38.99}, {"x": "2025/02", "y": 35.1}, {"x": "2025/03", "y": 30.23}, {"x": "2025/04", "y": 36.71}, {"x": "2025/05", "y": 49.75}, {"x": "2025/06", "y": 60.23}, {"x": "2025/07", "y": 64.93}, {"x": "2025/08", "y": 65.73}, {"x": "2025/09", "y": 75.2}, {"x": "2025/10", "y": 82.47}, {"x": "2025/11", "y": 77.34}, {"x": "2025/12", "y": 77.73}, {"x": "2026/01", "y": 91.91}, {"x": "2026/02", "y": 107.02}, {"x": "2026/03", "y": 90.41}, {"x": "2026/04", "y": 93.23}], "ret": 93.23}, "XLU": {"norm": [{"x": "2021/05", "y": 0.0}, {"x": "2021/06", "y": -2.96}, {"x": "2021/07", "y": 2.03}, {"x": "2021/08", "y": 6.0}, {"x": "2021/09", "y": -1.2}, {"x": "2021/10", "y": 4.27}, {"x": "2021/11", "y": 2.49}, {"x": "2021/12", "y": 11.54}, {"x": "2022/01", "y": 8.76}, {"x": "2022/02", "y": 6.69}, {"x": "2022/03", "y": 16.94}, {"x": "2022/04", "y": 12.67}, {"x": "2022/05", "y": 17.52}, {"x": "2022/06", "y": 10.88}, {"x": "2022/07", "y": 17.85}, {"x": "2022/08", "y": 18.48}, {"x": "2022/09", "y": 4.4}, {"x": "2022/10", "y": 7.15}, {"x": "2022/11", "y": 14.61}, {"x": "2022/12", "y": 13.12}, {"x": "2023/01", "y": 11.76}, {"x": "2023/02", "y": 5.15}, {"x": "2023/03", "y": 9.5}, {"x": "2023/04", "y": 12.41}, {"x": "2023/05", "y": 5.81}, {"x": "2023/06", "y": 6.64}, {"x": "2023/07", "y": 10.17}, {"x": "2023/08", "y": 3.42}, {"x": "2023/09", "y": -3.2}, {"x": "2023/10", "y": -1.16}, {"x": "2023/11", "y": 3.93}, {"x": "2023/12", "y": 4.87}, {"x": "2024/01", "y": 2.72}, {"x": "2024/02", "y": 3.8}, {"x": "2024/03", "y": 9.74}, {"x": "2024/04", "y": 12.48}, {"x": "2024/05", "y": 22.56}, {"x": "2024/06", "y": 14.84}, {"x": "2024/07", "y": 23.67}, {"x": "2024/08", "y": 29.61}, {"x": "2024/09", "y": 37.24}, {"x": "2024/10", "y": 36.68}, {"x": "2024/11", "y": 41.85}, {"x": "2024/12", "y": 29.47}, {"x": "2025/01", "y": 34.32}, {"x": "2025/02", "y": 36.63}, {"x": "2025/03", "y": 35.99}, {"x": "2025/04", "y": 37.04}, {"x": "2025/05", "y": 42.29}, {"x": "2025/06", "y": 41.83}, {"x": "2025/07", "y": 49.83}, {"x": "2025/08", "y": 47.47}, {"x": "2025/09", "y": 52.53}, {"x": "2025/10", "y": 56.88}, {"x": "2025/11", "y": 59.57}, {"x": "2025/12", "y": 50.33}, {"x": "2026/01", "y": 53.44}, {"x": "2026/02", "y": 69.34}, {"x": "2026/03", "y": 62.81}, {"x": "2026/04", "y": 65.56}], "ret": 65.56}, "00864B": {"norm": [{"x": "2021/05", "y": 0.0}, {"x": "2021/06", "y": 0.77}, {"x": "2021/07", "y": 1.04}, {"x": "2021/08", "y": 0.27}, {"x": "2021/09", "y": 0.66}, {"x": "2021/10", "y": 0.47}, {"x": "2021/11", "y": 0.16}, {"x": "2021/12", "y": -0.25}, {"x": "2022/01", "y": -0.08}, {"x": "2022/02", "y": 0.77}, {"x": "2022/03", "y": 2.88}, {"x": "2022/04", "y": 5.88}, {"x": "2022/05", "y": 4.2}, {"x": "2022/06", "y": 6.13}, {"x": "2022/07", "y": 7.09}, {"x": "2022/08", "y": 8.79}, {"x": "2022/09", "y": 13.38}, {"x": "2022/10", "y": 15.11}, {"x": "2022/11", "y": 10.77}, {"x": "2022/12", "y": 10.58}, {"x": "2023/01", "y": 8.46}, {"x": "2023/02", "y": 10.22}, {"x": "2023/03", "y": 10.71}, {"x": "2023/04", "y": 11.87}, {"x": "2023/05", "y": 12.28}, {"x": "2023/06", "y": 14.04}, {"x": "2023/07", "y": 16.32}, {"x": "2023/08", "y": 18.52}, {"x": "2023/09", "y": 20.27}, {"x": "2023/10", "y": 21.54}, {"x": "2023/11", "y": 17.61}, {"x": "2023/12", "y": 16.29}, {"x": "2024/01", "y": 18.71}, {"x": "2024/02", "y": 20.49}, {"x": "2024/03", "y": 22.25}, {"x": "2024/04", "y": 24.62}, {"x": "2024/05", "y": 24.84}, {"x": "2024/06", "y": 25.49}, {"x": "2024/07", "y": 27.53}, {"x": "2024/08", "y": 24.42}, {"x": "2024/09", "y": 23.74}, {"x": "2024/10", "y": 25.71}, {"x": "2024/11", "y": 27.88}, {"x": "2024/12", "y": 29.86}, {"x": "2025/01", "y": 29.56}, {"x": "2025/02", "y": 30.88}, {"x": "2025/03", "y": 32.91}, {"x": "2025/04", "y": 28.68}, {"x": "2025/05", "y": 20.66}, {"x": "2025/06", "y": 18.13}, {"x": "2025/07", "y": 21.4}, {"x": "2025/08", "y": 24.34}, {"x": "2025/09", "y": 24.67}, {"x": "2025/10", "y": 25.91}, {"x": "2025/11", "y": 28.9}, {"x": "2025/12", "y": 29.53}, {"x": "2026/01", "y": 29.78}, {"x": "2026/02", "y": 29.51}, {"x": "2026/03", "y": 33.43}, {"x": "2026/04", "y": 33.21}], "ret": 33.21}, "00635U": {"norm": [{"x": "2021/05", "y": 0.0}, {"x": "2021/06", "y": -7.56}, {"x": "2021/07", "y": -4.31}, {"x": "2021/08", "y": -5.09}, {"x": "2021/09", "y": -9.44}, {"x": "2021/10", "y": -6.38}, {"x": "2021/11", "y": -6.78}, {"x": "2021/12", "y": -6.58}, {"x": "2022/01", "y": -4.07}, {"x": "2022/02", "y": -0.67}, {"x": "2022/03", "y": -0.27}, {"x": "2022/04", "y": -0.9}, {"x": "2022/05", "y": -4.43}, {"x": "2022/06", "y": -6.19}, {"x": "2022/07", "y": -9.17}, {"x": "2022/08", "y": -11.28}, {"x": "2022/09", "y": -14.41}, {"x": "2022/10", "y": -15.75}, {"x": "2022/11", "y": -10.77}, {"x": "2022/12", "y": -8.07}, {"x": "2023/01", "y": -3.64}, {"x": "2023/02", "y": -8.7}, {"x": "2023/03", "y": -1.57}, {"x": "2023/04", "y": -1.57}, {"x": "2023/05", "y": -3.41}, {"x": "2023/06", "y": -6.31}, {"x": "2023/07", "y": -4.58}, {"x": "2023/08", "y": -5.48}, {"x": "2023/09", "y": -9.17}, {"x": "2023/10", "y": -4.0}, {"x": "2023/11", "y": -2.74}, {"x": "2023/12", "y": -2.04}, {"x": "2024/01", "y": -4.19}, {"x": "2024/02", "y": -4.58}, {"x": "2024/03", "y": 4.35}, {"x": "2024/04", "y": 8.58}, {"x": "2024/05", "y": 8.66}, {"x": "2024/06", "y": 7.21}, {"x": "2024/07", "y": 11.44}, {"x": "2024/08", "y": 14.53}, {"x": "2024/09", "y": 20.21}, {"x": "2024/10", "y": 25.7}, {"x": "2024/11", "y": 19.47}, {"x": "2024/12", "y": 16.61}, {"x": "2025/01", "y": 22.95}, {"x": "2025/02", "y": 28.08}, {"x": "2025/03", "y": 40.89}, {"x": "2025/04", "y": 44.3}, {"x": "2025/05", "y": 40.89}, {"x": "2025/06", "y": 40.7}, {"x": "2025/07", "y": 40.81}, {"x": "2025/08", "y": 45.87}, {"x": "2025/09", "y": 64.12}, {"x": "2025/10", "y": 69.13}, {"x": "2025/11", "y": 75.75}, {"x": "2025/12", "y": 81.9}, {"x": "2026/01", "y": 118.57}, {"x": "2026/02", "y": 115.43}, {"x": "2026/03", "y": 88.95}, {"x": "2026/04", "y": 93.26}], "ret": 93.26}};
+const TOTAL = 700;
+
+// ── Allocation ──
+const aBar = document.getElementById('aBar');
+const aGrid = document.getElementById('aGrid');
+HOLDINGS.forEach(h => {
+  const seg = document.createElement('div');
+  seg.className = 'alloc-seg';
+  seg.style.cssText = `width:${(h.amount/TOTAL*100).toFixed(1)}%;background:${h.color}`;
+  seg.title = `${h.display} ${(h.amount/TOTAL*100).toFixed(1)}%`;
+  aBar.appendChild(seg);
+
+  const card = document.createElement('div');
+  card.className = 'alloc-card';
+  card.innerHTML = `
+    <div class="a-tick"><span class="dot" style="background:${h.color}"></span>${h.display}</div>
+    <div class="a-name">${h.name}</div>
+    <div class="a-amt">NT$${h.amount}萬</div>
+    <div class="a-pct">${(h.amount/TOTAL*100).toFixed(1)}% 佔比</div>`;
+  aGrid.appendChild(card);
+});
+
+// ── Main Chart ──
+const ctx = document.getElementById('mainChart').getContext('2d');
+const visible = new Set(HOLDINGS.map(h => h.display));
+
+const datasets = HOLDINGS.map(h => {
+  const d = DATA[h.display];
+  return {
+    label: h.display,
+    data: d ? d.norm : [],
+    borderColor: h.color,
+    backgroundColor: 'transparent',
+    borderWidth: 2,
+    pointRadius: 0,
+    pointHoverRadius: 4,
+    tension: 0.3,
+  };
+});
+
+// Collect all x labels from first available dataset
+const allLabels = datasets.find(ds => ds.data.length)?.data.map(p => p.x) || [];
+const chartData = datasets.map(ds => ({ ...ds, data: ds.data.map(p => p.y) }));
+
+const mainChart = new Chart(ctx, {
+  type: 'line',
+  data: { labels: allLabels, datasets: chartData },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    interaction: { mode: 'index', intersect: false },
+    plugins: {
+      legend: { labels: { color:'#8892aa', font:{family:'Azeret Mono',size:11}, boxWidth:12, padding:16 } },
+      tooltip: {
+        backgroundColor:'#161820', borderColor:'#1e2130', borderWidth:1,
+        titleColor:'#8892aa', bodyColor:'#dde1ec',
+        titleFont:{family:'Azeret Mono',size:10}, bodyFont:{family:'Azeret Mono',size:11},
+        callbacks: { label: c => ` ${c.dataset.label}  ${c.parsed.y>=0?'+':''}${c.parsed.y.toFixed(1)}%` }
+      }
+    },
+    scales: {
+      x: {
+        grid: { color:'#1e2130' },
+        ticks: { color:'#5a6078', font:{family:'Azeret Mono',size:10}, maxTicksLimit:12,
+          callback: (val,i) => i%6===0 ? allLabels[i] : '' }
+      },
+      y: {
+        grid: { color:'#1e2130' },
+        ticks: { color:'#5a6078', font:{family:'Azeret Mono',size:10},
+          callback: v => (v>=0?'+':'')+v+'%' }
+      }
+    }
+  }
+});
+
+// ── Tabs ──
+const tabsEl = document.getElementById('tabs');
+const allBtn = document.createElement('button');
+allBtn.className = 'chart-tab';
+allBtn.textContent = '全部';
+allBtn.style.cssText = 'border-color:var(--gold);color:var(--gold);background:rgba(200,169,110,.1)';
+allBtn.onclick = () => {
+  HOLDINGS.forEach(h => visible.add(h.display));
+  mainChart.data.datasets.forEach(ds => ds.hidden = false);
+  mainChart.update();
+  document.querySelectorAll('.chart-tab[data-d]').forEach(t => {
+    const h = HOLDINGS.find(x => x.display===t.dataset.d);
+    if(h) { t.style.background=h.color+'18'; t.style.color=h.color; t.style.borderColor=h.color; }
+  });
+};
+tabsEl.appendChild(allBtn);
+
+HOLDINGS.forEach(h => {
+  const btn = document.createElement('button');
+  btn.className = 'chart-tab';
+  btn.dataset.d = h.display;
+  btn.style.cssText = `border-color:${h.color};color:${h.color};background:${h.color}18`;
+  btn.innerHTML = `<span class="dot" style="background:${h.color}"></span>${h.display}`;
+  const d = DATA[h.display];
+  if (d) btn.title = `五年: ${d.ret>=0?'+':''}${d.ret.toFixed(1)}%`;
+  btn.onclick = () => {
+    if(visible.has(h.display)) {
+      visible.delete(h.display);
+      btn.style.background='var(--surface)';btn.style.color='var(--text-dim)';btn.style.borderColor='var(--border)';
+    } else {
+      visible.add(h.display);
+      btn.style.background=h.color+'18';btn.style.color=h.color;btn.style.borderColor=h.color;
+    }
+    mainChart.data.datasets.forEach(ds => { ds.hidden = !visible.has(ds.label); });
+    mainChart.update();
+  };
+  tabsEl.appendChild(btn);
+});
+
+// ── Mini Charts ──
+const mGrid = document.getElementById('mGrid');
+HOLDINGS.forEach(h => {
+  const d = DATA[h.display];
+  const ret = d ? `${d.ret>=0?'+':''}${d.ret.toFixed(1)}%` : 'N/A';
+  const retColor = d && d.ret>=0 ? 'var(--green)' : 'var(--red)';
+  const cid = 'mc-' + h.display.replace(/[^a-z0-9]/gi,'');
+  const card = document.createElement('div');
+  card.className = 'mini-card';
+  card.innerHTML = `
+    <div class="mini-hdr">
+      <div class="mini-tick"><span class="dot" style="background:${h.color}"></span>${h.display}</div>
+      <div style="text-align:right">
+        <div class="mini-ret" style="color:${retColor}">${ret}</div>
+        <div class="mini-alloc">NT$${h.amount}萬</div>
+      </div>
+    </div>
+    <div style="height:110px"><canvas id="${cid}"></canvas></div>`;
+  mGrid.appendChild(card);
+
+  if (!d) return;
+  const mCtx = document.getElementById(cid).getContext('2d');
+  new Chart(mCtx, {
+    type:'line',
+    data: { labels: d.norm.map(p=>p.x), datasets: [{
+      data: d.norm.map(p=>p.y),
+      borderColor: h.color,
+      backgroundColor: h.color+'22',
+      fill: true, borderWidth:1.5, pointRadius:0, tension:0.3
+    }] },
+    options: {
+      responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{enabled:false}},
+      scales:{ x:{display:false}, y:{display:false} }
+    }
+  });
+});
+
+document.getElementById('ts').textContent = '更新：' + new Date().toLocaleString('zh-TW',{year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'});
+</script>
+</body>
+</html>
