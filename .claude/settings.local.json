@@ -24,7 +24,9 @@
       "Bash(ping -c 3 -W 5 161.33.6.190)",
       "Bash(gh run:*)",
       "WebFetch(domain:gn01226919.github.io)",
-      "WebFetch(domain:www.pcmarket.com.hk)"
+      "WebFetch(domain:www.pcmarket.com.hk)",
+      "Bash(ls -la /tmp/*renpy*)",
+      "Read(//Users/steven/Library/RenPy/**)"
     ]
   }
 }
