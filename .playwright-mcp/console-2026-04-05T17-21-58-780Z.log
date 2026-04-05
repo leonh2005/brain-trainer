@@ -1,0 +1,3 @@
+[    1404ms] [WARNING] <meta name="apple-mobile-web-app-capable" content="yes"> is deprecated. Please include <meta name="mobile-web-app-capable" content="yes"> @ https://biggo.com.tw/s/%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0+%E5%8D%8A%E8%BA%AB/:0
+[    1554ms] [LOG] age: new @ https://biggo.uk/_next/static/chunks/7628-083f6b4b07ef12e9.js:0
+[    2557ms] [WARNING] The following CSA option(s) are unsupported: fontSizeTitle, fontSizeAttribution, fontSizeDescription, fontSizeDomainLink, colorTitleLink, noTitleUnderline, titleBold, colorText, colorBorder, borderSelections, longerHeadlines @ https://www.google.com/adsense/search/ads.js:215

@@ -1,0 +1,2044 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - navigation [ref=e4]:
+        - generic [ref=e6]:
+          - generic [ref=e9]:
+            - button "比比昂日本購物" [ref=e12] [cursor=pointer]:
+              - link "比比昂日本購物" [ref=e13]:
+                - /url: https://24h.pchome.com.tw/extenal/v1/bibian/url?op=redirect
+                - generic [ref=e14]: 比比昂日本購物
+            - button "綜合服務 " [ref=e17] [cursor=pointer]:
+              - generic [ref=e18]: 綜合服務
+              - generic [ref=e20]: 
+          - generic [ref=e23]:
+            - generic [ref=e25]:
+              - button "最近看過" [ref=e26] [cursor=pointer]:
+                - link "最近看過" [ref=e27]:
+                  - /url: https://ecvip.pchome.com.tw/?0x15eb23c5ce89a61773cc2380c86d48d7618a3ed640480499691d4ffeab8ba45ea1db1015ce8b5d9afcda85fc6e6d1c41
+                  - generic [ref=e28]: 最近看過
+              - button "購物車" [ref=e29] [cursor=pointer]:
+                - link "購物車" [ref=e30]:
+                  - /url: https://ecssl.pchome.com.tw/sys/cflow/fsindex/BigCar/BIGCAR/ItemList
+              - button "我的訂單" [ref=e31] [cursor=pointer]:
+                - link "我的訂單" [ref=e32]:
+                  - /url: https://ecvip.pchome.com.tw/web/order/all
+                  - generic [ref=e33]: 我的訂單
+              - button "顧客中心" [ref=e34] [cursor=pointer]:
+                - link "顧客中心" [ref=e35]:
+                  - /url: https://ecvip.pchome.com.tw/
+                  - generic [ref=e36]: 顧客中心
+              - button "下載 APP" [ref=e37] [cursor=pointer]:
+                - link "下載 APP" [ref=e38]:
+                  - /url: " "
+                  - generic [ref=e39]: 下載 APP
+            - generic [ref=e41]:
+              - button "註冊" [ref=e42] [cursor=pointer]:
+                - generic [ref=e43]: 註冊
+              - button "登入" [ref=e44] [cursor=pointer]:
+                - generic [ref=e45]: 登入
+      - generic [ref=e49]:
+        - link "PChome 24h購物" [ref=e50] [cursor=pointer]:
+          - /url: /
+          - img "PChome 24h購物" [ref=e51]
+        - generic [ref=e52]:
+          - generic [ref=e54]:
+            - button "search button" [ref=e56] [cursor=pointer]:
+              - generic [ref=e57]:
+                - generic [ref=e58]: 全站
+                - generic [ref=e59]: 
+            - combobox [ref=e60]:
+              - searchbox "空氣清淨機" [ref=e61]: 鉑金矽膠 半身
+            - button "search button" [ref=e63] [cursor=pointer]:
+              - generic [ref=e65]: 
+          - list [ref=e67]:
+            - generic [ref=e68]:
+              - listitem [ref=e69]:
+                - link "延長線" [ref=e70] [cursor=pointer]:
+                  - /url: https://24h.pchome.com.tw/search/?q=延長線
+              - listitem [ref=e71]:
+                - link "switch 2" [ref=e72] [cursor=pointer]:
+                  - /url: https://24h.pchome.com.tw/search/?q=switch 2
+              - listitem [ref=e73]:
+                - link "滑鼠" [ref=e74] [cursor=pointer]:
+                  - /url: https://24h.pchome.com.tw/search/?q=滑鼠
+              - listitem [ref=e75]:
+                - link "筆電" [ref=e76] [cursor=pointer]:
+                  - /url: https://24h.pchome.com.tw/search/?q=筆電
+              - listitem [ref=e77]:
+                - link "投影機" [ref=e78] [cursor=pointer]:
+                  - /url: https://24h.pchome.com.tw/search/?q=投影機
+              - listitem [ref=e79]:
+                - link "電競" [ref=e80] [cursor=pointer]:
+                  - /url: https://24h.pchome.com.tw/search/?q=電競
+              - listitem [ref=e81]:
+                - link "核心訓練" [ref=e82] [cursor=pointer]:
+                  - /url: https://24h.pchome.com.tw/search/?q=核心訓練
+              - listitem [ref=e83]:
+                - link "電視" [ref=e84] [cursor=pointer]:
+                  - /url: https://24h.pchome.com.tw/search/?q=電視
+              - listitem [ref=e85]:
+                - link "電競筆電" [ref=e86] [cursor=pointer]:
+                  - /url: https://24h.pchome.com.tw/search/?q=電競筆電
+              - listitem [ref=e87]:
+                - link "洗衣機" [ref=e88] [cursor=pointer]:
+                  - /url: https://24h.pchome.com.tw/search/?q=洗衣機
+              - listitem [ref=e89]:
+                - link "掃地機器人" [ref=e90] [cursor=pointer]:
+                  - /url: https://24h.pchome.com.tw/search/?q=掃地機器人
+              - listitem [ref=e91]:
+                - link "鍵盤" [ref=e92] [cursor=pointer]:
+                  - /url: https://24h.pchome.com.tw/search/?q=鍵盤
+              - listitem [ref=e93]:
+                - link "雙人床墊" [ref=e94] [cursor=pointer]:
+                  - /url: https://24h.pchome.com.tw/search/?q=雙人床墊
+              - listitem [ref=e95]:
+                - link "健身" [ref=e96] [cursor=pointer]:
+                  - /url: https://24h.pchome.com.tw/search/?q=健身
+              - listitem [ref=e97]:
+                - link "充電器" [ref=e98] [cursor=pointer]:
+                  - /url: https://24h.pchome.com.tw/search/?q=充電器
+              - listitem [ref=e99]:
+                - link "ipad air 保護殼" [ref=e100] [cursor=pointer]:
+                  - /url: https://24h.pchome.com.tw/search/?q=ipad air 保護殼
+              - listitem [ref=e101]:
+                - link "麥蘆卡 蜂膠" [ref=e102] [cursor=pointer]:
+                  - /url: https://24h.pchome.com.tw/search/?q=麥蘆卡 蜂膠
+              - listitem [ref=e103]:
+                - link "洗碗機" [ref=e104] [cursor=pointer]:
+                  - /url: https://24h.pchome.com.tw/search/?q=洗碗機
+              - listitem [ref=e105]:
+                - link "維生素D" [ref=e106] [cursor=pointer]:
+                  - /url: https://24h.pchome.com.tw/search/?q=維生素D
+              - listitem [ref=e107]:
+                - link "益生菌" [ref=e108] [cursor=pointer]:
+                  - /url: https://24h.pchome.com.tw/search/?q=益生菌
+              - listitem [ref=e109]:
+                - link "萬國轉接頭" [ref=e110] [cursor=pointer]:
+                  - /url: https://24h.pchome.com.tw/search/?q=萬國轉接頭
+              - listitem [ref=e111]:
+                - link "鈣" [ref=e112] [cursor=pointer]:
+                  - /url: https://24h.pchome.com.tw/search/?q=鈣
+              - listitem [ref=e113]:
+                - link "感應燈" [ref=e114] [cursor=pointer]:
+                  - /url: https://24h.pchome.com.tw/search/?q=感應燈
+    - main [ref=e115]:
+      - generic [ref=e118]:
+        - list [ref=e123]:
+          - listitem [ref=e124]:
+            - link "" [ref=e125] [cursor=pointer]:
+              - /url: /
+              - generic [ref=e126]: 
+          - listitem [ref=e127]:
+            - generic "全部分類" [ref=e128] [cursor=pointer]
+        - generic [ref=e133]:
+          - navigation [ref=e136]:
+            - generic [ref=e140]: 依分類顯示
+            - generic [ref=e142]:
+              - generic [ref=e143]:
+                - list [ref=e145]:
+                  - listitem [ref=e146]:
+                    - generic [ref=e147] [cursor=pointer]: 24h購物 (999+)
+                    - list [ref=e148]:
+                      - listitem [ref=e149]:
+                        - link "汽車百貨 (999+)" [ref=e150] [cursor=pointer]:
+                          - /url: /search/?q=%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0%20%E5%8D%8A%E8%BA%AB&cateId=DEAD
+                          - generic [ref=e151]: 汽車百貨
+                          - text: (999+)
+                      - listitem [ref=e152]:
+                        - link "餐廚用品 (999+)" [ref=e153] [cursor=pointer]:
+                          - /url: /search/?q=%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0%20%E5%8D%8A%E8%BA%AB&cateId=DEAG
+                          - generic [ref=e154]: 餐廚用品
+                          - text: (999+)
+                      - listitem [ref=e155]:
+                        - link "APPLE殼貼 (999+)" [ref=e156] [cursor=pointer]:
+                          - /url: /search/?q=%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0%20%E5%8D%8A%E8%BA%AB&cateId=DYAR
+                          - generic [ref=e157]: APPLE殼貼
+                          - text: (999+)
+                      - listitem [ref=e158]:
+                        - link "嬰幼哺育用品 (763)" [ref=e159] [cursor=pointer]:
+                          - /url: /search/?q=%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0%20%E5%8D%8A%E8%BA%AB&cateId=DWAC
+                          - generic [ref=e160]: 嬰幼哺育用品
+                          - text: (763)
+                      - listitem [ref=e161]:
+                        - link "餐具/保鮮盒 (681)" [ref=e162] [cursor=pointer]:
+                          - /url: /search/?q=%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0%20%E5%8D%8A%E8%BA%AB&cateId=DEBM
+                          - generic [ref=e163]: 餐具/保鮮盒
+                          - text: (681)
+                      - listitem [ref=e164]:
+                        - link "筆電周邊/配件 (661)" [ref=e165] [cursor=pointer]:
+                          - /url: /search/?q=%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0%20%E5%8D%8A%E8%BA%AB&cateId=DCAG
+                          - generic [ref=e166]: 筆電周邊/配件
+                          - text: (661)
+                      - listitem [ref=e167]:
+                        - link "情趣用品(男) (652)" [ref=e168] [cursor=pointer]:
+                          - /url: /search/?q=%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0%20%E5%8D%8A%E8%BA%AB&cateId=DECZ
+                          - generic [ref=e169]: 情趣用品(男)
+                          - text: (652)
+                      - listitem [ref=e170]:
+                        - link "鍋具 (646)" [ref=e171] [cursor=pointer]:
+                          - /url: /search/?q=%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0%20%E5%8D%8A%E8%BA%AB&cateId=DEAW
+                          - generic [ref=e172]: 鍋具
+                          - text: (646)
+                      - listitem [ref=e173]:
+                        - link "鞋材 (454)" [ref=e174] [cursor=pointer]:
+                          - /url: /search/?q=%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0%20%E5%8D%8A%E8%BA%AB&cateId=DICN
+                          - generic [ref=e175]: 鞋材
+                          - text: (454)
+                      - listitem [ref=e176]:
+                        - link "烘焙用品 (437)" [ref=e177] [cursor=pointer]:
+                          - /url: /search/?q=%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0%20%E5%8D%8A%E8%BA%AB&cateId=DECF
+                          - generic [ref=e178]: 烘焙用品
+                          - text: (437)
+                      - listitem [ref=e179]:
+                        - link "家飾 (306)" [ref=e180] [cursor=pointer]:
+                          - /url: /search/?q=%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0%20%E5%8D%8A%E8%BA%AB&cateId=DEAZ
+                          - generic [ref=e181]: 家飾
+                          - text: (306)
+                      - listitem [ref=e182]:
+                        - link "手錶 (282)" [ref=e183] [cursor=pointer]:
+                          - /url: /search/?q=%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0%20%E5%8D%8A%E8%BA%AB&cateId=DIAC
+                          - generic [ref=e184]: 手錶
+                          - text: (282)
+                      - listitem [ref=e185]:
+                        - link "手機平板周邊 (270)" [ref=e186] [cursor=pointer]:
+                          - /url: /search/?q=%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0%20%E5%8D%8A%E8%BA%AB&cateId=DYAF
+                          - generic [ref=e187]: 手機平板周邊
+                          - text: (270)
+                      - listitem [ref=e188]:
+                        - link "線材 (250)" [ref=e189] [cursor=pointer]:
+                          - /url: /search/?q=%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0%20%E5%8D%8A%E8%BA%AB&cateId=DCAC
+                          - generic [ref=e190]: 線材
+                          - text: (250)
+                      - listitem [ref=e191]:
+                        - link "口罩抗菌 (236)" [ref=e192] [cursor=pointer]:
+                          - /url: /search/?q=%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0%20%E5%8D%8A%E8%BA%AB&cateId=DABC
+                          - generic [ref=e193]: 口罩抗菌
+                          - text: (236)
+                      - listitem [ref=e194]:
+                        - link "眼鏡/墨鏡 (229)" [ref=e195] [cursor=pointer]:
+                          - /url: /search/?q=%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0%20%E5%8D%8A%E8%BA%AB&cateId=DICV
+                          - generic [ref=e196]: 眼鏡/墨鏡
+                          - text: (229)
+                      - listitem [ref=e197]:
+                        - link "鑽石 (217)" [ref=e198] [cursor=pointer]:
+                          - /url: /search/?q=%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0%20%E5%8D%8A%E8%BA%AB&cateId=DIDS
+                          - generic [ref=e199]: 鑽石
+                          - text: (217)
+                      - listitem [ref=e200]:
+                        - link "智慧穿戴 (209)" [ref=e201] [cursor=pointer]:
+                          - /url: /search/?q=%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0%20%E5%8D%8A%E8%BA%AB&cateId=DYAI
+                          - generic [ref=e202]: 智慧穿戴
+                          - text: (209)
+                      - listitem [ref=e203]:
+                        - link "隨行杯/保溫瓶 (201)" [ref=e204] [cursor=pointer]:
+                          - /url: /search/?q=%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0%20%E5%8D%8A%E8%BA%AB&cateId=DEBW
+                          - generic [ref=e205]: 隨行杯/保溫瓶
+                          - text: (201)
+                      - listitem [ref=e206]:
+                        - link "掃除用具 (182)" [ref=e207] [cursor=pointer]:
+                          - /url: /search/?q=%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0%20%E5%8D%8A%E8%BA%AB&cateId=DAAC
+                          - generic [ref=e208]: 掃除用具
+                          - text: (182)
+                - button "更多" [ref=e209] [cursor=pointer]:
+                  - generic [ref=e211]: 更多
+              - list [ref=e214]:
+                - listitem [ref=e215]:
+                  - generic [ref=e216] [cursor=pointer]: 24h書店 (93)
+                  - list [ref=e217]:
+                    - listitem [ref=e218]:
+                      - link "Kobo電子書 (39)" [ref=e219] [cursor=pointer]:
+                        - /url: /search/?q=%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0%20%E5%8D%8A%E8%BA%AB&cateId=DJBQ
+                        - generic [ref=e220]: Kobo電子書
+                        - text: (39)
+                    - listitem [ref=e221]:
+                      - link "HyRead電子書 (23)" [ref=e222] [cursor=pointer]:
+                        - /url: /search/?q=%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0%20%E5%8D%8A%E8%BA%AB&cateId=DJBR
+                        - generic [ref=e223]: HyRead電子書
+                        - text: (23)
+                    - listitem [ref=e224]:
+                      - link "Pubu電子書 (16)" [ref=e225] [cursor=pointer]:
+                        - /url: /search/?q=%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0%20%E5%8D%8A%E8%BA%AB&cateId=DJBS
+                        - generic [ref=e226]: Pubu電子書
+                        - text: (16)
+                    - listitem [ref=e227]:
+                      - link "讀墨電子書 (10)" [ref=e228] [cursor=pointer]:
+                        - /url: /search/?q=%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0%20%E5%8D%8A%E8%BA%AB&cateId=DJBN
+                        - generic [ref=e229]: 讀墨電子書
+                        - text: (10)
+                    - listitem [ref=e230]:
+                      - link "金石堂 (2)" [ref=e231] [cursor=pointer]:
+                        - /url: /search/?q=%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0%20%E5%8D%8A%E8%BA%AB&cateId=DJBP
+                        - generic [ref=e232]: 金石堂
+                        - text: (2)
+                    - listitem [ref=e233]:
+                      - link "童書/教具 (2)" [ref=e234] [cursor=pointer]:
+                        - /url: /search/?q=%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0%20%E5%8D%8A%E8%BA%AB&cateId=DJAF
+                        - generic [ref=e235]: 童書/教具
+                        - text: (2)
+                    - listitem [ref=e236]:
+                      - link "影音 (1)" [ref=e237] [cursor=pointer]:
+                        - /url: /search/?q=%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0%20%E5%8D%8A%E8%BA%AB&cateId=DNAA
+                        - generic [ref=e238]: 影音
+                        - text: (1)
+          - generic [ref=e239]:
+            - list [ref=e243]:
+              - button "分類 餐廚用品 (999+) 車類 (999+) 數位周邊 (999+) 保健食品/用品 (999+) 母嬰 (854) 手機/通訊 (836) 資訊電腦 (739) 飾品配件 (608) 寢具傢飾 (591) 鞋/包/箱 (530) 運動用品/器材 (362) 修繕裝潢 (333) 珠寶/貴金屬 (297) 服裝內著 (239) 家庭清潔/紙品 (216) 攝影器材 (202) 文具/玩具/樂器 (182) 旅遊行程/用品 (163) 戶外用品 (126) 美妝保養 (98) 圖書/雜誌 (94) 寵物 (81) 家電 (76) 個人清潔 (48) 家具 (36) 按摩器材 (25) 園藝 (8) 食品飲料 (6) 影音 (1) 未分類 (2) 選更多 " [ref=e244]:
+                - generic [ref=e246]:
+                  - generic [ref=e247]: 分類
+                  - generic [ref=e248]:
+                    - list [ref=e249]:
+                      - listitem [ref=e250]:
+                        - generic [ref=e251] [cursor=pointer]:
+                          - generic [ref=e252]: 餐廚用品
+                          - generic [ref=e253]: (999+)
+                      - listitem [ref=e254]:
+                        - generic [ref=e255] [cursor=pointer]:
+                          - generic [ref=e256]: 車類
+                          - generic [ref=e257]: (999+)
+                      - listitem [ref=e258]:
+                        - generic [ref=e259] [cursor=pointer]:
+                          - generic [ref=e260]: 數位周邊
+                          - generic [ref=e261]: (999+)
+                      - listitem [ref=e262]:
+                        - generic [ref=e263] [cursor=pointer]:
+                          - generic [ref=e264]: 保健食品/用品
+                          - generic [ref=e265]: (999+)
+                      - listitem [ref=e266]:
+                        - generic [ref=e267] [cursor=pointer]:
+                          - generic [ref=e268]: 母嬰
+                          - generic [ref=e269]: (854)
+                      - listitem [ref=e270]:
+                        - generic [ref=e271] [cursor=pointer]:
+                          - generic [ref=e272]: 手機/通訊
+                          - generic [ref=e273]: (836)
+                      - listitem [ref=e274]:
+                        - generic [ref=e275] [cursor=pointer]:
+                          - generic [ref=e276]: 資訊電腦
+                          - generic [ref=e277]: (739)
+                      - listitem [ref=e278]:
+                        - generic [ref=e279] [cursor=pointer]:
+                          - generic [ref=e280]: 飾品配件
+                          - generic [ref=e281]: (608)
+                      - listitem [ref=e282]:
+                        - generic [ref=e283] [cursor=pointer]:
+                          - generic [ref=e284]: 寢具傢飾
+                          - generic [ref=e285]: (591)
+                      - listitem [ref=e286]:
+                        - generic [ref=e287] [cursor=pointer]:
+                          - generic [ref=e288]: 鞋/包/箱
+                          - generic [ref=e289]: (530)
+                      - listitem [ref=e290]:
+                        - generic [ref=e291] [cursor=pointer]:
+                          - generic [ref=e292]: 運動用品/器材
+                          - generic [ref=e293]: (362)
+                      - listitem [ref=e294]:
+                        - generic [ref=e295] [cursor=pointer]:
+                          - generic [ref=e296]: 修繕裝潢
+                          - generic [ref=e297]: (333)
+                      - listitem [ref=e298]:
+                        - generic [ref=e299] [cursor=pointer]:
+                          - generic [ref=e300]: 珠寶/貴金屬
+                          - generic [ref=e301]: (297)
+                      - listitem [ref=e302]:
+                        - generic [ref=e303] [cursor=pointer]:
+                          - generic [ref=e304]: 服裝內著
+                          - generic [ref=e305]: (239)
+                      - listitem [ref=e306]:
+                        - generic [ref=e307] [cursor=pointer]:
+                          - generic [ref=e308]: 家庭清潔/紙品
+                          - generic [ref=e309]: (216)
+                      - listitem [ref=e310]:
+                        - generic [ref=e311] [cursor=pointer]:
+                          - generic [ref=e312]: 攝影器材
+                          - generic [ref=e313]: (202)
+                      - listitem [ref=e314]:
+                        - generic [ref=e315] [cursor=pointer]:
+                          - generic [ref=e316]: 文具/玩具/樂器
+                          - generic [ref=e317]: (182)
+                      - listitem [ref=e318]:
+                        - generic [ref=e319] [cursor=pointer]:
+                          - generic [ref=e320]: 旅遊行程/用品
+                          - generic [ref=e321]: (163)
+                      - listitem [ref=e322]:
+                        - generic [ref=e323] [cursor=pointer]:
+                          - generic [ref=e324]: 戶外用品
+                          - generic [ref=e325]: (126)
+                      - listitem [ref=e326]:
+                        - generic [ref=e327] [cursor=pointer]:
+                          - generic [ref=e328]: 美妝保養
+                          - generic [ref=e329]: (98)
+                      - listitem [ref=e330]:
+                        - generic [ref=e331] [cursor=pointer]:
+                          - generic [ref=e332]: 圖書/雜誌
+                          - generic [ref=e333]: (94)
+                      - listitem [ref=e334]:
+                        - generic [ref=e335] [cursor=pointer]:
+                          - generic [ref=e336]: 寵物
+                          - generic [ref=e337]: (81)
+                      - listitem [ref=e338]:
+                        - generic [ref=e339] [cursor=pointer]:
+                          - generic [ref=e340]: 家電
+                          - generic [ref=e341]: (76)
+                      - listitem [ref=e342]:
+                        - generic [ref=e343] [cursor=pointer]:
+                          - generic [ref=e344]: 個人清潔
+                          - generic [ref=e345]: (48)
+                      - listitem [ref=e346]:
+                        - generic [ref=e347] [cursor=pointer]:
+                          - generic [ref=e348]: 家具
+                          - generic [ref=e349]: (36)
+                      - listitem [ref=e350]:
+                        - generic [ref=e351] [cursor=pointer]:
+                          - generic [ref=e352]: 按摩器材
+                          - generic [ref=e353]: (25)
+                      - listitem [ref=e354]:
+                        - generic [ref=e355] [cursor=pointer]:
+                          - generic [ref=e356]: 園藝
+                          - generic [ref=e357]: (8)
+                      - listitem [ref=e358]:
+                        - generic [ref=e359] [cursor=pointer]:
+                          - generic [ref=e360]: 食品飲料
+                          - generic [ref=e361]: (6)
+                      - listitem [ref=e362]:
+                        - generic [ref=e363] [cursor=pointer]:
+                          - generic [ref=e364]: 影音
+                          - generic [ref=e365]: (1)
+                      - listitem [ref=e366]:
+                        - generic [ref=e367] [cursor=pointer]:
+                          - generic [ref=e368]: 未分類
+                          - generic [ref=e369]: (2)
+                    - button "選更多 " [ref=e371] [cursor=pointer]:
+                      - generic [ref=e372]:
+                        - generic [ref=e373]: 選更多
+                        - generic [ref=e374]: 
+              - button "品牌 PiyoPiyo 黃色小鴨 (21) BLUSH (18) FaSoLa (63) Chow Sang Sang Group 點睛品 (68) 選更多 " [ref=e375]:
+                - generic [ref=e377]:
+                  - generic [ref=e378]: 品牌
+                  - generic [ref=e379]:
+                    - list [ref=e380]:
+                      - listitem [ref=e381]:
+                        - generic [ref=e382] [cursor=pointer]:
+                          - checkbox "PiyoPiyo 黃色小鴨 (21)" [ref=e385]
+                          - generic [ref=e387]: PiyoPiyo 黃色小鴨
+                          - generic [ref=e388]: (21)
+                      - listitem [ref=e389]:
+                        - generic [ref=e390] [cursor=pointer]:
+                          - checkbox "BLUSH (18)" [ref=e393]
+                          - generic [ref=e395]: BLUSH
+                          - generic [ref=e396]: (18)
+                      - listitem [ref=e397]:
+                        - generic [ref=e398] [cursor=pointer]:
+                          - checkbox "FaSoLa (63)" [ref=e401]
+                          - generic [ref=e403]: FaSoLa
+                          - generic [ref=e404]: (63)
+                      - listitem [ref=e405]:
+                        - generic [ref=e406] [cursor=pointer]:
+                          - checkbox "Chow Sang Sang Group 點睛品 (68)" [ref=e409]
+                          - generic [ref=e411]: Chow Sang Sang Group 點睛品
+                          - generic [ref=e412]: (68)
+                    - button "選更多 " [ref=e414] [cursor=pointer]:
+                      - generic [ref=e415]:
+                        - generic [ref=e416]: 選更多
+                        - generic [ref=e417]: 
+              - button "功能 其他 (431) 防潑水 (1) 藍芽遙控 (6) 鬧鈴 (15) 選更多 " [ref=e418]:
+                - generic [ref=e420]:
+                  - generic [ref=e421]: 功能
+                  - generic [ref=e422]:
+                    - list [ref=e423]:
+                      - listitem [ref=e424]:
+                        - list [ref=e425]:
+                          - listitem [ref=e426]:
+                            - list [ref=e428]:
+                              - listitem [ref=e429]:
+                                - generic [ref=e430] [cursor=pointer]:
+                                  - checkbox "其他 (431)" [ref=e433]
+                                  - generic [ref=e435]: 其他
+                                  - generic [ref=e436]: (431)
+                              - listitem [ref=e437]:
+                                - generic [ref=e438] [cursor=pointer]:
+                                  - checkbox "防潑水 (1)" [ref=e441]
+                                  - generic [ref=e443]: 防潑水
+                                  - generic [ref=e444]: (1)
+                              - listitem [ref=e445]:
+                                - generic [ref=e446] [cursor=pointer]:
+                                  - checkbox "藍芽遙控 (6)" [ref=e449]
+                                  - generic [ref=e451]: 藍芽遙控
+                                  - generic [ref=e452]: (6)
+                              - listitem [ref=e453]:
+                                - generic [ref=e454] [cursor=pointer]:
+                                  - checkbox "鬧鈴 (15)" [ref=e457]
+                                  - generic [ref=e459]: 鬧鈴
+                                  - generic [ref=e460]: (15)
+                    - button "選更多 " [ref=e462] [cursor=pointer]:
+                      - generic [ref=e463]:
+                        - generic [ref=e464]: 選更多
+                        - generic [ref=e465]: 
+              - button "款式 雙燈 (3) 三燈 (2) 瓶裝 (3) 其他 (164) 選更多 " [ref=e466]:
+                - generic [ref=e468]:
+                  - generic [ref=e469]: 款式
+                  - generic [ref=e470]:
+                    - list [ref=e471]:
+                      - listitem [ref=e472]:
+                        - list [ref=e473]:
+                          - listitem [ref=e474]:
+                            - list [ref=e476]:
+                              - listitem [ref=e477]:
+                                - generic [ref=e478] [cursor=pointer]:
+                                  - checkbox "雙燈 (3)" [ref=e481]
+                                  - generic [ref=e483]: 雙燈
+                                  - generic [ref=e484]: (3)
+                              - listitem [ref=e485]:
+                                - generic [ref=e486] [cursor=pointer]:
+                                  - checkbox "三燈 (2)" [ref=e489]
+                                  - generic [ref=e491]: 三燈
+                                  - generic [ref=e492]: (2)
+                              - listitem [ref=e493]:
+                                - generic [ref=e494] [cursor=pointer]:
+                                  - checkbox "瓶裝 (3)" [ref=e497]
+                                  - generic [ref=e499]: 瓶裝
+                                  - generic [ref=e500]: (3)
+                              - listitem [ref=e501]:
+                                - generic [ref=e502] [cursor=pointer]:
+                                  - checkbox "其他 (164)" [ref=e505]
+                                  - generic [ref=e507]: 其他
+                                  - generic [ref=e508]: (164)
+                    - button "選更多 " [ref=e510] [cursor=pointer]:
+                      - generic [ref=e511]:
+                        - generic [ref=e512]: 選更多
+                        - generic [ref=e513]: 
+              - button "其他條件 顏色  容量  包裝組合  形狀  選更多 " [ref=e514]:
+                - generic [ref=e516]:
+                  - generic [ref=e517]: 其他條件
+                  - generic [ref=e518]:
+                    - list [ref=e519]:
+                      - listitem [ref=e520]:
+                        - list [ref=e521]:
+                          - listitem [ref=e522]:
+                            - button "顏色 " [ref=e523] [cursor=pointer]:
+                              - button "顏色 " [ref=e524]:
+                                - generic [ref=e525]: 顏色
+                                - generic [ref=e526]: 
+                          - listitem [ref=e527]:
+                            - button "容量 " [ref=e528] [cursor=pointer]:
+                              - button "容量 " [ref=e529]:
+                                - generic [ref=e530]: 容量
+                                - generic [ref=e531]: 
+                          - listitem [ref=e532]:
+                            - button "包裝組合 " [ref=e533] [cursor=pointer]:
+                              - button "包裝組合 " [ref=e534]:
+                                - generic [ref=e535]: 包裝組合
+                                - generic [ref=e536]: 
+                          - listitem [ref=e537]:
+                            - button "形狀 " [ref=e538] [cursor=pointer]:
+                              - button "形狀 " [ref=e539]:
+                                - generic [ref=e540]: 形狀
+                                - generic [ref=e541]: 
+                    - button "選更多 " [ref=e543] [cursor=pointer]:
+                      - generic [ref=e544]:
+                        - generic [ref=e545]: 選更多
+                        - generic [ref=e546]: 
+            - generic [ref=e547]:
+              - generic [ref=e549]:
+                - generic [ref=e551]:
+                  - list [ref=e552]:
+                    - button "推薦排序" [ref=e553]:
+                      - button "推薦排序" [ref=e554] [cursor=pointer]:
+                        - generic [ref=e556]: 推薦排序
+                    - button "熱銷度" [ref=e557]:
+                      - button "熱銷度" [ref=e558] [cursor=pointer]:
+                        - generic [ref=e560]: 熱銷度
+                    - button "新上架" [ref=e561]:
+                      - button "新上架" [ref=e562] [cursor=pointer]:
+                        - generic [ref=e564]: 新上架
+                    - button "價格 " [ref=e565]:
+                      - button "價格 " [ref=e566] [cursor=pointer]:
+                        - generic [ref=e567]:
+                          - generic [ref=e568]: 價格
+                          - generic [ref=e569]: 
+                  - list [ref=e570]:
+                    - button "-" [ref=e571]:
+                      - textbox "最低價" [ref=e574]
+                      - text: "-"
+                    - button [ref=e575]:
+                      - textbox "最高價" [ref=e578]
+                    - button "確定" [ref=e579]:
+                      - button "確定" [ref=e580] [cursor=pointer]:
+                        - generic [ref=e582]: 確定
+                - generic [ref=e584]:
+                  - button "配送方式" [ref=e585]:
+                    - generic [ref=e587] [cursor=pointer]:
+                      - generic [ref=e589]: 配送方式
+                      - generic [ref=e591]: 
+                  - list [ref=e592]:
+                    - button "" [ref=e593]:
+                      - button "" [ref=e594] [cursor=pointer]:
+                        - generic [ref=e596]: 
+                    - button "" [ref=e597]:
+                      - button "" [ref=e598] [cursor=pointer]:
+                        - generic [ref=e600]: 
+              - generic [ref=e603]:
+                - generic [ref=e606]: 抱歉，找不到與鉑金矽膠 半身完全符合的商品，您可以參考以下推薦商品。
+                - list [ref=e607]:
+                  - listitem [ref=e608]:
+                    - generic [ref=e609]:
+                      - link "狐狸姬，L-2L塑身褲超無感無痕半身五分褲無痕塑身褲(多色) FoxBi 狐狸姬 L-2L塑身褲超無感無痕半身五分褲無痕塑身褲(多色) $780 $3,980 折價券 P幣" [ref=e610] [cursor=pointer]:
+                        - /url: /prod/QDAK6I-A900AB5PL
+                        - generic [ref=e611]:
+                          - img "狐狸姬，L-2L塑身褲超無感無痕半身五分褲無痕塑身褲(多色)" [ref=e614]
+                          - generic [ref=e615]:
+                            - generic [ref=e616]:
+                              - heading "FoxBi 狐狸姬 L-2L塑身褲超無感無痕半身五分褲無痕塑身褲(多色)" [level=3] [ref=e618]
+                              - generic [ref=e621]: $780
+                              - generic [ref=e623]: $3,980
+                            - list [ref=e625]:
+                              - listitem [ref=e626]:
+                                - generic [ref=e628]: 折價券
+                              - listitem [ref=e629]:
+                                - generic [ref=e631]: P幣
+                      - list [ref=e633]:
+                        - listitem [ref=e634]:
+                          - button "" [ref=e635] [cursor=pointer]:
+                            - generic [ref=e637]: 
+                        - listitem [ref=e638]:
+                          - button "" [ref=e639] [cursor=pointer]:
+                            - generic [ref=e641]: 
+                  - listitem [ref=e642]:
+                    - generic [ref=e643]:
+                      - link "【SHANG SHUO】兩件式PVC防護雨衣（鉑金灰） SHANG SHUO 兩件式PVC防護雨衣鉑金灰       (33) $399 $699 P幣" [ref=e644] [cursor=pointer]:
+                        - /url: /prod/DXAB8M-A900GCLWZ
+                        - generic [ref=e645]:
+                          - img "【SHANG SHUO】兩件式PVC防護雨衣（鉑金灰）" [ref=e648]
+                          - generic [ref=e649]:
+                            - generic [ref=e650]:
+                              - list [ref=e652]:
+                                - listitem [ref=e653]
+                              - generic [ref=e657]:
+                                - heading "SHANG SHUO 兩件式PVC防護雨衣鉑金灰" [level=3] [ref=e658]
+                                - generic [ref=e659]:
+                                  - generic [ref=e663]:
+                                    - generic [ref=e665]:
+                                      - text: 
+                                      - generic [ref=e666]: 
+                                    - generic [ref=e668]:
+                                      - text: 
+                                      - generic [ref=e669]: 
+                                    - generic [ref=e671]:
+                                      - text: 
+                                      - generic [ref=e672]: 
+                                    - generic [ref=e674]:
+                                      - text: 
+                                      - generic [ref=e675]: 
+                                    - generic [ref=e677]:
+                                      - generic [ref=e678]: 
+                                      - generic [ref=e679]: 
+                                  - generic [ref=e680]: (33)
+                              - generic [ref=e683]: $399
+                              - generic [ref=e685]: $699
+                            - list [ref=e687]:
+                              - listitem [ref=e688]:
+                                - generic [ref=e690]: P幣
+                      - list [ref=e692]:
+                        - listitem [ref=e693]:
+                          - button "" [ref=e694] [cursor=pointer]:
+                            - generic [ref=e696]: 
+                        - listitem [ref=e697]:
+                          - button "" [ref=e698] [cursor=pointer]:
+                            - generic [ref=e700]: 
+                  - listitem [ref=e701]:
+                    - generic [ref=e702]:
+                      - link "【小獅王辛巴】鉑金PPSU兒童水壺400ml(直飲/吸管) 專為不愛喝水寶寶！補水量大提升 Simba 小獅王辛巴 鉑金PPSU兒童水壺400ml(直飲/吸管)      (1) $819 $1,080 P幣" [ref=e703] [cursor=pointer]:
+                        - /url: /prod/DWACTG-B900JB1MI
+                        - generic [ref=e704]:
+                          - img "【小獅王辛巴】鉑金PPSU兒童水壺400ml(直飲/吸管)" [ref=e707]
+                          - generic [ref=e708]:
+                            - generic [ref=e709]:
+                              - generic [ref=e710]:
+                                - generic [ref=e711]: 專為不愛喝水寶寶！補水量大提升
+                                - heading "Simba 小獅王辛巴 鉑金PPSU兒童水壺400ml(直飲/吸管)" [level=3] [ref=e712]
+                                - generic [ref=e713]:
+                                  - generic [ref=e717]:
+                                    - generic [ref=e719]:
+                                      - text: 
+                                      - generic [ref=e720]: 
+                                    - generic [ref=e722]:
+                                      - text: 
+                                      - generic [ref=e723]: 
+                                    - generic [ref=e725]:
+                                      - text: 
+                                      - generic [ref=e726]: 
+                                    - generic [ref=e728]:
+                                      - text: 
+                                      - generic [ref=e729]: 
+                                    - generic [ref=e731]:
+                                      - text: 
+                                      - generic [ref=e732]: 
+                                  - generic [ref=e733]: (1)
+                              - generic [ref=e736]: $819
+                              - generic [ref=e738]: $1,080
+                            - list [ref=e740]:
+                              - listitem [ref=e741]:
+                                - generic [ref=e743]: P幣
+                      - list [ref=e745]:
+                        - listitem [ref=e746]:
+                          - button "" [ref=e747] [cursor=pointer]:
+                            - generic [ref=e749]: 
+                        - listitem [ref=e750]:
+                          - button "" [ref=e751] [cursor=pointer]:
+                            - generic [ref=e753]: 
+                  - listitem [ref=e754]:
+                    - generic [ref=e755]:
+                      - 'link "【Mammut 長毛象】Lithium Waistpack 多用途運動腰包 鉑金灰 #2810-00290 Mammut 長毛象官方直營 MAMMUT 長毛象 Lithium Waistpack 多用途運動腰包 鉑金灰 #2810-00290 $2,660 $2,800 P幣" [ref=e756] [cursor=pointer]':
+                        - /url: /prod/DEBLWV-A900HQ7HV
+                        - generic [ref=e757]:
+                          - 'img "【Mammut 長毛象】Lithium Waistpack 多用途運動腰包 鉑金灰 #2810-00290" [ref=e760]'
+                          - generic [ref=e761]:
+                            - generic [ref=e762]:
+                              - generic [ref=e763]:
+                                - generic [ref=e764]: Mammut 長毛象官方直營
+                                - 'heading "MAMMUT 長毛象 Lithium Waistpack 多用途運動腰包 鉑金灰 #2810-00290" [level=3] [ref=e765]'
+                              - generic [ref=e768]: $2,660
+                              - generic [ref=e770]: $2,800
+                            - list [ref=e772]:
+                              - listitem [ref=e773]:
+                                - generic [ref=e775]: P幣
+                      - list [ref=e777]:
+                        - listitem [ref=e778]:
+                          - button "" [ref=e779] [cursor=pointer]:
+                            - generic [ref=e781]: 
+                        - listitem [ref=e782]:
+                          - button "" [ref=e783] [cursor=pointer]:
+                            - generic [ref=e785]: 
+                  - listitem [ref=e786]:
+                    - generic [ref=e787]:
+                      - link "DOUBLE束胸 加強棉感排扣半身 Double 束胸 加強棉感排扣半身      (3) $935 $980 折價券 P幣" [ref=e788] [cursor=pointer]:
+                        - /url: /prod/DIAXEQ-A900GFG7C
+                        - generic [ref=e789]:
+                          - img "DOUBLE束胸 加強棉感排扣半身" [ref=e792]
+                          - generic [ref=e793]:
+                            - generic [ref=e794]:
+                              - list [ref=e796]:
+                                - listitem [ref=e797]
+                              - generic [ref=e801]:
+                                - heading "Double 束胸 加強棉感排扣半身" [level=3] [ref=e802]
+                                - generic [ref=e803]:
+                                  - generic [ref=e807]:
+                                    - generic [ref=e809]:
+                                      - text: 
+                                      - generic [ref=e810]: 
+                                    - generic [ref=e812]:
+                                      - text: 
+                                      - generic [ref=e813]: 
+                                    - generic [ref=e815]:
+                                      - text: 
+                                      - generic [ref=e816]: 
+                                    - generic [ref=e818]:
+                                      - text: 
+                                      - generic [ref=e819]: 
+                                    - generic [ref=e821]:
+                                      - text: 
+                                      - generic [ref=e822]: 
+                                  - generic [ref=e823]: (3)
+                              - generic [ref=e826]: $935
+                              - generic [ref=e828]: $980
+                            - list [ref=e830]:
+                              - listitem [ref=e831]:
+                                - generic [ref=e833]: 折價券
+                              - listitem [ref=e834]:
+                                - generic [ref=e836]: P幣
+                      - list [ref=e838]:
+                        - listitem [ref=e839]:
+                          - button "" [ref=e840] [cursor=pointer]:
+                            - generic [ref=e842]: 
+                        - listitem [ref=e843]:
+                          - button "" [ref=e844] [cursor=pointer]:
+                            - generic [ref=e846]: 
+                  - listitem [ref=e847]:
+                    - generic [ref=e848]:
+                      - link "AGE20s 鉑金奢華光綻爆水粉餅SPF50+/PA++++ (BE-21)亮白色14g (1殼2蕊) 滿3000折300 AGE20s AGE20s 鉑金奢華光綻爆水粉餅SPF50+/PA++++ (BE-21)亮白色14g (1殼2蕊)      (2) $1,190 $2,180 P幣 折扣" [ref=e849] [cursor=pointer]:
+                        - /url: /prod/DDCBBP-A900GFXVM
+                        - generic [ref=e850]:
+                          - img "AGE20s 鉑金奢華光綻爆水粉餅SPF50+/PA++++ (BE-21)亮白色14g (1殼2蕊)" [ref=e853]
+                          - generic [ref=e854]:
+                            - generic [ref=e855]:
+                              - generic [ref=e856]:
+                                - list [ref=e857]:
+                                  - listitem [ref=e858]
+                                - generic [ref=e862]: 滿3000折300
+                              - generic [ref=e863]:
+                                - heading "AGE20s AGE20s 鉑金奢華光綻爆水粉餅SPF50+/PA++++ (BE-21)亮白色14g (1殼2蕊)" [level=3] [ref=e864]
+                                - generic [ref=e865]:
+                                  - generic [ref=e869]:
+                                    - generic [ref=e871]:
+                                      - text: 
+                                      - generic [ref=e872]: 
+                                    - generic [ref=e874]:
+                                      - text: 
+                                      - generic [ref=e875]: 
+                                    - generic [ref=e877]:
+                                      - text: 
+                                      - generic [ref=e878]: 
+                                    - generic [ref=e880]:
+                                      - text: 
+                                      - generic [ref=e881]: 
+                                    - generic [ref=e883]:
+                                      - text: 
+                                      - generic [ref=e884]: 
+                                  - generic [ref=e885]: (2)
+                              - generic [ref=e888]: $1,190
+                              - generic [ref=e890]: $2,180
+                            - list [ref=e892]:
+                              - listitem [ref=e893]:
+                                - generic [ref=e895]: P幣
+                              - listitem [ref=e896]:
+                                - generic [ref=e898]: 折扣
+                      - list [ref=e900]:
+                        - listitem [ref=e901]:
+                          - button "" [ref=e902] [cursor=pointer]:
+                            - generic [ref=e904]: 
+                        - listitem [ref=e905]:
+                          - button "" [ref=e906] [cursor=pointer]:
+                            - generic [ref=e908]: 
+                  - listitem [ref=e909]:
+                    - generic [ref=e910]:
+                      - link "BLUETTI AC50P 戶外行動電源站 frame_b1 五年保固 支援快充 APP監控 UPS功能 BLUETTI 禾蓁鉑金版 AC50P 700W 戶外移動電源 露營電池 車泊 行動電源 UPS 防災      (2) $13,900 $15,900 P幣" [ref=e911] [cursor=pointer]:
+                        - /url: /prod/DEBQ7S-A900J0R6N
+                        - generic [ref=e912]:
+                          - generic [ref=e913]:
+                            - img "BLUETTI AC50P 戶外行動電源站" [ref=e915]
+                            - img "frame_b1" [ref=e918]
+                          - generic [ref=e919]:
+                            - generic [ref=e920]:
+                              - generic [ref=e921]:
+                                - generic [ref=e922]: 五年保固 支援快充 APP監控 UPS功能
+                                - heading "BLUETTI 禾蓁鉑金版 AC50P 700W 戶外移動電源 露營電池 車泊 行動電源 UPS 防災" [level=3] [ref=e923]
+                                - generic [ref=e924]:
+                                  - generic [ref=e928]:
+                                    - generic [ref=e930]:
+                                      - text: 
+                                      - generic [ref=e931]: 
+                                    - generic [ref=e933]:
+                                      - text: 
+                                      - generic [ref=e934]: 
+                                    - generic [ref=e936]:
+                                      - text: 
+                                      - generic [ref=e937]: 
+                                    - generic [ref=e939]:
+                                      - text: 
+                                      - generic [ref=e940]: 
+                                    - generic [ref=e942]:
+                                      - text: 
+                                      - generic [ref=e943]: 
+                                  - generic [ref=e944]: (2)
+                              - generic [ref=e947]: $13,900
+                              - generic [ref=e949]: $15,900
+                            - list [ref=e951]:
+                              - listitem [ref=e952]:
+                                - generic [ref=e954]: P幣
+                      - list [ref=e956]:
+                        - listitem [ref=e957]:
+                          - button "" [ref=e958] [cursor=pointer]:
+                            - generic [ref=e960]: 
+                        - listitem [ref=e961]:
+                          - button "" [ref=e962] [cursor=pointer]:
+                            - generic [ref=e964]: 
+                  - listitem [ref=e965]:
+                    - generic [ref=e966]:
+                      - link "BLUETTI AC70P 戶外行動電源站 frame_b1 五年保固 支援快充 APP監控 UPS功能 BLUETTI 禾蓁鉑金版 AC70P 戶外移動電源 1000W 露營電池 行動電源 儲能電池 UPS 車泊      (3) $19,900 $19,900 P幣" [ref=e967] [cursor=pointer]:
+                        - /url: /prod/DEBQNX-A900IAJ4H
+                        - generic [ref=e968]:
+                          - generic [ref=e969]:
+                            - img "BLUETTI AC70P 戶外行動電源站" [ref=e971]
+                            - img "frame_b1" [ref=e974]
+                          - generic [ref=e975]:
+                            - generic [ref=e976]:
+                              - generic [ref=e977]:
+                                - generic [ref=e978]: 五年保固 支援快充 APP監控 UPS功能
+                                - heading "BLUETTI 禾蓁鉑金版 AC70P 戶外移動電源 1000W 露營電池 行動電源 儲能電池 UPS 車泊" [level=3] [ref=e979]
+                                - generic [ref=e980]:
+                                  - generic [ref=e984]:
+                                    - generic [ref=e986]:
+                                      - text: 
+                                      - generic [ref=e987]: 
+                                    - generic [ref=e989]:
+                                      - text: 
+                                      - generic [ref=e990]: 
+                                    - generic [ref=e992]:
+                                      - text: 
+                                      - generic [ref=e993]: 
+                                    - generic [ref=e995]:
+                                      - text: 
+                                      - generic [ref=e996]: 
+                                    - generic [ref=e998]:
+                                      - text: 
+                                      - generic [ref=e999]: 
+                                  - generic [ref=e1000]: (3)
+                              - generic [ref=e1003]: $19,900
+                              - generic [ref=e1005]: $19,900
+                            - list [ref=e1007]:
+                              - listitem [ref=e1008]:
+                                - generic [ref=e1010]: P幣
+                      - list [ref=e1012]:
+                        - listitem [ref=e1013]:
+                          - button "" [ref=e1014] [cursor=pointer]:
+                            - generic [ref=e1016]: 
+                        - listitem [ref=e1017]:
+                          - button "" [ref=e1018] [cursor=pointer]:
+                            - generic [ref=e1020]: 
+                  - listitem [ref=e1021]:
+                    - generic [ref=e1022]:
+                      - link "ASUS Vivobook 14 X1407CA-0051D225H 鉑金色(Ultra 5 225H/16G/512G/14吋WUXGA/W11)AI效能筆電 ASUS 華碩 Vivobook 14 X1407CA-0051D225H 鉑金色(Ultra 5 225H/16G/512G/14吋WUXGA/W11)AI效能筆電 $28,999 $36,999 P幣" [ref=e1023] [cursor=pointer]:
+                        - /url: /prod/DHABB2-A900JUVNK
+                        - generic [ref=e1024]:
+                          - img "ASUS Vivobook 14 X1407CA-0051D225H 鉑金色(Ultra 5 225H/16G/512G/14吋WUXGA/W11)AI效能筆電" [ref=e1027]
+                          - generic [ref=e1028]:
+                            - generic [ref=e1029]:
+                              - heading "ASUS 華碩 Vivobook 14 X1407CA-0051D225H 鉑金色(Ultra 5 225H/16G/512G/14吋WUXGA/W11)AI效能筆電" [level=3] [ref=e1031]
+                              - generic [ref=e1034]: $28,999
+                              - generic [ref=e1036]: $36,999
+                            - list [ref=e1038]:
+                              - listitem [ref=e1039]:
+                                - generic [ref=e1041]: P幣
+                      - list [ref=e1043]:
+                        - listitem [ref=e1044]:
+                          - button "" [ref=e1045] [cursor=pointer]:
+                            - generic [ref=e1047]: 
+                        - listitem [ref=e1048]:
+                          - button "" [ref=e1049] [cursor=pointer]:
+                            - generic [ref=e1051]: 
+                  - listitem [ref=e1052]:
+                    - generic [ref=e1053]:
+                      - link "可微波矽膠蓋/大 frame_a1 約直徑23.5cm MUJI 無印良品 可微波矽膠蓋/大 $190 $190 折價券 P幣" [ref=e1054] [cursor=pointer]:
+                        - /url: /prod/DEDK3U-A900JT16E
+                        - generic [ref=e1055]:
+                          - generic [ref=e1056]:
+                            - img "可微波矽膠蓋/大" [ref=e1058]
+                            - img "frame_a1" [ref=e1061]
+                          - generic [ref=e1062]:
+                            - generic [ref=e1063]:
+                              - list [ref=e1065]:
+                                - listitem [ref=e1066]
+                              - generic [ref=e1070]:
+                                - generic [ref=e1071]: 約直徑23.5cm
+                                - heading "MUJI 無印良品 可微波矽膠蓋/大" [level=3] [ref=e1072]
+                              - generic [ref=e1075]: $190
+                              - generic [ref=e1077]: $190
+                            - list [ref=e1079]:
+                              - listitem [ref=e1080]:
+                                - generic [ref=e1082]: 折價券
+                              - listitem [ref=e1083]:
+                                - generic [ref=e1085]: P幣
+                      - list [ref=e1087]:
+                        - listitem [ref=e1088]:
+                          - button "" [ref=e1089] [cursor=pointer]:
+                            - generic [ref=e1091]: 
+                        - listitem [ref=e1092]:
+                          - button "" [ref=e1093] [cursor=pointer]:
+                            - generic [ref=e1095]: 
+                - list [ref=e1096]:
+                  - listitem [ref=e1097]:
+                    - generic [ref=e1098]:
+                      - link "BLUETTI AC70P 1000W 戶外移動電源 120W太陽能板套組 frame_b1 銷售破千台 , 全機五年保 BLUETTI 禾蓁鉑金版 AC70P 1000W 戶外移動電源 120W太陽能板套組      (6) $24,900 $28,000 P幣" [ref=e1099] [cursor=pointer]:
+                        - /url: /prod/DEBQ7S-A900IZM38
+                        - generic [ref=e1100]:
+                          - generic [ref=e1101]:
+                            - img "BLUETTI AC70P 1000W 戶外移動電源 120W太陽能板套組" [ref=e1103]
+                            - img "frame_b1" [ref=e1106]
+                          - generic [ref=e1107]:
+                            - generic [ref=e1108]:
+                              - generic [ref=e1109]:
+                                - generic [ref=e1110]: 銷售破千台 , 全機五年保
+                                - heading "BLUETTI 禾蓁鉑金版 AC70P 1000W 戶外移動電源 120W太陽能板套組" [level=3] [ref=e1111]
+                                - generic [ref=e1112]:
+                                  - generic [ref=e1116]:
+                                    - generic [ref=e1118]:
+                                      - text: 
+                                      - generic [ref=e1119]: 
+                                    - generic [ref=e1121]:
+                                      - text: 
+                                      - generic [ref=e1122]: 
+                                    - generic [ref=e1124]:
+                                      - text: 
+                                      - generic [ref=e1125]: 
+                                    - generic [ref=e1127]:
+                                      - text: 
+                                      - generic [ref=e1128]: 
+                                    - generic [ref=e1130]:
+                                      - text: 
+                                      - generic [ref=e1131]: 
+                                  - generic [ref=e1132]: (6)
+                              - generic [ref=e1135]: $24,900
+                              - generic [ref=e1137]: $28,000
+                            - list [ref=e1139]:
+                              - listitem [ref=e1140]:
+                                - generic [ref=e1142]: P幣
+                      - list [ref=e1144]:
+                        - listitem [ref=e1145]:
+                          - button "" [ref=e1146] [cursor=pointer]:
+                            - generic [ref=e1148]: 
+                        - listitem [ref=e1149]:
+                          - button "" [ref=e1150] [cursor=pointer]:
+                            - generic [ref=e1152]: 
+                  - listitem [ref=e1153]:
+                    - generic [ref=e1154]:
+                      - link "SONY NW-A306 Walkman 數位音樂播放器 公司貨 frame_b1 frame_a2 【南紡購物中心】支援 Hi-Res 高解析音質 SONY 索尼 【送原廠矽膠套】NW-A306 Walkman 數位音樂播放器      (1) $8,990 $9,490 P幣" [ref=e1155] [cursor=pointer]:
+                        - /url: /prod/DMBM1D-A900FZYMK
+                        - generic [ref=e1156]:
+                          - generic [ref=e1157]:
+                            - img "SONY NW-A306 Walkman 數位音樂播放器 公司貨" [ref=e1159]
+                            - img "frame_b1" [ref=e1162]
+                            - img "frame_a2" [ref=e1165]
+                          - generic [ref=e1166]:
+                            - generic [ref=e1167]:
+                              - generic [ref=e1168]:
+                                - generic [ref=e1169]: 【南紡購物中心】支援 Hi-Res 高解析音質
+                                - heading "SONY 索尼 【送原廠矽膠套】NW-A306 Walkman 數位音樂播放器" [level=3] [ref=e1170]
+                                - generic [ref=e1171]:
+                                  - generic [ref=e1175]:
+                                    - generic [ref=e1177]:
+                                      - text: 
+                                      - generic [ref=e1178]: 
+                                    - generic [ref=e1180]:
+                                      - text: 
+                                      - generic [ref=e1181]: 
+                                    - generic [ref=e1183]:
+                                      - text: 
+                                      - generic [ref=e1184]: 
+                                    - generic [ref=e1186]:
+                                      - text: 
+                                      - generic [ref=e1187]: 
+                                    - generic [ref=e1189]:
+                                      - text: 
+                                      - generic [ref=e1190]: 
+                                  - generic [ref=e1191]: (1)
+                              - generic [ref=e1194]: $8,990
+                              - generic [ref=e1196]: $9,490
+                            - list [ref=e1198]:
+                              - listitem [ref=e1199]:
+                                - generic [ref=e1201]: P幣
+                      - list [ref=e1203]:
+                        - listitem [ref=e1204]:
+                          - button "" [ref=e1205] [cursor=pointer]:
+                            - generic [ref=e1207]: 
+                        - listitem [ref=e1208]:
+                          - button "" [ref=e1209] [cursor=pointer]:
+                            - generic [ref=e1211]: 
+                  - listitem [ref=e1212]:
+                    - generic [ref=e1213]:
+                      - link "AC2P 300W 戶外移動電源 儲能電池 行動電源 frame_b1 五年保固 支援快充 APP監控 BLUETTI 禾蓁鉑金版 AC2P 300W 戶外移動電源 儲能電源 行動電源 UPS 登山 露營電池 車泊      (1) $6,990 $7,900 P幣" [ref=e1214] [cursor=pointer]:
+                        - /url: /prod/DEBQ7S-A900JAEA2
+                        - generic [ref=e1215]:
+                          - generic [ref=e1216]:
+                            - img "AC2P 300W 戶外移動電源 儲能電池 行動電源" [ref=e1218]
+                            - img "frame_b1" [ref=e1221]
+                          - generic [ref=e1222]:
+                            - generic [ref=e1223]:
+                              - generic [ref=e1224]:
+                                - generic [ref=e1225]: 五年保固 支援快充 APP監控
+                                - heading "BLUETTI 禾蓁鉑金版 AC2P 300W 戶外移動電源 儲能電源 行動電源 UPS 登山 露營電池 車泊" [level=3] [ref=e1226]
+                                - generic [ref=e1227]:
+                                  - generic [ref=e1231]:
+                                    - generic [ref=e1233]:
+                                      - text: 
+                                      - generic [ref=e1234]: 
+                                    - generic [ref=e1236]:
+                                      - text: 
+                                      - generic [ref=e1237]: 
+                                    - generic [ref=e1239]:
+                                      - text: 
+                                      - generic [ref=e1240]: 
+                                    - generic [ref=e1242]:
+                                      - text: 
+                                      - generic [ref=e1243]: 
+                                    - generic [ref=e1245]:
+                                      - generic [ref=e1246]: 
+                                      - text: 
+                                  - generic [ref=e1247]: (1)
+                              - generic [ref=e1250]: $6,990
+                              - generic [ref=e1252]: $7,900
+                            - list [ref=e1254]:
+                              - listitem [ref=e1255]:
+                                - generic [ref=e1257]: P幣
+                      - list [ref=e1259]:
+                        - listitem [ref=e1260]:
+                          - button "" [ref=e1261] [cursor=pointer]:
+                            - generic [ref=e1263]: 
+                        - listitem [ref=e1264]:
+                          - button "" [ref=e1265] [cursor=pointer]:
+                            - generic [ref=e1267]: 
+                  - listitem [ref=e1268]:
+                    - generic [ref=e1269]:
+                      - link "3台團購價 BLUETTI AC70P 戶外行動電源站 frame_b1 銷售破千台 全機五年保 支援快充 APP監控 UPS功能 BLUETTI 3台團購價 禾蓁鉑金版 AC70P*3入 戶外移動電源 1000W 露營電池 行動電源 儲能電池 UPS 車泊 $49,990 $59,700 P幣" [ref=e1270] [cursor=pointer]:
+                        - /url: /prod/DEBQ7S-A900JGWPZ
+                        - generic [ref=e1271]:
+                          - generic [ref=e1272]:
+                            - img "3台團購價 BLUETTI AC70P 戶外行動電源站" [ref=e1274]
+                            - img "frame_b1" [ref=e1277]
+                          - generic [ref=e1278]:
+                            - generic [ref=e1279]:
+                              - generic [ref=e1280]:
+                                - generic [ref=e1281]: 銷售破千台 全機五年保 支援快充 APP監控 UPS功能
+                                - heading "BLUETTI 3台團購價 禾蓁鉑金版 AC70P*3入 戶外移動電源 1000W 露營電池 行動電源 儲能電池 UPS 車泊" [level=3] [ref=e1282]
+                              - generic [ref=e1285]: $49,990
+                              - generic [ref=e1287]: $59,700
+                            - list [ref=e1289]:
+                              - listitem [ref=e1290]:
+                                - generic [ref=e1292]: P幣
+                      - list [ref=e1294]:
+                        - listitem [ref=e1295]:
+                          - button "" [ref=e1296] [cursor=pointer]:
+                            - generic [ref=e1298]: 
+                        - listitem [ref=e1299]:
+                          - button "" [ref=e1300] [cursor=pointer]:
+                            - generic [ref=e1302]: 
+                  - listitem [ref=e1303]:
+                    - generic [ref=e1304]:
+                      - link "msi Modern 15 F13MG-049TW(i3-1315U/8G+8G/512G SSD/15.6\"FHD/Win11/鉑金灰)特仕商務筆電 ★送:專屬包包+滑鼠★ MSI 微星 Modern 15 F13MG-049TW(i3-1315U/8G+8G/512G SSD/15.6\"FHD/Win11/鉑金灰)特仕商務筆電      (2) $18,900 $27,900 P幣" [ref=e1305] [cursor=pointer]:
+                        - /url: /prod/DHABC2-A900HZVQA
+                        - generic [ref=e1306]:
+                          - img "msi Modern 15 F13MG-049TW(i3-1315U/8G+8G/512G SSD/15.6\"FHD/Win11/鉑金灰)特仕商務筆電" [ref=e1309]
+                          - generic [ref=e1310]:
+                            - generic [ref=e1311]:
+                              - generic [ref=e1312]:
+                                - generic [ref=e1313]: ★送:專屬包包+滑鼠★
+                                - heading "MSI 微星 Modern 15 F13MG-049TW(i3-1315U/8G+8G/512G SSD/15.6\"FHD/Win11/鉑金灰)特仕商務筆電" [level=3] [ref=e1314]
+                                - generic [ref=e1315]:
+                                  - generic [ref=e1319]:
+                                    - generic [ref=e1321]:
+                                      - text: 
+                                      - generic [ref=e1322]: 
+                                    - generic [ref=e1324]:
+                                      - text: 
+                                      - generic [ref=e1325]: 
+                                    - generic [ref=e1327]:
+                                      - text: 
+                                      - generic [ref=e1328]: 
+                                    - generic [ref=e1330]:
+                                      - text: 
+                                      - generic [ref=e1331]: 
+                                    - generic [ref=e1333]:
+                                      - text: 
+                                      - generic [ref=e1334]: 
+                                  - generic [ref=e1335]: (2)
+                              - generic [ref=e1338]: $18,900
+                              - generic [ref=e1340]: $27,900
+                            - list [ref=e1342]:
+                              - listitem [ref=e1343]:
+                                - generic [ref=e1345]: P幣
+                      - list [ref=e1347]:
+                        - listitem [ref=e1348]:
+                          - button "" [ref=e1349] [cursor=pointer]:
+                            - generic [ref=e1351]: 
+                        - listitem [ref=e1352]:
+                          - button "" [ref=e1353] [cursor=pointer]:
+                            - generic [ref=e1355]: 
+                  - listitem [ref=e1356]:
+                    - generic [ref=e1357]:
+                      - link "E000095-1 久愛 - 瑤濕濕 少婦 任選1件享75折 強力吮吸、雙重震動、四國語音 久愛 瑤濕濕 10頻 智能 吮吸 震動 互動發音 美臀 屁股 矽膠 名器 實體娃娃 情趣娃娃 電動飛機杯 自慰套 $1,779 (售價已折) $2,373 折價券 P幣 折扣" [ref=e1358] [cursor=pointer]:
+                        - /url: /prod/DECZ0S-A900JLT3O
+                        - generic [ref=e1359]:
+                          - img "E000095-1 久愛 - 瑤濕濕 少婦" [ref=e1362]
+                          - generic [ref=e1363]:
+                            - generic [ref=e1364]:
+                              - generic [ref=e1366]: 任選1件享75折
+                              - generic [ref=e1367]:
+                                - generic [ref=e1368]: 強力吮吸、雙重震動、四國語音
+                                - heading "久愛 瑤濕濕 10頻 智能 吮吸 震動 互動發音 美臀 屁股 矽膠 名器 實體娃娃 情趣娃娃 電動飛機杯 自慰套" [level=3] [ref=e1369]
+                              - generic [ref=e1370]:
+                                - generic [ref=e1372]: $1,779
+                                - generic [ref=e1373]: (售價已折)
+                              - generic [ref=e1375]: $2,373
+                            - list [ref=e1377]:
+                              - listitem [ref=e1378]:
+                                - generic [ref=e1380]: 折價券
+                              - listitem [ref=e1381]:
+                                - generic [ref=e1383]: P幣
+                              - listitem [ref=e1384]:
+                                - generic [ref=e1386]: 折扣
+                      - list [ref=e1388]:
+                        - listitem [ref=e1389]:
+                          - button "" [ref=e1390] [cursor=pointer]:
+                            - generic [ref=e1392]: 
+                        - listitem [ref=e1393]:
+                          - button "" [ref=e1394] [cursor=pointer]:
+                            - generic [ref=e1396]: 
+                  - listitem [ref=e1397]:
+                    - generic [ref=e1398]:
+                      - link "RENATA 蕾娜塔 鉑金修護露 100ml 免沖洗 護髮 護髮精華 修護 抗毛躁 滿2000折200 免沖洗護髮 RENATA 鉑金修護露 100ml $899 $1,099 折價券 P幣 折扣" [ref=e1399] [cursor=pointer]:
+                        - /url: /prod/DDBXGS-A900I2MOO
+                        - generic [ref=e1400]:
+                          - img "RENATA 蕾娜塔 鉑金修護露 100ml 免沖洗 護髮 護髮精華 修護 抗毛躁" [ref=e1403]
+                          - generic [ref=e1404]:
+                            - generic [ref=e1405]:
+                              - generic [ref=e1407]: 滿2000折200
+                              - generic [ref=e1408]:
+                                - generic [ref=e1409]: 免沖洗護髮
+                                - heading "RENATA 鉑金修護露 100ml" [level=3] [ref=e1410]
+                              - generic [ref=e1413]: $899
+                              - generic [ref=e1415]: $1,099
+                            - list [ref=e1417]:
+                              - listitem [ref=e1418]:
+                                - generic [ref=e1420]: 折價券
+                              - listitem [ref=e1421]:
+                                - generic [ref=e1423]: P幣
+                              - listitem [ref=e1424]:
+                                - generic [ref=e1426]: 折扣
+                      - list [ref=e1428]:
+                        - listitem [ref=e1429]:
+                          - button "" [ref=e1430] [cursor=pointer]:
+                            - generic [ref=e1432]: 
+                        - listitem [ref=e1433]:
+                          - button "" [ref=e1434] [cursor=pointer]:
+                            - generic [ref=e1436]: 
+                  - listitem [ref=e1437]:
+                    - generic [ref=e1438]:
+                      - link "GATSBY 鉑金王者男性淡香水50ml 任選1件享85折 GATSBY 鉑金王者男性淡香水50ml (木質花果香)      (13) $152 (售價已折) $179 P幣 折扣" [ref=e1439] [cursor=pointer]:
+                        - /url: /prod/DDAHDB-A900FXI6W
+                        - generic [ref=e1440]:
+                          - img "GATSBY 鉑金王者男性淡香水50ml" [ref=e1443]
+                          - generic [ref=e1444]:
+                            - generic [ref=e1445]:
+                              - generic [ref=e1446]:
+                                - list [ref=e1447]:
+                                  - listitem [ref=e1448]
+                                - generic [ref=e1452]: 任選1件享85折
+                              - generic [ref=e1453]:
+                                - heading "GATSBY 鉑金王者男性淡香水50ml (木質花果香)" [level=3] [ref=e1454]
+                                - generic [ref=e1455]:
+                                  - generic [ref=e1459]:
+                                    - generic [ref=e1461]:
+                                      - text: 
+                                      - generic [ref=e1462]: 
+                                    - generic [ref=e1464]:
+                                      - text: 
+                                      - generic [ref=e1465]: 
+                                    - generic [ref=e1467]:
+                                      - text: 
+                                      - generic [ref=e1468]: 
+                                    - generic [ref=e1470]:
+                                      - text: 
+                                      - generic [ref=e1471]: 
+                                    - generic [ref=e1473]:
+                                      - text: 
+                                      - generic [ref=e1474]: 
+                                  - generic [ref=e1475]: (13)
+                              - generic [ref=e1476]:
+                                - generic [ref=e1478]: $152
+                                - generic [ref=e1479]: (售價已折)
+                              - generic [ref=e1481]: $179
+                            - list [ref=e1483]:
+                              - listitem [ref=e1484]:
+                                - generic [ref=e1486]: P幣
+                              - listitem [ref=e1487]:
+                                - generic [ref=e1489]: 折扣
+                      - list [ref=e1491]:
+                        - listitem [ref=e1492]:
+                          - button "" [ref=e1493] [cursor=pointer]:
+                            - generic [ref=e1495]: 
+                        - listitem [ref=e1496]:
+                          - button "" [ref=e1497] [cursor=pointer]:
+                            - generic [ref=e1499]: 
+                  - listitem [ref=e1500]:
+                    - generic [ref=e1501]:
+                      - link "【2024家用版】Dell Pro 14 Base PC14250-U7516G512G 鉑金銀 (Ultra 7 255U/16G/512G/W11P/14) DELL 戴爾 【2024家用版】Dell Pro 14 Base PC14250-U7516G512G 鉑金銀 (Ultra 7 255U/16G/512G/W11P/14) $45,999 P幣" [ref=e1502] [cursor=pointer]:
+                        - /url: /prod/DHAI9N-1900JS2RH
+                        - generic [ref=e1503]:
+                          - img "【2024家用版】Dell Pro 14 Base PC14250-U7516G512G 鉑金銀 (Ultra 7 255U/16G/512G/W11P/14)" [ref=e1506]
+                          - generic [ref=e1507]:
+                            - generic [ref=e1508]:
+                              - list [ref=e1510]:
+                                - listitem [ref=e1511]
+                              - heading "DELL 戴爾 【2024家用版】Dell Pro 14 Base PC14250-U7516G512G 鉑金銀 (Ultra 7 255U/16G/512G/W11P/14)" [level=3] [ref=e1516]
+                              - generic [ref=e1519]: $45,999
+                            - list [ref=e1521]:
+                              - listitem [ref=e1522]:
+                                - generic [ref=e1524]: P幣
+                      - list [ref=e1526]:
+                        - listitem [ref=e1527]:
+                          - button "" [ref=e1528] [cursor=pointer]:
+                            - generic [ref=e1530]: 
+                        - listitem [ref=e1531]:
+                          - button "" [ref=e1532] [cursor=pointer]:
+                            - generic [ref=e1534]: 
+                  - listitem [ref=e1535]:
+                    - generic [ref=e1536]:
+                      - link "3M透氣記憶枕 滿1件享85折 LUST 竹炭記憶枕 /3M材質 吸濕排汗/人體工學完美支撐 -惰性矽膠(日本原料)台灣製      (2) $424 (售價已折) $499 P幣 折扣" [ref=e1537] [cursor=pointer]:
+                        - /url: /prod/QFAV7W-A900ASXB0
+                        - generic [ref=e1538]:
+                          - img "3M透氣記憶枕" [ref=e1541]
+                          - generic [ref=e1542]:
+                            - generic [ref=e1543]:
+                              - generic [ref=e1545]: 滿1件享85折
+                              - generic [ref=e1546]:
+                                - heading "LUST 竹炭記憶枕 /3M材質 吸濕排汗/人體工學完美支撐 -惰性矽膠(日本原料)台灣製" [level=3] [ref=e1547]
+                                - generic [ref=e1548]:
+                                  - generic [ref=e1552]:
+                                    - generic [ref=e1554]:
+                                      - text: 
+                                      - generic [ref=e1555]: 
+                                    - generic [ref=e1557]:
+                                      - text: 
+                                      - generic [ref=e1558]: 
+                                    - generic [ref=e1560]:
+                                      - text: 
+                                      - generic [ref=e1561]: 
+                                    - generic [ref=e1563]:
+                                      - text: 
+                                      - generic [ref=e1564]: 
+                                    - generic [ref=e1566]:
+                                      - text: 
+                                      - generic [ref=e1567]: 
+                                  - generic [ref=e1568]: (2)
+                              - generic [ref=e1569]:
+                                - generic [ref=e1571]: $424
+                                - generic [ref=e1572]: (售價已折)
+                              - generic [ref=e1574]: $499
+                            - list [ref=e1576]:
+                              - listitem [ref=e1577]:
+                                - generic [ref=e1579]: P幣
+                              - listitem [ref=e1580]:
+                                - generic [ref=e1582]: 折扣
+                      - list [ref=e1584]:
+                        - listitem [ref=e1585]:
+                          - button "" [ref=e1586] [cursor=pointer]:
+                            - generic [ref=e1588]: 
+                        - listitem [ref=e1589]:
+                          - button "" [ref=e1590] [cursor=pointer]:
+                            - generic [ref=e1592]: 
+                  - listitem [ref=e1593]:
+                    - generic [ref=e1594]:
+                      - link "ASUS Vivobook 14 X1407AA-0041D325 鉑金色(Ultra 5 325/16G/512G/14吋WUXGA/W11)AI效能筆電 最新Core Ultra 5 (Series 3)AI 處理器 ASUS 華碩 Vivobook 14 X1407AA-0041D325 鉑金色(Ultra 5 325/16G/512G/14吋WUXGA/W11)AI效能筆電 $29,999 $40,999 P幣" [ref=e1595] [cursor=pointer]:
+                        - /url: /prod/DHABB2-A900JPLP4
+                        - generic [ref=e1596]:
+                          - img "ASUS Vivobook 14 X1407AA-0041D325 鉑金色(Ultra 5 325/16G/512G/14吋WUXGA/W11)AI效能筆電" [ref=e1599]
+                          - generic [ref=e1600]:
+                            - generic [ref=e1601]:
+                              - generic [ref=e1602]:
+                                - generic [ref=e1603]: 最新Core Ultra 5 (Series 3)AI 處理器
+                                - heading "ASUS 華碩 Vivobook 14 X1407AA-0041D325 鉑金色(Ultra 5 325/16G/512G/14吋WUXGA/W11)AI效能筆電" [level=3] [ref=e1604]
+                              - generic [ref=e1607]: $29,999
+                              - generic [ref=e1609]: $40,999
+                            - list [ref=e1611]:
+                              - listitem [ref=e1612]:
+                                - generic [ref=e1614]: P幣
+                      - list [ref=e1616]:
+                        - listitem [ref=e1617]:
+                          - button "" [ref=e1618] [cursor=pointer]:
+                            - generic [ref=e1620]: 
+                        - listitem [ref=e1621]:
+                          - button "" [ref=e1622] [cursor=pointer]:
+                            - generic [ref=e1624]: 
+                  - listitem [ref=e1625]:
+                    - generic [ref=e1626]:
+                      - link "Switch OLED 款式主機(白色)+包+貼+手把充電座+熱門遊戲&配件任選一組 送手把矽膠套 OHIOSPORT 暑假限定 買就送豪華配件包 Switch OLED 國際版主機(白色)+包+貼+手把充電座+熱門遊戲&配件任選一組 送手把矽膠套      (5) $11,980 $15,980 P幣" [ref=e1627] [cursor=pointer]:
+                        - /url: /prod/DGBJCW-A900BOQ25
+                        - generic [ref=e1628]:
+                          - img "Switch OLED 款式主機(白色)+包+貼+手把充電座+熱門遊戲&配件任選一組 送手把矽膠套" [ref=e1631]
+                          - generic [ref=e1632]:
+                            - generic [ref=e1633]:
+                              - generic [ref=e1634]:
+                                - heading "OHIOSPORT 暑假限定 買就送豪華配件包 Switch OLED 國際版主機(白色)+包+貼+手把充電座+熱門遊戲&配件任選一組 送手把矽膠套" [level=3] [ref=e1635]
+                                - generic [ref=e1636]:
+                                  - generic [ref=e1640]:
+                                    - generic [ref=e1642]:
+                                      - text: 
+                                      - generic [ref=e1643]: 
+                                    - generic [ref=e1645]:
+                                      - text: 
+                                      - generic [ref=e1646]: 
+                                    - generic [ref=e1648]:
+                                      - text: 
+                                      - generic [ref=e1649]: 
+                                    - generic [ref=e1651]:
+                                      - text: 
+                                      - generic [ref=e1652]: 
+                                    - generic [ref=e1654]:
+                                      - text: 
+                                      - generic [ref=e1655]: 
+                                  - generic [ref=e1656]: (5)
+                              - generic [ref=e1659]: $11,980
+                              - generic [ref=e1661]: $15,980
+                            - list [ref=e1663]:
+                              - listitem [ref=e1664]:
+                                - generic [ref=e1666]: P幣
+                      - list [ref=e1668]:
+                        - listitem [ref=e1669]:
+                          - button "" [ref=e1670] [cursor=pointer]:
+                            - generic [ref=e1672]: 
+                        - listitem [ref=e1673]:
+                          - button "" [ref=e1674] [cursor=pointer]:
+                            - generic [ref=e1676]: 
+                  - listitem [ref=e1677]:
+                    - generic [ref=e1678]:
+                      - link "狐狸姬，M-3XL塑身衣雙強排扣加強拉鍊超修飾半身塑身衣(膚) FoxBi 狐狸姬 M-3XL塑身衣雙強排扣加強拉鍊超修飾半身塑身衣(膚)      (1) $1,500 $4,980 折價券 P幣" [ref=e1679] [cursor=pointer]:
+                        - /url: /prod/QDAKBS-A900ADVLX
+                        - generic [ref=e1680]:
+                          - img "狐狸姬，M-3XL塑身衣雙強排扣加強拉鍊超修飾半身塑身衣(膚)" [ref=e1683]
+                          - generic [ref=e1684]:
+                            - generic [ref=e1685]:
+                              - generic [ref=e1686]:
+                                - heading "FoxBi 狐狸姬 M-3XL塑身衣雙強排扣加強拉鍊超修飾半身塑身衣(膚)" [level=3] [ref=e1687]
+                                - generic [ref=e1688]:
+                                  - generic [ref=e1692]:
+                                    - generic [ref=e1694]:
+                                      - text: 
+                                      - generic [ref=e1695]: 
+                                    - generic [ref=e1697]:
+                                      - text: 
+                                      - generic [ref=e1698]: 
+                                    - generic [ref=e1700]:
+                                      - text: 
+                                      - generic [ref=e1701]: 
+                                    - generic [ref=e1703]:
+                                      - text: 
+                                      - generic [ref=e1704]: 
+                                    - generic [ref=e1706]:
+                                      - text: 
+                                      - generic [ref=e1707]: 
+                                  - generic [ref=e1708]: (1)
+                              - generic [ref=e1711]: $1,500
+                              - generic [ref=e1713]: $4,980
+                            - list [ref=e1715]:
+                              - listitem [ref=e1716]:
+                                - generic [ref=e1718]: 折價券
+                              - listitem [ref=e1719]:
+                                - generic [ref=e1721]: P幣
+                      - list [ref=e1723]:
+                        - listitem [ref=e1724]:
+                          - button "" [ref=e1725] [cursor=pointer]:
+                            - generic [ref=e1727]: 
+                        - listitem [ref=e1728]:
+                          - button "" [ref=e1729] [cursor=pointer]:
+                            - generic [ref=e1731]: 
+                  - listitem [ref=e1732]:
+                    - generic [ref=e1733]:
+                      - link "BLUETTI 鉑金版 AC50P 700W 移動電源 + PV120 120W太陽能板 frame_b1 雙11+普發現金超划算｜五年保固 支援快充 APP監控 BLUETTI 禾蓁鉑金版 AC50P 700W 移動電源 + 120W太陽能板 戶外電源 露營電池 車宿 行動電源 UPS $16,900 $19,900 P幣" [ref=e1734] [cursor=pointer]:
+                        - /url: /prod/DEBQ7S-A900JAGSS
+                        - generic [ref=e1735]:
+                          - generic [ref=e1736]:
+                            - img "BLUETTI 鉑金版 AC50P 700W 移動電源 + PV120 120W太陽能板" [ref=e1738]
+                            - img "frame_b1" [ref=e1741]
+                          - generic [ref=e1742]:
+                            - generic [ref=e1743]:
+                              - generic [ref=e1744]:
+                                - generic [ref=e1745]: 雙11+普發現金超划算｜五年保固 支援快充 APP監控
+                                - heading "BLUETTI 禾蓁鉑金版 AC50P 700W 移動電源 + 120W太陽能板 戶外電源 露營電池 車宿 行動電源 UPS" [level=3] [ref=e1746]
+                              - generic [ref=e1749]: $16,900
+                              - generic [ref=e1751]: $19,900
+                            - list [ref=e1753]:
+                              - listitem [ref=e1754]:
+                                - generic [ref=e1756]: P幣
+                      - list [ref=e1758]:
+                        - listitem [ref=e1759]:
+                          - button "" [ref=e1760] [cursor=pointer]:
+                            - generic [ref=e1762]: 
+                        - listitem [ref=e1763]:
+                          - button "" [ref=e1764] [cursor=pointer]:
+                            - generic [ref=e1766]: 
+                  - listitem [ref=e1767]:
+                    - generic [ref=e1768]:
+                      - link "WMF Fusiontec Mineral 平底鍋 28cm (鉑金色) 德國WMF獨家最新製鍋精工 WMF Fusiontec Mineral 平底鍋 28cm (鉑金色) $11,520 $17,000 P幣" [ref=e1769] [cursor=pointer]:
+                        - /url: /prod/DEAWMW-A900JCCL5
+                        - generic [ref=e1770]:
+                          - img "WMF Fusiontec Mineral 平底鍋 28cm (鉑金色)" [ref=e1773]
+                          - generic [ref=e1774]:
+                            - generic [ref=e1775]:
+                              - generic [ref=e1776]:
+                                - generic [ref=e1777]: 德國WMF獨家最新製鍋精工
+                                - heading "WMF Fusiontec Mineral 平底鍋 28cm (鉑金色)" [level=3] [ref=e1778]
+                              - generic [ref=e1781]: $11,520
+                              - generic [ref=e1783]: $17,000
+                            - list [ref=e1785]:
+                              - listitem [ref=e1786]:
+                                - generic [ref=e1788]: P幣
+                      - list [ref=e1790]:
+                        - listitem [ref=e1791]:
+                          - button "" [ref=e1792] [cursor=pointer]:
+                            - generic [ref=e1794]: 
+                        - listitem [ref=e1795]:
+                          - button "" [ref=e1796] [cursor=pointer]:
+                            - generic [ref=e1798]: 
+                  - listitem [ref=e1799]:
+                    - generic [ref=e1800]:
+                      - link "家居好物 夏季冰絲豆豆涼感沙發墊 四人座70*210CM 涼而不冰 排濕透氣不悶熱 家居好物 夏季冰絲涼感沙發墊 沙發涼席 矽膠防滑坐墊 防貓抓沙發蓋布 沙發罩（四人座70*210CM）      (1) $859 $2,199 P幣" [ref=e1801] [cursor=pointer]:
+                        - /url: /prod/DEAZG4-A900ITEU5
+                        - generic [ref=e1802]:
+                          - img "家居好物 夏季冰絲豆豆涼感沙發墊 四人座70*210CM" [ref=e1805]
+                          - generic [ref=e1806]:
+                            - generic [ref=e1807]:
+                              - list [ref=e1809]:
+                                - listitem [ref=e1810]
+                              - generic [ref=e1814]:
+                                - generic [ref=e1815]: 涼而不冰 排濕透氣不悶熱
+                                - heading "家居好物 夏季冰絲涼感沙發墊 沙發涼席 矽膠防滑坐墊 防貓抓沙發蓋布 沙發罩（四人座70*210CM）" [level=3] [ref=e1816]
+                                - generic [ref=e1817]:
+                                  - generic [ref=e1821]:
+                                    - generic [ref=e1823]:
+                                      - text: 
+                                      - generic [ref=e1824]: 
+                                    - generic [ref=e1826]:
+                                      - text: 
+                                      - generic [ref=e1827]: 
+                                    - generic [ref=e1829]:
+                                      - text: 
+                                      - generic [ref=e1830]: 
+                                    - generic [ref=e1832]:
+                                      - text: 
+                                      - generic [ref=e1833]: 
+                                    - generic [ref=e1835]:
+                                      - text: 
+                                      - generic [ref=e1836]: 
+                                  - generic [ref=e1837]: (1)
+                              - generic [ref=e1840]: $859
+                              - generic [ref=e1842]: $2,199
+                            - list [ref=e1844]:
+                              - listitem [ref=e1845]:
+                                - generic [ref=e1847]: P幣
+                      - list [ref=e1849]:
+                        - listitem [ref=e1850]:
+                          - button "" [ref=e1851] [cursor=pointer]:
+                            - generic [ref=e1853]: 
+                        - listitem [ref=e1854]:
+                          - button "" [ref=e1855] [cursor=pointer]:
+                            - generic [ref=e1857]: 
+                  - listitem [ref=e1858]:
+                    - generic [ref=e1859]:
+                      - link "《D'Fina 時尚女裝》 名媛小個子蕾絲立領短袖上衣褶皺半身裙時尚套裝 預購 D'Fina 【南紡購物中心】 《 時尚女裝》 名媛小個子蕾絲立領短袖上衣褶皺半身裙時尚套裝 $1,990 $2,488 P幣" [ref=e1860] [cursor=pointer]:
+                        - /url: /prod/DIDV0J-A900GY0JI
+                        - generic [ref=e1861]:
+                          - img "《D'Fina 時尚女裝》 名媛小個子蕾絲立領短袖上衣褶皺半身裙時尚套裝" [ref=e1864]
+                          - generic [ref=e1865]:
+                            - generic [ref=e1866]:
+                              - list [ref=e1868]:
+                                - listitem [ref=e1869]:
+                                  - generic [ref=e1871]: 預購
+                              - heading "D'Fina 【南紡購物中心】 《 時尚女裝》 名媛小個子蕾絲立領短袖上衣褶皺半身裙時尚套裝" [level=3] [ref=e1873]
+                              - generic [ref=e1876]: $1,990
+                              - generic [ref=e1878]: $2,488
+                            - list [ref=e1880]:
+                              - listitem [ref=e1881]:
+                                - generic [ref=e1883]: P幣
+                      - list [ref=e1885]:
+                        - listitem [ref=e1886]:
+                          - button "" [ref=e1887] [cursor=pointer]:
+                            - generic [ref=e1889]: 
+                        - listitem [ref=e1890]:
+                          - button "" [ref=e1891] [cursor=pointer]:
+                            - generic [ref=e1893]: 
+                  - listitem [ref=e1894]:
+                    - generic [ref=e1895]:
+                      - link "【TiKOBO 鈦工坊】純鈦星光保溫瓶二代400ml 海水藍 閃耀星光海水藍 無塗層 不易卡味好清洗 TiKOBO 鈦工坊 純鈦星光保溫瓶二代400ml 海水藍(附專屬小茶隔．矽膠杯套) $2,880 $4,250 P幣 滿額贈" [ref=e1896] [cursor=pointer]:
+                        - /url: /prod/DEBWN3-A900JKHKI
+                        - generic [ref=e1897]:
+                          - img "【TiKOBO 鈦工坊】純鈦星光保溫瓶二代400ml 海水藍" [ref=e1900]
+                          - generic [ref=e1901]:
+                            - generic [ref=e1902]:
+                              - list [ref=e1904]:
+                                - listitem [ref=e1905]
+                              - generic [ref=e1909]:
+                                - generic [ref=e1910]: 閃耀星光海水藍 無塗層 不易卡味好清洗
+                                - heading "TiKOBO 鈦工坊 純鈦星光保溫瓶二代400ml 海水藍(附專屬小茶隔．矽膠杯套)" [level=3] [ref=e1911]
+                              - generic [ref=e1914]: $2,880
+                              - generic [ref=e1916]: $4,250
+                            - list [ref=e1918]:
+                              - listitem [ref=e1919]:
+                                - generic [ref=e1921]: P幣
+                              - listitem [ref=e1922]:
+                                - generic [ref=e1924]: 滿額贈
+                      - list [ref=e1926]:
+                        - listitem [ref=e1927]:
+                          - button "" [ref=e1928] [cursor=pointer]:
+                            - generic [ref=e1930]: 
+                        - listitem [ref=e1931]:
+                          - button "" [ref=e1932] [cursor=pointer]:
+                            - generic [ref=e1934]: 
+                  - listitem [ref=e1935]:
+                    - generic [ref=e1936]:
+                      - link "【韓國K.W.】KD3112韓國紗裙低調優雅多層紗裙(網紗/百褶裙/半身裙/長裙) 預購 (網紗/百褶裙/半身裙/長裙) K.W. 韓國紗裙低調優雅多層紗裙(網紗/百褶裙/半身裙/長裙) $599 $1,599 P幣" [ref=e1937] [cursor=pointer]:
+                        - /url: /prod/DIAI7A-A900HJ78Z
+                        - generic [ref=e1938]:
+                          - img "【韓國K.W.】KD3112韓國紗裙低調優雅多層紗裙(網紗/百褶裙/半身裙/長裙)" [ref=e1941]
+                          - generic [ref=e1942]:
+                            - generic [ref=e1943]:
+                              - list [ref=e1945]:
+                                - listitem [ref=e1946]:
+                                  - generic [ref=e1948]: 預購
+                              - generic [ref=e1949]:
+                                - generic [ref=e1950]: (網紗/百褶裙/半身裙/長裙)
+                                - heading "K.W. 韓國紗裙低調優雅多層紗裙(網紗/百褶裙/半身裙/長裙)" [level=3] [ref=e1951]
+                              - generic [ref=e1954]: $599
+                              - generic [ref=e1956]: $1,599
+                            - list [ref=e1958]:
+                              - listitem [ref=e1959]:
+                                - generic [ref=e1961]: P幣
+                      - list [ref=e1963]:
+                        - listitem [ref=e1964]:
+                          - button "" [ref=e1965] [cursor=pointer]:
+                            - generic [ref=e1967]: 
+                        - listitem [ref=e1968]:
+                          - button "" [ref=e1969] [cursor=pointer]:
+                            - generic [ref=e1971]: 
+                  - listitem [ref=e1972]:
+                    - generic [ref=e1973]:
+                      - link "HeleiWaho 日本 1.5mm 半身防寒衣 潛水衣 衝浪衣 溯溪 自由潛水 HeleiWaho 【南紡購物中心】 1.5mm 男半身長袖防寒衣 潛水衣      (2) $2,250 $3,150 折價券 P幣" [ref=e1974] [cursor=pointer]:
+                        - /url: /prod/DXBO2S-A900C3O05
+                        - generic [ref=e1975]:
+                          - img "HeleiWaho 日本 1.5mm 半身防寒衣 潛水衣 衝浪衣 溯溪 自由潛水" [ref=e1978]
+                          - generic [ref=e1979]:
+                            - generic [ref=e1980]:
+                              - generic [ref=e1981]:
+                                - heading "HeleiWaho 【南紡購物中心】 1.5mm 男半身長袖防寒衣 潛水衣" [level=3] [ref=e1982]
+                                - generic [ref=e1983]:
+                                  - generic [ref=e1987]:
+                                    - generic [ref=e1989]:
+                                      - text: 
+                                      - generic [ref=e1990]: 
+                                    - generic [ref=e1992]:
+                                      - text: 
+                                      - generic [ref=e1993]: 
+                                    - generic [ref=e1995]:
+                                      - text: 
+                                      - generic [ref=e1996]: 
+                                    - generic [ref=e1998]:
+                                      - text: 
+                                      - generic [ref=e1999]: 
+                                    - generic [ref=e2001]:
+                                      - text: 
+                                      - generic [ref=e2002]: 
+                                  - generic [ref=e2003]: (2)
+                              - generic [ref=e2006]: $2,250
+                              - generic [ref=e2008]: $3,150
+                            - list [ref=e2010]:
+                              - listitem [ref=e2011]:
+                                - generic [ref=e2013]: 折價券
+                              - listitem [ref=e2014]:
+                                - generic [ref=e2016]: P幣
+                      - list [ref=e2018]:
+                        - listitem [ref=e2019]:
+                          - button "" [ref=e2020] [cursor=pointer]:
+                            - generic [ref=e2022]: 
+                        - listitem [ref=e2023]:
+                          - button "" [ref=e2024] [cursor=pointer]:
+                            - generic [ref=e2026]: 
+                  - listitem [ref=e2027]:
+                    - generic [ref=e2028]:
+                      - link "日韓四季慵懶百搭薄款冰絲高腰皺褶半身山本裙長裙(4色) 鬆緊高腰 藏肉顯瘦 I.Dear 日韓四季慵懶百搭薄款冰絲高腰皺褶半身山本裙長裙(4色) $424 $1,980 P幣" [ref=e2029] [cursor=pointer]:
+                        - /url: /prod/DIAIU4-A900HPHF8
+                        - generic [ref=e2030]:
+                          - img "日韓四季慵懶百搭薄款冰絲高腰皺褶半身山本裙長裙(4色)" [ref=e2033]
+                          - generic [ref=e2034]:
+                            - generic [ref=e2035]:
+                              - generic [ref=e2036]:
+                                - generic [ref=e2037]: 鬆緊高腰 藏肉顯瘦
+                                - heading "I.Dear 日韓四季慵懶百搭薄款冰絲高腰皺褶半身山本裙長裙(4色)" [level=3] [ref=e2038]
+                              - generic [ref=e2041]: $424
+                              - generic [ref=e2043]: $1,980
+                            - list [ref=e2045]:
+                              - listitem [ref=e2046]:
+                                - generic [ref=e2048]: P幣
+                      - list [ref=e2050]:
+                        - listitem [ref=e2051]:
+                          - button "" [ref=e2052] [cursor=pointer]:
+                            - generic [ref=e2054]: 
+                        - listitem [ref=e2055]:
+                          - button "" [ref=e2056] [cursor=pointer]:
+                            - generic [ref=e2058]: 
+                  - listitem [ref=e2059]:
+                    - generic [ref=e2060]:
+                      - link "【NITORI 宜得利家居】折疊矽膠保鮮盒 GY 800ML 預購 NITORI 宜得利家居 可摺疊矽膠保鮮盒 GY 800ML      (3) $149 $149 P幣" [ref=e2061] [cursor=pointer]:
+                        - /url: /prod/DQCI0X-A900GZQ2F
+                        - generic [ref=e2062]:
+                          - img "【NITORI 宜得利家居】折疊矽膠保鮮盒 GY 800ML" [ref=e2065]
+                          - generic [ref=e2066]:
+                            - generic [ref=e2067]:
+                              - list [ref=e2069]:
+                                - listitem [ref=e2070]:
+                                  - generic [ref=e2072]: 預購
+                              - generic [ref=e2073]:
+                                - heading "NITORI 宜得利家居 可摺疊矽膠保鮮盒 GY 800ML" [level=3] [ref=e2074]
+                                - generic [ref=e2075]:
+                                  - generic [ref=e2079]:
+                                    - generic [ref=e2081]:
+                                      - text: 
+                                      - generic [ref=e2082]: 
+                                    - generic [ref=e2084]:
+                                      - text: 
+                                      - generic [ref=e2085]: 
+                                    - generic [ref=e2087]:
+                                      - text: 
+                                      - generic [ref=e2088]: 
+                                    - generic [ref=e2090]:
+                                      - text: 
+                                      - generic [ref=e2091]: 
+                                    - generic [ref=e2093]:
+                                      - text: 
+                                      - generic [ref=e2094]: 
+                                  - generic [ref=e2095]: (3)
+                              - generic [ref=e2098]: $149
+                              - generic [ref=e2100]: $149
+                            - list [ref=e2102]:
+                              - listitem [ref=e2103]:
+                                - generic [ref=e2105]: P幣
+                      - list [ref=e2107]:
+                        - listitem [ref=e2108]:
+                          - button "" [ref=e2109] [cursor=pointer]:
+                            - generic [ref=e2111]: 
+                        - listitem [ref=e2112]:
+                          - button "" [ref=e2113] [cursor=pointer]:
+                            - generic [ref=e2115]: 
+                  - listitem [ref=e2116]:
+                    - generic [ref=e2117]:
+                      - link "【墨尼克】美縫疤痕護理矽膠片(未滅菌)4x30cm 【墨尼克】美縫疤痕護理矽膠片(未滅菌)4x30cm      (1) $1,830 $1,980 P幣" [ref=e2118] [cursor=pointer]:
+                        - /url: /prod/DFAT2A-A900HHN9Q
+                        - generic [ref=e2119]:
+                          - img "【墨尼克】美縫疤痕護理矽膠片(未滅菌)4x30cm" [ref=e2122]
+                          - generic [ref=e2123]:
+                            - generic [ref=e2124]:
+                              - generic [ref=e2125]:
+                                - heading "【墨尼克】美縫疤痕護理矽膠片(未滅菌)4x30cm" [level=3] [ref=e2126]
+                                - generic [ref=e2127]:
+                                  - generic [ref=e2131]:
+                                    - generic [ref=e2133]:
+                                      - text: 
+                                      - generic [ref=e2134]: 
+                                    - generic [ref=e2136]:
+                                      - text: 
+                                      - generic [ref=e2137]: 
+                                    - generic [ref=e2139]:
+                                      - text: 
+                                      - generic [ref=e2140]: 
+                                    - generic [ref=e2142]:
+                                      - text: 
+                                      - generic [ref=e2143]: 
+                                    - generic [ref=e2145]:
+                                      - text: 
+                                      - generic [ref=e2146]: 
+                                  - generic [ref=e2147]: (1)
+                              - generic [ref=e2150]: $1,830
+                              - generic [ref=e2152]: $1,980
+                            - list [ref=e2154]:
+                              - listitem [ref=e2155]:
+                                - generic [ref=e2157]: P幣
+                      - list [ref=e2159]:
+                        - listitem [ref=e2160]:
+                          - button "" [ref=e2161] [cursor=pointer]:
+                            - generic [ref=e2163]: 
+                        - listitem [ref=e2164]:
+                          - button "" [ref=e2165] [cursor=pointer]:
+                            - generic [ref=e2167]: 
+                  - listitem [ref=e2168]:
+                    - generic [ref=e2169]:
+                      - link "BLUETTI 禾蓁鉑金版 AC70P + AC2P 戶外電源 雙機套組 行動電源 frame_b1 狂售千台 五年保固 支援快充 APP監控 UPS功能 BLUETTI 禾蓁鉑金版 AC70P + AC2P 戶外電源 雙機套組 行動電源      (1) $24,900 $26,900 P幣" [ref=e2170] [cursor=pointer]:
+                        - /url: /prod/DEBQ7S-A900JAIMF
+                        - generic [ref=e2171]:
+                          - generic [ref=e2172]:
+                            - img "BLUETTI 禾蓁鉑金版 AC70P + AC2P 戶外電源 雙機套組 行動電源" [ref=e2174]
+                            - img "frame_b1" [ref=e2177]
+                          - generic [ref=e2178]:
+                            - generic [ref=e2179]:
+                              - generic [ref=e2180]:
+                                - generic [ref=e2181]: 狂售千台 五年保固 支援快充 APP監控 UPS功能
+                                - heading "BLUETTI 禾蓁鉑金版 AC70P + AC2P 戶外電源 雙機套組 行動電源" [level=3] [ref=e2182]
+                                - generic [ref=e2183]:
+                                  - generic [ref=e2187]:
+                                    - generic [ref=e2189]:
+                                      - text: 
+                                      - generic [ref=e2190]: 
+                                    - generic [ref=e2192]:
+                                      - text: 
+                                      - generic [ref=e2193]: 
+                                    - generic [ref=e2195]:
+                                      - text: 
+                                      - generic [ref=e2196]: 
+                                    - generic [ref=e2198]:
+                                      - text: 
+                                      - generic [ref=e2199]: 
+                                    - generic [ref=e2201]:
+                                      - text: 
+                                      - generic [ref=e2202]: 
+                                  - generic [ref=e2203]: (1)
+                              - generic [ref=e2206]: $24,900
+                              - generic [ref=e2208]: $26,900
+                            - list [ref=e2210]:
+                              - listitem [ref=e2211]:
+                                - generic [ref=e2213]: P幣
+                      - list [ref=e2215]:
+                        - listitem [ref=e2216]:
+                          - button "" [ref=e2217] [cursor=pointer]:
+                            - generic [ref=e2219]: 
+                        - listitem [ref=e2220]:
+                          - button "" [ref=e2221] [cursor=pointer]:
+                            - generic [ref=e2223]: 
+                  - listitem [ref=e2224]:
+                    - generic [ref=e2225]:
+                      - link "Switch 2公司貨主機+王國之淚限定版+林克amiibo+保貼+收納包+矽膠套+主機支架 首批7/10預購 Nintendo 任天堂 Switch 2公司貨主機+王國之淚限定版+林克amiibo+保貼+收納包+矽膠套+主機支架      (1) $18,380 $19,990 P幣" [ref=e2226] [cursor=pointer]:
+                        - /url: /prod/DGBJLC-A900IJI29
+                        - generic [ref=e2227]:
+                          - img "Switch 2公司貨主機+王國之淚限定版+林克amiibo+保貼+收納包+矽膠套+主機支架" [ref=e2230]
+                          - generic [ref=e2231]:
+                            - generic [ref=e2232]:
+                              - generic [ref=e2233]:
+                                - generic [ref=e2234]: 首批7/10預購
+                                - heading "Nintendo 任天堂 Switch 2公司貨主機+王國之淚限定版+林克amiibo+保貼+收納包+矽膠套+主機支架" [level=3] [ref=e2235]
+                                - generic [ref=e2236]:
+                                  - generic [ref=e2240]:
+                                    - generic [ref=e2242]:
+                                      - text: 
+                                      - generic [ref=e2243]: 
+                                    - generic [ref=e2245]:
+                                      - text: 
+                                      - generic [ref=e2246]: 
+                                    - generic [ref=e2248]:
+                                      - text: 
+                                      - generic [ref=e2249]: 
+                                    - generic [ref=e2251]:
+                                      - text: 
+                                      - generic [ref=e2252]: 
+                                    - generic [ref=e2254]:
+                                      - text: 
+                                      - generic [ref=e2255]: 
+                                  - generic [ref=e2256]: (1)
+                              - generic [ref=e2259]: $18,380
+                              - generic [ref=e2261]: $19,990
+                            - list [ref=e2263]:
+                              - listitem [ref=e2264]:
+                                - generic [ref=e2266]: P幣
+                      - list [ref=e2268]:
+                        - listitem [ref=e2269]:
+                          - button "" [ref=e2270] [cursor=pointer]:
+                            - generic [ref=e2272]: 
+                        - listitem [ref=e2273]:
+                          - button "" [ref=e2274] [cursor=pointer]:
+                            - generic [ref=e2276]: 
+                  - listitem [ref=e2277]:
+                    - generic [ref=e2278]:
+                      - link "《DeBelle美人衣學館》秋冬百搭中長高腰開叉針織包臀半身裙 DeBelle 美人衣學館 秋冬百搭中長高腰開叉針織包臀半身裙 $718 $1,090 P幣" [ref=e2279] [cursor=pointer]:
+                        - /url: /prod/DIAI5K-A900AYA81
+                        - generic [ref=e2280]:
+                          - img "《DeBelle美人衣學館》秋冬百搭中長高腰開叉針織包臀半身裙" [ref=e2283]
+                          - generic [ref=e2284]:
+                            - generic [ref=e2285]:
+                              - list [ref=e2287]:
+                                - listitem [ref=e2288]
+                              - heading "DeBelle 美人衣學館 秋冬百搭中長高腰開叉針織包臀半身裙" [level=3] [ref=e2293]
+                              - generic [ref=e2296]: $718
+                              - generic [ref=e2298]: $1,090
+                            - list [ref=e2300]:
+                              - listitem [ref=e2301]:
+                                - generic [ref=e2303]: P幣
+                      - list [ref=e2305]:
+                        - listitem [ref=e2306]:
+                          - button "" [ref=e2307] [cursor=pointer]:
+                            - generic [ref=e2309]: 
+                        - listitem [ref=e2310]:
+                          - button "" [ref=e2311] [cursor=pointer]:
+                            - generic [ref=e2313]: 
+                  - listitem [ref=e2314]:
+                    - generic [ref=e2315]:
+                      - link "【思薇爾】柔塑曲線系列S-XXL中重機能半身塑身衣(水洗藍) 任選1件享9折 SWEAR 思薇爾 柔塑曲線系列S-XXL中重機能半身塑身衣(水洗藍) $2,502 (售價已折) $2,780 P幣 折扣" [ref=e2316] [cursor=pointer]:
+                        - /url: /prod/DIAXC3-A900GPJ5H
+                        - generic [ref=e2317]:
+                          - img "【思薇爾】柔塑曲線系列S-XXL中重機能半身塑身衣(水洗藍)" [ref=e2320]
+                          - generic [ref=e2321]:
+                            - generic [ref=e2322]:
+                              - generic [ref=e2324]: 任選1件享9折
+                              - heading "SWEAR 思薇爾 柔塑曲線系列S-XXL中重機能半身塑身衣(水洗藍)" [level=3] [ref=e2326]
+                              - generic [ref=e2327]:
+                                - generic [ref=e2329]: $2,502
+                                - generic [ref=e2330]: (售價已折)
+                              - generic [ref=e2332]: $2,780
+                            - list [ref=e2334]:
+                              - listitem [ref=e2335]:
+                                - generic [ref=e2337]: P幣
+                              - listitem [ref=e2338]:
+                                - generic [ref=e2340]: 折扣
+                      - list [ref=e2342]:
+                        - listitem [ref=e2343]:
+                          - button "" [ref=e2344] [cursor=pointer]:
+                            - generic [ref=e2346]: 
+                        - listitem [ref=e2347]:
+                          - button "" [ref=e2348] [cursor=pointer]:
+                            - generic [ref=e2350]: 
+                  - listitem [ref=e2351]:
+                    - generic [ref=e2352]:
+                      - link "NIKE AS U ACG SFADV MORPHO WRAP 男女 半身裙 II0928010 frame_b1 滿1件享84折 NIKE 耐吉 AS U ACG SFADV MORPHO WRAP 男女 半身裙 II0928010 $3,135 (售價已折) $3,733 P幣 折扣" [ref=e2353] [cursor=pointer]:
+                        - /url: /prod/DEBNOW-A900JU3F3
+                        - generic [ref=e2354]:
+                          - generic [ref=e2355]:
+                            - img "NIKE AS U ACG SFADV MORPHO WRAP 男女 半身裙 II0928010" [ref=e2357]
+                            - img "frame_b1" [ref=e2360]
+                          - generic [ref=e2361]:
+                            - generic [ref=e2362]:
+                              - generic [ref=e2364]: 滿1件享84折
+                              - heading "NIKE 耐吉 AS U ACG SFADV MORPHO WRAP 男女 半身裙 II0928010" [level=3] [ref=e2366]
+                              - generic [ref=e2367]:
+                                - generic [ref=e2369]: $3,135
+                                - generic [ref=e2370]: (售價已折)
+                              - generic [ref=e2372]: $3,733
+                            - list [ref=e2374]:
+                              - listitem [ref=e2375]:
+                                - generic [ref=e2377]: P幣
+                              - listitem [ref=e2378]:
+                                - generic [ref=e2380]: 折扣
+                      - list [ref=e2382]:
+                        - listitem [ref=e2383]:
+                          - button "" [ref=e2384] [cursor=pointer]:
+                            - generic [ref=e2386]: 
+                        - listitem [ref=e2387]:
+                          - button "" [ref=e2388] [cursor=pointer]:
+                            - generic [ref=e2390]: 
+                  - listitem [ref=e2391]:
+                    - generic [ref=e2392]:
+                      - link "E000017 久愛 - 健身教練臀 任選1件享75折 紮實肉感，只屬於你的健身教練 久愛 健身教練臀 同志 基佬 臀模 肛交 飛機杯 gay 男同志 屁股 倒模 基霸 自慰器 男用 矽膠娃娃 性愛娃娃 $1,779 (售價已折) $2,373 折價券 P幣 折扣" [ref=e2393] [cursor=pointer]:
+                        - /url: /prod/DECZ0G-A900JV4YM
+                        - generic [ref=e2394]:
+                          - img "E000017 久愛 - 健身教練臀" [ref=e2397]
+                          - generic [ref=e2398]:
+                            - generic [ref=e2399]:
+                              - generic [ref=e2401]: 任選1件享75折
+                              - generic [ref=e2402]:
+                                - generic [ref=e2403]: 紮實肉感，只屬於你的健身教練
+                                - heading "久愛 健身教練臀 同志 基佬 臀模 肛交 飛機杯 gay 男同志 屁股 倒模 基霸 自慰器 男用 矽膠娃娃 性愛娃娃" [level=3] [ref=e2404]
+                              - generic [ref=e2405]:
+                                - generic [ref=e2407]: $1,779
+                                - generic [ref=e2408]: (售價已折)
+                              - generic [ref=e2410]: $2,373
+                            - list [ref=e2412]:
+                              - listitem [ref=e2413]:
+                                - generic [ref=e2415]: 折價券
+                              - listitem [ref=e2416]:
+                                - generic [ref=e2418]: P幣
+                              - listitem [ref=e2419]:
+                                - generic [ref=e2421]: 折扣
+                      - list [ref=e2423]:
+                        - listitem [ref=e2424]:
+                          - button "" [ref=e2425] [cursor=pointer]:
+                            - generic [ref=e2427]: 
+                        - listitem [ref=e2428]:
+                          - button "" [ref=e2429] [cursor=pointer]:
+                            - generic [ref=e2431]: 
+                  - listitem [ref=e2432]:
+                    - generic [ref=e2433]:
+                      - link "浴室鏡櫃  到貨通知我 迎接新時代的家居生活 60公分智能浴室鏡櫃 太空鋁掛墻式儲物鏡子 簡約掛壁鏡箱 半身鏡 LED燈鏡子 補光鏡 浴室鏡 $3,732 $4,999 P幣" [ref=e2434] [cursor=pointer]:
+                        - /url: /prod/DEDW1U-A900JUZEL
+                        - generic [ref=e2435]:
+                          - generic [ref=e2436]:
+                            - img "浴室鏡櫃" [ref=e2438]
+                            - generic [ref=e2442]:
+                              - generic [ref=e2443]: 
+                              - text: 到貨通知我
+                          - generic [ref=e2444]:
+                            - generic [ref=e2445]:
+                              - generic [ref=e2446]:
+                                - generic [ref=e2447]: 迎接新時代的家居生活
+                                - heading "60公分智能浴室鏡櫃 太空鋁掛墻式儲物鏡子 簡約掛壁鏡箱 半身鏡 LED燈鏡子 補光鏡 浴室鏡" [level=3] [ref=e2448]
+                              - generic [ref=e2451]: $3,732
+                              - generic [ref=e2453]: $4,999
+                            - list [ref=e2455]:
+                              - listitem [ref=e2456]:
+                                - generic [ref=e2458]: P幣
+                      - list [ref=e2460]:
+                        - listitem [ref=e2461]:
+                          - button "" [ref=e2462] [cursor=pointer]:
+                            - generic [ref=e2464]: 
+                        - listitem [ref=e2465]:
+                          - button "" [disabled] [ref=e2466] [cursor=pointer]:
+                            - generic [ref=e2468]: 
+              - generic [ref=e2470]:
+                - button "" [disabled] [ref=e2472] [cursor=pointer]:
+                  - generic [ref=e2474]: 
+                - list [ref=e2475]:
+                  - listitem [ref=e2476]:
+                    - link "1" [ref=e2477] [cursor=pointer]:
+                      - /url: /search/?q=%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0%20%E5%8D%8A%E8%BA%AB&p=1
+                  - listitem [ref=e2478]:
+                    - link "2" [ref=e2479] [cursor=pointer]:
+                      - /url: /search/?q=%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0%20%E5%8D%8A%E8%BA%AB&p=2
+                  - listitem [ref=e2480]:
+                    - link "3" [ref=e2481] [cursor=pointer]:
+                      - /url: /search/?q=%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0%20%E5%8D%8A%E8%BA%AB&p=3
+                  - listitem [ref=e2482]:
+                    - link "4" [ref=e2483] [cursor=pointer]:
+                      - /url: /search/?q=%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0%20%E5%8D%8A%E8%BA%AB&p=4
+                  - listitem [ref=e2484]:
+                    - link "5" [ref=e2485] [cursor=pointer]:
+                      - /url: /search/?q=%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0%20%E5%8D%8A%E8%BA%AB&p=5
+                  - listitem [ref=e2486]: ...
+                  - listitem [ref=e2487]:
+                    - link "100" [ref=e2488] [cursor=pointer]:
+                      - /url: /search/?q=%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0%20%E5%8D%8A%E8%BA%AB&p=100
+                - button "" [ref=e2490] [cursor=pointer]:
+                  - generic [ref=e2492]: 
+                - generic [ref=e2493]: 共 999+ 項
+    - contentinfo [ref=e2494]:
+      - generic [ref=e2498]:
+        - generic [ref=e2499]:
+          - generic [ref=e2500]:
+            - button "24hlogo" [ref=e2501] [cursor=pointer]
+            - generic [ref=e2503]:
+              - button "facebook" [ref=e2504] [cursor=pointer]:
+                - generic [ref=e2505]: 
+              - button "instagram" [ref=e2506] [cursor=pointer]:
+                - generic [ref=e2507]: 
+              - button "line" [ref=e2508] [cursor=pointer]:
+                - generic [ref=e2509]: 
+              - button "youtube" [ref=e2510] [cursor=pointer]:
+                - generic [ref=e2511]: 
+            - generic [ref=e2512]:
+              - text: 106 台北市大安區敦化南路二段105號12樓
+              - generic [ref=e2513]: 統一編號：16606102
+              - generic [ref=e2514]: 本網站產品已投保國泰產物產品責任險$250,000,000元。
+              - text: 保險證號：1516字第14PD04516號
+          - list [ref=e2518]:
+            - listitem [ref=e2519]:
+              - generic [ref=e2520]: 關於PChome24h
+              - button "榮耀時刻" [ref=e2522] [cursor=pointer]:
+                - generic [ref=e2523]: 榮耀時刻
+              - button "大事記" [ref=e2525] [cursor=pointer]:
+                - generic [ref=e2526]: 大事記
+              - button "人才招募" [ref=e2528] [cursor=pointer]:
+                - generic [ref=e2529]: 人才招募
+              - button "隱私權聲明" [ref=e2531] [cursor=pointer]:
+                - generic [ref=e2532]: 隱私權聲明
+              - button "服務條款" [ref=e2534] [cursor=pointer]:
+                - generic [ref=e2535]: 服務條款
+              - button "商品專櫃總覽" [ref=e2537] [cursor=pointer]:
+                - generic [ref=e2538]: 商品專櫃總覽
+            - listitem [ref=e2539]:
+              - generic [ref=e2540]: 顧客權益
+              - button "聯絡我們" [ref=e2542] [cursor=pointer]:
+                - generic [ref=e2543]: 聯絡我們
+              - button "常見Q&A" [ref=e2545] [cursor=pointer]:
+                - generic [ref=e2546]: 常見Q&A
+              - button "防詐騙宣導" [ref=e2548] [cursor=pointer]:
+                - generic [ref=e2549]: 防詐騙宣導
+              - button "退換貨說明" [ref=e2551] [cursor=pointer]:
+                - generic [ref=e2552]: 退換貨說明
+              - button "24h到貨說明" [ref=e2554] [cursor=pointer]:
+                - generic [ref=e2555]: 24h到貨說明
+              - button "政令宣導" [ref=e2557] [cursor=pointer]:
+                - generic [ref=e2558]: 政令宣導
+            - listitem [ref=e2559]:
+              - generic [ref=e2560]: 其他服務
+              - button "PChome" [ref=e2562] [cursor=pointer]:
+                - generic [ref=e2563]: PChome
+              - button "書店" [ref=e2565] [cursor=pointer]:
+                - generic [ref=e2566]: 書店
+              - button "比比昂日本購物" [ref=e2568] [cursor=pointer]:
+                - generic [ref=e2569]: 比比昂日本購物
+              - button "旅遊" [ref=e2571] [cursor=pointer]:
+                - generic [ref=e2572]: 旅遊
+            - listitem [ref=e2573]:
+              - generic [ref=e2574]: 企業合作
+              - button "招商專區" [ref=e2576] [cursor=pointer]:
+                - generic [ref=e2577]: 招商專區
+              - button "媒體聯繫" [ref=e2579] [cursor=pointer]:
+                - generic [ref=e2580]: 媒體聯繫
+              - button "企業／大型採購" [ref=e2582] [cursor=pointer]:
+                - generic [ref=e2583]: 企業／大型採購
+          - button "下載 PChome 24h購物 APP" [ref=e2588] [cursor=pointer]:
+            - generic [ref=e2590]: 下載 PChome 24h購物 APP
+        - generic [ref=e2591]:
+          - generic [ref=e2592]: 網路家庭國際資訊股份有限公司 版權所有 轉載必究
+          - generic [ref=e2593]: PChome and PChome Online are trademarks of PChome Online Inc.
+  - alert [ref=e2594]

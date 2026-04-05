@@ -1,0 +1,938 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e4]:
+      - generic [ref=e6]:
+        - button [ref=e8] [cursor=pointer]:
+          - img [ref=e9]
+        - link "TW" [ref=e12] [cursor=pointer]:
+          - /url: /
+          - img [ref=e13]
+          - generic [ref=e17]: TW
+      - generic [ref=e19]:
+        - generic [ref=e21]:
+          - textbox "搜尋或貼上圖片" [ref=e22]: 鉑金矽膠 半身
+          - generic [ref=e23]:
+            - img [ref=e25] [cursor=pointer]
+            - button [ref=e27] [cursor=pointer]:
+              - img [ref=e28]
+        - button [ref=e31] [cursor=pointer]:
+          - img [ref=e32]
+      - generic [ref=e35]:
+        - generic [ref=e37]: ‌
+        - generic [ref=e39]: ‌
+        - generic [ref=e41]: ‌
+    - main [ref=e43]:
+      - generic [ref=e44]:
+        - generic [ref=e47]:
+          - generic [ref=e48] [cursor=pointer]: 全部
+          - generic [ref=e49] [cursor=pointer]: 購物網
+          - generic [ref=e50] [cursor=pointer]: 自選
+        - generic [ref=e52]:
+          - generic [ref=e53]:
+            - generic [ref=e55]:
+              - generic [ref=e56]:
+                - button "推薦排序" [ref=e57] [cursor=pointer]:
+                  - generic [ref=e58]: 推薦排序
+                - button "價格排序" [ref=e59] [cursor=pointer]:
+                  - generic [ref=e60]: 價格排序
+                  - img [ref=e62]
+                - button "搜尋設定" [ref=e64] [cursor=pointer]:
+                  - generic [ref=e65]: 搜尋設定
+                  - img [ref=e67]
+              - generic [ref=e69]:
+                - button [ref=e70] [cursor=pointer]:
+                  - img [ref=e71]
+                - button [ref=e76] [cursor=pointer]:
+                  - img [ref=e77]
+            - generic [ref=e81]:
+              - generic [ref=e83]:
+                - generic [ref=e84]:
+                  - link "高品質鉑金液態矽膠半身娃娃 全自動夾吸震動防水加溫語音矽膠娃娃 女優名器 矽膠倒模 實體娃娃 成人仿真娃娃 電動情趣娃娃" [ref=e85] [cursor=pointer]:
+                    - /url: /r/?i=tw_bid_shopee&id=1419933473.43662258648&purl=https%3A%2F%2Fshopee.tw%2Fproduct%2F1419933473%2F43662258648&lb=product_searchpage&q=%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0+%E5%8D%8A%E8%BA%AB
+                    - img "高品質鉑金液態矽膠半身娃娃 全自動夾吸震動防水加溫語音矽膠娃娃 女優名器 矽膠倒模 實體娃娃 成人仿真娃娃 電動情趣娃娃" [ref=e87]
+                  - button [ref=e88] [cursor=pointer]:
+                    - img [ref=e89]
+                - generic [ref=e93]:
+                  - generic [ref=e94]:
+                    - link "高品質鉑金液態矽膠半身娃娃 全自動夾吸震動防水加溫語音矽膠娃娃 女優名器 矽膠倒模 實體娃娃 成人仿真娃娃 電動情趣娃娃" [ref=e96] [cursor=pointer]:
+                      - /url: /r/?i=tw_bid_shopee&id=1419933473.43662258648&purl=https%3A%2F%2Fshopee.tw%2Fproduct%2F1419933473%2F43662258648&lb=product_searchpage&q=%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0+%E5%8D%8A%E8%BA%AB
+                    - button [ref=e97] [cursor=pointer]:
+                      - img [ref=e98]
+                  - generic [ref=e100]:
+                    - generic [ref=e101]: $7,580 ~ $19,580
+                    - generic [ref=e102] [cursor=pointer]:
+                      - generic [ref=e103]: 7.5公斤半身全矽膠娃娃（防水夾吸加熱）
+                      - generic [ref=e104]: $7,580
+                      - img [ref=e105]
+                  - generic [ref=e107]:
+                    - generic [ref=e108]:
+                      - link "蝦皮購物 icon 蝦皮購物" [ref=e109] [cursor=pointer]:
+                        - /url: /store/?i=tw_bid_shopee
+                        - img "蝦皮購物 icon" [ref=e111]
+                        - generic [ref=e112]: 蝦皮購物
+                      - generic [ref=e114]: 夜未眠💖情趣成人館｜專營性用品-飛機杯、震動按摩棒、跳蛋、女優名器、性愛娃娃、
+                    - generic [ref=e115]:
+                      - button "歷史價格" [ref=e116] [cursor=pointer]:
+                        - img [ref=e118]
+                        - generic [ref=e121]: 歷史價格
+                      - button [ref=e122] [cursor=pointer]:
+                        - img [ref=e123]
+                      - button [ref=e125] [cursor=pointer]:
+                        - img [ref=e126]
+              - generic [ref=e132]:
+                - generic [ref=e133]:
+                  - link "love898 深田詠美矽膠乳房 鉑金矽膠材質 木瓜奶 胸模 奶模 胸部倒模 半身娃娃 實體娃娃 男用娃娃 成人情趣用品" [ref=e134] [cursor=pointer]:
+                    - /url: /r/?i=tw_bid_shopee&id=1245692162.42908328523&purl=https%3A%2F%2Fshopee.tw%2Fproduct%2F1245692162%2F42908328523&lb=product_searchpage&q=%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0+%E5%8D%8A%E8%BA%AB
+                    - img "love898 深田詠美矽膠乳房 鉑金矽膠材質 木瓜奶 胸模 奶模 胸部倒模 半身娃娃 實體娃娃 男用娃娃 成人情趣用品" [ref=e136]
+                  - button [ref=e137] [cursor=pointer]:
+                    - img [ref=e138]
+                  - img [ref=e143]
+                - generic [ref=e149]:
+                  - generic [ref=e150]:
+                    - link "love898 深田詠美矽膠乳房 鉑金矽膠材質 木瓜奶 胸模 奶模 胸部倒模 半身娃娃 實體娃娃 男用娃娃 成人情趣用品" [ref=e152] [cursor=pointer]:
+                      - /url: /r/?i=tw_bid_shopee&id=1245692162.42908328523&purl=https%3A%2F%2Fshopee.tw%2Fproduct%2F1245692162%2F42908328523&lb=product_searchpage&q=%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0+%E5%8D%8A%E8%BA%AB
+                    - button [ref=e153] [cursor=pointer]:
+                      - img [ref=e154]
+                  - generic [ref=e156]: 折扣$120
+                  - generic [ref=e158]: $5,861
+                  - generic [ref=e159]:
+                    - generic [ref=e160]:
+                      - link "蝦皮購物 icon 蝦皮購物" [ref=e161] [cursor=pointer]:
+                        - /url: /store/?i=tw_bid_shopee
+                        - img "蝦皮購物 icon" [ref=e163]
+                        - generic [ref=e164]: 蝦皮購物
+                      - generic [ref=e166]: 維妮爾情趣（真人倒模/實體娃娃/專營店）
+                    - generic [ref=e167]:
+                      - button "降價 $119" [ref=e168] [cursor=pointer]:
+                        - img [ref=e170]
+                        - generic [ref=e173]: 降價 $119
+                      - button [ref=e174] [cursor=pointer]:
+                        - img [ref=e175]
+                      - button [ref=e177] [cursor=pointer]:
+                        - img [ref=e178]
+              - generic [ref=e184]:
+                - generic [ref=e185]:
+                  - link "娃娃學姐 Doll Senior X 奈也 聯名款 S38 106cm鉑金矽膠腿模皮膚紋 帶骨架 下半身陰臀倒模名器男用" [ref=e186] [cursor=pointer]:
+                    - /url: /r/?i=tw_bid_shopee&id=1354972490.25094264742&purl=https%3A%2F%2Fshopee.tw%2Fproduct%2F1354972490%2F25094264742&lb=product_searchpage&q=%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0+%E5%8D%8A%E8%BA%AB
+                    - img "娃娃學姐 Doll Senior X 奈也 聯名款 S38 106cm鉑金矽膠腿模皮膚紋 帶骨架 下半身陰臀倒模名器男用" [ref=e188]
+                  - button [ref=e189] [cursor=pointer]:
+                    - img [ref=e190]
+                - generic [ref=e194]:
+                  - generic [ref=e195]:
+                    - link "娃娃學姐 Doll Senior X 奈也 聯名款 S38 106cm鉑金矽膠腿模皮膚紋 帶骨架 下半身陰臀倒模名器男用" [ref=e197] [cursor=pointer]:
+                      - /url: /r/?i=tw_bid_shopee&id=1354972490.25094264742&purl=https%3A%2F%2Fshopee.tw%2Fproduct%2F1354972490%2F25094264742&lb=product_searchpage&q=%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0+%E5%8D%8A%E8%BA%AB
+                    - button [ref=e198] [cursor=pointer]:
+                      - img [ref=e199]
+                  - generic [ref=e201]: 折扣$100
+                  - generic [ref=e202]:
+                    - generic [ref=e203]: $20,599 ~ $26,999
+                    - generic [ref=e204] [cursor=pointer]:
+                      - generic [ref=e205]: 106cm【升級皮膚紋+鉑金矽膠+骨架】,標配版【隱私發貨+品質保固+贈禮品】
+                      - generic [ref=e206]: $20,599
+                      - img [ref=e207]
+                  - generic [ref=e209]:
+                    - generic [ref=e210]:
+                      - link "蝦皮購物 icon 蝦皮購物" [ref=e211] [cursor=pointer]:
+                        - /url: /store/?i=tw_bid_shopee
+                        - img "蝦皮購物 icon" [ref=e213]
+                        - generic [ref=e214]: 蝦皮購物
+                      - generic [ref=e216]: 幻蝶情趣企業店
+                    - generic [ref=e217]:
+                      - button "歷史價格" [ref=e218] [cursor=pointer]:
+                        - img [ref=e220]
+                        - generic [ref=e223]: 歷史價格
+                      - button [ref=e224] [cursor=pointer]:
+                        - img [ref=e225]
+                      - button [ref=e227] [cursor=pointer]:
+                        - img [ref=e228]
+              - generic [ref=e234]:
+                - generic [ref=e235]:
+                  - link "久久愛✨智能夾吸 發音電動 98cm鉑金液態全矽膠半身倒模 全自動實體娃娃帶腳性感美腿陰臀倒模名器 雙穴可用男用自慰器" [ref=e236] [cursor=pointer]:
+                    - /url: /r/?i=tw_bid_shopee&id=1280413345.53302592003&purl=https%3A%2F%2Fshopee.tw%2Fproduct%2F1280413345%2F53302592003&lb=product_searchpage&q=%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0+%E5%8D%8A%E8%BA%AB
+                    - img "久久愛✨智能夾吸 發音電動 98cm鉑金液態全矽膠半身倒模 全自動實體娃娃帶腳性感美腿陰臀倒模名器 雙穴可用男用自慰器" [ref=e238]
+                  - button [ref=e239] [cursor=pointer]:
+                    - img [ref=e240]
+                  - img [ref=e245]
+                - generic [ref=e251]:
+                  - generic [ref=e252]:
+                    - link "久久愛✨智能夾吸 發音電動 98cm鉑金液態全矽膠半身倒模 全自動實體娃娃帶腳性感美腿陰臀倒模名器 雙穴可用男用自慰器" [ref=e254] [cursor=pointer]:
+                      - /url: /r/?i=tw_bid_shopee&id=1280413345.53302592003&purl=https%3A%2F%2Fshopee.tw%2Fproduct%2F1280413345%2F53302592003&lb=product_searchpage&q=%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0+%E5%8D%8A%E8%BA%AB
+                    - button [ref=e255] [cursor=pointer]:
+                      - img [ref=e256]
+                  - generic [ref=e258]:
+                    - generic [ref=e259]: $5,999 ~ $10,599
+                    - generic [ref=e260] [cursor=pointer]:
+                      - generic [ref=e261]: 80CM矽膠腿模+合金關節骨架【18斤】,標準版
+                      - generic [ref=e262]: $5,999
+                      - img [ref=e263]
+                  - generic [ref=e265]:
+                    - generic [ref=e266]:
+                      - link "蝦皮購物 icon 蝦皮購物" [ref=e267] [cursor=pointer]:
+                        - /url: /store/?i=tw_bid_shopee
+                        - img "蝦皮購物 icon" [ref=e269]
+                        - generic [ref=e270]: 蝦皮購物
+                      - generic [ref=e272]: 久久愛情趣館
+                    - generic [ref=e273]:
+                      - button "歷史價格" [ref=e274] [cursor=pointer]:
+                        - img [ref=e276]
+                        - generic [ref=e279]: 歷史價格
+                      - button [ref=e280] [cursor=pointer]:
+                        - img [ref=e281]
+                      - button [ref=e283] [cursor=pointer]:
+                        - img [ref=e284]
+              - generic [ref=e290]:
+                - generic [ref=e291]:
+                  - link "iloveonepeace（布蘭琪）23KG鉑金矽膠半身娃娃男用性玩偶矽膠實體娃娃半身倒模擬真紋理半身飛機杯成人情趣玩具" [ref=e292] [cursor=pointer]:
+                    - /url: /r/?i=tw_bid_shopee&id=154121609.28958184080&purl=https%3A%2F%2Fshopee.tw%2Fproduct%2F154121609%2F28958184080&lb=product_searchpage&q=%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0+%E5%8D%8A%E8%BA%AB
+                    - img "iloveonepeace（布蘭琪）23KG鉑金矽膠半身娃娃男用性玩偶矽膠實體娃娃半身倒模擬真紋理半身飛機杯成人情趣玩具" [ref=e294]
+                  - button [ref=e295] [cursor=pointer]:
+                    - img [ref=e296]
+                - generic [ref=e300]:
+                  - generic [ref=e301]:
+                    - link "iloveonepeace（布蘭琪）23KG鉑金矽膠半身娃娃男用性玩偶矽膠實體娃娃半身倒模擬真紋理半身飛機杯成人情趣玩具" [ref=e303] [cursor=pointer]:
+                      - /url: /r/?i=tw_bid_shopee&id=154121609.28958184080&purl=https%3A%2F%2Fshopee.tw%2Fproduct%2F154121609%2F28958184080&lb=product_searchpage&q=%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0+%E5%8D%8A%E8%BA%AB
+                    - button [ref=e304] [cursor=pointer]:
+                      - img [ref=e305]
+                  - generic [ref=e307]: 折扣$588
+                  - generic [ref=e309]: $32,550
+                  - generic [ref=e310]:
+                    - generic [ref=e311]:
+                      - link "蝦皮購物 icon 蝦皮購物" [ref=e312] [cursor=pointer]:
+                        - /url: /store/?i=tw_bid_shopee
+                        - img "蝦皮購物 icon" [ref=e314]
+                        - generic [ref=e315]: 蝦皮購物
+                      - generic [ref=e317]: 維妮爾小铺/半身娃娃/屁股倒模/胸模/飛機杯
+                      - generic [ref=e318]: 高雄市三民區
+                    - generic [ref=e319]:
+                      - button "價格持平" [ref=e320] [cursor=pointer]:
+                        - img [ref=e322]
+                        - generic [ref=e325]: 價格持平
+                      - button [ref=e326] [cursor=pointer]:
+                        - img [ref=e327]
+                      - button [ref=e329] [cursor=pointer]:
+                        - img [ref=e330]
+              - generic [ref=e336]:
+                - generic [ref=e337]:
+                  - link "Mizi情趣 液態鉑金矽膠半身倒模 帶骨架可以活動身體 情趣用品全矽膠半身娃娃 半身倒模 仿生軟胸 仿生皮膚紋" [ref=e338] [cursor=pointer]:
+                    - /url: /r/?i=tw_bid_shopee&id=1094014149.55104323930&purl=https%3A%2F%2Fshopee.tw%2Fproduct%2F1094014149%2F55104323930&lb=product_searchpage&q=%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0+%E5%8D%8A%E8%BA%AB
+                    - img "Mizi情趣 液態鉑金矽膠半身倒模 帶骨架可以活動身體 情趣用品全矽膠半身娃娃 半身倒模 仿生軟胸 仿生皮膚紋" [ref=e340]
+                  - button [ref=e341] [cursor=pointer]:
+                    - img [ref=e342]
+                  - img [ref=e347]
+                - generic [ref=e353]:
+                  - generic [ref=e354]:
+                    - link "Mizi情趣 液態鉑金矽膠半身倒模 帶骨架可以活動身體 情趣用品全矽膠半身娃娃 半身倒模 仿生軟胸 仿生皮膚紋" [ref=e356] [cursor=pointer]:
+                      - /url: /r/?i=tw_bid_shopee&id=1094014149.55104323930&purl=https%3A%2F%2Fshopee.tw%2Fproduct%2F1094014149%2F55104323930&lb=product_searchpage&q=%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0+%E5%8D%8A%E8%BA%AB
+                    - button [ref=e357] [cursor=pointer]:
+                      - img [ref=e358]
+                  - generic [ref=e360]:
+                    - generic [ref=e361]: $3,000 ~ $15,000
+                    - generic [ref=e362] [cursor=pointer]:
+                      - generic [ref=e363]: 補禮包
+                      - generic [ref=e364]: $3,000
+                      - img [ref=e365]
+                  - generic [ref=e367]:
+                    - generic [ref=e368]:
+                      - link "蝦皮購物 icon 蝦皮購物" [ref=e369] [cursor=pointer]:
+                        - /url: /store/?i=tw_bid_shopee
+                        - img "蝦皮購物 icon" [ref=e371]
+                        - generic [ref=e372]: 蝦皮購物
+                      - generic [ref=e374]: Mizi情趣用品企業店
+                      - generic [ref=e375]: 桃園市蘆竹區
+                    - generic [ref=e376]:
+                      - button "歷史價格" [ref=e377] [cursor=pointer]:
+                        - img [ref=e379]
+                        - generic [ref=e382]: 歷史價格
+                      - button [ref=e383] [cursor=pointer]:
+                        - img [ref=e384]
+                      - button [ref=e386] [cursor=pointer]:
+                        - img [ref=e387]
+              - generic [ref=e393]:
+                - generic [ref=e394]:
+                  - link "五代高領半身G罩杯胸墊cosplay 鉑金矽膠 不出油變裝女裝直播配件" [ref=e395] [cursor=pointer]:
+                    - /url: /r/?i=tw_bid_shopee&id=110383674.43218817588&purl=https%3A%2F%2Fshopee.tw%2Fproduct%2F110383674%2F43218817588&lb=product_searchpage&q=%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0+%E5%8D%8A%E8%BA%AB
+                    - img "五代高領半身G罩杯胸墊cosplay 鉑金矽膠 不出油變裝女裝直播配件" [ref=e397]
+                  - button [ref=e398] [cursor=pointer]:
+                    - img [ref=e399]
+                - generic [ref=e403]:
+                  - generic [ref=e404]:
+                    - link "五代高領半身G罩杯胸墊cosplay 鉑金矽膠 不出油變裝女裝直播配件" [ref=e406] [cursor=pointer]:
+                      - /url: /r/?i=tw_bid_shopee&id=110383674.43218817588&purl=https%3A%2F%2Fshopee.tw%2Fproduct%2F110383674%2F43218817588&lb=product_searchpage&q=%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0+%E5%8D%8A%E8%BA%AB
+                    - button [ref=e407] [cursor=pointer]:
+                      - img [ref=e408]
+                  - generic [ref=e410]:
+                    - generic [ref=e411]: $2,580 ~ $3,370
+                    - generic [ref=e412] [cursor=pointer]:
+                      - generic [ref=e413]: G罩杯絲棉填充
+                      - generic [ref=e414]: $2,580
+                      - img [ref=e415]
+                  - generic [ref=e417]:
+                    - generic [ref=e418]:
+                      - link "蝦皮購物 icon 蝦皮購物" [ref=e419] [cursor=pointer]:
+                        - /url: /store/?i=tw_bid_shopee
+                        - img "蝦皮購物 icon" [ref=e421]
+                        - generic [ref=e422]: 蝦皮購物
+                      - generic [ref=e424]: 媛野//藝容//曼妙//面具//娃娃//手辦 義乳假陰褲偽娘變裝總店
+                      - generic [ref=e425]: 桃園市蘆竹區
+                    - generic [ref=e426]:
+                      - button "歷史價格" [ref=e427] [cursor=pointer]:
+                        - img [ref=e429]
+                        - generic [ref=e432]: 歷史價格
+                      - button [ref=e433] [cursor=pointer]:
+                        - img [ref=e434]
+                      - button [ref=e436] [cursor=pointer]:
+                        - img [ref=e437]
+              - generic [ref=e443]:
+                - generic [ref=e444]:
+                  - link "鉑金液態矽膠果凍胸臀半身娃娃 AI聲控互動10檔夾吸強震加溫全身防水矽膠娃娃半身倒模 情趣用品 實體娃娃 矽膠倒模" [ref=e445] [cursor=pointer]:
+                    - /url: /r/?i=tw_bid_shopee&id=847955993.53704758988&purl=https%3A%2F%2Fshopee.tw%2Fproduct%2F847955993%2F53704758988&lb=product_searchpage&q=%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0+%E5%8D%8A%E8%BA%AB
+                    - img "鉑金液態矽膠果凍胸臀半身娃娃 AI聲控互動10檔夾吸強震加溫全身防水矽膠娃娃半身倒模 情趣用品 實體娃娃 矽膠倒模" [ref=e447]
+                  - button [ref=e448] [cursor=pointer]:
+                    - img [ref=e449]
+                  - img [ref=e454]
+                - generic [ref=e460]:
+                  - generic [ref=e461]:
+                    - link "鉑金液態矽膠果凍胸臀半身娃娃 AI聲控互動10檔夾吸強震加溫全身防水矽膠娃娃半身倒模 情趣用品 實體娃娃 矽膠倒模" [ref=e463] [cursor=pointer]:
+                      - /url: /r/?i=tw_bid_shopee&id=847955993.53704758988&purl=https%3A%2F%2Fshopee.tw%2Fproduct%2F847955993%2F53704758988&lb=product_searchpage&q=%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0+%E5%8D%8A%E8%BA%AB
+                    - button [ref=e464] [cursor=pointer]:
+                      - img [ref=e465]
+                  - generic [ref=e467]:
+                    - generic [ref=e468]: $3,198 ~ $13,980
+                    - generic [ref=e469] [cursor=pointer]:
+                      - generic [ref=e470]: 小袋贈品潤滑液LB024
+                      - generic [ref=e471]: $3,198
+                      - img [ref=e472]
+                  - generic [ref=e474]:
+                    - generic [ref=e475]:
+                      - link "蝦皮購物 icon 蝦皮購物" [ref=e476] [cursor=pointer]:
+                        - /url: /store/?i=tw_bid_shopee
+                        - img "蝦皮購物 icon" [ref=e478]
+                        - generic [ref=e479]: 蝦皮購物
+                      - generic [ref=e481]: 夜未眠成人情趣用品店-工廠直供大人玩具｜價格、品質、安全 一流的品質一手的價作
+                      - generic [ref=e482]: 嘉義縣竹崎鄉
+                    - generic [ref=e483]:
+                      - button "歷史價格" [ref=e484] [cursor=pointer]:
+                        - img [ref=e486]
+                        - generic [ref=e489]: 歷史價格
+                      - button [ref=e490] [cursor=pointer]:
+                        - img [ref=e491]
+                      - button [ref=e493] [cursor=pointer]:
+                        - img [ref=e494]
+              - generic [ref=e500]:
+                - generic [ref=e501]:
+                  - link "Mizi情趣 液態鉑金矽膠半身 倒模 女友名器 飛機杯 男用玩具 提升性功能工具 自慰器 情趣用品" [ref=e502] [cursor=pointer]:
+                    - /url: /r/?i=tw_bid_shopee&id=1094014149.52954498885&purl=https%3A%2F%2Fshopee.tw%2Fproduct%2F1094014149%2F52954498885&lb=product_searchpage&q=%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0+%E5%8D%8A%E8%BA%AB
+                    - img "Mizi情趣 液態鉑金矽膠半身 倒模 女友名器 飛機杯 男用玩具 提升性功能工具 自慰器 情趣用品" [ref=e504]
+                  - button [ref=e505] [cursor=pointer]:
+                    - img [ref=e506]
+                  - img [ref=e511]
+                - generic [ref=e517]:
+                  - generic [ref=e518]:
+                    - link "Mizi情趣 液態鉑金矽膠半身 倒模 女友名器 飛機杯 男用玩具 提升性功能工具 自慰器 情趣用品" [ref=e520] [cursor=pointer]:
+                      - /url: /r/?i=tw_bid_shopee&id=1094014149.52954498885&purl=https%3A%2F%2Fshopee.tw%2Fproduct%2F1094014149%2F52954498885&lb=product_searchpage&q=%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0+%E5%8D%8A%E8%BA%AB
+                    - button [ref=e521] [cursor=pointer]:
+                      - img [ref=e522]
+                  - generic [ref=e524]:
+                    - generic [ref=e525]: $2,188 ~ $10,899
+                    - generic [ref=e526] [cursor=pointer]:
+                      - generic [ref=e527]: 補禮包
+                      - generic [ref=e528]: $2,188
+                      - img [ref=e529]
+                  - generic [ref=e531]:
+                    - generic [ref=e532]:
+                      - link "蝦皮購物 icon 蝦皮購物" [ref=e533] [cursor=pointer]:
+                        - /url: /store/?i=tw_bid_shopee
+                        - img "蝦皮購物 icon" [ref=e535]
+                        - generic [ref=e536]: 蝦皮購物
+                      - generic [ref=e538]: Mizi情趣用品企業店
+                      - generic [ref=e539]: 桃園市蘆竹區
+                    - generic [ref=e540]:
+                      - button "歷史價格" [ref=e541] [cursor=pointer]:
+                        - img [ref=e543]
+                        - generic [ref=e546]: 歷史價格
+                      - button [ref=e547] [cursor=pointer]:
+                        - img [ref=e548]
+                      - button [ref=e550] [cursor=pointer]:
+                        - img [ref=e551]
+              - generic [ref=e557]:
+                - generic [ref=e558]:
+                  - link "love898 布蘭琪 23kg 鉑金矽膠娃娃 情趣娃娃 半身倒模 半身娃娃 男用飛機杯 半身自慰器 成人用品 可插娃娃" [ref=e559] [cursor=pointer]:
+                    - /url: /r/?i=tw_bid_shopee&id=1245692162.28831196668&purl=https%3A%2F%2Fshopee.tw%2Fproduct%2F1245692162%2F28831196668&lb=product_searchpage&q=%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0+%E5%8D%8A%E8%BA%AB
+                    - img "love898 布蘭琪 23kg 鉑金矽膠娃娃 情趣娃娃 半身倒模 半身娃娃 男用飛機杯 半身自慰器 成人用品 可插娃娃" [ref=e561]
+                  - button [ref=e562] [cursor=pointer]:
+                    - img [ref=e563]
+                  - img [ref=e568]
+                - generic [ref=e574]:
+                  - generic [ref=e575]:
+                    - link "love898 布蘭琪 23kg 鉑金矽膠娃娃 情趣娃娃 半身倒模 半身娃娃 男用飛機杯 半身自慰器 成人用品 可插娃娃" [ref=e577] [cursor=pointer]:
+                      - /url: /r/?i=tw_bid_shopee&id=1245692162.28831196668&purl=https%3A%2F%2Fshopee.tw%2Fproduct%2F1245692162%2F28831196668&lb=product_searchpage&q=%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0+%E5%8D%8A%E8%BA%AB
+                    - button [ref=e578] [cursor=pointer]:
+                      - img [ref=e579]
+                  - generic [ref=e581]: 折扣$480
+                  - generic [ref=e583]: $30,184
+                  - generic [ref=e584]:
+                    - generic [ref=e585]:
+                      - link "蝦皮購物 icon 蝦皮購物" [ref=e586] [cursor=pointer]:
+                        - /url: /store/?i=tw_bid_shopee
+                        - img "蝦皮購物 icon" [ref=e588]
+                        - generic [ref=e589]: 蝦皮購物
+                      - generic [ref=e591]: 維妮爾情趣（真人倒模/實體娃娃/專營店）
+                    - generic [ref=e592]:
+                      - button "降價 $616" [ref=e593] [cursor=pointer]:
+                        - img [ref=e595]
+                        - generic [ref=e598]: 降價 $616
+                      - button [ref=e599] [cursor=pointer]:
+                        - img [ref=e600]
+                      - button [ref=e602] [cursor=pointer]:
+                        - img [ref=e603]
+              - generic [ref=e609]:
+                - generic [ref=e610]:
+                  - link "『最頂半身』76小班推薦 9Kg 真人倒模 真人皮紋細節 ｜最頂鉑金矽膠材質｜實體店面 現貨發送 ｜半身倒模飛機杯" [ref=e611] [cursor=pointer]:
+                    - /url: /r/?i=tw_bid_shopee&id=1146999926.55202579665&purl=https%3A%2F%2Fshopee.tw%2Fproduct%2F1146999926%2F55202579665&lb=product_searchpage&q=%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0+%E5%8D%8A%E8%BA%AB
+                    - img "『最頂半身』76小班推薦 9Kg 真人倒模 真人皮紋細節 ｜最頂鉑金矽膠材質｜實體店面 現貨發送 ｜半身倒模飛機杯" [ref=e613]
+                  - button [ref=e614] [cursor=pointer]:
+                    - img [ref=e615]
+                - generic [ref=e619]:
+                  - generic [ref=e620]:
+                    - link "『最頂半身』76小班推薦 9Kg 真人倒模 真人皮紋細節 ｜最頂鉑金矽膠材質｜實體店面 現貨發送 ｜半身倒模飛機杯" [ref=e622] [cursor=pointer]:
+                      - /url: /r/?i=tw_bid_shopee&id=1146999926.55202579665&purl=https%3A%2F%2Fshopee.tw%2Fproduct%2F1146999926%2F55202579665&lb=product_searchpage&q=%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0+%E5%8D%8A%E8%BA%AB
+                    - button [ref=e623] [cursor=pointer]:
+                      - img [ref=e624]
+                  - generic [ref=e627]: $12,000
+                  - generic [ref=e628]:
+                    - generic [ref=e629]:
+                      - link "蝦皮購物 icon 蝦皮購物" [ref=e630] [cursor=pointer]:
+                        - /url: /store/?i=tw_bid_shopee
+                        - img "蝦皮購物 icon" [ref=e632]
+                        - generic [ref=e633]: 蝦皮購物
+                      - generic [ref=e635]: 76dollshop矽膠娃娃專賣店
+                    - generic [ref=e636]:
+                      - button "價格持平" [ref=e637] [cursor=pointer]:
+                        - img [ref=e639]
+                        - generic [ref=e642]: 價格持平
+                      - button [ref=e643] [cursor=pointer]:
+                        - img [ref=e644]
+                      - button [ref=e646] [cursor=pointer]:
+                        - img [ref=e647]
+              - generic [ref=e653]:
+                - generic [ref=e654]:
+                  - link "💖趣愛💖飛機杯 半身娃娃 鉑金矽膠材質 真人倒模 人體紋理 男用自慰器 名器 實體娃娃 半身性愛娃娃 情趣用品" [ref=e655] [cursor=pointer]:
+                    - /url: /r/?i=tw_bid_shopee&id=1006752427.48402745334&purl=https%3A%2F%2Fshopee.tw%2Fproduct%2F1006752427%2F48402745334&lb=product_searchpage&q=%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0+%E5%8D%8A%E8%BA%AB
+                    - img "💖趣愛💖飛機杯 半身娃娃 鉑金矽膠材質 真人倒模 人體紋理 男用自慰器 名器 實體娃娃 半身性愛娃娃 情趣用品" [ref=e657]
+                  - button [ref=e658] [cursor=pointer]:
+                    - img [ref=e659]
+                  - img [ref=e664]
+                - generic [ref=e670]:
+                  - generic [ref=e671]:
+                    - link "💖趣愛💖飛機杯 半身娃娃 鉑金矽膠材質 真人倒模 人體紋理 男用自慰器 名器 實體娃娃 半身性愛娃娃 情趣用品" [ref=e673] [cursor=pointer]:
+                      - /url: /r/?i=tw_bid_shopee&id=1006752427.48402745334&purl=https%3A%2F%2Fshopee.tw%2Fproduct%2F1006752427%2F48402745334&lb=product_searchpage&q=%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0+%E5%8D%8A%E8%BA%AB
+                    - button [ref=e674] [cursor=pointer]:
+                      - img [ref=e675]
+                  - generic [ref=e677]:
+                    - generic [ref=e678]: $900 ~ $1,020
+                    - generic [ref=e679] [cursor=pointer]:
+                      - generic [ref=e680]: 尚香-700g
+                      - generic [ref=e681]: $900
+                      - img [ref=e682]
+                  - generic [ref=e684]:
+                    - generic [ref=e685]:
+                      - link "蝦皮購物 icon 蝦皮購物" [ref=e686] [cursor=pointer]:
+                        - /url: /store/?i=tw_bid_shopee
+                        - img "蝦皮購物 icon" [ref=e688]
+                        - generic [ref=e689]: 蝦皮購物
+                      - generic [ref=e691]: 🔥趣愛🔥【保健用品專營店】
+                      - generic [ref=e692]: 高雄市三民區
+                    - generic [ref=e693]:
+                      - button "歷史價格" [ref=e694] [cursor=pointer]:
+                        - img [ref=e696]
+                        - generic [ref=e699]: 歷史價格
+                      - button [ref=e700] [cursor=pointer]:
+                        - img [ref=e701]
+                      - button [ref=e703] [cursor=pointer]:
+                        - img [ref=e704]
+              - generic [ref=e710]:
+                - generic [ref=e711]:
+                  - link "快樂寶貝情趣用品 矽膠臀模 半身倒模 屁股臀模 男用情趣用品 真人仿真身體 頂級質感真人臀模 液態鉑金矽膠" [ref=e712] [cursor=pointer]:
+                    - /url: /r/?i=tw_bid_shopee&id=7347565.49857473047&purl=https%3A%2F%2Fshopee.tw%2Fproduct%2F7347565%2F49857473047&lb=product_searchpage&q=%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0+%E5%8D%8A%E8%BA%AB
+                    - img "快樂寶貝情趣用品 矽膠臀模 半身倒模 屁股臀模 男用情趣用品 真人仿真身體 頂級質感真人臀模 液態鉑金矽膠" [ref=e714]
+                  - button [ref=e715] [cursor=pointer]:
+                    - img [ref=e716]
+                  - img [ref=e721]
+                - generic [ref=e727]:
+                  - generic [ref=e728]:
+                    - link "快樂寶貝情趣用品 矽膠臀模 半身倒模 屁股臀模 男用情趣用品 真人仿真身體 頂級質感真人臀模 液態鉑金矽膠" [ref=e730] [cursor=pointer]:
+                      - /url: /r/?i=tw_bid_shopee&id=7347565.49857473047&purl=https%3A%2F%2Fshopee.tw%2Fproduct%2F7347565%2F49857473047&lb=product_searchpage&q=%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0+%E5%8D%8A%E8%BA%AB
+                    - button [ref=e731] [cursor=pointer]:
+                      - img [ref=e732]
+                  - generic [ref=e734]:
+                    - generic [ref=e735]: $950 ~ $4,350
+                    - generic [ref=e736] [cursor=pointer]:
+                      - generic [ref=e737]: 禮品購買鏈接
+                      - generic [ref=e738]: $950
+                      - img [ref=e739]
+                  - generic [ref=e741]:
+                    - generic [ref=e742]:
+                      - link "蝦皮購物 icon 蝦皮購物" [ref=e743] [cursor=pointer]:
+                        - /url: /store/?i=tw_bid_shopee
+                        - img "蝦皮購物 icon" [ref=e745]
+                        - generic [ref=e746]: 蝦皮購物
+                      - generic [ref=e748]: 仙女的衣櫃🧚🏻‍♀️
+                      - generic [ref=e749]: 臺中市西屯區
+                    - generic [ref=e750]:
+                      - button "歷史價格" [ref=e751] [cursor=pointer]:
+                        - img [ref=e753]
+                        - generic [ref=e756]: 歷史價格
+                      - button [ref=e757] [cursor=pointer]:
+                        - img [ref=e758]
+                      - button [ref=e760] [cursor=pointer]:
+                        - img [ref=e761]
+              - generic [ref=e767]:
+                - generic [ref=e768]:
+                  - link "『最頂半身』76小班推薦 4.3Kg 真人倒模 真人皮紋細節 ｜最頂鉑金矽膠材質｜實體店面 現貨發送 ｜半身倒模飛機杯" [ref=e769] [cursor=pointer]:
+                    - /url: /r/?i=tw_bid_shopee&id=1146999926.43677001455&purl=https%3A%2F%2Fshopee.tw%2Fproduct%2F1146999926%2F43677001455&lb=product_searchpage&q=%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0+%E5%8D%8A%E8%BA%AB
+                    - img "『最頂半身』76小班推薦 4.3Kg 真人倒模 真人皮紋細節 ｜最頂鉑金矽膠材質｜實體店面 現貨發送 ｜半身倒模飛機杯" [ref=e771]
+                  - button [ref=e772] [cursor=pointer]:
+                    - img [ref=e773]
+                - generic [ref=e777]:
+                  - generic [ref=e778]:
+                    - link "『最頂半身』76小班推薦 4.3Kg 真人倒模 真人皮紋細節 ｜最頂鉑金矽膠材質｜實體店面 現貨發送 ｜半身倒模飛機杯" [ref=e780] [cursor=pointer]:
+                      - /url: /r/?i=tw_bid_shopee&id=1146999926.43677001455&purl=https%3A%2F%2Fshopee.tw%2Fproduct%2F1146999926%2F43677001455&lb=product_searchpage&q=%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0+%E5%8D%8A%E8%BA%AB
+                    - button [ref=e781] [cursor=pointer]:
+                      - img [ref=e782]
+                  - generic [ref=e785]: $3,999
+                  - generic [ref=e786]:
+                    - generic [ref=e787]:
+                      - link "蝦皮購物 icon 蝦皮購物" [ref=e788] [cursor=pointer]:
+                        - /url: /store/?i=tw_bid_shopee
+                        - img "蝦皮購物 icon" [ref=e790]
+                        - generic [ref=e791]: 蝦皮購物
+                      - generic [ref=e793]: 76dollshop矽膠娃娃專賣店
+                    - generic [ref=e794]:
+                      - button "價格持平" [ref=e795] [cursor=pointer]:
+                        - img [ref=e797]
+                        - generic [ref=e800]: 價格持平
+                      - button [ref=e801] [cursor=pointer]:
+                        - img [ref=e802]
+                      - button [ref=e804] [cursor=pointer]:
+                        - img [ref=e805]
+              - generic [ref=e811]:
+                - generic [ref=e812]:
+                  - link "娃娃學姐 Doll Senior 奈也新款皮紋半身S47 半身帶手鉑金矽膠娃娃男用 聯名款 手指骨 ROS仿真口腔頭雕" [ref=e813] [cursor=pointer]:
+                    - /url: /r/?i=tw_bid_shopee&id=1354972490.43413576784&purl=https%3A%2F%2Fshopee.tw%2Fproduct%2F1354972490%2F43413576784&lb=product_searchpage&q=%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0+%E5%8D%8A%E8%BA%AB
+                    - img "娃娃學姐 Doll Senior 奈也新款皮紋半身S47 半身帶手鉑金矽膠娃娃男用 聯名款 手指骨 ROS仿真口腔頭雕" [ref=e815]
+                  - button [ref=e816] [cursor=pointer]:
+                    - img [ref=e817]
+                - generic [ref=e821]:
+                  - generic [ref=e822]:
+                    - link "娃娃學姐 Doll Senior 奈也新款皮紋半身S47 半身帶手鉑金矽膠娃娃男用 聯名款 手指骨 ROS仿真口腔頭雕" [ref=e824] [cursor=pointer]:
+                      - /url: /r/?i=tw_bid_shopee&id=1354972490.43413576784&purl=https%3A%2F%2Fshopee.tw%2Fproduct%2F1354972490%2F43413576784&lb=product_searchpage&q=%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0+%E5%8D%8A%E8%BA%AB
+                    - button [ref=e825] [cursor=pointer]:
+                      - img [ref=e826]
+                  - generic [ref=e828]: 折扣$100
+                  - generic [ref=e829]:
+                    - generic [ref=e830]: $28,999 ~ $41,999
+                    - generic [ref=e831] [cursor=pointer]:
+                      - generic [ref=e832]: S47奈也【帶手半身矽膠娃娃】不含頭,標配【全身皮膚紋理+手指骨+果凍胸】
+                      - generic [ref=e833]: $28,999
+                      - img [ref=e834]
+                  - generic [ref=e836]:
+                    - generic [ref=e837]:
+                      - link "蝦皮購物 icon 蝦皮購物" [ref=e838] [cursor=pointer]:
+                        - /url: /store/?i=tw_bid_shopee
+                        - img "蝦皮購物 icon" [ref=e840]
+                        - generic [ref=e841]: 蝦皮購物
+                      - generic [ref=e843]: 幻蝶情趣企業店
+                    - generic [ref=e844]:
+                      - button "歷史價格" [ref=e845] [cursor=pointer]:
+                        - img [ref=e847]
+                        - generic [ref=e850]: 歷史價格
+                      - button [ref=e851] [cursor=pointer]:
+                        - img [ref=e852]
+                      - button [ref=e854] [cursor=pointer]:
+                        - img [ref=e855]
+              - generic [ref=e861]:
+                - generic [ref=e862]:
+                  - link "高端鉑金全矽膠帶頭半身娃娃 全自動夾吸強震實體娃娃 陰臀倒模 情趣用品男用 矽膠娃娃 帶頭娃娃 半身電動娃娃 情趣娃娃" [ref=e863] [cursor=pointer]:
+                    - /url: /r/?i=tw_bid_shopee&id=694941677.28040115348&purl=https%3A%2F%2Fshopee.tw%2Fproduct%2F694941677%2F28040115348&lb=product_searchpage&q=%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0+%E5%8D%8A%E8%BA%AB
+                    - img "高端鉑金全矽膠帶頭半身娃娃 全自動夾吸強震實體娃娃 陰臀倒模 情趣用品男用 矽膠娃娃 帶頭娃娃 半身電動娃娃 情趣娃娃" [ref=e865]
+                  - button [ref=e866] [cursor=pointer]:
+                    - img [ref=e867]
+                  - img [ref=e872]
+                - generic [ref=e878]:
+                  - generic [ref=e879]:
+                    - link "高端鉑金全矽膠帶頭半身娃娃 全自動夾吸強震實體娃娃 陰臀倒模 情趣用品男用 矽膠娃娃 帶頭娃娃 半身電動娃娃 情趣娃娃" [ref=e881] [cursor=pointer]:
+                      - /url: /r/?i=tw_bid_shopee&id=694941677.28040115348&purl=https%3A%2F%2Fshopee.tw%2Fproduct%2F694941677%2F28040115348&lb=product_searchpage&q=%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0+%E5%8D%8A%E8%BA%AB
+                    - button [ref=e882] [cursor=pointer]:
+                      - img [ref=e883]
+                  - generic [ref=e885]:
+                    - generic [ref=e886]: $6,800 ~ $27,800
+                    - generic [ref=e887] [cursor=pointer]:
+                      - generic [ref=e888]: 小袋赠品润滑液LB024,無功能
+                      - generic [ref=e889]: $6,800
+                      - img [ref=e890]
+                  - generic [ref=e892]:
+                    - generic [ref=e893]:
+                      - link "蝦皮購物 icon 蝦皮購物" [ref=e894] [cursor=pointer]:
+                        - /url: /store/?i=tw_bid_shopee
+                        - img "蝦皮購物 icon" [ref=e896]
+                        - generic [ref=e897]: 蝦皮購物
+                      - generic [ref=e899]: 夢馬情趣用品HGOD賣場｜優質、精品、隱密｜一流的品質,一流的服務！
+                      - generic [ref=e900]: 嘉義縣竹崎鄉
+                    - generic [ref=e901]:
+                      - button "歷史價格" [ref=e902] [cursor=pointer]:
+                        - img [ref=e904]
+                        - generic [ref=e907]: 歷史價格
+                      - button [ref=e908] [cursor=pointer]:
+                        - img [ref=e909]
+                      - button [ref=e911] [cursor=pointer]:
+                        - img [ref=e912]
+              - generic [ref=e918]:
+                - generic [ref=e919]:
+                  - link "超軟乳 半身硅膠娃娃 半身飛機杯 鉑金矽膠 真人皮紋 實體倒膜 1:1復刻 合金骨架 男用自慰器 成人情趣用品" [ref=e920] [cursor=pointer]:
+                    - /url: /r/?i=tw_bid_shopee&id=550957899.54351945910&purl=https%3A%2F%2Fshopee.tw%2Fproduct%2F550957899%2F54351945910&lb=product_searchpage&q=%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0+%E5%8D%8A%E8%BA%AB
+                    - img "超軟乳 半身硅膠娃娃 半身飛機杯 鉑金矽膠 真人皮紋 實體倒膜 1:1復刻 合金骨架 男用自慰器 成人情趣用品" [ref=e922]
+                  - button [ref=e923] [cursor=pointer]:
+                    - img [ref=e924]
+                  - img [ref=e929]
+                - generic [ref=e935]:
+                  - generic [ref=e936]:
+                    - link "超軟乳 半身硅膠娃娃 半身飛機杯 鉑金矽膠 真人皮紋 實體倒膜 1:1復刻 合金骨架 男用自慰器 成人情趣用品" [ref=e938] [cursor=pointer]:
+                      - /url: /r/?i=tw_bid_shopee&id=550957899.54351945910&purl=https%3A%2F%2Fshopee.tw%2Fproduct%2F550957899%2F54351945910&lb=product_searchpage&q=%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0+%E5%8D%8A%E8%BA%AB
+                    - button [ref=e939] [cursor=pointer]:
+                      - img [ref=e940]
+                  - generic [ref=e942]: 折扣$90
+                  - generic [ref=e943]:
+                    - generic [ref=e944]: $3,309 ~ $11,811
+                    - generic [ref=e945] [cursor=pointer]:
+                      - generic [ref=e946]: 小妹/妮娜（小號） 單通道可定製
+                      - generic [ref=e947]: $3,309
+                      - img [ref=e948]
+                  - generic [ref=e950]:
+                    - generic [ref=e951]:
+                      - link "蝦皮購物 icon 蝦皮購物" [ref=e952] [cursor=pointer]:
+                        - /url: /store/?i=tw_bid_shopee
+                        - img "蝦皮購物 icon" [ref=e954]
+                        - generic [ref=e955]: 蝦皮購物
+                      - generic [ref=e957]: 彩虹憶容商品-鞍點國際
+                      - generic [ref=e958]: 新竹市香山區
+                    - generic [ref=e959]:
+                      - button "歷史價格" [ref=e960] [cursor=pointer]:
+                        - img [ref=e962]
+                        - generic [ref=e965]: 歷史價格
+                      - button [ref=e966] [cursor=pointer]:
+                        - img [ref=e967]
+                      - button [ref=e969] [cursor=pointer]:
+                        - img [ref=e970]
+              - generic [ref=e976]:
+                - generic [ref=e977]:
+                  - link "Climax Doll ULW 882 Torso 超輕減重鉑金矽膠娃娃 半身陰臀倒模名器 1:1等身復刻 情趣娃娃男用" [ref=e978] [cursor=pointer]:
+                    - /url: /r/?i=tw_bid_shopee&id=1280413345.49553626559&purl=https%3A%2F%2Fshopee.tw%2Fproduct%2F1280413345%2F49553626559&lb=product_searchpage&q=%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0+%E5%8D%8A%E8%BA%AB
+                    - img "Climax Doll ULW 882 Torso 超輕減重鉑金矽膠娃娃 半身陰臀倒模名器 1:1等身復刻 情趣娃娃男用" [ref=e980]
+                  - button [ref=e981] [cursor=pointer]:
+                    - img [ref=e982]
+                - generic [ref=e986]:
+                  - generic [ref=e987]:
+                    - link "Climax Doll ULW 882 Torso 超輕減重鉑金矽膠娃娃 半身陰臀倒模名器 1:1等身復刻 情趣娃娃男用" [ref=e989] [cursor=pointer]:
+                      - /url: /r/?i=tw_bid_shopee&id=1280413345.49553626559&purl=https%3A%2F%2Fshopee.tw%2Fproduct%2F1280413345%2F49553626559&lb=product_searchpage&q=%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0+%E5%8D%8A%E8%BA%AB
+                    - button [ref=e990] [cursor=pointer]:
+                      - img [ref=e991]
+                  - generic [ref=e993]: 折扣0%
+                  - generic [ref=e994]:
+                    - generic [ref=e995]: $17,999
+                    - generic [ref=e996] [cursor=pointer]:
+                      - generic [ref=e997]: 882Torso【超輕減重半身矽膠娃娃】,寫實皮膚紋+果凍胸+關節骨架+雙通道
+                      - generic [ref=e998]: $17,999
+                      - img [ref=e999]
+                  - generic [ref=e1001]:
+                    - generic [ref=e1002]:
+                      - link "蝦皮購物 icon 蝦皮購物" [ref=e1003] [cursor=pointer]:
+                        - /url: /store/?i=tw_bid_shopee
+                        - img "蝦皮購物 icon" [ref=e1005]
+                        - generic [ref=e1006]: 蝦皮購物
+                      - generic [ref=e1008]: 久久愛情趣館
+                    - generic [ref=e1009]:
+                      - button "歷史價格" [ref=e1010] [cursor=pointer]:
+                        - img [ref=e1012]
+                        - generic [ref=e1015]: 歷史價格
+                      - button [ref=e1016] [cursor=pointer]:
+                        - img [ref=e1017]
+                      - button [ref=e1019] [cursor=pointer]:
+                        - img [ref=e1020]
+              - generic [ref=e1026]:
+                - generic [ref=e1027]:
+                  - link "Climax Doll ULW661 Torso 減重小胸鉑金矽膠娃娃 等身復刻半身倒模名器 擬真皮膚紋 男用自慰器情趣" [ref=e1028] [cursor=pointer]:
+                    - /url: /r/?i=tw_bid_shopee&id=1280413345.46202219890&purl=https%3A%2F%2Fshopee.tw%2Fproduct%2F1280413345%2F46202219890&lb=product_searchpage&q=%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0+%E5%8D%8A%E8%BA%AB
+                    - img "Climax Doll ULW661 Torso 減重小胸鉑金矽膠娃娃 等身復刻半身倒模名器 擬真皮膚紋 男用自慰器情趣" [ref=e1030]
+                  - button [ref=e1031] [cursor=pointer]:
+                    - img [ref=e1032]
+                  - img [ref=e1037]
+                - generic [ref=e1043]:
+                  - generic [ref=e1044]:
+                    - link "Climax Doll ULW661 Torso 減重小胸鉑金矽膠娃娃 等身復刻半身倒模名器 擬真皮膚紋 男用自慰器情趣" [ref=e1046] [cursor=pointer]:
+                      - /url: /r/?i=tw_bid_shopee&id=1280413345.46202219890&purl=https%3A%2F%2Fshopee.tw%2Fproduct%2F1280413345%2F46202219890&lb=product_searchpage&q=%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0+%E5%8D%8A%E8%BA%AB
+                    - button [ref=e1047] [cursor=pointer]:
+                      - img [ref=e1048]
+                  - generic [ref=e1050]:
+                    - generic [ref=e1051]: $14,999
+                    - generic [ref=e1052] [cursor=pointer]:
+                      - generic [ref=e1053]: ULW 661 Torso【全矽膠品質】,超輕減重+皮膚紋+果凍胸+骨骼+3D軟陰
+                      - generic [ref=e1054]: $14,999
+                      - img [ref=e1055]
+                  - generic [ref=e1057]:
+                    - generic [ref=e1058]:
+                      - link "蝦皮購物 icon 蝦皮購物" [ref=e1059] [cursor=pointer]:
+                        - /url: /store/?i=tw_bid_shopee
+                        - img "蝦皮購物 icon" [ref=e1061]
+                        - generic [ref=e1062]: 蝦皮購物
+                      - generic [ref=e1064]: 久久愛情趣館
+                    - generic [ref=e1065]:
+                      - button "歷史價格" [ref=e1066] [cursor=pointer]:
+                        - img [ref=e1068]
+                        - generic [ref=e1071]: 歷史價格
+                      - button [ref=e1072] [cursor=pointer]:
+                        - img [ref=e1073]
+                      - button [ref=e1075] [cursor=pointer]:
+                        - img [ref=e1076]
+              - generic [ref=e1082]:
+                - generic [ref=e1083]:
+                  - link "MRL仿真 鉑金矽膠半身倒模 矽膠娃娃果凍胸 1:1等身復刻 寫實皮紋問 果凍胸 含骨架 情趣用品男用自慰器飛機杯雙通道" [ref=e1084] [cursor=pointer]:
+                    - /url: /r/?i=tw_bid_shopee&id=1280413345.42011844219&purl=https%3A%2F%2Fshopee.tw%2Fproduct%2F1280413345%2F42011844219&lb=product_searchpage&q=%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0+%E5%8D%8A%E8%BA%AB
+                    - img "MRL仿真 鉑金矽膠半身倒模 矽膠娃娃果凍胸 1:1等身復刻 寫實皮紋問 果凍胸 含骨架 情趣用品男用自慰器飛機杯雙通道" [ref=e1086]
+                  - button [ref=e1087] [cursor=pointer]:
+                    - img [ref=e1088]
+                  - img [ref=e1093]
+                - generic [ref=e1099]:
+                  - generic [ref=e1100]:
+                    - link "MRL仿真 鉑金矽膠半身倒模 矽膠娃娃果凍胸 1:1等身復刻 寫實皮紋問 果凍胸 含骨架 情趣用品男用自慰器飛機杯雙通道" [ref=e1102] [cursor=pointer]:
+                      - /url: /r/?i=tw_bid_shopee&id=1280413345.42011844219&purl=https%3A%2F%2Fshopee.tw%2Fproduct%2F1280413345%2F42011844219&lb=product_searchpage&q=%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0+%E5%8D%8A%E8%BA%AB
+                    - button [ref=e1103] [cursor=pointer]:
+                      - img [ref=e1104]
+                  - generic [ref=e1106]:
+                    - generic [ref=e1107]: $21,999
+                    - generic [ref=e1108] [cursor=pointer]:
+                      - generic [ref=e1109]: 96cm【全矽膠半身倒模+果凍胸+骨架】,贈情趣禮品【隱私發貨】
+                      - generic [ref=e1110]: $21,999
+                      - img [ref=e1111]
+                  - generic [ref=e1113]:
+                    - generic [ref=e1114]:
+                      - link "蝦皮購物 icon 蝦皮購物" [ref=e1115] [cursor=pointer]:
+                        - /url: /store/?i=tw_bid_shopee
+                        - img "蝦皮購物 icon" [ref=e1117]
+                        - generic [ref=e1118]: 蝦皮購物
+                      - generic [ref=e1120]: 久久愛情趣館
+                    - generic [ref=e1121]:
+                      - button "歷史價格" [ref=e1122] [cursor=pointer]:
+                        - img [ref=e1124]
+                        - generic [ref=e1127]: 歷史價格
+                      - button [ref=e1128] [cursor=pointer]:
+                        - img [ref=e1129]
+                      - button [ref=e1131] [cursor=pointer]:
+                        - img [ref=e1132]
+              - generic [ref=e1138]:
+                - generic [ref=e1139]:
+                  - link "贈送加溫棒 情趣飛機杯 矽膠娃娃 星野の希 鉑金矽膠 擬真膚感青筋紋理 模特復刻男用自慰器 處女飛機杯 半身娃娃性愛娃娃" [ref=e1140] [cursor=pointer]:
+                    - /url: /r/?i=tw_bid_shopee&id=4848975.46204703445&purl=https%3A%2F%2Fshopee.tw%2Fproduct%2F4848975%2F46204703445&lb=product_searchpage&q=%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0+%E5%8D%8A%E8%BA%AB
+                    - img "贈送加溫棒 情趣飛機杯 矽膠娃娃 星野の希 鉑金矽膠 擬真膚感青筋紋理 模特復刻男用自慰器 處女飛機杯 半身娃娃性愛娃娃" [ref=e1142]
+                  - button [ref=e1143] [cursor=pointer]:
+                    - img [ref=e1144]
+                  - img [ref=e1149]
+                - generic [ref=e1155]:
+                  - generic [ref=e1156]:
+                    - link "贈送加溫棒 情趣飛機杯 矽膠娃娃 星野の希 鉑金矽膠 擬真膚感青筋紋理 模特復刻男用自慰器 處女飛機杯 半身娃娃性愛娃娃" [ref=e1158] [cursor=pointer]:
+                      - /url: /r/?i=tw_bid_shopee&id=4848975.46204703445&purl=https%3A%2F%2Fshopee.tw%2Fproduct%2F4848975%2F46204703445&lb=product_searchpage&q=%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0+%E5%8D%8A%E8%BA%AB
+                    - button [ref=e1159] [cursor=pointer]:
+                      - img [ref=e1160]
+                  - generic [ref=e1162]: 折扣$25
+                  - generic [ref=e1164]: $950
+                  - generic [ref=e1165]:
+                    - generic [ref=e1166]:
+                      - link "蝦皮購物 icon 蝦皮購物" [ref=e1167] [cursor=pointer]:
+                        - /url: /store/?i=tw_bid_shopee
+                        - img "蝦皮購物 icon" [ref=e1169]
+                        - generic [ref=e1170]: 蝦皮購物
+                      - generic [ref=e1172]: Taolove 淘愛 大男孩の玩具
+                      - generic [ref=e1173]: 雲林縣斗六市
+                    - generic [ref=e1174]:
+                      - button "價格持平" [ref=e1175] [cursor=pointer]:
+                        - img [ref=e1177]
+                        - generic [ref=e1180]: 價格持平
+                      - button [ref=e1181] [cursor=pointer]:
+                        - img [ref=e1182]
+                      - button [ref=e1184] [cursor=pointer]:
+                        - img [ref=e1185]
+              - generic [ref=e1191]:
+                - generic [ref=e1192]:
+                  - link "贈送加溫棒 情趣飛機杯 矽膠娃娃 永瀨の葦 鉑金矽膠 擬真膚感青筋紋理 模特復刻男用自慰器 女優飛機杯 半身娃娃性愛娃娃" [ref=e1193] [cursor=pointer]:
+                    - /url: /r/?i=tw_bid_shopee&id=4848975.51054692931&purl=https%3A%2F%2Fshopee.tw%2Fproduct%2F4848975%2F51054692931&lb=product_searchpage&q=%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0+%E5%8D%8A%E8%BA%AB
+                    - img "贈送加溫棒 情趣飛機杯 矽膠娃娃 永瀨の葦 鉑金矽膠 擬真膚感青筋紋理 模特復刻男用自慰器 女優飛機杯 半身娃娃性愛娃娃" [ref=e1195]
+                  - button [ref=e1196] [cursor=pointer]:
+                    - img [ref=e1197]
+                  - img [ref=e1202]
+                - generic [ref=e1208]:
+                  - generic [ref=e1209]:
+                    - link "贈送加溫棒 情趣飛機杯 矽膠娃娃 永瀨の葦 鉑金矽膠 擬真膚感青筋紋理 模特復刻男用自慰器 女優飛機杯 半身娃娃性愛娃娃" [ref=e1211] [cursor=pointer]:
+                      - /url: /r/?i=tw_bid_shopee&id=4848975.51054692931&purl=https%3A%2F%2Fshopee.tw%2Fproduct%2F4848975%2F51054692931&lb=product_searchpage&q=%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0+%E5%8D%8A%E8%BA%AB
+                    - button [ref=e1212] [cursor=pointer]:
+                      - img [ref=e1213]
+                  - generic [ref=e1215]: 折扣$25
+                  - generic [ref=e1217]: $950
+                  - generic [ref=e1218]:
+                    - generic [ref=e1219]:
+                      - link "蝦皮購物 icon 蝦皮購物" [ref=e1220] [cursor=pointer]:
+                        - /url: /store/?i=tw_bid_shopee
+                        - img "蝦皮購物 icon" [ref=e1222]
+                        - generic [ref=e1223]: 蝦皮購物
+                      - generic [ref=e1225]: Taolove 淘愛 大男孩の玩具
+                      - generic [ref=e1226]: 雲林縣斗六市
+                    - generic [ref=e1227]:
+                      - button "價格持平" [ref=e1228] [cursor=pointer]:
+                        - img [ref=e1230]
+                        - generic [ref=e1233]: 價格持平
+                      - button [ref=e1234] [cursor=pointer]:
+                        - img [ref=e1235]
+                      - button [ref=e1237] [cursor=pointer]:
+                        - img [ref=e1238]
+              - generic [ref=e1244]:
+                - generic [ref=e1245]:
+                  - link "贈送加溫棒 情趣飛機杯 矽膠娃娃 櫻由の蘿 鉑金矽膠 擬真膚感青筋紋理 模特復刻男用飛機杯 女優飛機杯 半身娃娃性愛娃娃" [ref=e1246] [cursor=pointer]:
+                    - /url: /r/?i=tw_bid_shopee&id=4848975.54854932344&purl=https%3A%2F%2Fshopee.tw%2Fproduct%2F4848975%2F54854932344&lb=product_searchpage&q=%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0+%E5%8D%8A%E8%BA%AB
+                    - img "贈送加溫棒 情趣飛機杯 矽膠娃娃 櫻由の蘿 鉑金矽膠 擬真膚感青筋紋理 模特復刻男用飛機杯 女優飛機杯 半身娃娃性愛娃娃" [ref=e1248]
+                  - button [ref=e1249] [cursor=pointer]:
+                    - img [ref=e1250]
+                - generic [ref=e1254]:
+                  - generic [ref=e1255]:
+                    - link "贈送加溫棒 情趣飛機杯 矽膠娃娃 櫻由の蘿 鉑金矽膠 擬真膚感青筋紋理 模特復刻男用飛機杯 女優飛機杯 半身娃娃性愛娃娃" [ref=e1257] [cursor=pointer]:
+                      - /url: /r/?i=tw_bid_shopee&id=4848975.54854932344&purl=https%3A%2F%2Fshopee.tw%2Fproduct%2F4848975%2F54854932344&lb=product_searchpage&q=%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0+%E5%8D%8A%E8%BA%AB
+                    - button [ref=e1258] [cursor=pointer]:
+                      - img [ref=e1259]
+                  - generic [ref=e1261]: 折扣$25
+                  - generic [ref=e1263]: $950
+                  - generic [ref=e1264]:
+                    - generic [ref=e1265]:
+                      - link "蝦皮購物 icon 蝦皮購物" [ref=e1266] [cursor=pointer]:
+                        - /url: /store/?i=tw_bid_shopee
+                        - img "蝦皮購物 icon" [ref=e1268]
+                        - generic [ref=e1269]: 蝦皮購物
+                      - generic [ref=e1271]: Taolove 淘愛 大男孩の玩具
+                      - generic [ref=e1272]: 雲林縣斗六市
+                    - generic [ref=e1273]:
+                      - button "價格持平" [ref=e1274] [cursor=pointer]:
+                        - img [ref=e1276]
+                        - generic [ref=e1279]: 價格持平
+                      - button [ref=e1280] [cursor=pointer]:
+                        - img [ref=e1281]
+                      - button [ref=e1283] [cursor=pointer]:
+                        - img [ref=e1284]
+              - generic [ref=e1290]:
+                - generic [ref=e1291]:
+                  - link "Lusandy 93CM Torso Maya 全鉑金矽膠半身娃娃倒模名器 1:1等身復刻帶頭實體娃男用性愛娃娃自慰器" [ref=e1292] [cursor=pointer]:
+                    - /url: /r/?i=tw_bid_shopee&id=1354972490.47201057099&purl=https%3A%2F%2Fshopee.tw%2Fproduct%2F1354972490%2F47201057099&lb=product_searchpage&q=%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0+%E5%8D%8A%E8%BA%AB
+                    - img "Lusandy 93CM Torso Maya 全鉑金矽膠半身娃娃倒模名器 1:1等身復刻帶頭實體娃男用性愛娃娃自慰器" [ref=e1294]
+                  - button [ref=e1295] [cursor=pointer]:
+                    - img [ref=e1296]
+                  - img [ref=e1301]
+                - generic [ref=e1307]:
+                  - generic [ref=e1308]:
+                    - link "Lusandy 93CM Torso Maya 全鉑金矽膠半身娃娃倒模名器 1:1等身復刻帶頭實體娃男用性愛娃娃自慰器" [ref=e1310] [cursor=pointer]:
+                      - /url: /r/?i=tw_bid_shopee&id=1354972490.47201057099&purl=https%3A%2F%2Fshopee.tw%2Fproduct%2F1354972490%2F47201057099&lb=product_searchpage&q=%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0+%E5%8D%8A%E8%BA%AB
+                    - button [ref=e1311] [cursor=pointer]:
+                      - img [ref=e1312]
+                  - generic [ref=e1314]: 折扣$100
+                  - generic [ref=e1315]:
+                    - generic [ref=e1316]: $45,999
+                    - generic [ref=e1317] [cursor=pointer]:
+                      - generic [ref=e1318]: 93cm Torso doll,全矽膠-ROS口腔頭雕+半身
+                      - generic [ref=e1319]: $45,999
+                      - img [ref=e1320]
+                  - generic [ref=e1322]:
+                    - generic [ref=e1323]:
+                      - link "蝦皮購物 icon 蝦皮購物" [ref=e1324] [cursor=pointer]:
+                        - /url: /store/?i=tw_bid_shopee
+                        - img "蝦皮購物 icon" [ref=e1326]
+                        - generic [ref=e1327]: 蝦皮購物
+                      - generic [ref=e1329]: 幻蝶情趣企業店
+                    - generic [ref=e1330]:
+                      - button "歷史價格" [ref=e1331] [cursor=pointer]:
+                        - img [ref=e1333]
+                        - generic [ref=e1336]: 歷史價格
+                      - button [ref=e1337] [cursor=pointer]:
+                        - img [ref=e1338]
+                      - button [ref=e1340] [cursor=pointer]:
+                        - img [ref=e1341]
+              - generic [ref=e1347]:
+                - generic [ref=e1348]:
+                  - link "贈送加溫棒 情趣飛機杯 矽膠娃娃 桃井の子 鉑金矽膠 擬真膚感青筋紋理 模特復刻男用飛機杯 女優飛機杯 半身娃娃真人娃娃" [ref=e1349] [cursor=pointer]:
+                    - /url: /r/?i=tw_bid_shopee&id=4848975.56554932360&purl=https%3A%2F%2Fshopee.tw%2Fproduct%2F4848975%2F56554932360&lb=product_searchpage&q=%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0+%E5%8D%8A%E8%BA%AB
+                    - img "贈送加溫棒 情趣飛機杯 矽膠娃娃 桃井の子 鉑金矽膠 擬真膚感青筋紋理 模特復刻男用飛機杯 女優飛機杯 半身娃娃真人娃娃" [ref=e1351]
+                  - button [ref=e1352] [cursor=pointer]:
+                    - img [ref=e1353]
+                - generic [ref=e1357]:
+                  - generic [ref=e1358]:
+                    - link "贈送加溫棒 情趣飛機杯 矽膠娃娃 桃井の子 鉑金矽膠 擬真膚感青筋紋理 模特復刻男用飛機杯 女優飛機杯 半身娃娃真人娃娃" [ref=e1360] [cursor=pointer]:
+                      - /url: /r/?i=tw_bid_shopee&id=4848975.56554932360&purl=https%3A%2F%2Fshopee.tw%2Fproduct%2F4848975%2F56554932360&lb=product_searchpage&q=%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0+%E5%8D%8A%E8%BA%AB
+                    - button [ref=e1361] [cursor=pointer]:
+                      - img [ref=e1362]
+                  - generic [ref=e1364]: 折扣$25
+                  - generic [ref=e1366]: $950
+                  - generic [ref=e1367]:
+                    - generic [ref=e1368]:
+                      - link "蝦皮購物 icon 蝦皮購物" [ref=e1369] [cursor=pointer]:
+                        - /url: /store/?i=tw_bid_shopee
+                        - img "蝦皮購物 icon" [ref=e1371]
+                        - generic [ref=e1372]: 蝦皮購物
+                      - generic [ref=e1374]: Taolove 淘愛 大男孩の玩具
+                      - generic [ref=e1375]: 雲林縣斗六市
+                    - generic [ref=e1376]:
+                      - button "價格持平" [ref=e1377] [cursor=pointer]:
+                        - img [ref=e1379]
+                        - generic [ref=e1382]: 價格持平
+                      - button [ref=e1383] [cursor=pointer]:
+                        - img [ref=e1384]
+                      - button [ref=e1386] [cursor=pointer]:
+                        - img [ref=e1387]
+              - generic [ref=e1395]:
+                - text: 「
+                - link "鉑金矽膠 半身" [ref=e1396] [cursor=pointer]:
+                  - /url: /s/鉑金矽膠 半身
+                  - heading "鉑金矽膠 半身" [level=1] [ref=e1397]
+                - text: 」相關搜尋
+              - insertion
+          - generic [ref=e1399]:
+            - generic [ref=e1400]:
+              - generic [ref=e1402]: 價格範圍
+              - generic [ref=e1403]:
+                - spinbutton [ref=e1404]
+                - text: －
+                - spinbutton [ref=e1405]
+                - button "Go" [ref=e1406] [cursor=pointer]
+            - generic [ref=e1407]:
+              - generic [ref=e1408]:
+                - generic [ref=e1409]:
+                  - generic [ref=e1410]: 自選商店
+                  - generic [ref=e1411]: 共 3 間商店
+                - generic [ref=e1412]:
+                  - button "全部" [ref=e1413] [cursor=pointer]
+                  - button "清空" [ref=e1414] [cursor=pointer]
+                  - button "返現" [ref=e1415] [cursor=pointer]
+              - generic [ref=e1416]:
+                - generic [ref=e1422] [cursor=pointer]:
+                  - img "蝦皮購物" [ref=e1424]
+                  - generic [ref=e1425]: 蝦皮購物 (52)
+                - generic [ref=e1431] [cursor=pointer]:
+                  - img "momo購物網" [ref=e1433]
+                  - generic [ref=e1434]: momo購物網 (1)
+                - generic [ref=e1440] [cursor=pointer]:
+                  - img "露天拍賣" [ref=e1442]
+                  - generic [ref=e1443]: 露天拍賣 (3)
+              - button "送出" [ref=e1445] [cursor=pointer]
+            - generic [ref=e1446]:
+              - generic [ref=e1447]: 搜尋設定
+              - generic [ref=e1449]:
+                - text: 隱藏缺貨商品
+                - generic [ref=e1450]: (1)
+              - separator [ref=e1453]
+              - generic [ref=e1455]: 排除不相關商品
+            - generic:
+              - insertion
+  - region "Notifications (F8)":
+    - list

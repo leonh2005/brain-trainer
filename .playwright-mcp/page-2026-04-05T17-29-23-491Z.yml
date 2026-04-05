@@ -1,0 +1,1454 @@
+- main [ref=e2]:
+  - generic [ref=e4]:
+    - generic [ref=e5]:
+      - generic:
+        - list [ref=e6]:
+          - listitem [ref=e7]:
+            - link "首頁" [ref=e8] [cursor=pointer]:
+              - /url: https://www.etmall.com.tw
+          - listitem [ref=e9]:
+            - link "環保綠點" [ref=e10] [cursor=pointer]:
+              - /url: https://www.etmall.com.tw/product/greenpointsp
+          - listitem [ref=e11]:
+            - link "全球購" [ref=e12] [cursor=pointer]:
+              - /url: https://www.etmall.com.tw/shop
+          - listitem [ref=e13]:
+            - link "永續ESG" [ref=e14] [cursor=pointer]:
+              - /url: http://www.ehsn.com.tw
+        - list [ref=e15]:
+          - listitem [ref=e16]:
+            - link "登入" [ref=e17] [cursor=pointer]:
+              - /url: /Login?url=%2FSearch%3Fkeyword%3D%25E9%2589%2591%25E9%2587%2591%25E7%259F%25BD%25E8%2586%25A0%2B%25E5%258D%258A%25E8%25BA%25AB
+          - listitem [ref=e18]:
+            - link "註冊" [ref=e19] [cursor=pointer]:
+              - /url: /Register?url=%2FSearch%3Fkeyword%3D%25E9%2589%2591%25E9%2587%2591%25E7%259F%25BD%25E8%2586%25A0%2B%25E5%258D%258A%25E8%25BA%25AB
+          - listitem [ref=e20]:
+            - link "超級福利社" [ref=e21] [cursor=pointer]:
+              - /url: /Welfare
+          - listitem [ref=e22]:
+            - link "我的券匣" [ref=e23] [cursor=pointer]:
+              - /url: /member/ecoupon
+          - listitem [ref=e24]:
+            - link "會員服務" [ref=e25] [cursor=pointer]:
+              - /url: /OrderHistory
+          - listitem [ref=e26]:
+            - link "收藏" [ref=e27] [cursor=pointer]:
+              - /url: /member/wishlist
+              - text: 收藏
+          - listitem [ref=e29]:
+            - link "0 購物車(0)" [ref=e30] [cursor=pointer]:
+              - /url: /Order/Basket
+              - generic [ref=e32]: "0"
+              - text: 購物車(0)
+    - generic [ref=e34]:
+      - navigation [ref=e35]:
+        - generic [ref=e36] [cursor=pointer]:
+          - img [ref=e37]
+          - paragraph [ref=e39]: 商品分類
+        - generic:
+          - list:
+            - listitem:
+              - generic:
+                - heading "TV購物/" [level=2]:
+                  - link "TV購物":
+                    - /url: https://www.etmall.com.tw/s/31771
+                  - text: /
+                - heading "旗艦店/" [level=2]:
+                  - link "旗艦店":
+                    - /url: https://media.etmall.com.tw/sp/19689/m/index.html
+                  - text: /
+                - heading "商城/" [level=2]:
+                  - link "商城":
+                    - /url: https://www.etmall.com.tw/mall
+                  - text: /
+                - heading "愛買" [level=2]:
+                  - link "愛買":
+                    - /url: https://www.etmall.com.tw/S/154985
+            - listitem:
+              - generic:
+                - heading "旅遊/" [level=2]:
+                  - link "旅遊":
+                    - /url: https://www.etmall.com.tw/s/8
+                  - text: /
+                - heading "寵物/" [level=2]:
+                  - link "寵物":
+                    - /url: https://www.etmall.com.tw/s/126223
+                  - text: /
+                - heading "男女鞋/" [level=2]:
+                  - link "男女鞋":
+                    - /url: https://www.etmall.com.tw/s/31772
+                  - text: /
+                - heading "襪/" [level=2]:
+                  - link "襪":
+                    - /url: https://www.etmall.com.tw/c1/45678
+                  - text: /
+                - heading "包配" [level=2]:
+                  - link "包配":
+                    - /url: https://www.etmall.com.tw/s/126225
+            - listitem:
+              - generic:
+                - heading "保健/" [level=2]:
+                  - link "保健":
+                    - /url: https://www.etmall.com.tw/s/12
+                  - text: /
+                - heading "用品/" [level=2]:
+                  - link "用品":
+                    - /url: https://www.etmall.com.tw/c1/29005
+                  - text: /
+                - heading "機能/" [level=2]:
+                  - link "機能":
+                    - /url: https://www.etmall.com.tw/c1/29002
+                  - text: /
+                - heading "窈窕" [level=2]:
+                  - link "窈窕":
+                    - /url: https://www.etmall.com.tw/c1/2722
+            - listitem:
+              - generic:
+                - heading "食品/" [level=2]:
+                  - link "食品":
+                    - /url: https://www.etmall.com.tw/s/6
+                  - text: /
+                - heading "飲料/" [level=2]:
+                  - link "飲料":
+                    - /url: https://www.etmall.com.tw/gp/284598
+                  - text: /
+                - heading "生鮮/" [level=2]:
+                  - link "生鮮":
+                    - /url: https://www.etmall.com.tw/c1/27197
+                  - text: /
+                - heading "餐券" [level=2]:
+                  - link "餐券":
+                    - /url: https://www.etmall.com.tw/c1/46547
+            - listitem:
+              - generic:
+                - heading "日用/" [level=2]:
+                  - link "日用":
+                    - /url: https://www.etmall.com.tw/s/16462
+                  - text: /
+                - heading "紙品/" [level=2]:
+                  - link "紙品":
+                    - /url: https://www.etmall.com.tw/c1/26770
+                  - text: /
+                - heading "清潔/" [level=2]:
+                  - link "清潔":
+                    - /url: https://www.etmall.com.tw/c1/93708
+                  - text: /
+                - heading "口腔" [level=2]:
+                  - link "口腔":
+                    - /url: https://www.etmall.com.tw/c1/98047
+            - listitem:
+              - generic:
+                - heading "鍋具/" [level=2]:
+                  - link "鍋具":
+                    - /url: https://www.etmall.com.tw/s/172554
+                  - text: /
+                - heading "杯瓶/" [level=2]:
+                  - link "杯瓶":
+                    - /url: https://www.etmall.com.tw/c1/26648
+                  - text: /
+                - heading "廚衛/" [level=2]:
+                  - link "廚衛":
+                    - /url: https://www.etmall.com.tw/c1/157519
+                  - text: /
+                - heading "休閒" [level=2]:
+                  - link "休閒":
+                    - /url: https://www.etmall.com.tw/s/7
+            - listitem:
+              - generic:
+                - heading "服飾/" [level=2]:
+                  - link "服飾":
+                    - /url: https://www.etmall.com.tw/s/2
+                  - text: /
+                - heading "內衣/" [level=2]:
+                  - link "內衣":
+                    - /url: https://www.etmall.com.tw/s/6049
+                  - text: /
+                - heading "精品/" [level=2]:
+                  - link "精品":
+                    - /url: https://www.etmall.com.tw/s/55399
+                  - text: /
+                - heading "珠寶" [level=2]:
+                  - link "珠寶":
+                    - /url: https://www.etmall.com.tw/s/1
+            - listitem:
+              - generic:
+                - heading "寢具/" [level=2]:
+                  - link "寢具":
+                    - /url: https://www.etmall.com.tw/s/5
+                  - text: /
+                - heading "家具/" [level=2]:
+                  - link "家具":
+                    - /url: https://www.etmall.com.tw/c1/105342
+                  - text: /
+                - heading "收納/" [level=2]:
+                  - link "收納":
+                    - /url: https://www.etmall.com.tw/c1/16488
+                  - text: /
+                - heading "宗教" [level=2]:
+                  - link "宗教":
+                    - /url: https://www.etmall.com.tw/c1/35931
+            - listitem:
+              - generic:
+                - heading "Apple/" [level=2]:
+                  - link "Apple":
+                    - /url: https://www.etmall.com.tw/c1/107379
+                  - text: /
+                - heading "小米/" [level=2]:
+                  - link "小米":
+                    - /url: https://www.etmall.com.tw/bs/176223
+                  - text: /
+                - heading "手機平板/" [level=2]:
+                  - link "手機平板":
+                    - /url: https://www.etmall.com.tw/s/107378
+                  - text: /
+                - heading "穿戴" [level=2]:
+                  - link "穿戴":
+                    - /url: https://www.etmall.com.tw/c1/107566
+            - listitem:
+              - generic:
+                - heading "家電/" [level=2]:
+                  - link "家電":
+                    - /url: https://www.etmall.com.tw/s/4416
+                  - text: /
+                - heading "電視/" [level=2]:
+                  - link "電視":
+                    - /url: https://www.etmall.com.tw/c1/110037
+                  - text: /
+                - heading "季節/" [level=2]:
+                  - link "季節":
+                    - /url: https://www.etmall.com.tw/s/153513
+                  - text: /
+                - heading "廚房" [level=2]:
+                  - link "廚房":
+                    - /url: https://www.etmall.com.tw/s/153514
+            - listitem:
+              - generic:
+                - heading "電腦/" [level=2]:
+                  - link "電腦":
+                    - /url: https://www.etmall.com.tw/s/126219
+                  - text: /
+                - heading "週邊/" [level=2]:
+                  - link "週邊":
+                    - /url: https://www.etmall.com.tw/s/4
+                  - text: /
+                - heading "電玩/" [level=2]:
+                  - link "電玩":
+                    - /url: https://www.etmall.com.tw/s/126209
+                  - text: /
+                - heading "耳機" [level=2]:
+                  - link "耳機":
+                    - /url: https://www.etmall.com.tw/c1/107570
+            - listitem:
+              - generic:
+                - heading "保養/" [level=2]:
+                  - link "保養":
+                    - /url: https://www.etmall.com.tw/s/3
+                  - text: /
+                - heading "彩妝/" [level=2]:
+                  - link "彩妝":
+                    - /url: https://www.etmall.com.tw/c1/47150
+                  - text: /
+                - heading "美髮/" [level=2]:
+                  - link "美髮":
+                    - /url: https://www.etmall.com.tw/c1/40056
+                  - text: /
+                - heading "香氛" [level=2]:
+                  - link "香氛":
+                    - /url: https://www.etmall.com.tw/c1/44292
+      - link "ETMall東森購物網" [ref=e40] [cursor=pointer]:
+        - /url: /
+        - img [ref=e41]
+      - generic [ref=e43]:
+        - generic [ref=e44]:
+          - searchbox "金條" [ref=e45]: 鉑金矽膠+半身
+          - paragraph [ref=e47] [cursor=pointer]: 搜全站
+          - button "搜尋" [ref=e49] [cursor=pointer]
+        - list [ref=e50]:
+          - listitem [ref=e51]: 熱搜：
+          - listitem [ref=e52]:
+            - link "麥片" [ref=e53] [cursor=pointer]:
+              - /url: "#"
+          - listitem [ref=e54]:
+            - link "空氣清淨機" [ref=e55] [cursor=pointer]:
+              - /url: "#"
+          - listitem [ref=e56]:
+            - link "洗衣球" [ref=e57] [cursor=pointer]:
+              - /url: "#"
+          - listitem [ref=e58]:
+            - link "飼料乾糧" [ref=e59] [cursor=pointer]:
+              - /url: "#"
+          - listitem [ref=e60]:
+            - link "蘭陵" [ref=e61] [cursor=pointer]:
+              - /url: "#"
+          - listitem [ref=e62]:
+            - link "台酒生技" [ref=e63] [cursor=pointer]:
+              - /url: "#"
+          - listitem [ref=e64]:
+            - link "日本味王" [ref=e65] [cursor=pointer]:
+              - /url: "#"
+          - listitem [ref=e66]:
+            - link "矜蘭妃" [ref=e67] [cursor=pointer]:
+              - /url: "#"
+          - listitem [ref=e68]:
+            - link "蘭陵" [ref=e69] [cursor=pointer]:
+              - /url: "#"
+          - listitem [ref=e70]:
+            - link "資生堂" [ref=e71] [cursor=pointer]:
+              - /url: "#"
+  - generic [ref=e77]:
+    - generic [ref=e78]:
+      - generic [ref=e79]:
+        - generic [ref=e80]: 第
+        - generic [ref=e81]: "1"
+        - generic [ref=e82]: 件 ~ 第
+        - generic [ref=e83]: "48"
+        - generic [ref=e84]: 件（ 共
+        - generic [ref=e85]: "76792"
+        - generic [ref=e86]: 件商品 ）
+      - generic [ref=e87]:
+        - button "棋盤式" [ref=e88] [cursor=pointer]:
+          - img [ref=e89]
+        - button "列表式" [ref=e91] [cursor=pointer]:
+          - img [ref=e92]
+    - paragraph [ref=e95]: 很抱歉，找不到符合 鉑金矽膠 半身 的商品，我們試著搜尋出下列相似商品，或者請您試試其他關鍵字。
+    - generic [ref=e96]:
+      - generic [ref=e97]:
+        - list [ref=e98]:
+          - listitem [ref=e99]:
+            - button "高相關" [ref=e100] [cursor=pointer]
+          - listitem [ref=e101]:
+            - button "最熱銷" [ref=e102] [cursor=pointer]
+          - listitem [ref=e103]:
+            - button "新上架" [ref=e104] [cursor=pointer]
+          - listitem [ref=e105]:
+            - button "價格排序" [ref=e108] [cursor=pointer]:
+              - text: 價格排序
+              - img [ref=e109]
+        - button "價格區間" [ref=e113] [cursor=pointer]:
+          - text: 價格區間
+          - img [ref=e114]
+      - generic [ref=e118]:
+        - list [ref=e119]:
+          - listitem [ref=e120]:
+            - button "購物中心" [ref=e122] [cursor=pointer]
+          - listitem [ref=e123]:
+            - button "商城" [ref=e125] [cursor=pointer]
+          - listitem [ref=e126]:
+            - button "全球購" [ref=e128] [cursor=pointer]
+        - button "篩選條件" [ref=e131] [cursor=pointer]:
+          - generic [ref=e132]: 篩選條件
+          - img [ref=e133]
+    - generic [ref=e135]:
+      - list [ref=e136]:
+        - listitem [ref=e137]:
+          - generic [ref=e138]:
+            - generic [ref=e139]:
+              - link "BeBeLock 鉑金矽膠砧板-星辰紫" [ref=e140] [cursor=pointer]:
+                - /url: /i/3096083
+                - img "BeBeLock 鉑金矽膠砧板-星辰紫" [ref=e142]
+              - paragraph [ref=e143]: 幼兒副食品或外出露營方便使用
+              - paragraph [ref=e144]:
+                - link "BeBeLock 鉑金矽膠砧板-星辰紫" [ref=e145] [cursor=pointer]:
+                  - /url: /i/3096083
+              - generic [ref=e146]:
+                - generic [ref=e147]: $496
+                - generic [ref=e148]: $1,033
+            - generic [ref=e150]:
+              - button "找相似" [ref=e152] [cursor=pointer]
+              - button "加入收藏" [ref=e154] [cursor=pointer]
+              - button "加入購物車" [ref=e158] [cursor=pointer]
+        - listitem [ref=e160]:
+          - generic [ref=e161]:
+            - generic [ref=e162]:
+              - link "【Silipot】韓國頂級鉑金矽膠烘焙模具M 4入(蛋糕模具 果凍、布朗尼、布丁模具)" [ref=e163] [cursor=pointer]:
+                - /url: /i/7221846
+                - img "【Silipot】韓國頂級鉑金矽膠烘焙模具M 4入(蛋糕模具 果凍、布朗尼、布丁模具)" [ref=e166]
+              - paragraph [ref=e167]: 可微波、加熱、消毒，好清洗，好脫模
+              - paragraph [ref=e168]:
+                - link "【Silipot】韓國頂級鉑金矽膠烘焙模具M 4入(蛋糕模具 果凍、布朗尼、布丁模具)" [ref=e169] [cursor=pointer]:
+                  - /url: /i/7221846
+              - generic [ref=e170]:
+                - generic [ref=e171]: $265
+                - generic [ref=e172]: $350
+            - generic [ref=e174]:
+              - button "找相似" [ref=e176] [cursor=pointer]
+              - button "加入收藏" [ref=e178] [cursor=pointer]
+              - button "加入購物車" [ref=e182] [cursor=pointer]
+        - listitem [ref=e184]:
+          - generic [ref=e185]:
+            - generic [ref=e186]:
+              - link "BeBeLock 鉑金矽膠砧板-碧湖綠" [ref=e187] [cursor=pointer]:
+                - /url: /i/3096082
+                - img "BeBeLock 鉑金矽膠砧板-碧湖綠" [ref=e189]
+              - paragraph [ref=e190]: 幼兒副食品或外出露營方便使用
+              - paragraph [ref=e191]:
+                - link "BeBeLock 鉑金矽膠砧板-碧湖綠" [ref=e192] [cursor=pointer]:
+                  - /url: /i/3096082
+              - generic [ref=e193]:
+                - generic [ref=e194]: $496
+                - generic [ref=e195]: $1,033
+            - generic [ref=e197]:
+              - button "找相似" [ref=e199] [cursor=pointer]
+              - button "加入收藏" [ref=e201] [cursor=pointer]
+              - button "加入購物車" [ref=e205] [cursor=pointer]
+        - listitem [ref=e207]:
+          - generic [ref=e208]:
+            - generic [ref=e209]:
+              - link "大口直飲鉑金矽膠摺疊杯" [ref=e210] [cursor=pointer]:
+                - /url: /i/2723788
+                - img "大口直飲鉑金矽膠摺疊杯" [ref=e213]
+              - paragraph [ref=e214]
+              - paragraph [ref=e215]:
+                - link "大口直飲鉑金矽膠摺疊杯" [ref=e216] [cursor=pointer]:
+                  - /url: /i/2723788
+              - generic [ref=e217]:
+                - generic [ref=e218]: $258
+                - generic [ref=e219]: $499
+                - generic [ref=e220]:
+                  - generic [ref=e221]: "81"
+                  - generic [ref=e222]: 折
+              - generic [ref=e224]: 超取
+            - generic [ref=e225]:
+              - button "找相似" [ref=e227] [cursor=pointer]
+              - button "加入收藏" [ref=e229] [cursor=pointer]
+              - button "加入購物車" [ref=e233] [cursor=pointer]
+        - listitem [ref=e235]:
+          - generic [ref=e236]:
+            - generic [ref=e237]:
+              - link "【韓國 Silipot】 韓國鉑金矽膠微波摺疊保鮮蓋" [ref=e238] [cursor=pointer]:
+                - /url: /i/7762565
+                - img "【韓國 Silipot】 韓國鉑金矽膠微波摺疊保鮮蓋" [ref=e241]
+              - paragraph [ref=e242]: 可微波 可保鮮 防蒼蠅
+              - paragraph [ref=e243]:
+                - link "【韓國 Silipot】 韓國鉑金矽膠微波摺疊保鮮蓋" [ref=e244] [cursor=pointer]:
+                  - /url: /i/7762565
+              - generic [ref=e245]:
+                - generic [ref=e246]: $420
+                - generic [ref=e247]: $490
+              - generic [ref=e249]: 任選
+            - generic [ref=e250]:
+              - button "找相似" [ref=e252] [cursor=pointer]
+              - button "加入收藏" [ref=e254] [cursor=pointer]
+              - button "加入購物車" [ref=e258] [cursor=pointer]
+        - listitem [ref=e260]:
+          - link "PUKU藍色企鵝▼任選滿$699免運出貨 PUKU藍色企鵝▼任選滿$699免運出貨 PUKU藍色企鵝▼任選滿$699免運出貨 PUKU藍色企鵝▼任選滿$699免運出貨 PUKU藍色企鵝▼任選滿$699免運出貨 任選699元可結帳購買" [ref=e262] [cursor=pointer]:
+            - /url: /p/303470
+            - generic [ref=e263]:
+              - img "PUKU藍色企鵝▼任選滿$699免運出貨" [ref=e264]
+              - img "PUKU藍色企鵝▼任選滿$699免運出貨" [ref=e265]
+              - img "PUKU藍色企鵝▼任選滿$699免運出貨" [ref=e266]
+              - img "PUKU藍色企鵝▼任選滿$699免運出貨" [ref=e267]
+            - generic [ref=e269]:
+              - generic [ref=e270]: PUKU藍色企鵝▼任選滿$699免運出貨
+              - paragraph [ref=e271]: 任選699元可結帳購買
+        - listitem [ref=e272]:
+          - generic [ref=e273]:
+            - generic [ref=e274]:
+              - 'link "【韓國 Silipot】鉑金矽膠多功能蒸鍋加深1500ML #不含蒸架" [ref=e275] [cursor=pointer]':
+                - /url: /i/7762564
+                - 'img "【韓國 Silipot】鉑金矽膠多功能蒸鍋加深1500ML #不含蒸架" [ref=e278]'
+              - paragraph [ref=e279]: 蒸煮健身餐好幫手
+              - paragraph [ref=e280]:
+                - 'link "【韓國 Silipot】鉑金矽膠多功能蒸鍋加深1500ML #不含蒸架" [ref=e281] [cursor=pointer]':
+                  - /url: /i/7762564
+              - generic [ref=e282]:
+                - generic [ref=e283]: $850
+                - generic [ref=e284]: $1,100
+              - generic [ref=e286]: 任選
+            - generic [ref=e287]:
+              - button "找相似" [ref=e289] [cursor=pointer]
+              - button "加入收藏" [ref=e291] [cursor=pointer]
+              - button "加入購物車" [ref=e295] [cursor=pointer]
+        - listitem [ref=e297]:
+          - generic [ref=e298]:
+            - generic [ref=e299]:
+              - link "Piyo Piyo 黃色小鴨 鉑金矽膠兩用蘿蔔杯" [ref=e300] [cursor=pointer]:
+                - /url: /i/7447825
+                - img "Piyo Piyo 黃色小鴨 鉑金矽膠兩用蘿蔔杯" [ref=e302]
+              - paragraph [ref=e303]
+              - paragraph [ref=e304]:
+                - link "Piyo Piyo 黃色小鴨 鉑金矽膠兩用蘿蔔杯" [ref=e305] [cursor=pointer]:
+                  - /url: /i/7447825
+              - generic [ref=e306]:
+                - generic [ref=e307]: $232
+                - generic [ref=e308]: $320
+              - generic [ref=e310]: 任選
+            - generic [ref=e311]:
+              - button "找相似" [ref=e313] [cursor=pointer]
+              - button "加入收藏" [ref=e315] [cursor=pointer]
+              - button "加入購物車" [ref=e319] [cursor=pointer]
+        - listitem [ref=e321]:
+          - generic [ref=e322]:
+            - generic [ref=e323]:
+              - link "鉑金矽膠刻度大尺寸烘焙墊(1入)" [ref=e324] [cursor=pointer]:
+                - /url: /i/3299510
+                - img "鉑金矽膠刻度大尺寸烘焙墊(1入)" [ref=e327]
+              - paragraph [ref=e328]: 強性韌性吸附桌面烘焙用品首選
+              - paragraph [ref=e329]:
+                - link "鉑金矽膠刻度大尺寸烘焙墊(1入)" [ref=e330] [cursor=pointer]:
+                  - /url: /i/3299510
+              - generic [ref=e331]:
+                - generic [ref=e332]: $365
+                - generic [ref=e333]: $630
+                - generic [ref=e334]:
+                  - generic [ref=e335]: "85"
+                  - generic [ref=e336]: 折
+            - generic [ref=e338]:
+              - button "找相似" [ref=e340] [cursor=pointer]
+              - button "加入收藏" [ref=e342] [cursor=pointer]
+              - button "加入購物車" [ref=e346] [cursor=pointer]
+        - listitem [ref=e348]:
+          - generic [ref=e349]:
+            - generic [ref=e350]:
+              - link "大口直飲鉑金矽膠摺疊杯(2入組)" [ref=e351] [cursor=pointer]:
+                - /url: /i/2900770
+                - img "大口直飲鉑金矽膠摺疊杯(2入組)" [ref=e354]
+              - paragraph [ref=e355]
+              - paragraph [ref=e356]:
+                - link "大口直飲鉑金矽膠摺疊杯(2入組)" [ref=e357] [cursor=pointer]:
+                  - /url: /i/2900770
+              - generic [ref=e358]:
+                - generic [ref=e359]: $456
+                - generic [ref=e360]: $998
+                - generic [ref=e361]:
+                  - generic [ref=e362]: "81"
+                  - generic [ref=e363]: 折
+              - generic [ref=e365]: 超取
+            - generic [ref=e366]:
+              - button "找相似" [ref=e368] [cursor=pointer]
+              - button "加入收藏" [ref=e370] [cursor=pointer]
+              - button "加入購物車" [ref=e374] [cursor=pointer]
+        - listitem [ref=e376]:
+          - generic [ref=e377]:
+            - generic [ref=e378]:
+              - link "Piyo Piyo 黃色小鴨 鉑金矽膠金魚QQ固齒器" [ref=e379] [cursor=pointer]:
+                - /url: /i/7447777
+                - img "Piyo Piyo 黃色小鴨 鉑金矽膠金魚QQ固齒器" [ref=e381]
+              - paragraph [ref=e382]
+              - paragraph [ref=e383]:
+                - link "Piyo Piyo 黃色小鴨 鉑金矽膠金魚QQ固齒器" [ref=e384] [cursor=pointer]:
+                  - /url: /i/7447777
+              - generic [ref=e385]:
+                - generic [ref=e386]: $217
+                - generic [ref=e387]: $300
+              - generic [ref=e389]: 任選
+            - generic [ref=e390]:
+              - button "找相似" [ref=e392] [cursor=pointer]
+              - button "加入收藏" [ref=e394] [cursor=pointer]
+              - button "加入購物車" [ref=e398] [cursor=pointer]
+        - listitem [ref=e400]:
+          - generic [ref=e401]:
+            - generic [ref=e402]:
+              - link "【PUKU藍色企鵝】鉑金矽膠附蓋吸盤碗(三色)" [ref=e403] [cursor=pointer]:
+                - /url: /i/3613495
+                - img "【PUKU藍色企鵝】鉑金矽膠附蓋吸盤碗(三色)" [ref=e405]
+              - paragraph [ref=e406]
+              - paragraph [ref=e407]:
+                - link "【PUKU藍色企鵝】鉑金矽膠附蓋吸盤碗(三色)" [ref=e408] [cursor=pointer]:
+                  - /url: /i/3613495
+              - generic [ref=e409]:
+                - generic [ref=e410]: $380
+                - generic [ref=e411]: $580
+              - generic [ref=e413]: 任選
+            - generic [ref=e414]:
+              - button "找相似" [ref=e416] [cursor=pointer]
+              - button "加入收藏" [ref=e418] [cursor=pointer]
+              - button "加入購物車" [ref=e422] [cursor=pointer]
+        - listitem [ref=e424]:
+          - generic [ref=e425]:
+            - generic [ref=e426]:
+              - link "【韓國BABY JOY】鉑金矽膠副食品製冰盒12格-粉" [ref=e427] [cursor=pointer]:
+                - /url: /i/2476591
+                - img "【韓國BABY JOY】鉑金矽膠副食品製冰盒12格-粉" [ref=e429]
+              - paragraph [ref=e430]: 副食品分裝盒 保存盒 冰磚 烘焙模具
+              - paragraph [ref=e431]:
+                - link "【韓國BABY JOY】鉑金矽膠副食品製冰盒12格-粉" [ref=e432] [cursor=pointer]:
+                  - /url: /i/2476591
+              - generic [ref=e433]:
+                - generic [ref=e434]: $383
+                - generic [ref=e435]: $500
+                - generic [ref=e436]:
+                  - generic [ref=e437]: "9"
+                  - generic [ref=e438]: 折
+            - generic [ref=e440]:
+              - button "找相似" [ref=e442] [cursor=pointer]
+              - button "加入收藏" [ref=e444] [cursor=pointer]
+              - button "加入購物車" [ref=e448] [cursor=pointer]
+        - listitem [ref=e450]:
+          - generic [ref=e451]:
+            - generic [ref=e452]:
+              - link "Piyo Piyo 黃色小鴨 鉑金矽膠大吸力蘿蔔盤" [ref=e453] [cursor=pointer]:
+                - /url: /i/7447823
+                - img "Piyo Piyo 黃色小鴨 鉑金矽膠大吸力蘿蔔盤" [ref=e455]
+              - paragraph [ref=e456]
+              - paragraph [ref=e457]:
+                - link "Piyo Piyo 黃色小鴨 鉑金矽膠大吸力蘿蔔盤" [ref=e458] [cursor=pointer]:
+                  - /url: /i/7447823
+              - generic [ref=e459]:
+                - generic [ref=e460]: $350
+                - generic [ref=e461]: $480
+              - generic [ref=e463]: 任選
+            - generic [ref=e464]:
+              - button "找相似" [ref=e466] [cursor=pointer]
+              - button "加入收藏" [ref=e468] [cursor=pointer]
+              - button "加入購物車" [ref=e472] [cursor=pointer]
+        - listitem [ref=e474]:
+          - generic [ref=e475]:
+            - generic [ref=e476]:
+              - link "鉑金矽膠義乳膚感無痕變裝-【C罩杯-1200g】" [ref=e477] [cursor=pointer]:
+                - /url: /i/7850274
+                - img "鉑金矽膠義乳膚感無痕變裝-【C罩杯-1200g】" [ref=e481]
+              - paragraph [ref=e482]
+              - paragraph [ref=e483]:
+                - link "鉑金矽膠義乳膚感無痕變裝-【C罩杯-1200g】" [ref=e484] [cursor=pointer]:
+                  - /url: /i/7850274
+              - generic [ref=e485]:
+                - generic [ref=e486]: $1,992
+                - generic [ref=e487]: $3,980
+                - generic [ref=e488]:
+                  - generic [ref=e489]: "83"
+                  - generic [ref=e490]: 折
+            - generic [ref=e492]:
+              - button "找相似" [ref=e494] [cursor=pointer]
+              - button "加入收藏" [ref=e496] [cursor=pointer]
+              - button "加入購物車" [ref=e500] [cursor=pointer]
+        - listitem [ref=e502]:
+          - generic [ref=e503]:
+            - generic [ref=e504]:
+              - link "鉑金矽膠義乳膚感無痕變裝-【E罩杯-1400g】" [ref=e505] [cursor=pointer]:
+                - /url: /i/7850276
+                - img "鉑金矽膠義乳膚感無痕變裝-【E罩杯-1400g】" [ref=e509]
+              - paragraph [ref=e510]
+              - paragraph [ref=e511]:
+                - link "鉑金矽膠義乳膚感無痕變裝-【E罩杯-1400g】" [ref=e512] [cursor=pointer]:
+                  - /url: /i/7850276
+              - generic [ref=e513]:
+                - generic [ref=e514]: $2,324
+                - generic [ref=e515]: $3,980
+                - generic [ref=e516]:
+                  - generic [ref=e517]: "83"
+                  - generic [ref=e518]: 折
+            - generic [ref=e520]:
+              - button "找相似" [ref=e522] [cursor=pointer]
+              - button "加入收藏" [ref=e524] [cursor=pointer]
+              - button "加入購物車" [ref=e528] [cursor=pointer]
+        - listitem [ref=e530]:
+          - generic [ref=e531]:
+            - generic [ref=e532]:
+              - link "【韓國BABY JOY】鉑金矽膠副食品製冰盒12格-橘色" [ref=e533] [cursor=pointer]:
+                - /url: /i/2256967
+                - img "【韓國BABY JOY】鉑金矽膠副食品製冰盒12格-橘色" [ref=e535]
+              - paragraph [ref=e536]: 副食品分裝盒 保存盒 冰磚 烘焙模具
+              - paragraph [ref=e537]:
+                - link "【韓國BABY JOY】鉑金矽膠副食品製冰盒12格-橘色" [ref=e538] [cursor=pointer]:
+                  - /url: /i/2256967
+              - generic [ref=e539]:
+                - generic [ref=e540]: $383
+                - generic [ref=e541]: $500
+                - generic [ref=e542]:
+                  - generic [ref=e543]: "9"
+                  - generic [ref=e544]: 折
+            - generic [ref=e546]:
+              - button "找相似" [ref=e548] [cursor=pointer]
+              - button "加入收藏" [ref=e550] [cursor=pointer]
+              - button "加入購物車" [ref=e554] [cursor=pointer]
+        - listitem [ref=e556]:
+          - generic [ref=e557]:
+            - generic [ref=e558]:
+              - link "鉑金矽膠義乳膚感無痕變裝-【D罩杯-1300g】" [ref=e559] [cursor=pointer]:
+                - /url: /i/7850275
+                - img "鉑金矽膠義乳膚感無痕變裝-【D罩杯-1300g】" [ref=e563]
+              - paragraph [ref=e564]
+              - paragraph [ref=e565]:
+                - link "鉑金矽膠義乳膚感無痕變裝-【D罩杯-1300g】" [ref=e566] [cursor=pointer]:
+                  - /url: /i/7850275
+              - generic [ref=e567]:
+                - generic [ref=e568]: $2,158
+                - generic [ref=e569]: $3,980
+                - generic [ref=e570]:
+                  - generic [ref=e571]: "83"
+                  - generic [ref=e572]: 折
+            - generic [ref=e574]:
+              - button "找相似" [ref=e576] [cursor=pointer]
+              - button "加入收藏" [ref=e578] [cursor=pointer]
+              - button "加入購物車" [ref=e582] [cursor=pointer]
+        - listitem [ref=e584]:
+          - generic [ref=e585]:
+            - generic [ref=e586]:
+              - link "【韓國 SILIPOT】鉑金矽膠料理保存袋 (S/M/L各1)-3入" [ref=e587] [cursor=pointer]:
+                - /url: /i/4793083
+                - img "【韓國 SILIPOT】鉑金矽膠料理保存袋 (S/M/L各1)-3入" [ref=e590]
+              - paragraph [ref=e591]: 韓國製造料理儲存袋(可微波 熱水 儲存食物 熱湯 生鮮食品 水果)
+              - paragraph [ref=e592]:
+                - link "【韓國 SILIPOT】鉑金矽膠料理保存袋 (S/M/L各1)-3入" [ref=e593] [cursor=pointer]:
+                  - /url: /i/4793083
+              - generic [ref=e594]:
+                - generic [ref=e595]: $1,683
+                - generic [ref=e596]: $2,300
+            - generic [ref=e598]:
+              - button "找相似" [ref=e600] [cursor=pointer]
+              - button "加入收藏" [ref=e602] [cursor=pointer]
+              - button "加入購物車" [ref=e606] [cursor=pointer]
+        - listitem [ref=e608]:
+          - generic [ref=e609]:
+            - generic [ref=e610]:
+              - link "【FaSoLa】食品級FDA鉑金矽膠多功能摺疊碗杯" [ref=e611] [cursor=pointer]:
+                - /url: /i/2173043
+                - img "【FaSoLa】食品級FDA鉑金矽膠多功能摺疊碗杯" [ref=e614]
+              - paragraph [ref=e615]
+              - paragraph [ref=e616]:
+                - link "【FaSoLa】食品級FDA鉑金矽膠多功能摺疊碗杯" [ref=e617] [cursor=pointer]:
+                  - /url: /i/2173043
+              - generic [ref=e618]:
+                - generic [ref=e619]: $189
+                - generic [ref=e620]: $799
+            - generic [ref=e622]:
+              - button "找相似" [ref=e624] [cursor=pointer]
+              - button "加入收藏" [ref=e626] [cursor=pointer]
+              - button "加入購物車" [ref=e630] [cursor=pointer]
+        - listitem [ref=e632]:
+          - generic [ref=e633]:
+            - generic [ref=e634]:
+              - link "Fasola食品級FDA鉑金矽膠多功能摺疊碗 1000ml" [ref=e635] [cursor=pointer]:
+                - /url: /i/2142744
+                - img "Fasola食品級FDA鉑金矽膠多功能摺疊碗 1000ml" [ref=e638]
+              - paragraph [ref=e639]
+              - paragraph [ref=e640]:
+                - link "Fasola食品級FDA鉑金矽膠多功能摺疊碗 1000ml" [ref=e641] [cursor=pointer]:
+                  - /url: /i/2142744
+              - generic [ref=e642]:
+                - generic [ref=e643]: $336
+                - generic [ref=e644]: $699
+                - generic [ref=e645]:
+                  - generic [ref=e646]: "8"
+                  - generic [ref=e647]: 折
+            - generic [ref=e649]:
+              - button "找相似" [ref=e651] [cursor=pointer]
+              - button "加入收藏" [ref=e653] [cursor=pointer]
+              - button "加入購物車" [ref=e657] [cursor=pointer]
+        - listitem [ref=e659]:
+          - generic [ref=e660]:
+            - generic [ref=e661]:
+              - link "【韓國BABY JOY】鉑金矽膠造型製冰盒 北極熊/企鵝" [ref=e662] [cursor=pointer]:
+                - /url: /i/2429232
+                - img "【韓國BABY JOY】鉑金矽膠造型製冰盒 北極熊/企鵝" [ref=e664]
+              - paragraph [ref=e665]: 果凍食品模具 保存盒 冰磚 烘焙模具 巧克力模
+              - paragraph [ref=e666]:
+                - link "【韓國BABY JOY】鉑金矽膠造型製冰盒 北極熊/企鵝" [ref=e667] [cursor=pointer]:
+                  - /url: /i/2429232
+              - generic [ref=e668]:
+                - generic [ref=e669]: $315
+                - generic [ref=e670]: $470
+                - generic [ref=e671]:
+                  - generic [ref=e672]: "9"
+                  - generic [ref=e673]: 折
+            - generic [ref=e675]:
+              - button "找相似" [ref=e677] [cursor=pointer]
+              - button "加入收藏" [ref=e679] [cursor=pointer]
+              - button "加入購物車" [ref=e683] [cursor=pointer]
+        - listitem [ref=e685]:
+          - generic [ref=e686]:
+            - generic [ref=e687]:
+              - 'link "【韓國 Silipot】鉑金矽膠蒸架(可微波) #不含多功能蒸鍋" [ref=e688] [cursor=pointer]':
+                - /url: /i/7762566
+                - 'img "【韓國 Silipot】鉑金矽膠蒸架(可微波) #不含多功能蒸鍋" [ref=e691]'
+              - paragraph [ref=e692]: 幫助水分與食物分離
+              - paragraph [ref=e693]:
+                - 'link "【韓國 Silipot】鉑金矽膠蒸架(可微波) #不含多功能蒸鍋" [ref=e694] [cursor=pointer]':
+                  - /url: /i/7762566
+              - generic [ref=e695]:
+                - generic [ref=e696]: $320
+                - generic [ref=e697]: $450
+              - generic [ref=e699]: 任選
+            - generic [ref=e700]:
+              - button "找相似" [ref=e702] [cursor=pointer]
+              - button "加入收藏" [ref=e704] [cursor=pointer]
+              - button "加入購物車" [ref=e708] [cursor=pointer]
+        - listitem [ref=e710]:
+          - generic [ref=e711]:
+            - generic [ref=e712]:
+              - link "【Silipot】韓國 頂級鉑金矽膠油炸筷(耐高溫 好夾 可熱水消毒)" [ref=e713] [cursor=pointer]:
+                - /url: /i/3445797
+                - img "【Silipot】韓國 頂級鉑金矽膠油炸筷(耐高溫 好夾 可熱水消毒)" [ref=e716]
+              - paragraph [ref=e717]: 耐高溫 耐用且安全的烹飪工具
+              - paragraph [ref=e718]:
+                - link "【Silipot】韓國 頂級鉑金矽膠油炸筷(耐高溫 好夾 可熱水消毒)" [ref=e719] [cursor=pointer]:
+                  - /url: /i/3445797
+              - generic [ref=e720]:
+                - generic [ref=e721]: $265
+                - generic [ref=e722]: $450
+            - generic [ref=e724]:
+              - button "找相似" [ref=e726] [cursor=pointer]
+              - button "加入收藏" [ref=e728] [cursor=pointer]
+              - button "加入購物車" [ref=e732] [cursor=pointer]
+        - listitem [ref=e734]:
+          - generic [ref=e735]:
+            - generic [ref=e736]:
+              - link "鉑金矽膠系列 擬真膚感青筋紋理 模特復刻自慰名器" [ref=e737] [cursor=pointer]:
+                - /url: /i/7889411
+                - img "鉑金矽膠系列 擬真膚感青筋紋理 模特復刻自慰名器" [ref=e742]
+              - paragraph [ref=e743]
+              - paragraph [ref=e744]:
+                - link "鉑金矽膠系列 擬真膚感青筋紋理 模特復刻自慰名器" [ref=e745] [cursor=pointer]:
+                  - /url: /i/7889411
+              - generic [ref=e746]:
+                - generic [ref=e747]: $921
+                - generic [ref=e748]: $1,980
+                - generic [ref=e749]:
+                  - generic [ref=e750]: "78"
+                  - generic [ref=e751]: 折
+              - generic [ref=e753]: 超取
+            - generic [ref=e754]:
+              - button "找相似" [ref=e756] [cursor=pointer]
+              - button "加入收藏" [ref=e758] [cursor=pointer]
+              - button "加入購物車" [ref=e762] [cursor=pointer]
+        - listitem [ref=e764]:
+          - generic [ref=e765]:
+            - generic [ref=e766]:
+              - link "【PUKU藍色企鵝】鉑金矽膠附蓋吸盤分隔餐盤(三色)" [ref=e767] [cursor=pointer]:
+                - /url: /i/3613496
+                - img "【PUKU藍色企鵝】鉑金矽膠附蓋吸盤分隔餐盤(三色)" [ref=e769]
+              - paragraph [ref=e770]
+              - paragraph [ref=e771]:
+                - link "【PUKU藍色企鵝】鉑金矽膠附蓋吸盤分隔餐盤(三色)" [ref=e772] [cursor=pointer]:
+                  - /url: /i/3613496
+              - generic [ref=e773]:
+                - generic [ref=e774]: $480
+                - generic [ref=e775]: $880
+              - generic [ref=e777]: 任選
+            - generic [ref=e778]:
+              - button "找相似" [ref=e780] [cursor=pointer]
+              - button "加入收藏" [ref=e782] [cursor=pointer]
+              - button "加入購物車" [ref=e786] [cursor=pointer]
+        - listitem [ref=e788]:
+          - link "休閒獨家▼限量送1箱抗菌液 休閒獨家▼限量送1箱抗菌液 休閒獨家▼限量送1箱抗菌液 休閒獨家▼限量送1箱抗菌液 休閒獨家▼限量送1箱抗菌液" [ref=e790] [cursor=pointer]:
+            - /url: /gp/290009
+            - generic [ref=e791]:
+              - img "休閒獨家▼限量送1箱抗菌液" [ref=e792]
+              - img "休閒獨家▼限量送1箱抗菌液" [ref=e793]
+              - img "休閒獨家▼限量送1箱抗菌液" [ref=e794]
+              - img "休閒獨家▼限量送1箱抗菌液" [ref=e795]
+            - generic [ref=e798]: 休閒獨家▼限量送1箱抗菌液
+        - listitem [ref=e799]:
+          - generic [ref=e800]:
+            - generic [ref=e801]:
+              - 'link "【韓國 Silipot】鉑金矽膠多功能蒸鍋850ML #不含蒸架" [ref=e802] [cursor=pointer]':
+                - /url: /i/7762563
+                - 'img "【韓國 Silipot】鉑金矽膠多功能蒸鍋850ML #不含蒸架" [ref=e805]'
+              - paragraph [ref=e806]: 蒸蛋、健康餐
+              - paragraph [ref=e807]:
+                - 'link "【韓國 Silipot】鉑金矽膠多功能蒸鍋850ML #不含蒸架" [ref=e808] [cursor=pointer]':
+                  - /url: /i/7762563
+              - generic [ref=e809]:
+                - generic [ref=e810]: $750
+                - generic [ref=e811]: $1,000
+              - generic [ref=e813]: 任選
+            - generic [ref=e814]:
+              - button "找相似" [ref=e816] [cursor=pointer]
+              - button "加入收藏" [ref=e818] [cursor=pointer]
+              - button "加入購物車" [ref=e822] [cursor=pointer]
+        - listitem [ref=e824]:
+          - generic [ref=e825]:
+            - generic [ref=e826]:
+              - link "FaSoLa 食品用FDA鉑金矽膠多功能摺疊杯-萌寵款" [ref=e827] [cursor=pointer]:
+                - /url: /i/7668892
+                - img "FaSoLa 食品用FDA鉑金矽膠多功能摺疊杯-萌寵款" [ref=e830]
+              - paragraph [ref=e831]: "#FaSoLa#摺疊杯#矽膠摺疊杯#FDA鉑金矽膠#環保水杯"
+              - paragraph [ref=e832]:
+                - link "FaSoLa 食品用FDA鉑金矽膠多功能摺疊杯-萌寵款" [ref=e833] [cursor=pointer]:
+                  - /url: /i/7668892
+              - generic [ref=e834]:
+                - generic [ref=e835]: $249
+                - generic [ref=e836]: $699
+            - generic [ref=e838]:
+              - button "找相似" [ref=e840] [cursor=pointer]
+              - button "加入收藏" [ref=e842] [cursor=pointer]
+              - button "加入購物車" [ref=e846] [cursor=pointer]
+        - listitem [ref=e848]:
+          - generic [ref=e849]:
+            - generic [ref=e850]:
+              - link "CB JAPAN LÉKUÉ 無毒鉑金矽膠可微波耐熱保鮮盒-1L" [ref=e851] [cursor=pointer]:
+                - /url: /i/7616958
+                - img "CB JAPAN LÉKUÉ 無毒鉑金矽膠可微波耐熱保鮮盒-1L" [ref=e854]
+              - paragraph [ref=e855]: 可重複使用矽膠保鮮盒
+              - paragraph [ref=e856]:
+                - link "CB JAPAN LÉKUÉ 無毒鉑金矽膠可微波耐熱保鮮盒-1L" [ref=e857] [cursor=pointer]:
+                  - /url: /i/7616958
+              - generic [ref=e858]:
+                - generic [ref=e859]: $333
+                - generic [ref=e860]: $780
+            - generic [ref=e862]:
+              - button "找相似" [ref=e864] [cursor=pointer]
+              - button "加入收藏" [ref=e866] [cursor=pointer]
+              - button "加入購物車" [ref=e870] [cursor=pointer]
+        - listitem [ref=e872]:
+          - generic [ref=e873]:
+            - generic [ref=e874]:
+              - link "【PUKU藍色企組鵝】鉑金矽膠附蓋副食品分裝盒(三色)" [ref=e875] [cursor=pointer]:
+                - /url: /i/3612968
+                - img "【PUKU藍色企組鵝】鉑金矽膠附蓋副食品分裝盒(三色)" [ref=e877]
+              - paragraph [ref=e878]
+              - paragraph [ref=e879]:
+                - link "【PUKU藍色企組鵝】鉑金矽膠附蓋副食品分裝盒(三色)" [ref=e880] [cursor=pointer]:
+                  - /url: /i/3612968
+              - generic [ref=e881]:
+                - generic [ref=e882]: $380
+                - generic [ref=e883]: $580
+              - generic [ref=e885]: 任選
+            - generic [ref=e886]:
+              - button "找相似" [ref=e888] [cursor=pointer]
+              - button "加入收藏" [ref=e890] [cursor=pointer]
+              - button "加入購物車" [ref=e894] [cursor=pointer]
+        - listitem [ref=e896]:
+          - generic [ref=e897]:
+            - generic [ref=e898]:
+              - link "【Silipot】韓國 廚具鉑金矽膠漏勺 麵撈(撈麵勺 油炸撈 勺子 濾網 漏杓)" [ref=e899] [cursor=pointer]:
+                - /url: /i/3441814
+                - img "【Silipot】韓國 廚具鉑金矽膠漏勺 麵撈(撈麵勺 油炸撈 勺子 濾網 漏杓)" [ref=e902]
+              - paragraph [ref=e903]: 耐高溫 耐用且安全的烹飪工具
+              - paragraph [ref=e904]:
+                - link "【Silipot】韓國 廚具鉑金矽膠漏勺 麵撈(撈麵勺 油炸撈 勺子 濾網 漏杓)" [ref=e905] [cursor=pointer]:
+                  - /url: /i/3441814
+              - generic [ref=e906]:
+                - generic [ref=e907]: $460
+                - generic [ref=e908]: $630
+                - generic [ref=e909]:
+                  - generic [ref=e910]: "85"
+                  - generic [ref=e911]: 折
+            - generic [ref=e913]:
+              - button "找相似" [ref=e915] [cursor=pointer]
+              - button "加入收藏" [ref=e917] [cursor=pointer]
+              - button "加入購物車" [ref=e921] [cursor=pointer]
+        - listitem [ref=e923]:
+          - generic [ref=e924]:
+            - generic [ref=e925]:
+              - link "美國 PERFECT FIT 玩美合身 鉑金矽膠三屌環 171819 XACT-FIT 3 PREMIUM SILICONE RINGS" [ref=e926] [cursor=pointer]:
+                - /url: /i/2724531
+                - img "美國 PERFECT FIT 玩美合身 鉑金矽膠三屌環 171819 XACT-FIT 3 PREMIUM SILICONE RINGS" [ref=e930]
+              - paragraph [ref=e931]: 鉑金級矽膠製作一次三個合身屌環
+              - paragraph [ref=e932]:
+                - link "美國 PERFECT FIT 玩美合身 鉑金矽膠三屌環 171819 XACT-FIT 3 PREMIUM SILICONE RINGS" [ref=e933] [cursor=pointer]:
+                  - /url: /i/2724531
+              - generic [ref=e934]:
+                - generic [ref=e935]: $648
+                - generic [ref=e936]: $980
+                - generic [ref=e937]:
+                  - generic [ref=e938]: "83"
+                  - generic [ref=e939]: 折
+              - generic [ref=e941]: 折價券
+            - generic [ref=e942]:
+              - button "找相似" [ref=e944] [cursor=pointer]
+              - button "加入收藏" [ref=e946] [cursor=pointer]
+              - button "加入購物車" [ref=e950] [cursor=pointer]
+        - listitem [ref=e952]:
+          - generic [ref=e953]:
+            - generic [ref=e954]:
+              - link "Piyo Piyo 黃色小鴨 鉑金矽膠大吸力副食學習蘿蔔碗" [ref=e955] [cursor=pointer]:
+                - /url: /i/7463785
+                - img "Piyo Piyo 黃色小鴨 鉑金矽膠大吸力副食學習蘿蔔碗" [ref=e957]
+              - paragraph [ref=e958]
+              - paragraph [ref=e959]:
+                - link "Piyo Piyo 黃色小鴨 鉑金矽膠大吸力副食學習蘿蔔碗" [ref=e960] [cursor=pointer]:
+                  - /url: /i/7463785
+              - generic [ref=e961]:
+                - generic [ref=e962]: $275
+                - generic [ref=e963]: $380
+              - generic [ref=e965]: 任選
+            - generic [ref=e966]:
+              - button "找相似" [ref=e968] [cursor=pointer]
+              - button "加入收藏" [ref=e970] [cursor=pointer]
+              - button "加入購物車" [ref=e974] [cursor=pointer]
+        - listitem [ref=e976]:
+          - generic [ref=e977]:
+            - generic [ref=e978]:
+              - link "【Pomier】韓國鉑金矽膠餐桌墊(桌墊 隔熱墊 防水墊)" [ref=e979] [cursor=pointer]:
+                - /url: /i/3402919
+                - img "【Pomier】韓國鉑金矽膠餐桌墊(桌墊 隔熱墊 防水墊)" [ref=e982]
+              - paragraph [ref=e983]: 雙面不同花色點最都可使用
+              - paragraph [ref=e984]:
+                - link "【Pomier】韓國鉑金矽膠餐桌墊(桌墊 隔熱墊 防水墊)" [ref=e985] [cursor=pointer]:
+                  - /url: /i/3402919
+              - generic [ref=e986]:
+                - generic [ref=e987]: $420
+                - generic [ref=e988]: $600
+                - generic [ref=e989]:
+                  - generic [ref=e990]: "85"
+                  - generic [ref=e991]: 折
+            - generic [ref=e993]:
+              - button "找相似" [ref=e995] [cursor=pointer]
+              - button "加入收藏" [ref=e997] [cursor=pointer]
+              - button "加入購物車" [ref=e1001] [cursor=pointer]
+        - listitem [ref=e1003]:
+          - generic [ref=e1004]:
+            - generic [ref=e1005]:
+              - link "【Silipot】韓國 鉑金矽膠耐熱大湯匙 湯杓(湯勺 可熱水消毒)" [ref=e1006] [cursor=pointer]:
+                - /url: /i/3402916
+                - img "【Silipot】韓國 鉑金矽膠耐熱大湯匙 湯杓(湯勺 可熱水消毒)" [ref=e1009]
+              - paragraph [ref=e1010]: 耐高溫 耐用且安全的烹飪工具
+              - paragraph [ref=e1011]:
+                - link "【Silipot】韓國 鉑金矽膠耐熱大湯匙 湯杓(湯勺 可熱水消毒)" [ref=e1012] [cursor=pointer]:
+                  - /url: /i/3402916
+              - generic [ref=e1013]:
+                - generic [ref=e1014]: $529
+                - generic [ref=e1015]: $750
+            - generic [ref=e1017]:
+              - button "找相似" [ref=e1019] [cursor=pointer]
+              - button "加入收藏" [ref=e1021] [cursor=pointer]
+              - button "加入購物車" [ref=e1025] [cursor=pointer]
+        - listitem [ref=e1027]:
+          - generic [ref=e1028]:
+            - generic [ref=e1029]:
+              - link "【Silipot】韓國鉑金矽膠耐熱大鍋鏟 煎匙(煎鏟 平底鍋鏟)" [ref=e1030] [cursor=pointer]:
+                - /url: /i/3402915
+                - img "【Silipot】韓國鉑金矽膠耐熱大鍋鏟 煎匙(煎鏟 平底鍋鏟)" [ref=e1033]
+              - paragraph [ref=e1034]: 耐高溫 耐用且安全的烹飪工具
+              - paragraph [ref=e1035]:
+                - link "【Silipot】韓國鉑金矽膠耐熱大鍋鏟 煎匙(煎鏟 平底鍋鏟)" [ref=e1036] [cursor=pointer]:
+                  - /url: /i/3402915
+              - generic [ref=e1037]:
+                - generic [ref=e1038]: $479
+                - generic [ref=e1039]: $650
+                - generic [ref=e1040]:
+                  - generic [ref=e1041]: "85"
+                  - generic [ref=e1042]: 折
+            - generic [ref=e1044]:
+              - button "找相似" [ref=e1046] [cursor=pointer]
+              - button "加入收藏" [ref=e1048] [cursor=pointer]
+              - button "加入購物車" [ref=e1052] [cursor=pointer]
+        - listitem [ref=e1054]:
+          - generic [ref=e1055]:
+            - generic [ref=e1056]:
+              - link "【韓國JOHANSON】Q滋奶瓶造型固齒器(磨牙棒)鉑金矽膠" [ref=e1057] [cursor=pointer]:
+                - /url: /i/2792621
+                - img "【韓國JOHANSON】Q滋奶瓶造型固齒器(磨牙棒)鉑金矽膠" [ref=e1059]
+              - paragraph [ref=e1060]: 材質採食品級鉑金矽膠, 100%無毒,無雙酚A, 無塑化劑
+              - paragraph [ref=e1061]:
+                - link "【韓國JOHANSON】Q滋奶瓶造型固齒器(磨牙棒)鉑金矽膠" [ref=e1062] [cursor=pointer]:
+                  - /url: /i/2792621
+              - generic [ref=e1063]:
+                - generic [ref=e1064]: $519
+                - generic [ref=e1065]: $680
+                - generic [ref=e1066]:
+                  - generic [ref=e1067]: "9"
+                  - generic [ref=e1068]: 折
+            - generic [ref=e1070]:
+              - button "找相似" [ref=e1072] [cursor=pointer]
+              - button "加入收藏" [ref=e1074] [cursor=pointer]
+              - button "加入購物車" [ref=e1078] [cursor=pointer]
+        - listitem [ref=e1080]:
+          - generic [ref=e1081]:
+            - generic [ref=e1082]:
+              - link "美國 PERFECT FIT 玩美合身141516 鉑金矽膠三屌環 XACT-FIT 3 PREMIUM SILICONE RINGS" [ref=e1083] [cursor=pointer]:
+                - /url: /i/2598832
+                - img "美國 PERFECT FIT 玩美合身141516 鉑金矽膠三屌環 XACT-FIT 3 PREMIUM SILICONE RINGS" [ref=e1087]
+              - paragraph [ref=e1088]: 小尺寸彈性矽膠屌環給你緊腫脹
+              - paragraph [ref=e1089]:
+                - link "美國 PERFECT FIT 玩美合身141516 鉑金矽膠三屌環 XACT-FIT 3 PREMIUM SILICONE RINGS" [ref=e1090] [cursor=pointer]:
+                  - /url: /i/2598832
+              - generic [ref=e1091]:
+                - generic [ref=e1092]: $648
+                - generic [ref=e1093]: $980
+                - generic [ref=e1094]:
+                  - generic [ref=e1095]: "83"
+                  - generic [ref=e1096]: 折
+              - generic [ref=e1098]: 折價券
+            - generic [ref=e1099]:
+              - button "找相似" [ref=e1101] [cursor=pointer]
+              - button "加入收藏" [ref=e1103] [cursor=pointer]
+              - button "加入購物車" [ref=e1107] [cursor=pointer]
+        - listitem [ref=e1109]:
+          - generic [ref=e1110]:
+            - generic [ref=e1111]:
+              - link "【韓國BABY JOY】鉑金矽膠副食品製冰盒3入(顏色隨機)" [ref=e1112] [cursor=pointer]:
+                - /url: /i/2256964
+                - img "【韓國BABY JOY】鉑金矽膠副食品製冰盒3入(顏色隨機)" [ref=e1114]
+              - paragraph [ref=e1115]: 副食品分裝盒 保存盒 冰磚 烘焙模具
+              - paragraph [ref=e1116]:
+                - link "【韓國BABY JOY】鉑金矽膠副食品製冰盒3入(顏色隨機)" [ref=e1117] [cursor=pointer]:
+                  - /url: /i/2256964
+              - generic [ref=e1118]:
+                - generic [ref=e1119]: $1,200
+                - generic [ref=e1120]: $1,500
+            - generic [ref=e1122]:
+              - button "找相似" [ref=e1124] [cursor=pointer]
+              - button "加入收藏" [ref=e1126] [cursor=pointer]
+              - button "加入購物車" [ref=e1130] [cursor=pointer]
+        - listitem [ref=e1132]:
+          - generic [ref=e1133]:
+            - generic [ref=e1134]:
+              - link "【朴蜜兒】鉑金矽膠時尚折疊杯220ml -（含蓋）(露營 牙刷杯 水杯)" [ref=e1135] [cursor=pointer]:
+                - /url: /i/4738116
+                - img "【朴蜜兒】鉑金矽膠時尚折疊杯220ml -（含蓋）(露營 牙刷杯 水杯)" [ref=e1138]
+              - paragraph [ref=e1139]: 韓國熱銷~露營旅行必備時尚摺疊杯
+              - paragraph [ref=e1140]:
+                - link "【朴蜜兒】鉑金矽膠時尚折疊杯220ml -（含蓋）(露營 牙刷杯 水杯)" [ref=e1141] [cursor=pointer]:
+                  - /url: /i/4738116
+              - generic [ref=e1142]:
+                - generic [ref=e1143]: $395
+                - generic [ref=e1144]: $550
+                - generic [ref=e1145]:
+                  - generic [ref=e1146]: "91"
+                  - generic [ref=e1147]: 折
+            - generic [ref=e1149]:
+              - button "找相似" [ref=e1151] [cursor=pointer]
+              - button "加入收藏" [ref=e1153] [cursor=pointer]
+              - button "加入購物車" [ref=e1157] [cursor=pointer]
+        - listitem [ref=e1159]:
+          - generic [ref=e1160]:
+            - generic [ref=e1161]:
+              - link "CB JAPAN LÉKUÉ 無毒鉑金矽膠可微波耐熱保鮮蓋/密封蓋/保鮮罩-15cm" [ref=e1162] [cursor=pointer]:
+                - /url: /i/7615525
+                - img "CB JAPAN LÉKUÉ 無毒鉑金矽膠可微波耐熱保鮮蓋/密封蓋/保鮮罩-15cm" [ref=e1165]
+              - paragraph [ref=e1166]: 可清洗及重複使用
+              - paragraph [ref=e1167]:
+                - link "CB JAPAN LÉKUÉ 無毒鉑金矽膠可微波耐熱保鮮蓋/密封蓋/保鮮罩-15cm" [ref=e1168] [cursor=pointer]:
+                  - /url: /i/7615525
+              - generic [ref=e1169]:
+                - generic [ref=e1170]: $270
+                - generic [ref=e1171]: $680
+            - generic [ref=e1173]:
+              - button "找相似" [ref=e1175] [cursor=pointer]
+              - button "加入收藏" [ref=e1177] [cursor=pointer]
+              - button "加入購物車" [ref=e1181] [cursor=pointer]
+        - listitem [ref=e1183]:
+          - generic [ref=e1184]:
+            - generic [ref=e1185]:
+              - link "御女思娜 鉑金矽膠 真肌血管筋脈 大肉粒摩擦刺激性感美鮑魚雙穴自慰器" [ref=e1186] [cursor=pointer]:
+                - /url: /i/7889440
+                - img "御女思娜 鉑金矽膠 真肌血管筋脈 大肉粒摩擦刺激性感美鮑魚雙穴自慰器" [ref=e1190]
+              - paragraph [ref=e1191]
+              - paragraph [ref=e1192]:
+                - link "御女思娜 鉑金矽膠 真肌血管筋脈 大肉粒摩擦刺激性感美鮑魚雙穴自慰器" [ref=e1193] [cursor=pointer]:
+                  - /url: /i/7889440
+              - generic [ref=e1194]:
+                - generic [ref=e1195]: $1,077
+                - generic [ref=e1196]: $1,980
+                - generic [ref=e1197]:
+                  - generic [ref=e1198]: "78"
+                  - generic [ref=e1199]: 折
+              - generic [ref=e1201]: 超取
+            - generic [ref=e1202]:
+              - button "找相似" [ref=e1204] [cursor=pointer]
+              - button "加入收藏" [ref=e1206] [cursor=pointer]
+              - button "加入購物車" [ref=e1210] [cursor=pointer]
+        - listitem [ref=e1212]:
+          - generic [ref=e1213]:
+            - generic [ref=e1214]:
+              - link "御女師奶 倩倩 鉑金矽膠 爆乳青筋+肥臀 陰肛雙交VIP體驗2.7Kg" [ref=e1215] [cursor=pointer]:
+                - /url: /i/7916173
+                - img "御女師奶 倩倩 鉑金矽膠 爆乳青筋+肥臀 陰肛雙交VIP體驗2.7Kg" [ref=e1219]
+              - paragraph [ref=e1220]
+              - paragraph [ref=e1221]:
+                - link "御女師奶 倩倩 鉑金矽膠 爆乳青筋+肥臀 陰肛雙交VIP體驗2.7Kg" [ref=e1222] [cursor=pointer]:
+                  - /url: /i/7916173
+              - generic [ref=e1223]:
+                - generic [ref=e1224]: $1,467
+                - generic [ref=e1225]: $2,580
+                - generic [ref=e1226]:
+                  - generic [ref=e1227]: "78"
+                  - generic [ref=e1228]: 折
+              - generic [ref=e1230]: 超取
+            - generic [ref=e1231]:
+              - button "找相似" [ref=e1233] [cursor=pointer]
+              - button "加入收藏" [ref=e1235] [cursor=pointer]
+              - button "加入購物車" [ref=e1239] [cursor=pointer]
+        - listitem [ref=e1241]:
+          - generic [ref=e1242]:
+            - generic [ref=e1243]:
+              - link "朴蜜兒韓國鉑金矽膠蒸籠墊(蒸墊 蒸包子 小籠包 餃子 饅頭)" [ref=e1244] [cursor=pointer]:
+                - /url: /i/7713584
+                - img "朴蜜兒韓國鉑金矽膠蒸籠墊(蒸墊 蒸包子 小籠包 餃子 饅頭)" [ref=e1247]
+              - paragraph [ref=e1248]: 蒸煮餃類、包子、饅頭等不易沾黏
+              - paragraph [ref=e1249]:
+                - link "朴蜜兒韓國鉑金矽膠蒸籠墊(蒸墊 蒸包子 小籠包 餃子 饅頭)" [ref=e1250] [cursor=pointer]:
+                  - /url: /i/7713584
+              - generic [ref=e1251]:
+                - generic [ref=e1252]: $486
+                - generic [ref=e1253]: $600
+            - generic [ref=e1255]:
+              - button "找相似" [ref=e1257] [cursor=pointer]
+              - button "加入收藏" [ref=e1259] [cursor=pointer]
+              - button "加入購物車" [ref=e1263] [cursor=pointer]
+        - listitem [ref=e1265]:
+          - generic [ref=e1266]:
+            - generic [ref=e1267]:
+              - link "【Silipot】韓國頂級鉑金矽膠烘焙模具M 4入(蛋糕模具 果凍、布朗尼、布丁模具)" [ref=e1268] [cursor=pointer]:
+                - /url: /i/7772593
+                - img "【Silipot】韓國頂級鉑金矽膠烘焙模具M 4入(蛋糕模具 果凍、布朗尼、布丁模具)" [ref=e1271]
+              - paragraph [ref=e1272]: 可微波、加熱、消毒，好清洗，好脫模
+              - paragraph [ref=e1273]:
+                - link "【Silipot】韓國頂級鉑金矽膠烘焙模具M 4入(蛋糕模具 果凍、布朗尼、布丁模具)" [ref=e1274] [cursor=pointer]:
+                  - /url: /i/7772593
+              - generic [ref=e1275]:
+                - generic [ref=e1276]: $255
+                - generic [ref=e1277]: $350
+                - generic [ref=e1278]:
+                  - generic [ref=e1279]: "85"
+                  - generic [ref=e1280]: 折
+              - generic [ref=e1282]: 任選
+            - generic [ref=e1283]:
+              - button "找相似" [ref=e1285] [cursor=pointer]
+              - button "加入收藏" [ref=e1287] [cursor=pointer]
+              - button "加入購物車" [ref=e1291] [cursor=pointer]
+        - listitem [ref=e1293]:
+          - generic [ref=e1294]:
+            - generic [ref=e1295]:
+              - link "前列腺按摩器 肛塞 前列腺高潮 按摩棒 Blush Anal Adventure 鉑金矽膠子彈頭肛塞套件" [ref=e1296] [cursor=pointer]:
+                - /url: /i/7439140
+                - img "前列腺按摩器 肛塞 前列腺高潮 按摩棒 Blush Anal Adventure 鉑金矽膠子彈頭肛塞套件" [ref=e1300]
+              - paragraph [ref=e1301]: Blush的「Anal Adventure」鉑金矽膠子彈頭肛塞套件將成為你的完美選擇。
+              - paragraph [ref=e1302]:
+                - link "前列腺按摩器 肛塞 前列腺高潮 按摩棒 Blush Anal Adventure 鉑金矽膠子彈頭肛塞套件" [ref=e1303] [cursor=pointer]:
+                  - /url: /i/7439140
+              - generic [ref=e1304]:
+                - generic [ref=e1305]: $590
+                - generic [ref=e1306]: $1,510
+                - generic [ref=e1307]:
+                  - generic [ref=e1308]: "83"
+                  - generic [ref=e1309]: 折
+              - generic [ref=e1311]: 超取
+            - generic [ref=e1312]:
+              - button "找相似" [ref=e1314] [cursor=pointer]
+              - button "加入收藏" [ref=e1316] [cursor=pointer]
+              - button "加入購物車" [ref=e1320] [cursor=pointer]
+        - listitem [ref=e1322]:
+          - generic [ref=e1323]:
+            - generic [ref=e1324]:
+              - link "【韓國 SiliPot】鉑金矽膠熊讚餐碗 防摔碗(可裝麵條 防滑碗 可熱水消毒 防摔碗)" [ref=e1325] [cursor=pointer]:
+                - /url: /i/3397779
+                - img "【韓國 SiliPot】鉑金矽膠熊讚餐碗 防摔碗(可裝麵條 防滑碗 可熱水消毒 防摔碗)" [ref=e1327]
+              - paragraph [ref=e1328]: 可當嬰兒餐盤/湯碗！小孩容易喜歡的小熊角色
+              - paragraph [ref=e1329]:
+                - link "【韓國 SiliPot】鉑金矽膠熊讚餐碗 防摔碗(可裝麵條 防滑碗 可熱水消毒 防摔碗)" [ref=e1330] [cursor=pointer]:
+                  - /url: /i/3397779
+              - generic [ref=e1331]:
+                - generic [ref=e1332]: $340
+                - generic [ref=e1333]: $500
+            - generic [ref=e1335]:
+              - button "找相似" [ref=e1337] [cursor=pointer]
+              - button "加入收藏" [ref=e1339] [cursor=pointer]
+              - button "加入購物車" [ref=e1343] [cursor=pointer]
+        - listitem [ref=e1345]:
+          - generic [ref=e1346]:
+            - generic [ref=e1347]:
+              - link "【Silipot】韓國鉑金矽膠吸盤碗 含上蓋 學習餐碗(強力吸盤 可熱水消毒 防摔碗)" [ref=e1348] [cursor=pointer]:
+                - /url: /i/3400419
+                - img "【Silipot】韓國鉑金矽膠吸盤碗 含上蓋 學習餐碗(強力吸盤 可熱水消毒 防摔碗)" [ref=e1350]
+              - paragraph [ref=e1351]: 從初期副食品到到零食都能使用
+              - paragraph [ref=e1352]:
+                - link "【Silipot】韓國鉑金矽膠吸盤碗 含上蓋 學習餐碗(強力吸盤 可熱水消毒 防摔碗)" [ref=e1353] [cursor=pointer]:
+                  - /url: /i/3400419
+              - generic [ref=e1354]:
+                - generic [ref=e1355]: $369
+                - generic [ref=e1356]: $630
+            - generic [ref=e1358]:
+              - button "找相似" [ref=e1360] [cursor=pointer]
+              - button "加入收藏" [ref=e1362] [cursor=pointer]
+              - button "加入購物車" [ref=e1366] [cursor=pointer]
+        - listitem [ref=e1368]:
+          - generic [ref=e1369]:
+            - generic [ref=e1370]:
+              - link "【Silipot】韓國頂級鉑金矽膠烘焙模具S 6入(蛋糕模具 果凍、布朗尼、布丁模具)" [ref=e1371] [cursor=pointer]:
+                - /url: /i/7221848
+                - img "【Silipot】韓國頂級鉑金矽膠烘焙模具S 6入(蛋糕模具 果凍、布朗尼、布丁模具)" [ref=e1374]
+              - paragraph [ref=e1375]: 可微波、加熱、消毒，好清洗，好脫模
+              - paragraph [ref=e1376]:
+                - link "【Silipot】韓國頂級鉑金矽膠烘焙模具S 6入(蛋糕模具 果凍、布朗尼、布丁模具)" [ref=e1377] [cursor=pointer]:
+                  - /url: /i/7221848
+              - generic [ref=e1378]:
+                - generic [ref=e1379]: $223
+                - generic [ref=e1380]: $300
+            - generic [ref=e1382]:
+              - button "找相似" [ref=e1384] [cursor=pointer]
+              - button "加入收藏" [ref=e1386] [cursor=pointer]
+              - button "加入購物車" [ref=e1390] [cursor=pointer]
+        - listitem [ref=e1392]:
+          - generic [ref=e1393]:
+            - generic [ref=e1395]: 關鍵字挑挑看
+            - list [ref=e1397]:
+              - listitem [ref=e1398]:
+                - link "silipot" [ref=e1399] [cursor=pointer]:
+                  - /url: /Search?keyword=silipot
+              - listitem [ref=e1400]:
+                - link "烘焙模具" [ref=e1401] [cursor=pointer]:
+                  - /url: /Search?keyword=%e7%83%98%e7%84%99%e6%a8%a1%e5%85%b7
+              - listitem [ref=e1402]:
+                - link "韓國鍋具" [ref=e1403] [cursor=pointer]:
+                  - /url: /Search?keyword=%e9%9f%93%e5%9c%8b%e9%8d%8b%e5%85%b7
+              - listitem [ref=e1404]:
+                - link "情趣內衣" [ref=e1405] [cursor=pointer]:
+                  - /url: /Search?keyword=%e6%83%85%e8%b6%a3%e5%85%a7%e8%a1%a3
+              - listitem [ref=e1406]:
+                - link "蒸鍋" [ref=e1407] [cursor=pointer]:
+                  - /url: /Search?keyword=%e8%92%b8%e9%8d%8b
+              - listitem [ref=e1408]:
+                - link "折疊保鮮盒" [ref=e1409] [cursor=pointer]:
+                  - /url: /Search?keyword=%e6%8a%98%e7%96%8a%e4%bf%9d%e9%ae%ae%e7%9b%92
+              - listitem [ref=e1410]:
+                - link "硅膠義乳" [ref=e1411] [cursor=pointer]:
+                  - /url: /Search?keyword=%e7%a1%85%e8%86%a0%e7%be%a9%e4%b9%b3
+              - listitem [ref=e1412]:
+                - link "可微波碗" [ref=e1413] [cursor=pointer]:
+                  - /url: /Search?keyword=%e5%8f%af%e5%be%ae%e6%b3%a2%e7%a2%97
+              - listitem [ref=e1414]:
+                - link "蒸架" [ref=e1415] [cursor=pointer]:
+                  - /url: /Search?keyword=%e8%92%b8%e6%9e%b6
+      - generic [ref=e1418]:
+        - generic [ref=e1419]:
+          - text: 第
+          - generic [ref=e1420]: "1"
+          - text: 件 ~ 第
+          - generic [ref=e1421]: "48"
+          - text: 件（ 共
+          - generic [ref=e1422]: "76792"
+          - text: 件商品 ）
+        - generic [ref=e1423]:
+          - link "最前頁" [ref=e1424]:
+            - /url: javascript:;
+          - link "上一頁" [ref=e1426]:
+            - /url: javascript:;
+          - link "1" [ref=e1428] [cursor=pointer]:
+            - /url: javascript:;
+          - link "2" [ref=e1429] [cursor=pointer]:
+            - /url: javascript:;
+          - link "3" [ref=e1430] [cursor=pointer]:
+            - /url: javascript:;
+          - link "4" [ref=e1431] [cursor=pointer]:
+            - /url: javascript:;
+          - link "5" [ref=e1432] [cursor=pointer]:
+            - /url: javascript:;
+          - link "6" [ref=e1433] [cursor=pointer]:
+            - /url: javascript:;
+          - link "7" [ref=e1434] [cursor=pointer]:
+            - /url: javascript:;
+          - link "8" [ref=e1435] [cursor=pointer]:
+            - /url: javascript:;
+          - link "9" [ref=e1436] [cursor=pointer]:
+            - /url: javascript:;
+          - link "10" [ref=e1437] [cursor=pointer]:
+            - /url: javascript:;
+          - link "..." [ref=e1438]:
+            - /url: javascript:;
+          - link "下一頁" [ref=e1439] [cursor=pointer]:
+            - /url: javascript:;
+          - link "最後頁" [ref=e1441] [cursor=pointer]:
+            - /url: javascript:;
+  - generic [ref=e1443]:
+    - link "TOP" [ref=e1445] [cursor=pointer]:
+      - /url: "#"
+    - generic [ref=e1446]:
+      - generic [ref=e1449]:
+        - generic [ref=e1450]:
+          - list [ref=e1451]:
+            - listitem [ref=e1452]:
+              - heading "購物服務" [level=4] [ref=e1453]
+            - listitem [ref=e1454]:
+              - link "直配大陸" [ref=e1455] [cursor=pointer]:
+                - /url: https://www.etmall.com.tw/s/22223
+            - listitem [ref=e1456]:
+              - link "網購包裝減量" [ref=e1457] [cursor=pointer]:
+                - /url: https://media.etmall.com.tw/sp/1788/m/index.html
+            - listitem [ref=e1458]:
+              - link "境外肉品防疫政策宣導" [ref=e1459] [cursor=pointer]:
+                - /url: https://media.etmall.com.tw/sp/2318/m/index.html
+            - listitem [ref=e1460]:
+              - link "循環袋包裝回收" [ref=e1461] [cursor=pointer]:
+                - /url: https://media.etmall.com.tw/sp/22904/m/index.html
+          - list [ref=e1462]:
+            - listitem [ref=e1463]:
+              - heading "關於東森購物" [level=4] [ref=e1464]
+            - listitem [ref=e1465]:
+              - link "電視購物" [ref=e1466] [cursor=pointer]:
+                - /url: https://www.etmall.com.tw/s/31771
+            - listitem [ref=e1467]:
+              - link "人才招募" [ref=e1468] [cursor=pointer]:
+                - /url: https://www.104.com.tw/jobbank/custjob/index.php?r=cust&j=4b414a754f63465d3c39416a555b3d1f257514a2b43634528282828263f682d2c917j98
+            - listitem [ref=e1469]:
+              - link "官方網站" [ref=e1470] [cursor=pointer]:
+                - /url: https://www.etgroup.com.tw
+          - list [ref=e1471]:
+            - listitem [ref=e1472]:
+              - heading "相關服務" [level=4] [ref=e1473]
+            - listitem [ref=e1474]:
+              - link "連絡我們" [ref=e1475] [cursor=pointer]:
+                - /url: https://www.etmall.com.tw/HelpCenter/Contact
+            - listitem [ref=e1476]:
+              - link "電子報訂閱/取消" [ref=e1477] [cursor=pointer]:
+                - /url: https://www.etmall.com.tw/HelpCenter/EDM
+            - listitem [ref=e1478]:
+              - link "防詐騙提醒" [ref=e1479] [cursor=pointer]:
+                - /url: https://www.etmall.com.tw/HelpCenter/PreventCheat
+            - listitem [ref=e1480]:
+              - link "東購與新零售澄清公告" [ref=e1481] [cursor=pointer]:
+                - /url: https://media.etmall.com.tw/sp/5139/m/index.html
+          - list [ref=e1482]:
+            - listitem [ref=e1483]:
+              - heading "廠商專區" [level=4] [ref=e1484]
+            - listitem [ref=e1485]:
+              - link "招商專區" [ref=e1486] [cursor=pointer]:
+                - /url: https://www.etmall.com.tw/HelpCenter/Business
+            - listitem [ref=e1487]:
+              - link "合作提案" [ref=e1488] [cursor=pointer]:
+                - /url: https://www.etmall.com.tw/HelpCenter/Cooperation
+            - listitem [ref=e1489]:
+              - link "應施檢驗商品檢索" [ref=e1490] [cursor=pointer]:
+                - /url: http://www.bsmi.gov.tw/wSite/mp?mp=1
+            - listitem [ref=e1491]:
+              - link "廢止審驗證明之無線機上盒" [ref=e1492] [cursor=pointer]:
+                - /url: https://media.etmall.com.tw/sp/11197/m/index.html
+            - listitem [ref=e1493]:
+              - link "應檢定度量衡器檢索網" [ref=e1494] [cursor=pointer]:
+                - /url: https://www.bsmi.gov.tw/wSite/mp?mp=85
+            - listitem [ref=e1495]:
+              - link "商品檢驗業務申辦服務" [ref=e1496] [cursor=pointer]:
+                - /url: https://civil.bsmi.gov.tw/bsmi_pqn/
+            - listitem [ref=e1497]:
+              - link "應施檢商品檢索網" [ref=e1498] [cursor=pointer]:
+                - /url: https://www.bsmi.gov.tw/wSite/mp?mp=82
+            - listitem [ref=e1499]:
+              - link "企業福委招商專區" [ref=e1500] [cursor=pointer]:
+                - /url: https://www.etmall.com.tw/HelpCenter/WelfareCommitee
+            - listitem [ref=e1501]:
+              - link "政府挺你！多元貸款方案" [ref=e1502] [cursor=pointer]:
+                - /url: https://user301220.pse.is/7ysmu9
+        - generic [ref=e1503]:
+          - generic [ref=e1504]:
+            - paragraph [ref=e1505]: 下載東森購物網APP
+            - img "APP下載QRCODE" [ref=e1507]
+          - generic [ref=e1508]:
+            - link "LOGO" [ref=e1509] [cursor=pointer]:
+              - /url: /
+              - img "LOGO" [ref=e1511]
+            - link "IOS-APP下載" [ref=e1512] [cursor=pointer]:
+              - /url: https://apps.apple.com/tw/app/ehs%E6%9D%B1%E6%A3%AE%E8%B3%BC%E7%89%A9/id974433138
+              - img "IOS-APP下載" [ref=e1514]
+            - link "Android-APP下載" [ref=e1515] [cursor=pointer]:
+              - /url: https://play.google.com/store/apps/details?id=com.hyxen.app.etmall
+              - img "Android-APP下載" [ref=e1517]
+      - generic [ref=e1518]:
+        - paragraph [ref=e1519]:
+          - text: 本網站所有內容及圖片均不得以任何型式，予以重製或傳送
+          - link "安全機制" [ref=e1520] [cursor=pointer]:
+            - /url: /HelpCenter/StandardSecurity
+          - text: 與
+          - link "隱私聲明" [ref=e1521] [cursor=pointer]:
+            - /url: /HelpCenter/PrivacyStatement
+          - text: ( 即日起停用支援TLS 1.1 加密協定 )
+          - text: 東森得易購股份有限公司(統一編號：22456427)版權所有 台灣 新北市中和區景平路258號1樓
+          - text: 代表人：王令麟
+          - text: 24H 服務專線：
+          - link "02-8023-9515" [ref=e1522] [cursor=pointer]:
+            - /url: tel:02-8023-9515
+          - text: 電子信箱：
+          - link "ehs_service@ehsn.com.tw" [ref=e1523] [cursor=pointer]:
+            - /url: mailto:ehs_service@ehsn.com.tw
+          - text: 2019 EASTERN HOME SHOPPING & LEISURE CO., LTD. All Rights Reserved.
+        - generic [ref=e1524]:
+          - img "TWCA" [ref=e1527]
+          - generic [ref=e1528]:
+            - img "資訊安全管理系統認證" [ref=e1529]
+            - paragraph [ref=e1530]:
+              - text: 資訊安全管理
+              - text: 系統認證
+  - link "Go Top" [ref=e1531] [cursor=pointer]:
+    - /url: "#"

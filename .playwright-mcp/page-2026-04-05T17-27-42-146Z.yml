@@ -1,0 +1,513 @@
+- generic [ref=e3]:
+  - generic:
+    - button "跳到主要內容":
+      - generic: 跳到主要內容
+  - generic [ref=e5]:
+    - banner [ref=e6]:
+      - navigation [ref=e8]:
+        - generic [ref=e9]:
+          - link "賣家中心" [ref=e10] [cursor=pointer]:
+            - /url: //seller.shopee.tw
+          - link "開始隨拍即賣囉!" [ref=e11] [cursor=pointer]:
+            - /url: /seller/signup
+          - link "下載" [ref=e13] [cursor=pointer]:
+            - /url: /web/
+          - generic [ref=e14]: 追蹤我們
+          - generic [ref=e15]:
+            - link "追蹤我們 Facebook" [ref=e16] [cursor=pointer]:
+              - /url: https://facebook.com/ShopeeTW
+            - link "追蹤我們 Instagram!" [ref=e17] [cursor=pointer]:
+              - /url: https://instagram.com/Shopee_TW
+            - link "追蹤我們 Line" [ref=e18] [cursor=pointer]:
+              - /url: https://line.me/R/ti/p/@shopee
+        - list [ref=e19]:
+          - listitem [ref=e20] [cursor=pointer]:
+            - button "通知總覽" [ref=e23]:
+              - link "通知總覽":
+                - /url: /user/notifications/order
+                - img
+                - generic: 通知總覽
+          - link "幫助中心" [ref=e24] [cursor=pointer]:
+            - /url: https://help.shopee.tw/tw/s
+            - img [ref=e26]
+            - generic [ref=e30]: 幫助中心
+          - listitem [ref=e31] [cursor=pointer]:
+            - button "繁體中文" [ref=e33]:
+              - generic [ref=e34]:
+                - img [ref=e36]
+                - generic [ref=e39]: 繁體中文
+                - img [ref=e40]
+          - link "註冊" [ref=e42] [cursor=pointer]:
+            - /url: /buyer/signup?next=
+          - link "登入" [ref=e44] [cursor=pointer]:
+            - /url: /buyer/login?next=
+      - generic [ref=e46]:
+        - link [ref=e47] [cursor=pointer]:
+          - /url: /
+          - img [ref=e49]
+        - generic [ref=e54]:
+          - search [ref=e55]:
+            - combobox "註冊獲得全站優惠券與免運券" [ref=e58]
+            - button [ref=e59] [cursor=pointer]:
+              - img [ref=e60]
+          - generic [ref=e70]:
+            - link [ref=e71] [cursor=pointer]:
+              - /url: /search?keyword=%E6%89%8B%E6%A9%9F%E6%AE%BC
+              - text: 手機殼
+            - link [ref=e72] [cursor=pointer]:
+              - /url: /search?keyword=%E9%80%81%E5%A5%B3%E7%94%9F%E7%94%9F%E6%97%A5%E7%A6%AE%E7%89%A9
+              - text: 送女生生日禮物
+            - link [ref=e73] [cursor=pointer]:
+              - /url: /search?keyword=apple%20%E8%97%8D%E8%8A%BD%E8%80%B3%E6%A9%9F
+              - text: Apple 藍芽耳機
+            - link [ref=e74] [cursor=pointer]:
+              - /url: /search?keyword=ootd%E5%A5%B3%E8%A3%9D%E6%9C%8D%E9%A3%BE
+              - text: Ootd女裝服飾
+            - link [ref=e75] [cursor=pointer]:
+              - /url: /search?keyword=%E9%87%91%E9%A0%85%E9%8D%8A%201%E5%85%A9
+              - text: 金項鍊 1兩
+            - link [ref=e76] [cursor=pointer]:
+              - /url: /search?keyword=%E6%96%AF%E6%96%87%E6%95%97%E9%A1%9E%E5%8D%8A%E6%A1%86%E7%9C%BC%E9%8F%A1
+              - text: 斯文敗類半框眼鏡
+            - link [ref=e77] [cursor=pointer]:
+              - /url: /search?keyword=nike%E6%AD%A3%E7%89%88
+              - text: Nike正版
+            - link [ref=e78] [cursor=pointer]:
+              - /url: /search?keyword=%E9%86%9C%E6%8A%B1%E6%9E%95
+              - text: 醜抱枕
+            - link [ref=e79] [cursor=pointer]:
+              - /url: /search?keyword=%E6%B8%A3%E7%94%B7%E9%A6%99%E6%B0%B4
+              - text: 渣男香水
+            - link [ref=e80] [cursor=pointer]:
+              - /url: /search?keyword=iphone%E6%89%8B%E9%8C%B6
+              - text: Iphone手錶
+            - link [ref=e81] [cursor=pointer]:
+              - /url: /search?keyword=electric%20cooker%20pot
+              - text: Electric Cooker Pot
+            - link [ref=e82] [cursor=pointer]:
+              - /url: /search?keyword=%E5%A5%B3%E5%AE%89%E5%85%A8%E5%B8%BD
+              - text: 女安全帽
+            - link [ref=e83] [cursor=pointer]:
+              - /url: /search?keyword=%E9%8C%A2%E5%8C%85
+              - text: 錢包
+            - link [ref=e84] [cursor=pointer]:
+              - /url: /search?keyword=%E8%A1%8C%E5%8B%95%E5%85%85%E9%9B%BB%E5%99%A8
+              - text: 行動充電器
+        - button "Shopping Cart Icon Shopping Cart Please log in to view cart / add items to cart" [ref=e87]:
+          - link "Shopping Cart Icon Shopping Cart Please log in to view cart / add items to cart" [ref=e89] [cursor=pointer]:
+            - /url: /buyer/login?from_source=mini_cart_btn&next=
+            - img "Shopping Cart Icon" [ref=e90]
+            - generic [ref=e94]: Shopping Cart Please log in to view cart / add items to cart
+    - generic [ref=e98]:
+      - generic [ref=e100]:
+        - generic [ref=e101]: 請確認您的年齡
+        - generic [ref=e102]: 你必須年滿 18 歲才能觀看此內容。請確認你的年齡：
+        - generic [ref=e103]:
+          - button "我已超過 18歲" [disabled]
+          - button "我還未滿 18歲" [disabled]
+      - main [ref=e107]:
+        - generic [ref=e108]:
+          - link "蝦皮購物" [ref=e109] [cursor=pointer]:
+            - /url: /
+          - img "icon arrow right" [ref=e110]
+          - link "其他類別" [ref=e111] [cursor=pointer]:
+            - /url: /其他類別-cat.11041784
+          - img "icon arrow right" [ref=e112]
+          - link "成人專區" [ref=e113] [cursor=pointer]:
+            - /url: /成人專區-cat.11041784.11041785
+          - img "icon arrow right" [ref=e114]
+          - link "充氣娃娃" [ref=e115] [cursor=pointer]:
+            - /url: /充氣娃娃-cat.11041784.11041785.11041791
+          - img "icon arrow right" [ref=e116]
+          - generic [ref=e117]: 高品質鉑金液態矽膠半身娃娃 全自動夾吸震動防水加溫語音矽膠娃娃 女優名器 矽膠倒模 實體娃娃 成人仿真娃娃 電動情趣娃娃
+        - generic [ref=e118]:
+          - generic [ref=e119]:
+            - img "Product image 高品質鉑金液態矽膠半身娃娃 全自動夾吸震動防水加溫語音矽膠娃娃 女優名器 矽膠倒模 實體娃娃 成人仿真娃娃 電動情趣娃娃" [ref=e125]
+            - generic [ref=e127]:
+              - generic [ref=e128]:
+                - generic [ref=e129]: "分享:"
+                - button "Share on Messenger" [ref=e130] [cursor=pointer]
+                - button "Share on Facebook" [ref=e131] [cursor=pointer]
+                - button "Share on Pinterest" [ref=e132] [cursor=pointer]
+                - button "Share on Twitter" [ref=e133] [cursor=pointer]
+              - button "喜歡 (16)" [disabled] [ref=e135]:
+                - img [ref=e136]
+                - generic [ref=e138]: 喜歡 (16)
+          - generic [ref=e140]:
+            - heading "高品質鉑金液態矽膠半身娃娃 全自動夾吸震動防水加溫語音矽膠娃娃 女優名器 矽膠倒模 實體娃娃 成人仿真娃娃 電動情趣娃娃" [level=1] [ref=e142]
+            - generic [ref=e143]:
+              - button "5.0" [ref=e144] [cursor=pointer]:
+                - generic [ref=e145]: "5.0"
+              - button "2 評價" [ref=e167] [cursor=pointer]:
+                - generic [ref=e168]: "2"
+                - generic [ref=e169]: 評價
+              - button "匿名檢舉商品" [ref=e170] [cursor=pointer]
+            - generic [ref=e174]:
+              - generic [ref=e175]:
+                - heading "運送" [level=2] [ref=e176]
+                - generic [ref=e178]:
+                  - img "shipping entrance icon" [ref=e179]
+                  - generic [ref=e180]:
+                    - generic [ref=e181]:
+                      - generic [ref=e183]: (較長備貨) 預計配達時間 4月11日 - 4月19日, 運費：$0 起
+                      - img [ref=e184]
+                    - generic [ref=e187]: 如果訂單未能準時配達，您可以領取 $10 優惠券作為補償
+              - generic [ref=e188]:
+                - heading "服務與保障" [level=2] [ref=e189]
+                - generic [ref=e191]:
+                  - img "service entrance icon" [ref=e192]
+                  - generic [ref=e193]: 蝦皮放心買 • 蝦皮安心退
+                  - img [ref=e194]
+              - generic [ref=e197]:
+                - generic [ref=e198]:
+                  - heading "Color" [level=2] [ref=e199]
+                  - generic [ref=e201]:
+                    - button "7.5公斤半身全矽膠娃娃（防水夾吸加熱）" [ref=e202] [cursor=pointer]:
+                      - img [ref=e204]
+                      - generic [ref=e205]: 7.5公斤半身全矽膠娃娃（防水夾吸加熱）
+                    - button "10公斤全矽膠半身娃娃（防水夾吸款）" [ref=e206] [cursor=pointer]:
+                      - img [ref=e208]
+                      - generic [ref=e209]: 10公斤全矽膠半身娃娃（防水夾吸款）
+                    - button "15公斤半身全矽膠娃娃（防水夾吸加熱）" [ref=e210] [cursor=pointer]:
+                      - img [ref=e212]
+                      - generic [ref=e213]: 15公斤半身全矽膠娃娃（防水夾吸加熱）
+                    - button "18公斤半身矽膠娃娃（防水夾吸加熱）" [ref=e214] [cursor=pointer]:
+                      - img [ref=e216]
+                      - generic [ref=e217]: 18公斤半身矽膠娃娃（防水夾吸加熱）
+                - generic [ref=e218]:
+                  - heading "數量" [level=2] [ref=e219]
+                  - generic [ref=e222]:
+                    - button "Decrease" [disabled] [ref=e223]:
+                      - img [ref=e224]
+                    - spinbutton [disabled] [ref=e226]: "1"
+                    - button "Increase" [disabled] [ref=e227]:
+                      - img [ref=e228]
+            - generic [ref=e232]:
+              - button "icon-add-to-cart 加入購物車" [ref=e233] [cursor=pointer]:
+                - img "icon-add-to-cart" [ref=e234]
+                - generic [ref=e235]: 加入購物車
+              - button "直接購買" [ref=e236] [cursor=pointer]
+        - generic [ref=e239]:
+          - generic [ref=e240]:
+            - link "icon head shot 造訪賣場" [ref=e241] [cursor=pointer]:
+              - /url: /chenfenglin747?categoryId=100001&entryPoint=ShopByPDP&itemId=43662258648
+              - generic [ref=e242]:
+                - img "icon head shot" [ref=e244]
+                - img "造訪賣場" [ref=e246]
+            - generic [ref=e247]:
+              - generic [ref=e248]: 夜未眠💖情趣成人館｜專營性用品-飛機杯、震動按摩棒、跳蛋、女優名器、性愛娃娃、
+              - generic [ref=e250]: 10分鐘前上線
+              - generic [ref=e251]:
+                - button "聊聊" [ref=e252] [cursor=pointer]:
+                  - generic [ref=e254]: 聊聊
+                - link "icon shop 查看賣場" [ref=e255] [cursor=pointer]:
+                  - /url: /chenfenglin747?categoryId=100001&entryPoint=ShopByPDP&itemId=43662258648
+                  - img "icon shop" [ref=e256]
+                  - generic [ref=e257]: 查看賣場
+          - generic [ref=e258]:
+            - generic [ref=e259]:
+              - generic [ref=e260]: 商品評價
+              - generic [ref=e261]: 1,955
+            - generic [ref=e262]:
+              - generic [ref=e263]: 聊聊回應率
+              - generic [ref=e264]: 81%
+            - generic [ref=e265]:
+              - generic [ref=e266]: 加入時間
+              - generic [ref=e267]: 16個月 前
+            - link "商品 264" [ref=e268]:
+              - /url: /chenfenglin747#product_list
+              - generic [ref=e269]: 商品
+              - generic [ref=e270] [cursor=pointer]: "264"
+            - generic [ref=e271]:
+              - generic [ref=e272]: 回應速度
+              - generic [ref=e273]: 幾小時內
+            - generic [ref=e274]:
+              - generic [ref=e275]: 粉絲
+              - generic [ref=e276]: "574"
+        - generic [ref=e280]:
+          - generic [ref=e281]:
+            - heading "商品規格" [level=2] [ref=e282]
+            - generic [ref=e283]:
+              - generic [ref=e284]:
+                - heading "分類" [level=3] [ref=e285]
+                - generic [ref=e286]:
+                  - link "蝦皮購物" [ref=e287] [cursor=pointer]:
+                    - /url: /
+                  - img "icon arrow right" [ref=e288]
+                  - link "其他類別" [ref=e289] [cursor=pointer]:
+                    - /url: /其他類別-cat.11041784
+                  - img "icon arrow right" [ref=e290]
+                  - link "成人專區" [ref=e291] [cursor=pointer]:
+                    - /url: /成人專區-cat.11041784.11041785
+                  - img "icon arrow right" [ref=e292]
+                  - link "充氣娃娃" [ref=e293] [cursor=pointer]:
+                    - /url: /充氣娃娃-cat.11041784.11041785.11041791
+              - generic [ref=e294]:
+                - heading "情趣用品類型" [level=3] [ref=e295]
+                - generic [ref=e296]: 性玩偶
+              - generic [ref=e297]:
+                - heading "出貨地" [level=3] [ref=e298]
+                - generic [ref=e299]: 嘉義市東區
+          - generic [ref=e300]:
+            - heading "商品描述" [level=2] [ref=e301]
+            - generic [ref=e304]:
+              - paragraph [ref=e305]: 🚀關注夜未眠情趣成人館即享好禮相贈🚀
+              - paragraph [ref=e306]: ✔️點讚&關注，聊聊告知後即贈袋裝潤滑液，器具保護粉
+              - paragraph [ref=e307]: 💗滿額贈活動💗任意消費即可買一贈五！好康等你拿！
+              - paragraph [ref=e308]: ✔️消費滿1999加贈60克激情潤滑液一支！
+              - paragraph [ref=e309]: ❤️祝福您 性福美滿 潮源廣進 ❤️
+              - paragraph [ref=e310]: ==========================================
+              - paragraph
+              - paragraph [ref=e311]: 💗高品質鉑金液態矽膠夾吸震動半身娃娃💗
+              - paragraph [ref=e312]: 重量：約7.5公斤
+              - paragraph [ref=e313]: 尺寸：48*23.5*14CM
+              - paragraph [ref=e314]: 胸圍：56公分
+              - paragraph [ref=e315]: 腰圍：34公分
+              - paragraph [ref=e316]: 臀圍：56公分
+              - paragraph [ref=e317]: 通道：單通道 10檔夾吸 10檔震動 加溫 全身防水
+              - paragraph
+              - paragraph [ref=e318]: 重量：約10公斤
+              - paragraph [ref=e319]: 尺寸：53*24.5*15CM
+              - paragraph [ref=e320]: 胸圍：64公分
+              - paragraph [ref=e321]: 腰圍：37公分
+              - paragraph [ref=e322]: 臀圍：64公分
+              - paragraph [ref=e323]: 通道：單通道 10檔夾吸 10檔震動 加溫 全身防水
+              - paragraph
+              - paragraph [ref=e324]: 量：約15公斤
+              - paragraph [ref=e325]: 尺寸：60*29*16CM
+              - paragraph [ref=e326]: 胸圍：71公分
+              - paragraph [ref=e327]: 腰圍：44公分
+              - paragraph [ref=e328]: 臀圍：74公分
+              - paragraph [ref=e329]: 通道：單通道 10檔夾吸 10檔震動 加溫 全身防水
+              - paragraph
+              - paragraph [ref=e330]: 重量：約18公斤
+              - paragraph [ref=e331]: 尺寸：97*36*17CM
+              - paragraph [ref=e332]: 胸圍：75公分
+              - paragraph [ref=e333]: 腰圍：53公分
+              - paragraph [ref=e334]: 臀圍：94公分
+              - paragraph [ref=e335]: 通道：單通道 10檔夾吸 10檔震動 加溫 全身防水
+              - paragraph [ref=e336]: ==========================================
+              - img [ref=e340]
+              - img [ref=e344]
+              - img [ref=e348]
+              - img [ref=e352]
+              - img [ref=e356]
+              - img [ref=e360]
+              - img [ref=e364]
+              - img [ref=e368]
+              - img [ref=e372]
+              - img [ref=e376]
+              - paragraph [ref=e377]: ========================================
+              - paragraph [ref=e378]: 隱密出貨,隱密到你不要不要
+              - paragraph [ref=e379]: 下標說明
+              - paragraph [ref=e380]: "*下標前請詳閱賣場規則,以避免不必要之消費糾紛*"
+              - paragraph [ref=e381]: "*下單前請熟慮! 賣場不接受隨意取消訂單*"
+              - paragraph [ref=e382]: "*收到貨後請給五星好評哦! 如果有不滿意的地方可聊聊聯繫客服哦，一定會處理到讓您滿意為止"
+              - paragraph [ref=e383]: 【收納注意事項】
+              - paragraph [ref=e384]: 1、★本商品請收納於陰涼之處所,避免陽光直接曝曬、高溫、潮濕之處所★
+              - paragraph [ref=e385]: 2、★用後請擦拭後再進行收納★
+              - paragraph [ref=e386]: 3、★本產品為個人私密性用品，一經〝拆封〞或〝使用〞即無法接受退換貨，不便之處敬請見諒★
+              - paragraph [ref=e387]: PS:但如果是因為商品質量原因則您即使在拆封或使用後也享有退貨退款之權利，請您安心選購★
+              - paragraph [ref=e388]: 4、★本商出貨時皆以隱密之包裝方式出貨，外包裝不會出現任何情趣商品字樣，敬請安心選購★
+              - paragraph [ref=e389]: 注意事項
+              - paragraph [ref=e390]: 親愛的陛下:本產品所有頁面展示的所有內衣及服裝屬於拍攝道具,均沒有默認贈送哦。 請留意規格圖或詳情頁的詳細贈品說明哦。 給您帶來的不便多多包容哦。
+              - paragraph [ref=e391]: "#自慰杯"
+              - paragraph [ref=e392]: "#自慰套"
+              - paragraph [ref=e393]: "#飛機杯情趣"
+              - paragraph [ref=e394]: "#自愛器"
+              - paragraph [ref=e395]: "#自慰器"
+              - paragraph [ref=e396]: "#情趣用品"
+              - paragraph [ref=e397]: "#情趣精品"
+              - paragraph [ref=e398]: "#女優名器"
+              - paragraph [ref=e399]: "#AV女優"
+              - paragraph [ref=e400]: "#飛機杯"
+              - paragraph [ref=e401]: "#打手槍"
+              - paragraph [ref=e402]: "#打飛機"
+              - paragraph [ref=e403]: "#情趣SM"
+              - paragraph [ref=e404]: "#自慰"
+              - paragraph [ref=e405]: "#DIY"
+              - paragraph [ref=e406]: "#性愛"
+              - paragraph [ref=e407]: "#紓壓"
+              - paragraph [ref=e408]: "#成人用品"
+    - contentinfo [ref=e409]:
+      - generic [ref=e412]:
+        - generic [ref=e413]:
+          - generic [ref=e414]:
+            - generic [ref=e415]: 客服中心
+            - list [ref=e416]:
+              - listitem [ref=e417]:
+                - link "幫助中心" [ref=e418] [cursor=pointer]:
+                  - /url: https://help.shopee.tw/tw/s
+                  - generic [ref=e419]: 幫助中心
+              - listitem [ref=e420]:
+                - link "蝦皮商城" [ref=e421] [cursor=pointer]:
+                  - /url: https://help.shopee.tw/portal/article/83489-[%E6%96%B0%E6%89%8B%E4%B8%8A%E8%B7%AF]-%E4%BB%80%E9%BA%BC%E6%98%AF%E8%9D%A6%E7%9A%AE%E5%95%86%E5%9F%8E?
+                  - generic [ref=e422]: 蝦皮商城
+              - listitem [ref=e423]:
+                - link "付款方式" [ref=e424] [cursor=pointer]:
+                  - /url: https://help.shopee.tw/portal/article/80089-[%E6%96%B0%E6%89%8B%E4%B8%8A%E8%B7%AF]-%E8%9D%A6%E7%9A%AE%E8%B3%BC%E7%89%A9%E6%94%AF%E6%8F%B4%E5%93%AA%E4%BA%9B%E4%BB%98%E6%AC%BE%E6%96%B9%E5%BC%8F%E8%88%87%E4%BB%98%E6%AC%BE%E9%87%91%E9%A1%8D%E4%B8%8A%E9%99%90?
+                  - generic [ref=e425]: 付款方式
+              - listitem [ref=e426]:
+                - link "蝦皮錢包" [ref=e427] [cursor=pointer]:
+                  - /url: https://help.shopee.tw/portal/article/79770-[%E8%9D%A6%E7%9A%AE%E9%8C%A2%E5%8C%85]-%E4%BB%80%E9%BA%BC%E6%98%AF%E8%9D%A6%E7%9A%AE%E9%8C%A2%E5%8C%85
+                  - generic [ref=e428]: 蝦皮錢包
+              - listitem [ref=e429]:
+                - link "蝦幣" [ref=e430] [cursor=pointer]:
+                  - /url: https://help.shopee.tw/portal/4/article/79809
+                  - generic [ref=e431]: 蝦幣
+              - listitem [ref=e432]:
+                - link "運費補助" [ref=e433] [cursor=pointer]:
+                  - /url: https://help.shopee.tw/portal/4/article/79786
+                  - generic [ref=e434]: 運費補助
+              - listitem [ref=e435]:
+                - link "退貨退款" [ref=e436] [cursor=pointer]:
+                  - /url: https://help.shopee.tw/portal/4/article/79905
+                  - generic [ref=e437]: 退貨退款
+              - listitem [ref=e438]:
+                - link "物流方式" [ref=e439] [cursor=pointer]:
+                  - /url: https://help.shopee.tw/portal/4/article/79726
+                  - generic [ref=e440]: 物流方式
+              - listitem [ref=e441]:
+                - link "聯絡客服" [ref=e442] [cursor=pointer]:
+                  - /url: https://help.shopee.tw/portal/article/79725-[%e8%81%af%e7%b5%a1%e5%ae%a2%e6%9c%8d]-%e5%a6%82%e4%bd%95%e8%81%af%e7%b5%a1%e8%9d%a6%e7%9a%ae%e5%ae%a2%e6%9c%8d%3F
+                  - generic [ref=e443]: 聯絡客服
+              - listitem [ref=e444]:
+                - link "防詐騙宣傳" [ref=e445] [cursor=pointer]:
+                  - /url: https://shopee.tw/m/Anti-fraud-advocacy
+                  - generic [ref=e446]: 防詐騙宣傳
+          - generic [ref=e447]:
+            - generic [ref=e448]: 關於蝦皮
+            - list [ref=e449]:
+              - listitem [ref=e450]:
+                - link "關於蝦皮" [ref=e451] [cursor=pointer]:
+                  - /url: https://careers.shopee.com/about/
+                  - generic [ref=e452]: 關於蝦皮
+              - listitem [ref=e453]:
+                - link "加入我們" [ref=e454] [cursor=pointer]:
+                  - /url: https://careers.shopee.com/jobs
+                  - generic [ref=e455]: 加入我們
+              - listitem [ref=e456]:
+                - link "政策" [ref=e457] [cursor=pointer]:
+                  - /url: https://help.shopee.tw/portal/4/category/17521
+                  - generic [ref=e458]: 政策
+              - listitem [ref=e459]:
+                - link "蝦皮隱私權政策" [ref=e460] [cursor=pointer]:
+                  - /url: https://help.shopee.tw/portal/article/77271
+                  - generic [ref=e461]: 蝦皮隱私權政策
+              - listitem [ref=e462]:
+                - link "蝦皮商城" [ref=e463] [cursor=pointer]:
+                  - /url: https://shopee.tw/mall/
+                  - generic [ref=e464]: 蝦皮商城
+              - listitem [ref=e465]:
+                - link "賣家中心" [ref=e466] [cursor=pointer]:
+                  - /url: https://seller.shopee.tw/
+                  - generic [ref=e467]: 賣家中心
+              - listitem [ref=e468]:
+                - link "限時特賣" [ref=e469] [cursor=pointer]:
+                  - /url: https://shopee.tw/flash_sale/
+                  - generic [ref=e470]: 限時特賣
+              - listitem [ref=e471]:
+                - link "聯絡媒體" [ref=e472] [cursor=pointer]:
+                  - /url: mailto:media.tw%40shopee.com
+                  - generic [ref=e473]: 聯絡媒體
+          - generic [ref=e474]:
+            - generic [ref=e475]: 付款
+            - list [ref=e476]:
+              - listitem [ref=e477]:
+                - img "logo" [ref=e479]
+              - listitem [ref=e480]:
+                - img "logo" [ref=e482]
+              - listitem [ref=e483]:
+                - img "logo" [ref=e485]
+            - generic [ref=e486]: 物流合作
+            - list [ref=e487]:
+              - listitem [ref=e488]:
+                - img "logo" [ref=e490]
+              - listitem [ref=e491]:
+                - img "logo" [ref=e493]
+              - listitem [ref=e494]:
+                - img "logo" [ref=e496]
+              - listitem [ref=e497]:
+                - img "logo" [ref=e499]
+              - listitem [ref=e500]:
+                - img "logo" [ref=e502]
+              - listitem [ref=e503]:
+                - img "logo" [ref=e505]
+              - listitem [ref=e506]:
+                - img "logo" [ref=e508]
+              - listitem [ref=e509]:
+                - img "logo" [ref=e511]
+              - listitem [ref=e512]:
+                - img "logo" [ref=e514]
+            - generic [ref=e515]: 蝦皮直送包裝減量標章
+            - list [ref=e516]:
+              - listitem [ref=e517]:
+                - img "logo" [ref=e519]
+          - generic [ref=e520]:
+            - generic [ref=e521]: 關注我們
+            - list [ref=e522]:
+              - listitem [ref=e523]:
+                - link "Facebook" [ref=e524] [cursor=pointer]:
+                  - /url: https://facebook.com/ShopeeTW
+                  - img [ref=e525]
+                  - generic [ref=e526]: Facebook
+              - listitem [ref=e527]:
+                - link "Instagram" [ref=e528] [cursor=pointer]:
+                  - /url: https://instagram.com/Shopee_TW
+                  - img [ref=e529]
+                  - generic [ref=e530]: Instagram
+              - listitem [ref=e531]:
+                - link "Line" [ref=e532] [cursor=pointer]:
+                  - /url: https://page.line.me/shopee?openQrModal=true
+                  - img [ref=e533]
+                  - generic [ref=e534]: Line
+              - listitem [ref=e535]:
+                - link "LinkedIn" [ref=e536] [cursor=pointer]:
+                  - /url: https://linkedin.com/company/shopee
+                  - img [ref=e537]
+                  - generic [ref=e538]: LinkedIn
+              - listitem [ref=e539]:
+                - link "蝦品輯部落格" [ref=e540] [cursor=pointer]:
+                  - /url: https://shopee.tw/blog
+                  - img [ref=e541]
+                  - generic [ref=e542]: 蝦品輯部落格
+          - generic [ref=e543]:
+            - generic [ref=e544]: 下載蝦皮
+            - generic [ref=e545]:
+              - link "download_qr_code" [ref=e546] [cursor=pointer]:
+                - /url: https://shopee.tw/web
+                - img "download_qr_code" [ref=e547]
+              - generic [ref=e548]:
+                - link "app" [ref=e549] [cursor=pointer]:
+                  - /url: https://shopee.tw/web
+                  - img "app" [ref=e550]
+                - link "app" [ref=e551] [cursor=pointer]:
+                  - /url: https://shopee.tw/web
+                  - img "app" [ref=e552]
+                - link "app" [ref=e553] [cursor=pointer]:
+                  - /url: https://shopee.tw/web
+                  - img "app" [ref=e554]
+        - generic [ref=e555]:
+          - generic [ref=e556]: 新加坡商蝦皮娛樂電商有限公司台灣分公司 統一編號：56801904
+          - generic [ref=e557]: © 2026 Shopee. 版權所有。
+          - generic [ref=e558]:
+            - link "阿根廷" [ref=e560] [cursor=pointer]:
+              - /url: https://shopee.com.ar
+            - link "新加坡" [ref=e562] [cursor=pointer]:
+              - /url: https://shopee.sg
+            - link "印尼" [ref=e564] [cursor=pointer]:
+              - /url: https://shopee.co.id
+            - link "泰國" [ref=e566] [cursor=pointer]:
+              - /url: https://shopee.co.th
+            - link "馬來西亞" [ref=e568] [cursor=pointer]:
+              - /url: https://shopee.com.my
+            - link "越南" [ref=e570] [cursor=pointer]:
+              - /url: https://shopee.vn
+            - link "菲律賓" [ref=e572] [cursor=pointer]:
+              - /url: https://shopee.ph
+            - link "巴西" [ref=e574] [cursor=pointer]:
+              - /url: https://shopee.com.br
+            - link "墨西哥" [ref=e576] [cursor=pointer]:
+              - /url: https://shopee.com.mx
+            - link "台灣" [ref=e578] [cursor=pointer]:
+              - /url: https://shopee.tw

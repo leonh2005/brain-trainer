@@ -1,0 +1,17 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - heading "Rakuten — Shopping is entertainment" [level=1] [ref=e6]:
+        - link "Rakuten — Shopping is entertainment" [ref=e7] [cursor=pointer]:
+          - /url: https://www.rakuten.com.tw/
+    - generic [ref=e11]:
+      - heading "錯誤 404 Not Found，此網頁不存在" [level=1] [ref=e12]:
+        - emphasis [ref=e13]: 錯誤 404 Not Found，此網頁不存在
+      - paragraph [ref=e14]: 找不到您要求的頁面。
+      - paragraph [ref=e15]: 請嘗試下列選項：
+      - list [ref=e16]:
+        - listitem [ref=e17]: 重載頁面，或稍後再試。
+        - listitem [ref=e19]: 檢查您輸入的網址，確定拼字正確無誤。
+        - listitem [ref=e21]: 按一下「返回」按鈕，嘗試另一個連結。
+    - generic [ref=e25]: © Rakuten Group, Inc.
+  - generic [ref=e26]: "Request ID: e515f42e-57aa-488b-916b-ff314049635c"
