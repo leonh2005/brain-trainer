@@ -1,4 +1,178 @@
 <!DOCTYPE html>
-<html><head><title>財經新聞情緒儀表板</title></head>
-<body><h1>Loading...</h1></body>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>財經新聞情緒儀表板</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: system-ui, sans-serif; background: #0f172a; color: #e2e8f0; min-height: 100vh; }
+  .header { padding: 20px 24px; border-bottom: 1px solid #1e293b; display: flex; align-items: center; gap: 12px; }
+  .header h1 { font-size: 1.25rem; font-weight: 700; }
+  .period-btns { margin-left: auto; display: flex; gap: 8px; }
+  .period-btns button { background: #1e293b; color: #94a3b8; border: none; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 0.85rem; }
+  .period-btns button.active { background: #3b82f6; color: #fff; }
+  .chart-section { padding: 24px; }
+  .chart-wrap { background: #1e293b; border-radius: 12px; padding: 20px; height: 300px; }
+  .filters { padding: 0 24px 16px; display: flex; flex-wrap: wrap; gap: 10px; }
+  .filters input, .filters select { background: #1e293b; color: #e2e8f0; border: 1px solid #334155; padding: 8px 12px; border-radius: 8px; font-size: 0.875rem; }
+  .filters input[type="text"] { width: 220px; }
+  .news-list { padding: 0 24px 40px; display: flex; flex-direction: column; gap: 10px; }
+  .card { background: #1e293b; border-radius: 10px; padding: 14px 18px; display: flex; gap: 14px; align-items: flex-start; }
+  .score { font-size: 1.4rem; font-weight: 800; min-width: 36px; text-align: center; padding-top: 2px; }
+  .score.bull { color: #22c55e; }
+  .score.bear { color: #ef4444; }
+  .score.neutral { color: #94a3b8; }
+  .card-body { flex: 1; }
+  .card-title { font-size: 0.95rem; font-weight: 600; margin-bottom: 4px; }
+  .card-title a { color: #e2e8f0; text-decoration: none; }
+  .card-title a:hover { color: #3b82f6; }
+  .card-summary { font-size: 0.83rem; color: #94a3b8; margin-bottom: 6px; }
+  .tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tag { background: #0f172a; color: #64748b; font-size: 0.75rem; padding: 2px 8px; border-radius: 4px; }
+  .source-badge { font-size: 0.72rem; background: #334155; color: #94a3b8; padding: 2px 8px; border-radius: 4px; margin-right: 8px; }
+  .pagination { padding: 16px 24px; display: flex; gap: 8px; align-items: center; color: #64748b; font-size: 0.875rem; }
+  .pagination button { background: #1e293b; color: #94a3b8; border: none; padding: 6px 14px; border-radius: 6px; cursor: pointer; }
+  .pagination button:disabled { opacity: 0.4; cursor: default; }
+  .empty { color: #64748b; padding: 20px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <span>📊</span>
+  <h1>財經新聞情緒儀表板</h1>
+  <div class="period-btns">
+    <button class="active" onclick="setPeriod('day', this)">今日</button>
+    <button onclick="setPeriod('week', this)">本週</button>
+    <button onclick="setPeriod('month', this)">本月</button>
+  </div>
+</div>
+
+<div class="chart-section">
+  <div class="chart-wrap">
+    <canvas id="trendChart"></canvas>
+  </div>
+</div>
+
+<div class="filters">
+  <input type="text" id="searchInput" placeholder="搜尋標題、摘要..." oninput="debounceLoad()">
+  <select id="sourceSelect" onchange="loadArticles(1)">
+    <option value="">所有來源</option>
+    <option value="cnyes">鉅亨網</option>
+    <option value="yahoo">Yahoo</option>
+    <option value="ptt">PTT</option>
+    <option value="reddit">Reddit</option>
+    <option value="x">X</option>
+  </select>
+  <input type="date" id="dateInput" onchange="loadArticles(1)">
+  <select id="scoreFilter" onchange="loadArticles(1)">
+    <option value="">所有情緒</option>
+    <option value="7,10">看多（7-10）</option>
+    <option value="1,4">看空（1-4）</option>
+    <option value="5,6">中性（5-6）</option>
+  </select>
+</div>
+
+<div class="news-list" id="newsList"></div>
+<div class="pagination" id="pagination"></div>
+
+<script>
+let chart = null;
+let currentPage = 1;
+let debounceTimer = null;
+
+function debounceLoad() {
+  clearTimeout(debounceTimer);
+  debounceTimer = setTimeout(() => loadArticles(1), 400);
+}
+
+async function loadTrend(period = 'day') {
+  const res = await fetch(`/api/trend?period=${period}`);
+  const data = await res.json();
+  const ctx = document.getElementById('trendChart').getContext('2d');
+  if (chart) chart.destroy();
+  chart = new Chart(ctx, {
+    type: 'line',
+    data: { labels: data.labels, datasets: data.datasets },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      scales: {
+        y: { min: 1, max: 10, ticks: { color: '#94a3b8' }, grid: { color: '#334155' } },
+        x: { ticks: { color: '#94a3b8' }, grid: { color: '#334155' } }
+      },
+      plugins: { legend: { labels: { color: '#e2e8f0' } } }
+    }
+  });
+}
+
+function setPeriod(period, btn) {
+  document.querySelectorAll('.period-btns button').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  loadTrend(period);
+}
+
+async function loadArticles(page = 1) {
+  currentPage = page;
+  const q = document.getElementById('searchInput').value;
+  const source = document.getElementById('sourceSelect').value;
+  const date = document.getElementById('dateInput').value;
+  const scoreVal = document.getElementById('scoreFilter').value;
+  let url = `/api/articles?page=${page}`;
+  if (q) url += `&q=${encodeURIComponent(q)}`;
+  if (source) url += `&source=${source}`;
+  if (date) url += `&date=${date}`;
+  if (scoreVal) {
+    const [min, max] = scoreVal.split(',');
+    url += `&score_min=${min}&score_max=${max}`;
+  }
+  const res = await fetch(url);
+  const data = await res.json();
+  renderArticles(data.articles);
+  renderPagination(data.total, page);
+}
+
+function scoreClass(s) {
+  if (s === null || s === undefined) return 'neutral';
+  if (s >= 7) return 'bull';
+  if (s <= 4) return 'bear';
+  return 'neutral';
+}
+
+function renderArticles(articles) {
+  const el = document.getElementById('newsList');
+  if (!articles.length) {
+    el.innerHTML = '<div class="empty">沒有符合的新聞</div>';
+    return;
+  }
+  el.innerHTML = articles.map(a => `
+    <div class="card">
+      <div class="score ${scoreClass(a.score)}">${a.score ?? '–'}</div>
+      <div class="card-body">
+        <div class="card-title">
+          <span class="source-badge">${a.source}</span>
+          <a href="${a.url}" target="_blank" rel="noopener">${a.title}</a>
+        </div>
+        ${a.summary ? `<div class="card-summary">${a.summary}</div>` : ''}
+        <div class="tags">${(Array.isArray(a.tags) ? a.tags : []).map(t => `<span class="tag">#${t}</span>`).join('')}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderPagination(total, page) {
+  const pages = Math.ceil(total / 20);
+  const el = document.getElementById('pagination');
+  el.innerHTML = `
+    <button onclick="loadArticles(${page - 1})" ${page <= 1 ? 'disabled' : ''}>上一頁</button>
+    <span>${page} / ${pages || 1}（共 ${total} 則）</span>
+    <button onclick="loadArticles(${page + 1})" ${page >= pages ? 'disabled' : ''}>下一頁</button>
+  `;
+}
+
+loadTrend('day');
+loadArticles(1);
+</script>
+</body>
 </html>
