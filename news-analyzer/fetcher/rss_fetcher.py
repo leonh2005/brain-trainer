@@ -7,8 +7,9 @@ load_dotenv()
 logger = logging.getLogger(__name__)
 
 RSS_SOURCES = [
-    {"url": "https://news.cnyes.com/rss/cat/tw_stock", "source": "cnyes"},
-    {"url": "https://finance.yahoo.com/news/rssindex", "source": "yahoo"},
+    {"url": "https://tw.stock.yahoo.com/rss", "source": "yahoo_tw"},
+    {"url": "https://finance.yahoo.com/news/rssindex", "source": "yahoo_us"},
+    {"url": "https://money.udn.com/rssfeed/news/1001/USD/NEWS.rss", "source": "udn"},
 ]
 
 

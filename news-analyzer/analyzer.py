@@ -9,7 +9,7 @@ load_dotenv()
 logger = logging.getLogger(__name__)
 
 BATCH_SIZE = 20
-GROQ_MODEL = "llama3-8b-8192"
+GROQ_MODEL = "llama-3.1-8b-instant"
 
 SYSTEM_PROMPT = """你是財經市場情緒分析師。分析新聞標題與內容，判斷對股市的情緒傾向。
 回傳純 JSON 陣列（不要有其他文字），格式如下：
@@ -23,7 +23,12 @@ def build_groq_client():
 def parse_groq_response(content, articles):
     """Parse Groq JSON response and merge back with articles."""
     try:
-        results = json.loads(content)
+        # Strip markdown code fences if model wraps response
+        text = content.strip()
+        if text.startswith("```"):
+            text = "\n".join(text.split("\n")[1:])
+            text = text.rstrip("`").strip()
+        results = json.loads(text)
         id_map = {a["id"]: a for a in articles}
         enriched = []
         for r in results:
@@ -70,5 +75,5 @@ def analyze_all(articles):
         enriched = analyze_batch(batch)
         results.extend(enriched)
         if i + BATCH_SIZE < len(articles):
-            time.sleep(1)
+            time.sleep(3)
     return results
