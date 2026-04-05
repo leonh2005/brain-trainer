@@ -1,0 +1,1322 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e4]:
+      - banner [ref=e5]:
+        - generic [ref=e6]:
+          - generic [ref=e7]:
+            - generic [ref=e8]:
+              - button "樂天生態圈" [ref=e11] [cursor=pointer]:
+                - generic [ref=e12]:
+                  - img [ref=e14]
+                  - generic [ref=e17]: 樂天生態圈
+                  - img [ref=e19]
+              - button "我要開店" [ref=e23] [cursor=pointer]:
+                - generic [ref=e24]:
+                  - img [ref=e26]
+                  - generic [ref=e29]: 我要開店
+                  - img [ref=e31]
+              - button "網站導覽" [ref=e35] [cursor=pointer]:
+                - generic [ref=e36]:
+                  - img [ref=e38]
+                  - generic [ref=e41]: 網站導覽
+                  - img [ref=e43]
+              - button "購物教學" [ref=e47] [cursor=pointer]:
+                - generic [ref=e48]:
+                  - img [ref=e50]
+                  - generic [ref=e53]: 購物教學
+                  - img [ref=e55]
+              - button "下載APP" [ref=e59] [cursor=pointer]:
+                - generic [ref=e60]:
+                  - img [ref=e62]
+                  - generic [ref=e65]: 下載APP
+                  - img [ref=e67]
+            - generic "loading" [ref=e69]
+          - generic [ref=e70]:
+            - link "rakuten-logo" [ref=e72] [cursor=pointer]:
+              - /url: https://www.rakuten.com.tw?m-id=tw_common_nav_logo
+              - img "rakuten-logo" [ref=e73]
+            - generic [ref=e77]:
+              - searchbox "在全站搜尋" [ref=e79]
+              - button [ref=e80] [cursor=pointer]:
+                - img [ref=e81]
+            - link "追蹤清單" [ref=e85] [cursor=pointer]:
+              - /url: /wishlist/?m-id=tw_common_nav_btn_wishlist
+              - img [ref=e89]
+              - paragraph [ref=e91]: 追蹤清單
+            - link "我的訂單" [ref=e93] [cursor=pointer]:
+              - /url: /order/list/?m-id=tw_common_nav_btn_myorder
+              - img [ref=e97]
+              - paragraph [ref=e99]: 我的訂單
+            - link "我的優惠券" [ref=e101] [cursor=pointer]:
+              - /url: /mycoupons/?m-id=tw_common_nav_btn_mycoupon
+              - img [ref=e105]
+              - paragraph [ref=e107]: 我的優惠券
+            - link "購物車" [ref=e109] [cursor=pointer]:
+              - /url: /checkout/cart/?m-id=tw_common_nav_btn_cart
+              - img [ref=e113]
+              - paragraph [ref=e115]: 購物車
+          - generic [ref=e117]:
+            - button "商品分類" [ref=e120] [cursor=pointer]:
+              - generic [ref=e121]:
+                - img [ref=e123]
+                - generic [ref=e126]: 商品分類
+            - list [ref=e127]:
+              - listitem [ref=e128]:
+                - link "優惠券" [ref=e129] [cursor=pointer]:
+                  - /url: /coupon/?m-id=tw_common_nav_channel_coupon
+                  - generic [ref=e130]: 優惠券
+              - listitem [ref=e131]:
+                - link "抽獎優惠" [ref=e132] [cursor=pointer]:
+                  - /url: /game/?m-id=tw_common_nav_channel_game
+                  - generic [ref=e133]: 抽獎優惠
+              - listitem [ref=e134]:
+                - link "天天免運" [ref=e135] [cursor=pointer]:
+                  - /url: /event/free-shipping/?m-id=tw_common_nav_channel_freeshipping
+                  - generic [ref=e136]: 天天免運
+              - listitem [ref=e137]:
+                - link "日本購物" [ref=e138] [cursor=pointer]:
+                  - /url: /japan/?m-id=tw_common_nav_channel_japan
+                  - generic [ref=e139]: 日本購物
+              - listitem [ref=e140]:
+                - link "品牌旗艦" [ref=e141] [cursor=pointer]:
+                  - /url: /brand/?m-id=tw_common_nav_channel_brand
+                  - generic [ref=e142]: 品牌旗艦
+              - listitem [ref=e143]:
+                - link "優惠活動" [ref=e144] [cursor=pointer]:
+                  - /url: /event/?m-id=tw_common_nav_channel_event
+                  - generic [ref=e145]: 優惠活動
+              - listitem [ref=e146]:
+                - link "排行榜" [ref=e147] [cursor=pointer]:
+                  - /url: /ranking/?m-id=tw_common_nav_channel_Ranking
+                  - generic [ref=e148]: 排行榜
+              - listitem [ref=e149]:
+                - link "電子書/紙本書" [ref=e150] [cursor=pointer]:
+                  - /url: /books/?m-id=tw_common_nav_channel_books
+                  - generic [ref=e151]: 電子書/紙本書
+              - listitem [ref=e152]:
+                - link "樂集點" [ref=e153] [cursor=pointer]:
+                  - /url: /ad/pointgallery/?m-id=tw_common_nav_channel_pointgallery
+                  - generic [ref=e154]: 樂集點
+              - listitem [ref=e155]:
+                - link "樂天點數" [ref=e156] [cursor=pointer]:
+                  - /url: /superpoint/?m-id=tw_common_nav_channel_rsp
+                  - generic [ref=e157]: 樂天點數
+              - listitem [ref=e158]:
+                - link "旅遊訂房" [ref=e159] [cursor=pointer]:
+                  - /url: /travel/?m-id=tw_common_nav_channel_travel
+                  - generic [ref=e160]: 旅遊訂房
+        - generic [ref=e162]:
+          - link "rakuten-logo" [ref=e164] [cursor=pointer]:
+            - /url: https://www.rakuten.com.tw?m-id=tw_common_nav_sticky_logo
+            - img "rakuten-logo" [ref=e165]
+          - generic [ref=e169]:
+            - searchbox "在全站搜尋" [ref=e171]
+            - button [ref=e172] [cursor=pointer]:
+              - img [ref=e173]
+          - link [ref=e177] [cursor=pointer]:
+            - /url: /wishlist/?m-id=tw_common_nav_sticky_btn_wishlist
+            - img [ref=e181]
+          - link [ref=e185] [cursor=pointer]:
+            - /url: /order/list/?m-id=tw_common_nav_sticky_btn_myorder
+            - img [ref=e189]
+          - link [ref=e193] [cursor=pointer]:
+            - /url: /mycoupons/?m-id=tw_common_nav_sticky_btn_mycoupon
+            - img [ref=e197]
+          - link [ref=e201] [cursor=pointer]:
+            - /url: /checkout/cart/?m-id=tw_common_nav_sticky_btn_cart
+            - img [ref=e205]
+      - link "會員神券領券最高折5000" [ref=e209] [cursor=pointer]:
+        - /url: https://www.rakuten.com.tw/coupon/?m-id=RADTop-Header-All-SuperBanner
+        - img "會員神券領券最高折5000" [ref=e210]
+    - navigation [ref=e211]:
+      - generic [ref=e212]:
+        - paragraph [ref=e213] [cursor=pointer]: 樂天市場類別
+        - paragraph [ref=e214] [cursor=pointer]: 本店類別
+        - generic [ref=e216] [cursor=pointer]: 
+      - list [ref=e218]:
+        - listitem [ref=e219]:
+          - generic [ref=e220] [cursor=pointer]:
+            - text: 家具,寢具與衛浴
+            - generic [ref=e221]: 
+        - listitem [ref=e222]:
+          - generic [ref=e223] [cursor=pointer]:
+            - text: 廚房與生活雜貨
+            - generic [ref=e224]: 
+        - listitem [ref=e225]:
+          - generic [ref=e226] [cursor=pointer]:
+            - text: 美容保養與彩妝
+            - generic [ref=e227]: 
+        - listitem [ref=e228]:
+          - generic [ref=e229] [cursor=pointer]:
+            - text: 美體與保健
+            - generic [ref=e230]: 
+        - listitem [ref=e231]:
+          - generic [ref=e232] [cursor=pointer]:
+            - text: 美食與甜點
+            - generic [ref=e233]: 
+        - listitem [ref=e234]:
+          - generic [ref=e235] [cursor=pointer]:
+            - text: 水與飲料
+            - generic [ref=e236]: 
+        - listitem [ref=e237]:
+          - generic [ref=e238] [cursor=pointer]:
+            - text: 流行女裝
+            - generic [ref=e239]: 
+        - listitem [ref=e240]:
+          - generic [ref=e241] [cursor=pointer]:
+            - text: 流行男裝
+            - generic [ref=e242]: 
+        - listitem [ref=e243]:
+          - generic [ref=e244] [cursor=pointer]:
+            - text: 精品,包包與服飾配件
+            - generic [ref=e245]: 
+        - listitem [ref=e246]:
+          - generic [ref=e247] [cursor=pointer]:
+            - text: 手機與通訊
+            - generic [ref=e248]: 
+        - listitem [ref=e249]:
+          - generic [ref=e250] [cursor=pointer]:
+            - text: 家電,視聽與電玩
+            - generic [ref=e251]: 
+        - listitem [ref=e252]:
+          - generic [ref=e253] [cursor=pointer]:
+            - text: 嬰幼兒與孕婦
+            - generic [ref=e254]: 
+        - listitem [ref=e255]:
+          - generic [ref=e256] [cursor=pointer]:
+            - text: 寵物用品
+            - generic [ref=e257]: 
+        - listitem [ref=e258]:
+          - generic [ref=e259] [cursor=pointer]:
+            - text: 玩具與模型公仔
+            - generic [ref=e260]: 
+        - listitem [ref=e261]:
+          - generic [ref=e262] [cursor=pointer]:
+            - text: 內衣類與睡衣
+            - generic [ref=e263]: 
+        - listitem [ref=e264]:
+          - generic [ref=e265] [cursor=pointer]:
+            - text: 手錶與流行飾品
+            - generic [ref=e266]: 
+        - listitem [ref=e267]:
+          - generic [ref=e268] [cursor=pointer]:
+            - text: 運動,戶外與休閒
+            - generic [ref=e269]: 
+        - listitem [ref=e270]:
+          - generic [ref=e271] [cursor=pointer]:
+            - text: 男鞋與女鞋
+            - generic [ref=e272]: 
+        - listitem [ref=e273]:
+          - generic [ref=e274] [cursor=pointer]:
+            - text: 電腦軟硬體與周邊配件
+            - generic [ref=e275]: 
+        - listitem [ref=e276]:
+          - generic [ref=e277] [cursor=pointer]:
+            - text: 數位相機、攝影機與周邊配件
+            - generic [ref=e278]: 
+        - listitem [ref=e279]:
+          - generic [ref=e280] [cursor=pointer]:
+            - text: 汽機車精品百貨
+            - generic [ref=e281]: 
+        - listitem [ref=e282]:
+          - generic [ref=e283] [cursor=pointer]:
+            - text: 圖書與雜誌
+            - generic [ref=e284]: 
+        - listitem [ref=e285]:
+          - generic [ref=e286] [cursor=pointer]:
+            - text: 文具用品
+            - generic [ref=e287]: 
+        - listitem [ref=e288]:
+          - generic [ref=e289] [cursor=pointer]:
+            - text: 收藏品與藝術品
+            - generic [ref=e290]: 
+        - listitem [ref=e291]:
+          - generic [ref=e292] [cursor=pointer]:
+            - text: 庭院,花草與園藝
+            - generic [ref=e293]: 
+        - listitem [ref=e294]:
+          - generic [ref=e295] [cursor=pointer]:
+            - text: 音樂與影片
+            - generic [ref=e296]: 
+        - listitem [ref=e297]:
+          - generic [ref=e298] [cursor=pointer]:
+            - text: 情趣用品
+            - generic [ref=e299]: 
+  - generic [ref=e302]:
+    - generic [ref=e304]:
+      - list [ref=e306]:
+        - listitem [ref=e307]:
+          - link "樂天首頁" [ref=e308] [cursor=pointer]:
+            - /url: /
+            - generic [ref=e309]: 樂天首頁
+        - img [ref=e311]
+        - listitem [ref=e313]:
+          - link "情趣用品" [ref=e314] [cursor=pointer]:
+            - /url: /category/8016/
+            - generic [ref=e315]: 情趣用品
+        - img [ref=e317]
+        - listitem [ref=e319]:
+          - link "男生情趣用品" [ref=e320] [cursor=pointer]:
+            - /url: /category/8017/
+            - generic [ref=e321]: 男生情趣用品
+        - img [ref=e323]
+        - listitem [ref=e325]:
+          - link "其他男生情趣用品" [ref=e326] [cursor=pointer]:
+            - /url: /category/8023/
+            - generic [ref=e327]: 其他男生情趣用品
+        - img [ref=e329]
+        - listitem [ref=e331]:
+          - generic [ref=e332]: 半身 實體娃娃 陰臀倒模 大屁股 自慰器 男用飛機杯 男人 情趣 性用品 仿真肌膚 豐乳肥臀 逼真通道
+      - generic [ref=e335]:
+        - generic [ref=e336]:
+          - generic [ref=e337]:
+            - link "小胖達生活百貨" [ref=e338] [cursor=pointer]:
+              - /url: /shop/panda1125/?l-id=tw_product_shopinfo_logo
+              - img "小胖達生活百貨" [ref=e341]
+            - generic [ref=e342]:
+              - generic [ref=e343]:
+                - link "小胖達生活百貨" [ref=e344] [cursor=pointer]:
+                  - /url: /shop/panda1125/
+                - button "追蹤" [ref=e345] [cursor=pointer]:
+                  - img [ref=e346]
+                  - generic [ref=e348]: 追蹤
+              - generic [ref=e349]:
+                - link "4.4 (87)" [ref=e350] [cursor=pointer]:
+                  - /url: /shop/panda1125/review/?l-id=tw_product_shopinfo_review
+                  - img [ref=e351]
+                  - generic [ref=e353]: "4.4"
+                  - generic [ref=e354]: (87)
+                - generic [ref=e355]:
+                  - img [ref=e356]
+                  - text: 追蹤
+                  - generic [ref=e358]: "873"
+                - generic [ref=e361] [cursor=pointer]:
+                  - img [ref=e362]
+                  - generic [ref=e364]: 備貨時間較長
+                - generic [ref=e367] [cursor=pointer]:
+                  - img [ref=e368]
+                  - generic [ref=e371]: 回應率 100%
+                - generic [ref=e374] [cursor=pointer]:
+                  - img "海外進貨" [ref=e375]
+                  - generic [ref=e376]: 海外進貨
+          - generic [ref=e378]:
+            - link "店家資訊" [ref=e379] [cursor=pointer]:
+              - /url: /shop/panda1125/info/
+              - img [ref=e380]
+              - generic [ref=e382]: 店家資訊
+            - link "聯絡店家" [ref=e383] [cursor=pointer]:
+              - /url: /contact/panda1125/?message_type=product&base_sku=2b32ze5ye&l-id=tw_product_shopinfo_contact
+              - img [ref=e384]
+              - generic [ref=e386]: 聯絡店家
+        - generic [ref=e387]:
+          - generic:
+            - list:
+              - listitem [ref=e388]:
+                - generic [ref=e389] [cursor=pointer]:
+                  - text: 本店類別
+                  - img [ref=e390]
+              - listitem [ref=e392]:
+                - link "店家首頁" [ref=e393] [cursor=pointer]:
+                  - /url: https://www.rakuten.com.tw/shop/panda1125/?l-id=tw_product_shopinfo_navi_01
+              - listitem [ref=e394]:
+                - link "店家資訊頁面" [ref=e395] [cursor=pointer]:
+                  - /url: https://www.rakuten.com.tw/shop/panda1125/info?l-id=tw_product_shopinfo_navi_02
+              - listitem [ref=e396]:
+                - link "配送與付款頁面" [ref=e397] [cursor=pointer]:
+                  - /url: https://www.rakuten.com.tw/shop/panda1125/info/?l-id=tw_product_shopinfo_navi_03#Payment
+              - listitem [ref=e398]:
+                - link "所有商品" [ref=e399] [cursor=pointer]:
+                  - /url: https://www.rakuten.com.tw/shop/panda1125/products/?l-id=tw_product_shopinfo_navi_04
+              - listitem [ref=e400]:
+                - link "台灣樂天市場首頁" [ref=e401] [cursor=pointer]:
+                  - /url: https://www.rakuten.com.tw?l-id=tw_product_shopinfo_navi_05
+              - listitem [ref=e402]:
+                - generic [ref=e403]:
+                  - searchbox "搜尋 小胖達生活百貨" [ref=e404]
+                  - button [ref=e405] [cursor=pointer]:
+                    - img [ref=e406]
+      - generic [ref=e408]:
+        - generic [ref=e410]:
+          - generic [ref=e411]:
+            - img "半身 實體娃娃 陰臀倒模 大屁股 自慰器 男用飛機杯 男人 情趣 性用品 仿真肌膚 豐乳肥臀 逼真通道 0" [ref=e414]
+            - generic [ref=e417]:
+              - generic [ref=e419]:
+                - img "半身 實體娃娃 陰臀倒模 大屁股 自慰器 男用飛機杯 男人 情趣 性用品 仿真肌膚 豐乳肥臀 逼真通道 0" [ref=e422] [cursor=pointer]
+                - img "半身 實體娃娃 陰臀倒模 大屁股 自慰器 男用飛機杯 男人 情趣 性用品 仿真肌膚 豐乳肥臀 逼真通道 1" [ref=e425] [cursor=pointer]
+                - img "半身 實體娃娃 陰臀倒模 大屁股 自慰器 男用飛機杯 男人 情趣 性用品 仿真肌膚 豐乳肥臀 逼真通道 2" [ref=e428] [cursor=pointer]
+                - img "半身 實體娃娃 陰臀倒模 大屁股 自慰器 男用飛機杯 男人 情趣 性用品 仿真肌膚 豐乳肥臀 逼真通道 3" [ref=e431] [cursor=pointer]
+                - img "半身 實體娃娃 陰臀倒模 大屁股 自慰器 男用飛機杯 男人 情趣 性用品 仿真肌膚 豐乳肥臀 逼真通道 4" [ref=e434] [cursor=pointer]
+                - img "半身 實體娃娃 陰臀倒模 大屁股 自慰器 男用飛機杯 男人 情趣 性用品 仿真肌膚 豐乳肥臀 逼真通道 5" [ref=e437] [cursor=pointer]
+                - img "半身 實體娃娃 陰臀倒模 大屁股 自慰器 男用飛機杯 男人 情趣 性用品 仿真肌膚 豐乳肥臀 逼真通道 6" [ref=e440] [cursor=pointer]
+                - img "半身 實體娃娃 陰臀倒模 大屁股 自慰器 男用飛機杯 男人 情趣 性用品 仿真肌膚 豐乳肥臀 逼真通道 7" [ref=e443] [cursor=pointer]
+                - img "半身 實體娃娃 陰臀倒模 大屁股 自慰器 男用飛機杯 男人 情趣 性用品 仿真肌膚 豐乳肥臀 逼真通道 8" [ref=e446] [cursor=pointer]
+              - button [disabled] [ref=e447]:
+                - img [ref=e448]
+              - button [ref=e450] [cursor=pointer]:
+                - img [ref=e451]
+          - generic [ref=e453]:
+            - generic [ref=e454]: 分享：
+            - link [ref=e456] [cursor=pointer]:
+              - /url: https://www.facebook.com/sharer/sharer.php?u=https://www.rakuten.com.tw/shop/panda1125/product/2b32ze5ye/
+              - img [ref=e457]
+            - link [ref=e461] [cursor=pointer]:
+              - /url: https://social-plugins.line.me/lineit/share?url=https://www.rakuten.com.tw/shop/panda1125/product/2b32ze5ye/?scid=TBAtw_pc_item
+              - img [ref=e462]
+            - link "賺分紅" [ref=e467] [cursor=pointer]:
+              - /url: https://affiliate.rakuten.com.tw/product/share/panda1125/fd23f2b0-44f2-11ee-aa40-0242ac110006/2e4b3f30-8754-11ee-ac19-0242ac110005?utm_source=Rakuten&utm_medium=shop&utm_campaign=panda1125
+              - generic [ref=e468]:
+                - img [ref=e469]
+                - text: 賺分紅
+        - generic [ref=e472]:
+          - generic [ref=e473]:
+            - generic [ref=e475]:
+              - heading "半身 實體娃娃 陰臀倒模 大屁股 自慰器 男用飛機杯 男人 情趣 性用品 仿真肌膚 豐乳肥臀 逼真通道" [level=1] [ref=e476]
+              - img [ref=e480] [cursor=pointer]
+            - generic [ref=e482]:
+              - generic [ref=e484]: $1,807 - $8,743
+              - generic [ref=e486]:
+                - generic [ref=e487]: 折扣後價格
+                - generic [ref=e488]: $
+                - generic [ref=e489]: 1,496
+                - generic [ref=e490]: 起
+            - generic [ref=e491]:
+              - img [ref=e492] [cursor=pointer]
+              - generic [ref=e494] [cursor=pointer]:
+                - generic [ref=e495]: 4%
+                - generic [ref=e496]: (賺72 - 348點)
+              - img [ref=e497] [cursor=pointer]
+            - generic [ref=e499] [cursor=pointer]:
+              - generic [ref=e501]:
+                - img [ref=e503]
+                - img [ref=e506]
+                - img [ref=e509]
+                - img [ref=e512]
+                - img [ref=e515]
+              - generic [ref=e517]: "4.0"
+              - generic [ref=e518]: (1)
+          - generic [ref=e519] [cursor=pointer]:
+            - generic [ref=e520]:
+              - generic [ref=e521]: 活動
+              - generic [ref=e524]: 滿$1折10%
+            - button "更多活動" [ref=e525]:
+              - generic [ref=e526]: 更多活動
+              - img [ref=e527]
+          - generic [ref=e529]:
+            - generic [ref=e530] [cursor=pointer]:
+              - generic [ref=e532]: 優惠券
+              - button "一鍵全領" [ref=e533]:
+                - generic [ref=e534]: 一鍵全領
+                - img [ref=e535]
+            - generic [ref=e541]:
+              - generic [ref=e544]:
+                - generic [ref=e545] [cursor=pointer]:
+                  - generic [ref=e547]:
+                    - generic [ref=e548]: 折
+                    - generic [ref=e549]: $
+                    - generic [ref=e550]: "30"
+                  - generic [ref=e552]: 滿500元可用
+                  - generic [ref=e554]: 2026/06/30 23:59截止
+                - button "領取" [ref=e556] [cursor=pointer]:
+                  - generic [ref=e558]: 領取
+              - generic [ref=e561]:
+                - generic [ref=e562] [cursor=pointer]:
+                  - generic [ref=e564]:
+                    - generic [ref=e565]: 折
+                    - generic [ref=e566]: $
+                    - generic [ref=e567]: "60"
+                  - generic [ref=e569]: 滿800元可用
+                  - generic [ref=e571]: 2026/06/30 23:59截止
+                - button "領取" [ref=e573] [cursor=pointer]:
+                  - generic [ref=e575]: 領取
+              - generic [ref=e578]:
+                - generic [ref=e579] [cursor=pointer]:
+                  - generic [ref=e581]:
+                    - generic [ref=e582]: 折
+                    - generic [ref=e583]: $
+                    - generic [ref=e584]: "90"
+                  - generic [ref=e586]: 滿1000元可用
+                  - generic [ref=e588]: 2026/06/30 23:59截止
+                - button "領取" [ref=e590] [cursor=pointer]:
+                  - generic [ref=e592]: 領取
+              - generic [ref=e595]:
+                - generic [ref=e596] [cursor=pointer]:
+                  - generic [ref=e598]:
+                    - generic [ref=e599]: 折
+                    - generic [ref=e600]: $
+                    - generic [ref=e601]: "130"
+                  - generic [ref=e603]: 滿1500元可用
+                  - generic [ref=e605]: 2026/06/30 23:59截止
+                - button "領取" [ref=e607] [cursor=pointer]:
+                  - generic [ref=e609]: 領取
+              - generic [ref=e612]:
+                - generic [ref=e613] [cursor=pointer]:
+                  - generic [ref=e615]:
+                    - generic [ref=e616]: 折
+                    - generic [ref=e617]: $
+                    - generic [ref=e618]: "200"
+                  - generic [ref=e620]: 滿2500元可用
+                  - generic [ref=e622]: 2026/06/30 23:59截止
+                - button "領取" [ref=e624] [cursor=pointer]:
+                  - generic [ref=e626]: 領取
+              - generic [ref=e629]:
+                - generic [ref=e630] [cursor=pointer]:
+                  - generic [ref=e632]:
+                    - generic [ref=e633]: 折
+                    - generic [ref=e634]: $
+                    - generic [ref=e635]: "280"
+                  - generic [ref=e637]: 滿3000元可用
+                  - generic [ref=e639]: 2026/06/30 23:59截止
+                - button "領取" [ref=e641] [cursor=pointer]:
+                  - generic [ref=e643]: 領取
+              - generic [ref=e646]:
+                - generic [ref=e647] [cursor=pointer]:
+                  - generic [ref=e649]:
+                    - generic [ref=e650]: 折
+                    - generic [ref=e651]: $
+                    - generic [ref=e652]: "500"
+                  - generic [ref=e654]: 滿6000元可用
+                  - generic [ref=e656]: 2026/06/30 23:59截止
+                - button "領取" [ref=e658] [cursor=pointer]:
+                  - generic [ref=e660]: 領取
+          - generic [ref=e662]:
+            - generic [ref=e663]: size
+            - generic [ref=e665]:
+              - generic [ref=e667]:
+                - checkbox "小胖子-3公斤青春款"
+                - generic [ref=e668]: 小胖子-3公斤青春款
+              - generic [ref=e670]:
+                - checkbox "小胖子-3公斤少婦款"
+                - generic [ref=e671]: 小胖子-3公斤少婦款
+              - generic [ref=e673]:
+                - checkbox "小胖子-4.5公斤青春款"
+                - generic [ref=e674]: 小胖子-4.5公斤青春款
+              - generic [ref=e676]:
+                - checkbox "小胖子-4.5公斤少婦款"
+                - generic [ref=e677]: 小胖子-4.5公斤少婦款
+              - generic [ref=e679]:
+                - checkbox "小胖子-6.5公斤青春款"
+                - generic [ref=e680]: 小胖子-6.5公斤青春款
+              - generic [ref=e682]:
+                - checkbox "小胖子-9公斤青春款"
+                - generic [ref=e683]: 小胖子-9公斤青春款
+              - generic [ref=e685]:
+                - checkbox "小胖子-9公斤少婦款"
+                - generic [ref=e686]: 小胖子-9公斤少婦款
+              - generic [ref=e688]:
+                - checkbox "小胖子-21公斤青春款"
+                - generic [ref=e689]: 小胖子-21公斤青春款
+              - generic [ref=e691]:
+                - checkbox "小胖子-21公斤少婦款"
+                - generic [ref=e692]: 小胖子-21公斤少婦款
+          - generic [ref=e694]:
+            - generic [ref=e695]: 數量
+            - generic [ref=e698]:
+              - button [disabled] [ref=e700]:
+                - img [ref=e701]
+              - textbox [disabled] [ref=e703]: "0"
+              - button [disabled] [ref=e705]:
+                - img [ref=e706]
+          - generic [ref=e709]:
+            - button "放入購物車" [ref=e712] [cursor=pointer]:
+              - img [ref=e713]
+              - generic [ref=e715]: 放入購物車
+            - button "立即購買" [ref=e718] [cursor=pointer]:
+              - img [ref=e719]
+              - generic [ref=e721]: 立即購買
+          - generic [ref=e723] [cursor=pointer]:
+            - generic [ref=e724]:
+              - generic [ref=e725]: 配送
+              - generic [ref=e726]:
+                - generic [ref=e727]:
+                  - generic [ref=e728]: 免運活動
+                  - generic [ref=e730]: 全店滿$299免運
+                - generic [ref=e732]:
+                  - generic [ref=e733]: 宅配$75 - $300
+                  - generic [ref=e734]: 超商取貨$50 - $100
+                  - generic [ref=e735]: 其他$100 - $300
+            - button "看更多" [ref=e736]:
+              - generic [ref=e737]: 看更多
+              - img [ref=e738]
+          - generic [ref=e740] [cursor=pointer]:
+            - generic [ref=e741]:
+              - generic [ref=e742]: 付款
+              - generic [ref=e744]: 信用卡／貨到付款／ATM
+            - button "看更多" [ref=e745]:
+              - generic [ref=e746]: 看更多
+              - img [ref=e747]
+          - generic [ref=e749] [cursor=pointer]:
+            - generic [ref=e751]: 信用卡優惠
+            - button "看更多" [ref=e752]:
+              - generic [ref=e753]: 看更多
+              - img [ref=e754]
+          - generic [ref=e758]:
+            - generic [ref=e760]:
+              - generic [ref=e762] [cursor=pointer]:
+                - link "兆豐銀行":
+                  - /url: https://www.rakuten.com.tw/event/bank/#pointthis7
+                  - img "兆豐銀行"
+              - generic [ref=e764] [cursor=pointer]:
+                - link "遠東銀行":
+                  - /url: https://www.rakuten.com.tw/event/bank/#pointthis1
+                  - img "遠東銀行"
+              - generic [ref=e766] [cursor=pointer]:
+                - link "永豐銀行":
+                  - /url: https://www.rakuten.com.tw/event/bank/#pointthis3
+                  - img "永豐銀行"
+              - generic [ref=e768] [cursor=pointer]:
+                - link "上海銀行":
+                  - /url: https://www.rakuten.com.tw/event/bank/#pointthis4
+                  - img "上海銀行"
+              - generic [ref=e770] [cursor=pointer]:
+                - link "陽信銀行":
+                  - /url: https://www.rakuten.com.tw/event/bank/#pointthis5
+                  - img "陽信銀行"
+              - generic [ref=e772] [cursor=pointer]:
+                - link "凱基銀行":
+                  - /url: https://www.rakuten.com.tw/event/bank/#pointthis12
+                  - img "凱基銀行"
+              - generic [ref=e774] [cursor=pointer]:
+                - link "台新銀行":
+                  - /url: https://www.rakuten.com.tw/event/bank/#pointthis10
+                  - img "台新銀行"
+              - generic [ref=e776] [cursor=pointer]:
+                - link "星展銀行":
+                  - /url: https://www.rakuten.com.tw/event/bank/#pointthis2
+                  - img "星展銀行"
+              - generic [ref=e778] [cursor=pointer]:
+                - link "聯邦銀行":
+                  - /url: https://www.rakuten.com.tw/event/bank/#pointthis13
+                  - img "聯邦銀行"
+            - button [ref=e779] [cursor=pointer]:
+              - img [ref=e780]
+      - link "小胖達生活百貨" [ref=e790] [cursor=pointer]:
+        - /url: https://d-rmsg089.shop.rakuten.tw/gold/Vickey/edm/2024home-living.html
+        - img "小胖達生活百貨" [ref=e791]
+      - generic [ref=e792]:
+        - generic [ref=e794]:
+          - generic [ref=e795]:
+            - generic [ref=e796]: 本店相關類別
+            - generic [ref=e797]:
+              - link "實體娃娃" [ref=e798] [cursor=pointer]:
+                - /url: /shop/panda1125/category/tgyf8/
+              - link "🔞成人用品🔞" [ref=e799] [cursor=pointer]:
+                - /url: /shop/panda1125/category/mkycd/
+          - generic [ref=e800]:
+            - generic [ref=e801]: 優惠活動
+            - generic [ref=e802]:
+              - generic [ref=e803]:
+                - generic [ref=e804]: 點數加碼
+                - link "新店開幕~既享5%點數回饋~" [ref=e805] [cursor=pointer]:
+                  - /url: /shop/panda1125/campaign/237fd940-ed3b-11f0-80a0-1e60130233ad/?l-id=tw_product_side_campaign_01
+              - generic [ref=e806]: 2026/12/31 23:59 截止
+            - link "查看全部 11 個活動" [ref=e808] [cursor=pointer]:
+              - /url: /shop/panda1125/campaign?l-id=tw_product_side_campaign_viewall
+              - text: 查看全部 11 個活動
+              - img [ref=e809]
+          - generic [ref=e811]:
+            - generic [ref=e812]: 商品分類
+            - generic [ref=e813]:
+              - generic [ref=e814]:
+                - img [ref=e815]
+                - link "全部商品" [ref=e817] [cursor=pointer]:
+                  - /url: /shop/panda1125/product/?l-id=tw_product_side_cate_viewall
+              - list [ref=e819]:
+                - listitem [ref=e820]:
+                  - generic [ref=e822] [cursor=pointer]:
+                    - link "🔥冬日保暖🔥" [ref=e823]:
+                      - /url: /shop/panda1125/category/airg1/?l-id=tw_product_side_cate_01
+                    - img [ref=e824]
+                  - list:
+                    - listitem [ref=e826]:
+                      - link "保暖襪子" [ref=e829] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/vvk7o/?l-id=tw_product_side_cate_01_01
+                - listitem [ref=e830]:
+                  - generic [ref=e832] [cursor=pointer]:
+                    - link "-------夏日神器-------" [ref=e833]:
+                      - /url: /shop/panda1125/category/u4ogy/?l-id=tw_product_side_cate_02
+                    - img [ref=e834]
+                  - list:
+                    - listitem [ref=e836]:
+                      - link "泳衣" [ref=e839] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/4rdb6/?l-id=tw_product_side_cate_02_01
+                    - listitem [ref=e840]:
+                      - link "沙發涼席坐墊" [ref=e843] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/suo18/?l-id=tw_product_side_cate_02_02
+                    - listitem [ref=e844]:
+                      - link "香薰機" [ref=e847] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/ysty9/?l-id=tw_product_side_cate_02_03
+                    - listitem [ref=e848]:
+                      - link "掛脖風扇" [ref=e851] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/vrzsn/?l-id=tw_product_side_cate_02_04
+                    - listitem [ref=e852]:
+                      - link "風扇帽" [ref=e855] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/kqzou/?l-id=tw_product_side_cate_02_05
+                - listitem [ref=e856]:
+                  - generic [ref=e858] [cursor=pointer]:
+                    - link "-------收納百貨-------" [ref=e859]:
+                      - /url: /shop/panda1125/category/1ba09/?l-id=tw_product_side_cate_03
+                    - img [ref=e860]
+                  - list:
+                    - listitem [ref=e862]:
+                      - link "行李箱" [ref=e865] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/9eilu/?l-id=tw_product_side_cate_03_01
+                    - listitem [ref=e866]:
+                      - link "米缸" [ref=e869] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/43l5a/?l-id=tw_product_side_cate_03_02
+                    - listitem [ref=e870]:
+                      - link "貨架" [ref=e873] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/zmfcu/?l-id=tw_product_side_cate_03_03
+                    - listitem [ref=e874]:
+                      - link "辦公文件架" [ref=e877] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/igrty/?l-id=tw_product_side_cate_03_04
+                    - listitem [ref=e878]:
+                      - link "洞洞置物板" [ref=e881] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/ox3wk/?l-id=tw_product_side_cate_03_05
+                - listitem [ref=e882]:
+                  - generic [ref=e884] [cursor=pointer]:
+                    - link "-------汽車用品-------" [ref=e885]:
+                      - /url: /shop/panda1125/category/g3uc9/?l-id=tw_product_side_cate_04
+                    - img [ref=e886]
+                  - list:
+                    - listitem [ref=e888]:
+                      - link "汽車鑰匙套" [ref=e891] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/pm7ob/?l-id=tw_product_side_cate_04_01
+                    - listitem [ref=e892]:
+                      - link "車枕" [ref=e895] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/42jmj/?l-id=tw_product_side_cate_04_02
+                    - listitem [ref=e896]:
+                      - link "汽車座椅套" [ref=e899] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/tep3o/?l-id=tw_product_side_cate_04_03
+                    - listitem [ref=e900]:
+                      - link "摩托車車罩" [ref=e903] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/xnv0b/?l-id=tw_product_side_cate_04_04
+                    - listitem [ref=e904]:
+                      - link "車載充電器" [ref=e907] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/65d68/?l-id=tw_product_side_cate_04_05
+                    - listitem [ref=e908]:
+                      - link "車燈" [ref=e911] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/x6bpn/?l-id=tw_product_side_cate_04_06
+                    - listitem [ref=e912]:
+                      - link "擡頭顯示" [ref=e915] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/jj5a9/?l-id=tw_product_side_cate_04_07
+                    - listitem [ref=e916]:
+                      - link "後備箱墊" [ref=e919] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/aur60/?l-id=tw_product_side_cate_04_08
+                    - listitem [ref=e920]:
+                      - link "後備箱收納盒" [ref=e923] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/byo9m/?l-id=tw_product_side_cate_04_09
+                - listitem [ref=e924]:
+                  - generic [ref=e926] [cursor=pointer]:
+                    - link "-------寢具-------" [ref=e927]:
+                      - /url: /shop/panda1125/category/vj2zs/?l-id=tw_product_side_cate_05
+                    - img [ref=e928]
+                  - list:
+                    - listitem [ref=e930]:
+                      - link "床頭靠背枕" [ref=e933] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/gd73e/?l-id=tw_product_side_cate_05_01
+                    - listitem [ref=e934]:
+                      - link "床包/四件套" [ref=e937] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/5urw2/?l-id=tw_product_side_cate_05_02
+                    - listitem [ref=e938]:
+                      - link "化妝桌/梳妝臺" [ref=e941] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/4hebk/?l-id=tw_product_side_cate_05_03
+                    - listitem [ref=e942]:
+                      - link "泡脚桶" [ref=e945] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/vgwac/?l-id=tw_product_side_cate_05_04
+                    - listitem [ref=e946]:
+                      - link "泡澡浴缸" [ref=e949] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/u8jny/?l-id=tw_product_side_cate_05_05
+                    - listitem [ref=e950]:
+                      - link "床頭靠墊" [ref=e953] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/w42wn/?l-id=tw_product_side_cate_05_06
+                    - listitem [ref=e954]:
+                      - link "蚊帳" [ref=e957] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/8xfeh/?l-id=tw_product_side_cate_05_07
+                    - listitem [ref=e958]:
+                      - link "床墊/沙發墊" [ref=e961] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/do8va/?l-id=tw_product_side_cate_05_08
+                - listitem [ref=e962]:
+                  - generic [ref=e964] [cursor=pointer]:
+                    - link "-------運動用品-------" [ref=e965]:
+                      - /url: /shop/panda1125/category/cyskb/?l-id=tw_product_side_cate_06
+                    - img [ref=e966]
+                  - list:
+                    - listitem [ref=e968]:
+                      - link "智能音樂拳擊" [ref=e971] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/r5xek/?l-id=tw_product_side_cate_06_01
+                    - listitem [ref=e972]:
+                      - link "臂力器" [ref=e975] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/doq1h/?l-id=tw_product_side_cate_06_02
+                    - listitem [ref=e976]:
+                      - link "健腹輪" [ref=e979] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/9xyan/?l-id=tw_product_side_cate_06_03
+                    - listitem [ref=e980]:
+                      - link "啞鈴凳" [ref=e983] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/1mjso/?l-id=tw_product_side_cate_06_04
+                    - listitem [ref=e984]:
+                      - link "引體向上" [ref=e987] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/dj6zx/?l-id=tw_product_side_cate_06_05
+                    - listitem [ref=e988]:
+                      - link "瑜伽支撐墊" [ref=e991] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/67e8y/?l-id=tw_product_side_cate_06_06
+                    - listitem [ref=e992]:
+                      - link "羽毛球網" [ref=e995] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/kpjoj/?l-id=tw_product_side_cate_06_07
+                    - listitem [ref=e996]:
+                      - link "健步機" [ref=e999] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/epb3e/?l-id=tw_product_side_cate_06_08
+                    - listitem [ref=e1000]:
+                      - link "臥推椅" [ref=e1003] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/f3ipa/?l-id=tw_product_side_cate_06_09
+                    - listitem [ref=e1004]:
+                      - link "俯臥撐支架" [ref=e1007] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/02k7z/?l-id=tw_product_side_cate_06_10
+                - listitem [ref=e1008]:
+                  - generic [ref=e1010] [cursor=pointer]:
+                    - link "-------3C配件-------" [ref=e1011]:
+                      - /url: /shop/panda1125/category/esaq7/?l-id=tw_product_side_cate_07
+                    - img [ref=e1012]
+                  - list:
+                    - listitem [ref=e1014]:
+                      - link "耳罩" [ref=e1017] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/q4g1t/?l-id=tw_product_side_cate_07_01
+                    - listitem [ref=e1018]:
+                      - link "錶帶" [ref=e1021] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/xq9tj/?l-id=tw_product_side_cate_07_02
+                    - listitem [ref=e1022]:
+                      - link "電動牙刷替換頭" [ref=e1025] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/y73ne/?l-id=tw_product_side_cate_07_03
+                    - listitem [ref=e1026]:
+                      - link "電視屏幕架" [ref=e1029] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/61631/?l-id=tw_product_side_cate_07_04
+                    - listitem [ref=e1030]:
+                      - link "Macbook 保護殼" [ref=e1033] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/pnz78/?l-id=tw_product_side_cate_07_05
+                    - listitem [ref=e1034]:
+                      - link "翻譯筆" [ref=e1037] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/8o90p/?l-id=tw_product_side_cate_07_06
+                - listitem [ref=e1038]:
+                  - generic [ref=e1040] [cursor=pointer]:
+                    - link "-------個人百貨-------" [ref=e1041]:
+                      - /url: /shop/panda1125/category/7hv9k/?l-id=tw_product_side_cate_08
+                    - img [ref=e1042]
+                  - list:
+                    - listitem [ref=e1044]:
+                      - link "戰術褲" [ref=e1047] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/zllj0/?l-id=tw_product_side_cate_08_01
+                    - listitem [ref=e1048]:
+                      - link "保溫杯/水壺" [ref=e1051] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/a5b18/?l-id=tw_product_side_cate_08_02
+                    - listitem [ref=e1052]:
+                      - link "擴音器" [ref=e1055] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/4uaaa/?l-id=tw_product_side_cate_08_03
+                    - listitem [ref=e1056]:
+                      - link "望遠鏡" [ref=e1059] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/ebjq3/?l-id=tw_product_side_cate_08_04
+                    - listitem [ref=e1060]:
+                      - link "書架" [ref=e1063] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/apgbt/?l-id=tw_product_side_cate_08_05
+                    - listitem [ref=e1064]:
+                      - link "公事包" [ref=e1067] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/gvv7s/?l-id=tw_product_side_cate_08_06
+                    - listitem [ref=e1068]:
+                      - link "抱枕" [ref=e1071] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/wtw3g/?l-id=tw_product_side_cate_08_07
+                    - listitem [ref=e1072]:
+                      - link "登山鞋" [ref=e1075] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/ld3od/?l-id=tw_product_side_cate_08_08
+                    - listitem [ref=e1076]:
+                      - link "理髮器/剃鬚刀" [ref=e1079] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/xbywz/?l-id=tw_product_side_cate_08_09
+                    - listitem [ref=e1080]:
+                      - link "防曬冰感手套" [ref=e1083] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/3uaky/?l-id=tw_product_side_cate_08_10
+                    - listitem [ref=e1084]:
+                      - link "手工DIY" [ref=e1087] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/9ixdo/?l-id=tw_product_side_cate_08_11
+                    - listitem [ref=e1088]:
+                      - link "運動套裝" [ref=e1091] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/i6ps1/?l-id=tw_product_side_cate_08_12
+                    - listitem [ref=e1092]:
+                      - link "内褲" [ref=e1095] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/at6f0/?l-id=tw_product_side_cate_08_13
+                    - listitem [ref=e1096]:
+                      - link "腰椎舒緩器" [ref=e1099] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/w64nq/?l-id=tw_product_side_cate_08_14
+                - listitem [ref=e1100]:
+                  - generic [ref=e1102] [cursor=pointer]:
+                    - link "-------家庭百貨-------" [ref=e1103]:
+                      - /url: /shop/panda1125/category/m03pq/?l-id=tw_product_side_cate_09
+                    - img [ref=e1104]
+                  - list:
+                    - listitem [ref=e1106]:
+                      - link "窗簾" [ref=e1109] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/h7jix/?l-id=tw_product_side_cate_09_01
+                    - listitem [ref=e1110]:
+                      - link "門簾" [ref=e1113] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/bpukr/?l-id=tw_product_side_cate_09_02
+                    - listitem [ref=e1114]:
+                      - link "垃圾桶" [ref=e1117] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/gu915/?l-id=tw_product_side_cate_09_03
+                    - listitem [ref=e1118]:
+                      - link "馬桶/冰箱置物架" [ref=e1121] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/end9s/?l-id=tw_product_side_cate_09_04
+                    - listitem [ref=e1122]:
+                      - link "演講臺" [ref=e1125] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/zo8lq/?l-id=tw_product_side_cate_09_05
+                    - listitem [ref=e1126]:
+                      - link "貢神/香爐" [ref=e1129] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/as5cu/?l-id=tw_product_side_cate_09_06
+                    - listitem [ref=e1130]:
+                      - link "滑軌" [ref=e1133] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/mbz5x/?l-id=tw_product_side_cate_09_07
+                    - listitem [ref=e1134]:
+                      - link "茶桶" [ref=e1137] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/hljnp/?l-id=tw_product_side_cate_09_08
+                    - listitem [ref=e1138]:
+                      - link "浴室架" [ref=e1141] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/53gx7/?l-id=tw_product_side_cate_09_09
+                    - listitem [ref=e1142]:
+                      - link "牙刷烘乾機" [ref=e1145] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/p0jwf/?l-id=tw_product_side_cate_09_10
+                    - listitem [ref=e1146]:
+                      - link "風水挂畫" [ref=e1149] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/tlk6y/?l-id=tw_product_side_cate_09_11
+                    - listitem [ref=e1150]:
+                      - link "風水擺件" [ref=e1153] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/p1ovd/?l-id=tw_product_side_cate_09_12
+                    - listitem [ref=e1154]:
+                      - link "床頭櫃" [ref=e1157] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/sq88f/?l-id=tw_product_side_cate_09_13
+                    - listitem [ref=e1158]:
+                      - link "臺燈" [ref=e1161] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/4wcra/?l-id=tw_product_side_cate_09_14
+                    - listitem [ref=e1162]:
+                      - link "碗" [ref=e1165] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/dee1h/?l-id=tw_product_side_cate_09_15
+                    - listitem [ref=e1166]:
+                      - link "泡沫發生器" [ref=e1169] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/pidlt/?l-id=tw_product_side_cate_09_16
+                    - listitem [ref=e1170]:
+                      - link "餐桌保溫板" [ref=e1173] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/mi66e/?l-id=tw_product_side_cate_09_17
+                    - listitem [ref=e1174]:
+                      - link "厨房貼紙" [ref=e1177] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/tqegd/?l-id=tw_product_side_cate_09_18
+                    - listitem [ref=e1178]:
+                      - link "氛圍燈" [ref=e1181] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/2g7wx/?l-id=tw_product_side_cate_09_19
+                    - listitem [ref=e1182]:
+                      - link "投影儀/投影布" [ref=e1185] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/evtl1/?l-id=tw_product_side_cate_09_20
+                    - listitem [ref=e1186]:
+                      - link "免打孔晾衣杆" [ref=e1189] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/oacu6/?l-id=tw_product_side_cate_09_21
+                    - listitem [ref=e1190]:
+                      - link "打印機架" [ref=e1193] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/4as6t/?l-id=tw_product_side_cate_09_22
+                    - listitem [ref=e1194]:
+                      - link "學習桌椅" [ref=e1197] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/tl11g/?l-id=tw_product_side_cate_09_23
+                    - listitem [ref=e1198]:
+                      - link "洞洞板" [ref=e1201] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/i5tee/?l-id=tw_product_side_cate_09_24
+                    - listitem [ref=e1202]:
+                      - link "黑板貼紙" [ref=e1205] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/t4l76/?l-id=tw_product_side_cate_09_25
+                    - listitem [ref=e1206]:
+                      - link "爬行墊" [ref=e1209] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/4fuc0/?l-id=tw_product_side_cate_09_26
+                    - listitem [ref=e1210]:
+                      - link "踢腳線/壁貼" [ref=e1213] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/ca1br/?l-id=tw_product_side_cate_09_27
+                    - listitem [ref=e1214]:
+                      - link "通風管道" [ref=e1217] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/qi0rv/?l-id=tw_product_side_cate_09_28
+                    - listitem [ref=e1218]:
+                      - link "掃把組" [ref=e1221] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/ee27g/?l-id=tw_product_side_cate_09_29
+                    - listitem [ref=e1222]:
+                      - link "花瓶" [ref=e1225] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/ct9md/?l-id=tw_product_side_cate_09_30
+                    - listitem [ref=e1226]:
+                      - link "鍋" [ref=e1229] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/zh2fv/?l-id=tw_product_side_cate_09_31
+                    - listitem [ref=e1230]:
+                      - link "配電箱裝飾" [ref=e1233] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/sakye/?l-id=tw_product_side_cate_09_32
+                    - listitem [ref=e1234]:
+                      - link "蛋糕轉臺" [ref=e1237] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/ir9sv/?l-id=tw_product_side_cate_09_33
+                    - listitem [ref=e1238]:
+                      - link "阻門器" [ref=e1241] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/oom9l/?l-id=tw_product_side_cate_09_34
+                    - listitem [ref=e1242]:
+                      - link "自動關門神器" [ref=e1245] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/t2cxm/?l-id=tw_product_side_cate_09_35
+                    - listitem [ref=e1246]:
+                      - link "煮蛋器" [ref=e1249] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/ytgix/?l-id=tw_product_side_cate_09_36
+                    - listitem [ref=e1250]:
+                      - link "浴室防滑墊" [ref=e1253] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/oqqnv/?l-id=tw_product_side_cate_09_37
+                    - listitem [ref=e1254]:
+                      - link "油水分離器" [ref=e1257] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/7y9ca/?l-id=tw_product_side_cate_09_38
+                    - listitem [ref=e1258]:
+                      - link "酥油燈" [ref=e1261] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/213jq/?l-id=tw_product_side_cate_09_39
+                    - listitem [ref=e1262]:
+                      - link "桌腳增高" [ref=e1265] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/r9nv9/?l-id=tw_product_side_cate_09_40
+                    - listitem [ref=e1266]:
+                      - link "集水槽" [ref=e1269] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/wc6sn/?l-id=tw_product_side_cate_09_41
+                - listitem [ref=e1270]:
+                  - generic [ref=e1272] [cursor=pointer]:
+                    - link "-------五金工具-------" [ref=e1273]:
+                      - /url: /shop/panda1125/category/nds3x/?l-id=tw_product_side_cate_10
+                    - img [ref=e1274]
+                  - list:
+                    - listitem [ref=e1276]:
+                      - link "電絡鉄" [ref=e1279] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/s4hen/?l-id=tw_product_side_cate_10_01
+                    - listitem [ref=e1280]:
+                      - link "烤火爐" [ref=e1283] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/hr5x8/?l-id=tw_product_side_cate_10_02
+                    - listitem [ref=e1284]:
+                      - link "背景支架" [ref=e1287] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/gjuld/?l-id=tw_product_side_cate_10_03
+                    - listitem [ref=e1288]:
+                      - link "萬向水龍頭" [ref=e1291] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/t1k3l/?l-id=tw_product_side_cate_10_04
+                    - listitem [ref=e1292]:
+                      - link "千斤頂" [ref=e1295] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/8ol6u/?l-id=tw_product_side_cate_10_05
+                    - listitem [ref=e1296]:
+                      - link "角尺/水平儀" [ref=e1299] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/2qzjp/?l-id=tw_product_side_cate_10_06
+                - listitem [ref=e1300]:
+                  - generic [ref=e1302] [cursor=pointer]:
+                    - link "-------戶外百貨-------" [ref=e1303]:
+                      - /url: /shop/panda1125/category/tlu24/?l-id=tw_product_side_cate_11
+                    - img [ref=e1304]
+                  - list:
+                    - listitem [ref=e1306]:
+                      - link "擺攤架" [ref=e1309] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/70nok/?l-id=tw_product_side_cate_11_01
+                    - listitem [ref=e1310]:
+                      - link "廣告牌" [ref=e1313] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/2kdoj/?l-id=tw_product_side_cate_11_02
+                    - listitem [ref=e1314]:
+                      - link "陽臺花架" [ref=e1317] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/poo3k/?l-id=tw_product_side_cate_11_03
+                    - listitem [ref=e1318]:
+                      - link "手電筒" [ref=e1321] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/u0ar3/?l-id=tw_product_side_cate_11_04
+                    - listitem [ref=e1322]:
+                      - link "花園工具房" [ref=e1325] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/5d6s5/?l-id=tw_product_side_cate_11_05
+                    - listitem [ref=e1326]:
+                      - link "捕蛇器" [ref=e1329] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/scqif/?l-id=tw_product_side_cate_11_06
+                    - listitem [ref=e1330]:
+                      - link "太陽能燈" [ref=e1333] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/msgv1/?l-id=tw_product_side_cate_11_07
+                    - listitem [ref=e1334]:
+                      - link "雨褲" [ref=e1337] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/z6zio/?l-id=tw_product_side_cate_11_08
+                - listitem [ref=e1338]:
+                  - generic [ref=e1340] [cursor=pointer]:
+                    - link "居家家具" [ref=e1341]:
+                      - /url: /shop/panda1125/category/qx8ux/?l-id=tw_product_side_cate_12
+                    - img [ref=e1342]
+                  - list:
+                    - listitem [ref=e1344]:
+                      - link "床頭櫃" [ref=e1347] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/6y6hk/?l-id=tw_product_side_cate_12_01
+                    - listitem [ref=e1348]:
+                      - link "瓦斯爐" [ref=e1351] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/1weug/?l-id=tw_product_side_cate_12_02
+                - listitem [ref=e1352]:
+                  - generic [ref=e1354] [cursor=pointer]:
+                    - link "🔞成人用品🔞" [ref=e1355]:
+                      - /url: /shop/panda1125/category/mkycd/?l-id=tw_product_side_cate_13
+                    - img [ref=e1356]
+                  - list:
+                    - listitem [ref=e1358]:
+                      - link "實體娃娃" [ref=e1361] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/tgyf8/?l-id=tw_product_side_cate_13_01
+                    - listitem [ref=e1362]:
+                      - link "飛機杯" [ref=e1365] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/rcr6t/?l-id=tw_product_side_cate_13_02
+          - generic [ref=e1366]:
+            - link [ref=e1367] [cursor=pointer]:
+              - /url: https://www.rakuten.com.tw/shop/panda1125/product/bxyze8rnv/
+              - img [ref=e1368]
+            - link [ref=e1369] [cursor=pointer]:
+              - /url: https://www.rakuten.com.tw/shop/panda1125/product/6qzvj4l7j/
+              - img [ref=e1370]
+            - link [ref=e1371] [cursor=pointer]:
+              - /url: https://www.rakuten.com.tw/shop/panda1125/product/srlb0rvng/
+              - img [ref=e1372]
+        - generic [ref=e1373]:
+          - generic [ref=e1374]:
+            - generic [ref=e1375]:
+              - generic [ref=e1376]:
+                - generic [ref=e1377]: 商品詳情
+                - generic [ref=e1378]:
+                  - img [ref=e1380]
+                  - generic [ref=e1382]:
+                    - generic [ref=e1383]: 特別注意事項
+                    - text: 您所點選的網頁內可能含有兒童、青少年不宜之成人限制級內容，如您未滿18歲，請勿進入、購買！
+                - img "半身 實體娃娃 陰臀倒模 大屁股 自慰器 男用飛機杯 男人 情趣 性用品 仿真肌膚 豐乳肥臀 逼真通道 1" [ref=e1384]
+                - img "半身 實體娃娃 陰臀倒模 大屁股 自慰器 男用飛機杯 男人 情趣 性用品 仿真肌膚 豐乳肥臀 逼真通道 2" [ref=e1385]
+                - img "半身 實體娃娃 陰臀倒模 大屁股 自慰器 男用飛機杯 男人 情趣 性用品 仿真肌膚 豐乳肥臀 逼真通道 3" [ref=e1386]
+                - img "半身 實體娃娃 陰臀倒模 大屁股 自慰器 男用飛機杯 男人 情趣 性用品 仿真肌膚 豐乳肥臀 逼真通道 4" [ref=e1387]
+                - img "半身 實體娃娃 陰臀倒模 大屁股 自慰器 男用飛機杯 男人 情趣 性用品 仿真肌膚 豐乳肥臀 逼真通道 5" [ref=e1388]
+                - img "半身 實體娃娃 陰臀倒模 大屁股 自慰器 男用飛機杯 男人 情趣 性用品 仿真肌膚 豐乳肥臀 逼真通道 6" [ref=e1389]
+                - img "半身 實體娃娃 陰臀倒模 大屁股 自慰器 男用飛機杯 男人 情趣 性用品 仿真肌膚 豐乳肥臀 逼真通道 7" [ref=e1390]
+                - img "半身 實體娃娃 陰臀倒模 大屁股 自慰器 男用飛機杯 男人 情趣 性用品 仿真肌膚 豐乳肥臀 逼真通道 8" [ref=e1391]
+                - generic [ref=e1393]: "??限量 ?? 3公斤和4.5公斤的款式可以超商取貨其他款式由於超材請選擇宅配哦。 3公斤和4.5公斤的款式可以超商取貨其他款式由於超材請選擇宅配哦。 3公斤和4.5公斤的款式可以超商取貨其他款式由於超材請選擇宅配哦。 【註意事項】 ?請注意不接急單後正常7-9天左右收到敬請耐心等候包裹抵達後客服人員會通知您取件請留意信息感謝您的購買。 ?全場產品為個人私密性用品壹經〝拆封〞或〝使用〞即無法接受退換貨不便之處敬請見諒 ?時皆以隱密之包裝方式外包裝不會出現任何情趣商品字洋敬請安心選購 ??購物須知?? ★因個人資料保護法賣場無法為您修改訂單請務必於購物車內確認後再。 ★訂單若有使用折價一經取消後即無法再次使用。 ★取消訂單：因訂單隨時會如要取消請再下訂單後10分鐘內告知。 ??到貨後超商不一定會傳簡訊通知後請開啟通知並留意到貨時間 ??線上客服時間：週一至週日 9:00-18:00 ??收件後：首先檢查外包裝是否破損然後拆開快遞時對照訂單到貨產品數量是否全到齊全發現少貨的請及時申請退款因為取貨後兩天后系統會自動完成訂單無法退款收到貨的們麻煩請給寶貝好評 拒絕1~2~3顆星喔 ??我們的難處：急要要出國時間趕的慎拍請一定要及時取件包裹一旦寄出就退不回來如果們不要了或者要取消訂單那麼我們就要直接損失必要時刻有權追究法律責任。 ☆有任何問題直接請勿直接給與商品負評 感恩 ????賣場???? ??最後祝各位購物愉快以最優惠的價格買到最實惠的商品有任何問題都可以”“諮詢。 感謝耐心看完表示同意以上哦 給五星好評截圖回傳,下次購買有優惠(請向客服索取折扣碼) ??祝大家購物愉快.."
+              - button "查看更多" [ref=e1397] [cursor=pointer]:
+                - generic [ref=e1398]:
+                  - text: 查看更多
+                  - img [ref=e1400]
+            - generic [ref=e1403]:
+              - generic [ref=e1404]:
+                - term [ref=e1405]: 品牌
+                - definition [ref=e1406]:
+                  - link "其他品牌" [ref=e1407] [cursor=pointer]:
+                    - /url: /search/?b=21038
+              - generic [ref=e1408]:
+                - term [ref=e1409]: 商品分類
+                - definition [ref=e1410]:
+                  - list [ref=e1411]:
+                    - listitem [ref=e1412]:
+                      - link "樂天首頁" [ref=e1413] [cursor=pointer]:
+                        - /url: /
+                      - img [ref=e1415]
+                    - listitem [ref=e1417]:
+                      - link "小胖達生活百貨" [ref=e1418] [cursor=pointer]:
+                        - /url: /shop/panda1125/
+                      - img [ref=e1420]
+                    - listitem [ref=e1422]:
+                      - link "🔞成人用品🔞" [ref=e1423] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/mkycd/
+                      - img [ref=e1425]
+                    - listitem [ref=e1427]:
+                      - link "實體娃娃" [ref=e1428] [cursor=pointer]:
+                        - /url: /shop/panda1125/category/tgyf8/
+              - generic [ref=e1429]:
+                - term [ref=e1430]: 商品貨號(SKU)
+                - definition [ref=e1431]: 2b32ze5ye
+            - generic [ref=e1432]:
+              - generic [ref=e1433]:
+                - generic [ref=e1434]: 商品評價
+                - link "查看全部 1 則評價" [ref=e1436] [cursor=pointer]:
+                  - /url: /shop/panda1125/review/2b32ze5ye/
+                  - text: 查看全部 1 則評價
+                  - img [ref=e1437]
+              - generic [ref=e1440]:
+                - generic [ref=e1441]:
+                  - link "4.0" [ref=e1442] [cursor=pointer]:
+                    - /url: /shop/panda1125/review/2b32ze5ye/?l-id=number_of_average_rating
+                    - heading "4.0" [level=2] [ref=e1443]
+                  - generic [ref=e1444]:
+                    - link [ref=e1445] [cursor=pointer]:
+                      - /url: /shop/panda1125/review/2b32ze5ye/?l-id=images_of_average_rating
+                      - generic [ref=e1446]:
+                        - img [ref=e1448]
+                        - img [ref=e1451]
+                        - img [ref=e1454]
+                        - img [ref=e1457]
+                        - img [ref=e1460]
+                    - link "(1)" [ref=e1462] [cursor=pointer]:
+                      - /url: /shop/panda1125/review/2b32ze5ye/?l-id=total_count_of_average_rating
+                      - generic [ref=e1463]: (1)
+                - generic [ref=e1465]:
+                  - list [ref=e1466]:
+                    - listitem [ref=e1467]:
+                      - generic [ref=e1468]: 5 星
+                    - listitem [ref=e1470]:
+                      - generic [ref=e1471]: 4 星
+                    - listitem [ref=e1474]:
+                      - generic [ref=e1475]: 3 星
+                    - listitem [ref=e1477]:
+                      - generic [ref=e1478]: 2 星
+                    - listitem [ref=e1480]:
+                      - generic [ref=e1481]: 1 星
+                  - list [ref=e1483]:
+                    - listitem [ref=e1484]: 0 人
+                    - listitem [ref=e1485]: 1 人
+                    - listitem [ref=e1486]: 0 人
+                    - listitem [ref=e1487]: 0 人
+                    - listitem [ref=e1488]: 0 人
+              - generic [ref=e1492]:
+                - generic [ref=e1494]:
+                  - img [ref=e1496]
+                  - img [ref=e1499]
+                  - img [ref=e1502]
+                  - img [ref=e1505]
+                  - img [ref=e1508]
+                - paragraph
+                - generic [ref=e1510]: 規格：小胖子-4.5公斤少婦款
+                - generic [ref=e1511]:
+                  - generic [ref=e1512]: 何***
+                  - generic [ref=e1513]: 2024/05/27
+          - generic [ref=e1514]:
+            - generic [ref=e1516]:
+              - generic [ref=e1517] [cursor=pointer]:
+                - text: 退換貨須知
+                - button [ref=e1518]:
+                  - img [ref=e1519]
+              - region:
+                - generic [ref=e1522]:
+                  - text: 一、 本店鋪依消費者保護法第十九條第一項提供所有消費者得於收受商品之次日起算七天內
+                  - text: （下稱「猶豫期」）取消訂單/退貨之權利，無須說明理由或負擔任何費用，
+                  - text: 合理例外情事不在此限。提醒您：
+                  - text: ※取消訂單/退貨時，您與本店鋪應互負回復原狀之責，故商品應為全新狀態
+                  - text: （需回復至商品到貨時之狀態），並保持完整包裝
+                  - text: （包括主要商品、週邊相關配件、保證書、附隨文件、贈品或發票等，以及原包裝、外盒），
+                  - text: 並請勿於商品本體外盒直接黏貼宅配單或書寫文字。
+                  - text: ※猶豫期非試用期，若商品有損毀、磨損、刮傷、髒污、包裝破損、減少等
+                  - text: 非完整、全新之狀態，本店鋪將向您酌收回復原狀之費用，或依商品之狀況按比例
+                  - text: 向您請求商品之價額。
+                  - text: 二、您欲取消訂單或辦理退貨時，請登入樂天市場，並於「我的訂單」中點選
+                  - text: 「瀏覽訂單明細」>「申請取消訂單/退貨」，本店鋪將依您的申請進行確認。
+                  - text: 三、依據消費者保護法第十九條第二項及通訊交易解除權合理例外情事適用準則之規定，
+                  - text: 請您訂購前留意下列資訊：
+                  - text: (一) 本店鋪對於下列商品或服務，恕不提供消費者保護法七天猶豫期之適用：
+                  - text: 1. 商品有易於腐敗、保存期限較短或解約時即將逾期之性質，例如現做餐盒或蔬果、蛋糕或鮮奶等。
+                  - text: 2. 依您要求所為之客製化商品，例如：依指示所刻印之印章、量身訂製之服裝等。
+                  - text: 3. 報紙、期刊或雜誌。
+                  - text: 4. 經您拆封之影音商品或電腦軟體。若您不確定是否辦理退貨，請勿拆封。
+                  - text: 5. 非以有形媒介提供之數位內容或一經提供即為完成之線上服務，
+                  - text: 且經您事先同意始提供之商品或服務。例如：電子書、虛擬點數或電子會員卡等。
+                  - text: 6.已拆封之個人衛生用品，例如：已拆封之內衣褲或刮鬍刀。若您不確定是否辦理退貨，請勿拆封。
+                  - text: 7.國際航空客運服務，例如：國際機票等。
+                  - text: (二)如商品或服務之品項，主管機關已依消費者保護法第十七條第一項公告相關定型化契約
+                  - text: 應記載及不得記載事項，應適用該事項關於解除契約之規定。例如：藝文展演票券等。
+                  - text: 四、如您有換貨需求，請直接與本店鋪聯繫。
+            - generic [ref=e1524]:
+              - generic [ref=e1525] [cursor=pointer]:
+                - text: 購物須知
+                - button [ref=e1526]:
+                  - img [ref=e1527]
+              - region:
+                - generic [ref=e1531]:
+                  - img "購物資訊" [ref=e1532]
+                  - generic [ref=e1533]:
+                    - generic [ref=e1534]:
+                      - img "付款方式" [ref=e1535]
+                      - paragraph [ref=e1536]:
+                        - text: ATM轉帳、信用卡付款
+                        - text: 全家/7-11/萊爾富門市取貨付款
+                        - text: 黑貓宅急便貨到付款、宅配通貨到付款
+                      - img "配送方式" [ref=e1537]
+                      - paragraph [ref=e1538]: 宅配、7-11 / 全家/萊爾富門市取貨
+                    - generic [ref=e1539]:
+                      - img "退換貨規範" [ref=e1540]
+                      - paragraph [ref=e1541]:
+                        - text: 本店是否提供消費者保護法七日猶豫期之權利，遽消費者保護法及通訊交易解除權合理例外情事適用準則，依商品性質各有不同規定。詳細退換貨說明請參照各商品
+                        - link "頁面說明" [ref=e1542] [cursor=pointer]:
+                          - /url: https://www.rakuten.com.tw/shop/panda1125/info/?l-id=tw_product_shopinfo#ReturnPolicy
+                        - text: 。
+                    - generic [ref=e1543]:
+                      - img "客服方式" [ref=e1544]
+                      - paragraph [ref=e1545]:
+                        - text: "服務時間 : 周一至周六 09:00~19:00"
+                        - text: "客服電話 : 0909-783610"
+                        - text: 客服信箱 :panda91125@hotmail.com
+                        - text: "客服Line : hh888996"
+                  - img "客服方式" [ref=e1546]
+          - generic [ref=e1551]: 繼續逛其他店舖
+    - generic [ref=e1553]:
+      - generic [ref=e1554]:
+        - link "小胖達生活百貨 小胖達生活百貨" [ref=e1555] [cursor=pointer]:
+          - /url: /shop/panda1125/
+          - img [ref=e1556]
+          - img "小胖達生活百貨" [ref=e1562]
+          - generic [ref=e1564]: 小胖達生活百貨
+        - generic [ref=e1565]:
+          - button "回上方" [ref=e1566] [cursor=pointer]:
+            - generic [ref=e1567]: 回上方
+          - button "商品詳情" [ref=e1568] [cursor=pointer]:
+            - generic [ref=e1569]: 商品詳情
+          - button "商品評價 (1)" [ref=e1570] [cursor=pointer]:
+            - generic [ref=e1571]: 商品評價
+            - generic [ref=e1572]: (1)
+          - button "商品推薦" [ref=e1573] [cursor=pointer]:
+            - generic [ref=e1574]: 商品推薦
+      - generic [ref=e1575]:
+        - generic [ref=e1577]:
+          - generic [ref=e1578]: $
+          - generic [ref=e1579]: 1,807
+          - generic [ref=e1580]: 起
+        - button "選擇規格" [ref=e1581] [cursor=pointer]:
+          - generic [ref=e1582]: 選擇規格
+    - generic [ref=e1585]:
+      - button [ref=e1587] [cursor=pointer]:
+        - img [ref=e1588]
+      - generic [ref=e1590]:
+        - img "ageRestrictedAddOn" [ref=e1593]
+        - generic [ref=e1594]:
+          - paragraph [ref=e1595]: 台灣樂天市場在此提醒您！
+          - paragraph [ref=e1596]: 您所點選的網頁內可能含有兒童、青少年不宜之成人限制級內容，如您未滿18歲，請勿進入、購買！
+      - generic [ref=e1597]:
+        - button "我未滿18歲 離開" [ref=e1598] [cursor=pointer]:
+          - generic [ref=e1599]: 我未滿18歲 離開
+        - button "我已年滿18歲 確認進入" [ref=e1600] [cursor=pointer]:
+          - generic [ref=e1601]: 我已年滿18歲 確認進入
+    - text: 
+  - list [ref=e1610]:
+    - listitem [ref=e1611]:
+      - link "日本草莓" [ref=e1612] [cursor=pointer]:
+        - /url: https://www.rakuten.com.tw/search/日本草莓/
+    - listitem [ref=e1613]:
+      - link "白鐵板" [ref=e1614] [cursor=pointer]:
+        - /url: https://www.rakuten.com.tw/search/白鐵板/
+    - listitem [ref=e1615]:
+      - link "TCL 85吋電視" [ref=e1616] [cursor=pointer]:
+        - /url: https://www.rakuten.com.tw/search/TCL 85吋電視/
+    - listitem [ref=e1617]:
+      - link "Microsoft 365 家用版" [ref=e1618] [cursor=pointer]:
+        - /url: https://www.rakuten.com.tw/search/Microsoft 365 家用版/
+    - listitem [ref=e1619]:
+      - link "CHANEL香奈兒 手錶" [ref=e1620] [cursor=pointer]:
+        - /url: https://www.rakuten.com.tw/search/CHANEL香奈兒 手錶/
+    - listitem [ref=e1621]:
+      - link "晚禮服 出租" [ref=e1622] [cursor=pointer]:
+        - /url: https://www.rakuten.com.tw/search/晚禮服 出租/
+    - listitem [ref=e1623]:
+      - link "私密處除毛" [ref=e1624] [cursor=pointer]:
+        - /url: https://www.rakuten.com.tw/search/私密處除毛/
+    - listitem [ref=e1625]:
+      - link "秒開帳篷" [ref=e1626] [cursor=pointer]:
+        - /url: https://www.rakuten.com.tw/search/秒開帳篷/
+    - listitem [ref=e1627]:
+      - link "barbie" [ref=e1628] [cursor=pointer]:
+        - /url: https://www.rakuten.com.tw/search/barbie/
+    - listitem [ref=e1629]:
+      - link "染髮劑 奶茶灰" [ref=e1630] [cursor=pointer]:
+        - /url: https://www.rakuten.com.tw/search/染髮劑 奶茶灰/
+  - generic [ref=e1632]:
+    - link "防詐騙提醒" [ref=e1634] [cursor=pointer]:
+      - /url: https://www.rakuten.com.tw/info/announcement/warning/
+    - generic [ref=e1635]: 台灣樂天市場與店家不會主動致電要求解除分期付款、要求ATM轉帳。
+    - link "政策宣導" [ref=e1637] [cursor=pointer]:
+      - /url: https://www.rakuten.com.tw/policy/legal/qa_result_80100/
+    - list [ref=e1638]:
+      - listitem [ref=e1639]: 為防治動物傳染病，境外動物或動物產品等應施檢疫物輸入我國，應符合動物檢疫規定，並依規定申請檢疫。擅自輸入屬禁止輸入之應施檢疫物者最高可處七年以下有期徒刑，得併科新臺幣三百萬元以下罰金。應施檢疫物之輸入人或代理人未依規定申請檢疫者，得處新臺幣五萬元以上一百萬元以下罰鍰，並得按次處罰。
+      - listitem [ref=e1640]: 境外商品不得隨貨贈送應施檢疫物。
+      - listitem [ref=e1641]: 收件人違反動物傳染病防治條例第三十四條第三項規定，未將郵遞寄送輸入之應施檢疫物送交輸出入動物檢疫機關銷燬者，處新臺幣三萬元以上十五萬元以下罰鍰。
+  - generic [ref=e1643]:
+    - generic [ref=e1644]:
+      - paragraph [ref=e1645]: Shopping is Entertainment!
+      - generic [ref=e1646]:
+        - link "非洲豬瘟政策宣導" [ref=e1647] [cursor=pointer]:
+          - /url: /policy/legal/qa_result_80100/
+        - link "隱私權政策" [ref=e1648] [cursor=pointer]:
+          - /url: /policy/privacy/
+    - text: © Rakuten Group, Inc.

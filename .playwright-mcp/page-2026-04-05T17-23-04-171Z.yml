@@ -1,0 +1,151 @@
+- generic [active] [ref=e1]:
+  - paragraph [ref=e2]:
+    - img [ref=e3]
+    - generic:
+      - link:
+        - /url: https://www.rakuten.com.tw/shop/mius/
+    - img [ref=e4]
+    - link [ref=e5] [cursor=pointer]:
+      - /url: https://www.rakuten.com.tw/shop/mius/info/#/Payment
+      - img [ref=e6]
+    - img [ref=e7]
+    - link [ref=e8] [cursor=pointer]:
+      - /url: https://step.rakuten.com.tw/inquiry/input?iqt=1&sid=1140&tz=Asia/Taipei&country=TW&lang=zh_T
+      - img [ref=e9]
+    - img [ref=e10]
+    - link [ref=e11] [cursor=pointer]:
+      - /url: https://mius.shop.rakuten.tw/gold/know/shopping.html
+      - img [ref=e12]
+    - link [ref=e13] [cursor=pointer]:
+      - /url: http://w126.proshop.com.tw/dadalove_102/index/OtherShopOrderFind.aspx
+      - img [ref=e14]
+    - img [ref=e15]
+    - link [ref=e16] [cursor=pointer]:
+      - /url: https://mius.shop.rakuten.tw/owner/#mius
+      - img [ref=e17]
+    - link [ref=e18] [cursor=pointer]:
+      - /url: https://www.rakuten.com.tw/cart/
+      - img [ref=e19]
+      - img [ref=e20]
+    - img [ref=e21]
+  - paragraph [ref=e22]:
+    - img [ref=e23]
+    - img [ref=e24]
+    - generic:
+      - link:
+        - /url: https://www.rakuten.com.tw/shop/mius/product/nk32d103/#mius
+      - link:
+        - /url: https://www.rakuten.com.tw/shop/mius/product/nk24d183/#mius
+      - link:
+        - /url: https://www.rakuten.com.tw/shop/mius/product/nk24d185/#mius
+    - generic:
+      - link:
+        - /url: https://www.rakuten.com.tw/shop/mius/product/nk22d172/#mius
+      - link:
+        - /url: https://www.rakuten.com.tw/shop/mius/product/nk11d059/#mius
+      - link:
+        - /url: https://www.rakuten.com.tw/shop/mius/product/nk63d223/#mius
+      - link:
+        - /url: https://www.rakuten.com.tw/shop/mius/product/nk22d075/#mius
+      - link:
+        - /url: https://www.rakuten.com.tw/shop/mius/product/nk63d221/#mius
+  - paragraph [ref=e25]:
+    - img [ref=e26]
+    - generic:
+      - link:
+        - /url: https://www.rakuten.com.tw/shop/mius/product/nk85c765/#mius
+      - link:
+        - /url: https://www.rakuten.com.tw/shop/mius/product/nk21c919/#mius
+      - link:
+        - /url: https://mius.shop.rakuten.tw/nk22d150/#mius
+      - link:
+        - /url: https://mius.shop.rakuten.tw/nk73c844/#mius
+      - link:
+        - /url: https://www.rakuten.com.tw/shop/mius/product/nk89c855/#mius
+  - paragraph [ref=e27]:
+    - generic:
+      - link:
+        - /url: https://shop.r10s.com/00c981a0-ec8c-11e4-8ba2-005056ae57f4/upload/102-0604/R-F-BANNER-0607-.jpg
+    - link [ref=e28] [cursor=pointer]:
+      - /url: http://bit.ly/12UQu17
+      - img [ref=e29]
+  - paragraph [ref=e30]:
+    - img [ref=e31]
+  - paragraph [ref=e32]:
+    - link [ref=e33] [cursor=pointer]:
+      - /url: https://www.rakuten.com.tw/shop/mius/product/nk15c562/#mius
+      - generic:
+        - link:
+          - /url: http://bit.ly/17eVYGF
+  - paragraph [ref=e34]:
+    - img [ref=e35]
+    - generic:
+      - link:
+        - /url: https://www.rakuten.com.tw/shop/mius/product/nk19a498/#0403
+      - link:
+        - /url: https://mius.shop.rakuten.tw/nk95c536/#mius
+      - link:
+        - /url: https://www.rakuten.com.tw/shop/mius/product/nk17c711/#mius
+      - link:
+        - /url: https://www.rakuten.com.tw/shop/mius/product/nk63c965/
+      - link:
+        - /url: https://mius.shop.rakuten.tw/nk15c860/#mius
+      - link:
+        - /url: https://www.rakuten.com.tw/shop/mius/product/nk21c293/#mius
+    - generic:
+      - link:
+        - /url: https://mius.shop.rakuten.tw/nk15c906/#mius
+      - link:
+        - /url: https://mius.shop.rakuten.tw/nk15c515/
+      - link:
+        - /url: https://www.rakuten.com.tw/shop/mius/product/nk24c523/#mius
+      - link:
+        - /url: https://www.rakuten.com.tw/shop/mius/product/nk29c468/#0403
+      - link:
+        - /url: https://www.rakuten.com.tw/shop/mius/product/nk15c206/#0403
+      - link:
+        - /url: https://www.rakuten.com.tw/shop/mius/product/nk15s463/#0403
+      - link:
+        - /url: https://www.rakuten.com.tw/shop/mius/product/nk32c955/#mius
+      - link:
+        - /url: https://www.rakuten.com.tw/shop/mius/product/nk23c463/#0403
+      - link:
+        - /url: https://mius.shop.rakuten.tw/nk73c272/#0403
+      - link:
+        - /url: https://mius.shop.rakuten.tw/nk85c499/#0403
+      - link:
+        - /url: https://www.rakuten.com.tw/shop/mius/product/nk58c482/
+      - link:
+        - /url: https://www.rakuten.com.tw/shop/mius/product/nk85c850/#mius
+  - paragraph [ref=e36]:
+    - generic:
+      - link:
+        - /url: https://www.rakuten.com.tw/shop/mius/category/207387/
+      - link:
+        - /url: https://www.rakuten.com.tw/shop/mius/category/207389/
+      - link:
+        - /url: https://www.rakuten.com.tw/shop/mius/category/207716/
+    - generic:
+      - link:
+        - /url: https://www.rakuten.com.tw/shop/mius/product/nk23b346/
+    - link [ref=e37] [cursor=pointer]:
+      - /url: http://bit.ly/16vJCtv
+      - img [ref=e38]
+  - paragraph [ref=e39]:
+    - img [ref=e40]
+  - paragraph [ref=e41]:
+    - generic:
+      - link:
+        - /url: http://bit.ly/16vJIB7
+      - link:
+        - /url: http://bit.ly/107H2an
+    - img [ref=e42]
+    - generic:
+      - link:
+        - /url: https://www.rakuten.com.tw/shop/mius/category/207387/
+      - link:
+        - /url: https://www.rakuten.com.tw/shop/mius/category/207389/
+      - link:
+        - /url: https://www.rakuten.com.tw/shop/mius/category/207716/
+  - paragraph [ref=e43]:
+    - img [ref=e44]

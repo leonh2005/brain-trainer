@@ -1,0 +1,13 @@
+[     692ms] [LOG] false @ https://www.momoshop.com.tw/search/_next/static/chunks/6896-da8edd40ef7a57b9.js:0
+[     707ms] [LOG] false @ https://www.momoshop.com.tw/search/_next/static/chunks/6896-da8edd40ef7a57b9.js:0
+[     712ms] [LOG] false @ https://www.momoshop.com.tw/search/_next/static/chunks/6896-da8edd40ef7a57b9.js:0
+[     730ms] [WARNING] [sentry-loader][member-info] member info unavailable; proceeding without whitelist override @ https://sentry-script.s3.ap-east-2.amazonaws.com/loader/sentry-loader@1.x-latest.js:0
+[     863ms] [LOG] false @ https://www.momoshop.com.tw/search/_next/static/chunks/6896-da8edd40ef7a57b9.js:0
+[     882ms] [LOG] init momoWaTrack @ https://www.momoshop.com.tw/search/_next/static/chunks/6083-33b920aede587894.js:0
+[     898ms] [LOG] false @ https://www.momoshop.com.tw/search/_next/static/chunks/6896-da8edd40ef7a57b9.js:0
+[     941ms] [LOG] web rc status:200 @ https://momowa.momoshop.com.tw/momowa/rc/js/momowa.js?t=20250321001:10
+[     941ms] [LOG] web rc status:200 @ https://momowa.momoshop.com.tw/momowa/rc/js/momowa.js?t=20250321001:10
+[     957ms] [LOG] false @ https://www.momoshop.com.tw/search/_next/static/chunks/6896-da8edd40ef7a57b9.js:0
+[    1373ms] [LOG] false @ https://www.momoshop.com.tw/search/_next/static/chunks/6896-da8edd40ef7a57b9.js:0
+[    1631ms] [LOG] false @ https://www.momoshop.com.tw/search/_next/static/chunks/6896-da8edd40ef7a57b9.js:0
+[    1726ms] [LOG] false @ https://www.momoshop.com.tw/search/_next/static/chunks/6896-da8edd40ef7a57b9.js:0

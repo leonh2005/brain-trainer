@@ -1,0 +1,384 @@
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e3]:
+      - generic [ref=e5]:
+        - list [ref=e6]:
+          - listitem [ref=e7] [cursor=pointer]:
+            - link "回首頁" [ref=e8]:
+              - /url: /main/Main.jsp?cid=memb&oid=back2hp&mdiv=1099800000-bt_0_150_01-bt_0_150_01_e1&ctype=B
+          - listitem [ref=e9] [cursor=pointer]:
+            - link "momo富立保險" [ref=e10]:
+              - /url: https://www.momoshop.com.tw/fuli/redirect.jsp?redirect_url=https://www.momo5188.com
+          - listitem [ref=e11] [cursor=pointer]:
+            - link "APP下載" [ref=e12]:
+              - /url: https://www.momoshop.com.tw/edm/cmmedm.jsp?lpn=Nzpe4YTLgeM&n=1&cid=memb&oid=APP&mdiv=1099800000-bt_0_150_01-bt_0_150_01_e3
+          - listitem [ref=e13] [cursor=pointer]:
+            - link "點點賺分潤計畫" [ref=e14]:
+              - /url: https://affiliate.momoshop.com.tw/publisher/coming-soon
+          - listitem [ref=e15] [cursor=pointer]:
+            - link "書店" [ref=e16]:
+              - /url: //www.momoshop.com.tw/category/LgrpCategory.jsp?l_code=4099900000&cid=memb&oid=china&mdiv=1099800000-bt_0_150_01-bt_0_150_01_e6
+        - list [ref=e17]:
+          - listitem [ref=e18] [cursor=pointer]
+          - listitem [ref=e19] [cursor=pointer]:
+            - link "登入" [ref=e21]:
+              - /url: "javascript:momoj().MomoLogin({GoCart:true});"
+          - listitem [ref=e22] [cursor=pointer]:
+            - link "註冊" [ref=e24]:
+              - /url: https://www.momoshop.com.tw/customer/CustomerAgree.jsp?cid=memfu&oid=customer&mdiv=1099800000-bt_0_150_01-bt_0_150_01_e7&ctype=B
+          - listitem [ref=e25] [cursor=pointer]:
+            - link "會員中心" [ref=e26]:
+              - /url: https://www.momoshop.com.tw/mypage/MemberCenter.jsp?cid=memb&oid=mcenter&mdiv=1099800000-bt_0_150_01-bt_0_150_01_e13&ctype=B
+          - listitem [ref=e27] [cursor=pointer]:
+            - link "查訂單" [ref=e28]:
+              - /url: https://www.momoshop.com.tw/mypage/MemberCenter.jsp?cid=memb&oid=checkorders&func=01&mdiv=1099800000-bt_0_150_01-bt_0_150_01_e8&ctype=B
+          - listitem [ref=e29] [cursor=pointer]:
+            - link "追蹤清單" [ref=e30]:
+              - /url: https://www.momoshop.com.tw/mypage/MemberCenter.jsp?cid=memb&oid=wishlist&func=02&mdiv=1099800000-bt_0_150_01-bt_0_150_01_e9&ctype=B
+          - listitem [ref=e31] [cursor=pointer]:
+            - link "折價券" [ref=e32]:
+              - /url: "javascript:momoj().MomoLogin({LoginSuccess:function(){window.location.href='/mypage/MemberCenter.jsp?func=14&cid=memb&oid=coupon&mdiv=1099800000-bt_0_150_01-bt_0_150_01_e10&ctype=B';}});"
+          - listitem [ref=e33] [cursor=pointer]:
+            - link "購物車( 0 )" [ref=e34]:
+              - /url: "javascript:momoj().MomoLogin({preUrl:momoj('#TopCart').data('CartUrl'),LoginSuccess:function(){var _url=momoj('#TopCart').data('CartUrl');if(!_url){alert('購物車內沒有任何商品');}else{window.location.href=_url+'?cid=memb&oid=cart&mdiv=1099800000-bt_0_150_01-bt_0_150_01_e11&ctype=B';}}});"
+          - listitem [ref=e35] [cursor=pointer]:
+            - link "登記活動" [ref=e36]:
+              - /url: https://www.momoshop.com.tw/mypage/MemberCenter.jsp?func=18&cid=memfu&oid=login&ctype=B&mdiv=1000100000-bt_0_003_01&_=1685432891447
+      - generic [ref=e38]:
+        - link "momo" [ref=e41] [cursor=pointer]:
+          - /url: https://www.momoshop.com.tw/main/Main.jsp?mdiv=1099800000-bt_0_243_01-bt_0_243_01_e1&ctype=B
+          - img "momo" [ref=e42]
+        - generic [ref=e43]:
+          - generic [ref=e45]:
+            - textbox "m2美度" [ref=e47]
+            - button "搜尋" [ref=e48] [cursor=pointer]
+          - list [ref=e51]:
+            - listitem [ref=e52]:
+              - generic [ref=e53]: 熱門 >
+            - listitem [ref=e54]:
+              - link "買一送一" [ref=e55] [cursor=pointer]:
+                - /url: https://www.momoshop.com.tw/search/searchShop.jsp?keyword=%E8%B2%B7%E4%B8%80%E9%80%81%E4%B8%80&_isFuzzy=0&searchType=1&mdiv=1099800000-bt_0_244_01-bt_0_244_01_P1_9_e1&ctype=B
+            - listitem [ref=e56]:
+              - text: ｜
+              - link "即享券" [ref=e57] [cursor=pointer]:
+                - /url: https://www.momoshop.com.tw/search/searchShop.jsp?keyword=%E5%8D%B3%E4%BA%AB%E5%88%B8&_isFuzzy=0&searchType=1&mdiv=1099800000-bt_0_244_01-bt_0_244_01_P1_14_e1&ctype=B
+            - listitem [ref=e58]:
+              - text: ｜
+              - link "風扇" [ref=e59] [cursor=pointer]:
+                - /url: https://www.momoshop.com.tw/search/%E9%A2%A8%E6%89%87?cateLevel=0&_isFuzzy=0&searchType=1&mdiv=1099800000-bt_0_244_01-bt_0_244_01_P1_3_e1&ctype=B
+            - listitem [ref=e60]:
+              - text: ｜
+              - link "洗衣精" [ref=e61] [cursor=pointer]:
+                - /url: https://www.momoshop.com.tw/search/%E6%B4%97%E8%A1%A3%E7%B2%BE?cateLevel=0&_isFuzzy=0&searchType=1&mdiv=1099800000-bt_0_244_01-bt_0_244_01_P1_2_e1&ctype=B
+            - listitem [ref=e62]:
+              - text: ｜
+              - link "手機" [ref=e63] [cursor=pointer]:
+                - /url: https://www.momoshop.com.tw/search/%E6%89%8B%E6%A9%9F?cateLevel=0&_isFuzzy=0&searchType=1&mdiv=1099800000-bt_0_244_01-bt_0_244_01_P1_4_e1&ctype=B
+            - listitem [ref=e64]:
+              - text: ｜
+              - link "伴手禮" [ref=e65] [cursor=pointer]:
+                - /url: https://www.momoshop.com.tw/search/%E4%BC%B4%E6%89%8B%E7%A6%AE?_isFuzzy=0&searchType=1&mdiv=1099800000-bt_0_244_01-bt_0_244_01_P1_6_e1&ctype=B
+        - list [ref=e68]:
+          - listitem [ref=e69]:
+            - link "活動" [ref=e70] [cursor=pointer]:
+              - /url: https://www.momoshop.com.tw/edm/cmmedm.jsp?lpn=O7xNlalgdat&n=1&mdiv=1099800000-bt_0_245_01-bt_0_245_01_P1_1_e1&ctype=B
+              - img "活動" [ref=e71]
+          - listitem [ref=e72]:
+            - link "全站活動" [ref=e73] [cursor=pointer]:
+              - /url: https://www.momoshop.com.tw/edm/cmmedm.jsp?lpn=O7ylWdZJHj8&n=1&mdiv=1099800000-bt_0_245_01-bt_0_245_01_P1_2_e1&ctype=B
+              - img "全站活動" [ref=e74]
+          - listitem [ref=e75]:
+            - link "活動" [ref=e76] [cursor=pointer]:
+              - /url: https://www.momoshop.com.tw/edm/cmmedm.jsp?lpn=O7vd0HeUtCl&mdiv=1099800000-bt_0_245_01-bt_0_245_01_P1_3_e1&ctype=B
+              - img "活動" [ref=e77]
+        - list [ref=e80]:
+          - listitem [ref=e81]:
+            - link "momo購物網" [ref=e82] [cursor=pointer]:
+              - /url: https://www.momoshop.com.tw/edm/cmmedm.jsp?lpn=O7D6uRgVmla&n=1&mdiv=1099800000-bt_0_246_01-bt_0_246_01_P1_1_e1&ctype=B
+              - img "momo購物網" [ref=e83]
+          - listitem [ref=e84]:
+            - link "momo購物網" [ref=e85] [cursor=pointer]:
+              - /url: https://www.momoshop.com.tw/edm/cmmedm.jsp?lpn=O7ASmQVZkQX&n=1&mdiv=1099800000-bt_0_246_01-bt_0_246_01_P1_8_e1&ctype=B
+              - img "momo購物網" [ref=e86]
+          - listitem [ref=e87]:
+            - link "momo購物網" [ref=e88] [cursor=pointer]:
+              - /url: https://www.momoshop.com.tw/edm/cmmedm.jsp?lpn=O7Ascr4f5bQ&n=1&mdiv=1099800000-bt_0_246_01-bt_0_246_01_P1_11_e1&ctype=B
+              - img "momo購物網" [ref=e89]
+          - listitem [ref=e90]:
+            - link "樂公益" [ref=e91] [cursor=pointer]:
+              - /url: https://www.momoshop.com.tw/edm/cmmedm.jsp?msu=1&npn=1vEL11s9veQN&n=1&mdiv=1099800000-bt_0_246_01-bt_0_246_01_P1_2_e1&ctype=B
+              - img "樂公益" [ref=e92]
+          - listitem [ref=e93]:
+            - link "保險" [ref=e94] [cursor=pointer]:
+              - /url: https://www.momoshop.com.tw/fuli/redirect.jsp?redirect_url=https://www.momo5188.com&mdiv=1099800000-bt_0_246_01-bt_0_246_01_P1_9_e1&ctype=B
+              - img "保險" [ref=e95]
+          - listitem [ref=e96]:
+            - link "momo電視購物" [ref=e97] [cursor=pointer]:
+              - /url: https://www.momoshop.com.tw/category/LgrpCategory.jsp?l_code=2499900000&FTOOTH=24&Area=tooth&cid=T24&oid=L24999&mdiv=1000100000&mdiv=1099800000-bt_0_246_01-bt_0_246_01_P1_4_e1&ctype=B
+              - img "momo電視購物" [ref=e98]
+          - listitem [ref=e99]:
+            - link "週期訂購" [ref=e100] [cursor=pointer]:
+              - /url: https://www.momoshop.com.tw/edm/cmmedm.jsp?lpn=O4DhtqbdzSP&n=1&mdiv=1099800000-bt_0_246_01-bt_0_246_01_P1_6_e1&ctype=B
+              - img "週期訂購" [ref=e101]
+          - listitem [ref=e102]:
+            - link "品牌旗艦" [ref=e103] [cursor=pointer]:
+              - /url: https://www.momoshop.com.tw/brand/Main.jsp?FTOOTH=21&Area=tooth&cid=T21&mdiv=1099800000-bt_0_246_01-bt_0_246_01_P1_7_e1&ctype=B
+              - img "品牌旗艦" [ref=e104]
+          - listitem [ref=e105]:
+            - link "綠色生活館" [ref=e106] [cursor=pointer]:
+              - /url: https://www.momoshop.com.tw/category/LgrpCategory.jsp?l_code=3799900000&mdiv=1099800000-bt_0_246_01-bt_0_246_01_P1_10_e1&ctype=B
+              - img "綠色生活館" [ref=e107]
+          - listitem [ref=e108]:
+            - link "momo購物網" [ref=e109] [cursor=pointer]:
+              - /url: https://www.momoshop.com.tw/edm/cmmedm.jsp?lpn=O7Aqd7yrJjz&mdiv=1099800000-bt_0_246_01-bt_0_246_01_P1_5_e1&ctype=B
+              - img "momo購物網" [ref=e110]
+    - list [ref=e113]:
+      - listitem [ref=e114] [cursor=pointer]: 3C
+      - listitem [ref=e115] [cursor=pointer]: 家電
+      - listitem [ref=e116] [cursor=pointer]: 美妝個清
+      - listitem [ref=e117] [cursor=pointer]: 保健/食品
+      - listitem [ref=e118] [cursor=pointer]: 流行時尚
+      - listitem [ref=e119] [cursor=pointer]: 精品配飾
+      - listitem [ref=e120] [cursor=pointer]: 母嬰用品
+      - listitem [ref=e121] [cursor=pointer]: 圖書文具
+      - listitem [ref=e122] [cursor=pointer]: 傢寢運動
+      - listitem [ref=e123] [cursor=pointer]: 日用生活
+      - listitem [ref=e124] [cursor=pointer]: 旅遊戶外
+    - generic [ref=e127]:
+      - button "我未滿18歲離開" [ref=e128] [cursor=pointer]
+      - button "我已滿18歲進入" [active] [ref=e129] [cursor=pointer]
+    - generic [ref=e130]:
+      - generic [ref=e131]:
+        - paragraph [ref=e132]: 購物車
+        - list
+        - button "結帳" [ref=e133] [cursor=pointer]
+      - link "全站活動" [ref=e135] [cursor=pointer]:
+        - /url: https://www.momoshop.com.tw/edm/cmmedm.jsp?lpn=O6Tl8JoDQoK&n=1&mdiv=1000600000-bt_A_020_01-bt_A_020_01_e2&ctype=B
+        - img "全站活動" [ref=e136]
+      - link "TOP" [ref=e137] [cursor=pointer]:
+        - /url: javascript:void(0);
+  - generic [ref=e138]:
+    - list [ref=e141]:
+      - listitem [ref=e142]:
+        - link [ref=e143] [cursor=pointer]:
+          - /url: https://www.momoshop.com.tw/edm/cmmedm.jsp?npn=1vEKpYbgbGyK&n=1&mdiv=1000200000-bt_0_190_01-bt_0_190_01_P1_6_e1&ctype=B
+          - img [ref=e144]
+      - listitem [ref=e145]:
+        - link [ref=e146] [cursor=pointer]:
+          - /url: https://www.momoshop.com.tw/edm/cmmedm.jsp?lpn=O4xRWKpX6wX&n=1&mdiv=1000200000-bt_0_190_01-bt_0_190_01_P1_2_e1&ctype=B
+          - img [ref=e147]
+      - listitem [ref=e148]:
+        - link [ref=e149] [cursor=pointer]:
+          - /url: https://www.momoshop.com.tw/edm/cmmedm.jsp?lpn=O3UlOVVFKru&n=1&osm=appno&utm_source=APP&utm_medium=friendly_connect_Enter&showTB=0&mdiv=1000200000-bt_0_190_01-bt_0_190_01_P1_9_e1&ctype=B
+          - img [ref=e150]
+      - listitem [ref=e151]:
+        - link [ref=e152] [cursor=pointer]:
+          - /url: https://www.momoshop.com.tw/edm/cmmedm.jsp?npn=1vEIatoRLSBb&n=1&mdiv=1000200000-bt_0_190_01-bt_0_190_01_P1_4_e1&ctype=B
+          - img [ref=e153]
+      - listitem [ref=e154]:
+        - link [ref=e155] [cursor=pointer]:
+          - /url: https://www.momoshop.com.tw/edm/cmmedm.jsp?lpn=O7Cf5Gbd1Zy&mdiv=1000200000-bt_0_190_01-bt_0_190_01_P1_3_e1&ctype=B
+          - img [ref=e156]
+    - iframe [ref=e158]:
+      
+    - generic [ref=e159]:
+      - generic [ref=e160]: 防詐騙提醒：momo絕不會以電話或簡訊通知訂單/分期出錯、或變更付款方式，更不會要您前往ATM進行任何操作！不應在momo以外的任何地方輸入momo帳密(例如非政府官方的電子發票app)，以免權益受損！
+      - generic [ref=e163]:
+        - term [ref=e164]: 關於我們
+        - definition [ref=e165]:
+          - link "momo官網" [ref=e166] [cursor=pointer]:
+            - /url: https://corp.momo.com.tw/?mdiv=1000200000-bt_0_192_01-bt_0_192_01_e2&ctype=B
+        - definition [ref=e167]:
+          - link "招商專區" [ref=e168] [cursor=pointer]:
+            - /url: https://corp.momo.com.tw/supplier/businessCooperation?mdiv=1000200000-bt_0_192_01-bt_0_192_01_e4&ctype=B
+        - definition [ref=e169]:
+          - link "人才招募" [ref=e170] [cursor=pointer]:
+            - /url: https://www.104.com.tw/company/ckkyqvc?jobsource=2018indexpoc&cid=footer&oid=3&mdiv=1000200000-bt_0_192_01-bt_0_192_01_e6&ctype=B
+        - definition [ref=e171]:
+          - link [ref=e172] [cursor=pointer]:
+            - /url: https://www.104.com.tw/company/ckkyqvc?jobsource=2018indexpoc&cid=footer&oid=4&mdiv=1000200000-bt_0_192_01-bt_0_192_01_e8&ctype=B
+      - generic [ref=e175]:
+        - term [ref=e176]: 特色服務
+        - definition [ref=e177]:
+          - link "異業合作" [ref=e178] [cursor=pointer]:
+            - /url: mailto:%20ccshih@fmt.com.tw?subject=異業合作&body=momo購物網誠摯歡迎各界廠商跨領域合作，凡行銷活動合作、商品贊助、廣告資源互惠或是線上線下資源結合，請填寫以下資訊，收到後我們將第一時間主動聯絡與接洽。%0d%0a請您留下以下訊息：%0d%0a%0d%0a1.公司名稱：%0d%0a2.聯絡人：%0d%0a3.聯絡人信箱：%0d%0a4.聯絡人電話：%0d%0a5.合作內容：%0d%0a%0d%0a%0d%0a若是商品上架的販售合作請聯繫招商專區&cid=footer&oid=5&mdiv=1000200000-bt_0_193_01-bt_0_193_01_e6&ctype=B
+        - definition [ref=e179]:
+          - link "mo幣企業採購" [ref=e180] [cursor=pointer]:
+            - /url: mailto:%20skylarliao@fmt.com.tw?subject=mo幣企業採購&body=momo購物網提供各大企業大量採購mo幣，凡企業福委會、活動禮贈等相關mo幣採購，請填寫以下資訊，收到後我們將專人聯絡與接洽。%0d%0a請您留下以下訊息：%0d%0a%0d%0a1.公司名稱：%0d%0a2.聯絡人： %0d%0a3.聯絡人信箱： %0d%0a4.聯絡人電話： %0d%0a5.合作內容：%0d%0a%0d%0a%0d%0a我們將儘快安排專人與您聯繫。謝謝！&cid=footer&oid=5&mdiv=1000200000-bt_0_193_01-bt_0_193_01_e8&ctype=B&mdiv=1000200000-bt_0_193_01-bt_0_193_01_e8&ctype=B
+        - definition [ref=e181]:
+          - link "點點賺分潤計劃" [ref=e182] [cursor=pointer]:
+            - /url: https://affiliate.momoshop.com.tw/publisher/coming-soon?mdiv=1000200000-bt_0_193_01-bt_0_193_01_e10&ctype=B
+      - generic [ref=e185]:
+        - term [ref=e186]: 會員權益
+        - definition [ref=e187]:
+          - link "客戶隱私權政策" [ref=e188] [cursor=pointer]:
+            - /url: https://www.momoshop.com.tw/mypage/MemberCenter.jsp?func=33&cid=footer&oid=7&mdiv=1000200000-bt_0_194_01-bt_0_194_01_e2&ctype=B
+        - definition [ref=e189]:
+          - link "客戶權利義務" [ref=e190] [cursor=pointer]:
+            - /url: https://www.momoshop.com.tw/mypage/MemberCenter.jsp?func=32&cid=footer&oid=8&mdiv=1000200000-bt_0_194_01-bt_0_194_01_e4&ctype=B
+        - definition [ref=e191]:
+          - link "網路安全標章" [ref=e192] [cursor=pointer]:
+            - /url: javascript:void(0)
+        - definition [ref=e193]:
+          - link "包裝減量標章" [ref=e194] [cursor=pointer]:
+            - /url: javascript:void(0)
+        - definition [ref=e195]:
+          - link "防詐騙宣導" [ref=e196] [cursor=pointer]:
+            - /url: https://www.momoshop.com.tw/edm/cmmedm.jsp?npn=1vEHfuNNoYpw&n=1&mdiv=1000200000-bt_0_194_01-bt_0_194_01_e10&ctype=B
+        - definition [ref=e197]:
+          - link "碳足跡標籤" [ref=e198] [cursor=pointer]:
+            - /url: javascript:void(0)
+      - generic [ref=e201]:
+        - term [ref=e202]: 系列網站
+        - definition [ref=e203]:
+          - link "momoFB粉絲團" [ref=e204] [cursor=pointer]:
+            - /url: https://www.facebook.com/momofans?&mdiv=1000200000&cid=footer&oid=9&mdiv=1000200000-bt_0_195_01-bt_0_195_01_e2&ctype=B
+        - definition [ref=e205]:
+          - link "momo好物交流社團" [ref=e206] [cursor=pointer]:
+            - /url: https://www.facebook.com/groups/momoshoppinggo/?msu=1&cid=footer&oid=10&mdiv=1000200000-bt_0_195_01-bt_0_195_01_e4&ctype=B
+        - definition [ref=e207]:
+          - link "momo官方IG" [ref=e208] [cursor=pointer]:
+            - /url: https://www.instagram.com/momoshopping_/?msu=1&hl=zh-tw&cid=footer&oid=11&mdiv=1000200000-bt_0_195_01-bt_0_195_01_e6&ctype=B
+        - definition [ref=e209]:
+          - link "momo富立保險" [ref=e210] [cursor=pointer]:
+            - /url: https://www.momo5188.com/?mdiv=1000200000&cid=footer&oid=12&mdiv=1000200000-bt_0_195_01-bt_0_195_01_e8&ctype=B
+        - definition [ref=e211]:
+          - link "momo富立保險" [ref=e212] [cursor=pointer]:
+            - /url: " ?mdiv=1000200000-bt_0_195_01-bt_0_195_01_e10&ctype=B"
+      - generic [ref=e215]:
+        - term [ref=e216]: 客戶服務
+        - definition [ref=e217]:
+          - link "訂單/配送進度查詢" [ref=e218] [cursor=pointer]:
+            - /url: /mypage/MemberCenter.jsp?func=00&cid=footer&oid=13&mdiv=1000200000-bt_0_196_01-bt_0_196_01_e2&ctype=B
+        - definition [ref=e219]:
+          - link "取消訂單/退貨" [ref=e220] [cursor=pointer]:
+            - /url: /mypage/MemberCenter.jsp?func=01&cid=footer&oid=14&mdiv=1000200000-bt_0_196_01-bt_0_196_01_e4&ctype=B
+        - definition [ref=e221]:
+          - link "更改配送地址" [ref=e222] [cursor=pointer]:
+            - /url: /mypage/MemberCenter.jsp?func=04&cid=footer&oid=15&mdiv=1000200000-bt_0_196_01-bt_0_196_01_e6&ctype=B
+        - definition [ref=e223]:
+          - link "追蹤清單" [ref=e224] [cursor=pointer]:
+            - /url: /mypage/MemberCenter.jsp?func=02&cid=footer&oid=16&mdiv=1000200000-bt_0_196_01-bt_0_196_01_e8&ctype=B
+        - definition [ref=e225]:
+          - link "快速到貨服務" [ref=e226] [cursor=pointer]:
+            - /url: /mypage/MemberCenter.jsp?func=36&cid=footer&oid=17&mdiv=1000200000-bt_0_196_01-bt_0_196_01_e10&ctype=B
+        - definition [ref=e227]:
+          - link "折價券說明" [ref=e228] [cursor=pointer]:
+            - /url: /mypage/MemberCenter.jsp?func=30&cid=footer&oid=18&mdiv=1000200000-bt_0_196_01-bt_0_196_01_e12&ctype=B
+        - definition [ref=e229]:
+          - link "FAQ 常見問題" [ref=e230] [cursor=pointer]:
+            - /url: /mypage/MemberCenter.jsp?func=37&cid=footer&oid=19&mdiv=1000200000-bt_0_196_01-bt_0_196_01_e14&ctype=B
+        - definition [ref=e231]:
+          - link "聯絡我們" [ref=e232] [cursor=pointer]:
+            - /url: https://www.momoshop.com.tw/mypage/MemberCenter.jsp?autoXiao=1&cid=footer&oid=20&mdiv=1000200000-bt_0_196_01-bt_0_196_01_e16&ctype=B
+      - generic [ref=e234]:
+        - heading "行動購物APP" [level=3] [ref=e235]
+        - list [ref=e236]:
+          - listitem [ref=e237]:
+            - link "momo購物網" [ref=e238] [cursor=pointer]:
+              - /url: https://www.momoshop.com.tw/edm/cmmedm.jsp?lpn=Nzpe4YTLgeM&n=1&mdiv=1000200000-bt_0_203_01-bt_0_203_01_P1_1_e1&ctype=B
+              - img "momo購物網" [ref=e239]
+      - list [ref=e241]:
+        - listitem [ref=e242]:
+          - link "momo購物網" [ref=e243] [cursor=pointer]:
+            - /url: https://www.momoshop.com.tw/main/Main.jsp?cid=mtab&oid=logo&mdiv=1000200000-bt_0_204_01-bt_0_204_01_P1_1_e1&ctype=B
+            - img "momo購物網" [ref=e244]
+    - list [ref=e247]:
+      - listitem [ref=e248]:
+        - link "關於我們" [ref=e249] [cursor=pointer]:
+          - /url: https://corp.momo.com.tw/about/aboutmomo/?mdiv=1000200000-bt_0_229_01-bt_0_229_01_P1_1_e1&ctype=B
+      - listitem [ref=e250]:
+        - link "人才招募" [ref=e251] [cursor=pointer]:
+          - /url: https://www.104.com.tw/company/ckkyqvc?page=1&pageSize=20&order=undefined&asc=undefined&jobsource=2018indexpoc&cid=footer&oid=3&mdiv=1000200000-bt_0_229_01-bt_0_229_01_P1_2_e1&ctype=B
+          - text: 人才招募
+      - listitem [ref=e253]:
+        - link "招商專區" [ref=e254] [cursor=pointer]:
+          - /url: https://corp.momo.com.tw/supplier/businessCooperation?mdiv=1000200000-bt_0_229_01-bt_0_229_01_P1_3_e1&ctype=B
+          - img
+          - text: 招商專區
+      - listitem [ref=e256]:
+        - link "電腦版 電腦版" [ref=e257] [cursor=pointer]:
+          - /url: https://www.momoshop.com.tw/main/Main.jsp?mdiv=1000200000-bt_0_229_01-bt_0_229_01_P1_4_e1&ctype=B
+          - img "電腦版" [ref=e259]
+          - text: 電腦版
+      - listitem [ref=e260]:
+        - link "手機版 手機版" [ref=e261] [cursor=pointer]:
+          - /url: https://m.momoshop.com.tw/main.momo?mdiv=1000200000-bt_0_229_01-bt_0_229_01_P1_5_e1&ctype=B
+          - img "手機版" [ref=e263]
+          - text: 手機版
+      - listitem [ref=e264]:
+        - link "Facebook" [ref=e265] [cursor=pointer]:
+          - /url: https://www.facebook.com/momofans?mdiv=1000200000-bt_0_229_01-bt_0_229_01_P1_6_e1&ctype=B
+          - img
+          - text: Facebook
+      - listitem [ref=e267]:
+        - link "加入LINE" [ref=e268] [cursor=pointer]:
+          - /url: https://line.me/ti/p/%40momoshop?mdiv=1000200000-bt_0_229_01-bt_0_229_01_P1_7_e1&ctype=B
+          - text: 加入LINE
+      - listitem [ref=e270]:
+        - link "Instagram" [ref=e271] [cursor=pointer]:
+          - /url: https://www.instagram.com/momoshopping_/?mdiv=1000200000-bt_0_229_01-bt_0_229_01_P1_8_e1&ctype=B
+          - text: Instagram
+    - generic [ref=e275]:
+      - generic [ref=e276]:
+        - text: 富邦媒體科技股份有限公司 統編：27365925 台北市 114 內湖區洲子街 96 號 4 樓 富邦momo通過ISO/IEC27001認證，食品業者登錄字號：A-127365925-00000-7
+        - text: 版權所有 copyright © 2006 momo.com Inc. All Rights Reserved.
+      - text: 網站中旅遊行程商品由富昇旅行社股份有限公司提供 註冊編號：交觀綜2152號 旅遊專線電話：0800-777-616 地址：台北市內湖區洲子街92號7樓
+  - status [ref=e277]
+  - iframe [ref=e279]:
+    - generic [ref=f75e5]:
+      - generic [ref=f75e6]:
+        - generic [ref=f75e8]:
+          - term [ref=f75e9]:
+            - img "momo購物網會員登入" [ref=f75e10]
+          - definition [ref=f75e11]:
+            - listitem [ref=f75e12]:
+              - generic [ref=f75e13]: 帳號
+              - textbox "手機/身分字號/統一證號 (三擇一)" [ref=f75e14]
+          - definition [ref=f75e15]:
+            - listitem [ref=f75e16]:
+              - generic [ref=f75e17]: 密碼
+              - textbox "6-15位英數字混合密碼，英文需區分大小寫" [ref=f75e18]
+          - definition [ref=f75e20]:
+            - generic [ref=f75e21] [cursor=pointer]:
+              - checkbox "記住我的帳號" [checked] [ref=f75e22]
+              - text: 記住我的帳號
+          - generic [ref=f75e23]:
+            - definition [ref=f75e24]:
+              - generic [ref=f75e25] [cursor=pointer]: 登入
+            - definition [ref=f75e26]:
+              - generic [ref=f75e27] [cursor=pointer]: 免費註冊
+            - definition [ref=f75e28]:
+              - generic [ref=f75e29] [cursor=pointer]: 忘記密碼?
+        - generic [ref=f75e31]:
+          - button "× 關閉" [ref=f75e32] [cursor=pointer]
+          - definition [ref=f75e33]:
+            - img "Facebook登入" [ref=f75e35] [cursor=pointer]
+          - definition [ref=f75e36]:
+            - img "LINE登入" [ref=f75e38] [cursor=pointer]
+          - definition [ref=f75e39]:
+            - img "Google登入" [ref=f75e41] [cursor=pointer]
+          - definition [ref=f75e42]:
+            - img "台灣大哥大登入" [ref=f75e44] [cursor=pointer]
+          - definition [ref=f75e45]:
+            - img "電視購物客戶轉網路會員" [ref=f75e47] [cursor=pointer]
+          - definition [ref=f75e48]:
+            - img "型錄購物客戶轉網路會員" [ref=f75e50] [cursor=pointer]
+          - definition [ref=f75e51]: 客戶資格說明客戶注意事項
+      - list [ref=f75e65]:
+        - listitem [ref=f75e66]:
+          - text: 會員不應擁有多個使用者帳號，平台保有封鎖之權利，詳情請參閱
+          - link "客戶服務條款" [ref=f75e67] [cursor=pointer]:
+            - /url: https://m.momoshop.com.tw/mymomo/bill.momo?memb=memb
+          - text: 。
+        - listitem [ref=f75e68]:
+          - text: 因合作物流業者調整配送政策，新北、桃園部分區域將無法提供快速到貨服務，詳請參閱
+          - link "快速到貨行政區域" [ref=f75e69] [cursor=pointer]:
+            - /url: https://www.momoshop.com.tw/edm/cmmedm.jsp?npn=1vEMnGLm2l7r&n=1
+          - text: 。
+        - listitem [ref=f75e70]:
+          - text: momo不會以電話或簡訊通知變更付款，或要求以ATM進行任何操作，請定期更改密碼確保帳戶安全。
+          - text: 近期出現假冒 momo 的電子發票中獎詐騙郵件，請勿點擊不明連結，如有疑慮請至momo App、客服或撥165查證，詳情請參閱
+          - link "防詐宣導" [ref=f75e71] [cursor=pointer]:
+            - /url: https://www.momoshop.com.tw/edm/cmmedm.jsp?npn=1vEHfuNNoYpw&n=1
+          - text: 。

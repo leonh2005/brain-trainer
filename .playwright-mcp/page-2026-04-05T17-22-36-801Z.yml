@@ -1,0 +1,691 @@
+- generic [ref=e4]:
+  - generic [ref=e6]:
+    - banner [ref=e7]:
+      - generic [ref=e8]:
+        - generic [ref=e9]:
+          - generic [ref=e10]:
+            - button "樂天生態圈" [ref=e13] [cursor=pointer]:
+              - generic [ref=e14]:
+                - img [ref=e16]
+                - generic [ref=e19]: 樂天生態圈
+                - img [ref=e21]
+            - button "我要開店" [ref=e25] [cursor=pointer]:
+              - generic [ref=e26]:
+                - img [ref=e28]
+                - generic [ref=e31]: 我要開店
+                - img [ref=e33]
+            - button "網站導覽" [ref=e37] [cursor=pointer]:
+              - generic [ref=e38]:
+                - img [ref=e40]
+                - generic [ref=e43]: 網站導覽
+                - img [ref=e45]
+            - button "購物教學" [ref=e49] [cursor=pointer]:
+              - generic [ref=e50]:
+                - img [ref=e52]
+                - generic [ref=e55]: 購物教學
+                - img [ref=e57]
+            - button "下載APP" [ref=e61] [cursor=pointer]:
+              - generic [ref=e62]:
+                - img [ref=e64]
+                - generic [ref=e67]: 下載APP
+                - img [ref=e69]
+          - generic "loading" [ref=e71]
+        - generic [ref=e72]:
+          - link "rakuten-logo" [ref=e74] [cursor=pointer]:
+            - /url: https://www.rakuten.com.tw?m-id=tw_common_nav_logo
+            - img "rakuten-logo" [ref=e75]
+          - generic [ref=e79]:
+            - searchbox "在全站搜尋" [ref=e81]: 鉑金矽膠半身
+            - button [ref=e82] [cursor=pointer]:
+              - img [ref=e83]
+          - link "追蹤清單" [ref=e87] [cursor=pointer]:
+            - /url: /wishlist/?m-id=tw_common_nav_btn_wishlist
+            - img [ref=e91]
+            - paragraph [ref=e93]: 追蹤清單
+          - link "我的訂單" [ref=e95] [cursor=pointer]:
+            - /url: /order/list/?m-id=tw_common_nav_btn_myorder
+            - img [ref=e99]
+            - paragraph [ref=e101]: 我的訂單
+          - link "我的優惠券" [ref=e103] [cursor=pointer]:
+            - /url: /mycoupons/?m-id=tw_common_nav_btn_mycoupon
+            - img [ref=e107]
+            - paragraph [ref=e109]: 我的優惠券
+          - link "購物車" [ref=e111] [cursor=pointer]:
+            - /url: /checkout/cart/?m-id=tw_common_nav_btn_cart
+            - img [ref=e115]
+            - paragraph [ref=e117]: 購物車
+        - generic [ref=e119]:
+          - button "商品分類" [ref=e122] [cursor=pointer]:
+            - generic [ref=e123]:
+              - img [ref=e125]
+              - generic [ref=e128]: 商品分類
+          - list [ref=e129]:
+            - listitem [ref=e130]:
+              - link "優惠券" [ref=e131] [cursor=pointer]:
+                - /url: /coupon/?m-id=tw_common_nav_channel_coupon
+                - generic [ref=e132]: 優惠券
+            - listitem [ref=e133]:
+              - link "抽獎優惠" [ref=e134] [cursor=pointer]:
+                - /url: /game/?m-id=tw_common_nav_channel_game
+                - generic [ref=e135]: 抽獎優惠
+            - listitem [ref=e136]:
+              - link "天天免運" [ref=e137] [cursor=pointer]:
+                - /url: /event/free-shipping/?m-id=tw_common_nav_channel_freeshipping
+                - generic [ref=e138]: 天天免運
+            - listitem [ref=e139]:
+              - link "日本購物" [ref=e140] [cursor=pointer]:
+                - /url: /japan/?m-id=tw_common_nav_channel_japan
+                - generic [ref=e141]: 日本購物
+            - listitem [ref=e142]:
+              - link "品牌旗艦" [ref=e143] [cursor=pointer]:
+                - /url: /brand/?m-id=tw_common_nav_channel_brand
+                - generic [ref=e144]: 品牌旗艦
+            - listitem [ref=e145]:
+              - link "優惠活動" [ref=e146] [cursor=pointer]:
+                - /url: /event/?m-id=tw_common_nav_channel_event
+                - generic [ref=e147]: 優惠活動
+            - listitem [ref=e148]:
+              - link "排行榜" [ref=e149] [cursor=pointer]:
+                - /url: /ranking/?m-id=tw_common_nav_channel_Ranking
+                - generic [ref=e150]: 排行榜
+            - listitem [ref=e151]:
+              - link "電子書/紙本書" [ref=e152] [cursor=pointer]:
+                - /url: /books/?m-id=tw_common_nav_channel_books
+                - generic [ref=e153]: 電子書/紙本書
+            - listitem [ref=e154]:
+              - link "樂集點" [ref=e155] [cursor=pointer]:
+                - /url: /ad/pointgallery/?m-id=tw_common_nav_channel_pointgallery
+                - generic [ref=e156]: 樂集點
+            - listitem [ref=e157]:
+              - link "樂天點數" [ref=e158] [cursor=pointer]:
+                - /url: /superpoint/?m-id=tw_common_nav_channel_rsp
+                - generic [ref=e159]: 樂天點數
+            - listitem [ref=e160]:
+              - link "旅遊訂房" [ref=e161] [cursor=pointer]:
+                - /url: /travel/?m-id=tw_common_nav_channel_travel
+                - generic [ref=e162]: 旅遊訂房
+      - generic [ref=e164]:
+        - link "rakuten-logo" [ref=e166] [cursor=pointer]:
+          - /url: https://www.rakuten.com.tw?m-id=tw_common_nav_sticky_logo
+          - img "rakuten-logo" [ref=e167]
+        - generic [ref=e171]:
+          - searchbox "在全站搜尋" [ref=e173]: 鉑金矽膠半身
+          - button [ref=e174] [cursor=pointer]:
+            - img [ref=e175]
+        - link [ref=e179] [cursor=pointer]:
+          - /url: /wishlist/?m-id=tw_common_nav_sticky_btn_wishlist
+          - img [ref=e183]
+        - link [ref=e187] [cursor=pointer]:
+          - /url: /order/list/?m-id=tw_common_nav_sticky_btn_myorder
+          - img [ref=e191]
+        - link [ref=e195] [cursor=pointer]:
+          - /url: /mycoupons/?m-id=tw_common_nav_sticky_btn_mycoupon
+          - img [ref=e199]
+        - link [ref=e203] [cursor=pointer]:
+          - /url: /checkout/cart/?m-id=tw_common_nav_sticky_btn_cart
+          - img [ref=e207]
+    - link "會員神券領券最高折5000" [ref=e211] [cursor=pointer]:
+      - /url: https://www.rakuten.com.tw/coupon/?m-id=RADTop-Header-All-SuperBanner
+      - img "會員神券領券最高折5000" [ref=e212]
+  - navigation [ref=e213]:
+    - generic [ref=e214]:
+      - paragraph [ref=e215] [cursor=pointer]: 樂天市場類別
+      - generic [ref=e217] [cursor=pointer]: 
+    - generic:
+      - generic:
+        - generic:
+          - list
+  - generic [ref=e218]:
+    - generic [ref=e219]:
+      - generic [ref=e220]:
+        - text: 
+        - list [ref=e223]:
+          - listitem [ref=e224]:
+            - link "樂天首頁" [ref=e225] [cursor=pointer]:
+              - /url: /
+              - generic [ref=e226]: 樂天首頁
+          - img [ref=e228]
+          - listitem [ref=e230]:
+            - generic [ref=e231]: 鉑金矽膠半身的搜尋結果(6筆)
+        - generic:
+          - button "control button up":
+            - img
+        - generic [ref=e232]:
+          - generic [ref=e233]:
+            - generic [ref=e235]:
+              - generic [ref=e238]: 期間活動
+              - list [ref=e240]:
+                - listitem [ref=e241]:
+                  - link "PGS會員日" [ref=e243] [cursor=pointer]:
+                    - /url: https://www.rakuten.com.tw/search/%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0%E5%8D%8A%E8%BA%AB/?rpc=3af1a9e0-2cf2-11f1-8ebc-da4a7b8cef24
+                    - generic [ref=e246]:
+                      - radio "PGS會員日" [ref=e247]
+                      - generic [ref=e248]: PGS會員日
+                - listitem [ref=e249]:
+                  - link "kobo電子書" [ref=e251] [cursor=pointer]:
+                    - /url: https://www.rakuten.com.tw/search/%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0%E5%8D%8A%E8%BA%AB/?rpc=e3f55fc0-2c0a-11f1-89d6-4a8fabef6aeb
+                    - generic [ref=e254]:
+                      - radio "kobo電子書" [ref=e255]
+                      - generic [ref=e256]: kobo電子書
+            - generic [ref=e257]:
+              - generic [ref=e260]: 商品類別
+              - list [ref=e262]:
+                - listitem [ref=e263]:
+                  - link "流行男裝 1" [ref=e264] [cursor=pointer]:
+                    - /url: https://www.rakuten.com.tw/search/%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0%E5%8D%8A%E8%BA%AB/2466/
+                    - generic [ref=e265]:
+                      - generic [ref=e268]: 流行男裝
+                      - generic [ref=e270]: "1"
+            - generic [ref=e272]:
+              - generic [ref=e273]:
+                - generic [ref=e275]: 品牌
+                - generic [ref=e276]:
+                  - img [ref=e279]
+                  - img [ref=e283]
+              - list [ref=e288]:
+                - listitem [ref=e289]:
+                  - link "其他品牌 1" [ref=e291] [cursor=pointer]:
+                    - /url: https://www.rakuten.com.tw/search/%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0%E5%8D%8A%E8%BA%AB/?b=21038
+                    - generic [ref=e292]:
+                      - generic [ref=e294]:
+                        - radio "其他品牌 1" [ref=e295]
+                        - generic [ref=e296]: 其他品牌
+                      - generic [ref=e298]: "1"
+            - generic [ref=e299]:
+              - generic [ref=e302]: 價格
+              - list [ref=e304]:
+                - listitem [ref=e305]:
+                  - generic [ref=e306]:
+                    - generic [ref=e307]:
+                      - textbox "最低" [ref=e308]
+                      - generic [ref=e310]: ~
+                      - textbox "最高" [ref=e311]
+                    - button "送出" [disabled]:
+                      - generic: 送出
+            - generic [ref=e312]:
+              - generic [ref=e315]: 熱門篩選
+              - list [ref=e317]:
+                - listitem [ref=e318]:
+                  - link "免運" [ref=e320] [cursor=pointer]:
+                    - /url: https://www.rakuten.com.tw/search/%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0%E5%8D%8A%E8%BA%AB/?fs=1
+                    - generic [ref=e325]: 免運
+                - listitem [ref=e326]:
+                  - link "優惠券" [ref=e328] [cursor=pointer]:
+                    - /url: https://www.rakuten.com.tw/search/%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0%E5%8D%8A%E8%BA%AB/?cp=1
+                    - generic [ref=e333]: 優惠券
+                - listitem [ref=e334]:
+                  - link "點數加碼" [ref=e336] [cursor=pointer]:
+                    - /url: https://www.rakuten.com.tw/search/%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0%E5%8D%8A%E8%BA%AB/?po_c=1
+                    - generic [ref=e341]: 點數加碼
+                - listitem [ref=e342]:
+                  - link "店家推薦" [ref=e344] [cursor=pointer]:
+                    - /url: https://www.rakuten.com.tw/search/%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0%E5%8D%8A%E8%BA%AB/?sr=1
+                    - generic [ref=e349]: 店家推薦
+                - listitem [ref=e350]:
+                  - link "有評價的商品" [ref=e352] [cursor=pointer]:
+                    - /url: https://www.rakuten.com.tw/search/%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0%E5%8D%8A%E8%BA%AB/?r=1
+                    - generic [ref=e357]: 有評價的商品
+            - generic [ref=e358]:
+              - generic [ref=e361]: 優惠活動
+              - list [ref=e363]:
+                - listitem [ref=e364]:
+                  - link "商品折扣" [ref=e366] [cursor=pointer]:
+                    - /url: https://www.rakuten.com.tw/search/%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0%E5%8D%8A%E8%BA%AB/?sale=1
+                    - generic [ref=e371]: 商品折扣
+                - listitem [ref=e372]:
+                  - link "訂單折扣" [ref=e374] [cursor=pointer]:
+                    - /url: https://www.rakuten.com.tw/search/%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0%E5%8D%8A%E8%BA%AB/?odc=1
+                    - generic [ref=e379]: 訂單折扣
+                - listitem [ref=e380]:
+                  - link "組合優惠" [ref=e382] [cursor=pointer]:
+                    - /url: https://www.rakuten.com.tw/search/%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0%E5%8D%8A%E8%BA%AB/?bd=1
+                    - generic [ref=e387]: 組合優惠
+            - generic [ref=e388]:
+              - generic [ref=e391]: 付款方式
+              - list [ref=e393]:
+                - listitem [ref=e394]:
+                  - link "0 利率" [ref=e396] [cursor=pointer]:
+                    - /url: https://www.rakuten.com.tw/search/%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0%E5%8D%8A%E8%BA%AB/?pm=zero
+                    - generic [ref=e401]: 0 利率
+                - listitem [ref=e402]:
+                  - link "信用卡" [ref=e404] [cursor=pointer]:
+                    - /url: https://www.rakuten.com.tw/search/%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0%E5%8D%8A%E8%BA%AB/?pm=credit
+                    - generic [ref=e409]: 信用卡
+                - listitem [ref=e410]:
+                  - link "LINE Pay" [ref=e412] [cursor=pointer]:
+                    - /url: https://www.rakuten.com.tw/search/%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0%E5%8D%8A%E8%BA%AB/?pm=line
+                    - generic [ref=e417]: LINE Pay
+                - listitem [ref=e418]:
+                  - link "超商取貨付款" [ref=e420] [cursor=pointer]:
+                    - /url: https://www.rakuten.com.tw/search/%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0%E5%8D%8A%E8%BA%AB/?pm=store
+                    - generic [ref=e425]: 超商取貨付款
+                - listitem [ref=e426]:
+                  - link "AFTEE 先享後付" [ref=e428] [cursor=pointer]:
+                    - /url: https://www.rakuten.com.tw/search/%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0%E5%8D%8A%E8%BA%AB/?pm=aftee
+                    - generic [ref=e433]: AFTEE 先享後付
+                - listitem [ref=e434]:
+                  - link "宅配貨到付款" [ref=e436] [cursor=pointer]:
+                    - /url: https://www.rakuten.com.tw/search/%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0%E5%8D%8A%E8%BA%AB/?pm=home
+                    - generic [ref=e441]: 宅配貨到付款
+            - generic [ref=e442]:
+              - generic [ref=e445]: 配送方式
+              - list [ref=e447]:
+                - listitem [ref=e448]:
+                  - generic [ref=e449]: 常溫
+                - listitem [ref=e450]:
+                  - link "宅配" [ref=e452] [cursor=pointer]:
+                    - /url: https://www.rakuten.com.tw/search/%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0%E5%8D%8A%E8%BA%AB/?sp=home
+                    - generic [ref=e457]: 宅配
+                - listitem [ref=e458]:
+                  - link "7-11" [ref=e460] [cursor=pointer]:
+                    - /url: https://www.rakuten.com.tw/search/%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0%E5%8D%8A%E8%BA%AB/?sp=seven
+                    - generic [ref=e465]: 7-11
+                - listitem [ref=e466]:
+                  - link "全家" [ref=e468] [cursor=pointer]:
+                    - /url: https://www.rakuten.com.tw/search/%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0%E5%8D%8A%E8%BA%AB/?sp=family
+                    - generic [ref=e473]: 全家
+                - listitem [ref=e474]:
+                  - link "萊爾富" [ref=e476] [cursor=pointer]:
+                    - /url: https://www.rakuten.com.tw/search/%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0%E5%8D%8A%E8%BA%AB/?sp=life
+                    - generic [ref=e481]: 萊爾富
+                - listitem [ref=e482]:
+                  - generic [ref=e483]: 低溫
+                - listitem [ref=e484]:
+                  - link "宅配冷藏/冷凍" [ref=e486] [cursor=pointer]:
+                    - /url: https://www.rakuten.com.tw/search/%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0%E5%8D%8A%E8%BA%AB/?sp=homefreeze
+                    - generic [ref=e491]: 宅配冷藏/冷凍
+                - listitem [ref=e492]:
+                  - link "7-11冷凍" [ref=e494] [cursor=pointer]:
+                    - /url: https://www.rakuten.com.tw/search/%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0%E5%8D%8A%E8%BA%AB/?sp=sevenfreeze
+                    - generic [ref=e499]: 7-11冷凍
+            - generic [ref=e500]:
+              - generic [ref=e503]: 其他篩選
+              - list [ref=e505]:
+                - listitem [ref=e506]:
+                  - link "包含已售完" [ref=e508] [cursor=pointer]:
+                    - /url: https://www.rakuten.com.tw/search/%E9%89%91%E9%87%91%E7%9F%BD%E8%86%A0%E5%8D%8A%E8%BA%AB/?fa=1
+                    - generic [ref=e513]: 包含已售完
+          - generic [ref=e514]:
+            - heading "鉑金矽膠半身的搜尋結果" [level=1] [ref=e518]
+            - generic [ref=e519]:
+              - button "綜合排名" [ref=e520] [cursor=pointer]:
+                - generic [ref=e521]: 綜合排名
+              - button "價格" [ref=e522] [cursor=pointer]:
+                - generic [ref=e523]:
+                  - text: 價格
+                  - img [ref=e525]
+              - button "回饋高" [ref=e528] [cursor=pointer]:
+                - generic [ref=e529]: 回饋高
+              - button "評分高" [ref=e530] [cursor=pointer]:
+                - generic [ref=e531]: 評分高
+              - button "評價多" [ref=e532] [cursor=pointer]:
+                - generic [ref=e533]: 評價多
+              - button "最新到貨" [ref=e534] [cursor=pointer]:
+                - generic [ref=e535]: 最新到貨
+            - generic [ref=e536]:
+              - generic [ref=e538]:
+                - generic [ref=e539]:
+                  - generic [ref=e540]:
+                    - link "【四季通用】半罩車衣 汽車車衣 防曬車衣 防雪車衣 防凍車衣 防雨車衣 隔熱車衣 加厚絨棉內裡 半身設計 易穿脫 通用型 APP10%_4月":
+                      - /url: https://www.rakuten.com.tw/shop/ripple/product/U6UFUovTL2/?s-id=RADSearch_ProductAd_01&l-id=tw_search_product_thumbnail_1
+                      - generic [ref=e541] [cursor=pointer]:
+                        - img "【四季通用】半罩車衣 汽車車衣 防曬車衣 防雪車衣 防凍車衣 防雨車衣 隔熱車衣 加厚絨棉內裡 半身設計 易穿脫 通用型"
+                      - img "APP10%_4月" [ref=e545] [cursor=pointer]
+                      - img [ref=e547] [cursor=pointer]
+                  - link "[PR]【四季通用】半罩車衣 汽車車衣 防曬車衣 防雪車衣 防凍車衣 防雨車衣 隔熱車衣 加厚絨棉內裡 半身設計 易穿脫 通用型 $ 784 起 3% (賺 21 點起) 免運 券" [ref=e551] [cursor=pointer]:
+                    - /url: https://www.rakuten.com.tw/shop/ripple/product/U6UFUovTL2/?s-id=RADSearch_ProductAd_01&l-id=tw_search_product_1
+                    - heading "[PR]【四季通用】半罩車衣 汽車車衣 防曬車衣 防雪車衣 防凍車衣 防雨車衣 隔熱車衣 加厚絨棉內裡 半身設計 易穿脫 通用型" [level=2] [ref=e553]
+                    - generic [ref=e554]:
+                      - generic [ref=e555]:
+                        - generic [ref=e556]: $
+                        - generic [ref=e557]: "784"
+                      - generic [ref=e558]: 起
+                    - generic [ref=e559]:
+                      - img [ref=e560]
+                      - generic [ref=e562]:
+                        - generic [ref=e563]: 3%
+                        - generic [ref=e564]:
+                          - generic [ref=e565]: (賺
+                          - generic [ref=e566]: "21"
+                          - generic [ref=e567]: 點起)
+                    - generic [ref=e569]:
+                      - generic [ref=e570]: 免運
+                      - generic [ref=e571]: 券
+                - link "漣漪生活" [ref=e573] [cursor=pointer]:
+                  - /url: https://www.rakuten.com.tw/shop/ripple/?s-id=RADSearch_ProductAd_01
+                  - img [ref=e574]
+                  - generic [ref=e576]: 漣漪生活
+              - generic [ref=e580]:
+                - generic [ref=e581]:
+                  - generic [ref=e582]:
+                    - link "【可打統編 公司貨】K/助身老年人上下肢康復訓練腳踏車家用中風偏癱手腳腿部鍛煉器材":
+                      - /url: https://www.rakuten.com.tw/shop/dyhw/product/n7ti1qerl/?s-id=RADSearch_ProductAd_02&l-id=tw_search_product_thumbnail_2
+                      - generic [ref=e583] [cursor=pointer]:
+                        - img "【可打統編 公司貨】K/助身老年人上下肢康復訓練腳踏車家用中風偏癱手腳腿部鍛煉器材"
+                      - img [ref=e586] [cursor=pointer]
+                  - link "[PR]【可打統編 公司貨】K/助身老年人上下肢康復訓練腳踏車家用中風偏癱手腳腿部鍛煉器材 20%折後 $ 3,039 起 1% (賺 30 點起) 免運 券 滿500折5%" [ref=e590] [cursor=pointer]:
+                    - /url: https://www.rakuten.com.tw/shop/dyhw/product/n7ti1qerl/?s-id=RADSearch_ProductAd_02&l-id=tw_search_product_2
+                    - heading "[PR]【可打統編 公司貨】K/助身老年人上下肢康復訓練腳踏車家用中風偏癱手腳腿部鍛煉器材" [level=2] [ref=e592]
+                    - generic [ref=e593]:
+                      - generic [ref=e594]: 20%折後
+                      - generic [ref=e595]:
+                        - generic [ref=e596]: $
+                        - generic [ref=e597]: 3,039
+                      - generic [ref=e598]: 起
+                    - generic [ref=e599]:
+                      - img [ref=e600]
+                      - generic [ref=e602]:
+                        - generic [ref=e603]: 1%
+                        - generic [ref=e604]:
+                          - generic [ref=e605]: (賺
+                          - generic [ref=e606]: "30"
+                          - generic [ref=e607]: 點起)
+                    - generic [ref=e609]:
+                      - generic [ref=e610]: 免運
+                      - generic [ref=e611]: 券
+                      - generic [ref=e612]: 滿500折5%
+                - link "島嶼好物" [ref=e614] [cursor=pointer]:
+                  - /url: https://www.rakuten.com.tw/shop/dyhw/?s-id=RADSearch_ProductAd_02
+                  - img [ref=e615]
+                  - generic [ref=e617]: 島嶼好物
+              - generic [ref=e621]:
+                - generic [ref=e622]:
+                  - generic [ref=e623]:
+                    - link "【可打統編 公司貨】K/助身老年人上下肢康復訓練腳踏車家用中風偏癱手腳腿部鍛煉器材":
+                      - /url: https://www.rakuten.com.tw/shop/dyhw/product/u96e1ru7l/?s-id=RADSearch_ProductAd_03&l-id=tw_search_product_thumbnail_3
+                      - generic [ref=e624] [cursor=pointer]:
+                        - img "【可打統編 公司貨】K/助身老年人上下肢康復訓練腳踏車家用中風偏癱手腳腿部鍛煉器材"
+                      - img [ref=e627] [cursor=pointer]
+                  - link "[PR]【可打統編 公司貨】K/助身老年人上下肢康復訓練腳踏車家用中風偏癱手腳腿部鍛煉器材 20%折後 $ 3,039 起 1% (賺 30 點起) 免運 券 滿500折5%" [ref=e631] [cursor=pointer]:
+                    - /url: https://www.rakuten.com.tw/shop/dyhw/product/u96e1ru7l/?s-id=RADSearch_ProductAd_03&l-id=tw_search_product_3
+                    - heading "[PR]【可打統編 公司貨】K/助身老年人上下肢康復訓練腳踏車家用中風偏癱手腳腿部鍛煉器材" [level=2] [ref=e633]
+                    - generic [ref=e634]:
+                      - generic [ref=e635]: 20%折後
+                      - generic [ref=e636]:
+                        - generic [ref=e637]: $
+                        - generic [ref=e638]: 3,039
+                      - generic [ref=e639]: 起
+                    - generic [ref=e640]:
+                      - img [ref=e641]
+                      - generic [ref=e643]:
+                        - generic [ref=e644]: 1%
+                        - generic [ref=e645]:
+                          - generic [ref=e646]: (賺
+                          - generic [ref=e647]: "30"
+                          - generic [ref=e648]: 點起)
+                    - generic [ref=e650]:
+                      - generic [ref=e651]: 免運
+                      - generic [ref=e652]: 券
+                      - generic [ref=e653]: 滿500折5%
+                - link "島嶼好物" [ref=e655] [cursor=pointer]:
+                  - /url: https://www.rakuten.com.tw/shop/dyhw/?s-id=RADSearch_ProductAd_03
+                  - img [ref=e656]
+                  - generic [ref=e658]: 島嶼好物
+              - generic [ref=e662]:
+                - generic [ref=e663]:
+                  - generic [ref=e664]:
+                    - link "【台灣公司 可打統編】 K/助身老年人上下肢康復訓練腳踏車家用中風偏癱手腳腿部鍛煉器材":
+                      - /url: https://www.rakuten.com.tw/shop/jpt/product/iic0ywrrw/?s-id=RADSearch_ProductAd_04&l-id=tw_search_product_thumbnail_4
+                      - generic [ref=e665] [cursor=pointer]:
+                        - img "【台灣公司 可打統編】 K/助身老年人上下肢康復訓練腳踏車家用中風偏癱手腳腿部鍛煉器材"
+                      - img [ref=e668] [cursor=pointer]
+                  - link "[PR]【台灣公司 可打統編】 K/助身老年人上下肢康復訓練腳踏車家用中風偏癱手腳腿部鍛煉器材 12%折後 $ 3,283 起 1% (賺 32 點起) 免運 券 滿500折5%" [ref=e672] [cursor=pointer]:
+                    - /url: https://www.rakuten.com.tw/shop/jpt/product/iic0ywrrw/?s-id=RADSearch_ProductAd_04&l-id=tw_search_product_4
+                    - heading "[PR]【台灣公司 可打統編】 K/助身老年人上下肢康復訓練腳踏車家用中風偏癱手腳腿部鍛煉器材" [level=2] [ref=e674]
+                    - generic [ref=e675]:
+                      - generic [ref=e676]: 12%折後
+                      - generic [ref=e677]:
+                        - generic [ref=e678]: $
+                        - generic [ref=e679]: 3,283
+                      - generic [ref=e680]: 起
+                    - generic [ref=e681]:
+                      - img [ref=e682]
+                      - generic [ref=e684]:
+                        - generic [ref=e685]: 1%
+                        - generic [ref=e686]:
+                          - generic [ref=e687]: (賺
+                          - generic [ref=e688]: "32"
+                          - generic [ref=e689]: 點起)
+                    - generic [ref=e691]:
+                      - generic [ref=e692]: 免運
+                      - generic [ref=e693]: 券
+                      - generic [ref=e694]: 滿500折5%
+                - link "集品臺" [ref=e696] [cursor=pointer]:
+                  - /url: https://www.rakuten.com.tw/shop/jpt/?s-id=RADSearch_ProductAd_04
+                  - img [ref=e697]
+                  - generic [ref=e699]: 集品臺
+              - generic [ref=e703]:
+                - generic [ref=e704]:
+                  - generic [ref=e705]:
+                    - link "【台灣公司 可打統編】 K/助身老年人上下肢康復訓練腳踏車家用中風偏癱手腳腿部鍛煉器材":
+                      - /url: https://www.rakuten.com.tw/shop/jpt/product/kpb34e9de/?s-id=RADSearch_ProductAd_05&l-id=tw_search_product_thumbnail_5
+                      - generic [ref=e706] [cursor=pointer]:
+                        - img "【台灣公司 可打統編】 K/助身老年人上下肢康復訓練腳踏車家用中風偏癱手腳腿部鍛煉器材"
+                      - img [ref=e709] [cursor=pointer]
+                  - link "[PR]【台灣公司 可打統編】 K/助身老年人上下肢康復訓練腳踏車家用中風偏癱手腳腿部鍛煉器材 12%折後 $ 2,985 起 1% (賺 29 點起) 免運 券 滿500折5%" [ref=e713] [cursor=pointer]:
+                    - /url: https://www.rakuten.com.tw/shop/jpt/product/kpb34e9de/?s-id=RADSearch_ProductAd_05&l-id=tw_search_product_5
+                    - heading "[PR]【台灣公司 可打統編】 K/助身老年人上下肢康復訓練腳踏車家用中風偏癱手腳腿部鍛煉器材" [level=2] [ref=e715]
+                    - generic [ref=e716]:
+                      - generic [ref=e717]: 12%折後
+                      - generic [ref=e718]:
+                        - generic [ref=e719]: $
+                        - generic [ref=e720]: 2,985
+                      - generic [ref=e721]: 起
+                    - generic [ref=e722]:
+                      - img [ref=e723]
+                      - generic [ref=e725]:
+                        - generic [ref=e726]: 1%
+                        - generic [ref=e727]:
+                          - generic [ref=e728]: (賺
+                          - generic [ref=e729]: "29"
+                          - generic [ref=e730]: 點起)
+                    - generic [ref=e732]:
+                      - generic [ref=e733]: 免運
+                      - generic [ref=e734]: 券
+                      - generic [ref=e735]: 滿500折5%
+                - link "集品臺" [ref=e737] [cursor=pointer]:
+                  - /url: https://www.rakuten.com.tw/shop/jpt/?s-id=RADSearch_ProductAd_05
+                  - img [ref=e738]
+                  - generic [ref=e740]: 集品臺
+              - generic [ref=e744]:
+                - generic [ref=e745]:
+                  - generic [ref=e746]:
+                    - link "創意矽膠折叠水杯 摔不壞的杯子 矽膠水袋水杯全軟折疊網紅創意個性潮流便攜夏天抖音硅膠摺叠杯 運動【滿199發貨】 APP10%_4月":
+                      - /url: https://www.rakuten.com.tw/shop/liansheng2168/product/2lb6tq751/?l-id=tw_search_product_thumbnail_6
+                      - generic [ref=e747] [cursor=pointer]:
+                        - img "創意矽膠折叠水杯 摔不壞的杯子 矽膠水袋水杯全軟折疊網紅創意個性潮流便攜夏天抖音硅膠摺叠杯 運動【滿199發貨】"
+                      - img "APP10%_4月" [ref=e751] [cursor=pointer]
+                  - link "創意矽膠折叠水杯 摔不壞的杯子 矽膠水袋水杯全軟折疊網紅創意個性潮流便攜夏天抖音硅膠摺叠杯 運動【滿199發貨】 $ 424 1% (賺 4 點)" [ref=e752] [cursor=pointer]:
+                    - /url: https://www.rakuten.com.tw/shop/liansheng2168/product/2lb6tq751/?l-id=tw_search_product_6
+                    - heading "創意矽膠折叠水杯 摔不壞的杯子 矽膠水袋水杯全軟折疊網紅創意個性潮流便攜夏天抖音硅膠摺叠杯 運動【滿199發貨】" [level=2] [ref=e754]
+                    - generic [ref=e756]:
+                      - generic [ref=e757]: $
+                      - generic [ref=e758]: "424"
+                    - generic [ref=e759]:
+                      - img [ref=e760]
+                      - generic [ref=e762]:
+                        - generic [ref=e763]: 1%
+                        - generic [ref=e764]:
+                          - generic [ref=e765]: (賺
+                          - generic [ref=e766]: "4"
+                          - generic [ref=e767]: 點)
+                - link "連盛" [ref=e770] [cursor=pointer]:
+                  - /url: https://www.rakuten.com.tw/shop/liansheng2168/
+                  - img [ref=e771]
+                  - generic [ref=e773]: 連盛
+                - button "找相似" [ref=e776] [cursor=pointer]:
+                  - generic [ref=e777]: 找相似
+            - text: 
+            - button "Go to page 1" [ref=e780] [cursor=pointer]: "1"
+      - text: 
+    - generic [ref=e782]:
+      - generic [ref=e786]:
+        - generic [ref=e787]:
+          - list [ref=e788]:
+            - listitem [ref=e789]: 關於我們
+            - listitem [ref=e790]:
+              - link "公司資訊" [ref=e791] [cursor=pointer]:
+                - /url: https://www.rakuten.com.tw/info/corp/
+            - listitem [ref=e792]:
+              - link "新聞稿" [ref=e793] [cursor=pointer]:
+                - /url: https://www.rakuten.com.tw/info/release/
+            - listitem [ref=e794]:
+              - link "人才招募" [ref=e795] [cursor=pointer]:
+                - /url: https://www.rakuten.com.tw/info/recruit/
+            - listitem [ref=e796]:
+              - link "服務公告" [ref=e797] [cursor=pointer]:
+                - /url: https://www.rakuten.com.tw/info/maintaince/
+          - list [ref=e798]:
+            - listitem [ref=e799]: 顧客服務
+            - listitem [ref=e800]:
+              - link "購物流程" [ref=e801] [cursor=pointer]:
+                - /url: https://www.rakuten.com.tw/help/guide/?m-id=RADRWD-Footer-Guide
+            - listitem [ref=e802]:
+              - link "會員等級" [ref=e803] [cursor=pointer]:
+                - /url: https://www.rakuten.com.tw/help/guide/rankup/?m-id=RADRWD-Footer-Member
+            - listitem [ref=e804]:
+              - link "中獎名單" [ref=e805] [cursor=pointer]:
+                - /url: https://www.rakuten.com.tw/user/campaign/2021/?m-id=RADRWD-Footer-Guide
+            - listitem [ref=e806]:
+              - link "訂單查詢" [ref=e807] [cursor=pointer]:
+                - /url: https://www.rakuten.com.tw/order/list/?m-id=RADRWD-Footer-Order
+            - listitem [ref=e808]:
+              - link "常見問題" [ref=e809] [cursor=pointer]:
+                - /url: https://support.rakuten.com.tw/hc/zh-tw/?m-id=RADRWD-Footer-Guide
+            - listitem [ref=e810]:
+              - link "退換貨須知" [ref=e811] [cursor=pointer]:
+                - /url: https://support.rakuten.com.tw/hc/zh-tw/articles/201253335-我想要退換貨/?m-id=RADRWD-Footer-Guide
+            - listitem [ref=e812]:
+              - link "聯絡客服" [ref=e813] [cursor=pointer]:
+                - /url: https://support.rakuten.com.tw/hc/zh-tw/articles/201252945-如何與樂天會員服務中心連繫-/?m-id=RADRWD-Footer-Guide
+          - list [ref=e814]:
+            - listitem [ref=e815]: 開店專區
+            - listitem [ref=e816]:
+              - link "開店平台介紹" [ref=e817] [cursor=pointer]:
+                - /url: https://www.rakuten.com.tw/info/ec/
+            - listitem [ref=e818]:
+              - link "索取開店資料" [ref=e819] [cursor=pointer]:
+                - /url: https://www.rakuten.com.tw/ecsite/requestInfo/
+            - listitem [ref=e820]:
+              - link "免費報名說明會" [ref=e821] [cursor=pointer]:
+                - /url: https://www.rakuten.com.tw/ecsite/
+          - list [ref=e822]:
+            - listitem [ref=e823]: 政策與規範
+            - listitem [ref=e824]:
+              - link "平台政策" [ref=e825] [cursor=pointer]:
+                - /url: https://www.rakuten.com.tw/policy/terms_conditions/
+            - listitem [ref=e826]:
+              - link "店家規範" [ref=e827] [cursor=pointer]:
+                - /url: https://www.rakuten.com.tw/policy/shop/
+            - listitem [ref=e828]:
+              - link "違規事件通報" [ref=e829] [cursor=pointer]:
+                - /url: https://www.rakuten.com.tw/policy/qa_result_20300/
+            - listitem [ref=e830]:
+              - link "智財侵權檢舉" [ref=e831] [cursor=pointer]:
+                - /url: https://www.rakuten.com.tw/policy/qa_result_20200/
+            - listitem [ref=e832]:
+              - link "隱私權保護" [ref=e833] [cursor=pointer]:
+                - /url: https://www.rakuten.com.tw/policy/privacy/
+            - listitem [ref=e834]:
+              - link "消費者保護" [ref=e835] [cursor=pointer]:
+                - /url: https://www.rakuten.com.tw/policy/consumer/
+            - listitem [ref=e836]:
+              - link "網路購物交易安全" [ref=e837] [cursor=pointer]:
+                - /url: https://www.rakuten.com.tw/policy/safety/
+          - list [ref=e838]:
+            - listitem [ref=e839]: 官方社群
+            - listitem [ref=e840]:
+              - link [ref=e841] [cursor=pointer]:
+                - /url: https://www.facebook.com/RakutenTW/
+            - listitem [ref=e842]:
+              - link [ref=e843] [cursor=pointer]:
+                - /url: https://www.rakuten.com.tw/sns/line/
+            - listitem [ref=e844]:
+              - link [ref=e845] [cursor=pointer]:
+                - /url: https://www.pinterest.com/rakutentw/
+            - listitem [ref=e846]:
+              - link [ref=e847] [cursor=pointer]:
+                - /url: https://www.youtube.com/user/RakutenTaiwan/
+            - listitem [ref=e848]:
+              - link [ref=e849] [cursor=pointer]:
+                - /url: https://twitter.com/RakutenTW/
+            - listitem [ref=e850]:
+              - link [ref=e851] [cursor=pointer]:
+                - /url: https://rakutentw.blogspot.tw/
+            - listitem [ref=e852]:
+              - link [ref=e853] [cursor=pointer]:
+                - /url: https://www.plurk.com/RakutenTW/
+          - list [ref=e854]:
+            - listitem [ref=e855]:
+              - generic [ref=e856]:
+                - list [ref=e857]:
+                  - listitem [ref=e858]:
+                    - link "樂天市場APP" [ref=e859] [cursor=pointer]:
+                      - /url: https://www.rakuten.com.tw/app/?m-id=RADRWD-Footer-APP
+                  - listitem [ref=e860]
+                  - listitem [ref=e861]:
+                    - link [ref=e862] [cursor=pointer]:
+                      - /url: https://www.rakuten.com.tw/app/
+                - list [ref=e863]:
+                  - listitem [ref=e864]:
+                    - link "樂天點數 APP" [ref=e865] [cursor=pointer]:
+                      - /url: https://www.rakuten.com.tw/superpoint/app/?m-id=RADRWD-Footer-APP
+                  - listitem [ref=e866]
+                  - listitem [ref=e867]:
+                    - link "樂天點數App下載" [ref=e868] [cursor=pointer]:
+                      - /url: /superpoint/app/?m-id=RADTop-Footer-APPPoint
+          - separator [ref=e869]
+          - generic [ref=e870]:
+            - list [ref=e871]:
+              - listitem [ref=e872]:
+                - generic [ref=e873]: 資訊安全
+              - listitem [ref=e874]:
+                - link "dpmark 資料隱私保護標章" [ref=e876] [cursor=pointer]:
+                  - /url: https://www.tpipas.org.tw/DPmark/ShowCertData.aspx?id=B000006(01)
+                  - img "dpmark 資料隱私保護標章" [ref=e877]
+                - generic [ref=e878]: B000006(01)
+              - listitem [ref=e879]:
+                - paragraph [ref=e880]: 樂天市場採用SSL系統，信用卡卡號將以密碼傳送，請放心使用。
+            - list [ref=e881]:
+              - listitem [ref=e882]:
+                - generic [ref=e883]: 多元付款
+              - listitem [ref=e884]
+            - list [ref=e885]:
+              - listitem [ref=e886]:
+                - generic [ref=e887]: 便利配送
+              - listitem [ref=e888]
+        - list [ref=e890]:
+          - listitem [ref=e891]: 國家/地區
+          - listitem [ref=e892]:
+            - link "法國" [ref=e893] [cursor=pointer]:
+              - /url: "https://fr.shopping.rakuten.com "
+            - link "德國" [ref=e895] [cursor=pointer]:
+              - /url: https://www.rakuten.de/
+            - link "日本" [ref=e897] [cursor=pointer]:
+              - /url: https://www.rakuten.co.jp/?op=1&lng=ja&backurl=https://www.rakuten.co.jp
+            - generic [ref=e898]:
+              - link "美國" [ref=e900] [cursor=pointer]:
+                - /url: https://www.rakuten.com/
+              - link "服務一覽" [ref=e902] [cursor=pointer]:
+                - /url: https://global.rakuten.com/group/
+        - generic [ref=e903]:
+          - list [ref=e905]:
+            - listitem [ref=e906]:
+              - link "更多樂天服務+" [ref=e907] [cursor=pointer]:
+                - /url: https://global.rakuten.com/corp/about/company/
+            - listitem [ref=e908]:
+              - link "關於樂天" [ref=e909] [cursor=pointer]:
+                - /url: https://global.rakuten.com/corp/about/
+            - listitem [ref=e910]:
+              - link "台灣樂天集團" [ref=e911] [cursor=pointer]:
+                - /url: https://www.rakuten.com.tw/info/
+          - separator [ref=e912]
+      - generic [ref=e914]:
+        - generic [ref=e915]:
+          - paragraph [ref=e916]: Shopping is Entertainment!
+          - generic [ref=e917]:
+            - link "非洲豬瘟政策宣導" [ref=e918] [cursor=pointer]:
+              - /url: /policy/legal/qa_result_80100/
+            - link "隱私權政策" [ref=e919] [cursor=pointer]:
+              - /url: /policy/privacy/
+        - generic [ref=e920]: © Rakuten Group, Inc.
