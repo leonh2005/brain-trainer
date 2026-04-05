@@ -39,12 +39,12 @@ def parse_article_page(html):
 def fetch_ptt(max_articles=30):
     """Fetch PTT Stock board articles."""
     try:
-        resp = requests.get(PTT_INDEX, headers=HEADERS, cookies=COOKIES, timeout=10)
+        resp = requests.get(PTT_INDEX, headers=HEADERS, cookies=COOKIES, timeout=10, verify=True)
         items = parse_index_page(resp.text)
         articles = []
         for item in items[:max_articles]:
             try:
-                r = requests.get(item["url"], headers=HEADERS, cookies=COOKIES, timeout=10)
+                r = requests.get(item["url"], headers=HEADERS, cookies=COOKIES, timeout=10, verify=True)
                 _, content = parse_article_page(r.text)
                 articles.append({
                     "source": "ptt",
