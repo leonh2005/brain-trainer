@@ -1,25 +1,15 @@
 import feedparser
 import logging
-import os
-from dotenv import load_dotenv
 
-load_dotenv()
 logger = logging.getLogger(__name__)
 
 RSS_SOURCES = [
     {"url": "https://tw.stock.yahoo.com/rss", "source": "yahoo_tw"},
     {"url": "https://finance.yahoo.com/news/rssindex", "source": "yahoo_us"},
     {"url": "https://money.udn.com/rssfeed/news/1001/USD/NEWS.rss", "source": "udn"},
+    {"url": "https://feeds.marketwatch.com/marketwatch/topstories/", "source": "marketwatch"},
+    {"url": "https://www.cnbc.com/id/10001147/device/rss/rss.html", "source": "cnbc"},
 ]
-
-
-def _build_x_rss_sources():
-    base = os.getenv("RSSHUB_BASE_URL", "https://rsshub.app")
-    accounts = os.getenv("X_ACCOUNTS", "").split(",")
-    return [
-        {"url": f"{base}/twitter/user/{acct.strip()}", "source": "x"}
-        for acct in accounts if acct.strip()
-    ]
 
 
 def fetch_rss(url, source_name):
@@ -43,7 +33,7 @@ def fetch_rss(url, source_name):
 
 def fetch_all_rss():
     """Fetch all configured RSS sources."""
-    sources = RSS_SOURCES + _build_x_rss_sources()
+    sources = RSS_SOURCES
     all_articles = []
     for s in sources:
         articles = fetch_rss(s["url"], s["source"])
