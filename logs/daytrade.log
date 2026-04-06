@@ -242,3 +242,21 @@ Response Code: 200 | Event Code: 16 | Info: APISUB/V1/SYS/CONTRACT | Event: Subs
 🛑 停損：跌破進場價 -1.5% 出清
 
 ⚠️ 數據參考，非投資建議，買賣自負
+2026-04-06 09:30:02.402 | WARNING  | importlib._bootstrap:_call_with_frames_removed:491 - Optional: pip install shioaji[speed] or uv add shioaji --extra speed for better performance.
+2026-04-06 09:30:03.069 | INFO     | FinMind.data.finmind_api:login_by_token:84 - Login success
+2026-04-06 09:30:03.118 | INFO     | FinMind.data.finmind_api:login_by_token:84 - Login success
+2026-04-06 09:30:44.695 | INFO     | FinMind.data.finmind_api:get_data:153 - download Dataset.TaiwanStockPrice, data_id: 2409
+2026-04-06 09:31:20.155 | INFO     | FinMind.data.finmind_api:get_data:153 - download Dataset.TaiwanStockPrice, data_id: 3481
+2026-04-06 09:31:55.211 | INFO     | FinMind.data.finmind_api:get_data:153 - download Dataset.TaiwanStockPrice, data_id: 2887
+2026-04-06 09:32:30.447 | INFO     | FinMind.data.finmind_api:get_data:153 - download Dataset.TaiwanStockPrice, data_id: 4906
+2026-04-06 09:33:05.863 | INFO     | FinMind.data.finmind_api:get_data:153 - download Dataset.TaiwanStockPrice, data_id: 2344
+2026-04-06 09:33:41.140 | INFO     | FinMind.data.finmind_api:get_data:153 - download Dataset.TaiwanStockPrice, data_id: 6770
+2026-04-06 09:34:16.680 | INFO     | FinMind.data.finmind_api:get_data:153 - download Dataset.TaiwanStockPrice, data_id: 0056
+2026-04-06 09:34:52.173 | INFO     | FinMind.data.finmind_api:get_data:153 - download Dataset.TaiwanStockPrice, data_id: 2367
+2026-04-06 09:35:28.430 | INFO     | FinMind.data.finmind_api:get_data:153 - download Dataset.TaiwanStockPrice, data_id: 2408
+2026-04-06 09:36:09.082 | INFO     | FinMind.data.finmind_api:get_data:153 - download Dataset.TaiwanStockPrice, data_id: 2313
+2026-04-06 09:36:50.136 | INFO     | FinMind.data.finmind_api:get_data:153 - download Dataset.TaiwanStockPrice, data_id: 0050
+2026-04-06 09:37:31.042 | INFO     | FinMind.data.finmind_api:get_data:153 - download Dataset.TaiwanStockPrice, data_id: 2303
+2026-04-06 09:38:11.492 | INFO     | FinMind.data.finmind_api:get_data:153 - download Dataset.TaiwanStockPrice, data_id: 1304
+2026-04-06 09:38:51.893 | INFO     | FinMind.data.finmind_api:get_data:153 - download Dataset.TaiwanStockPrice, data_id: 3062
+2026-04-06 09:39:32.116 | INFO     | FinMind.data.finmind_api:get_data:153 - download Dataset.TaiwanStockPrice, data_id: 1303
