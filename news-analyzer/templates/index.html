@@ -13,8 +13,16 @@
   .period-btns { margin-left: auto; display: flex; gap: 8px; }
   .period-btns button { background: #1e293b; color: #94a3b8; border: none; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 0.85rem; }
   .period-btns button.active { background: #3b82f6; color: #fff; }
-  .chart-section { padding: 24px; }
-  .chart-wrap { background: #1e293b; border-radius: 12px; padding: 20px; height: 300px; }
+  .stats { padding: 0 24px 0; display: flex; gap: 12px; margin-bottom: 16px; }
+  .stat-card { flex: 1; background: #1e293b; border-radius: 10px; padding: 16px 20px; text-align: center; }
+  .stat-label { font-size: 0.78rem; color: #64748b; margin-bottom: 6px; text-transform: uppercase; letter-spacing: .05em; }
+  .stat-value { font-size: 2rem; font-weight: 800; line-height: 1; }
+  .stat-value.bull { color: #22c55e; }
+  .stat-value.bear { color: #ef4444; }
+  .stat-value.neutral { color: #94a3b8; }
+  .stat-count { font-size: 0.78rem; color: #475569; margin-top: 4px; }
+  .chart-section { padding: 0 24px 24px; }
+  .chart-wrap { background: #1e293b; border-radius: 12px; padding: 20px; height: 280px; }
   .filters { padding: 0 24px 16px; display: flex; flex-wrap: wrap; gap: 10px; }
   .filters input, .filters select { background: #1e293b; color: #e2e8f0; border: 1px solid #334155; padding: 8px 12px; border-radius: 8px; font-size: 0.875rem; }
   .filters input[type="text"] { width: 220px; }
@@ -50,6 +58,24 @@
   </div>
 </div>
 
+<div class="stats" id="statsBar">
+  <div class="stat-card">
+    <div class="stat-label">多方</div>
+    <div class="stat-value bull" id="statBull">–</div>
+    <div class="stat-count" id="statBullN">–</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">空方</div>
+    <div class="stat-value bear" id="statBear">–</div>
+    <div class="stat-count" id="statBearN">–</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">中性</div>
+    <div class="stat-value neutral" id="statNeutral">–</div>
+    <div class="stat-count" id="statNeutralN">–</div>
+  </div>
+</div>
+
 <div class="chart-section">
   <div class="chart-wrap">
     <canvas id="trendChart"></canvas>
@@ -66,7 +92,7 @@
     <option value="reddit">Reddit</option>
     <option value="x">X</option>
   </select>
-  <input type="date" id="dateInput" onchange="loadArticles(1)">
+  <input type="date" id="dateInput" onchange="loadStats(); loadArticles(1)">
   <select id="scoreFilter" onchange="loadArticles(1)">
     <option value="">所有情緒</option>
     <option value="7,10">看多（7-10）</option>
@@ -171,6 +197,24 @@ function renderPagination(total, page) {
   `;
 }
 
+async function loadStats() {
+  const date = document.getElementById('dateInput').value;
+  let url = '/api/stats';
+  if (date) url += `?date=${date}`;
+  const res = await fetch(url);
+  const d = await res.json();
+  const bPct = d.bullish_pct, rPct = d.bearish_pct, nPct = d.neutral_pct;
+  document.getElementById('statBull').textContent = bPct + '%';
+  document.getElementById('statBull').className = 'stat-value ' + (bPct > 50 ? 'bull' : 'neutral');
+  document.getElementById('statBullN').textContent = d.bullish + ' 則';
+  document.getElementById('statBear').textContent = rPct + '%';
+  document.getElementById('statBear').className = 'stat-value ' + (rPct > 50 ? 'bear' : 'neutral');
+  document.getElementById('statBearN').textContent = d.bearish + ' 則';
+  document.getElementById('statNeutral').textContent = nPct + '%';
+  document.getElementById('statNeutralN').textContent = d.neutral + ' 則';
+}
+
+loadStats();
 loadTrend('day');
 loadArticles(1);
 </script>
