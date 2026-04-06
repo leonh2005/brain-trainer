@@ -5,7 +5,7 @@ from flask import Flask, jsonify, render_template, request
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from storage import DB_PATH as _DEFAULT_DB, get_articles, get_trend_data, init_db
+from storage import DB_PATH as _DEFAULT_DB, get_articles, get_trend_data, get_conn, init_db
 
 app = Flask(__name__)
 DB_PATH = _DEFAULT_DB
@@ -65,6 +65,34 @@ def api_trend():
         })
 
     return jsonify({"labels": labels_set, "datasets": datasets})
+
+
+@app.route("/api/stats")
+def api_stats():
+    date = request.args.get("date")
+    condition = "DATE(fetched_at) = ?" if date else "fetched_at >= datetime('now', '-24 hours')"
+    params = [date] if date else []
+    with get_conn(DB_PATH) as conn:
+        rows = conn.execute(
+            f"SELECT score FROM articles WHERE score IS NOT NULL AND {condition}",
+            params,
+        ).fetchall()
+    total = len(rows)
+    if total == 0:
+        return jsonify({"total": 0, "bullish": 0, "bearish": 0, "neutral": 0,
+                        "bullish_pct": 0, "bearish_pct": 0, "neutral_pct": 0})
+    bullish = sum(1 for r in rows if r["score"] >= 7)
+    bearish = sum(1 for r in rows if r["score"] <= 4)
+    neutral = total - bullish - bearish
+    return jsonify({
+        "total": total,
+        "bullish": bullish,
+        "bearish": bearish,
+        "neutral": neutral,
+        "bullish_pct": round(bullish / total * 100, 1),
+        "bearish_pct": round(bearish / total * 100, 1),
+        "neutral_pct": round(neutral / total * 100, 1),
+    })
 
 
 if __name__ == "__main__":
