@@ -1,0 +1,706 @@
+- generic [active] [ref=e1]:
+  - link "開啟輔助訪問" [ref=e4] [cursor=pointer]:
+    - /url: javascript:;
+  - generic [ref=e6]:
+    - generic [ref=e7]:
+      - heading "94i論壇" [level=2] [ref=e8]:
+        - link "94i論壇" [ref=e9] [cursor=pointer]:
+          - /url: ./
+          - img "94i論壇" [ref=e10]
+      - table [ref=e14]:
+        - rowgroup [ref=e15]:
+          - row "賬號 用戶名/Email 自動登錄 找回密碼" [ref=e16]:
+            - cell "賬號" [ref=e17]
+            - cell "用戶名/Email" [ref=e18]:
+              - textbox "賬號" [ref=e19]: 用戶名/Email
+            - cell "自動登錄" [ref=e20]:
+              - generic [ref=e21] [cursor=pointer]:
+                - checkbox "自動登錄" [ref=e22]
+                - text: 自動登錄
+            - cell "找回密碼" [ref=e23]:
+              - link "找回密碼" [ref=e24] [cursor=pointer]:
+                - /url: javascript:;
+          - row "密碼 登錄 立即註冊94i會員" [ref=e25]:
+            - cell "密碼" [ref=e26]
+            - cell [ref=e27]:
+              - textbox "密碼" [ref=e28]
+            - cell "登錄" [ref=e29]:
+              - button "登錄" [ref=e30] [cursor=pointer]:
+                - emphasis [ref=e31]: 登錄
+            - cell "立即註冊94i會員" [ref=e32]:
+              - link "立即註冊94i會員" [ref=e33] [cursor=pointer]:
+                - /url: member.php?mod=AAbb@siDrXe~sXs
+    - generic [ref=e34]:
+      - link "快捷導航" [ref=e35] [cursor=pointer]:
+        - /url: javascript:;
+      - list:
+        - listitem [ref=e36]:
+          - link "首頁" [ref=e37] [cursor=pointer]:
+            - /url: forum.php
+        - listitem [ref=e38]:
+          - link "BT下載" [ref=e39] [cursor=pointer]:
+            - /url: https://94i.in/gid-36.html
+        - listitem [ref=e40]:
+          - link "免空下載" [ref=e41] [cursor=pointer]:
+            - /url: https://94i.in/gid-36.html
+        - listitem [ref=e42]:
+          - link "意見反饋" [ref=e43] [cursor=pointer]:
+            - /url: forum-61-1.html
+        - listitem [ref=e44]:
+          - link "小額贊助" [ref=e45] [cursor=pointer]:
+            - /url: https://94i.in/thread-2096-1-1.html
+    - table [ref=e48]:
+      - rowgroup [ref=e49]:
+        - 'row "搜索 搜索 熱搜: 全面攻佔 玩命關頭 復仇者聯盟 小飛象 捍衛任務" [ref=e50]':
+          - cell [ref=e51]
+          - cell [ref=e52]:
+            - textbox "請輸入搜索內容" [ref=e53]
+          - cell "搜索" [ref=e54]:
+            - link "搜索" [ref=e55] [cursor=pointer]:
+              - /url: javascript:;
+          - cell "搜索" [ref=e56]:
+            - button "搜索" [ref=e57] [cursor=pointer]:
+              - text: 
+              - strong [ref=e58]: 搜索
+          - 'cell "熱搜: 全面攻佔 玩命關頭 復仇者聯盟 小飛象 捍衛任務" [ref=e59]':
+            - generic [ref=e60]:
+              - strong [ref=e61]: "熱搜:"
+              - link "全面攻佔" [ref=e62] [cursor=pointer]:
+                - /url: search.php?mod=forum&srchtxt=%E5%85%A8%E9%9D%A2%E6%94%BB%E4%BD%94&formhash=7336aa57&searchsubmit=true&source=hotsearch
+              - link "玩命關頭" [ref=e63] [cursor=pointer]:
+                - /url: search.php?mod=forum&srchtxt=%E7%8E%A9%E5%91%BD%E9%97%9C%E9%A0%AD&formhash=7336aa57&searchsubmit=true&source=hotsearch
+              - link "復仇者聯盟" [ref=e64] [cursor=pointer]:
+                - /url: search.php?mod=forum&srchtxt=%E5%BE%A9%E4%BB%87%E8%80%85%E8%81%AF%E7%9B%9F&formhash=7336aa57&searchsubmit=true&source=hotsearch
+              - link "小飛象" [ref=e65] [cursor=pointer]:
+                - /url: search.php?mod=forum&srchtxt=%E5%B0%8F%E9%A3%9B%E8%B1%A1&formhash=7336aa57&searchsubmit=true&source=hotsearch
+              - link "捍衛任務" [ref=e66] [cursor=pointer]:
+                - /url: search.php?mod=forum&srchtxt=%E6%8D%8D%E8%A1%9B%E4%BB%BB%E5%8B%99&formhash=7336aa57&searchsubmit=true&source=hotsearch
+  - generic [ref=e67]:
+    - generic [ref=e68]:
+      - definition [ref=e72]:
+        - generic [ref=e73]:
+          - list:
+            - listitem [ref=e74]:
+              - link "目前使用手機瀏覽論壇無法註冊會員,請用電腦版註冊" [ref=e76] [cursor=pointer]:
+                - /url: forum.php?mod=announcement&id=15
+                - generic [ref=e78]: 目前使用手機瀏覽論壇無法註冊會員,請用電腦版註冊
+              - emphasis [ref=e79]: (2024-9-26)
+            - listitem [ref=e80]:
+              - link "94i論壇總版規 請查閱並遵守 2020/11/28新增" [ref=e82] [cursor=pointer]:
+                - /url: https://94i.in/thread-4-1-1.html
+              - emphasis [ref=e83]: (2020-8-11)
+            - listitem [ref=e84]:
+              - link "如果你喜歡94i論壇,歡迎贊助我們.." [ref=e86] [cursor=pointer]:
+                - /url: https://94i.in/thread-2096-1-1.html
+                - generic [ref=e87]: 如果你喜歡94i論壇,歡迎贊助我們..
+              - emphasis [ref=e88]: (2018-3-17)
+            - listitem [ref=e89]:
+              - link "新手註冊關於信箱驗證問.(很重要!!!!)" [ref=e91] [cursor=pointer]:
+                - /url: https://94i.in/thread-3816-1-1.html
+                - generic [ref=e92]: 新手註冊關於信箱驗證問.(很重要!!!!)
+              - emphasis [ref=e93]: (2020-10-7)
+            - listitem [ref=e94]:
+              - link "目前使用手機瀏覽論壇無法註冊會員,請用電腦版註冊" [ref=e96] [cursor=pointer]:
+                - /url: forum.php?mod=announcement&id=15
+                - generic [ref=e98]: 目前使用手機瀏覽論壇無法註冊會員,請用電腦版註冊
+              - emphasis [ref=e99]: (2024-9-26)
+            - listitem [ref=e100]:
+              - link "94i論壇總版規 請查閱並遵守 2020/11/28新增" [ref=e102] [cursor=pointer]:
+                - /url: https://94i.in/thread-4-1-1.html
+              - emphasis [ref=e103]: (2020-8-11)
+            - listitem [ref=e104]:
+              - link "如果你喜歡94i論壇,歡迎贊助我們.." [ref=e106] [cursor=pointer]:
+                - /url: https://94i.in/thread-2096-1-1.html
+                - generic [ref=e107]: 如果你喜歡94i論壇,歡迎贊助我們..
+              - emphasis [ref=e108]: (2018-3-17)
+            - listitem [ref=e109]:
+              - link "新手註冊關於信箱驗證問.(很重要!!!!)" [ref=e111] [cursor=pointer]:
+                - /url: https://94i.in/thread-3816-1-1.html
+                - generic [ref=e112]: 新手註冊關於信箱驗證問.(很重要!!!!)
+              - emphasis [ref=e113]: (2020-10-7)
+      - generic [ref=e114]:
+        - link "94i論壇" [ref=e115] [cursor=pointer]:
+          - /url: ./
+        - emphasis [ref=e116]: »
+        - link "首頁" [ref=e117] [cursor=pointer]:
+          - /url: forum.php
+    - generic [ref=e118]:
+      - paragraph [ref=e120]:
+        - text: " 今日:"
+        - emphasis [ref=e121]: "253"
+        - text: "|昨日:"
+        - emphasis [ref=e122]: "204"
+        - text: "|帖子:"
+        - emphasis [ref=e123]: "354064"
+        - text: "|會員:"
+        - emphasis [ref=e124]: "31855"
+        - text: "|歡迎新會員:"
+        - emphasis [ref=e125]:
+          - link "whj2007020465" [ref=e126] [cursor=pointer]:
+            - /url: space-username-whj2007020465.html
+      - generic [ref=e127]:
+        - table [ref=e131]:
+          - rowgroup [ref=e132]:
+            - row [ref=e133]:
+              - cell "最新圖片 朱音落語 第一季 更新至01話 2026 (GD@1080p@GB@繁中) ... 1 2 3 4 5 6 7 8 9 10" [ref=e134]:
+                - generic [ref=e135]:
+                  - heading "最新圖片" [level=4] [ref=e136] [cursor=pointer]: 最新圖片
+                  - generic [ref=e138]:
+                    - table [ref=e140] [cursor=pointer]:
+                      - rowgroup [ref=e141]:
+                        - row "朱音落語 第一季 更新至01話 2026 (GD@1080p@GB@繁中) ..." [ref=e142]:
+                          - cell "朱音落語 第一季 更新至01話 2026 (GD@1080p@GB@繁中) ..." [ref=e143]:
+                            - img "朱音落語 第一季 更新至01話 2026 (GD@1080p@GB@繁中) ..." [ref=e144]
+                    - generic [ref=e145]:
+                      - generic [ref=e146] [cursor=pointer]: "1"
+                      - generic [ref=e147] [cursor=pointer]: "2"
+                      - generic [ref=e148] [cursor=pointer]: "3"
+                      - generic [ref=e149] [cursor=pointer]: "4"
+                      - generic [ref=e150] [cursor=pointer]: "5"
+                      - generic [ref=e151] [cursor=pointer]: "6"
+                      - generic [ref=e152] [cursor=pointer]: "7"
+                      - generic [ref=e153] [cursor=pointer]: "8"
+                      - generic [ref=e154] [cursor=pointer]: "9"
+                      - generic [ref=e155] [cursor=pointer]: "10"
+              - cell "最新主題 朱音落語 第一季 更新至01話 2026 (GD@1080p@GB@繁中) ... 凍結地球 第一季 更新至第01話 2026 (GD@1080p@GB@繁 ... 荷魯斯之眼：王者爭霸 Gods of Egypt 2017(4K UHD@MKV ... 科學新娘 The Bride! 2025(WEB@MKV@1080P@國語@官方繁 ... 黃泉使者 第一季 更新至01話 2026 (GD@1080p@繁中) ... 雞鬥士 第一季 更新至04話 2026 (GD@1080p@繁中) ... 敦克爾克大行動 Dunkirk 2017(4K UHD@MKV@2160P@英語@ ... 搜查瑠公圳 Where The River Flows 2025(WEB@MKV@108 ... 蠟筆小新：超華麗！灼熱的春日部舞者們 2025(Bluray@M ... 與愛麗絲夢遊仙境 2025 Dive in Wonderland 2025 (MEG ..." [ref=e156]:
+                - generic [ref=e157]:
+                  - heading "最新主題" [level=4] [ref=e158] [cursor=pointer]: 最新主題
+                  - list [ref=e160]:
+                    - listitem [ref=e161]:
+                      - link "朱音落語 第一季 更新至01話 2026 (GD@1080p@GB@繁中) ..." [ref=e162] [cursor=pointer]:
+                        - /url: thread-18990-1-1.html
+                    - listitem [ref=e163]:
+                      - link "凍結地球 第一季 更新至第01話 2026 (GD@1080p@GB@繁 ..." [ref=e164] [cursor=pointer]:
+                        - /url: thread-18989-1-1.html
+                    - listitem [ref=e165]:
+                      - link "荷魯斯之眼：王者爭霸 Gods of Egypt 2017(4K UHD@MKV ..." [ref=e166] [cursor=pointer]:
+                        - /url: thread-18987-1-1.html
+                    - listitem [ref=e167]:
+                      - link "科學新娘 The Bride! 2025(WEB@MKV@1080P@國語@官方繁 ..." [ref=e168] [cursor=pointer]:
+                        - /url: thread-18985-1-1.html
+                    - listitem [ref=e169]:
+                      - link "黃泉使者 第一季 更新至01話 2026 (GD@1080p@繁中) ..." [ref=e170] [cursor=pointer]:
+                        - /url: thread-18981-1-1.html
+                    - listitem [ref=e171]:
+                      - link "雞鬥士 第一季 更新至04話 2026 (GD@1080p@繁中) ..." [ref=e172] [cursor=pointer]:
+                        - /url: thread-18980-1-1.html
+                    - listitem [ref=e173]:
+                      - link "敦克爾克大行動 Dunkirk 2017(4K UHD@MKV@2160P@英語@ ..." [ref=e174] [cursor=pointer]:
+                        - /url: thread-18974-1-1.html
+                    - listitem [ref=e175]:
+                      - link "搜查瑠公圳 Where The River Flows 2025(WEB@MKV@108 ..." [ref=e176] [cursor=pointer]:
+                        - /url: thread-18960-1-1.html
+                    - listitem [ref=e177]:
+                      - link "蠟筆小新：超華麗！灼熱的春日部舞者們 2025(Bluray@M ..." [ref=e178] [cursor=pointer]:
+                        - /url: thread-18954-1-1.html
+                    - listitem [ref=e179]:
+                      - link "與愛麗絲夢遊仙境 2025 Dive in Wonderland 2025 (MEG ..." [ref=e180] [cursor=pointer]:
+                        - /url: thread-18952-1-1.html
+              - 'cell "最新回復 荷魯斯之眼：王者爭霸 Gods of Egypt 2017(4K UHD@MKV ... 屍速列車 부산행 2016(4K UltraHD@M2TS@2160P@韓語@官 ... 荒島囚救 Send Help 2026(WEBy@MKV@2160P@英語@官方繁 ... 黑白線人 YADANG: THE SNITCH 2025 [MP4@1080p@簡中] ... 逐玉 全40集 2026 (mkv@1080p@多國含繁簡中) ... 捍衛任務4 2023(WEB@MKV@2160P@英語@繁中) (1994~1995) 超時空要塞 Macross Plus OVA全4話+劇場 ... 神鬼戰士II Gladiator II 2024(4K UHD@M2TS@2160P@英 ... 蠟筆小新：超華麗！灼熱的春日部舞者們 2025(Bluray@M ... (2002) 超時空要塞Zero (OVA全5話)" [ref=e181]':
+                - generic [ref=e182]:
+                  - heading "最新回復" [level=4] [ref=e183] [cursor=pointer]: 最新回復
+                  - list [ref=e185]:
+                    - listitem [ref=e186]:
+                      - link "荷魯斯之眼：王者爭霸 Gods of Egypt 2017(4K UHD@MKV ..." [ref=e187] [cursor=pointer]:
+                        - /url: forum.php?mod=redirect&tid=18987&goto=lastpost#lastpost
+                    - listitem [ref=e188]:
+                      - link "屍速列車 부산행 2016(4K UltraHD@M2TS@2160P@韓語@官 ..." [ref=e189] [cursor=pointer]:
+                        - /url: forum.php?mod=redirect&tid=10364&goto=lastpost#lastpost
+                    - listitem [ref=e190]:
+                      - link "荒島囚救 Send Help 2026(WEBy@MKV@2160P@英語@官方繁 ..." [ref=e191] [cursor=pointer]:
+                        - /url: forum.php?mod=redirect&tid=18884&goto=lastpost#lastpost
+                    - listitem [ref=e192]:
+                      - 'link "黑白線人 YADANG: THE SNITCH 2025 [MP4@1080p@簡中] ..." [ref=e193] [cursor=pointer]':
+                        - /url: forum.php?mod=redirect&tid=17502&goto=lastpost#lastpost
+                    - listitem [ref=e194]:
+                      - link "逐玉 全40集 2026 (mkv@1080p@多國含繁簡中) ..." [ref=e195] [cursor=pointer]:
+                        - /url: forum.php?mod=redirect&tid=18906&goto=lastpost#lastpost
+                    - listitem [ref=e196]:
+                      - link "捍衛任務4 2023(WEB@MKV@2160P@英語@繁中)" [ref=e197] [cursor=pointer]:
+                        - /url: forum.php?mod=redirect&tid=11342&goto=lastpost#lastpost
+                    - listitem [ref=e198]:
+                      - link "(1994~1995) 超時空要塞 Macross Plus OVA全4話+劇場 ..." [ref=e199] [cursor=pointer]:
+                        - /url: forum.php?mod=redirect&tid=11117&goto=lastpost#lastpost
+                    - listitem [ref=e200]:
+                      - link "神鬼戰士II Gladiator II 2024(4K UHD@M2TS@2160P@英 ..." [ref=e201] [cursor=pointer]:
+                        - /url: forum.php?mod=redirect&tid=16330&goto=lastpost#lastpost
+                    - listitem [ref=e202]:
+                      - link "蠟筆小新：超華麗！灼熱的春日部舞者們 2025(Bluray@M ..." [ref=e203] [cursor=pointer]:
+                        - /url: forum.php?mod=redirect&tid=18954&goto=lastpost#lastpost
+                    - listitem [ref=e204]:
+                      - link "(2002) 超時空要塞Zero (OVA全5話)" [ref=e205] [cursor=pointer]:
+                        - /url: forum.php?mod=redirect&tid=11133&goto=lastpost#lastpost
+              - 'cell "熱帖 屍速列車 부산행 2016(4K UltraHD@M2TS@2160P@韓語@官 ... 荒島囚救 Send Help 2026(WEBy@MKV@2160P@英語@官方繁 ... 黑白線人 YADANG: THE SNITCH 2025 [MP4@1080p@簡中] ... 逐玉 全40集 2026 (mkv@1080p@多國含繁簡中) ... 捍衛任務4 2023(WEB@MKV@2160P@英語@繁中) 神鬼戰士II Gladiator II 2024(4K UHD@M2TS@2160P@英 ... 蠟筆小新：超華麗！灼熱的春日部舞者們 2025(Bluray@M ... (2002) 超時空要塞Zero (OVA全5話) 阿凡達 Avatar 2009(4K UHD@M2TS@2160P@英語@官方繁中 ... 科學新娘 The Bride! 2025(WEB@MKV@1080P@國語@官方繁 ..." [ref=e206]':
+                - generic [ref=e207]:
+                  - heading "熱帖" [level=4] [ref=e208] [cursor=pointer]: 熱帖
+                  - list [ref=e210]:
+                    - listitem [ref=e211]:
+                      - link "屍速列車 부산행 2016(4K UltraHD@M2TS@2160P@韓語@官 ..." [ref=e212] [cursor=pointer]:
+                        - /url: thread-10364-1-1.html
+                    - listitem [ref=e213]:
+                      - link "荒島囚救 Send Help 2026(WEBy@MKV@2160P@英語@官方繁 ..." [ref=e214] [cursor=pointer]:
+                        - /url: thread-18884-1-1.html
+                    - listitem [ref=e215]:
+                      - 'link "黑白線人 YADANG: THE SNITCH 2025 [MP4@1080p@簡中] ..." [ref=e216] [cursor=pointer]':
+                        - /url: thread-17502-1-1.html
+                    - listitem [ref=e217]:
+                      - link "逐玉 全40集 2026 (mkv@1080p@多國含繁簡中) ..." [ref=e218] [cursor=pointer]:
+                        - /url: thread-18906-1-1.html
+                    - listitem [ref=e219]:
+                      - link "捍衛任務4 2023(WEB@MKV@2160P@英語@繁中)" [ref=e220] [cursor=pointer]:
+                        - /url: thread-11342-1-1.html
+                    - listitem [ref=e221]:
+                      - link "神鬼戰士II Gladiator II 2024(4K UHD@M2TS@2160P@英 ..." [ref=e222] [cursor=pointer]:
+                        - /url: thread-16330-1-1.html
+                    - listitem [ref=e223]:
+                      - link "蠟筆小新：超華麗！灼熱的春日部舞者們 2025(Bluray@M ..." [ref=e224] [cursor=pointer]:
+                        - /url: thread-18954-1-1.html
+                    - listitem [ref=e225]:
+                      - link "(2002) 超時空要塞Zero (OVA全5話)" [ref=e226] [cursor=pointer]:
+                        - /url: thread-11133-1-1.html
+                    - listitem [ref=e227]:
+                      - link "阿凡達 Avatar 2009(4K UHD@M2TS@2160P@英語@官方繁中 ..." [ref=e228] [cursor=pointer]:
+                        - /url: thread-11445-1-1.html
+                    - listitem [ref=e229]:
+                      - link "科學新娘 The Bride! 2025(WEB@MKV@1080P@國語@官方繁 ..." [ref=e230] [cursor=pointer]:
+                        - /url: thread-18985-1-1.html
+        - generic [ref=e231]:
+          - generic [ref=e232]:
+            - generic [ref=e233]:
+              - emphasis [ref=e235] [cursor=pointer]: 
+              - heading "免費線上看" [level=2] [ref=e236]:
+                - link "免費線上看" [ref=e237] [cursor=pointer]:
+                  - /url: gid-57.html
+            - table [ref=e239]:
+              - rowgroup [ref=e240]:
+                - 'row "求片留言 求片留言 (8) 主題: 2606, 帖數: 7966 求劇 山田君與7個魔女2013 ... 半小時前 小紫" [ref=e241]':
+                  - 'cell "求片留言 求片留言 (8) 主題: 2606, 帖數: 7966 求劇 山田君與7個魔女2013 ... 半小時前 小紫" [ref=e242]':
+                    - generic [ref=e243]:
+                      - link "求片留言":
+                        - /url: forum-58-1.html
+                        - img "求片留言" [ref=e244] [cursor=pointer]
+                    - generic [ref=e245]:
+                      - term [ref=e246]:
+                        - link "求片留言" [ref=e247] [cursor=pointer]:
+                          - /url: forum-58-1.html
+                        - emphasis [ref=e248]: (8)
+                      - definition [ref=e249]:
+                        - emphasis [ref=e250]: "主題: 2606"
+                        - text: ","
+                        - emphasis [ref=e251]: "帖數: 7966"
+                      - definition [ref=e252]:
+                        - link "求劇 山田君與7個魔女2013 ..." [ref=e253] [cursor=pointer]:
+                          - /url: forum.php?mod=redirect&tid=18988&goto=lastpost#lastpost
+                        - generic [ref=e254]:
+                          - text: 半小時前
+                          - link "小紫" [ref=e255] [cursor=pointer]:
+                            - /url: space-username-%E5%B0%8F%E7%B4%AB.html
+                  - cell [ref=e256]
+          - generic [ref=e257]:
+            - generic [ref=e258]:
+              - emphasis [ref=e260] [cursor=pointer]: 
+              - generic [ref=e261]:
+                - text: "分區版主:"
+                - link "louische" [ref=e262] [cursor=pointer]:
+                  - /url: space-username-louische.html
+                - text: ","
+                - link "lonelyvenus" [ref=e263] [cursor=pointer]:
+                  - /url: space-username-lonelyvenus.html
+              - heading "影片交流區" [level=2] [ref=e264]:
+                - link "影片交流區" [ref=e265] [cursor=pointer]:
+                  - /url: gid-36.html
+            - table [ref=e267]:
+              - rowgroup [ref=e268]:
+                - 'row "電影BT下載 電影BT下載 (111) 主題: 5123, 帖數: 15萬 敦克爾克大行動 Dunkirk 2017(4K ... 2 分鐘前 ptwsam 電影免空下載 電影免空下載 (2) 主題: 1457, 帖數: 1萬 異形系列 正傳4部+前傳2部 1979~ ... 3 小時前 秘密客" [ref=e269]':
+                  - 'cell "電影BT下載 電影BT下載 (111) 主題: 5123, 帖數: 15萬 敦克爾克大行動 Dunkirk 2017(4K ... 2 分鐘前 ptwsam" [ref=e270]':
+                    - generic [ref=e271]:
+                      - link "電影BT下載":
+                        - /url: forum-40-1.html
+                        - img "電影BT下載" [ref=e272] [cursor=pointer]
+                    - generic [ref=e273]:
+                      - term [ref=e274]:
+                        - link "電影BT下載" [ref=e275] [cursor=pointer]:
+                          - /url: forum-40-1.html
+                        - emphasis [ref=e276]: (111)
+                      - definition [ref=e277]:
+                        - emphasis [ref=e278]: "主題: 5123"
+                        - text: ","
+                        - emphasis [ref=e279]: "帖數: 15萬"
+                      - definition [ref=e280]:
+                        - link "敦克爾克大行動 Dunkirk 2017(4K ..." [ref=e281] [cursor=pointer]:
+                          - /url: forum.php?mod=redirect&tid=18974&goto=lastpost#lastpost
+                        - generic [ref=e282]:
+                          - text: 2 分鐘前
+                          - link "ptwsam" [ref=e283] [cursor=pointer]:
+                            - /url: space-username-ptwsam.html
+                  - 'cell "電影免空下載 電影免空下載 (2) 主題: 1457, 帖數: 1萬 異形系列 正傳4部+前傳2部 1979~ ... 3 小時前 秘密客" [ref=e284]':
+                    - generic [ref=e285]:
+                      - link "電影免空下載":
+                        - /url: forum-41-1.html
+                        - img "電影免空下載" [ref=e286] [cursor=pointer]
+                    - generic [ref=e287]:
+                      - term [ref=e288]:
+                        - link "電影免空下載" [ref=e289] [cursor=pointer]:
+                          - /url: forum-41-1.html
+                        - emphasis [ref=e290]: (2)
+                      - definition [ref=e291]:
+                        - emphasis [ref=e292]: "主題: 1457"
+                        - text: ","
+                        - emphasis [ref=e293]: "帖數: 1萬"
+                      - definition [ref=e294]:
+                        - link "異形系列 正傳4部+前傳2部 1979~ ..." [ref=e295] [cursor=pointer]:
+                          - /url: forum.php?mod=redirect&tid=14108&goto=lastpost#lastpost
+                        - generic [ref=e296]: 3 小時前 秘密客
+                - 'row "影集BT下載 影集BT下載 (13) 主題: 524, 帖數: 8674 逐玉 全40集 2026 (mkv@1080p@多 ... 13 分鐘前 austindai 影集免空下載 影集免空下載 (2) 主題: 136, 帖數: 1526 恐龍時代：你不知道的故事 The D ... 2 小時前 aenjess" [ref=e297]':
+                  - 'cell "影集BT下載 影集BT下載 (13) 主題: 524, 帖數: 8674 逐玉 全40集 2026 (mkv@1080p@多 ... 13 分鐘前 austindai" [ref=e298]':
+                    - generic [ref=e299]:
+                      - link "影集BT下載":
+                        - /url: forum-77-1.html
+                        - img "影集BT下載" [ref=e300] [cursor=pointer]
+                    - generic [ref=e301]:
+                      - term [ref=e302]:
+                        - link "影集BT下載" [ref=e303] [cursor=pointer]:
+                          - /url: forum-77-1.html
+                        - emphasis [ref=e304]: (13)
+                      - definition [ref=e305]:
+                        - emphasis [ref=e306]: "主題: 524"
+                        - text: ","
+                        - emphasis [ref=e307]: "帖數: 8674"
+                      - definition [ref=e308]:
+                        - link "逐玉 全40集 2026 (mkv@1080p@多 ..." [ref=e309] [cursor=pointer]:
+                          - /url: forum.php?mod=redirect&tid=18906&goto=lastpost#lastpost
+                        - generic [ref=e310]:
+                          - text: 13 分鐘前
+                          - link "austindai" [ref=e311] [cursor=pointer]:
+                            - /url: space-username-austindai.html
+                  - 'cell "影集免空下載 影集免空下載 (2) 主題: 136, 帖數: 1526 恐龍時代：你不知道的故事 The D ... 2 小時前 aenjess" [ref=e312]':
+                    - generic [ref=e313]:
+                      - link "影集免空下載":
+                        - /url: forum-78-1.html
+                        - img "影集免空下載" [ref=e314] [cursor=pointer]
+                    - generic [ref=e315]:
+                      - term [ref=e316]:
+                        - link "影集免空下載" [ref=e317] [cursor=pointer]:
+                          - /url: forum-78-1.html
+                        - emphasis [ref=e318]: (2)
+                      - definition [ref=e319]:
+                        - emphasis [ref=e320]: "主題: 136"
+                        - text: ","
+                        - emphasis [ref=e321]: "帖數: 1526"
+                      - definition [ref=e322]:
+                        - link "恐龍時代：你不知道的故事 The D ..." [ref=e323] [cursor=pointer]:
+                          - /url: forum.php?mod=redirect&tid=18948&goto=lastpost#lastpost
+                        - generic [ref=e324]:
+                          - text: 2 小時前
+                          - link "aenjess" [ref=e325] [cursor=pointer]:
+                            - /url: space-username-aenjess.html
+          - generic [ref=e326]:
+            - generic [ref=e327]:
+              - emphasis [ref=e329] [cursor=pointer]: 
+              - generic [ref=e330]:
+                - text: "分區版主:"
+                - link "louische" [ref=e331] [cursor=pointer]:
+                  - /url: space-username-louische.html
+                - text: ","
+                - link "austindai" [ref=e332] [cursor=pointer]:
+                  - /url: space-username-austindai.html
+              - heading "動漫區" [level=2] [ref=e333]:
+                - link "動漫區" [ref=e334] [cursor=pointer]:
+                  - /url: gid-52.html
+            - table [ref=e336]:
+              - rowgroup [ref=e337]:
+                - 'row "動畫BT分享 動畫BT分享 主題: 25, 帖數: 321 最後發表: 7 天前 動畫免空分享 動畫免空分享 (20) 主題: 907, 帖數: 4274 最後發表: 20 分鐘前 漫畫下載分享 漫畫下載分享 主題: 183, 帖數: 347 最後發表: 2025-11-20 08:10" [ref=e338]':
+                  - 'cell "動畫BT分享 動畫BT分享 主題: 25, 帖數: 321 最後發表: 7 天前" [ref=e339]':
+                    - generic [ref=e340]:
+                      - link "動畫BT分享":
+                        - /url: forum-80-1.html
+                        - img "動畫BT分享" [ref=e341] [cursor=pointer]
+                    - generic [ref=e342]:
+                      - term [ref=e343]:
+                        - link "動畫BT分享" [ref=e344] [cursor=pointer]:
+                          - /url: forum-80-1.html
+                      - definition [ref=e345]:
+                        - emphasis [ref=e346]: "主題: 25"
+                        - text: ","
+                        - emphasis [ref=e347]: "帖數: 321"
+                      - definition [ref=e348]:
+                        - 'link "最後發表: 7 天前" [ref=e349] [cursor=pointer]':
+                          - /url: forum.php?mod=redirect&tid=18308&goto=lastpost#lastpost
+                  - 'cell "動畫免空分享 動畫免空分享 (20) 主題: 907, 帖數: 4274 最後發表: 20 分鐘前" [ref=e350]':
+                    - generic [ref=e351]:
+                      - link "動畫免空分享":
+                        - /url: forum-53-1.html
+                        - img "動畫免空分享" [ref=e352] [cursor=pointer]
+                    - generic [ref=e353]:
+                      - term [ref=e354]:
+                        - link "動畫免空分享" [ref=e355] [cursor=pointer]:
+                          - /url: forum-53-1.html
+                        - emphasis [ref=e356]: (20)
+                      - definition [ref=e357]:
+                        - emphasis [ref=e358]: "主題: 907"
+                        - text: ","
+                        - emphasis [ref=e359]: "帖數: 4274"
+                      - definition [ref=e360]:
+                        - 'link "最後發表: 20 分鐘前" [ref=e361] [cursor=pointer]':
+                          - /url: forum.php?mod=redirect&tid=11117&goto=lastpost#lastpost
+                  - 'cell "漫畫下載分享 漫畫下載分享 主題: 183, 帖數: 347 最後發表: 2025-11-20 08:10" [ref=e362]':
+                    - generic [ref=e363]:
+                      - link "漫畫下載分享":
+                        - /url: forum-54-1.html
+                        - img "漫畫下載分享" [ref=e364] [cursor=pointer]
+                    - generic [ref=e365]:
+                      - term [ref=e366]:
+                        - link "漫畫下載分享" [ref=e367] [cursor=pointer]:
+                          - /url: forum-54-1.html
+                      - definition [ref=e368]:
+                        - emphasis [ref=e369]: "主題: 183"
+                        - text: ","
+                        - emphasis [ref=e370]: "帖數: 347"
+                      - definition [ref=e371]:
+                        - 'link "最後發表: 2025-11-20 08:10" [ref=e372] [cursor=pointer]':
+                          - /url: forum.php?mod=redirect&tid=10145&goto=lastpost#lastpost
+          - generic [ref=e373]:
+            - generic [ref=e374]:
+              - emphasis [ref=e376] [cursor=pointer]: 
+              - heading "字幕交流區" [level=2] [ref=e377]:
+                - link "字幕交流區" [ref=e378] [cursor=pointer]:
+                  - /url: gid-74.html
+            - table [ref=e380]:
+              - rowgroup [ref=e381]:
+                - 'row "電影字幕交流 電影字幕交流 主題: 427, 帖數: 786 《驚聲尖叫(7)》 昨天 18:42 chenchengming 電視劇字幕交流 電視劇字幕交流 主題: 12, 帖數: 36 汪達與幻視 WandaVision 繁中字 ... 2026-3-27 19:29 swqafred" [ref=e382]':
+                  - 'cell "電影字幕交流 電影字幕交流 主題: 427, 帖數: 786 《驚聲尖叫(7)》 昨天 18:42 chenchengming" [ref=e383]':
+                    - generic [ref=e384]:
+                      - link "電影字幕交流":
+                        - /url: forum-75-1.html
+                        - img "電影字幕交流" [ref=e385] [cursor=pointer]
+                    - generic [ref=e386]:
+                      - term [ref=e387]:
+                        - link "電影字幕交流" [ref=e388] [cursor=pointer]:
+                          - /url: forum-75-1.html
+                      - definition [ref=e389]:
+                        - emphasis [ref=e390]: "主題: 427"
+                        - text: ","
+                        - emphasis [ref=e391]: "帖數: 786"
+                      - definition [ref=e392]:
+                        - link "《驚聲尖叫(7)》" [ref=e393] [cursor=pointer]:
+                          - /url: forum.php?mod=redirect&tid=18977&goto=lastpost#lastpost
+                        - generic [ref=e394]:
+                          - text: 昨天 18:42
+                          - link "chenchengming" [ref=e395] [cursor=pointer]:
+                            - /url: space-username-chenchengming.html
+                  - 'cell "電視劇字幕交流 電視劇字幕交流 主題: 12, 帖數: 36 汪達與幻視 WandaVision 繁中字 ... 2026-3-27 19:29 swqafred" [ref=e396]':
+                    - generic [ref=e397]:
+                      - link "電視劇字幕交流":
+                        - /url: forum-76-1.html
+                        - img "電視劇字幕交流" [ref=e398] [cursor=pointer]
+                    - generic [ref=e399]:
+                      - term [ref=e400]:
+                        - link "電視劇字幕交流" [ref=e401] [cursor=pointer]:
+                          - /url: forum-76-1.html
+                      - definition [ref=e402]:
+                        - emphasis [ref=e403]: "主題: 12"
+                        - text: ","
+                        - emphasis [ref=e404]: "帖數: 36"
+                      - definition [ref=e405]:
+                        - link "汪達與幻視 WandaVision 繁中字 ..." [ref=e406] [cursor=pointer]:
+                          - /url: forum.php?mod=redirect&tid=6544&goto=lastpost#lastpost
+                        - generic [ref=e407]:
+                          - text: 2026-3-27 19:29
+                          - link "swqafred" [ref=e408] [cursor=pointer]:
+                            - /url: space-username-swqafred.html
+          - generic [ref=e409]:
+            - generic [ref=e410]:
+              - emphasis [ref=e412] [cursor=pointer]: 
+              - generic [ref=e413]:
+                - text: "分區版主:"
+                - link "yoyokuo2007" [ref=e414] [cursor=pointer]:
+                  - /url: space-username-yoyokuo2007.html
+              - heading "軟體交流區" [level=2] [ref=e415]:
+                - link "軟體交流區" [ref=e416] [cursor=pointer]:
+                  - /url: gid-37.html
+            - table [ref=e418]:
+              - rowgroup [ref=e419]:
+                - 'row "Windows軟體下載 Windows軟體下載 主題: 445, 帖數: 2198 最後發表: 前天 17:13 手機APP軟體下載 手機APP軟體下載 主題: 33, 帖數: 195 最後發表: 前天 22:29 PC/Windows資訊應用討論 PC/Windows資訊應用討論 主題: 6, 帖數: 90 最後發表: 6 天前" [ref=e420]':
+                  - 'cell "Windows軟體下載 Windows軟體下載 主題: 445, 帖數: 2198 最後發表: 前天 17:13" [ref=e421]':
+                    - generic [ref=e422]:
+                      - link "Windows軟體下載":
+                        - /url: forum-42-1.html
+                        - img "Windows軟體下載" [ref=e423] [cursor=pointer]
+                    - generic [ref=e424]:
+                      - term [ref=e425]:
+                        - link "Windows軟體下載" [ref=e426] [cursor=pointer]:
+                          - /url: forum-42-1.html
+                      - definition [ref=e427]:
+                        - emphasis [ref=e428]: "主題: 445"
+                        - text: ","
+                        - emphasis [ref=e429]: "帖數: 2198"
+                      - definition [ref=e430]:
+                        - 'link "最後發表: 前天 17:13" [ref=e431] [cursor=pointer]':
+                          - /url: forum.php?mod=redirect&tid=12247&goto=lastpost#lastpost
+                  - 'cell "手機APP軟體下載 手機APP軟體下載 主題: 33, 帖數: 195 最後發表: 前天 22:29" [ref=e432]':
+                    - generic [ref=e433]:
+                      - link "手機APP軟體下載":
+                        - /url: forum-43-1.html
+                        - img "手機APP軟體下載" [ref=e434] [cursor=pointer]
+                    - generic [ref=e435]:
+                      - term [ref=e436]:
+                        - link "手機APP軟體下載" [ref=e437] [cursor=pointer]:
+                          - /url: forum-43-1.html
+                      - definition [ref=e438]:
+                        - emphasis [ref=e439]: "主題: 33"
+                        - text: ","
+                        - emphasis [ref=e440]: "帖數: 195"
+                      - definition [ref=e441]:
+                        - 'link "最後發表: 前天 22:29" [ref=e442] [cursor=pointer]':
+                          - /url: forum.php?mod=redirect&tid=7501&goto=lastpost#lastpost
+                  - 'cell "PC/Windows資訊應用討論 PC/Windows資訊應用討論 主題: 6, 帖數: 90 最後發表: 6 天前" [ref=e443]':
+                    - link "PC/Windows資訊應用討論" [ref=e445] [cursor=pointer]:
+                      - /url: forum-81-1.html
+                      - img [ref=e446]
+                    - generic [ref=e448]:
+                      - term [ref=e449]:
+                        - link "PC/Windows資訊應用討論" [ref=e450] [cursor=pointer]:
+                          - /url: forum-81-1.html
+                      - definition [ref=e451]:
+                        - emphasis [ref=e452]: "主題: 6"
+                        - text: ","
+                        - emphasis [ref=e453]: "帖數: 90"
+                      - definition [ref=e454]:
+                        - 'link "最後發表: 6 天前" [ref=e455] [cursor=pointer]':
+                          - /url: forum.php?mod=redirect&tid=15383&goto=lastpost#lastpost
+          - generic [ref=e456]:
+            - generic [ref=e457]:
+              - emphasis [ref=e459] [cursor=pointer]: 
+              - heading "論壇聯誼區" [level=2] [ref=e460]:
+                - link "論壇聯誼區" [ref=e461] [cursor=pointer]:
+                  - /url: gid-46.html
+            - table [ref=e463]:
+              - rowgroup [ref=e464]:
+                - 'row "意見反應區 意見反應區 (1) 主題: 134, 帖數: 524 最後發表: 15 分鐘前 新手發表區 新手發表區 (4) 主題: 1186, 帖數: 1535 最後發表: 2 小時前 影幣回饋區 影幣回饋區 (81) 主題: 2304, 帖數: 13萬 最後發表: 12 分鐘前 聊天打屁區 聊天打屁區 (2) 主題: 190, 帖數: 1583 最後發表: 半小時前" [ref=e465]':
+                  - 'cell "意見反應區 意見反應區 (1) 主題: 134, 帖數: 524 最後發表: 15 分鐘前" [ref=e466]':
+                    - generic [ref=e467]:
+                      - link "意見反應區":
+                        - /url: forum-61-1.html
+                        - img "意見反應區" [ref=e468] [cursor=pointer]
+                    - generic [ref=e469]:
+                      - term [ref=e470]:
+                        - link "意見反應區" [ref=e471] [cursor=pointer]:
+                          - /url: forum-61-1.html
+                        - emphasis [ref=e472]: (1)
+                      - definition [ref=e473]:
+                        - emphasis [ref=e474]: "主題: 134"
+                        - text: ","
+                        - emphasis [ref=e475]: "帖數: 524"
+                      - definition [ref=e476]:
+                        - 'link "最後發表: 15 分鐘前" [ref=e477] [cursor=pointer]':
+                          - /url: forum.php?mod=redirect&tid=18991&goto=lastpost#lastpost
+                  - 'cell "新手發表區 新手發表區 (4) 主題: 1186, 帖數: 1535 最後發表: 2 小時前" [ref=e478]':
+                    - generic [ref=e479]:
+                      - link "新手發表區":
+                        - /url: forum-47-1.html
+                        - img "新手發表區" [ref=e480] [cursor=pointer]
+                    - generic [ref=e481]:
+                      - term [ref=e482]:
+                        - link "新手發表區" [ref=e483] [cursor=pointer]:
+                          - /url: forum-47-1.html
+                        - emphasis [ref=e484]: (4)
+                      - definition [ref=e485]:
+                        - emphasis [ref=e486]: "主題: 1186"
+                        - text: ","
+                        - emphasis [ref=e487]: "帖數: 1535"
+                      - definition [ref=e488]:
+                        - 'link "最後發表: 2 小時前" [ref=e489] [cursor=pointer]':
+                          - /url: forum.php?mod=redirect&tid=18984&goto=lastpost#lastpost
+                  - 'cell "影幣回饋區 影幣回饋區 (81) 主題: 2304, 帖數: 13萬 最後發表: 12 分鐘前" [ref=e490]':
+                    - generic [ref=e491]:
+                      - link "影幣回饋區":
+                        - /url: forum-72-1.html
+                        - img "影幣回饋區" [ref=e492] [cursor=pointer]
+                    - generic [ref=e493]:
+                      - term [ref=e494]:
+                        - link "影幣回饋區" [ref=e495] [cursor=pointer]:
+                          - /url: forum-72-1.html
+                        - emphasis [ref=e496]: (81)
+                      - definition [ref=e497]:
+                        - emphasis [ref=e498]: "主題: 2304"
+                        - text: ","
+                        - emphasis [ref=e499]: "帖數: 13萬"
+                      - definition [ref=e500]:
+                        - 'link "最後發表: 12 分鐘前" [ref=e501] [cursor=pointer]':
+                          - /url: forum.php?mod=redirect&tid=18819&goto=lastpost#lastpost
+                  - 'cell "聊天打屁區 聊天打屁區 (2) 主題: 190, 帖數: 1583 最後發表: 半小時前" [ref=e502]':
+                    - generic [ref=e503]:
+                      - link "聊天打屁區":
+                        - /url: forum-73-1.html
+                        - img "聊天打屁區" [ref=e504] [cursor=pointer]
+                    - generic [ref=e505]:
+                      - term [ref=e506]:
+                        - link "聊天打屁區" [ref=e507] [cursor=pointer]:
+                          - /url: forum-73-1.html
+                        - emphasis [ref=e508]: (2)
+                      - definition [ref=e509]:
+                        - emphasis [ref=e510]: "主題: 190"
+                        - text: ","
+                        - emphasis [ref=e511]: "帖數: 1583"
+                      - definition [ref=e512]:
+                        - 'link "最後發表: 半小時前" [ref=e513] [cursor=pointer]':
+                          - /url: forum.php?mod=redirect&tid=15491&goto=lastpost#lastpost
+          - generic [ref=e514]:
+            - generic [ref=e515]:
+              - emphasis [ref=e517] [cursor=pointer]: 
+              - heading "站務區" [level=2] [ref=e518]:
+                - link "站務區" [ref=e519] [cursor=pointer]:
+                  - /url: gid-1.html
+            - table [ref=e521]:
+              - rowgroup [ref=e522]:
+                - row "站務公告 站務公告 (8) 45 / 6343 歡迎新加入的會員~~發影幣囉!! ... 半小時前 become6510" [ref=e523]:
+                  - cell "站務公告" [ref=e524]:
+                    - link "站務公告":
+                      - /url: forum-2-1.html
+                      - img "站務公告" [ref=e525] [cursor=pointer]
+                  - cell "站務公告 (8)" [ref=e526]:
+                    - heading "站務公告 (8)" [level=2] [ref=e527]:
+                      - link "站務公告" [ref=e528] [cursor=pointer]:
+                        - /url: forum-2-1.html
+                      - emphasis [ref=e529]: (8)
+                  - cell "45 / 6343" [ref=e530]
+                  - cell "歡迎新加入的會員~~發影幣囉!! ... 半小時前 become6510" [ref=e531]:
+                    - generic [ref=e532]:
+                      - link "歡迎新加入的會員~~發影幣囉!! ..." [ref=e533] [cursor=pointer]:
+                        - /url: forum.php?mod=redirect&tid=2709&goto=lastpost#lastpost
+                      - generic [ref=e534]:
+                        - text: 半小時前
+                        - link "become6510" [ref=e535] [cursor=pointer]:
+                          - /url: space-username-become6510.html
+                - row
+        - generic [ref=e537]:
+          - generic [ref=e538]:
+            - link "":
+              - /url: forum.php?showoldetails=yes#online
+              - emphasis [ref=e539] [cursor=pointer]: 
+          - heading "在線會員 - 總計 241 人在線 - 最高記錄是 2200 於 2024-5-21." [level=3] [ref=e540]:
+            - strong [ref=e541]: 在線會員
+            - generic [ref=e542]:
+              - text: "- 總計"
+              - strong [ref=e543]: "241"
+              - text: 人在線 - 最高記錄是
+              - strong [ref=e544]: "2200"
+              - text: 於
+              - strong [ref=e545]: 2024-5-21
+              - text: .
+  - generic [ref=e546]:
+    - generic [ref=e547]:
+      - paragraph [ref=e548]:
+        - link "小黑屋" [ref=e549] [cursor=pointer]:
+          - /url: forum.php?mod=misc&action=showdarkroom
+        - text: "|"
+        - strong [ref=e550]:
+          - link "94i論壇" [ref=e551] [cursor=pointer]:
+            - /url: https://94i.in
+        - generic [ref=e552]: 《論壇已正常運行3180天 21小時 45分9 秒》
+      - paragraph [ref=e553]: GMT+8, 2026-4-6 23:44, Updated at 2026-04-06 23:44:30, Processed in 0.000182 second(s), Gzip On.
+    - generic [ref=e554]:
+      - paragraph [ref=e555]:
+        - text: Powered Discuz!
+        - emphasis [ref=e556]: X3.5
+      - paragraph [ref=e557]: ©2017~2026 94i.in

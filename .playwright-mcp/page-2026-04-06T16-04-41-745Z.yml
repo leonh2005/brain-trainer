@@ -1,0 +1,136 @@
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - generic:
+      - generic [ref=e4]: 歡迎來到94i論壇，今天是：2026年04月07日 星期二 凌晨 00:04:41
+      - link "開啟輔助訪問" [ref=e6] [cursor=pointer]:
+        - /url: javascript:;
+  - generic [ref=e8]:
+    - heading "94i論壇" [level=2] [ref=e10]:
+      - link "94i論壇" [ref=e11] [cursor=pointer]:
+        - /url: ./
+        - img "94i論壇" [ref=e12]
+    - generic [ref=e13]:
+      - link "快捷導航" [ref=e14] [cursor=pointer]:
+        - /url: javascript:;
+      - list:
+        - listitem [ref=e15]:
+          - link "首頁" [ref=e16] [cursor=pointer]:
+            - /url: forum.php
+        - listitem [ref=e17]:
+          - link "BT下載" [ref=e18] [cursor=pointer]:
+            - /url: https://94i.in/gid-36.html
+        - listitem [ref=e19]:
+          - link "免空下載" [ref=e20] [cursor=pointer]:
+            - /url: https://94i.in/gid-36.html
+        - listitem [ref=e21]:
+          - link "意見反饋" [ref=e22] [cursor=pointer]:
+            - /url: forum-61-1.html
+        - listitem [ref=e23]:
+          - link "小額贊助" [ref=e24] [cursor=pointer]:
+            - /url: https://94i.in/thread-2096-1-1.html
+    - table [ref=e27]:
+      - rowgroup [ref=e28]:
+        - 'row "搜索 搜索 熱搜: 全面攻佔 玩命關頭 復仇者聯盟 小飛象 捍衛任務" [ref=e29]':
+          - cell [ref=e30]
+          - cell [ref=e31]:
+            - textbox "請輸入搜索內容" [ref=e32]
+          - cell "搜索" [ref=e33]:
+            - link "搜索" [ref=e34] [cursor=pointer]:
+              - /url: javascript:;
+          - cell "搜索" [ref=e35]:
+            - button "搜索" [ref=e36] [cursor=pointer]:
+              - text: 
+              - strong [ref=e37]: 搜索
+          - 'cell "熱搜: 全面攻佔 玩命關頭 復仇者聯盟 小飛象 捍衛任務" [ref=e38]':
+            - generic [ref=e39]:
+              - strong [ref=e40]: "熱搜:"
+              - link "全面攻佔" [ref=e41] [cursor=pointer]:
+                - /url: search.php?mod=forum&srchtxt=%E5%85%A8%E9%9D%A2%E6%94%BB%E4%BD%94&formhash=0e4d752a&searchsubmit=true&source=hotsearch
+              - link "玩命關頭" [ref=e42] [cursor=pointer]:
+                - /url: search.php?mod=forum&srchtxt=%E7%8E%A9%E5%91%BD%E9%97%9C%E9%A0%AD&formhash=0e4d752a&searchsubmit=true&source=hotsearch
+              - link "復仇者聯盟" [ref=e43] [cursor=pointer]:
+                - /url: search.php?mod=forum&srchtxt=%E5%BE%A9%E4%BB%87%E8%80%85%E8%81%AF%E7%9B%9F&formhash=0e4d752a&searchsubmit=true&source=hotsearch
+              - link "小飛象" [ref=e44] [cursor=pointer]:
+                - /url: search.php?mod=forum&srchtxt=%E5%B0%8F%E9%A3%9B%E8%B1%A1&formhash=0e4d752a&searchsubmit=true&source=hotsearch
+              - link "捍衛任務" [ref=e45] [cursor=pointer]:
+                - /url: search.php?mod=forum&srchtxt=%E6%8D%8D%E8%A1%9B%E4%BB%BB%E5%8B%99&formhash=0e4d752a&searchsubmit=true&source=hotsearch
+  - generic [ref=e47]:
+    - text: 
+    - generic [ref=e49]:
+      - generic [ref=e50]:
+        - generic [ref=e51]:
+          - link "沒有賬號？" [ref=e52] [cursor=pointer]:
+            - /url: member.php?mod=AAbb@siDrXe~sXs
+          - link "立即註冊94i會員" [ref=e53] [cursor=pointer]:
+            - /url: member.php?mod=AAbb@siDrXe~sXs
+        - heading "登錄" [level=3] [ref=e54]
+      - generic [ref=e55]:
+        - generic [ref=e57]:
+          - heading [level=3] [ref=e58]:
+            - emphasis
+          - generic [ref=e60]:
+            - table [ref=e62]:
+              - rowgroup [ref=e63]:
+                - 'row "帳號: 立即註冊94i會員" [ref=e64]':
+                  - rowheader "帳號:" [ref=e65]
+                  - cell [ref=e66]:
+                    - textbox "帳號:" [active] [ref=e67]
+                  - cell "立即註冊94i會員" [ref=e68]:
+                    - link "立即註冊94i會員" [ref=e69] [cursor=pointer]:
+                      - /url: member.php?mod=AAbb@siDrXe~sXs
+            - table [ref=e71]:
+              - rowgroup [ref=e72]:
+                - 'row "密碼: 找回密碼" [ref=e73]':
+                  - rowheader "密碼:" [ref=e74]
+                  - cell [ref=e75]:
+                    - textbox "密碼:" [ref=e76]
+                  - cell "找回密碼" [ref=e77]:
+                    - link "找回密碼" [ref=e78] [cursor=pointer]:
+                      - /url: javascript:;
+            - table [ref=e80]:
+              - rowgroup [ref=e81]:
+                - 'row "安全提問: 安全提問(未設置請忽略)" [ref=e82]':
+                  - rowheader "安全提問:" [ref=e83]
+                  - cell "安全提問(未設置請忽略)" [ref=e84]:
+                    - combobox [ref=e85]:
+                      - option "安全提問(未設置請忽略)" [selected]
+                      - option "母親的名字"
+                      - option "爺爺的名字"
+                      - option "父親出生的城市"
+                      - option "您其中一位老師的名字"
+                      - option "您個人計算機的型號"
+                      - option "您最喜歡的餐館名稱"
+                      - option "駕駛執照最後四位數字"
+            - table [ref=e87]:
+              - rowgroup [ref=e88]:
+                - row "自動登錄" [ref=e89]:
+                  - rowheader [ref=e90]
+                  - cell "自動登錄" [ref=e91]:
+                    - generic [ref=e92] [cursor=pointer]:
+                      - checkbox "自動登錄" [ref=e93]
+                      - text: 自動登錄
+            - table [ref=e95]:
+              - rowgroup [ref=e96]:
+                - row "登錄" [ref=e97]:
+                  - rowheader [ref=e98]
+                  - cell "登錄" [ref=e99]:
+                    - button "登錄" [ref=e100] [cursor=pointer]:
+                      - strong [ref=e101]: 登錄
+                  - cell [ref=e102]
+        - text: 
+  - generic [ref=e103]:
+    - generic [ref=e104]:
+      - paragraph [ref=e105]:
+        - link "小黑屋" [ref=e106] [cursor=pointer]:
+          - /url: forum.php?mod=misc&action=showdarkroom
+        - text: "|"
+        - strong [ref=e107]:
+          - link "94i論壇" [ref=e108] [cursor=pointer]:
+            - /url: https://94i.in
+        - generic [ref=e109]: 《論壇已正常運行3180天 22小時 4分40 秒》
+      - paragraph [ref=e110]: GMT+8, 2026-4-7 00:04 , Processed in 0.029328 second(s), 8 queries , Gzip On.
+    - generic [ref=e111]:
+      - paragraph [ref=e112]:
+        - text: Powered Discuz!
+        - emphasis [ref=e113]: X3.5
+      - paragraph [ref=e114]: ©2017~2026 94i.in
