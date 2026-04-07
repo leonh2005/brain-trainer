@@ -1,0 +1,291 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e3]: 📊
+    - heading "財經新聞情緒儀表板" [level=1] [ref=e4]
+    - generic [ref=e5]:
+      - generic [ref=e6]: 最後更新 2026-04-07 15:40 UTC
+      - generic [ref=e7]:
+        - button "今日" [ref=e8] [cursor=pointer]
+        - button "本週" [ref=e9] [cursor=pointer]
+        - button "本月" [ref=e10] [cursor=pointer]
+  - generic [ref=e11]:
+    - generic [ref=e12]:
+      - generic [ref=e13]: 多方
+      - generic [ref=e14]: 46.7%
+      - generic [ref=e15]: 28 則
+    - generic [ref=e16]:
+      - generic [ref=e17]: 空方
+      - generic [ref=e18]: 36.7%
+      - generic [ref=e19]: 22 則
+    - generic [ref=e20]:
+      - generic [ref=e21]: 中性
+      - generic [ref=e22]: 16.7%
+      - generic [ref=e23]: 10 則
+  - generic [ref=e27]:
+    - textbox "搜尋標題、摘要..." [ref=e28]
+    - combobox [ref=e29]:
+      - option "所有來源" [selected]
+      - option "Yahoo 台灣"
+      - option "Yahoo"
+      - option "Yahoo 美國"
+      - option "聯合新聞"
+      - option "鉅亨網"
+      - option "MarketWatch"
+      - option "CNBC"
+      - option "PTT"
+      - option "Reddit"
+      - option "X"
+    - textbox [ref=e30]
+    - combobox [ref=e31]:
+      - option "所有情緒" [selected]
+      - option "看多（7-10）"
+      - option "看空（1-4）"
+      - option "中性（5-6）"
+    - combobox [ref=e32]:
+      - option "排除無關" [selected]
+      - option "僅顯示無關"
+  - generic [ref=e33]:
+    - generic [ref=e34]:
+      - generic [ref=e35]: "8"
+      - generic [ref=e36]:
+        - generic [ref=e37]:
+          - text: yahoo_tw
+          - link "沙烏地阿拉伯發展基金與帛琉共和國簽署價值1500萬美元的協議，推動當地經濟成長" [ref=e38] [cursor=pointer]:
+            - /url: https://tw.stock.yahoo.com/news/%E6%B2%99%E7%83%8F%E5%9C%B0%E9%98%BF%E6%8B%89%E4%BC%AF%E7%99%BC%E5%B1%95%E5%9F%BA%E9%87%91%E8%88%87%E5%B8%9B%E7%90%89%E5%85%B1%E5%92%8C%E5%9C%8B%E7%B0%BD%E7%BD%B2%E5%83%B9%E5%80%BC1500%E8%90%AC%E7%BE%8E%E5%85%83%E7%9A%84%E5%8D%94%E8%AD%B0-%E6%8E%A8%E5%8B%95%E7%95%B6%E5%9C%B0%E7%B6%93%E6%BF%9F%E6%88%90%E9%95%B7-151400975.html
+        - generic [ref=e39]: 沙烏地阿拉伯發展基金與帛琉共和國簽署價值1500萬美元的發展貸款協議
+        - generic [ref=e40]:
+          - generic [ref=e41]: "#經濟成長"
+          - generic [ref=e42]: "#發展貸款"
+      - button "無關" [ref=e43] [cursor=pointer]
+    - generic [ref=e44]:
+      - generic [ref=e45]: "6"
+      - generic [ref=e46]:
+        - generic [ref=e47]:
+          - text: yahoo_tw
+          - link "Mouser Electronics探索人工智慧如何塑造日常科技和使用體驗" [ref=e48] [cursor=pointer]:
+            - /url: https://tw.stock.yahoo.com/news/mouser-electronics%E6%8E%A2%E7%B4%A2%E4%BA%BA%E5%B7%A5%E6%99%BA%E6%85%A7%E5%A6%82%E4%BD%95%E5%A1%91%E9%80%A0%E6%97%A5%E5%B8%B8%E7%A7%91%E6%8A%80%E5%92%8C%E4%BD%BF%E7%94%A8%E9%AB%94%E9%A9%97-151100441.html
+        - generic [ref=e49]: Mouser Electronics探索人工智慧如何塑造日常科技和使用體驗
+        - generic [ref=e50]:
+          - generic [ref=e51]: "#人工智慧"
+          - generic [ref=e52]: "#科技"
+      - button "無關" [ref=e53] [cursor=pointer]
+    - generic [ref=e54]:
+      - generic [ref=e55]: "9"
+      - generic [ref=e56]:
+        - generic [ref=e57]:
+          - text: yahoo_tw
+          - link "世界先進大手筆！現金增資新加坡子公司1.2億美元" [ref=e58] [cursor=pointer]:
+            - /url: https://tw.news.yahoo.com/%E4%B8%96%E7%95%8C%E5%85%88%E9%80%B2%E5%A4%A7%E6%89%8B%E7%AD%86-%E7%8F%BE%E9%87%91%E5%A2%9E%E8%B3%87%E6%96%B0%E5%8A%A0%E5%9D%A1%E5%AD%90%E5%85%AC%E5%8F%B81-2%E5%84%84%E7%BE%8E%E5%85%83-150911402.html
+        - generic [ref=e59]: 世界先進大手筆！現金增資新加坡子公司1.2億美元
+        - generic [ref=e60]:
+          - generic [ref=e61]: "#現金增資"
+          - generic [ref=e62]: "#新加坡"
+      - button "無關" [ref=e63] [cursor=pointer]
+    - generic [ref=e64]:
+      - generic [ref=e65]: "4"
+      - generic [ref=e66]:
+        - generic [ref=e67]:
+          - text: yahoo_tw
+          - link "泰國應對能源危機 潑水節後擬禁止加油站夜間營業" [ref=e68] [cursor=pointer]:
+            - /url: https://tw.stock.yahoo.com/news/%E6%B3%B0%E5%9C%8B%E6%87%89%E5%B0%8D%E8%83%BD%E6%BA%90%E5%8D%B1%E6%A9%9F-%E6%BD%91%E6%B0%B4%E7%AF%80%E5%BE%8C%E6%93%AC%E7%A6%81%E6%AD%A2%E5%8A%A0%E6%B2%B9%E7%AB%99%E5%A4%9C%E9%96%93%E7%87%9F%E6%A5%AD-150220392.html
+        - generic [ref=e69]: 泰國應對能源危機 潑水節後擬禁止加油站夜間營業
+        - generic [ref=e70]:
+          - generic [ref=e71]: "#能源危機"
+          - generic [ref=e72]: "#加油站"
+      - button "無關" [ref=e73] [cursor=pointer]
+    - generic [ref=e74]:
+      - generic [ref=e75]: "2"
+      - generic [ref=e76]:
+        - generic [ref=e77]:
+          - text: yahoo_tw
+          - link "伊朗官員：民眾一起來手牽手護電廠" [ref=e78] [cursor=pointer]:
+            - /url: https://tw.news.yahoo.com/%E4%BC%8A%E6%9C%97%E5%AE%98%E5%93%A1-%E6%B0%91%E7%9C%BE-%E8%B5%B7%E4%BE%86%E6%89%8B%E7%89%BD%E6%89%8B%E8%AD%B7%E9%9B%BB%E5%BB%A0-143923667.html
+        - generic [ref=e79]: 伊朗官員：民眾一起來手牽手護電廠
+        - generic [ref=e80]:
+          - generic [ref=e81]: "#伊朗"
+          - generic [ref=e82]: "#電廠"
+      - button "無關" [ref=e83] [cursor=pointer]
+    - generic [ref=e84]:
+      - generic [ref=e85]: "3"
+      - generic [ref=e86]:
+        - generic [ref=e87]:
+          - text: yahoo_tw
+          - link "快訊！伊朗民眾組「人鏈」 保護發電廠、橋梁" [ref=e88] [cursor=pointer]:
+            - /url: https://tw.stock.yahoo.com/news/%E5%BF%AB%E8%A8%8A-%E4%BC%8A%E6%9C%97%E6%B0%91%E7%9C%BE%E7%B5%84-%E4%BA%BA%E9%8F%88-%E4%BF%9D%E8%AD%B7%E7%99%BC%E9%9B%BB%E5%BB%A0-%E6%A9%8B%E6%A2%81-145244551.html
+        - generic [ref=e89]: 快訊！伊朗民眾組「人鏈」 保護發電廠、橋梁
+        - generic [ref=e90]:
+          - generic [ref=e91]: "#伊朗"
+          - generic [ref=e92]: "#發電廠"
+      - button "無關" [ref=e93] [cursor=pointer]
+    - generic [ref=e94]:
+      - generic [ref=e95]: "1"
+      - generic [ref=e96]:
+        - generic [ref=e97]:
+          - text: yahoo_tw
+          - link "伊朗：已關閉美國、伊朗所有溝通管道" [ref=e98] [cursor=pointer]:
+            - /url: https://tw.stock.yahoo.com/news/%E4%BC%8A%E6%9C%97-%E5%B7%B2%E9%97%9C%E9%96%89%E7%BE%8E%E5%9C%8B-%E4%BC%8A%E6%9C%97%E6%89%80%E6%9C%89%E6%BA%9D%E9%80%9A%E7%AE%A1%E9%81%93-144511409.html
+        - generic [ref=e99]: 伊朗：已關閉美國、伊朗所有溝通管道
+        - generic [ref=e100]:
+          - generic [ref=e101]: "#伊朗"
+          - generic [ref=e102]: "#溝通管道"
+      - button "無關" [ref=e103] [cursor=pointer]
+    - generic [ref=e104]:
+      - generic [ref=e105]: "8"
+      - generic [ref=e106]:
+        - generic [ref=e107]:
+          - text: yahoo_tw
+          - link "【公告】建準 2026年3月合併營收19.18億元 年增22.46%" [ref=e108] [cursor=pointer]:
+            - /url: https://tw.stock.yahoo.com/news/%E5%85%AC%E5%91%8A-%E5%BB%BA%E6%BA%96-2026%E5%B9%B43%E6%9C%88%E5%90%88%E4%BD%B5%E7%87%9F%E6%94%B619-18%E5%84%84%E5%85%83-%E5%B9%B4%E5%A2%9E22-144218798.html
+        - generic [ref=e109]: 【公告】建準 2026年3月合併營收19.18億元 年增22.46%
+        - generic [ref=e110]:
+          - generic [ref=e111]: "#營收"
+          - generic [ref=e112]: "#增長"
+      - button "無關" [ref=e113] [cursor=pointer]
+    - generic [ref=e114]:
+      - generic [ref=e115]: "5"
+      - generic [ref=e116]:
+        - generic [ref=e117]:
+          - text: yahoo_tw
+          - link "美副總統范斯：美伊談判將持續到川普設下的最後期限結束為止" [ref=e118] [cursor=pointer]:
+            - /url: https://tw.stock.yahoo.com/news/%E7%BE%8E%E5%89%AF%E7%B8%BD%E7%B5%B1%E8%8C%83%E6%96%AF-%E7%BE%8E%E4%BC%8A%E8%AB%87%E5%88%A4%E5%B0%87%E6%8C%81%E7%BA%8C%E5%88%B0%E5%B7%9D%E6%99%AE%E8%A8%AD%E4%B8%8B%E7%9A%84%E6%9C%80%E5%BE%8C%E6%9C%9F%E9%99%90%E7%B5%90%E6%9D%9F%E7%82%BA%E6%AD%A2-144039948.html
+        - generic [ref=e119]: 美副總統范斯：美伊談判將持續到川普設下的最後期限結束為止
+        - generic [ref=e120]:
+          - generic [ref=e121]: "#美伊談判"
+          - generic [ref=e122]: "#最後期限"
+      - button "無關" [ref=e123] [cursor=pointer]
+    - generic [ref=e124]:
+      - generic [ref=e125]: "9"
+      - generic [ref=e126]:
+        - generic [ref=e127]:
+          - text: yahoo_tw
+          - link "搶當AI新貴！調查：6.7萬個AI工作機會歡迎新鮮人" [ref=e128] [cursor=pointer]:
+            - /url: https://tw.stock.yahoo.com/news/%E6%90%B6%E7%95%B6ai%E6%96%B0%E8%B2%B4-%E8%AA%BF%E6%9F%A5-6-7%E8%90%AC%E5%80%8Bai%E5%B7%A5%E4%BD%9C%E6%A9%9F%E6%9C%83%E6%AD%A1%E8%BF%8E%E6%96%B0%E9%AE%AE%E4%BA%BA-143232078.html
+        - generic [ref=e129]: 搶當AI新貴！調查：6.7萬個AI工作機會歡迎新鮮人
+        - generic [ref=e130]:
+          - generic [ref=e131]: "#AI"
+          - generic [ref=e132]: "#工作機會"
+      - button "無關" [ref=e133] [cursor=pointer]
+    - generic [ref=e134]:
+      - generic [ref=e135]: "6"
+      - generic [ref=e136]:
+        - generic [ref=e137]:
+          - text: yahoo_tw
+          - link "國票金董事改選超額提名 25人搶15席" [ref=e138] [cursor=pointer]:
+            - /url: https://tw.stock.yahoo.com/news/%E5%9C%8B%E7%A5%A8%E9%87%91%E8%91%A3%E4%BA%8B%E6%94%B9%E9%81%B8%E8%B6%85%E9%A1%8D%E6%8F%90%E5%90%8D-25%E4%BA%BA%E6%90%B615%E5%B8%AD-142716617.html
+        - generic [ref=e139]: 國票金董事改選超額提名 25人搶15席
+        - generic [ref=e140]:
+          - generic [ref=e141]: "#董事改選"
+          - generic [ref=e142]: "#超額提名"
+      - button "無關" [ref=e143] [cursor=pointer]
+    - generic [ref=e144]:
+      - generic [ref=e145]: "9"
+      - generic [ref=e146]:
+        - generic [ref=e147]:
+          - text: yahoo_tw
+          - link "金融業唯一 國泰金控與OpenAI啟動策略合作" [ref=e148] [cursor=pointer]:
+            - /url: https://tw.stock.yahoo.com/news/%E9%87%91%E8%9E%8D%E6%A5%AD%E5%94%AF-%E5%9C%8B%E6%B3%B0%E9%87%91%E6%8E%A7%E8%88%87openai%E5%95%9F%E5%8B%95%E7%AD%96%E7%95%A5%E5%90%88%E4%BD%9C-142524538.html
+        - generic [ref=e149]: 金融業唯一 國泰金控與OpenAI啟動策略合作
+        - generic [ref=e150]:
+          - generic [ref=e151]: "#OpenAI"
+          - generic [ref=e152]: "#策略合作"
+      - button "無關" [ref=e153] [cursor=pointer]
+    - generic [ref=e154]:
+      - generic [ref=e155]: "5"
+      - generic [ref=e156]:
+        - generic [ref=e157]:
+          - text: yahoo_tw
+          - link "【公告】陽程董事會決議變更應選董事及獨立董事席次及重新訂定受理提名期間" [ref=e158] [cursor=pointer]:
+            - /url: https://tw.stock.yahoo.com/news/%E5%85%AC%E5%91%8A-%E9%99%BD%E7%A8%8B%E8%91%A3%E4%BA%8B%E6%9C%83%E6%B1%BA%E8%AD%B0%E8%AE%8A%E6%9B%B4%E6%87%89%E9%81%B8%E8%91%A3%E4%BA%8B%E5%8F%8A%E7%8D%A8%E7%AB%8B%E8%91%A3%E4%BA%8B%E5%B8%AD%E6%AC%A1%E5%8F%8A%E9%87%8D%E6%96%B0%E8%A8%82%E5%AE%9A%E5%8F%97%E7%90%86%E6%8F%90%E5%90%8D%E6%9C%9F%E9%96%93-142414717.html
+        - generic [ref=e159]: 【公告】陽程董事會決議變更應選董事及獨立董事席次及重新訂定受理提名期間
+        - generic [ref=e160]:
+          - generic [ref=e161]: "#董事會"
+          - generic [ref=e162]: "#變更"
+      - button "無關" [ref=e163] [cursor=pointer]
+    - generic [ref=e164]:
+      - generic [ref=e165]: "4"
+      - generic [ref=e166]:
+        - generic [ref=e167]:
+          - text: yahoo_tw
+          - link "【公告】北極星藥業-KY申請股票上巿時所出具之承諾事項暨其後續執行情形" [ref=e168] [cursor=pointer]:
+            - /url: https://tw.stock.yahoo.com/news/%E5%85%AC%E5%91%8A-%E5%8C%97%E6%A5%B5%E6%98%9F%E8%97%A5%E6%A5%AD-ky%E7%94%B3%E8%AB%8B%E8%82%A1%E7%A5%A8%E4%B8%8A%E5%B7%BF%E6%99%82%E6%89%80%E5%87%BA%E5%85%B7%E4%B9%8B%E6%89%BF%E8%AB%BE%E4%BA%8B%E9%A0%85%E6%9A%A8%E5%85%B6%E5%BE%8C%E7%BA%8C%E5%9F%B7%E8%A1%8C%E6%83%85%E5%BD%A2-142411652.html
+        - generic [ref=e169]: 【公告】北極星藥業-KY申請股票上巿時所出具之承諾事項暨其後續執行情形
+        - generic [ref=e170]:
+          - generic [ref=e171]: "#股票上巿"
+          - generic [ref=e172]: "#承諾事項"
+      - button "無關" [ref=e173] [cursor=pointer]
+    - generic [ref=e174]:
+      - generic [ref=e175]: "1"
+      - generic [ref=e176]:
+        - generic [ref=e177]:
+          - text: yahoo_tw
+          - link "川普「文明滅亡」預告嚇壞市場 美股3大指數開低" [ref=e178] [cursor=pointer]:
+            - /url: https://tw.stock.yahoo.com/news/%E5%B7%9D%E6%99%AE-%E6%96%87%E6%98%8E%E6%BB%85%E4%BA%A1-%E9%A0%90%E5%91%8A%E5%9A%87%E5%A3%9E%E5%B8%82%E5%A0%B4-%E7%BE%8E%E8%82%A13%E5%A4%A7%E6%8C%87%E6%95%B8%E9%96%8B%E4%BD%8E-142408882.html
+        - generic [ref=e179]: 川普「文明滅亡」預告嚇壞市場 美股3大指數開低
+        - generic [ref=e180]:
+          - generic [ref=e181]: "#川普"
+          - generic [ref=e182]: "#文明滅亡"
+      - button "無關" [ref=e183] [cursor=pointer]
+    - generic [ref=e184]:
+      - generic [ref=e185]: "3"
+      - generic [ref=e186]:
+        - generic [ref=e187]:
+          - text: yahoo_tw
+          - link "【公告】代斯其大之孫公司華新綠建材(股)公司公告總經理異動" [ref=e188] [cursor=pointer]:
+            - /url: https://tw.stock.yahoo.com/news/%E5%85%AC%E5%91%8A-%E4%BB%A3%E6%96%AF%E5%85%B6%E5%A4%A7%E4%B9%8B%E5%AD%AB%E5%85%AC%E5%8F%B8%E8%8F%AF%E6%96%B0%E7%B6%A0%E5%BB%BA%E6%9D%90-%E8%82%A1-%E5%85%AC%E5%8F%B8%E5%85%AC%E5%91%8A%E7%B8%BD%E7%B6%93%E7%90%86%E7%95%B0%E5%8B%95-141909028.html
+        - generic [ref=e189]: 【公告】代斯其大之孫公司華新綠建材(股)公司公告總經理異動
+        - generic [ref=e190]:
+          - generic [ref=e191]: "#總經理"
+          - generic [ref=e192]: "#異動"
+      - button "無關" [ref=e193] [cursor=pointer]
+    - generic [ref=e194]:
+      - generic [ref=e195]: "4"
+      - generic [ref=e196]:
+        - generic [ref=e197]:
+          - text: yahoo_tw
+          - link "北極星藥業-KY 公告本公司申請股票上巿時所出具之承諾事項暨其後續執行情形" [ref=e198] [cursor=pointer]:
+            - /url: https://tw.stock.yahoo.com/news/%E5%8C%97%E6%A5%B5%E6%98%9F%E8%97%A5%E6%A5%AD-ky-%E5%85%AC%E5%91%8A%E6%9C%AC%E5%85%AC%E5%8F%B8%E7%94%B3%E8%AB%8B%E8%82%A1%E7%A5%A8%E4%B8%8A%E5%B7%BF%E6%99%82%E6%89%80%E5%87%BA%E5%85%B7%E4%B9%8B%E6%89%BF%E8%AB%BE%E4%BA%8B%E9%A0%85%E6%9A%A8%E5%85%B6%E5%BE%8C%E7%BA%8C%E5%9F%B7%E8%A1%8C%E6%83%85%E5%BD%A2-141600251.html
+        - generic [ref=e199]: 北極星藥業-KY 公告本公司申請股票上巿時所出具之承諾事項暨其後續執行情形
+        - generic [ref=e200]:
+          - generic [ref=e201]: "#股票上巿"
+          - generic [ref=e202]: "#承諾事項"
+      - button "無關" [ref=e203] [cursor=pointer]
+    - generic [ref=e204]:
+      - generic [ref=e205]: "5"
+      - generic [ref=e206]:
+        - generic [ref=e207]:
+          - text: yahoo_tw
+          - link "陽程 公告本公司董事會決議變更應選董事及獨立董事席次及重新訂定受理提名期間" [ref=e208] [cursor=pointer]:
+            - /url: https://tw.stock.yahoo.com/news/%E9%99%BD%E7%A8%8B-%E5%85%AC%E5%91%8A%E6%9C%AC%E5%85%AC%E5%8F%B8%E8%91%A3%E4%BA%8B%E6%9C%83%E6%B1%BA%E8%AD%B0%E8%AE%8A%E6%9B%B4%E6%87%89%E9%81%B8%E8%91%A3%E4%BA%8B%E5%8F%8A%E7%8D%A8%E7%AB%8B%E8%91%A3%E4%BA%8B%E5%B8%AD%E6%AC%A1%E5%8F%8A%E9%87%8D%E6%96%B0%E8%A8%82%E5%AE%9A%E5%8F%97%E7%90%86%E6%8F%90%E5%90%8D%E6%9C%9F%E9%96%93-141600482.html
+        - generic [ref=e209]: 陽程 公告本公司董事會決議變更應選董事及獨立董事席次及重新訂定受理提名期間
+        - generic [ref=e210]:
+          - generic [ref=e211]: "#董事會"
+          - generic [ref=e212]: "#變更"
+      - button "無關" [ref=e213] [cursor=pointer]
+    - generic [ref=e214]:
+      - generic [ref=e215]: "2"
+      - generic [ref=e216]:
+        - generic [ref=e217]:
+          - text: yahoo_tw
+          - link "俄羅斯宣布延後月球探測任務 與美中差距進一步拉大" [ref=e218] [cursor=pointer]:
+            - /url: https://tw.news.yahoo.com/%E4%BF%84%E7%BE%85%E6%96%AF%E5%AE%A3%E5%B8%83%E5%BB%B6%E5%BE%8C%E6%9C%88%E7%90%83%E6%8E%A2%E6%B8%AC%E4%BB%BB%E5%8B%99-%E8%88%87%E7%BE%8E%E4%B8%AD%E5%B7%AE%E8%B7%9D%E9%80%B2-%E6%AD%A5%E6%8B%89%E5%A4%A7-141326555.html
+        - generic [ref=e219]: 俄羅斯宣布延後月球探測任務 與美中差距進一步拉大
+        - generic [ref=e220]:
+          - generic [ref=e221]: "#月球探測"
+          - generic [ref=e222]: "#延後"
+      - button "無關" [ref=e223] [cursor=pointer]
+    - generic [ref=e224]:
+      - generic [ref=e225]: "1"
+      - generic [ref=e226]:
+        - generic [ref=e227]:
+          - text: yahoo_tw
+          - link "接班近一個月遲未露面！英媒：伊朗最高領袖穆吉塔巴病重昏迷" [ref=e228] [cursor=pointer]:
+            - /url: https://tw.stock.yahoo.com/news/%E6%8E%A5%E7%8F%AD%E8%BF%91-%E5%80%8B%E6%9C%88%E9%81%B2%E6%9C%AA%E9%9C%B2%E9%9D%A2-%E8%8B%B1%E5%AA%92-%E4%BC%8A%E6%9C%97%E6%9C%80%E9%AB%98%E9%A0%98%E8%A2%96%E7%A9%86%E5%90%89%E5%A1%94%E5%B7%B4%E7%97%85%E9%87%8D%E6%98%8F%E8%BF%B7-141006665.html
+        - generic [ref=e229]: 接班近一個月遲未露面！英媒：伊朗最高領袖穆吉塔巴病重昏迷
+        - generic [ref=e230]:
+          - generic [ref=e231]: "#伊朗"
+          - generic [ref=e232]: "#最高領袖"
+      - button "無關" [ref=e233] [cursor=pointer]
+  - generic [ref=e234]:
+    - button "上一頁" [disabled] [ref=e235]
+    - generic [ref=e236]: 1 / 15（共 289 則）
+    - button "下一頁" [ref=e237] [cursor=pointer]
