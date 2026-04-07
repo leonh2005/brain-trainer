@@ -17,8 +17,8 @@
   .stat-card { flex: 1; background: #1e293b; border-radius: 10px; padding: 16px 20px; text-align: center; }
   .stat-label { font-size: 0.78rem; color: #64748b; margin-bottom: 6px; text-transform: uppercase; letter-spacing: .05em; }
   .stat-value { font-size: 2rem; font-weight: 800; line-height: 1; }
-  .stat-value.bull { color: #22c55e; }
-  .stat-value.bear { color: #ef4444; }
+  .stat-value.bull { color: #ef4444; }
+  .stat-value.bear { color: #22c55e; }
   .stat-value.neutral { color: #94a3b8; }
   .stat-count { font-size: 0.78rem; color: #475569; margin-top: 4px; }
   .chart-section { padding: 0 24px 24px; }
@@ -27,10 +27,14 @@
   .filters input, .filters select { background: #1e293b; color: #e2e8f0; border: 1px solid #334155; padding: 8px 12px; border-radius: 8px; font-size: 0.875rem; }
   .filters input[type="text"] { width: 220px; }
   .news-list { padding: 0 24px 40px; display: flex; flex-direction: column; gap: 10px; }
-  .card { background: #1e293b; border-radius: 10px; padding: 14px 18px; display: flex; gap: 14px; align-items: flex-start; }
+  .card { background: #1e293b; border-radius: 10px; padding: 14px 18px; display: flex; gap: 14px; align-items: flex-start; position: relative; }
+  .card.is-irrelevant { opacity: 0.45; }
+  .btn-irrelevant { position: absolute; top: 10px; right: 12px; background: transparent; border: 1px solid #334155; color: #475569; font-size: 0.7rem; padding: 2px 8px; border-radius: 4px; cursor: pointer; transition: all 0.15s; }
+  .btn-irrelevant:hover { border-color: #ef4444; color: #ef4444; }
+  .btn-irrelevant.marked { border-color: #ef4444; color: #ef4444; background: rgba(239,68,68,0.1); }
   .score { font-size: 1.4rem; font-weight: 800; min-width: 36px; text-align: center; padding-top: 2px; }
-  .score.bull { color: #22c55e; }
-  .score.bear { color: #ef4444; }
+  .score.bull { color: #ef4444; }
+  .score.bear { color: #22c55e; }
   .score.neutral { color: #94a3b8; }
   .card-body { flex: 1; }
   .card-title { font-size: 0.95rem; font-weight: 600; margin-bottom: 4px; }
@@ -39,7 +43,17 @@
   .card-summary { font-size: 0.83rem; color: #94a3b8; margin-bottom: 6px; }
   .tags { display: flex; flex-wrap: wrap; gap: 6px; }
   .tag { background: #0f172a; color: #64748b; font-size: 0.75rem; padding: 2px 8px; border-radius: 4px; }
-  .source-badge { font-size: 0.72rem; background: #334155; color: #94a3b8; padding: 2px 8px; border-radius: 4px; margin-right: 8px; }
+  .source-badge { font-size: 0.72rem; color: #fff; padding: 2px 8px; border-radius: 4px; margin-right: 8px; font-weight: 600; letter-spacing: 0.03em; }
+  .source-cnyes     { background: #e53e3e; }
+  .source-yahoo     { background: #7c3aed; }
+  .source-yahoo_tw  { background: #7c3aed; }
+  .source-yahoo_us  { background: #4f46e5; }
+  .source-udn       { background: #0369a1; }
+  .source-marketwatch { background: #0f766e; }
+  .source-cnbc      { background: #b45309; }
+  .source-ptt       { background: #15803d; }
+  .source-reddit    { background: #c2410c; }
+  .source-x         { background: #1d4ed8; }
   .pagination { padding: 16px 24px; display: flex; gap: 8px; align-items: center; color: #64748b; font-size: 0.875rem; }
   .pagination button { background: #1e293b; color: #94a3b8; border: none; padding: 6px 14px; border-radius: 6px; cursor: pointer; }
   .pagination button:disabled { opacity: 0.4; cursor: default; }
@@ -51,10 +65,13 @@
 <div class="header">
   <span>📊</span>
   <h1>財經新聞情緒儀表板</h1>
-  <div class="period-btns">
-    <button class="active" onclick="setPeriod('day', this)">今日</button>
-    <button onclick="setPeriod('week', this)">本週</button>
-    <button onclick="setPeriod('month', this)">本月</button>
+  <div style="margin-left:auto;display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
+    <span id="lastUpdated" style="font-size:0.78rem;color:#475569;font-family:monospace;"></span>
+    <div class="period-btns" style="margin-left:0">
+      <button class="active" onclick="setPeriod('day', this)">今日</button>
+      <button onclick="setPeriod('week', this)">本週</button>
+      <button onclick="setPeriod('month', this)">本月</button>
+    </div>
   </div>
 </div>
 
@@ -86,11 +103,13 @@
   <input type="text" id="searchInput" placeholder="搜尋標題、摘要..." oninput="debounceLoad()">
   <select id="sourceSelect" onchange="loadArticles(1)">
     <option value="">所有來源</option>
-    <option value="cnyes">鉅亨網</option>
+    <option value="yahoo_tw">Yahoo 台灣</option>
     <option value="yahoo">Yahoo</option>
+    <option value="yahoo_us">Yahoo 美國</option>
+    <option value="udn">聯合新聞</option>
+    <option value="marketwatch">MarketWatch</option>
+    <option value="cnbc">CNBC</option>
     <option value="ptt">PTT</option>
-    <option value="reddit">Reddit</option>
-    <option value="x">X</option>
   </select>
   <input type="date" id="dateInput" onchange="loadStats(); loadArticles(1)">
   <select id="scoreFilter" onchange="loadArticles(1)">
@@ -98,6 +117,10 @@
     <option value="7,10">看多（7-10）</option>
     <option value="1,4">看空（1-4）</option>
     <option value="5,6">中性（5-6）</option>
+  </select>
+  <select id="irrelevantFilter" onchange="loadArticles(1)">
+    <option value="0">排除無關</option>
+    <option value="1">僅顯示無關</option>
   </select>
 </div>
 
@@ -108,6 +131,7 @@
 let chart = null;
 let currentPage = 1;
 let debounceTimer = null;
+let currentPeriod = 'day';
 
 function debounceLoad() {
   clearTimeout(debounceTimer);
@@ -128,15 +152,17 @@ async function loadTrend(period = 'day') {
         y: { min: 1, max: 10, ticks: { color: '#94a3b8' }, grid: { color: '#334155' } },
         x: { ticks: { color: '#94a3b8' }, grid: { color: '#334155' } }
       },
-      plugins: { legend: { labels: { color: '#e2e8f0' } } }
+      plugins: { legend: { labels: { color: '#e2e8f0', usePointStyle: true, pointStyle: 'rect', boxWidth: 14, boxHeight: 14 } } }
     }
   });
 }
 
 function setPeriod(period, btn) {
+  currentPeriod = period;
   document.querySelectorAll('.period-btns button').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   loadTrend(period);
+  loadStats();
 }
 
 async function loadArticles(page = 1) {
@@ -145,6 +171,7 @@ async function loadArticles(page = 1) {
   const source = document.getElementById('sourceSelect').value;
   const date = document.getElementById('dateInput').value;
   const scoreVal = document.getElementById('scoreFilter').value;
+  const irrelevantVal = document.getElementById('irrelevantFilter').value;
   let url = `/api/articles?page=${page}`;
   if (q) url += `&q=${encodeURIComponent(q)}`;
   if (source) url += `&source=${source}`;
@@ -153,6 +180,7 @@ async function loadArticles(page = 1) {
     const [min, max] = scoreVal.split(',');
     url += `&score_min=${min}&score_max=${max}`;
   }
+  if (irrelevantVal === '1') url += `&irrelevant=1`;
   const res = await fetch(url);
   const data = await res.json();
   renderArticles(data.articles);
@@ -173,16 +201,17 @@ function renderArticles(articles) {
     return;
   }
   el.innerHTML = articles.map(a => `
-    <div class="card">
+    <div class="card${a.irrelevant ? ' is-irrelevant' : ''}" id="card-${a.id}">
       <div class="score ${scoreClass(a.score)}">${a.score ?? '–'}</div>
       <div class="card-body">
         <div class="card-title">
-          <span class="source-badge">${a.source}</span>
+          <span class="source-badge source-${a.source}">${a.source}</span>
           <a href="${a.url}" target="_blank" rel="noopener">${a.title}</a>
         </div>
         ${a.summary ? `<div class="card-summary">${a.summary}</div>` : ''}
         <div class="tags">${(Array.isArray(a.tags) ? a.tags : []).map(t => `<span class="tag">#${t}</span>`).join('')}</div>
       </div>
+      <button class="btn-irrelevant${a.irrelevant ? ' marked' : ''}" onclick="toggleIrrelevant(${a.id}, this)">${a.irrelevant ? '已標無關' : '無關'}</button>
     </div>
   `).join('');
 }
@@ -201,17 +230,46 @@ async function loadStats() {
   const date = document.getElementById('dateInput').value;
   let url = '/api/stats';
   if (date) url += `?date=${date}`;
+  else url += `?period=${currentPeriod}`;
   const res = await fetch(url);
   const d = await res.json();
   const bPct = d.bullish_pct, rPct = d.bearish_pct, nPct = d.neutral_pct;
   document.getElementById('statBull').textContent = bPct + '%';
-  document.getElementById('statBull').className = 'stat-value ' + (bPct > 50 ? 'bull' : 'neutral');
+  document.getElementById('statBull').className = 'stat-value bull';
   document.getElementById('statBullN').textContent = d.bullish + ' 則';
   document.getElementById('statBear').textContent = rPct + '%';
-  document.getElementById('statBear').className = 'stat-value ' + (rPct > 50 ? 'bear' : 'neutral');
+  document.getElementById('statBear').className = 'stat-value bear';
   document.getElementById('statBearN').textContent = d.bearish + ' 則';
   document.getElementById('statNeutral').textContent = nPct + '%';
+  document.getElementById('statNeutral').className = 'stat-value neutral';
   document.getElementById('statNeutralN').textContent = d.neutral + ' 則';
+  if (d.last_updated) {
+    const label = {'day':'今日','week':'本週','month':'本月'}[currentPeriod] || '';
+    const noData = d.total === 0 ? `（${label}無資料）` : '';
+    document.getElementById('lastUpdated').textContent = `最後更新 ${d.last_updated} UTC${noData}`;
+  }
+}
+
+async function toggleIrrelevant(id, btn) {
+  const card = document.getElementById(`card-${id}`);
+  const isMarked = btn.classList.contains('marked');
+  const newVal = !isMarked;
+  await fetch(`/api/articles/${id}/irrelevant`, {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({irrelevant: newVal}),
+  });
+  if (newVal) {
+    btn.classList.add('marked');
+    btn.textContent = '已標無關';
+    card.classList.add('is-irrelevant');
+  } else {
+    btn.classList.remove('marked');
+    btn.textContent = '無關';
+    card.classList.remove('is-irrelevant');
+  }
+  // 更新統計（排除/納入後數字會變）
+  loadStats();
 }
 
 loadStats();

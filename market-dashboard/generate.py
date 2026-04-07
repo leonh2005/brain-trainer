@@ -711,16 +711,16 @@ def main():
         prev_state = json.loads(SP_STATE.read_text()).get("state") if SP_STATE.exists() else None
         SP_STATE.write_text(json.dumps({"state": current_state, "date": generated_at}))
 
-        if prev_state == "above" and current_state == "below":
+        if current_state == "below":
             send_telegram(
-                f"🚨 S&P 500 跌破 200 日均線\n"
+                f"🚨 S&P 500 低於 200 日均線\n"
                 f"S&P 500：{sp_current:,.0f}\n"
                 f"200MA：{ma_current:,.0f}\n"
                 f"偏離：{sp_vs_ma}%"
             )
-        elif prev_state == "below" and current_state == "above":
+        elif current_state == "above":
             send_telegram(
-                f"✅ S&P 500 重回 200 日均線上方\n"
+                f"✅ S&P 500 高於 200 日均線\n"
                 f"S&P 500：{sp_current:,.0f}\n"
                 f"200MA：{ma_current:,.0f}\n"
                 f"偏離：+{sp_vs_ma}%"

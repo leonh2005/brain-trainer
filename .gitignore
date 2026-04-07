@@ -5,3 +5,4 @@ tw-coverage/
 BettaFish/
 line-claude-bot/
 telebot/
+news-analyzer/.env
