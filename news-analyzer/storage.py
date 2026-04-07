@@ -26,16 +26,22 @@ def init_db(db_path=DB_PATH):
                 score        INTEGER,
                 summary      TEXT,
                 tags         TEXT,
-                analyzed_at  DATETIME
+                analyzed_at  DATETIME,
+                irrelevant   INTEGER NOT NULL DEFAULT 0
             )
         """)
+        # migration：舊 DB 補欄位
+        cols = [r[1] for r in conn.execute("PRAGMA table_info(articles)").fetchall()]
+        if "irrelevant" not in cols:
+            conn.execute("ALTER TABLE articles ADD COLUMN irrelevant INTEGER NOT NULL DEFAULT 0")
         conn.commit()
 
 
 def save_articles(articles, db_path=DB_PATH):
-    """Insert articles, ignore duplicates by URL."""
+    """Insert articles, ignore duplicates by URL. Returns count of newly inserted rows."""
     now = datetime.now(timezone.utc).isoformat()
     with get_conn(db_path) as conn:
+        before = conn.execute("SELECT COUNT(*) FROM articles").fetchone()[0]
         conn.executemany(
             """INSERT OR IGNORE INTO articles
                (source, title, url, content, published_at, fetched_at)
@@ -53,6 +59,8 @@ def save_articles(articles, db_path=DB_PATH):
             ],
         )
         conn.commit()
+        after = conn.execute("SELECT COUNT(*) FROM articles").fetchone()[0]
+        return after - before
 
 
 def get_unanalyzed(db_path=DB_PATH):
@@ -74,10 +82,30 @@ def update_analysis(article_id, score, summary, tags, db_path=DB_PATH):
         conn.commit()
 
 
-def get_articles(source=None, date=None, score_min=None, score_max=None, query=None, page=1, db_path=DB_PATH):
+def get_irrelevant_examples(limit=5, db_path=DB_PATH):
+    """回傳人工標記為無關的文章樣本，供 few-shot prompt 使用。"""
+    with get_conn(db_path) as conn:
+        rows = conn.execute(
+            "SELECT title FROM articles WHERE irrelevant = 1 ORDER BY RANDOM() LIMIT ?",
+            (limit,),
+        ).fetchall()
+    return [r["title"] for r in rows]
+
+
+def set_irrelevant(article_id, value, db_path=DB_PATH):
+    with get_conn(db_path) as conn:
+        conn.execute("UPDATE articles SET irrelevant=? WHERE id=?", (1 if value else 0, article_id))
+        conn.commit()
+
+
+def get_articles(source=None, date=None, score_min=None, score_max=None, query=None, page=1, show_irrelevant=False, db_path=DB_PATH):
     """Return paginated articles for dashboard."""
     conditions = []
     params = []
+    if not show_irrelevant:
+        conditions.append("irrelevant = 0")
+    else:
+        conditions.append("irrelevant = 1")
     if source and source != "all":
         conditions.append("source = ?")
         params.append(source)
@@ -108,23 +136,38 @@ def get_articles(source=None, date=None, score_min=None, score_max=None, query=N
 
 
 def get_trend_data(period="day", db_path=DB_PATH):
-    """Return average scores per time bucket per source, for Chart.js."""
+    """Return average scores per time bucket per source, for Chart.js.
+    Labels are always filled to cover the full period (nulls for empty buckets)."""
+    from datetime import datetime, timedelta, timezone
+
+    now_tw = datetime.now(timezone.utc) + timedelta(hours=8)
+    today_tw = now_tw.date()
+
     if period == "day":
-        time_bucket = "strftime('%H:00', fetched_at)"
-        condition = "DATE(fetched_at) = DATE('now')"
+        time_bucket = "strftime('%H:00', datetime(fetched_at, '+8 hours'))"
+        condition = "DATE(datetime(fetched_at, '+8 hours')) = ?", [str(today_tw)]
+        all_labels = [f"{h:02d}:00" for h in range(now_tw.hour + 1)]
     elif period == "week":
-        time_bucket = "strftime('%m-%d', fetched_at)"
-        condition = "fetched_at >= DATE('now', '-7 days')"
+        time_bucket = "strftime('%m-%d', datetime(fetched_at, '+8 hours'))"
+        since = str(today_tw - timedelta(days=6))
+        condition = "DATE(datetime(fetched_at, '+8 hours')) >= ?", [since]
+        all_labels = [(today_tw - timedelta(days=i)).strftime("%m-%d") for i in range(6, -1, -1)]
     else:  # month
-        time_bucket = "strftime('%m-%d', fetched_at)"
-        condition = "fetched_at >= DATE('now', '-30 days')"
+        time_bucket = "strftime('%m-%d', datetime(fetched_at, '+8 hours'))"
+        since = str(today_tw - timedelta(days=29))
+        condition = "DATE(datetime(fetched_at, '+8 hours')) >= ?", [since]
+        all_labels = [(today_tw - timedelta(days=i)).strftime("%m-%d") for i in range(29, -1, -1)]
+
+    cond_sql, cond_params = condition
 
     with get_conn(db_path) as conn:
         rows = conn.execute(
             f"""SELECT {time_bucket} as t, source, ROUND(AVG(score), 2) as avg_score
                 FROM articles
-                WHERE score IS NOT NULL AND {condition}
+                WHERE score IS NOT NULL AND irrelevant = 0 AND {cond_sql}
                 GROUP BY t, source
                 ORDER BY t""",
+            cond_params,
         ).fetchall()
-        return [dict(r) for r in rows]
+
+    return [dict(r) for r in rows], all_labels
