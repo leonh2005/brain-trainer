@@ -43,7 +43,8 @@
   .card-summary { font-size: 0.83rem; color: #94a3b8; margin-bottom: 6px; }
   .tags { display: flex; flex-wrap: wrap; gap: 6px; }
   .tag { background: #0f172a; color: #64748b; font-size: 0.75rem; padding: 2px 8px; border-radius: 4px; }
-  .source-badge { font-size: 0.72rem; color: #fff; padding: 2px 8px; border-radius: 4px; margin-right: 8px; font-weight: 600; letter-spacing: 0.03em; }
+  .source-badge { font-size: 0.72rem; color: #fff; padding: 2px 8px; border-radius: 4px; margin-right: 4px; font-weight: 600; letter-spacing: 0.03em; }
+  .article-time { font-size: 0.72rem; color: #475569; margin-right: 8px; font-family: monospace; white-space: nowrap; }
   .source-cnyes     { background: #e53e3e; }
   .source-yahoo     { background: #7c3aed; }
   .source-yahoo_tw  { background: #7c3aed; }
@@ -194,18 +195,33 @@ function scoreClass(s) {
   return 'neutral';
 }
 
+function formatTime(utcStr) {
+  if (!utcStr) return '';
+  const d = new Date(utcStr);
+  if (isNaN(d)) return '';
+  const tw = new Date(d.getTime() + 8 * 3600000);
+  const mm = String(tw.getUTCMonth() + 1).padStart(2, '0');
+  const dd = String(tw.getUTCDate()).padStart(2, '0');
+  const hh = String(tw.getUTCHours()).padStart(2, '0');
+  const min = String(tw.getUTCMinutes()).padStart(2, '0');
+  return `${mm}/${dd} ${hh}:${min}`;
+}
+
 function renderArticles(articles) {
   const el = document.getElementById('newsList');
   if (!articles.length) {
     el.innerHTML = '<div class="empty">沒有符合的新聞</div>';
     return;
   }
-  el.innerHTML = articles.map(a => `
+  el.innerHTML = articles.map(a => {
+    const timeStr = formatTime(a.published_at || a.fetched_at);
+    return `
     <div class="card${a.irrelevant ? ' is-irrelevant' : ''}" id="card-${a.id}">
       <div class="score ${scoreClass(a.score)}">${a.score ?? '–'}</div>
       <div class="card-body">
         <div class="card-title">
           <span class="source-badge source-${a.source}">${a.source}</span>
+          ${timeStr ? `<span class="article-time">${timeStr}</span>` : ''}
           <a href="${a.url}" target="_blank" rel="noopener">${a.title}</a>
         </div>
         ${a.summary ? `<div class="card-summary">${a.summary}</div>` : ''}
@@ -213,7 +229,7 @@ function renderArticles(articles) {
       </div>
       <button class="btn-irrelevant${a.irrelevant ? ' marked' : ''}" onclick="toggleIrrelevant(${a.id}, this)">${a.irrelevant ? '已標無關' : '無關'}</button>
     </div>
-  `).join('');
+  `}).join('');
 }
 
 function renderPagination(total, page) {
