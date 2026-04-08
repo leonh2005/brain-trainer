@@ -5,10 +5,16 @@
 """
 
 import json
+import math
 import requests
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
+
+
+def trunc2(x):
+    """截斷至小數點後兩位，不四捨五入"""
+    return math.trunc(x * 100) / 100
 
 try:
     import yfinance as yf
@@ -60,7 +66,7 @@ def fetch_yfinance(ticker, period="20y"):
     close = df[("Close", ticker)].dropna()
     result = []
     for date, val in close.items():
-        result.append({"x": date.strftime("%Y-%m-%d"), "y": round(float(val), 2)})
+        result.append({"x": date.strftime("%Y-%m-%d"), "y": trunc2(float(val))})
     return result
 
 
@@ -70,10 +76,10 @@ def fetch_sp500_with_ma(period="20y"):
     ma200 = close.rolling(200).mean()
     prices, mas = [], []
     for date, val in close.items():
-        prices.append({"x": date.strftime("%Y-%m-%d"), "y": round(float(val), 2)})
+        prices.append({"x": date.strftime("%Y-%m-%d"), "y": trunc2(float(val))})
     for date, val in ma200.items():
         if pd.notna(val):
-            mas.append({"x": date.strftime("%Y-%m-%d"), "y": round(float(val), 2)})
+            mas.append({"x": date.strftime("%Y-%m-%d"), "y": trunc2(float(val))})
     return prices, mas
 
 
@@ -92,11 +98,11 @@ def fetch_fear_greed():
         hist_raw = d.get("fear_and_greed_historical", {}).get("data", [])
         hist = [
             {"x": datetime.fromtimestamp(p["x"] / 1000, tz=timezone.utc).strftime("%Y-%m-%d"),
-             "y": round(p["y"], 1),
+             "y": trunc2(p["y"]),
              "rating": p.get("rating", "")}
             for p in hist_raw
         ]
-        score = round(current["score"], 1)
+        score = trunc2(current["score"])
         rating = current["rating"]
 
         # 更新本地快取（今天的值）
@@ -125,7 +131,7 @@ def generate_html(vix_data, sp_data, ma_data, fg_data, generated_at):
     vix_current = vix_data[-1]["y"] if vix_data else 0
     sp_current = sp_data[-1]["y"] if sp_data else 0
     ma_current = ma_data[-1]["y"] if ma_data else 0
-    sp_vs_ma = round((sp_current / ma_current - 1) * 100, 2) if ma_current else 0
+    sp_vs_ma = trunc2((sp_current / ma_current - 1) * 100) if ma_current else 0
     fg_score = fg_data["score"]
     fg_rating = fg_data["rating"]
 
@@ -134,7 +140,7 @@ def generate_html(vix_data, sp_data, ma_data, fg_data, generated_at):
     fg_color = "#ff4757" if (fg_score or 50) < 25 else ("#ffaa00" if (fg_score or 50) < 45 else ("#00d68f" if (fg_score or 50) > 55 else "#e0e0e0"))
     sp_color = "#00d68f" if sp_vs_ma > 0 else "#ff4757"
 
-    fg_score_display = str(fg_score) if fg_score is not None else "N/A"
+    fg_score_display = f"{fg_score:.2f}" if fg_score is not None else "N/A"
     fg_label_map = {
         "extreme fear": "極度恐慌", "fear": "恐慌",
         "neutral": "中立", "greed": "貪婪",
@@ -409,7 +415,7 @@ def generate_html(vix_data, sp_data, ma_data, fg_data, generated_at):
 <div class="cards">
   <div class="card" style="--accent: {vix_color}">
     <div class="card-label"><span class="pulse"></span>VIX 恐慌指數</div>
-    <div class="card-value">{vix_current}</div>
+    <div class="card-value">{vix_current:.2f}</div>
     <div class="card-sub">
       {'<b>極度恐慌 &gt;30</b>' if vix_current > 30 else ('<b>警戒 20–30</b>' if vix_current > 20 else '<b>低波動 &lt;20</b>')}
       &nbsp;·&nbsp; 標普 500 30日隱含波動率
@@ -427,9 +433,9 @@ def generate_html(vix_data, sp_data, ma_data, fg_data, generated_at):
 
   <div class="card" style="--accent: {sp_color}">
     <div class="card-label"><span class="pulse"></span>S&P 500 vs 200MA</div>
-    <div class="card-value">{sp_current:,.0f}</div>
+    <div class="card-value">{sp_current:,.2f}</div>
     <div class="card-sub">
-      200MA：{ma_current:,.0f}
+      200MA：{ma_current:,.2f}
       &nbsp;·&nbsp; <b>{'▲' if sp_vs_ma > 0 else '▼'} {abs(sp_vs_ma)}%</b>
     </div>
   </div>
@@ -693,7 +699,7 @@ def main():
     fg_rating = fg_data["rating"]
 
     print(f"[{datetime.now().strftime('%H:%M:%S')}] 完成 → {OUTPUT}")
-    sp_vs_ma_str = f"{round((sp_current/ma_current-1)*100,2):+.2f}%" if isinstance(sp_current, float) and isinstance(ma_current, float) else "N/A"
+    sp_vs_ma_str = f"{trunc2((sp_current/ma_current-1)*100):+.2f}%" if isinstance(sp_current, float) and isinstance(ma_current, float) else "N/A"
     above_below = "高於" if isinstance(sp_current, float) and isinstance(ma_current, float) and sp_current >= ma_current else "低於"
     print(f"  VIX: {vix_current}  |  S&P: {sp_current}  |  200MA: {ma_current}  |  {above_below} 200MA ({sp_vs_ma_str})  |  F&G: {fg_score} ({fg_rating})")
 
@@ -701,12 +707,12 @@ def main():
         f"📊 市場儀表板已更新 {generated_at}\n"
         f"VIX：{vix_current}\n"
         f"Fear & Greed：{fg_score} ({fg_rating})\n"
-        f"S&P 500：{sp_current:,.0f}"
+        f"S&P 500：{sp_current:,.2f}"
     )
 
     # S&P 500 vs 200MA 狀態變化通知（只在跌破 / 收復時各通知一次）
     if isinstance(sp_current, float) and isinstance(ma_current, float):
-        sp_vs_ma = round((sp_current / ma_current - 1) * 100, 2)
+        sp_vs_ma = trunc2((sp_current / ma_current - 1) * 100)
         current_state = "below" if sp_current < ma_current else "above"
         prev_state = json.loads(SP_STATE.read_text()).get("state") if SP_STATE.exists() else None
         SP_STATE.write_text(json.dumps({"state": current_state, "date": generated_at}))
@@ -715,14 +721,14 @@ def main():
             send_telegram(
                 f"🚨 S&P 500 低於 200 日均線\n"
                 f"S&P 500：{sp_current:,.0f}\n"
-                f"200MA：{ma_current:,.0f}\n"
+                f"200MA：{ma_current:,.2f}\n"
                 f"偏離：{sp_vs_ma}%"
             )
         elif current_state == "above":
             send_telegram(
                 f"✅ S&P 500 高於 200 日均線\n"
                 f"S&P 500：{sp_current:,.0f}\n"
-                f"200MA：{ma_current:,.0f}\n"
+                f"200MA：{ma_current:,.2f}\n"
                 f"偏離：+{sp_vs_ma}%"
             )
 
