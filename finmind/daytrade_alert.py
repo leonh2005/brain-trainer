@@ -52,30 +52,39 @@ def _get_sj():
     return _sj_api
 
 
-def get_sj_snapshots(codes: list) -> dict:
-    """Shioaji 批次取即時快照（今日 OHLCV + 漲幅）"""
-    try:
-        api = _get_sj()
-        contracts = [api.Contracts.Stocks[c] for c in codes if api.Contracts.Stocks.get(c)]
-        if not contracts:
-            return {}
-        snaps = api.snapshots(contracts)
-        result = {}
-        for s in snaps:
-            rng = s.high - s.low
-            close_pos = round((s.close - s.low) / rng * 100, 1) if rng > 0 else 50.0
-            amp_pct   = round((s.high - s.low) / s.low * 100, 2) if s.low > 0 else 0.0
-            result[s.code] = {
-                'close':     s.close,
-                'chg_pct':   round(float(s.change_rate), 2),
-                'amp_pct':   amp_pct,
-                'close_pos': close_pos,
-                'vol_k':     int(s.total_volume),
-            }
-        return result
-    except Exception as e:
-        print(f'[sj] snapshots 失敗: {e}')
-        return {}
+def get_top_volume_sj(n: int = 20) -> list:
+    """Shioaji 全市場掃描，回傳今日成交量前 n 名（含股名、即時行情）"""
+    api = _get_sj()
+    all_contracts = [
+        c for c in api.Contracts.Stocks.TSE
+        if hasattr(c, 'code') and c.code.isdigit() and len(c.code) == 4
+    ]
+    cmap = {c.code: c for c in all_contracts}
+    rows = {}
+    for i in range(0, len(all_contracts), 200):
+        chunk = all_contracts[i:i+200]
+        try:
+            snaps = api.snapshots(chunk)
+            for s in snaps:
+                if s.close <= 0 or s.total_volume <= 0:
+                    continue
+                rng = s.high - s.low
+                rows[s.code] = {
+                    'code':      s.code,
+                    'name':      getattr(cmap.get(s.code), 'name', s.code),
+                    'close':     s.close,
+                    'chg_pct':   round(float(s.change_rate), 2),
+                    'amp_pct':   round(rng / s.low * 100, 2) if s.low > 0 else 0.0,
+                    'close_pos': round((s.close - s.low) / rng * 100, 1) if rng > 0 else 50.0,
+                    'vol_k':     int(s.total_volume / 1000),
+                }
+        except Exception as e:
+            print(f'[sj] snapshot batch {i} 失敗: {e}')
+    if not rows:
+        return []
+    top = sorted(rows.values(), key=lambda x: x['vol_k'], reverse=True)[:n]
+    print(f'[top{n}] ' + ' '.join(f"{r['code']}({r['vol_k']}K)" for r in top[:5]) + ' ...')
+    return top
 
 
 def get_sj_avg5(symbol: str) -> int:
@@ -121,26 +130,6 @@ def send_telegram(text: str):
     )
 
 
-def get_twse_data():
-    """TWSE 全市場收盤資料（Shioaji snapshot 失敗時備用）"""
-    r = requests.get(
-        'https://openapi.twse.com.tw/v1/exchangeReport/STOCK_DAY_ALL',
-        timeout=20, verify=False
-    )
-    df = pd.DataFrame(r.json())
-    num_cols = ['TradeVolume','OpeningPrice','HighestPrice','LowestPrice','ClosingPrice','Change']
-    for c in num_cols:
-        df[c] = pd.to_numeric(df[c], errors='coerce')
-    df = df.dropna(subset=['TradeVolume','ClosingPrice'])
-    df['vol_k']    = df['TradeVolume'] / 1000
-    df['chg_pct']  = ((df['Change'] / (df['ClosingPrice'] - df['Change'])) * 100).round(2)
-    df['amp_pct']  = (((df['HighestPrice'] - df['LowestPrice']) / df['LowestPrice']) * 100).round(2)
-    rng = df['HighestPrice'] - df['LowestPrice']
-    df['close_pos'] = ((df['ClosingPrice'] - df['LowestPrice']) / rng.replace(0, float('nan')) * 100).round(1)
-    df = df[df['Code'].str.match(r'^\d{4}$')]
-    return df
-
-
 def get_futures_direction():
     try:
         fut = finmind.taiwan_futures_institutional_investors(futures_id="TX", start_date=D5)
@@ -154,47 +143,30 @@ def get_futures_direction():
 
 # ── 主程式 ────────────────────────────────────────
 
-twse_df = get_twse_data()
-top20   = twse_df.nlargest(20, 'TradeVolume')
-codes   = top20['Code'].tolist()
-twse_map = {row['Code']: row for _, row in top20.iterrows()}
-
-# Shioaji 批次快照（今日即時）
-sj_snaps = get_sj_snapshots(codes)
+top20 = get_top_volume_sj(n=20)
+if not top20:
+    print('[error] Shioaji 全市場掃描失敗，結束執行')
+    send_telegram(f"⚠️ {TODAY} 當沖掃描失敗：Shioaji 無法取得全市場資料，請確認 API 連線")
+    exit(1)
 
 candidates = []
-for code in codes:
-    twse_row = twse_map[code]
-    name = twse_row['Name']
-
-    if code in sj_snaps:
-        d = sj_snaps[code]
-        close, chg_pct, amp_pct, close_pos, vol_k = (
-            d['close'], d['chg_pct'], d['amp_pct'], d['close_pos'], d['vol_k']
-        )
-    else:
-        # 備用：TWSE
-        close     = twse_row['ClosingPrice']
-        chg_pct   = twse_row['chg_pct']
-        amp_pct   = twse_row['amp_pct']
-        close_pos = twse_row['close_pos']
-        vol_k     = int(twse_row['vol_k'])
-
+for row in top20:
+    code      = row['code']
     # 近5日均量：Shioaji kbars，失敗用 FinMind
     avg5 = get_sj_avg5(code)
     if avg5 == 0:
         avg5 = get_avg5_finmind(code)
 
-    if amp_pct >= 3 and avg5 >= 3000 and chg_pct >= 1.5:
+    if row['amp_pct'] >= 3 and avg5 >= 3000 and row['chg_pct'] >= 1.5:
         candidates.append({
             'code':      code,
-            'name':      name,
-            'close':     close,
-            'chg_pct':   chg_pct,
-            'amp_pct':   amp_pct,
-            'vol_k':     vol_k,
+            'name':      row['name'],
+            'close':     row['close'],
+            'chg_pct':   row['chg_pct'],
+            'amp_pct':   row['amp_pct'],
+            'vol_k':     row['vol_k'],
             'avg5':      avg5,
-            'close_pos': close_pos,
+            'close_pos': row['close_pos'],
         })
 
 fut_diff, fut_date = get_futures_direction()
@@ -205,7 +177,7 @@ mkt_dir = "偏多 ↑" if fut_diff > 0 else "偏空 ↓"
 lines = [f"📊 <b>當沖候選</b>｜{TODAY} 09:30\n"]
 lines.append(f"🌐 大盤外資期貨（{fut_date}）：{mkt_dir}（多空差 {fut_diff:+,} 口）\n")
 lines.append("📋 <b>篩選條件</b>")
-lines.append("量前20 ＋ 振幅&gt;3% ＋ 近5均量&gt;3000張 ＋ 漲幅&gt;1.5%\n")
+lines.append("今日量前20（Shioaji即時）＋ 振幅&gt;3% ＋ 近5均量&gt;3000張 ＋ 漲幅&gt;1.5%\n")
 
 if candidates:
     lines.append(f"✅ 符合 {len(candidates)} 檔：\n")

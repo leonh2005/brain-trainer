@@ -111,7 +111,7 @@ def get_sj_snapshot_all() -> pd.DataFrame:
     for i in range(0, len(stocks), 100):
         batch = stocks[i:i+100]
         try:
-            contracts = [api.Contracts.Stocks[s['symbol']] for s in batch]
+            contracts = [api.Contracts.Stocks.get(s['symbol']) for s in batch]
             name_map  = {s['symbol']: s['name'] for s in batch}
             valid = [c for c in contracts if c is not None]
             if not valid:
@@ -160,6 +160,9 @@ def get_fi_yesterday(stock_id):
 def get_avg5_vol(stock_id):
     """近5日均量（張）—— Shioaji kbars；失敗時 fallback FinMind"""
     df = get_sj_daily_kbars(stock_id, days=20)
+    # 排除今日（盤中 K 棒不完整，會拉偏均值）
+    if len(df) >= 2:
+        df = df.iloc[:-1]
     if len(df) >= 5:
         return round(df['volume'].tail(5).mean(), 0)
     # Fallback: FinMind
@@ -208,21 +211,9 @@ def get_futures_direction():
 df = get_sj_snapshot_all()
 
 if df.empty:
-    # Fallback: TWSE 公開 API
-    print('[fallback] Shioaji 快照失敗，改用 TWSE API')
-    r = requests.get('https://openapi.twse.com.tw/v1/exchangeReport/STOCK_DAY_ALL',
-                     timeout=20, verify=False)
-    raw = pd.DataFrame(r.json())
-    for c in ['TradeVolume','HighestPrice','LowestPrice','ClosingPrice','Change']:
-        raw[c] = pd.to_numeric(raw[c], errors='coerce')
-    raw = raw.dropna(subset=['TradeVolume','ClosingPrice'])
-    raw['vol_k']    = raw['TradeVolume'] / 1000
-    raw['chg_pct']  = ((raw['Change'] / (raw['ClosingPrice'] - raw['Change'])) * 100).round(2)
-    raw['amp_pct']  = (((raw['HighestPrice'] - raw['LowestPrice']) / raw['LowestPrice']) * 100).round(2)
-    rng = raw['HighestPrice'] - raw['LowestPrice']
-    raw['close_pos'] = ((raw['ClosingPrice'] - raw['LowestPrice']) / rng.replace(0, float('nan')) * 100).round(1)
-    raw = raw[raw['Code'].str.match(r'^\d{4}$')]
-    df = raw[['Code','Name','ClosingPrice','vol_k','chg_pct','amp_pct','close_pos']].copy()
+    print('[error] Shioaji 快照失敗，無法取得今日即時資料，結束執行')
+    send_telegram(f"⚠️ {TODAY} 隔日沖掃描失敗：Shioaji 快照無法取得，請確認 API 連線")
+    exit(1)
 
 pool = df[
     (df['vol_k'] >= 5000) &
@@ -260,7 +251,9 @@ for code, name in WATCHLIST.items():
         if h.empty:
             continue
         h['vol_k'] = h['volume']
-        avg5 = round(h['vol_k'].tail(5).mean(), 0)
+        # 排除今日（盤中不完整），用前5日算均量
+        hist = h.iloc[:-1] if len(h) >= 2 else h
+        avg5 = round(hist['vol_k'].tail(5).mean(), 0)
         last = h.iloc[-1]
         prev_close = h.iloc[-2]['close'] if len(h) >= 2 else last['open']
         chg_pct = round((last['close'] - prev_close) / prev_close * 100, 2) if prev_close > 0 else 0
