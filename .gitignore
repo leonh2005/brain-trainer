@@ -1,8 +1,15 @@
-rabbit-care/.env
+# 所有 .env 檔案（含子目錄），但允許 .env.example 範本
+**/.env
+**/.env.local
+**/.env.production
+!**/.env.example
 .secrets/
 finmind/venv/
 tw-coverage/
 BettaFish/
 line-claude-bot/
 telebot/
-news-analyzer/.env
+
+.playwright-mcp/
+**/__pycache__/
+*.pyc
