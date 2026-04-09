@@ -150,7 +150,7 @@ def get_top_volume_stocks(n: int = TOP_N) -> list:
             except Exception:
                 pass
         if not all_snaps:
-            return []
+            return [], {}
         # 依總量排序取前 n
         sorted_codes = sorted(all_snaps, key=lambda c: all_snaps[c]['total_vol'], reverse=True)
         top = sorted_codes[:n]
