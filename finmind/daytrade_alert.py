@@ -226,3 +226,10 @@ lines.append("\n⚠️ 數據參考，非投資建議，買賣自負")
 msg = "\n".join(lines)
 send_telegram(msg)
 print(msg)
+
+# 儲存候選清單供盤中監控腳本使用
+import json
+candidate_codes = [c['code'] for c in candidates]
+with open('/tmp/daytrade_candidates.json', 'w') as f:
+    json.dump(candidate_codes, f)
+print(f'[daytrade] 候選清單已寫入 /tmp/daytrade_candidates.json: {candidate_codes}')
