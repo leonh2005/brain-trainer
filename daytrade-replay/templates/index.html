@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<title>當沖回放模擬</title>
+<script src="https://unpkg.com/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0d1117; color: #e6edf3; font-family: 'SF Pro Display', 'Helvetica Neue', sans-serif; font-size: 13px; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+
+  /* ── 頂部控制列 ── */
+  #toolbar {
+    background: #161b22;
+    border-bottom: 1px solid #30363d;
+    padding: 8px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+  }
+  #toolbar h1 { font-size: 14px; font-weight: 600; color: #58a6ff; margin-right: 8px; white-space: nowrap; }
+  select, input[type=date] {
+    background: #21262d;
+    border: 1px solid #30363d;
+    color: #e6edf3;
+    padding: 5px 8px;
+    border-radius: 6px;
+    font-size: 13px;
+    cursor: pointer;
+  }
+  select:focus, input:focus { outline: none; border-color: #58a6ff; }
+  .btn {
+    background: #21262d;
+    border: 1px solid #30363d;
+    color: #e6edf3;
+    padding: 5px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: background .15s;
+  }
+  .btn:hover { background: #30363d; }
+  .btn.active { background: #1f6feb; border-color: #58a6ff; }
+  #speed-group { display: flex; gap: 4px; }
+  #status-bar { margin-left: auto; font-size: 12px; color: #8b949e; white-space: nowrap; }
+  #current-time { font-size: 14px; font-weight: 700; color: #f0883e; min-width: 60px; }
+
+  /* ── 主區域 ── */
+  #main { display: flex; flex: 1; overflow: hidden; }
+
+  /* ── 圖表區 ── */
+  #chart-area { flex: 1; position: relative; min-width: 0; }
+  #chart { width: 100%; height: 100%; }
+
+  /* ── 右側面板 ── */
+  #panel {
+    width: 220px;
+    background: #161b22;
+    border-left: 1px solid #30363d;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  .panel-section {
+    border-bottom: 1px solid #30363d;
+    padding: 10px 12px;
+  }
+  .panel-section h3 {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: #8b949e;
+    margin-bottom: 8px;
+  }
+
+  /* ── 訊號燈 ── */
+  #signals-list { display: flex; flex-direction: column; gap: 5px; }
+  .signal-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 3px 0;
+    border-radius: 4px;
+    transition: background .1s;
+  }
+  .signal-row.triggered { background: rgba(35,134,54,.15); }
+  .signal-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: #30363d;
+    flex-shrink: 0;
+    transition: background .2s, box-shadow .2s;
+  }
+  .signal-dot.on  { background: #3fb950; box-shadow: 0 0 6px #3fb950; }
+  .signal-dot.na  { background: #d29922; }
+  .signal-label   { font-size: 12px; color: #8b949e; }
+  .signal-row.triggered .signal-label { color: #e6edf3; }
+
+  /* ── 信心度 ── */
+  #confidence-bar-wrap {
+    height: 6px;
+    background: #21262d;
+    border-radius: 3px;
+    overflow: hidden;
+    margin-top: 6px;
+  }
+  #confidence-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #1f6feb, #3fb950);
+    border-radius: 3px;
+    width: 0%;
+    transition: width .3s;
+  }
+  #confidence-text { font-size: 20px; font-weight: 700; color: #e6edf3; }
+  #trigger-badge {
+    display: none;
+    background: #f85149;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin-top: 4px;
+    text-align: center;
+    animation: pulse 1s infinite;
+  }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.5} }
+
+  /* ── 持倉 ── */
+  #position-price { font-size: 18px; font-weight: 700; color: #e6edf3; }
+  #position-pnl   { font-size: 20px; font-weight: 700; margin-top: 4px; }
+  .pos-up   { color: #f85149; }
+  .pos-down { color: #3fb950; }
+  .pos-flat { color: #8b949e; }
+
+  #buy-btn, #sell-btn {
+    flex: 1;
+    padding: 8px 0;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: opacity .15s;
+  }
+  #buy-btn  { background: #f85149; color: #fff; }
+  #sell-btn { background: #3fb950; color: #fff; }
+  #buy-btn:disabled, #sell-btn:disabled { opacity: .35; cursor: default; }
+  .trade-btns { display: flex; gap: 8px; margin-top: 8px; }
+
+  /* ── 交易紀錄 ── */
+  #trades-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 10px 12px;
+  }
+  #trades-list h3 {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: #8b949e;
+    margin-bottom: 8px;
+  }
+  .trade-item {
+    font-size: 11px;
+    padding: 4px 0;
+    border-bottom: 1px solid #21262d;
+    color: #8b949e;
+    line-height: 1.5;
+  }
+  .trade-item .pnl { font-weight: 700; }
+  .trade-item .pnl.up   { color: #f85149; }
+  .trade-item .pnl.down { color: #3fb950; }
+  #total-pnl-row { font-size: 12px; color: #8b949e; margin-top: 6px; }
+  #total-pnl-val { font-weight: 700; font-size: 13px; }
+
+  /* ── 載入遮罩 ── */
+  #loading {
+    display: none;
+    position: absolute;
+    inset: 0;
+    background: rgba(13,17,23,.85);
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    color: #58a6ff;
+    z-index: 100;
+  }
+  #loading.show { display: flex; }
+</style>
+</head>
+<body>
+
+<!-- 頂部控制列 -->
+<div id="toolbar">
+  <h1>⚡ 當沖回放</h1>
+  <select id="stock-select"><option value="">載入中...</option></select>
+  <select id="date-select"><option value="">選股票</option></select>
+  <div id="speed-group">
+    <button class="btn active" onclick="setSpeed(1)" id="s1">1x</button>
+    <button class="btn" onclick="setSpeed(3)" id="s3">3x</button>
+    <button class="btn" onclick="setSpeed(10)" id="s10">10x</button>
+    <button class="btn" onclick="setSpeed(30)" id="s30">30x</button>
+  </div>
+  <button class="btn" id="play-btn" onclick="togglePlay()" disabled>▶ 播放</button>
+  <button class="btn" onclick="resetReplay()" id="reset-btn" disabled>↺ 重置</button>
+  <span id="current-time">--:--</span>
+  <span id="status-bar">請選擇股票和日期</span>
+</div>
+
+<!-- 主區域 -->
+<div id="main">
+  <!-- 圖表 -->
+  <div id="chart-area">
+    <div id="chart"></div>
+    <div id="loading"><span>載入資料中...</span></div>
+  </div>
+
+  <!-- 右側面板 -->
+  <div id="panel">
+
+    <!-- 訊號燈 -->
+    <div class="panel-section" style="flex-shrink:0">
+      <h3>策略訊號</h3>
+      <div id="signals-list">
+        <!-- 由 JS 生成 -->
+      </div>
+    </div>
+
+    <!-- 信心度 -->
+    <div class="panel-section" style="flex-shrink:0">
+      <h3>信心度</h3>
+      <div id="confidence-text">0%</div>
+      <div id="confidence-bar-wrap"><div id="confidence-bar"></div></div>
+      <div id="trigger-badge">⚡ 訊號觸發！</div>
+    </div>
+
+    <!-- 持倉 & 交易 -->
+    <div class="panel-section" style="flex-shrink:0">
+      <h3>持倉</h3>
+      <div id="position-price">無持倉</div>
+      <div id="position-pnl" class="pos-flat">—</div>
+      <div class="trade-btns">
+        <button id="buy-btn"  onclick="buy()"  disabled>買進 ▲</button>
+        <button id="sell-btn" onclick="sell()" disabled>賣出 ▼</button>
+      </div>
+      <div id="total-pnl-row">
+        累計損益：<span id="total-pnl-val" class="pos-flat">0.00%</span>
+      </div>
+    </div>
+
+    <!-- 交易紀錄 -->
+    <div id="trades-list">
+      <h3>交易紀錄</h3>
+      <div id="trades-content"><div style="color:#8b949e;font-size:12px">尚無交易</div></div>
+    </div>
+
+  </div>
+</div>
+
+<script src="/static/app.js"></script>
+</body>
+</html>

@@ -170,7 +170,9 @@ def auto_update_memory() -> str:
             f.write(result)
         return f"✅ 記憶已更新：{os.path.basename(fname)}"
     except Exception as e:
-        return f"⚠️ 記憶更新失敗：{str(e)[:60]}"
+        import traceback
+        print(f"[記憶更新失敗] {traceback.format_exc()}", flush=True)
+        return f"⚠️ 記憶更新失敗：{str(e)}"
 
 
 def run_auto_session_end():

@@ -1,0 +1,4 @@
+flask
+finmind
+pandas
+python-dotenv
