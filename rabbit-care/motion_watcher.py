@@ -203,10 +203,18 @@ def analyze_frames_gemini(frames: list):
             return _parse_response(response.text)
         except Exception as e:
             err_str = str(e)
-            if '429' in err_str and attempt < 2:
-                wait = 60 * (attempt + 1)
-                logger.warning(f'Gemini 429，等待 {wait}s 後重試')
-                time.sleep(wait)
+            if '429' in err_str:
+                # 日配額耗盡：立即放棄讓 fallback 接手
+                if 'PerDay' in err_str or 'free_tier' in err_str:
+                    logger.warning('Gemini 日配額耗盡，直接 fallback')
+                    return None
+                # 一般速率限制：等待後重試
+                if attempt < 2:
+                    wait = 60 * (attempt + 1)
+                    logger.warning(f'Gemini 429，等待 {wait}s 後重試')
+                    time.sleep(wait)
+                else:
+                    return None
             else:
                 logger.error(f'Gemini 分析失敗: {e}')
                 return None
@@ -228,7 +236,11 @@ def analyze_frames(frames: list):
             logger.warning('Ollama 分析無結果，fallback 至 OpenAI')
             result = analyze_frames_openai(frames)
         return result
-    return analyze_frames_gemini(frames)
+    result = analyze_frames_gemini(frames)
+    if result is None:
+        logger.warning('Gemini 分析無結果，fallback 至 OpenAI')
+        result = analyze_frames_openai(frames)
+    return result
 
 
 ACTION_EMOJI = {'eating': '🍽', 'drinking': '💧', 'stretching': '🐇', 'sleeping': '😴', 'resting': '🐰'}
