@@ -10,7 +10,30 @@ load_dotenv()
 logger = logging.getLogger(__name__)
 
 BATCH_SIZE = 20
-GROQ_MODEL = "llama-3.1-8b-instant"
+GROQ_MODELS = [
+    "llama-3.1-8b-instant",
+    "qwen/qwen3-32b",
+    "meta-llama/llama-4-scout-17b-16e-instruct",
+]
+_current_model_idx = 0
+
+
+def get_model() -> str:
+    return GROQ_MODELS[_current_model_idx]
+
+
+def next_model() -> str | None:
+    """切換到下一個備用模型，回傳新模型名稱；已是最後一個則回傳 None。"""
+    global _current_model_idx
+    if _current_model_idx + 1 < len(GROQ_MODELS):
+        _current_model_idx += 1
+        logger.warning(f"切換模型 → {get_model()}")
+        return get_model()
+    return None
+
+
+def is_rate_limit_error(e: Exception) -> bool:
+    return "429" in str(e) or "rate_limit" in str(e).lower() or "tokens per day" in str(e).lower()
 
 BASE_SYSTEM_PROMPT = """你是財經市場情緒分析師。分析新聞標題與內容：
 1. 判斷是否與股票市場、金融投資、總體經濟相關（relevant）
@@ -31,8 +54,13 @@ def build_groq_client():
     return Groq(api_key=os.getenv("GROQ_API_KEY"))
 
 
+def _no_think_prefix() -> str:
+    """qwen3 需要 /no_think 關閉思考模式才能穩定輸出 JSON。"""
+    return "/no_think\n" if "qwen3" in get_model() else ""
+
+
 def build_system_prompt(irrelevant_examples=None):
-    prompt = BASE_SYSTEM_PROMPT
+    prompt = _no_think_prefix() + BASE_SYSTEM_PROMPT
     if irrelevant_examples:
         examples_text = "\n".join(f"- {t}" for t in irrelevant_examples)
         prompt += f"\n\n以下是過去被標記為「不相關」的新聞標題範例，請參考類似模式：\n{examples_text}"
@@ -40,7 +68,7 @@ def build_system_prompt(irrelevant_examples=None):
 
 
 def build_single_prompt(irrelevant_examples=None):
-    prompt = BASE_SINGLE_PROMPT
+    prompt = _no_think_prefix() + BASE_SINGLE_PROMPT
     if irrelevant_examples:
         examples_text = "\n".join(f"- {t}" for t in irrelevant_examples)
         prompt += f"\n\n不相關範例：\n{examples_text}"
@@ -50,6 +78,8 @@ def build_single_prompt(irrelevant_examples=None):
 def extract_json(text):
     """嘗試從 text 中提取第一個合法 JSON 陣列或物件。"""
     text = text.strip()
+    # 去掉 Qwen3 思考標籤 <think>...</think>
+    text = re.sub(r'<think>.*?</think>', '', text, flags=re.DOTALL).strip()
     # 去掉 markdown code fence
     if text.startswith("```"):
         lines = text.split("\n")
@@ -71,27 +101,31 @@ def extract_json(text):
 
 
 def analyze_single(client, article, irrelevant_examples=None):
-    """單篇分析，作為 batch 失敗的 fallback。"""
-    try:
-        content_text = (article.get("content") or "")[:200]
-        completion = client.chat.completions.create(
-            model=GROQ_MODEL,
-            messages=[
-                {"role": "system", "content": build_single_prompt(irrelevant_examples)},
-                {"role": "user", "content": f'[id={article["id"]}] 標題：{article["title"]} 內容：{content_text}'},
-            ],
-            temperature=0.1,
-        )
-        result = extract_json(completion.choices[0].message.content)
-        if result and isinstance(result, dict) and "score" in result:
-            a = article.copy()
-            a["relevant"] = result.get("relevant", True)
-            a["score"] = max(1, min(10, int(result.get("score", 5))))
-            a["summary"] = result.get("summary", "")
-            a["tags"] = result.get("tags", [])
-            return a
-    except Exception as e:
-        logger.warning(f"Single analyze failed id={article['id']}: {e}")
+    """單篇分析，作為 batch 失敗的 fallback。遇到 429 會切換模型重試一次。"""
+    for attempt in range(len(GROQ_MODELS)):
+        try:
+            content_text = (article.get("content") or "")[:200]
+            completion = client.chat.completions.create(
+                model=get_model(),
+                messages=[
+                    {"role": "system", "content": build_single_prompt(irrelevant_examples)},
+                    {"role": "user", "content": f'[id={article["id"]}] 標題：{article["title"]} 內容：{content_text}'},
+                ],
+                temperature=0.1,
+            )
+            result = extract_json(completion.choices[0].message.content)
+            if result and isinstance(result, dict) and "score" in result:
+                a = article.copy()
+                a["relevant"] = result.get("relevant", True)
+                a["score"] = max(1, min(10, int(result.get("score", 5))))
+                a["summary"] = result.get("summary", "")
+                a["tags"] = result.get("tags", [])
+                return a
+        except Exception as e:
+            if is_rate_limit_error(e) and next_model():
+                continue
+            logger.warning(f"Single analyze failed id={article['id']}: {e}")
+            break
     return None
 
 
@@ -100,49 +134,58 @@ def analyze_batch(articles, irrelevant_examples=None):
     if not articles:
         return []
     client = build_groq_client()
-    try:
-        articles_text = "\n".join(
-            f'[id={a["id"]}] 標題：{a["title"]} 內容：{(a.get("content") or "")[:200]}'
-            for a in articles
-        )
-        completion = client.chat.completions.create(
-            model=GROQ_MODEL,
-            messages=[
-                {"role": "system", "content": build_system_prompt(irrelevant_examples)},
-                {"role": "user", "content": f"分析以下 {len(articles)} 則新聞：\n{articles_text}"},
-            ],
-            temperature=0.1,
-        )
-        results = extract_json(completion.choices[0].message.content)
-        if results and isinstance(results, list):
-            id_map = {a["id"]: a for a in articles}
-            analyzed_ids = set()
-            enriched = []
-            for r in results:
-                article = id_map.get(r.get("id"), {}).copy()
-                if not article:
-                    continue
-                article["relevant"] = r.get("relevant", True)
-                article["score"] = max(1, min(10, int(r.get("score", 5))))
-                article["summary"] = r.get("summary", "")
-                article["tags"] = r.get("tags", [])
-                enriched.append(article)
-                analyzed_ids.add(article["id"])
 
-            # fallback：batch 裡沒回來的逐篇補分析
-            missing = [a for a in articles if a["id"] not in analyzed_ids]
-            if missing:
-                logger.info(f"Batch missing {len(missing)} articles, falling back to single analyze")
-                for a in missing:
-                    result = analyze_single(client, a, irrelevant_examples)
-                    if result:
-                        enriched.append(result)
-                    time.sleep(0.5)
-            return enriched
-        else:
-            logger.warning("Batch parse failed, falling back to single analyze for all")
-    except Exception as e:
-        logger.warning(f"Groq analyze_batch failed: {e}, falling back to single analyze")
+    for attempt in range(len(GROQ_MODELS)):
+        try:
+            articles_text = "\n".join(
+                f'[id={a["id"]}] 標題：{a["title"]} 內容：{(a.get("content") or "")[:200]}'
+                for a in articles
+            )
+            completion = client.chat.completions.create(
+                model=get_model(),
+                messages=[
+                    {"role": "system", "content": build_system_prompt(irrelevant_examples)},
+                    {"role": "user", "content": f"分析以下 {len(articles)} 則新聞：\n{articles_text}"},
+                ],
+                temperature=0.1,
+            )
+            results = extract_json(completion.choices[0].message.content)
+            if results and isinstance(results, list):
+                id_map = {a["id"]: a for a in articles}
+                analyzed_ids = set()
+                enriched = []
+                for r in results:
+                    article = id_map.get(r.get("id"), {}).copy()
+                    if not article:
+                        continue
+                    article["relevant"] = r.get("relevant", True)
+                    article["score"] = max(1, min(10, int(r.get("score", 5))))
+                    article["summary"] = r.get("summary", "")
+                    article["tags"] = r.get("tags", [])
+                    enriched.append(article)
+                    analyzed_ids.add(article["id"])
+
+                # fallback：batch 裡沒回來的逐篇補分析
+                missing = [a for a in articles if a["id"] not in analyzed_ids]
+                if missing:
+                    logger.info(f"Batch missing {len(missing)} articles, falling back to single analyze")
+                    for a in missing:
+                        result = analyze_single(client, a, irrelevant_examples)
+                        if result:
+                            enriched.append(result)
+                        time.sleep(0.5)
+                return enriched
+            else:
+                logger.warning("Batch parse failed, falling back to single analyze for all")
+                break
+        except Exception as e:
+            if is_rate_limit_error(e):
+                if next_model():
+                    continue
+                logger.warning("所有模型配額已耗盡，放棄此 batch")
+                return []
+            logger.warning(f"Groq analyze_batch failed: {e}, falling back to single analyze")
+            break
 
     # 整個 batch 失敗 → 逐篇
     enriched = []

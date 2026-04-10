@@ -74,13 +74,28 @@ def fetch_sp500_with_ma(period="20y"):
     df = yf.download("^GSPC", period=period, progress=False, auto_adjust=True)
     close = df[("Close", "^GSPC")].dropna()
     ma200 = close.rolling(200).mean()
+    hist_high = trunc2(float(close.max()))
     prices, mas = [], []
     for date, val in close.items():
         prices.append({"x": date.strftime("%Y-%m-%d"), "y": trunc2(float(val))})
     for date, val in ma200.items():
         if pd.notna(val):
             mas.append({"x": date.strftime("%Y-%m-%d"), "y": trunc2(float(val))})
-    return prices, mas
+    return prices, mas, hist_high
+
+
+def fetch_taiex_with_ma(period="20y"):
+    df = yf.download("^TWII", period=period, progress=False, auto_adjust=True)
+    close = df[("Close", "^TWII")].dropna()
+    ma200 = close.rolling(200).mean()
+    hist_high = trunc2(float(close.max()))
+    prices, mas = [], []
+    for date, val in close.items():
+        prices.append({"x": date.strftime("%Y-%m-%d"), "y": trunc2(float(val))})
+    for date, val in ma200.items():
+        if pd.notna(val):
+            mas.append({"x": date.strftime("%Y-%m-%d"), "y": trunc2(float(val))})
+    return prices, mas, hist_high
 
 
 def fetch_fear_greed():
@@ -127,18 +142,24 @@ def fetch_fear_greed():
         return {"score": None, "rating": "N/A", "history": hist}
 
 
-def generate_html(vix_data, sp_data, ma_data, fg_data, generated_at):
+def generate_html(vix_data, sp_data, ma_data, sp_hist_high, fg_data, tw_data, tw_ma_data, tw_hist_high, generated_at):
     vix_current = vix_data[-1]["y"] if vix_data else 0
     sp_current = sp_data[-1]["y"] if sp_data else 0
     ma_current = ma_data[-1]["y"] if ma_data else 0
     sp_vs_ma = trunc2((sp_current / ma_current - 1) * 100) if ma_current else 0
+    sp_vs_high = trunc2((sp_current / sp_hist_high - 1) * 100) if sp_hist_high else 0
     fg_score = fg_data["score"]
     fg_rating = fg_data["rating"]
+    tw_current = tw_data[-1]["y"] if tw_data else 0
+    tw_ma_current = tw_ma_data[-1]["y"] if tw_ma_data else 0
+    tw_vs_ma = trunc2((tw_current / tw_ma_current - 1) * 100) if tw_ma_current else 0
+    tw_vs_high = trunc2((tw_current / tw_hist_high - 1) * 100) if tw_hist_high else 0
 
     # 顏色判斷
     vix_color = "#ff4757" if vix_current > 30 else ("#ffaa00" if vix_current > 20 else "#00d68f")
     fg_color = "#ff4757" if (fg_score or 50) < 25 else ("#ffaa00" if (fg_score or 50) < 45 else ("#00d68f" if (fg_score or 50) > 55 else "#e0e0e0"))
     sp_color = "#00d68f" if sp_vs_ma > 0 else "#ff4757"
+    tw_color = "#ff4757" if tw_vs_ma > 0 else "#00d68f"  # 台股：紅漲綠跌
 
     fg_score_display = f"{fg_score:.2f}" if fg_score is not None else "N/A"
     fg_label_map = {
@@ -216,7 +237,7 @@ def generate_html(vix_data, sp_data, ma_data, fg_data, generated_at):
 
   .cards {{
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     gap: 1px;
     border: 1px solid var(--border);
     background: var(--border);
@@ -400,6 +421,7 @@ def generate_html(vix_data, sp_data, ma_data, fg_data, generated_at):
 
   @media (max-width: 768px) {{
     .cards {{ grid-template-columns: 1fr; margin: 1rem; }}
+    .cards .card {{ grid-column: 1; }}
     header, .controls, .chart-section, footer {{ padding-left: 1rem; padding-right: 1rem; }}
     .card-value {{ font-size: 2.2rem; }}
   }}
@@ -437,6 +459,17 @@ def generate_html(vix_data, sp_data, ma_data, fg_data, generated_at):
     <div class="card-sub">
       200MA：{ma_current:,.2f}
       &nbsp;·&nbsp; <b>{'▲' if sp_vs_ma > 0 else '▼'} {abs(sp_vs_ma)}%</b>
+      <br><span style="font-size:0.7rem;opacity:0.6">歷史高點：{sp_hist_high:,.2f}&nbsp;&nbsp;<b style="opacity:1">{sp_vs_high:.1f}%</b></span>
+    </div>
+  </div>
+
+  <div class="card" style="--accent: {tw_color}">
+    <div class="card-label"><span class="pulse"></span>台股加權指數 vs 200MA</div>
+    <div class="card-value">{tw_current:,.0f}</div>
+    <div class="card-sub">
+      200MA：{tw_ma_current:,.0f}
+      &nbsp;·&nbsp; <b style="color:{'#ff4757' if tw_vs_ma > 0 else '#00d68f'}">{'▲' if tw_vs_ma > 0 else '▼'} {abs(tw_vs_ma)}%</b>
+      <br><span style="font-size:0.7rem;opacity:0.6">歷史高點：{tw_hist_high:,.0f}&nbsp;&nbsp;<b style="opacity:1">{tw_vs_high:.1f}%</b></span>
     </div>
   </div>
 </div>
@@ -475,13 +508,26 @@ def generate_html(vix_data, sp_data, ma_data, fg_data, generated_at):
 
   <div class="chart-section">
     <div class="chart-header">
-      <div class="chart-title"><b>S&P 500</b> 收盤價 vs 200日均線</div>
+      <div class="chart-title"><b>S&P 500</b> 收盤價 vs 200日均線 vs 歷史高點</div>
       <div class="chart-legend">
         <div class="legend-item"><div class="legend-dot" style="background:#00d68f"></div>S&P 500</div>
         <div class="legend-item"><div class="legend-dot" style="background:#ffaa00"></div>200MA</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#ff4757"></div>歷史高點 {sp_hist_high:,.0f}</div>
       </div>
     </div>
     <div class="chart-wrap"><canvas id="spChart"></canvas></div>
+  </div>
+
+  <div class="chart-section">
+    <div class="chart-header">
+      <div class="chart-title"><b>台股加權指數</b> 收盤價 vs 200日均線 vs 歷史高點</div>
+      <div class="chart-legend">
+        <div class="legend-item"><div class="legend-dot" style="background:#ff4757"></div>加權指數</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#ffaa00"></div>200MA</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#ff4757"></div>歷史高點 {tw_hist_high:,.0f}</div>
+      </div>
+    </div>
+    <div class="chart-wrap"><canvas id="twChart"></canvas></div>
   </div>
 </div>
 
@@ -494,7 +540,11 @@ def generate_html(vix_data, sp_data, ma_data, fg_data, generated_at):
 const VIX_DATA = {json.dumps(vix_data)};
 const SP_DATA  = {json.dumps(sp_data)};
 const MA_DATA  = {json.dumps(ma_data)};
+const SP_HIST_HIGH = {sp_hist_high};
 const FG_DATA  = {json.dumps(fg_data["history"])};
+const TW_DATA  = {json.dumps(tw_data)};
+const TW_MA_DATA = {json.dumps(tw_ma_data)};
+const TW_HIST_HIGH = {tw_hist_high};
 
 const CHART_DEFAULTS = {{
   responsive: true,
@@ -622,7 +672,29 @@ Chart.register(fgPlugin);
 fgChart.config.plugins = [fgPlugin];
 fgChart.update();
 
-// S&P 500 chart
+// S&P 500 chart with ATH line
+const spHighPlugin = {{
+  id: 'spHighLine',
+  beforeDraw(chart) {{
+    const {{ ctx, chartArea, scales }} = chart;
+    if (!chartArea) return;
+    const yHigh = scales.y.getPixelForValue(SP_HIST_HIGH);
+    if (yHigh < chartArea.top || yHigh > chartArea.bottom) return;
+    ctx.save();
+    ctx.strokeStyle = 'rgba(255,71,87,0.5)';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([6,4]);
+    ctx.beginPath();
+    ctx.moveTo(chartArea.left, yHigh);
+    ctx.lineTo(chartArea.right, yHigh);
+    ctx.stroke();
+    ctx.fillStyle = 'rgba(255,71,87,0.7)';
+    ctx.font = "10px 'Share Tech Mono'";
+    ctx.fillText('ATH ' + SP_HIST_HIGH.toLocaleString(), chartArea.left + 6, yHigh - 4);
+    ctx.restore();
+  }}
+}};
+
 const spChart = makeChart('spChart', [
   {{
     label: 'S&P 500',
@@ -646,6 +718,59 @@ const spChart = makeChart('spChart', [
     borderDash: [5,3],
   }},
 ], null, null);
+Chart.register(spHighPlugin);
+spChart.config.plugins = [spHighPlugin];
+spChart.update();
+
+// TAIEX chart with historical high line
+const twHighPlugin = {{
+  id: 'twHighLine',
+  beforeDraw(chart) {{
+    const {{ ctx, chartArea, scales }} = chart;
+    if (!chartArea) return;
+    const yHigh = scales.y.getPixelForValue(TW_HIST_HIGH);
+    if (yHigh < chartArea.top || yHigh > chartArea.bottom) return;
+    ctx.save();
+    ctx.strokeStyle = 'rgba(255,71,87,0.5)';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([6,4]);
+    ctx.beginPath();
+    ctx.moveTo(chartArea.left, yHigh);
+    ctx.lineTo(chartArea.right, yHigh);
+    ctx.stroke();
+    ctx.fillStyle = 'rgba(255,71,87,0.7)';
+    ctx.font = "10px 'Share Tech Mono'";
+    ctx.fillText('ATH ' + TW_HIST_HIGH.toLocaleString(), chartArea.left + 6, yHigh - 4);
+    ctx.restore();
+  }}
+}};
+
+const twChart = makeChart('twChart', [
+  {{
+    label: '加權指數',
+    data: TW_DATA,
+    borderColor: '#ff4757',
+    borderWidth: 1.5,
+    pointRadius: 0,
+    fill: false,
+    parsing: {{ xAxisKey: 'x', yAxisKey: 'y' }},
+    tension: 0.2,
+  }},
+  {{
+    label: '200MA',
+    data: TW_MA_DATA,
+    borderColor: '#ffaa00',
+    borderWidth: 1.5,
+    pointRadius: 0,
+    fill: false,
+    parsing: {{ xAxisKey: 'x', yAxisKey: 'y' }},
+    tension: 0.2,
+    borderDash: [5,3],
+  }},
+], null, null);
+Chart.register(twHighPlugin);
+twChart.config.plugins = [twHighPlugin];
+twChart.update();
 
 // Range selector
 function setRange(days) {{
@@ -669,6 +794,10 @@ function setRange(days) {{
   spChart.data.datasets[0].data = filter(SP_DATA);
   spChart.data.datasets[1].data = filter(MA_DATA);
   spChart.update('none');
+
+  twChart.data.datasets[0].data = filter(TW_DATA);
+  twChart.data.datasets[1].data = filter(TW_MA_DATA);
+  twChart.update('none');
 }}
 </script>
 </body>
@@ -681,15 +810,18 @@ def main():
     vix_data = fetch_yfinance("^VIX", "20y")
 
     print(f"[{datetime.now().strftime('%H:%M:%S')}] 抓取 S&P 500 資料與 200MA...")
-    sp_data, ma_data = fetch_sp500_with_ma("20y")
+    sp_data, ma_data, sp_hist_high = fetch_sp500_with_ma("20y")
 
     print(f"[{datetime.now().strftime('%H:%M:%S')}] 抓取 CNN Fear & Greed...")
     fg_data = fetch_fear_greed()
 
+    print(f"[{datetime.now().strftime('%H:%M:%S')}] 抓取台股加權指數資料...")
+    tw_data, tw_ma_data, tw_hist_high = fetch_taiex_with_ma("20y")
+
     generated_at = datetime.now().strftime("%Y-%m-%d %H:%M")
     print(f"[{datetime.now().strftime('%H:%M:%S')}] 生成 HTML...")
 
-    html = generate_html(vix_data, sp_data, ma_data, fg_data, generated_at)
+    html = generate_html(vix_data, sp_data, ma_data, sp_hist_high, fg_data, tw_data, tw_ma_data, tw_hist_high, generated_at)
     OUTPUT.write_text(html, encoding="utf-8")
 
     vix_current = vix_data[-1]["y"] if vix_data else "N/A"
@@ -701,13 +833,19 @@ def main():
     print(f"[{datetime.now().strftime('%H:%M:%S')}] 完成 → {OUTPUT}")
     sp_vs_ma_str = f"{trunc2((sp_current/ma_current-1)*100):+.2f}%" if isinstance(sp_current, float) and isinstance(ma_current, float) else "N/A"
     above_below = "高於" if isinstance(sp_current, float) and isinstance(ma_current, float) and sp_current >= ma_current else "低於"
+    tw_current = tw_data[-1]["y"] if tw_data else "N/A"
+    tw_ma_current = tw_ma_data[-1]["y"] if tw_ma_data else "N/A"
+    tw_vs_ma_str = f"{trunc2((tw_current/tw_ma_current-1)*100):+.2f}%" if isinstance(tw_current, float) and isinstance(tw_ma_current, float) else "N/A"
+    tw_vs_high_str = f"{trunc2((tw_current/tw_hist_high-1)*100):.1f}%" if isinstance(tw_current, float) and tw_hist_high else "N/A"
     print(f"  VIX: {vix_current}  |  S&P: {sp_current}  |  200MA: {ma_current}  |  {above_below} 200MA ({sp_vs_ma_str})  |  F&G: {fg_score} ({fg_rating})")
+    print(f"  加權指數: {tw_current}  |  200MA: {tw_ma_current}  |  vs 200MA: {tw_vs_ma_str}  |  距高點: {tw_vs_high_str}  |  ATH: {tw_hist_high}")
 
     send_telegram(
         f"📊 市場儀表板已更新 {generated_at}\n"
         f"VIX：{vix_current}\n"
         f"Fear & Greed：{fg_score} ({fg_rating})\n"
-        f"S&P 500：{sp_current:,.2f}"
+        f"S&P 500：{sp_current:,.2f}\n"
+        f"台股加權：{tw_current:,.0f}　vs 200MA {tw_vs_ma_str}　距高點 {tw_vs_high_str}"
     )
 
     # S&P 500 vs 200MA 狀態變化通知（只在跌破 / 收復時各通知一次）

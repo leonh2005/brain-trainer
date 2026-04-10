@@ -1,16 +1,24 @@
 #!/usr/bin/env python3
 """
 盤中多方主力發動偵測器 — 每 5 分鐘執行（09:05–13:30 交易時段）
-偵測 7 項指標，≥3 個同時觸發時推播 Telegram 通知。
+偵測 12 項指標，推播規則：
+  - 第 12 項（MACD背離+千張K）觸發即推播
+  - 推播內容附上同時觸發的其他指標
 
 指標：
-  1. VWAP 突破（股價上穿均價線）
-  2. OBV 領先創高（底背離）
-  3. KD 鈍化（K值≥80 持續3根）
-  4. MACD 0軸上金叉
-  5. RSI5 陡峭上穿 RSI10
-  6. 預估量爆增（>近5日均量×2）
-  7. 委買委賣差（買量>賣量×1.5）
+  1.  VWAP 突破（股價上穿均價線）
+  2.  OBV 領先創高（底背離）
+  3.  KD 鈍化（K值≥80 持續3根）
+  4.  MACD 0軸上金叉
+  5.  RSI5 陡峭上穿 RSI10
+  6.  預估量爆增（>近5日均量×2）
+  7.  外盤比≥65%
+  8.  委買委賣差（掛單委買>委賣×1.5）
+  9.  昨量單K（最新1分K≥昨日總量1%）【必要條件之一】
+  10. 單K倍量（最新1分K≥前5根均量×5）【必要條件之一】
+  11. 超越開盤量（最新1分K≥9:01首根量×0.9）【必要條件之一】
+  12. 最新1分K≥前5根均量×5 且 全市場成交量前30（排除ETF）【單獨觸發即推播】
+  13. MACD底背離或頂背離
 """
 
 import json
@@ -30,13 +38,13 @@ warnings.filterwarnings('ignore')
 BOT_TOKEN        = "8666778924:AAFMAFKfsfx3opS2CfCBrDYMIx6vcJKACTk"
 CHAT_ID          = "7556217543"
 TOP_N            = 24                   # 監控量前 N 名
-SIGNAL_THRESHOLD = 3                    # 觸發推播的最低訊號數
-# 成交量相關訊號關鍵字（至少 1 個才推播）
-# 量能類訊號（全部來自 1 分 K，至少 1 個才推播）
-VOL_SIGNAL_KEYS  = ['預估量', '外盤比', '昨量', '單K', '超越開盤量']
+SIGNAL_THRESHOLD = 4                    # 觸發推播的最低訊號數
+# 必要條件：9(昨量單K)、10(單K倍量)、11(超越開盤量) 其中至少 1 個須觸發
+VOL_SIGNAL_KEYS  = ['昨量', '單K', '超越開盤量']
 COOLDOWN_MINUTES = 30                   # 同一股票冷卻時間（分鐘）
 COOLDOWN_FILE    = '/tmp/intraday_cooldown.json'
 AVG5_CACHE_FILE  = '/tmp/intraday_avg5_cache.json'  # 每日均量快取
+VOL_RANK_CACHE   = '/tmp/intraday_vol_rank_cache.json'  # 30分鐘成交量排名快取（由 vol_rank_updater.py 更新）
 
 # 族群定義（觀察用，不計入訊號）
 SECTOR_PEERS = {
@@ -320,10 +328,11 @@ def detect_signals(df: pd.DataFrame, snap: dict, avg5: int, yday_vol: int = 0) -
     if yday_vol > 0 and cur_bar_vol >= yday_vol * 0.01:
         signals.append(f'昨量{cur_bar_vol/yday_vol*100:.1f}%單K')
 
-    # 10. 均量倍數法：最新 1 分 K >= 前 5 根平均量 × 3
+    # 10. 均量倍數法：最新 1 分 K >= 前 5 根平均量 × 5
+    prev5_avg = 0
     if len(df) >= 6:
         prev5_avg = df['volume'].iloc[-6:-1].mean()
-        if prev5_avg > 0 and cur_bar_vol >= prev5_avg * 3:
+        if prev5_avg > 0 and cur_bar_vol >= prev5_avg * 5:
             signals.append(f'單K{cur_bar_vol/prev5_avg:.1f}x前5均')
 
     # 11. 開盤量對比法：最新 1 分 K 接近或超越 9:01 開盤首根量
@@ -332,6 +341,26 @@ def detect_signals(df: pd.DataFrame, snap: dict, avg5: int, yday_vol: int = 0) -
         open_vol = open_bar['volume'].iloc[0]
         if open_vol > 0 and cur_bar_vol >= open_vol * 0.9:
             signals.append(f'超越開盤量({cur_bar_vol}/{open_vol}張)')
+
+    # 12. 量爆+top30：最新1分K≥前5根均量×5 且 全市場成交量前30（排除ETF）
+    #     ─ top30 條件由主迴圈補判，此處只記錄量爆部分
+    if prev5_avg > 0 and cur_bar_vol >= prev5_avg * 5:
+        signals.append(f'量爆{cur_bar_vol/prev5_avg:.1f}x前5均')
+
+    # 13. MACD背離（底或頂）
+    # 底背離：股價創近20根新低，但 DIF 未創新低（主力逢低接手）
+    # 頂背離：股價創近20根新高，但 DIF 未創新高（動能衰竭警示）
+    lk = min(20, len(close) - 1)
+    if lk >= 5:
+        p_min = close.iloc[-lk-1:-1].min()
+        p_max = close.iloc[-lk-1:-1].max()
+        d_min = dif.iloc[-lk-1:-1].min()
+        d_max = dif.iloc[-lk-1:-1].max()
+        bull_div = close.iloc[last] <= p_min * 1.002 and dif.iloc[last] > d_min
+        bear_div = close.iloc[last] >= p_max * 0.998 and dif.iloc[last] < d_max
+        if bull_div or bear_div:
+            div_type = '底背離' if bull_div else '頂背離'
+            signals.append(f'MACD{div_type}')
 
     return signals
 
@@ -407,8 +436,35 @@ def calc_confidence(signals: list) -> int:
     return min(100, round(score / _MAX_SCORE * 100))
 
 
+def load_vol_rank_top30() -> set:
+    """讀取 vol_rank_updater 的快取，回傳 top30 非 ETF 代碼集合。
+    快取超過 60 分鐘則警告，快取不存在則回傳空集合（不阻擋推播）。"""
+    try:
+        if not os.path.exists(VOL_RANK_CACHE):
+            print('[vol_rank] 快取不存在，top30 條件略過')
+            return set()
+        with open(VOL_RANK_CACHE) as f:
+            data = json.load(f)
+        updated_at = datetime.fromisoformat(data['updated_at'])
+        age_min = (datetime.now() - updated_at).total_seconds() / 60
+        top_codes = set(data.get('top_codes', []))
+        if age_min > 60:
+            print(f'[vol_rank] 快取已 {age_min:.0f} 分鐘未更新，仍沿用')
+        else:
+            print(f'[vol_rank] 快取 {age_min:.0f} 分鐘前更新，top{len(top_codes)}')
+        return top_codes
+    except Exception as e:
+        print(f'[vol_rank] 讀取失敗: {e}，top30 條件略過')
+        return set()
+
+
 def has_vol_signal(signals: list) -> bool:
     return any(any(k in s for k in VOL_SIGNAL_KEYS) for s in signals)
+
+
+def has_signal_12(signals: list) -> bool:
+    """第12項：量爆（前5根均量×5）觸發，top30 由主迴圈確認"""
+    return any('量爆' in s for s in signals)
 
 
 # ── 推播 ─────────────────────────────────────────────────────────────────────
@@ -467,6 +523,9 @@ def main():
     if peer_codes:
         all_snaps.update(get_snapshot(peer_codes))
 
+    # 從快取讀取全市場成交量 top30（由 vol_rank_updater.py 每 30 分鐘更新）
+    top30_non_etf = load_vol_rank_top30()
+
     cooldown   = load_cooldown()
     avg5_cache = _load_avg5_cache()
 
@@ -492,10 +551,10 @@ def main():
             continue
 
         signals = detect_signals(df, snap, avg5, yday_vol)
-        vol_ok  = has_vol_signal(signals)
-        print(f'訊號 {len(signals)}: {signals}  量能訊號:{vol_ok}')
+        sig12   = has_signal_12(signals) and code in top30_non_etf
+        print(f'訊號 {len(signals)}: {signals}  第12項:{sig12}  top30:{code in top30_non_etf}')
 
-        if len(signals) >= SIGNAL_THRESHOLD and vol_ok:
+        if sig12:
             sector_txt = get_sector_status(code, all_snaps)
             msg = build_message(code, signals, snap, avg5, sector_txt)
             send_telegram(msg)
@@ -508,4 +567,28 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    import time as _time
+
+    print('[startup] intraday_monitor 啟動，初始化 Shioaji...')
+    _api = _get_sj()
+    _probe_contracts = [
+        c for c in _api.Contracts.Stocks.TSE
+        if hasattr(c, 'code') and c.code.isdigit() and len(c.code) == 4
+    ]
+    for _wait in range(1, 61):
+        _time.sleep(1)
+        if _api.snapshots(_probe_contracts[:10]):
+            print(f'[startup] Shioaji 暖機完成（{_wait}s），開始監控迴圈')
+            break
+    else:
+        print('[startup] Shioaji 暖機逾時（60s），結束')
+        exit(1)
+
+    # 持久迴圈：每 60 秒執行一次，13:35 後自動結束
+    while True:
+        _now = datetime.now()
+        if _now.hour > 13 or (_now.hour == 13 and _now.minute > 35):
+            print(f'[{_now.strftime("%H:%M:%S")}] 盤後，監控結束')
+            break
+        main()
+        _time.sleep(60)
