@@ -205,3 +205,7 @@ candidate_codes = [c['code'] for c in candidates]
 with open('/tmp/daytrade_candidates.json', 'w') as f:
     json.dump(candidate_codes, f)
 print(f'[daytrade] 候選清單已寫入 /tmp/daytrade_candidates.json: {candidate_codes}')
+
+if _sj_api is not None:
+    _sj_api.logout()
+    print('[sj] 永豐 API 已登出')
