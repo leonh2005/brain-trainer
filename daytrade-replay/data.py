@@ -1,24 +1,20 @@
 """
-FinMind 資料層：top30 股票清單、1分K、日K均量
+資料層：
+- top30 股票清單：TWSE API（最近15交易日前20大量）
+- 1分K：yfinance（最近7天免費）
+- 日K均量：yfinance 日線
 """
 
 import json
 import os
+import re
 import time
-from datetime import date, timedelta
+from collections import defaultdict
+from datetime import date, datetime, timedelta
 
 import pandas as pd
 
 CACHE_FILE = '/tmp/daytrade_top30_cache.json'
-TOKEN_FILE = '/Users/steven/CCProject/.secrets/finmind_token.txt'
-
-
-def _get_loader():
-    from FinMind.data import DataLoader
-    dl = DataLoader()
-    token = open(TOKEN_FILE).read().strip()
-    dl.login_by_token(api_token=token)
-    return dl
 
 
 def _trading_days_ago(n: int) -> str:
@@ -31,13 +27,43 @@ def _trading_days_ago(n: int) -> str:
     return d.strftime('%Y-%m-%d')
 
 
+# ── Top30 ────────────────────────────────────────────────────────────────────
+
+def _fetch_twse_top20(date_str: str) -> list:
+    """用 TWSE API 取單日成交量前20名，回傳 [{'code','name','vol_k'}, ...]"""
+    import requests
+    d = date_str.replace('-', '')
+    try:
+        res = requests.get(
+            f'https://www.twse.com.tw/rwd/zh/afterTrading/MI_INDEX20?date={d}&type=MS&response=json',
+            timeout=10, verify=False
+        )
+        data = res.json()
+        if data.get('stat') != 'OK' or not data.get('data'):
+            return []
+        rows = []
+        for item in data['data']:
+            code = str(item[1]).strip()
+            name = str(item[2]).strip()
+            if not code.isdigit() or len(code) != 4:
+                continue
+            try:
+                # item[3] = 成交量（股），item[4] = 成交筆數
+                vol_k = int(str(item[3]).replace(',', '')) // 1000
+            except Exception:
+                vol_k = 0
+            rows.append({'code': code, 'name': name, 'vol_k': vol_k})
+        return rows
+    except Exception as e:
+        print(f'[twse] {date_str} 失敗: {e}')
+        return []
+
+
 def get_top30_stocks() -> list:
     """
-    取最近15交易日平均成交量前30名（非ETF，4碼純數字）。
-    結果快取到 /tmp/daytrade_top30_cache.json（當日有效）。
-    回傳 [{'code': '2330', 'name': '台積電', 'avg_vol': 123456}, ...]
+    取最近15交易日 TWSE 成交量前20名，統計平均量取前30。
+    快取到 /tmp/daytrade_top30_cache.json（當日有效）。
     """
-    # 讀快取
     today_str = str(date.today())
     if os.path.exists(CACHE_FILE):
         try:
@@ -47,122 +73,129 @@ def get_top30_stocks() -> list:
         except Exception:
             pass
 
-    dl = _get_loader()
-    start = _trading_days_ago(20)  # 多取幾天確保有15個交易日
-    end   = _trading_days_ago(1)
+    print('[data] 取最近15交易日 TWSE top20...')
+    vol_sum = defaultdict(int)
+    vol_cnt = defaultdict(int)
+    name_map = {}
+    got = 0
 
-    print(f'[data] 取 top30 日K：{start} ~ {end}')
-    df = dl.taiwan_stock_daily(start_date=start, end_date=end)
+    for i in range(1, 25):
+        if got >= 15:
+            break
+        d = _trading_days_ago(i)
+        rows = _fetch_twse_top20(d)
+        if not rows:
+            continue
+        got += 1
+        for r in rows:
+            vol_sum[r['code']] += r['vol_k']
+            vol_cnt[r['code']] += 1
+            name_map[r['code']] = r['name']
+        time.sleep(0.15)
 
-    # 只保留4碼純數字（排除ETF）
-    df = df[df['stock_id'].str.match(r'^\d{4}$')]
-    df['Trading_Volume'] = pd.to_numeric(df['Trading_Volume'], errors='coerce').fillna(0)
+    stocks_raw = []
+    for code, cnt in vol_cnt.items():
+        avg = vol_sum[code] // cnt
+        stocks_raw.append({'code': code, 'name': name_map.get(code, code), 'avg_vol': avg})
 
-    # 取近15個交易日的資料
-    dates = sorted(df['date'].unique())[-15:]
-    df15 = df[df['date'].isin(dates)]
+    stocks = sorted(stocks_raw, key=lambda x: x['avg_vol'], reverse=True)[:30]
 
-    # 計算各股平均成交量（張）
-    avg_vol = (
-        df15.groupby('stock_id')['Trading_Volume']
-        .mean()
-        .div(1000)
-        .round(0)
-        .astype(int)
-        .reset_index()
-        .rename(columns={'stock_id': 'code', 'Trading_Volume': 'avg_vol'})
-    )
-    avg_vol = avg_vol.sort_values('avg_vol', ascending=False).head(30)
-
-    # 取股票名稱
-    name_map = df[['stock_id', 'stock_name']].drop_duplicates('stock_id').set_index('stock_id')['stock_name'].to_dict()
-    stocks = []
-    for _, row in avg_vol.iterrows():
-        stocks.append({
-            'code':    row['code'],
-            'name':    name_map.get(row['code'], row['code']),
-            'avg_vol': int(row['avg_vol']),
-        })
-
-    # 寫快取
     json.dump({'date': today_str, 'stocks': stocks}, open(CACHE_FILE, 'w'), ensure_ascii=False)
-    print(f'[data] top30 完成，第1名: {stocks[0]["code"]} {stocks[0]["name"]} {stocks[0]["avg_vol"]:,}張')
+    if stocks:
+        print(f'[data] top30 完成，第1名: {stocks[0]["code"]} {stocks[0]["name"]} {stocks[0]["avg_vol"]:,}張')
     return stocks
+
+
+# ── 1分K（yfinance）────────────────────────────────────────────────────────
+
+def _yf_ticker(stock_id: str) -> str:
+    return stock_id + '.TW'
 
 
 def get_1min_kbars(stock_id: str, date_str: str) -> list:
     """
-    取指定股票指定日的1分K。
-    回傳 [{'ts': '2026-04-01 09:01:00', 'open':..., 'high':..., 'low':..., 'close':..., 'volume':...}, ...]
+    取指定股票指定日的1分K（yfinance，最近7天）。
+    時間轉為台灣時間（+8），只保留 09:01~13:30。
+    回傳 [{'ts': '2026-04-01 09:01', 'open':..., 'high':..., 'low':..., 'close':..., 'volume':...}]
+    volume 單位：股（整股）
     """
     cache_path = f'/tmp/kbar_{stock_id}_{date_str}.json'
     if os.path.exists(cache_path):
         return json.load(open(cache_path))
 
-    dl = _get_loader()
-    time.sleep(0.3)
+    import yfinance as yf
+
+    ticker = _yf_ticker(stock_id)
     try:
-        df = dl.taiwan_stock_kbar(stock_id=stock_id, date=date_str)
+        df = yf.download(ticker, interval='1m', period='7d', progress=False, auto_adjust=True)
     except Exception as e:
-        print(f'[data] kbar {stock_id} {date_str} 失敗: {e}')
+        print(f'[yf] kbar {stock_id} 失敗: {e}')
         return []
 
-    if df is None or df.empty:
+    if df.empty:
         return []
 
-    # 合併 date + minute → ts
-    df['ts'] = df['date'] + ' ' + df['minute'] + ':00'
-    df = df.sort_values('ts')
+    # 多層欄位處理
+    if isinstance(df.columns, pd.MultiIndex):
+        df.columns = df.columns.droplevel(1)
 
-    bars = df[['ts', 'open', 'high', 'low', 'close', 'volume']].copy()
-    bars['volume'] = bars['volume'].fillna(0).astype(int) // 1000  # 股→張
+    # UTC → 台灣時間
+    df.index = df.index.tz_convert('Asia/Taipei')
 
-    result = bars.to_dict('records')
+    # 只取目標日期，且限制在交易時段
+    df = df[df.index.date == date.fromisoformat(date_str)]
+    df = df.between_time('09:01', '13:30')
+
+    if df.empty:
+        return []
+
+    df = df.reset_index()
+    df.rename(columns={'Datetime': 'ts', 'Open': 'open', 'High': 'high',
+                       'Low': 'low', 'Close': 'close', 'Volume': 'volume'}, inplace=True)
+    df['ts'] = df['ts'].dt.strftime('%Y-%m-%d %H:%M')
+    df['volume'] = df['volume'].fillna(0).astype(int)
+
+    result = df[['ts', 'open', 'high', 'low', 'close', 'volume']].to_dict('records')
     json.dump(result, open(cache_path, 'w'), ensure_ascii=False)
     return result
 
 
-def get_avg5_and_yday(stock_id: str, date_str: str) -> tuple:
-    """
-    取 date_str 前5個交易日的平均量（張）和前一個交易日的總量（張）。
-    回傳 (avg5, yday_vol)
-    """
-    dl = _get_loader()
-    time.sleep(0.3)
-
-    # 取往前推20天的日K
-    d = date.fromisoformat(date_str)
-    start = (d - timedelta(days=30)).strftime('%Y-%m-%d')
-    end   = (d - timedelta(days=1)).strftime('%Y-%m-%d')
-
+def get_available_dates(stock_id: str) -> list:
+    """取 yfinance 最近7天有1分K資料的交易日"""
+    import yfinance as yf
+    ticker = _yf_ticker(stock_id)
     try:
-        df = dl.taiwan_stock_daily(stock_id=stock_id, start_date=start, end_date=end)
-    except Exception as e:
-        print(f'[data] daily {stock_id} 失敗: {e}')
-        return 0, 0
-
-    if df is None or df.empty:
-        return 0, 0
-
-    df = df.sort_values('date')
-    df['vol_k'] = pd.to_numeric(df['Trading_Volume'], errors='coerce').fillna(0).astype(int) // 1000
-
-    last5 = df['vol_k'].tail(5)
-    avg5 = int(last5.mean()) if len(last5) >= 3 else 0
-    yday_vol = int(df['vol_k'].iloc[-1]) if len(df) >= 1 else 0
-
-    return avg5, yday_vol
-
-
-def get_available_dates(stock_id: str, n: int = 15) -> list:
-    """取最近 n 個有資料的交易日（用於日期選擇器）"""
-    dl = _get_loader()
-    start = _trading_days_ago(n + 5)
-    end   = _trading_days_ago(1)
-    try:
-        df = dl.taiwan_stock_daily(stock_id=stock_id, start_date=start, end_date=end)
-        if df is None or df.empty:
+        df = yf.download(ticker, interval='1m', period='7d', progress=False, auto_adjust=True)
+        if df.empty:
             return []
-        return sorted(df['date'].unique().tolist())[-n:]
+        df.index = df.index.tz_convert('Asia/Taipei')
+        df = df.between_time('09:01', '13:30')
+        dates = sorted(set(df.index.date.astype(str).tolist()), reverse=True)
+        return dates
     except Exception:
         return []
+
+
+def get_avg5_and_yday(stock_id: str, date_str: str) -> tuple:
+    """
+    取 date_str 前5個交易日的平均量（股）和前一個交易日的總量（股）。
+    用 yfinance 日線資料。
+    """
+    import yfinance as yf
+    ticker = _yf_ticker(stock_id)
+    try:
+        d = date.fromisoformat(date_str)
+        start = (d - timedelta(days=30)).strftime('%Y-%m-%d')
+        df = yf.download(ticker, start=start, end=date_str, interval='1d',
+                         progress=False, auto_adjust=True)
+        if df.empty:
+            return 0, 0
+        if isinstance(df.columns, pd.MultiIndex):
+            df.columns = df.columns.droplevel(1)
+        vols = df['Volume'].dropna().astype(int)
+        avg5     = int(vols.tail(5).mean()) if len(vols) >= 3 else 0
+        yday_vol = int(vols.iloc[-1]) if len(vols) >= 1 else 0
+        return avg5, yday_vol
+    except Exception as e:
+        print(f'[yf] avg5 {stock_id} 失敗: {e}')
+        return 0, 0
