@@ -1,5 +1,7 @@
 // ── 常數 ────────────────────────────────────────────────────────────────────
-const COST_RATE = 0.435;
+const BUY_FEE_RATE  = 0.001425;  // 手續費 0.1425%（未打折）
+const SELL_FEE_RATE = 0.001425;  // 手續費 0.1425%
+const DAY_TRADE_TAX = 0.0015;    // 當沖證交稅 0.15%
 const SIGNAL_DEFS = [
   'VWAP突破', 'OBV領先創高', 'KD鈍化≥80', 'MACD0軸上金叉',
   'RSI5穿RSI10', '預估量爆增', '外盤比≥65%', '委買委賣差',
@@ -18,7 +20,8 @@ let obvChart, obvSeries, obvAnchor;
 let allBars = [], shownBars = [];
 let playIndex = 0, isPlaying = false, playTimer = null, speed = 1;
 let avg5 = 0, yadayVol = 0, yadayHigh = 0, yadayLow = 0, yadayClose = 0;
-let position = null, trades = [], totalPnl = 0;
+let position = null, trades = [], totalPnl = 0, totalNTD = 0;
+let lotSize = 1;
 let _markers = [];
 
 // ── 指標開關狀態 ─────────────────────────────────────────────────────────────
@@ -125,7 +128,17 @@ function initChart() {
       const e = document.getElementById(id);
       if (c && e.style.display !== 'none') c.applyOptions({ width: e.clientWidth, height: e.clientHeight });
     });
+    requestAnimationFrame(syncPriceScales);
   }).observe(document.getElementById('chart-area'));
+}
+
+// ── 副圖對齊：同步所有圖表的右側價格軸寬度 ─────────────────────────────────
+function syncPriceScales() {
+  const charts = [chart, volChart, macdChart, rsiChart, obvChart].filter(Boolean);
+  try {
+    const maxW = Math.max(...charts.map(c => c.priceScale('right').width()));
+    if (maxW > 0) charts.forEach(c => c.priceScale('right').applyOptions({ minimumWidth: maxW }));
+  } catch(e) {}
 }
 
 function _addSubAnchor(c) {
@@ -231,13 +244,17 @@ async function loadKbars(stockId, dateStr) {
   chart.timeScale().setVisibleRange(range);
   [volChart, macdChart, rsiChart, obvChart].forEach(c => c.timeScale().setVisibleRange(range));
 
+  // 資料載入後同步對齊
+  setTimeout(syncPriceScales, 200);
+
   // 畫三關價 / CDP（如果已開啟）
   if (pivotVisible) drawPivotLines();
   if (cdpVisible)   drawCDPLines();
 
-  document.getElementById('play-btn').disabled  = false;
-  document.getElementById('reset-btn').disabled = false;
-  document.getElementById('buy-btn').disabled   = false;
+  document.getElementById('play-btn').disabled   = false;
+  document.getElementById('reset-btn').disabled  = false;
+  document.getElementById('rewind-btn').disabled = false;
+  document.getElementById('buy-btn').disabled    = false;
   showLoading(false);
   setStatus(`共 ${allBars.length} 根K棒，按播放開始`);
 }
@@ -247,6 +264,38 @@ function toTs(tsStr) {
   // LC v4 以 UTC 顯示，加 8h 讓軸上顯示台灣時間
   const iso = tsStr.replace(' ', 'T') + ':00+08:00';
   return Math.floor(new Date(iso).getTime() / 1000) + 8 * 3600;
+}
+
+// ── 費用 & 損益計算 ──────────────────────────────────────────────────────────
+function calcRequiredCapital(price, lots) {
+  const shares = lots * 1000;
+  const buyAmt = price * shares;
+  const fee    = Math.ceil(buyAmt * BUY_FEE_RATE);
+  return buyAmt + fee;
+}
+
+function calcPnlDetails(entryPrice, exitPrice, lots) {
+  const shares  = lots * 1000;
+  const gross   = (exitPrice - entryPrice) * shares;
+  const buyFee  = Math.ceil(entryPrice * shares * BUY_FEE_RATE);
+  const sellFee = Math.ceil(exitPrice  * shares * SELL_FEE_RATE);
+  const tax     = Math.floor(exitPrice * shares * DAY_TRADE_TAX);
+  const netNTD  = gross - buyFee - sellFee - tax;
+  const pct     = netNTD / (entryPrice * shares) * 100;
+  return { netNTD, pct };
+}
+
+function updateCapitalDisplay(price) {
+  if (!price) return;
+  const cap = calcRequiredCapital(price, lotSize);
+  document.getElementById('capital-required').textContent =
+    `所需資金：$${cap.toLocaleString()}（${lotSize}張，含手續費）`;
+}
+
+function changeLots(delta) {
+  lotSize = Math.max(1, lotSize + delta);
+  document.getElementById('lot-display').textContent = lotSize;
+  if (shownBars.length) updateCapitalDisplay(shownBars[shownBars.length - 1].close);
 }
 
 // ── 指標計算 ─────────────────────────────────────────────────────────────────
@@ -409,6 +458,7 @@ async function advanceBar() {
   updateOBVNext(ts, bar);
 
   document.getElementById('current-time').textContent = bar.ts.substring(11, 16);
+  updateCapitalDisplay(bar.close);
   if (position) updatePnl(bar.close);
   if (shownBars.length >= 5) fetchSignals();
 
@@ -460,20 +510,99 @@ function resetReplay() {
 
   // 重置持倉 / UI
   _markers = [];
-  position = null;
+  position = null; trades = []; totalPnl = 0; totalNTD = 0;
   document.getElementById('position-price').textContent = '無持倉';
   document.getElementById('position-pnl').textContent   = '—';
   document.getElementById('position-pnl').className     = 'pos-flat';
+  document.getElementById('position-ntd').textContent   = '';
+  document.getElementById('position-ntd').className     = 'pos-flat';
+  document.getElementById('capital-required').textContent = '所需資金：—';
+  document.getElementById('trades-content').innerHTML  = '<div style="color:#8b949e;font-size:12px">尚無交易</div>';
+  document.getElementById('total-pnl-val').textContent = '0.00%';
+  document.getElementById('total-pnl-val').className   = 'pos-flat';
+  document.getElementById('total-ntd-val').textContent = '$0';
+  document.getElementById('total-ntd-val').className   = 'pos-flat';
   const hasData = allBars.length > 0;
-  document.getElementById('buy-btn').disabled   = true;
-  document.getElementById('sell-btn').disabled  = true;
-  document.getElementById('play-btn').disabled  = !hasData;
-  document.getElementById('reset-btn').disabled = !hasData;
+  document.getElementById('buy-btn').disabled    = true;
+  document.getElementById('sell-btn').disabled   = true;
+  document.getElementById('play-btn').disabled   = !hasData;
+  document.getElementById('reset-btn').disabled  = !hasData;
+  document.getElementById('rewind-btn').disabled = !hasData;
   document.getElementById('play-btn').textContent = '▶ 播放';
   document.getElementById('play-btn').classList.remove('active');
   document.getElementById('current-time').textContent = '--:--';
   updateSignals(Object.fromEntries(SIGNAL_DEFS.map(n => [n, false])), 0, false);
   setStatus(hasData ? `共 ${allBars.length} 根K棒，按播放開始` : '請選擇股票和日期');
+}
+
+// ── 從頭重建指定根數的圖表狀態 ─────────────────────────────────────────────
+function rebuildBars(count) {
+  ema12St = ema26St = signalSt = null;
+  rsiGain = rsiLoss = rsiPrevC = null;
+  obvVal = 0; obvPrevC = null;
+  shownBars = [];
+
+  candleSeries.setData([]);
+  ma5Series.setData([]); ma10Series.setData([]); ma20Series.setData([]);
+  volSeries.setData([]);
+  difSeries.setData([]); macdSignalSeries.setData([]); macdHistSeries.setData([]);
+  rsiSeries.setData([]);
+  obvSeries.setData([]);
+
+  for (let i = 0; i < count; i++) {
+    const bar = allBars[i];
+    const ts  = toTs(bar.ts);
+    candleSeries.update({ time: ts, open: bar.open, high: bar.high, low: bar.low, close: bar.close });
+    volSeries.update({ time: ts, value: bar.volume,
+      color: bar.close >= bar.open ? '#f8514966' : '#3fb95066' });
+    shownBars.push(bar);
+    updateMAs(ts);
+    updateMACDNext(ts, bar);
+    updateRSINext(ts, bar);
+    updateOBVNext(ts, bar);
+  }
+  candleSeries.setMarkers(_markers);
+}
+
+// ── 退一根K棒 ───────────────────────────────────────────────────────────────
+function rewindOneBar() {
+  if (playIndex <= 0 || !allBars.length) return;
+  pause();
+  playIndex--;
+
+  // 若持倉是在這根或之後開的，取消持倉（不記錄交易）
+  if (position && position.barIndex >= playIndex) {
+    position = null;
+    document.getElementById('position-price').textContent = '無持倉';
+    document.getElementById('position-pnl').textContent   = '—';
+    document.getElementById('position-pnl').className     = 'pos-flat';
+    document.getElementById('position-ntd').textContent   = '';
+    document.getElementById('position-ntd').className     = 'pos-flat';
+    document.getElementById('buy-btn').disabled  = false;
+    document.getElementById('sell-btn').disabled = true;
+  }
+
+  // 移除這根 bar 之後的 marker
+  if (playIndex > 0) {
+    const cutoff = toTs(allBars[playIndex - 1].ts);
+    _markers = _markers.filter(m => m.time <= cutoff);
+  } else {
+    _markers = [];
+  }
+
+  rebuildBars(playIndex);
+
+  if (playIndex > 0) {
+    const bar = allBars[playIndex - 1];
+    document.getElementById('current-time').textContent = bar.ts.substring(11, 16);
+    if (position) updatePnl(bar.close);
+    if (shownBars.length >= 5) fetchSignals();
+    setStatus(`${bar.ts.substring(11,16)}  ${bar.close.toFixed(1)}元  ${playIndex}/${allBars.length}根`);
+  } else {
+    document.getElementById('current-time').textContent = '--:--';
+    updateSignals(Object.fromEntries(SIGNAL_DEFS.map(n => [n, false])), 0, false);
+    setStatus(`共 ${allBars.length} 根K棒，按播放開始`);
+  }
 }
 
 // ── 訊號 API ─────────────────────────────────────────────────────────────────
@@ -501,10 +630,12 @@ async function fetchSignals() {
 function buy() {
   if (!shownBars.length || position) return;
   const bar = shownBars[shownBars.length - 1];
-  position = { price: bar.close, time: bar.ts.substring(11, 16) };
-  document.getElementById('position-price').textContent = `均價 ${bar.close.toFixed(2)} 元`;
+  position = { price: bar.close, time: bar.ts.substring(11, 16), barIndex: playIndex - 1, lots: lotSize };
+  document.getElementById('position-price').textContent = `均價 ${bar.close.toFixed(2)} 元 ×${lotSize}張`;
   document.getElementById('position-pnl').textContent  = '0.00%';
   document.getElementById('position-pnl').className    = 'pos-flat';
+  document.getElementById('position-ntd').textContent  = '±$0';
+  document.getElementById('position-ntd').className    = 'pos-flat';
   document.getElementById('buy-btn').disabled  = true;
   document.getElementById('sell-btn').disabled = false;
   addMarker(toTs(bar.ts), 'belowBar', '#f85149', 'arrowUp', '買');
@@ -513,13 +644,15 @@ function buy() {
 function sell() {
   if (!position || !shownBars.length) return;
   const bar = shownBars[shownBars.length - 1];
-  const pnl = calcPnl(position.price, bar.close);
-  recordTrade(position.time, bar.ts.substring(11,16), position.price, bar.close, pnl);
+  const { netNTD, pct } = calcPnlDetails(position.price, bar.close, position.lots);
+  recordTrade(position.time, bar.ts.substring(11,16), position.price, bar.close, pct, netNTD, position.lots);
   addMarker(toTs(bar.ts), 'aboveBar', '#3fb950', 'arrowDown', '賣');
   position = null;
   document.getElementById('position-price').textContent = '無持倉';
   document.getElementById('position-pnl').textContent   = '—';
   document.getElementById('position-pnl').className     = 'pos-flat';
+  document.getElementById('position-ntd').textContent   = '';
+  document.getElementById('position-ntd').className     = 'pos-flat';
   document.getElementById('buy-btn').disabled  = false;
   document.getElementById('sell-btn').disabled = true;
 }
@@ -527,34 +660,43 @@ function sell() {
 function forceClose() {
   if (!position || !shownBars.length) { position = null; return; }
   const bar = shownBars[shownBars.length - 1];
-  recordTrade(position.time, bar.ts.substring(11,16), position.price, bar.close,
-              calcPnl(position.price, bar.close), true);
+  const { netNTD, pct } = calcPnlDetails(position.price, bar.close, position.lots);
+  recordTrade(position.time, bar.ts.substring(11,16), position.price, bar.close, pct, netNTD, position.lots, true);
   position = null;
 }
 
-function calcPnl(entry, exit) { return (exit - entry) / entry * 100 - COST_RATE; }
-
 function updatePnl(cur) {
-  const u = calcPnl(position.price, cur);
-  const el = document.getElementById('position-pnl');
-  el.textContent = (u >= 0 ? '+' : '') + u.toFixed(2) + '%';
-  el.className   = u > 0 ? 'pos-up' : u < 0 ? 'pos-down' : 'pos-flat';
+  const { netNTD, pct } = calcPnlDetails(position.price, cur, position.lots);
+  const pEl = document.getElementById('position-pnl');
+  const nEl = document.getElementById('position-ntd');
+  const cls = pct > 0 ? 'pos-up' : pct < 0 ? 'pos-down' : 'pos-flat';
+  pEl.textContent = (pct >= 0 ? '+' : '') + pct.toFixed(2) + '%';
+  pEl.className   = cls;
+  const ntdSign = netNTD >= 0 ? '+' : '';
+  nEl.textContent = `${ntdSign}$${netNTD.toLocaleString()}`;
+  nEl.className   = cls;
 }
 
-function recordTrade(et, xt, ep, xp, pnl, forced = false) {
-  totalPnl += pnl;
-  const dir  = pnl >= 0 ? 'up' : 'down';
-  const sign = pnl >= 0 ? '+' : '';
+function recordTrade(et, xt, ep, xp, pct, netNTD, lots, forced = false) {
+  totalPnl += pct;
+  totalNTD += netNTD;
+  const dir  = pct >= 0 ? 'up' : 'down';
+  const sign = pct >= 0 ? '+' : '';
+  const ntdSign = netNTD >= 0 ? '+' : '';
   const item = document.createElement('div');
   item.className = 'trade-item';
-  item.innerHTML = `<span>${et}買@${ep.toFixed(1)}</span><br>
+  item.innerHTML = `<span>${et}買@${ep.toFixed(1)} ×${lots}張</span><br>
     <span>${xt}賣@${xp.toFixed(1)}</span>${forced ? ' <span style="color:#d29922">(強平)</span>' : ''}
-    <span class="pnl ${dir}"> ${sign}${pnl.toFixed(2)}%</span>`;
+    <span class="pnl ${dir}"> ${sign}${pct.toFixed(2)}% / ${ntdSign}$${netNTD.toLocaleString()}</span>`;
   document.getElementById('trades-content').insertBefore(item,
     document.getElementById('trades-content').firstChild);
-  const tEl = document.getElementById('total-pnl-val');
-  tEl.textContent = (totalPnl >= 0 ? '+' : '') + totalPnl.toFixed(2) + '%';
-  tEl.className   = totalPnl > 0 ? 'pos-up' : totalPnl < 0 ? 'pos-down' : 'pos-flat';
+  const tEl  = document.getElementById('total-pnl-val');
+  const tNEl = document.getElementById('total-ntd-val');
+  tEl.textContent  = (totalPnl >= 0 ? '+' : '') + totalPnl.toFixed(2) + '%';
+  tEl.className    = totalPnl > 0 ? 'pos-up' : totalPnl < 0 ? 'pos-down' : 'pos-flat';
+  const tNSign = totalNTD >= 0 ? '+' : '';
+  tNEl.textContent = `${tNSign}$${totalNTD.toLocaleString()}`;
+  tNEl.className   = totalNTD > 0 ? 'pos-up' : totalNTD < 0 ? 'pos-down' : 'pos-flat';
 }
 
 function addMarker(time, position, color, shape, text) {

@@ -178,11 +178,26 @@
   @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.5} }
 
   /* ── 持倉 ── */
-  #position-price { font-size: 18px; font-weight: 700; color: #e6edf3; }
-  #position-pnl   { font-size: 20px; font-weight: 700; margin-top: 4px; }
+  #position-price { font-size: 15px; font-weight: 700; color: #e6edf3; }
+  #position-pnl   { font-size: 20px; font-weight: 700; margin-top: 2px; }
+  #position-ntd   { font-size: 13px; font-weight: 600; margin-top: 1px; }
   .pos-up   { color: #f85149; }
   .pos-down { color: #3fb950; }
   .pos-flat { color: #8b949e; }
+
+  /* 張數控制 */
+  .lot-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+  .lot-label { font-size: 12px; color: #8b949e; }
+  .lot-ctrl { display: flex; align-items: center; gap: 6px; }
+  .lot-btn {
+    width: 22px; height: 22px; border-radius: 4px;
+    background: #30363d; border: 1px solid #484f58;
+    color: #e6edf3; font-size: 14px; line-height: 1;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+  }
+  .lot-btn:hover { background: #484f58; }
+  #lot-display { font-size: 14px; font-weight: 700; color: #e6edf3; min-width: 20px; text-align: center; }
+  #capital-required { font-size: 11px; color: #8b949e; margin-bottom: 6px; }
 
   #buy-btn, #sell-btn {
     flex: 1;
@@ -225,6 +240,7 @@
   .trade-item .pnl.down { color: #3fb950; }
   #total-pnl-row { font-size: 12px; color: #8b949e; margin-top: 6px; }
   #total-pnl-val { font-weight: 700; font-size: 13px; }
+  #total-ntd-val { font-weight: 700; font-size: 12px; }
 
   /* ── 載入遮罩 ── */
   #loading {
@@ -256,7 +272,8 @@
     <button class="btn" onclick="setSpeed(30)" id="s30">30x</button>
   </div>
   <button class="btn" id="play-btn" onclick="togglePlay()" disabled>▶ 播放</button>
-  <button class="btn" onclick="resetReplay()" id="reset-btn" disabled>⏮ 重播</button>
+  <button class="btn" onclick="rewindOneBar()" id="rewind-btn" disabled title="退一根K棒">◀ 1分</button>
+  <button class="btn" onclick="resetReplay()" id="reset-btn" disabled>⏮ 重置</button>
   <span id="current-time">--:--</span>
   <span id="status-bar">請選擇股票和日期</span>
 </div>
@@ -311,14 +328,25 @@
     <!-- 持倉 & 交易 -->
     <div class="panel-section" style="flex-shrink:0">
       <h3>持倉</h3>
+      <div class="lot-row">
+        <span class="lot-label">張數</span>
+        <div class="lot-ctrl">
+          <button class="lot-btn" onclick="changeLots(-1)">−</button>
+          <span id="lot-display">1</span>
+          <button class="lot-btn" onclick="changeLots(1)">+</button>
+        </div>
+      </div>
+      <div id="capital-required">所需資金：—</div>
       <div id="position-price">無持倉</div>
       <div id="position-pnl" class="pos-flat">—</div>
+      <div id="position-ntd" class="pos-flat"></div>
       <div class="trade-btns">
         <button id="buy-btn"  onclick="buy()"  disabled>買進 ▲</button>
         <button id="sell-btn" onclick="sell()" disabled>賣出 ▼</button>
       </div>
       <div id="total-pnl-row">
         累計損益：<span id="total-pnl-val" class="pos-flat">0.00%</span>
+        ／<span id="total-ntd-val" class="pos-flat">$0</span>
       </div>
     </div>
 
