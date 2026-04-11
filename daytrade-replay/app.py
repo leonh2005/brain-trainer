@@ -31,8 +31,9 @@ def api_kbars():
 
     try:
         bars = data.get_1min_kbars(stock_id, date_str)
-        avg5, yday_vol = data.get_avg5_and_yday(stock_id, date_str)
-        return jsonify({'bars': bars, 'avg5': avg5, 'yday_vol': yday_vol})
+        avg5, yday_vol, yday_high, yday_low, yday_close = data.get_daily_stats(stock_id, date_str)
+        return jsonify({'bars': bars, 'avg5': avg5, 'yday_vol': yday_vol,
+                        'yday_high': yday_high, 'yday_low': yday_low, 'yday_close': yday_close})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 

@@ -32912,3 +32912,18 @@ Port 5200 is in use by another program. Either identify and stop that program, o
 127.0.0.1 - - [11/Apr/2026 09:07:44] "POST /api/log-action HTTP/1.1" 200 -
 127.0.0.1 - - [11/Apr/2026 09:13:13] "POST /api/log-action HTTP/1.1" 200 -
 127.0.0.1 - - [11/Apr/2026 09:39:14] "POST /api/log-action HTTP/1.1" 200 -
+127.0.0.1 - - [11/Apr/2026 09:49:28] "POST /api/log-action HTTP/1.1" 200 -
+127.0.0.1 - - [11/Apr/2026 09:49:49] "POST /api/log-action HTTP/1.1" 200 -
+127.0.0.1 - - [11/Apr/2026 09:56:16] "POST /api/log-action HTTP/1.1" 200 -
+127.0.0.1 - - [11/Apr/2026 10:02:42] "POST /api/log-action HTTP/1.1" 200 -
+127.0.0.1 - - [11/Apr/2026 10:05:31] "POST /api/log-action HTTP/1.1" 200 -
+127.0.0.1 - - [11/Apr/2026 10:19:20] "POST /api/log-action HTTP/1.1" 200 -
+[scheduler] 每日摘要排程已啟動（08:00）
+兔子照護系統啟動：http://localhost:5200
+ * Serving Flask app 'app'
+ * Debug mode: off
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5200
+ * Running on http://192.168.68.123:5200
+[33mPress CTRL+C to quit[0m

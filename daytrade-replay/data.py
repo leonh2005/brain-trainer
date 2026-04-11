@@ -176,10 +176,10 @@ def get_available_dates(stock_id: str) -> list:
         return []
 
 
-def get_avg5_and_yday(stock_id: str, date_str: str) -> tuple:
+def get_daily_stats(stock_id: str, date_str: str) -> tuple:
     """
-    取 date_str 前5個交易日的平均量（股）和前一個交易日的總量（股）。
-    用 yfinance 日線資料。
+    取 date_str 前一個交易日的量/高/低/收，以及前5日均量。
+    回傳 (avg5, yday_vol, yday_high, yday_low, yday_close)
     """
     import yfinance as yf
     ticker = _yf_ticker(stock_id)
@@ -189,13 +189,22 @@ def get_avg5_and_yday(stock_id: str, date_str: str) -> tuple:
         df = yf.download(ticker, start=start, end=date_str, interval='1d',
                          progress=False, auto_adjust=True)
         if df.empty:
-            return 0, 0
+            return 0, 0, 0, 0, 0
         if isinstance(df.columns, pd.MultiIndex):
             df.columns = df.columns.droplevel(1)
-        vols = df['Volume'].dropna().astype(int)
-        avg5     = int(vols.tail(5).mean()) if len(vols) >= 3 else 0
-        yday_vol = int(vols.iloc[-1]) if len(vols) >= 1 else 0
-        return avg5, yday_vol
+        vols  = df['Volume'].dropna().astype(int)
+        avg5      = int(vols.tail(5).mean()) if len(vols) >= 3 else 0
+        yday_vol  = int(vols.iloc[-1])              if len(vols) >= 1 else 0
+        yday_high  = round(float(df['High'].iloc[-1]),  2) if len(df) >= 1 else 0
+        yday_low   = round(float(df['Low'].iloc[-1]),   2) if len(df) >= 1 else 0
+        yday_close = round(float(df['Close'].iloc[-1]), 2) if len(df) >= 1 else 0
+        return avg5, yday_vol, yday_high, yday_low, yday_close
     except Exception as e:
-        print(f'[yf] avg5 {stock_id} 失敗: {e}')
-        return 0, 0
+        print(f'[yf] daily_stats {stock_id} 失敗: {e}')
+        return 0, 0, 0, 0, 0
+
+
+# 向後相容別名
+def get_avg5_and_yday(stock_id: str, date_str: str) -> tuple:
+    avg5, yday_vol, *_ = get_daily_stats(stock_id, date_str)
+    return avg5, yday_vol

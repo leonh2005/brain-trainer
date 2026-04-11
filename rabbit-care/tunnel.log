@@ -121,3 +121,13 @@
 [Sat Apr 11 03:58:10 CST 2026] 2026-04-10T19:58:10Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveP256] connIndex=0 event=0 ip=198.41.200.73
 [Sat Apr 11 03:58:11 CST 2026] 2026-04-10T19:58:11Z INF Registered tunnel connection connIndex=0 connection=19a4333f-9c2f-4f4d-9314-a7c724371b4e event=0 ip=198.41.200.73 location=tpe01 protocol=quic
 [Sat Apr 11 07:30:14 CST 2026] 2026-04-10T23:30:14Z ERR update check failed error="no release found"
+[Sat Apr 11 12:49:14 CST 2026] 2026-04-11T04:49:14Z ERR failed to accept incoming stream requests error="failed to accept QUIC stream: timeout: no recent network activity" connIndex=0 event=0 ip=198.41.200.73
+[Sat Apr 11 12:49:14 CST 2026] 2026-04-11T04:49:14Z ERR failed to run the datagram handler error="timeout: no recent network activity" connIndex=0 event=0 ip=198.41.200.73
+[Sat Apr 11 12:49:14 CST 2026] 2026-04-11T04:49:14Z ERR failed to serve tunnel connection error="accept stream listener encountered a failure while serving" connIndex=0 event=0 ip=198.41.200.73
+[Sat Apr 11 12:49:14 CST 2026] 2026-04-11T04:49:14Z ERR Serve tunnel error error="accept stream listener encountered a failure while serving" connIndex=0 event=0 ip=198.41.200.73
+[Sat Apr 11 12:49:14 CST 2026] 2026-04-11T04:49:14Z INF Retrying connection in up to 1s connIndex=0 event=0 ip=198.41.200.73
+[Sat Apr 11 12:49:14 CST 2026] 2026-04-11T04:49:14Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveP256] connIndex=0 event=0 ip=198.41.200.73
+[Sat Apr 11 12:49:19 CST 2026] 2026-04-11T04:49:19Z ERR Failed to dial a quic connection error="failed to dial to edge with quic: timeout: no recent network activity" connIndex=0 event=0 ip=198.41.200.73
+[Sat Apr 11 12:49:19 CST 2026] 2026-04-11T04:49:19Z INF Retrying connection in up to 4s connIndex=0 event=0 ip=198.41.200.73
+[Sat Apr 11 12:49:21 CST 2026] 2026-04-11T04:49:21Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveP256] connIndex=0 event=0 ip=198.41.192.107
+[Sat Apr 11 12:49:22 CST 2026] 2026-04-11T04:49:22Z INF Registered tunnel connection connIndex=0 connection=bbc45a25-e054-45b1-aa0d-d3f17d84b72b event=0 ip=198.41.192.107 location=khh01 protocol=quic
