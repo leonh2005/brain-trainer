@@ -1,0 +1,64 @@
+[daytrade-replay] 啟動 http://localhost:5400
+ * Serving Flask app 'app'
+ * Debug mode: off
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5400
+ * Running on http://192.168.68.123:5400
+[33mPress CTRL+C to quit[0m
+127.0.0.1 - - [11/Apr/2026 14:37:27] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [11/Apr/2026 14:37:30] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [11/Apr/2026 14:37:30] "GET /static/app.js HTTP/1.1" 200 -
+127.0.0.1 - - [11/Apr/2026 14:37:30] "[36mGET /static/lightweight-charts.js HTTP/1.1[0m" 304 -
+127.0.0.1 - - [11/Apr/2026 14:37:30] "GET /api/stocks HTTP/1.1" 200 -
+127.0.0.1 - - [11/Apr/2026 14:37:30] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+127.0.0.1 - - [11/Apr/2026 14:38:40] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [11/Apr/2026 14:38:40] "[36mGET /static/lightweight-charts.js HTTP/1.1[0m" 304 -
+127.0.0.1 - - [11/Apr/2026 14:38:40] "GET /static/app.js HTTP/1.1" 200 -
+127.0.0.1 - - [11/Apr/2026 14:38:40] "GET /api/stocks HTTP/1.1" 200 -
+127.0.0.1 - - [11/Apr/2026 14:38:44] "GET /api/dates?stock=3481 HTTP/1.1" 200 -
+127.0.0.1 - - [11/Apr/2026 14:38:45] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [11/Apr/2026 14:38:46] "GET /api/kbars?stock=3481&date=2026-04-10 HTTP/1.1" 200 -
+127.0.0.1 - - [11/Apr/2026 14:38:59] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [11/Apr/2026 14:39:00] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [11/Apr/2026 14:39:01] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [11/Apr/2026 14:39:02] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [11/Apr/2026 14:39:03] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [11/Apr/2026 14:39:04] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [11/Apr/2026 14:39:05] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [11/Apr/2026 14:39:06] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [11/Apr/2026 14:39:07] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [11/Apr/2026 14:39:08] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [11/Apr/2026 14:39:09] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [11/Apr/2026 14:39:10] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [11/Apr/2026 14:39:11] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [11/Apr/2026 14:39:19] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [11/Apr/2026 14:39:20] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [11/Apr/2026 14:39:21] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [11/Apr/2026 14:39:22] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [11/Apr/2026 14:39:23] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [11/Apr/2026 14:39:29] "POST /api/signals HTTP/1.1" 200 -
+'
+ * Debug mode: off
+Address already in use
+Port 5400 is in use by another program. Either identify and stop that program, or start the server with a different port.
+[daytrade-replay] 啟動 http://localhost:5400
+ * Serving Flask app 'app'
+ * Debug mode: off
+Address already in use
+Port 5400 is in use by another program. Either identify and stop that program, or start the server with a different port.
+[daytrade-replay] 啟動 http://localhost:5400
+ * Serving Flask app 'app'
+ * Debug mode: off
+Address already in use
+Port 5400 is in use by another program. Either identify and stop that program, or start the server with a different port.
+[daytrade-replay] 啟動 http://localhost:5400
+ * Serving Flask app 'app'
+ * Debug mode: off
+Address already in use
+Port 5400 is in use by another program. Either identify and stop that program, or start the server with a different port.
+[daytrade-replay] 啟動 http://localhost:5400
+ * Serving Flask app 'app'
+ * Debug mode: off
+Address already in use
+Port 5400 is in use by another program. Either identify and stop that program, or start the server with a different port.
