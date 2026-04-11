@@ -294,3 +294,11 @@ SDK NOTICE Wed Mar 25 04:15:08.310 2026 solClient.c:11196                    (17
 [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
  * Running on http://127.0.0.1:5001
 [33mPress CTRL+C to quit[0m
+/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/multiprocessing/resource_tracker.py:396: UserWarning: resource_tracker: There appear to be 1 leaked semaphore objects to clean up at shutdown: {'/mp-nm3xp3zc'}
+  warnings.warn(
+2026-04-11 16:32:45.096 | WARNING  | importlib._bootstrap:_call_with_frames_removed:491 - Optional: pip install shioaji[speed] or uv add shioaji --extra speed for better performance.
+ * Serving Flask app 'app'
+ * Debug mode: on
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5001
+[33mPress CTRL+C to quit[0m
