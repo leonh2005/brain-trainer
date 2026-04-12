@@ -23,6 +23,7 @@ let avg5 = 0, yadayVol = 0, yadayHigh = 0, yadayLow = 0, yadayClose = 0;
 let position = null, trades = [], totalPnl = 0, totalNTD = 0;
 let lotSize = 1;
 let _markers = [];
+let _chartRange = null; // 當前鎖定的可視範圍
 
 // ── 指標開關狀態 ─────────────────────────────────────────────────────────────
 let maState = { 5: true, 10: true, 20: true };
@@ -90,6 +91,29 @@ function initChart() {
   volChart.priceScale('right').applyOptions({ scaleMargins: { top: 0.1, bottom: 0.05 } });
   volAnchor = _addSubAnchor(volChart);
 
+  // 成交量 hover tooltip（原生 mousemove，不依賴 LW 事件系統）
+  const _volTip = document.createElement('div');
+  _volTip.id = 'vol-tooltip';
+  const _volChartEl = document.getElementById('vol-chart');
+  _volChartEl.appendChild(_volTip);
+  _volChartEl.addEventListener('mousemove', e => {
+    const rect = _volChartEl.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    try {
+      const logical = volChart.timeScale().coordinateToLogical(x);
+      if (logical === null || logical === undefined) { _volTip.style.display = 'none'; return; }
+      const idx = Math.round(logical);
+      if (idx < 0 || idx >= shownBars.length) { _volTip.style.display = 'none'; return; }
+      const vol = shownBars[idx].volume;
+      const formatted = vol >= 1000 ? (vol / 1000).toFixed(1) + 'K張' : Math.round(vol) + '張';
+      _volTip.textContent = formatted;
+      _volTip.style.left = Math.min(x + 8, _volChartEl.clientWidth - 80) + 'px';
+      _volTip.style.top = '6px';
+      _volTip.style.display = 'block';
+    } catch(_) { _volTip.style.display = 'none'; }
+  });
+  _volChartEl.addEventListener('mouseleave', () => { _volTip.style.display = 'none'; });
+
   // ── MACD 副圖 ──────────────────────────────────
   macdChart = LightweightCharts.createChart(document.getElementById('macd-chart'), subOpts('macd-chart'));
   macdChart.applyOptions({ watermark: { visible: true, fontSize: 10, horzAlign: 'left', vertAlign: 'top', color: '#484f58', text: 'MACD (10,23,8)' } });
@@ -117,6 +141,7 @@ function initChart() {
   const subCharts = [volChart, macdChart, rsiChart, obvChart];
   chart.timeScale().subscribeVisibleTimeRangeChange((range) => {
     if (!range) return;
+    _chartRange = range;
     subCharts.forEach(c => { try { c && c.timeScale().setVisibleRange(range); } catch(e) {} });
   });
 
@@ -130,6 +155,20 @@ function initChart() {
     });
     requestAnimationFrame(syncPriceScales);
   }).observe(document.getElementById('chart-area'));
+}
+
+// ── Range 鎖定：解決 LW Charts 非同步 auto-fit 覆蓋問題 ─────────────────────
+function applyChartRange(range) {
+  _chartRange = range;
+  const _apply = () => {
+    if (!_chartRange) return;
+    try { chart.timeScale().setVisibleRange(_chartRange); } catch(e) {}
+    [volChart, macdChart, rsiChart, obvChart].forEach(c => {
+      try { c.timeScale().setVisibleRange(_chartRange); } catch(e) {}
+    });
+  };
+  _apply();
+  requestAnimationFrame(() => requestAnimationFrame(_apply));
 }
 
 // ── 副圖對齊：同步所有圖表的右側價格軸寬度 ─────────────────────────────────
@@ -241,8 +280,7 @@ async function loadKbars(stockId, dateStr) {
   // 鎖定可見範圍
   const firstDate = allBars[0].ts.slice(0, 10);
   const range = { from: toTs(firstDate + ' 09:00'), to: toTs(allBars[allBars.length - 1].ts) };
-  chart.timeScale().setVisibleRange(range);
-  [volChart, macdChart, rsiChart, obvChart].forEach(c => c.timeScale().setVisibleRange(range));
+  applyChartRange(range);
 
   // 資料載入後同步對齊
   setTimeout(syncPriceScales, 200);
@@ -255,6 +293,7 @@ async function loadKbars(stockId, dateStr) {
   document.getElementById('reset-btn').disabled  = false;
   document.getElementById('rewind-btn').disabled = false;
   document.getElementById('buy-btn').disabled    = false;
+  document.getElementById('sell-btn').disabled   = false;
   showLoading(false);
   setStatus(`共 ${allBars.length} 根K棒，按播放開始`);
 }
@@ -285,11 +324,23 @@ function calcPnlDetails(entryPrice, exitPrice, lots) {
   return { netNTD, pct };
 }
 
+function calcPnlDetailsShort(entryPrice, exitPrice, lots) {
+  // 先賣後買：entryPrice=放空價，exitPrice=回補價
+  const shares  = lots * 1000;
+  const gross   = (entryPrice - exitPrice) * shares;
+  const sellFee = Math.ceil(entryPrice * shares * SELL_FEE_RATE);
+  const buyFee  = Math.ceil(exitPrice  * shares * BUY_FEE_RATE);
+  const tax     = Math.floor(entryPrice * shares * DAY_TRADE_TAX);
+  const netNTD  = gross - sellFee - buyFee - tax;
+  const pct     = netNTD / (entryPrice * shares) * 100;
+  return { netNTD, pct };
+}
+
 function updateCapitalDisplay(price) {
   if (!price) return;
   const cap = calcRequiredCapital(price, lotSize);
   document.getElementById('capital-required').textContent =
-    `所需資金：$${cap.toLocaleString()}（${lotSize}張，含手續費）`;
+    `所需資金：$${Math.ceil(cap).toLocaleString('zh-TW', { maximumFractionDigits: 0 })}（${lotSize}張，含手續費）`;
 }
 
 function changeLots(delta) {
@@ -320,7 +371,7 @@ function updateMACDNext(ts, bar) {
   const hist = dif - signalSt;
   difSeries.update({ time: ts, value: dif });
   macdSignalSeries.update({ time: ts, value: signalSt });
-  macdHistSeries.update({ time: ts, value: hist, color: hist >= 0 ? '#3fb95099' : '#f8514999' });
+  macdHistSeries.update({ time: ts, value: hist, color: hist >= 0 ? '#f8514999' : '#3fb95099' });
 }
 
 function updateRSINext(ts, bar) {
@@ -522,9 +573,21 @@ function resetReplay() {
   document.getElementById('total-pnl-val').className   = 'pos-flat';
   document.getElementById('total-ntd-val').textContent = '$0';
   document.getElementById('total-ntd-val').className   = 'pos-flat';
+  // 恢復 anchor + 時間軸對齊（清空 series 後 LW 會忘記時間範圍）
+  if (allBars.length > 0) {
+    const subAnchorData = allBars.map(b => ({ time: toTs(b.ts), value: 0 }));
+    [volAnchor, macdAnchor, rsiAnchor, obvAnchor].forEach(a => a.setData(subAnchorData));
+    const mid = allBars[Math.floor(allBars.length / 2)].close;
+    anchorSeries.setData(allBars.map(b => ({ time: toTs(b.ts), value: mid })));
+    const firstDate = allBars[0].ts.slice(0, 10);
+    const range = { from: toTs(firstDate + ' 09:00'), to: toTs(allBars[allBars.length - 1].ts) };
+    applyChartRange(range);
+    setTimeout(syncPriceScales, 200);
+  }
+
   const hasData = allBars.length > 0;
-  document.getElementById('buy-btn').disabled    = true;
-  document.getElementById('sell-btn').disabled   = true;
+  document.getElementById('buy-btn').disabled    = !hasData;
+  document.getElementById('sell-btn').disabled   = !hasData;
   document.getElementById('play-btn').disabled   = !hasData;
   document.getElementById('reset-btn').disabled  = !hasData;
   document.getElementById('rewind-btn').disabled = !hasData;
@@ -579,7 +642,7 @@ function rewindOneBar() {
     document.getElementById('position-ntd').textContent   = '';
     document.getElementById('position-ntd').className     = 'pos-flat';
     document.getElementById('buy-btn').disabled  = false;
-    document.getElementById('sell-btn').disabled = true;
+    document.getElementById('sell-btn').disabled = false;
   }
 
   // 移除這根 bar 之後的 marker
@@ -627,26 +690,7 @@ async function fetchSignals() {
 }
 
 // ── 手動交易 ─────────────────────────────────────────────────────────────────
-function buy() {
-  if (!shownBars.length || position) return;
-  const bar = shownBars[shownBars.length - 1];
-  position = { price: bar.close, time: bar.ts.substring(11, 16), barIndex: playIndex - 1, lots: lotSize };
-  document.getElementById('position-price').textContent = `均價 ${bar.close.toFixed(2)} 元 ×${lotSize}張`;
-  document.getElementById('position-pnl').textContent  = '0.00%';
-  document.getElementById('position-pnl').className    = 'pos-flat';
-  document.getElementById('position-ntd').textContent  = '±$0';
-  document.getElementById('position-ntd').className    = 'pos-flat';
-  document.getElementById('buy-btn').disabled  = true;
-  document.getElementById('sell-btn').disabled = false;
-  addMarker(toTs(bar.ts), 'belowBar', '#f85149', 'arrowUp', '買');
-}
-
-function sell() {
-  if (!position || !shownBars.length) return;
-  const bar = shownBars[shownBars.length - 1];
-  const { netNTD, pct } = calcPnlDetails(position.price, bar.close, position.lots);
-  recordTrade(position.time, bar.ts.substring(11,16), position.price, bar.close, pct, netNTD, position.lots);
-  addMarker(toTs(bar.ts), 'aboveBar', '#3fb950', 'arrowDown', '賣');
+function _clearPosition() {
   position = null;
   document.getElementById('position-price').textContent = '無持倉';
   document.getElementById('position-pnl').textContent   = '—';
@@ -654,19 +698,72 @@ function sell() {
   document.getElementById('position-ntd').textContent   = '';
   document.getElementById('position-ntd').className     = 'pos-flat';
   document.getElementById('buy-btn').disabled  = false;
-  document.getElementById('sell-btn').disabled = true;
+  document.getElementById('sell-btn').disabled = false;
+}
+
+function buy() {
+  if (!shownBars.length) return;
+  const bar = shownBars[shownBars.length - 1];
+  if (position && position.direction === 'short') {
+    // 回補空單
+    const { netNTD, pct } = calcPnlDetailsShort(position.price, bar.close, position.lots);
+    recordTrade('short', position.time, bar.ts.substring(11,16), position.price, bar.close, pct, netNTD, position.lots);
+    addMarker(toTs(bar.ts), 'belowBar', '#f85149', 'arrowUp', '補');
+    _clearPosition();
+  } else if (!position) {
+    // 開多
+    position = { price: bar.close, time: bar.ts.substring(11,16), barIndex: playIndex - 1, lots: lotSize, direction: 'long' };
+    document.getElementById('position-price').textContent = `多 ${bar.close.toFixed(2)} 元 ×${lotSize}張`;
+    document.getElementById('position-pnl').textContent  = '0.00%';
+    document.getElementById('position-pnl').className    = 'pos-flat';
+    document.getElementById('position-ntd').textContent  = '±$0';
+    document.getElementById('position-ntd').className    = 'pos-flat';
+    document.getElementById('buy-btn').disabled  = true;
+    document.getElementById('sell-btn').disabled = false;
+    addMarker(toTs(bar.ts), 'belowBar', '#f85149', 'arrowUp', '買');
+  }
+}
+
+function sell() {
+  if (!shownBars.length) return;
+  const bar = shownBars[shownBars.length - 1];
+  if (position && position.direction === 'long') {
+    // 平多
+    const { netNTD, pct } = calcPnlDetails(position.price, bar.close, position.lots);
+    recordTrade('long', position.time, bar.ts.substring(11,16), position.price, bar.close, pct, netNTD, position.lots);
+    addMarker(toTs(bar.ts), 'aboveBar', '#3fb950', 'arrowDown', '賣');
+    _clearPosition();
+  } else if (!position) {
+    // 開空
+    position = { price: bar.close, time: bar.ts.substring(11,16), barIndex: playIndex - 1, lots: lotSize, direction: 'short' };
+    document.getElementById('position-price').textContent = `空 ${bar.close.toFixed(2)} 元 ×${lotSize}張`;
+    document.getElementById('position-pnl').textContent  = '0.00%';
+    document.getElementById('position-pnl').className    = 'pos-flat';
+    document.getElementById('position-ntd').textContent  = '±$0';
+    document.getElementById('position-ntd').className    = 'pos-flat';
+    document.getElementById('buy-btn').disabled  = false;
+    document.getElementById('sell-btn').disabled = true;
+    addMarker(toTs(bar.ts), 'aboveBar', '#3fb950', 'arrowDown', '空');
+  }
 }
 
 function forceClose() {
   if (!position || !shownBars.length) { position = null; return; }
   const bar = shownBars[shownBars.length - 1];
-  const { netNTD, pct } = calcPnlDetails(position.price, bar.close, position.lots);
-  recordTrade(position.time, bar.ts.substring(11,16), position.price, bar.close, pct, netNTD, position.lots, true);
+  if (position.direction === 'short') {
+    const { netNTD, pct } = calcPnlDetailsShort(position.price, bar.close, position.lots);
+    recordTrade('short', position.time, bar.ts.substring(11,16), position.price, bar.close, pct, netNTD, position.lots, true);
+  } else {
+    const { netNTD, pct } = calcPnlDetails(position.price, bar.close, position.lots);
+    recordTrade('long', position.time, bar.ts.substring(11,16), position.price, bar.close, pct, netNTD, position.lots, true);
+  }
   position = null;
 }
 
 function updatePnl(cur) {
-  const { netNTD, pct } = calcPnlDetails(position.price, cur, position.lots);
+  const { netNTD, pct } = position.direction === 'short'
+    ? calcPnlDetailsShort(position.price, cur, position.lots)
+    : calcPnlDetails(position.price, cur, position.lots);
   const pEl = document.getElementById('position-pnl');
   const nEl = document.getElementById('position-ntd');
   const cls = pct > 0 ? 'pos-up' : pct < 0 ? 'pos-down' : 'pos-flat';
@@ -677,17 +774,19 @@ function updatePnl(cur) {
   nEl.className   = cls;
 }
 
-function recordTrade(et, xt, ep, xp, pct, netNTD, lots, forced = false) {
+function recordTrade(dir, et, xt, ep, xp, pct, netNTD, lots, forced = false) {
   totalPnl += pct;
   totalNTD += netNTD;
-  const dir  = pct >= 0 ? 'up' : 'down';
+  const cls  = pct >= 0 ? 'up' : 'down';
   const sign = pct >= 0 ? '+' : '';
   const ntdSign = netNTD >= 0 ? '+' : '';
   const item = document.createElement('div');
   item.className = 'trade-item';
-  item.innerHTML = `<span>${et}買@${ep.toFixed(1)} ×${lots}張</span><br>
-    <span>${xt}賣@${xp.toFixed(1)}</span>${forced ? ' <span style="color:#d29922">(強平)</span>' : ''}
-    <span class="pnl ${dir}"> ${sign}${pct.toFixed(2)}% / ${ntdSign}$${netNTD.toLocaleString()}</span>`;
+  const entryLabel = dir === 'short' ? '空' : '買';
+  const exitLabel  = dir === 'short' ? '補' : '賣';
+  item.innerHTML = `<span>${et}${entryLabel}@${ep.toFixed(1)} ×${lots}張</span><br>
+    <span>${xt}${exitLabel}@${xp.toFixed(1)}</span>${forced ? ' <span style="color:#d29922">(強平)</span>' : ''}
+    <span class="pnl ${cls}"> ${sign}${pct.toFixed(2)}% / ${ntdSign}$${netNTD.toLocaleString()}</span>`;
   document.getElementById('trades-content').insertBefore(item,
     document.getElementById('trades-content').firstChild);
   const tEl  = document.getElementById('total-pnl-val');

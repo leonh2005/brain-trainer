@@ -96,7 +96,21 @@
     flex-shrink: 0;
     border-top: 1px solid #21262d;
   }
-  #vol-chart  { height: 80px; }
+  #vol-chart  { height: 80px; position: relative; }
+  #vol-tooltip {
+    position: absolute;
+    background: rgba(22,27,34,.92);
+    border: 1px solid #484f58;
+    border-radius: 4px;
+    padding: 2px 8px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #e6edf3;
+    pointer-events: none;
+    display: none;
+    z-index: 20;
+    white-space: nowrap;
+  }
   #macd-chart { height: 100px; }
   #rsi-chart  { height: 100px; }
   #obv-chart  { height: 100px; }
