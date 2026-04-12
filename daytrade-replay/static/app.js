@@ -24,6 +24,13 @@ let position = null, trades = [], totalPnl = 0, totalNTD = 0;
 let lotSize = 1;
 let _markers = [];
 
+// ── 大盤 / 產業資料 ───────────────────────────────────────────────────────────
+let _taiexMap = {};    // { 'HH:MM': close }
+let _taiexOpen = 0;    // 開盤第一根收盤
+let _sectorMap = {};   // { 'HH:MM': close }
+let _sectorOpen = 0;   // 開盤第一根收盤
+let _sectorName = '';  // 顯示用產業名稱
+
 // ── 指標開關狀態 ─────────────────────────────────────────────────────────────
 let maState = { 5: true, 10: true, 20: true };
 let pivotVisible = false, cdpVisible = false;
@@ -95,6 +102,7 @@ function initChart() {
   _volTip.id = 'vol-tooltip';
   const _volChartEl = document.getElementById('vol-chart');
   _volChartEl.appendChild(_volTip);
+  // capture:true 確保在 LW Charts canvas stopPropagation 之前攔截
   _volChartEl.addEventListener('mousemove', e => {
     const rect = _volChartEl.getBoundingClientRect();
     const x = e.clientX - rect.left;
@@ -110,8 +118,8 @@ function initChart() {
       _volTip.style.top = '6px';
       _volTip.style.display = 'block';
     } catch(_) { _volTip.style.display = 'none'; }
-  });
-  _volChartEl.addEventListener('mouseleave', () => { _volTip.style.display = 'none'; });
+  }, true);
+  _volChartEl.addEventListener('mouseleave', () => { _volTip.style.display = 'none'; }, true);
 
   // ── MACD 副圖 ──────────────────────────────────
   macdChart = LightweightCharts.createChart(document.getElementById('macd-chart'), subOpts('macd-chart'));
@@ -296,6 +304,126 @@ async function loadKbars(stockId, dateStr) {
   document.getElementById('sell-btn').disabled   = false;
   showLoading(false);
   setStatus(`共 ${allBars.length} 根K棒，按播放開始`);
+
+  // 非同步載入大盤/產業資料（不阻塞主流程）
+  fetchIndexData(stockId, dateStr);
+}
+
+async function fetchIndexData(stockId, dateStr) {
+  try {
+    const res = await fetch(`/api/index_data?stock=${stockId}&date=${dateStr}`);
+    const d = await res.json();
+    if (d.error) return;
+
+    // 建立 taiex map: HH:MM → close
+    _taiexMap = {};
+    _taiexOpen = 0;
+    for (const bar of (d.taiex_bars || [])) {
+      const hhmm = bar.ts.substring(11, 16);
+      _taiexMap[hhmm] = bar.close;
+      if (_taiexOpen === 0) _taiexOpen = bar.close;
+    }
+
+    // 建立 sector map: HH:MM → close（動態，同 TAIEX）
+    _sectorMap = {};
+    _sectorOpen = 0;
+    _sectorName = '';
+    const sector = d.sector || {};
+    if (sector.name && sector.bars && sector.bars.length) {
+      _sectorName = sector.name;
+      for (const bar of sector.bars) {
+        const hhmm = bar.ts.substring(11, 16);
+        _sectorMap[hhmm] = bar.close;
+        if (_sectorOpen === 0) _sectorOpen = bar.close;
+      }
+    }
+
+    // 載入完後立即顯示當前播放位置的值（或 09:01 初始值）
+    const curHhmm = shownBars.length
+      ? shownBars[shownBars.length - 1].ts.substring(11, 16)
+      : '09:01';
+    updateTaiexDisplay(curHhmm);
+    updateSectorDisplay(curHhmm);
+    if (shownBars.length) updateStockDisplay(shownBars[shownBars.length - 1]);
+  } catch(e) { /* 忽略，不影響主功能 */ }
+}
+
+function updateTaiexDisplay(hhmm) {
+  const cur = _taiexMap[hhmm];
+  if (!cur || !_taiexOpen) return;
+  const chg = cur - _taiexOpen;
+  const pct = (chg / _taiexOpen * 100).toFixed(2);
+  const sign = chg >= 0 ? '+' : '';
+  const cls  = chg >= 0 ? '#f85149' : '#3fb950';
+  document.getElementById('taiex-display').innerHTML =
+    `大盤: ${Math.round(cur).toLocaleString()} <span style="color:${cls}">${sign}${pct}%</span>`;
+}
+
+function updatePosDisplay() {
+  // 頂部 bar
+  const el = document.getElementById('pos-display');
+  if (el) {
+    if (!position) {
+      el.innerHTML = '持倉 <span style="color:#8b949e">—</span>';
+    } else {
+      const cls = position.direction === 'long' ? '#f85149' : '#58a6ff';
+      const dir = position.direction === 'long' ? '多' : '空';
+      el.innerHTML = `持倉 <span style="color:${cls};font-weight:700">${dir} ${position.lots}張</span>`;
+    }
+  }
+  // 右側面板「當前持倉」
+  const hl = document.getElementById('holding-lots');
+  if (hl) {
+    if (!position) {
+      hl.textContent = '0 張';
+      hl.style.color = '#8b949e';
+    } else {
+      const cls = position.direction === 'long' ? '#f85149' : '#58a6ff';
+      hl.textContent = `${position.lots} 張`;
+      hl.style.color = cls;
+    }
+  }
+}
+
+// ── 確認 modal ────────────────────────────────────────────────────────────────
+let _pendingAction = null;
+
+function showConfirm(msg, action) {
+  document.getElementById('confirm-msg').textContent = msg;
+  document.getElementById('confirm-overlay').style.display = 'flex';
+  _pendingAction = action;
+}
+
+function confirmYes() {
+  document.getElementById('confirm-overlay').style.display = 'none';
+  if (_pendingAction) { _pendingAction(); _pendingAction = null; }
+}
+
+function confirmNo() {
+  document.getElementById('confirm-overlay').style.display = 'none';
+  _pendingAction = null;
+}
+
+function updateStockDisplay(bar) {
+  if (!yadayClose) return;
+  const chg = bar.close - yadayClose;
+  const pct = (chg / yadayClose * 100).toFixed(2);
+  const sign = chg >= 0 ? '+' : '';
+  const cls  = chg >= 0 ? '#f85149' : '#3fb950';
+  document.getElementById('stock-display').innerHTML =
+    `${bar.close.toFixed(1)} <span style="color:${cls}">${sign}${pct}%</span>`;
+}
+
+function updateSectorDisplay(hhmm) {
+  if (!_sectorName) return;
+  const cur = _sectorMap[hhmm];
+  if (!cur || !_sectorOpen) return;
+  const chg = cur - _sectorOpen;
+  const pct = (chg / _sectorOpen * 100).toFixed(2);
+  const sign = chg >= 0 ? '+' : '';
+  const cls  = chg >= 0 ? '#f85149' : '#3fb950';
+  document.getElementById('sector-display').innerHTML =
+    `${_sectorName}: ${Math.round(cur).toLocaleString()} <span style="color:${cls}">${sign}${pct}%</span>`;
 }
 
 function toTs(tsStr) {
@@ -512,6 +640,9 @@ async function advanceBar() {
   updateCapitalDisplay(bar.close);
   if (position) updatePnl(bar.close);
   if (shownBars.length >= 5) fetchSignals();
+  updateStockDisplay(bar);
+  updateTaiexDisplay(bar.ts.substring(11, 16));
+  updateSectorDisplay(bar.ts.substring(11, 16));
 
   setStatus(`${bar.ts.substring(11,16)}  ${bar.close.toFixed(1)}元  ${playIndex}/${allBars.length}根`);
   scheduleNext();
@@ -562,6 +693,7 @@ function resetReplay() {
   // 重置持倉 / UI
   _markers = [];
   position = null; trades = []; totalPnl = 0; totalNTD = 0;
+  updatePosDisplay();
   document.getElementById('position-price').textContent = '無持倉';
   document.getElementById('position-pnl').textContent   = '—';
   document.getElementById('position-pnl').className     = 'pos-flat';
@@ -635,6 +767,7 @@ function rewindOneBar() {
   // 若持倉是在這根或之後開的，取消持倉（不記錄交易）
   if (position && position.barIndex >= playIndex) {
     position = null;
+    updatePosDisplay();
     document.getElementById('position-price').textContent = '無持倉';
     document.getElementById('position-pnl').textContent   = '—';
     document.getElementById('position-pnl').className     = 'pos-flat';
@@ -691,6 +824,7 @@ async function fetchSignals() {
 // ── 手動交易 ─────────────────────────────────────────────────────────────────
 function _clearPosition() {
   position = null;
+  updatePosDisplay();
   document.getElementById('position-price').textContent = '無持倉';
   document.getElementById('position-pnl').textContent   = '—';
   document.getElementById('position-pnl').className     = 'pos-flat';
@@ -709,15 +843,23 @@ function buy() {
     recordTrade('short', position.time, bar.ts.substring(11,16), position.price, bar.close, pct, netNTD, position.lots);
     addMarker(toTs(bar.ts), 'belowBar', '#f85149', 'arrowUp', '補');
     _clearPosition();
-  } else if (!position) {
+  } else if (position && position.direction === 'long') {
+    // 加碼多單（均價攤入）
+    const totalCost = position.price * position.lots + bar.close * lotSize;
+    position.lots += lotSize;
+    position.price = totalCost / position.lots;
+    document.getElementById('position-price').textContent = `多 均${position.price.toFixed(1)} 元 ×${position.lots}張`;
+    updatePosDisplay();
+    addMarker(toTs(bar.ts), 'belowBar', '#f0883e', 'arrowUp', '加');
+  } else {
     // 開多
     position = { price: bar.close, time: bar.ts.substring(11,16), barIndex: playIndex - 1, lots: lotSize, direction: 'long' };
-    document.getElementById('position-price').textContent = `多 ${bar.close.toFixed(2)} 元 ×${lotSize}張`;
-    document.getElementById('position-pnl').textContent  = '0.00%';
+    document.getElementById('position-price').textContent = `多 ${bar.close.toFixed(1)} 元 ×${lotSize}張`;
+    updatePosDisplay();
+    document.getElementById('position-pnl').textContent  = '0%';
     document.getElementById('position-pnl').className    = 'pos-flat';
     document.getElementById('position-ntd').textContent  = '±$0';
     document.getElementById('position-ntd').className    = 'pos-flat';
-    document.getElementById('buy-btn').disabled  = true;
     document.getElementById('sell-btn').disabled = false;
     addMarker(toTs(bar.ts), 'belowBar', '#f85149', 'arrowUp', '買');
   }
@@ -732,16 +874,24 @@ function sell() {
     recordTrade('long', position.time, bar.ts.substring(11,16), position.price, bar.close, pct, netNTD, position.lots);
     addMarker(toTs(bar.ts), 'aboveBar', '#3fb950', 'arrowDown', '賣');
     _clearPosition();
-  } else if (!position) {
+  } else if (position && position.direction === 'short') {
+    // 加碼空單（均價攤入）
+    const totalCost = position.price * position.lots + bar.close * lotSize;
+    position.lots += lotSize;
+    position.price = totalCost / position.lots;
+    document.getElementById('position-price').textContent = `空 均${position.price.toFixed(1)} 元 ×${position.lots}張`;
+    updatePosDisplay();
+    addMarker(toTs(bar.ts), 'aboveBar', '#58a6ff', 'arrowDown', '加');
+  } else {
     // 開空
     position = { price: bar.close, time: bar.ts.substring(11,16), barIndex: playIndex - 1, lots: lotSize, direction: 'short' };
-    document.getElementById('position-price').textContent = `空 ${bar.close.toFixed(2)} 元 ×${lotSize}張`;
-    document.getElementById('position-pnl').textContent  = '0.00%';
+    document.getElementById('position-price').textContent = `空 ${bar.close.toFixed(1)} 元 ×${lotSize}張`;
+    updatePosDisplay();
+    document.getElementById('position-pnl').textContent  = '0%';
     document.getElementById('position-pnl').className    = 'pos-flat';
     document.getElementById('position-ntd').textContent  = '±$0';
     document.getElementById('position-ntd').className    = 'pos-flat';
-    document.getElementById('buy-btn').disabled  = false;
-    document.getElementById('sell-btn').disabled = true;
+    document.getElementById('buy-btn').disabled = false;
     addMarker(toTs(bar.ts), 'aboveBar', '#3fb950', 'arrowDown', '空');
   }
 }
@@ -766,10 +916,10 @@ function updatePnl(cur) {
   const pEl = document.getElementById('position-pnl');
   const nEl = document.getElementById('position-ntd');
   const cls = pct > 0 ? 'pos-up' : pct < 0 ? 'pos-down' : 'pos-flat';
-  pEl.textContent = (pct >= 0 ? '+' : '') + pct.toFixed(2) + '%';
+  pEl.textContent = (pct >= 0 ? '+' : '') + pct.toFixed(1) + '%';
   pEl.className   = cls;
   const ntdSign = netNTD >= 0 ? '+' : '';
-  nEl.textContent = `${ntdSign}$${netNTD.toLocaleString()}`;
+  nEl.textContent = `${ntdSign}$${Math.round(netNTD).toLocaleString()}`;
   nEl.className   = cls;
 }
 
@@ -785,12 +935,12 @@ function recordTrade(dir, et, xt, ep, xp, pct, netNTD, lots, forced = false) {
   const exitLabel  = dir === 'short' ? '補' : '賣';
   item.innerHTML = `<span>${et}${entryLabel}@${ep.toFixed(1)} ×${lots}張</span><br>
     <span>${xt}${exitLabel}@${xp.toFixed(1)}</span>${forced ? ' <span style="color:#d29922">(強平)</span>' : ''}
-    <span class="pnl ${cls}"> ${sign}${pct.toFixed(2)}% / ${ntdSign}$${netNTD.toLocaleString()}</span>`;
+    <span class="pnl ${cls}"> ${sign}${pct.toFixed(1)}% / ${ntdSign}$${netNTD.toLocaleString()}</span>`;
   document.getElementById('trades-content').insertBefore(item,
     document.getElementById('trades-content').firstChild);
   const tEl  = document.getElementById('total-pnl-val');
   const tNEl = document.getElementById('total-ntd-val');
-  tEl.textContent  = (totalPnl >= 0 ? '+' : '') + totalPnl.toFixed(2) + '%';
+  tEl.textContent  = (totalPnl >= 0 ? '+' : '') + totalPnl.toFixed(1) + '%';
   tEl.className    = totalPnl > 0 ? 'pos-up' : totalPnl < 0 ? 'pos-down' : 'pos-flat';
   const tNSign = totalNTD >= 0 ? '+' : '';
   tNEl.textContent = `${tNSign}$${totalNTD.toLocaleString()}`;
