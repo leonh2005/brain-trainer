@@ -96,16 +96,14 @@ def get_sj_snapshot_all() -> pd.DataFrame:
 
     stocks = []
     try:
-        r = requests.get(
-            'https://openapi.twse.com.tw/v1/exchangeReport/STOCK_DAY_ALL',
-            timeout=20, verify=False, headers={'User-Agent': 'Mozilla/5.0'}
-        )
-        for s in r.json():
-            code = s.get('Code', '').strip()
-            if code and len(code) == 4 and code.isdigit():
-                stocks.append({'symbol': code, 'name': s.get('Name', '')})
+        for exchange in api.Contracts.Stocks:
+            for contract in exchange:
+                code = contract.code
+                if len(code) == 4 and code.isdigit():
+                    stocks.append({'symbol': code, 'name': contract.name})
+        print(f'[sj] 取得 {len(stocks)} 檔股票合約')
     except Exception as e:
-        print(f'[data] TWSE 清單失敗: {e}')
+        print(f'[sj] 合約清單失敗: {e}')
 
     rows = []
     for i in range(0, len(stocks), 100):
