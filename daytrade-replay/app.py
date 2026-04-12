@@ -67,6 +67,21 @@ def api_dates():
         return jsonify({'error': str(e)}), 500
 
 
+@app.route('/api/index_data')
+def api_index_data():
+    stock_id = request.args.get('stock', '')
+    date_str = request.args.get('date', '')
+    if not stock_id or not date_str:
+        return jsonify({'error': 'stock and date required'}), 400
+    try:
+        taiex_bars = data.get_taiex_1min(date_str)
+        industry   = data.get_stock_sector(stock_id)
+        sector     = data.get_sector_1min(industry, date_str)
+        return jsonify({'taiex_bars': taiex_bars, 'industry': industry, 'sector': sector})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
 if __name__ == '__main__':
     print('[daytrade-replay] 啟動 http://localhost:5400')
     app.run(host='0.0.0.0', port=5400, debug=False)

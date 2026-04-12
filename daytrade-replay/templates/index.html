@@ -228,6 +228,26 @@
   #buy-btn:disabled, #sell-btn:disabled { opacity: .35; cursor: default; }
   .trade-btns { display: flex; gap: 8px; margin-top: 8px; }
 
+  /* 當前持倉張數 */
+  #holding-row { display:flex; justify-content:space-between; align-items:center; margin-bottom:4px; }
+  #holding-label { font-size:12px; color:#8b949e; }
+  #holding-lots { font-size:18px; font-weight:700; color:#8b949e; }
+
+  /* 確認 modal */
+  #confirm-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,.6); z-index: 999;
+    align-items: center; justify-content: center;
+  }
+  #confirm-box {
+    background: #161b22; border: 1px solid #30363d;
+    border-radius: 10px; padding: 20px 24px; min-width: 220px; text-align: center;
+  }
+  #confirm-msg { font-size: 15px; font-weight: 700; color: #e6edf3; margin-bottom: 16px; }
+  .confirm-btns { display: flex; gap: 10px; justify-content: center; }
+  #confirm-yes { background: #238636; color:#fff; border:none; border-radius:6px; padding:8px 22px; font-size:14px; font-weight:700; cursor:pointer; }
+  #confirm-no  { background: #30363d; color:#cdd9e5; border:none; border-radius:6px; padding:8px 22px; font-size:14px; font-weight:700; cursor:pointer; }
+
   /* ── 交易紀錄 ── */
   #trades-list {
     flex: 1;
@@ -308,6 +328,14 @@
   <button class="ind-btn active" id="ind-macd" onclick="togglePanel('macd')">MACD</button>
   <button class="ind-btn active" id="ind-rsi"  onclick="togglePanel('rsi')">RSI</button>
   <button class="ind-btn active" id="ind-obv"  onclick="togglePanel('obv')">OBV</button>
+  <div class="ind-sep"></div>
+  <div id="index-info" style="display:flex;gap:12px;margin-left:auto;align-items:center">
+    <span id="pos-display" style="font-size:11px;color:#8b949e;white-space:nowrap">持倉 —</span>
+    <span style="color:#30363d">|</span>
+    <span id="stock-display" style="font-size:11px;color:#8b949e;white-space:nowrap">個股 —</span>
+    <span id="taiex-display" style="font-size:11px;color:#8b949e;white-space:nowrap">大盤 —</span>
+    <span id="sector-display" style="font-size:11px;color:#8b949e;white-space:nowrap">產業 —</span>
+  </div>
 </div>
 
 <!-- 主區域 -->
@@ -351,6 +379,10 @@
         </div>
       </div>
       <div id="capital-required">所需資金：—</div>
+      <div id="holding-row">
+        <span id="holding-label">當前持倉</span>
+        <span id="holding-lots">0 張</span>
+      </div>
       <div id="position-price">無持倉</div>
       <div id="position-pnl" class="pos-flat">—</div>
       <div id="position-ntd" class="pos-flat"></div>
@@ -374,5 +406,15 @@
 </div>
 
 <script src="/static/app.js"></script>
+
+<div id="confirm-overlay" onclick="confirmNo()">
+  <div id="confirm-box" onclick="event.stopPropagation()">
+    <div id="confirm-msg"></div>
+    <div class="confirm-btns">
+      <button id="confirm-yes" onclick="confirmYes()">✓ 確認</button>
+      <button id="confirm-no"  onclick="confirmNo()">✗ 取消</button>
+    </div>
+  </div>
+</div>
 </body>
 </html>
