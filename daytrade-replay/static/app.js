@@ -23,7 +23,6 @@ let avg5 = 0, yadayVol = 0, yadayHigh = 0, yadayLow = 0, yadayClose = 0;
 let position = null, trades = [], totalPnl = 0, totalNTD = 0;
 let lotSize = 1;
 let _markers = [];
-let _chartRange = null; // 當前鎖定的可視範圍
 
 // ── 指標開關狀態 ─────────────────────────────────────────────────────────────
 let maState = { 5: true, 10: true, 20: true };
@@ -141,7 +140,6 @@ function initChart() {
   const subCharts = [volChart, macdChart, rsiChart, obvChart];
   chart.timeScale().subscribeVisibleTimeRangeChange((range) => {
     if (!range) return;
-    _chartRange = range;
     subCharts.forEach(c => { try { c && c.timeScale().setVisibleRange(range); } catch(e) {} });
   });
 
@@ -157,18 +155,22 @@ function initChart() {
   }).observe(document.getElementById('chart-area'));
 }
 
-// ── Range 鎖定：解決 LW Charts 非同步 auto-fit 覆蓋問題 ─────────────────────
-function applyChartRange(range) {
-  _chartRange = range;
-  const _apply = () => {
-    if (!_chartRange) return;
-    try { chart.timeScale().setVisibleRange(_chartRange); } catch(e) {}
-    [volChart, macdChart, rsiChart, obvChart].forEach(c => {
-      try { c.timeScale().setVisibleRange(_chartRange); } catch(e) {}
-    });
-  };
-  _apply();
-  requestAnimationFrame(() => requestAnimationFrame(_apply));
+// ── 初始化圖表視窗：顯示全天所有 bar，並同步副圖 ─────────────────────────────
+function initChartView() {
+  if (!allBars.length) return;
+  requestAnimationFrame(() => {
+    try {
+      // 以邏輯範圍顯示全部 bar（每根 bar 均分寬度，不會因播放根數少而變粗）
+      chart.timeScale().setVisibleLogicalRange({ from: -0.5, to: allBars.length - 0.5 });
+      // 取主圖時間範圍同步副圖
+      const timeRange = chart.timeScale().getVisibleRange();
+      if (timeRange) {
+        [volChart, macdChart, rsiChart, obvChart].forEach(c => {
+          try { c && c.timeScale().setVisibleRange(timeRange); } catch(e) {}
+        });
+      }
+    } catch(e) {}
+  });
 }
 
 // ── 副圖對齊：同步所有圖表的右側價格軸寬度 ─────────────────────────────────
@@ -277,10 +279,8 @@ async function loadKbars(stockId, dateStr) {
   const mid = allBars[Math.floor(allBars.length / 2)].close;
   anchorSeries.setData(allBars.map(b => ({ time: toTs(b.ts), value: mid })));
 
-  // 鎖定可見範圍
-  const firstDate = allBars[0].ts.slice(0, 10);
-  const range = { from: toTs(firstDate + ' 09:00'), to: toTs(allBars[allBars.length - 1].ts) };
-  applyChartRange(range);
+  // 主圖 auto-fit 後同步副圖
+  initChartView();
 
   // 資料載入後同步對齊
   setTimeout(syncPriceScales, 200);
@@ -579,9 +579,8 @@ function resetReplay() {
     [volAnchor, macdAnchor, rsiAnchor, obvAnchor].forEach(a => a.setData(subAnchorData));
     const mid = allBars[Math.floor(allBars.length / 2)].close;
     anchorSeries.setData(allBars.map(b => ({ time: toTs(b.ts), value: mid })));
-    const firstDate = allBars[0].ts.slice(0, 10);
-    const range = { from: toTs(firstDate + ' 09:00'), to: toTs(allBars[allBars.length - 1].ts) };
-    applyChartRange(range);
+    // 主圖 auto-fit 後同步副圖
+    initChartView();
     setTimeout(syncPriceScales, 200);
   }
 
