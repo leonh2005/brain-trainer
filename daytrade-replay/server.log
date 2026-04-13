@@ -1777,3 +1777,15 @@ Port 5400 is in use by another program. Either identify and stop that program, o
 127.0.0.1 - - [13/Apr/2026 00:06:31] "POST /api/signals HTTP/1.1" 200 -
 127.0.0.1 - - [13/Apr/2026 00:06:32] "POST /api/signals HTTP/1.1" 200 -
 127.0.0.1 - - [13/Apr/2026 00:06:33] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [13/Apr/2026 08:40:40] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [13/Apr/2026 08:40:40] "[36mGET /static/lightweight-charts.js HTTP/1.1[0m" 304 -
+127.0.0.1 - - [13/Apr/2026 08:40:40] "GET /static/app.js HTTP/1.1" 200 -
+127.0.0.1 - - [13/Apr/2026 08:40:46] "GET /api/stocks HTTP/1.1" 200 -
+127.0.0.1 - - [13/Apr/2026 08:40:51] "GET /api/dates?stock=2344 HTTP/1.1" 200 -
+127.0.0.1 - - [13/Apr/2026 09:01:47] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [13/Apr/2026 09:01:47] "[36mGET /static/lightweight-charts.js HTTP/1.1[0m" 304 -
+127.0.0.1 - - [13/Apr/2026 09:01:47] "[36mGET /static/app.js HTTP/1.1[0m" 304 -
+127.0.0.1 - - [13/Apr/2026 09:01:47] "GET /api/stocks HTTP/1.1" 200 -
+127.0.0.1 - - [13/Apr/2026 09:01:49] "GET /api/dates?stock=2409 HTTP/1.1" 200 -
+127.0.0.1 - - [13/Apr/2026 09:01:51] "GET /api/kbars?stock=2409&date=2026-04-13 HTTP/1.1" 200 -
+127.0.0.1 - - [13/Apr/2026 09:01:52] "GET /api/index_data?stock=2409&date=2026-04-13 HTTP/1.1" 200 -
