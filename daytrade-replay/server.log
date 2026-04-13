@@ -2676,3 +2676,7 @@ Port 5400 is in use by another program. Either identify and stop that program, o
 127.0.0.1 - - [13/Apr/2026 16:57:38] "POST /api/signals HTTP/1.1" 200 -
 127.0.0.1 - - [13/Apr/2026 16:57:39] "POST /api/signals HTTP/1.1" 200 -
 127.0.0.1 - - [13/Apr/2026 16:57:40] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [13/Apr/2026 22:11:58] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [13/Apr/2026 22:11:59] "[36mGET /static/lightweight-charts.js HTTP/1.1[0m" 304 -
+127.0.0.1 - - [13/Apr/2026 22:11:59] "[36mGET /static/app.js HTTP/1.1[0m" 304 -
+127.0.0.1 - - [13/Apr/2026 22:11:59] "GET /api/stocks HTTP/1.1" 200 -
