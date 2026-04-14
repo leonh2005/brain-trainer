@@ -84,17 +84,61 @@ def fetch_sp500_with_ma(period="20y"):
     return prices, mas, hist_high
 
 
+def fetch_twse_recent(months=3) -> dict:
+    """用 TWSE 官方 API 抓最近 N 個月的加權指數日收盤（台灣時間）"""
+    result = {}
+    today = datetime.now()
+    for i in range(months):
+        year = today.year
+        month = today.month - i
+        while month <= 0:
+            month += 12
+            year -= 1
+        date_str = f"{year}{month:02d}01"
+        try:
+            r = requests.get(
+                "https://www.twse.com.tw/exchangeReport/FMTQIK",
+                params={"response": "json", "date": date_str, "type": "MS"},
+                headers={"User-Agent": "Mozilla/5.0"},
+                timeout=15,
+                verify=False,
+            )
+            j = r.json()
+            if j.get("stat") != "OK":
+                continue
+            for row in j.get("data", []):
+                # row[0] = ROC date e.g. "115/04/14", row[4] = 加權指數
+                roc_date, close_str = row[0], row[4]
+                parts = roc_date.split("/")
+                iso_date = f"{int(parts[0]) + 1911}-{parts[1]}-{parts[2]}"
+                result[iso_date] = trunc2(float(close_str.replace(",", "")))
+        except Exception as e:
+            print(f"  TWSE {date_str} 抓取失敗: {e}")
+    return result
+
+
 def fetch_taiex_with_ma(period="20y"):
+    # yfinance 抓長期歷史
     df = yf.download("^TWII", period=period, progress=False, auto_adjust=True)
     close = df[("Close", "^TWII")].dropna()
-    ma200 = close.rolling(200).mean()
-    hist_high = trunc2(float(close.max()))
+    hist = {date.strftime("%Y-%m-%d"): trunc2(float(val)) for date, val in close.items()}
+
+    # TWSE 官方 API 補最近 3 個月（確保今日資料）
+    print("  補充 TWSE 官方資料（近 3 個月）...")
+    twse = fetch_twse_recent(months=3)
+    hist.update(twse)  # TWSE 資料覆蓋 yfinance（更準確）
+
+    # 轉回 pandas Series 計算 MA200
+    series = pd.Series(hist).sort_index()
+    ma200 = series.rolling(200).mean()
+    hist_high = trunc2(float(series.max()))
+
     prices, mas = [], []
-    for date, val in close.items():
-        prices.append({"x": date.strftime("%Y-%m-%d"), "y": trunc2(float(val))})
+    for date, val in series.items():
+        prices.append({"x": date, "y": val})
     for date, val in ma200.items():
         if pd.notna(val):
-            mas.append({"x": date.strftime("%Y-%m-%d"), "y": trunc2(float(val))})
+            mas.append({"x": date, "y": trunc2(float(val))})
     return prices, mas, hist_high
 
 
