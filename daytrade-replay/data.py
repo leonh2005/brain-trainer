@@ -190,54 +190,19 @@ def get_1min_kbars(stock_id: str, date_str: str) -> list:
 
 def get_available_dates(stock_id: str) -> list:
     """
-    取可用交易日（Shioaji 優先）。
-    用大盤指數(TSE001)確認交易日，再確認個股有資料。
-    包含今日（若今日是交易日且已有 K 棒）。
+    列出最近 10 個交易日（週一到週五）直接回傳，不預先驗資料。
+    今日（若是交易日）必然列在最前面。
+    K 棒實際有無由 get_1min_kbars() 處理。
     """
     today = date.today()
-    today_str = str(today)
     dates = []
-    try:
-        api = _get_sj()
-        checked = 0
-        for i in range(0, 30):
-            if len(dates) >= 10:
-                break
-            d = today - timedelta(days=i)
-            if d.weekday() >= 5:   # 跳過週末
-                continue
-            checked += 1
-            d_str = str(d)
-            # 用大盤確認是交易日（有快取就快）
-            taiex = _sj_index_1min('001', d_str)
-            if not taiex:
-                continue
-            # 今日直接加（盤中可能只有部分 K 棒）
-            if d_str == today_str:
-                dates.append(d_str)
-                continue
-            # 過去日再確認個股
-            bars = _sj_stock_1min(stock_id, d_str)
-            if bars:
-                dates.append(d_str)
-    except Exception as e:
-        print(f'[sj] available_dates 失敗: {e}')
-
-    if dates:
-        return sorted(dates, reverse=True)
-
-    # Fallback: yfinance
-    import yfinance as yf
-    ticker = _yf_ticker(stock_id)
-    try:
-        df = yf.download(ticker, interval='1m', period='7d', progress=False, auto_adjust=True)
-        if df.empty:
-            return []
-        df.index = df.index.tz_convert('Asia/Taipei')
-        df = df.between_time('09:01', '13:30')
-        return sorted(set(df.index.date.astype(str).tolist()), reverse=True)
-    except Exception:
-        return []
+    for i in range(0, 30):
+        if len(dates) >= 10:
+            break
+        d = today - timedelta(days=i)
+        if d.weekday() < 5:          # 只列交易日（週一到週五）
+            dates.append(str(d))
+    return dates
 
 
 def get_daily_stats(stock_id: str, date_str: str) -> tuple:

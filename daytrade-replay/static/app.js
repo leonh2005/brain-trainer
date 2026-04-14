@@ -837,6 +837,22 @@ function _clearPosition() {
 function buy() {
   if (!shownBars.length) return;
   const bar = shownBars[shownBars.length - 1];
+  const wasPlaying = isPlaying;
+  if (wasPlaying) pause();
+  let msg;
+  if (position && position.direction === 'short') {
+    msg = `回補空單 ${position.lots}張 @ ${bar.close.toFixed(1)} 元`;
+  } else if (position && position.direction === 'long') {
+    msg = `加碼多單 ${lotSize}張 @ ${bar.close.toFixed(1)} 元`;
+  } else {
+    msg = `買多 ${lotSize}張 @ ${bar.close.toFixed(1)} 元`;
+  }
+  showConfirm(msg, () => { _execBuy(); if (wasPlaying) play(); });
+}
+
+function _execBuy() {
+  if (!shownBars.length) return;
+  const bar = shownBars[shownBars.length - 1];
   if (position && position.direction === 'short') {
     // 回補空單
     const { netNTD, pct } = calcPnlDetailsShort(position.price, bar.close, position.lots);
@@ -866,6 +882,22 @@ function buy() {
 }
 
 function sell() {
+  if (!shownBars.length) return;
+  const bar = shownBars[shownBars.length - 1];
+  const wasPlaying = isPlaying;
+  if (wasPlaying) pause();
+  let msg;
+  if (position && position.direction === 'long') {
+    msg = `賣出平多 ${position.lots}張 @ ${bar.close.toFixed(1)} 元`;
+  } else if (position && position.direction === 'short') {
+    msg = `加碼空單 ${lotSize}張 @ ${bar.close.toFixed(1)} 元`;
+  } else {
+    msg = `放空 ${lotSize}張 @ ${bar.close.toFixed(1)} 元`;
+  }
+  showConfirm(msg, () => { _execSell(); if (wasPlaying) play(); });
+}
+
+function _execSell() {
   if (!shownBars.length) return;
   const bar = shownBars[shownBars.length - 1];
   if (position && position.direction === 'long') {
