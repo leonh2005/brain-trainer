@@ -128,8 +128,10 @@ def _sj_stock_1min(stock_id: str, date_str: str) -> list:
         if df.empty:
             return []
         df['ts'] = pd.to_datetime(df['ts'])
-        t_open  = pd.Timestamp('09:01').time()
-        t_close = pd.Timestamp('13:30').time()
+        # Shioaji 時戳為收盤時間（end-time），往前移 1 分鐘轉為開盤時間（start-time）
+        df['ts'] = df['ts'] - pd.Timedelta(minutes=1)
+        t_open  = pd.Timestamp('09:00').time()
+        t_close = pd.Timestamp('13:29').time()
         df = df[(df['ts'].dt.time >= t_open) & (df['ts'].dt.time <= t_close)]
         if df.empty:
             return []
@@ -151,14 +153,16 @@ def get_1min_kbars(stock_id: str, date_str: str) -> list:
     """
     取指定股票指定日的1分K（Shioaji 優先，失敗 fallback yfinance）。
     只保留 09:01~13:30，volume 單位：股。
+    今日資料不快取（持續更新）。
     """
     bars = _sj_stock_1min(stock_id, date_str)
     if bars:
         return bars
 
     # Fallback: yfinance（最近7天）
+    today_str_yf = str(date.today())
     cache_path = f'/tmp/kbar_{stock_id}_{date_str}.json'
-    if os.path.exists(cache_path):
+    if date_str != today_str_yf and os.path.exists(cache_path):
         return json.load(open(cache_path))
 
     import yfinance as yf
@@ -184,7 +188,8 @@ def get_1min_kbars(stock_id: str, date_str: str) -> list:
     df['ts'] = df['ts'].dt.strftime('%Y-%m-%d %H:%M')
     df['volume'] = df['volume'].fillna(0).astype(int)
     result = df[['ts', 'open', 'high', 'low', 'close', 'volume']].to_dict('records')
-    json.dump(result, open(cache_path, 'w'), ensure_ascii=False)
+    if date_str != today_str_yf:
+        json.dump(result, open(cache_path, 'w'), ensure_ascii=False)
     return result
 
 
@@ -329,8 +334,9 @@ def _sj_index_1min(tse_code: str, date_str: str) -> list:
     Shioaji 時戳已是台灣本地時間，不做 tz 轉換。
     回傳 [{'ts': 'YYYY-MM-DD HH:MM', 'close': float}]
     """
+    today_str = str(date.today())
     cache_path = f'/tmp/sj_idx_{tse_code}_{date_str}.json'
-    if os.path.exists(cache_path):
+    if date_str != today_str and os.path.exists(cache_path):
         return json.load(open(cache_path))
     try:
         api = _get_sj()
@@ -340,8 +346,10 @@ def _sj_index_1min(tse_code: str, date_str: str) -> list:
         if df.empty:
             return []
         df['ts'] = pd.to_datetime(df['ts'])
-        t_open  = pd.Timestamp('09:01').time()
-        t_close = pd.Timestamp('13:30').time()
+        # Shioaji 時戳為收盤時間，往前移 1 分鐘轉為開盤時間
+        df['ts'] = df['ts'] - pd.Timedelta(minutes=1)
+        t_open  = pd.Timestamp('09:00').time()
+        t_close = pd.Timestamp('13:29').time()
         df = df[(df['ts'].dt.time >= t_open) & (df['ts'].dt.time <= t_close)]
         result = [{'ts': row['ts'].strftime('%Y-%m-%d %H:%M'), 'close': round(float(row['Close']), 2)}
                   for _, row in df.iterrows()]
@@ -361,8 +369,9 @@ def get_taiex_1min(date_str: str) -> list:
     if bars:
         return bars
     # Fallback: yfinance
+    today_str_tx = str(date.today())
     cache_path = f'/tmp/taiex_1min_{date_str}.json'
-    if os.path.exists(cache_path):
+    if date_str != today_str_tx and os.path.exists(cache_path):
         return json.load(open(cache_path))
     import yfinance as yf
     try:
@@ -380,7 +389,8 @@ def get_taiex_1min(date_str: str) -> list:
         df_day.rename(columns={'Datetime': 'ts', 'Close': 'close'}, inplace=True)
         df_day['ts'] = df_day['ts'].dt.strftime('%Y-%m-%d %H:%M')
         result = df_day[['ts', 'close']].round({'close': 2}).to_dict('records')
-        json.dump(result, open(cache_path, 'w'))
+        if date_str != today_str_tx:
+            json.dump(result, open(cache_path, 'w'))
         return result
     except Exception as e:
         print(f'[taiex] yfinance fallback 失敗: {e}')
