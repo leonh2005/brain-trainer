@@ -146,11 +146,69 @@ function initChart() {
   obvSeries = obvChart.addLineSeries({ ...lineOpts, color: '#bc8cff' });
   obvAnchor = _addSubAnchor(obvChart);
 
-  // ── 時間軸同步：主圖 → 副圖 ─────────────────────
+  // ── OHLC Legend（crosshair hover）─────────────────
+  const ohlcLegend = document.getElementById('ohlc-legend');
+  chart.subscribeCrosshairMove(param => {
+    if (!param || !param.time || !shownBars.length) { ohlcLegend.innerHTML = ''; return; }
+    const logical = param.logical;
+    if (logical === null || logical === undefined) { ohlcLegend.innerHTML = ''; return; }
+    const idx = Math.round(logical);
+    if (idx < 0 || idx >= shownBars.length) { ohlcLegend.innerHTML = ''; return; }
+    const b = shownBars[idx];
+    const prevClose = idx > 0 ? shownBars[idx - 1].close : b.open;
+    const chg = b.close - prevClose;
+    const pct = prevClose ? chg / prevClose * 100 : 0;
+    const sign = chg >= 0 ? '+' : '';
+    const barCol = b.close >= b.open ? '#f85149' : '#3fb950';
+    const chgCol = chg >= 0 ? '#f85149' : '#3fb950';
+    const vol張 = b.volume >= 1000 ? (b.volume / 1000).toFixed(0) + '張' : b.volume + '股';
+    const hhmm = b.ts.substring(11, 16);
+    ohlcLegend.innerHTML =
+      `<span style="color:#f0883e;font-weight:700">${hhmm}</span>` +
+      `<span>開</span><b style="color:${barCol}">${b.open.toFixed(2)}</b>` +
+      `<span>高</span><b style="color:${barCol}">${b.high.toFixed(2)}</b>` +
+      `<span>低</span><b style="color:${barCol}">${b.low.toFixed(2)}</b>` +
+      `<span>收</span><b style="color:${barCol}">${b.close.toFixed(2)}</b>` +
+      `<span>量</span><b style="color:${barCol}">${vol張}</b>` +
+      `<b style="color:${chgCol}">${sign}${chg.toFixed(2)}</b>` +
+      `<b style="color:${chgCol}">${sign}${pct.toFixed(2)}%</b>`;
+  });
+
+  // ── 時間軸同步：主圖 → 副圖（用 logical range，不受 scale 寬度影響）──────
   const subCharts = [volChart, macdChart, rsiChart, obvChart];
-  chart.timeScale().subscribeVisibleTimeRangeChange((range) => {
+  const subAnchors = [volAnchor, macdAnchor, rsiAnchor, obvAnchor];
+  chart.timeScale().subscribeVisibleLogicalRangeChange((range) => {
     if (!range) return;
-    subCharts.forEach(c => { try { c && c.timeScale().setVisibleRange(range); } catch(e) {} });
+    subCharts.forEach(c => { try { c && c.timeScale().setVisibleLogicalRange(range); } catch(e) {} });
+  });
+
+  // ── 十字線縱線跨圖同步 ───────────────────────────
+  let _crosshairSyncing = false;
+  function syncCrosshair(sourceChart, targetCharts, targetAnchors, time) {
+    if (_crosshairSyncing) return;
+    _crosshairSyncing = true;
+    targetCharts.forEach((c, i) => {
+      try {
+        if (time !== undefined) c.setCrosshairPosition(0, time, targetAnchors[i]);
+        else c.clearCrosshairPosition();
+      } catch(e) {}
+    });
+    _crosshairSyncing = false;
+  }
+
+  // 主圖 → 副圖
+  chart.subscribeCrosshairMove(param => {
+    syncCrosshair(chart, subCharts, subAnchors, param?.time);
+  });
+
+  // 副圖 → 主圖 + 其他副圖
+  subCharts.forEach((sc, i) => {
+    sc.subscribeCrosshairMove(param => {
+      if (_crosshairSyncing) return;
+      const time = param?.time;
+      syncCrosshair(sc, [chart, ...subCharts.filter((_, j) => j !== i)],
+                        [candleSeries, ...subAnchors.filter((_, j) => j !== i)], time);
+    });
   });
 
   // ── Resize ──────────────────────────────────────
@@ -172,11 +230,11 @@ function initChartView() {
     try {
       // 以邏輯範圍顯示全部 bar（每根 bar 均分寬度，不會因播放根數少而變粗）
       chart.timeScale().setVisibleLogicalRange({ from: -0.5, to: allBars.length - 0.5 });
-      // 取主圖時間範圍同步副圖
-      const timeRange = chart.timeScale().getVisibleRange();
-      if (timeRange) {
+      // logical range 同步副圖
+      const lr = chart.timeScale().getVisibleLogicalRange();
+      if (lr) {
         [volChart, macdChart, rsiChart, obvChart].forEach(c => {
-          try { c && c.timeScale().setVisibleRange(timeRange); } catch(e) {}
+          try { c && c.timeScale().setVisibleLogicalRange(lr); } catch(e) {}
         });
       }
     } catch(e) {}
@@ -638,8 +696,8 @@ function togglePanel(name) {
     const c = { vol: volChart, macd: macdChart, rsi: rsiChart, obv: obvChart }[name];
     if (c) {
       c.applyOptions({ width: el.clientWidth, height: el.clientHeight });
-      const range = chart.timeScale().getVisibleRange();
-      if (range) c.timeScale().setVisibleRange(range);
+      const lr = chart.timeScale().getVisibleLogicalRange();
+      if (lr) c.timeScale().setVisibleLogicalRange(lr);
     }
   }
 }
@@ -709,6 +767,7 @@ async function advanceBar() {
   updateTaiexDisplay(bar.ts.substring(11, 16));
   updateSectorDisplay(bar.ts.substring(11, 16));
 
+  if (playIndex === 10) syncPriceScales();  // 前幾根 scale 寬度確定後對齊一次
   setStatus(`${bar.ts.substring(11,16)}  ${bar.close.toFixed(1)}元  ${playIndex}/${allBars.length}根`);
   scheduleNext();
 }
@@ -822,6 +881,7 @@ function rebuildBars(count) {
     updateOBVNext(ts, bar);
   }
   candleSeries.setMarkers(_markers);
+  syncPriceScales();
 }
 
 // ── 退一根K棒 ───────────────────────────────────────────────────────────────

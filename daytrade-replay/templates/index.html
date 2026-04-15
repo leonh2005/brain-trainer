@@ -89,7 +89,23 @@
     flex-direction: column;
     overflow: hidden;
   }
-  #chart { flex: 1; min-height: 180px; }
+  #chart { flex: 1; min-height: 180px; position: relative; }
+  #ohlc-legend {
+    position: absolute;
+    top: 6px;
+    left: 8px;
+    z-index: 10;
+    pointer-events: none;
+    display: flex;
+    gap: 10px;
+    font-size: 12px;
+    font-weight: 600;
+    background: rgba(13,17,23,.75);
+    padding: 3px 8px;
+    border-radius: 4px;
+    white-space: nowrap;
+  }
+  #ohlc-legend span { color: #8b949e; font-weight: 400; margin-right: 2px; }
 
   /* ── 副圖共用 ── */
   .sub-chart {
@@ -342,7 +358,9 @@
 <div id="main">
   <!-- 圖表區 -->
   <div id="chart-area">
-    <div id="chart"></div>
+    <div id="chart">
+      <div id="ohlc-legend"></div>
+    </div>
     <div id="vol-chart"  class="sub-chart"></div>
     <div id="macd-chart" class="sub-chart"></div>
     <div id="rsi-chart"  class="sub-chart"></div>
