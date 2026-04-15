@@ -86,3 +86,20 @@
 [07:00:06] 完成 → /Users/steven/CCProject/market-dashboard/index.html
   VIX: 19.12  |  S&P: 6886.24  |  200MA: 6666.58  |  高於 200MA (+3.29%)  |  F&G: 41.05 (fear)
   加權指數: 35417.82  |  200MA: 27677.7  |  vs 200MA: +27.96%  |  距高點: 0.0%  |  ATH: 35417.82
+/Users/steven/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+/Users/steven/Library/Python/3.9/lib/python/site-packages/urllib3/connectionpool.py:1097: InsecureRequestWarning: Unverified HTTPS request is being made to host 'www.twse.com.tw'. Adding certificate verification is strongly advised. See: https://urllib3.readthedocs.io/en/latest/advanced-usage.html#tls-warnings
+  warnings.warn(
+/Users/steven/Library/Python/3.9/lib/python/site-packages/urllib3/connectionpool.py:1097: InsecureRequestWarning: Unverified HTTPS request is being made to host 'www.twse.com.tw'. Adding certificate verification is strongly advised. See: https://urllib3.readthedocs.io/en/latest/advanced-usage.html#tls-warnings
+  warnings.warn(
+/Users/steven/Library/Python/3.9/lib/python/site-packages/urllib3/connectionpool.py:1097: InsecureRequestWarning: Unverified HTTPS request is being made to host 'www.twse.com.tw'. Adding certificate verification is strongly advised. See: https://urllib3.readthedocs.io/en/latest/advanced-usage.html#tls-warnings
+  warnings.warn(
+[07:00:03] 抓取 VIX 資料...
+[07:00:04] 抓取 S&P 500 資料與 200MA...
+[07:00:04] 抓取 CNN Fear & Greed...
+[07:00:04] 抓取台股加權指數資料...
+  補充 TWSE 官方資料（近 3 個月）...
+[07:00:05] 生成 HTML...
+[07:00:05] 完成 → /Users/steven/CCProject/market-dashboard/index.html
+  VIX: 18.36  |  S&P: 6967.37  |  200MA: 6670.72  |  高於 200MA (+4.44%)  |  F&G: 47.0 (neutral)
+  加權指數: 36296.12  |  200MA: 27815.85  |  vs 200MA: +30.48%  |  距高點: 0.0%  |  ATH: 36296.12
