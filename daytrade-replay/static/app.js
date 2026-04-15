@@ -19,6 +19,8 @@ let obvChart, obvSeries, obvAnchor;
 // ── 回放狀態 ─────────────────────────────────────────────────────────────────
 let allBars = [], shownBars = [];
 let playIndex = 0, isPlaying = false, playTimer = null, speed = 1;
+let liveRefreshTimer = null;  // 今日即時輪詢計時器
+let currentStockId = '', currentDateStr = '';
 let avg5 = 0, yadayVol = 0, yadayHigh = 0, yadayLow = 0, yadayClose = 0;
 let position = null, trades = [], totalPnl = 0, totalNTD = 0;
 let lotSize = 1;
@@ -259,8 +261,62 @@ async function loadDates(stockId) {
   setStatus('請選擇日期');
 }
 
+function isToday(dateStr) {
+  const now = new Date();
+  const tw = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Taipei' }));
+  const y = tw.getFullYear(), m = String(tw.getMonth() + 1).padStart(2, '0'), d = String(tw.getDate()).padStart(2, '0');
+  return dateStr === `${y}-${m}-${d}`;
+}
+
+function isMarketOpen() {
+  const now = new Date();
+  const tw = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Taipei' }));
+  const h = tw.getHours(), mi = tw.getMinutes();
+  const mins = h * 60 + mi;
+  return mins >= 9 * 60 && mins <= 13 * 60 + 30;
+}
+
+// 今日即時模式：到達末尾後輪詢新 K 棒
+async function startLiveRefresh(stockId, dateStr) {
+  if (liveRefreshTimer) return;  // 避免重複啟動
+  setStatus('等待新K棒...');
+  liveRefreshTimer = setInterval(async () => {
+    if (!isMarketOpen()) {
+      clearInterval(liveRefreshTimer);
+      liveRefreshTimer = null;
+      setStatus('收盤，回放結束');
+      return;
+    }
+    try {
+      const data = await fetch(`/api/kbars?stock=${stockId}&date=${dateStr}`).then(r => r.json());
+      if (data.error || !data.bars || !data.bars.length) return;
+      const lastKnownTs = allBars.length ? allBars[allBars.length - 1].ts : '';
+      const newBars = data.bars.filter(b => b.ts > lastKnownTs);
+      if (!newBars.length) return;
+      allBars = allBars.concat(newBars);
+      clearInterval(liveRefreshTimer);
+      liveRefreshTimer = null;
+      // 更新副圖錨點，讓新 bar 有時間軸基準
+      const subAnchorData = allBars.map(b => ({ time: toTs(b.ts), value: 0 }));
+      [volAnchor, macdAnchor, rsiAnchor, obvAnchor].forEach(a => { try { a.setData(subAnchorData); } catch(e) {} });
+      // 主圖往右延展，讓新 bar 出現在視野內
+      try {
+        const cur = chart.timeScale().getVisibleLogicalRange();
+        if (cur) {
+          const shift = newBars.length;
+          chart.timeScale().setVisibleLogicalRange({ from: cur.from + shift, to: cur.to + shift });
+        }
+      } catch(e) {}
+      if (isPlaying) scheduleNext();
+    } catch(e) {}
+  }, 60000);  // 每分鐘輪詢一次
+}
+
 async function loadKbars(stockId, dateStr) {
   if (!stockId || !dateStr) return;
+  if (liveRefreshTimer) { clearInterval(liveRefreshTimer); liveRefreshTimer = null; }
+  currentStockId = stockId;
+  currentDateStr = dateStr;
   showLoading(true);
   resetReplay();
   allBars = [];          // 清掉舊資料（resetReplay 本身不清，僅在重載時手動清）
@@ -608,7 +664,16 @@ function pause() {
 
 function scheduleNext() {
   if (!isPlaying || playIndex >= allBars.length) {
-    if (playIndex >= allBars.length) { setStatus('回放結束'); pause(); if (position) forceClose(); }
+    if (playIndex >= allBars.length) {
+      if (isToday(currentDateStr) && isMarketOpen()) {
+        // 今日盤中：等待新 K 棒
+        startLiveRefresh(currentStockId, currentDateStr);
+      } else {
+        setStatus('回放結束');
+        pause();
+        if (position) forceClose();
+      }
+    }
     return;
   }
   playTimer = setTimeout(advanceBar, Math.max(50, 1000 / speed));
@@ -657,6 +722,7 @@ function setSpeed(s) {
 }
 
 function resetReplay() {
+  if (liveRefreshTimer) { clearInterval(liveRefreshTimer); liveRefreshTimer = null; }
   pause();
   playIndex = 0; shownBars = [];
   // allBars 保留，讓重置後仍可重播（loadKbars 呼叫前會重新賦值）
