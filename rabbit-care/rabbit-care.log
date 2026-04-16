@@ -33381,3 +33381,453 @@ Traceback (most recent call last):
   File "<frozen importlib._bootstrap_external>", line 950, in get_data
 OSError: [Errno 24] Too many open files: '/opt/homebrew/lib/python3.14/site-packages/werkzeug/debug/__init__.py'
 ----------------------------------------
+[2026-04-17 01:44:28,849] ERROR in app: Exception on /api/log-action [POST]
+Traceback (most recent call last):
+  File "/opt/homebrew/lib/python3.14/site-packages/flask/app.py", line 1511, in wsgi_app
+  File "/opt/homebrew/lib/python3.14/site-packages/flask/app.py", line 919, in full_dispatch_request
+  File "/opt/homebrew/lib/python3.14/site-packages/flask/app.py", line 917, in full_dispatch_request
+  File "/opt/homebrew/lib/python3.14/site-packages/flask/app.py", line 902, in dispatch_request
+  File "/Users/steven/CCProject/rabbit-care/app.py", line 705, in api_log_action
+  File "/Users/steven/CCProject/rabbit-care/app.py", line 59, in get_db
+sqlite3.OperationalError: unable to open database file
+127.0.0.1 - - [17/Apr/2026 01:44:28] "[35m[1mPOST /api/log-action HTTP/1.1[0m" 500 -
+----------------------------------------
+Exception occurred during processing of request from ('127.0.0.1', 50270)
+Traceback (most recent call last):
+  File "/opt/homebrew/lib/python3.14/site-packages/werkzeug/serving.py", line 370, in run_wsgi
+  File "/opt/homebrew/lib/python3.14/site-packages/werkzeug/serving.py", line 346, in execute
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/selectors.py", line 493, in __init__
+OSError: [Errno 24] Too many open files
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 697, in process_request_thread
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 362, in finish_request
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 766, in __init__
+  File "/opt/homebrew/lib/python3.14/site-packages/werkzeug/serving.py", line 398, in handle
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/server.py", line 496, in handle
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/server.py", line 484, in handle_one_request
+  File "/opt/homebrew/lib/python3.14/site-packages/werkzeug/serving.py", line 390, in run_wsgi
+  File "<frozen importlib._bootstrap>", line 1371, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1342, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 938, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 755, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 892, in get_code
+  File "<frozen importlib._bootstrap_external>", line 950, in get_data
+OSError: [Errno 24] Too many open files: '/opt/homebrew/lib/python3.14/site-packages/werkzeug/debug/__init__.py'
+----------------------------------------
+[2026-04-17 02:12:52,716] ERROR in app: Exception on /api/log-action [POST]
+Traceback (most recent call last):
+  File "/opt/homebrew/lib/python3.14/site-packages/flask/app.py", line 1511, in wsgi_app
+  File "/opt/homebrew/lib/python3.14/site-packages/flask/app.py", line 919, in full_dispatch_request
+  File "/opt/homebrew/lib/python3.14/site-packages/flask/app.py", line 917, in full_dispatch_request
+  File "/opt/homebrew/lib/python3.14/site-packages/flask/app.py", line 902, in dispatch_request
+  File "/Users/steven/CCProject/rabbit-care/app.py", line 705, in api_log_action
+  File "/Users/steven/CCProject/rabbit-care/app.py", line 59, in get_db
+sqlite3.OperationalError: unable to open database file
+127.0.0.1 - - [17/Apr/2026 02:12:52] "[35m[1mPOST /api/log-action HTTP/1.1[0m" 500 -
+----------------------------------------
+Exception occurred during processing of request from ('127.0.0.1', 50395)
+Traceback (most recent call last):
+  File "/opt/homebrew/lib/python3.14/site-packages/werkzeug/serving.py", line 370, in run_wsgi
+  File "/opt/homebrew/lib/python3.14/site-packages/werkzeug/serving.py", line 346, in execute
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/selectors.py", line 493, in __init__
+OSError: [Errno 24] Too many open files
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 697, in process_request_thread
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 362, in finish_request
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 766, in __init__
+  File "/opt/homebrew/lib/python3.14/site-packages/werkzeug/serving.py", line 398, in handle
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/server.py", line 496, in handle
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/server.py", line 484, in handle_one_request
+  File "/opt/homebrew/lib/python3.14/site-packages/werkzeug/serving.py", line 390, in run_wsgi
+  File "<frozen importlib._bootstrap>", line 1371, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1342, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 938, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 755, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 892, in get_code
+  File "<frozen importlib._bootstrap_external>", line 950, in get_data
+OSError: [Errno 24] Too many open files: '/opt/homebrew/lib/python3.14/site-packages/werkzeug/debug/__init__.py'
+----------------------------------------
+[2026-04-17 02:24:12,488] ERROR in app: Exception on /api/log-action [POST]
+Traceback (most recent call last):
+  File "/opt/homebrew/lib/python3.14/site-packages/flask/app.py", line 1511, in wsgi_app
+  File "/opt/homebrew/lib/python3.14/site-packages/flask/app.py", line 919, in full_dispatch_request
+  File "/opt/homebrew/lib/python3.14/site-packages/flask/app.py", line 917, in full_dispatch_request
+  File "/opt/homebrew/lib/python3.14/site-packages/flask/app.py", line 902, in dispatch_request
+  File "/Users/steven/CCProject/rabbit-care/app.py", line 705, in api_log_action
+  File "/Users/steven/CCProject/rabbit-care/app.py", line 59, in get_db
+sqlite3.OperationalError: unable to open database file
+127.0.0.1 - - [17/Apr/2026 02:24:12] "[35m[1mPOST /api/log-action HTTP/1.1[0m" 500 -
+----------------------------------------
+Exception occurred during processing of request from ('127.0.0.1', 50458)
+Traceback (most recent call last):
+  File "/opt/homebrew/lib/python3.14/site-packages/werkzeug/serving.py", line 370, in run_wsgi
+  File "/opt/homebrew/lib/python3.14/site-packages/werkzeug/serving.py", line 346, in execute
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/selectors.py", line 493, in __init__
+OSError: [Errno 24] Too many open files
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 697, in process_request_thread
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 362, in finish_request
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 766, in __init__
+  File "/opt/homebrew/lib/python3.14/site-packages/werkzeug/serving.py", line 398, in handle
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/server.py", line 496, in handle
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/server.py", line 484, in handle_one_request
+  File "/opt/homebrew/lib/python3.14/site-packages/werkzeug/serving.py", line 390, in run_wsgi
+  File "<frozen importlib._bootstrap>", line 1371, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1342, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 938, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 755, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 892, in get_code
+  File "<frozen importlib._bootstrap_external>", line 950, in get_data
+OSError: [Errno 24] Too many open files: '/opt/homebrew/lib/python3.14/site-packages/werkzeug/debug/__init__.py'
+----------------------------------------
+[2026-04-17 02:47:27,283] ERROR in app: Exception on /api/log-action [POST]
+Traceback (most recent call last):
+  File "/opt/homebrew/lib/python3.14/site-packages/flask/app.py", line 1511, in wsgi_app
+  File "/opt/homebrew/lib/python3.14/site-packages/flask/app.py", line 919, in full_dispatch_request
+  File "/opt/homebrew/lib/python3.14/site-packages/flask/app.py", line 917, in full_dispatch_request
+  File "/opt/homebrew/lib/python3.14/site-packages/flask/app.py", line 902, in dispatch_request
+  File "/Users/steven/CCProject/rabbit-care/app.py", line 705, in api_log_action
+  File "/Users/steven/CCProject/rabbit-care/app.py", line 59, in get_db
+sqlite3.OperationalError: unable to open database file
+127.0.0.1 - - [17/Apr/2026 02:47:27] "[35m[1mPOST /api/log-action HTTP/1.1[0m" 500 -
+----------------------------------------
+Exception occurred during processing of request from ('127.0.0.1', 50563)
+Traceback (most recent call last):
+  File "/opt/homebrew/lib/python3.14/site-packages/werkzeug/serving.py", line 370, in run_wsgi
+  File "/opt/homebrew/lib/python3.14/site-packages/werkzeug/serving.py", line 346, in execute
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/selectors.py", line 493, in __init__
+OSError: [Errno 24] Too many open files
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 697, in process_request_thread
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 362, in finish_request
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 766, in __init__
+  File "/opt/homebrew/lib/python3.14/site-packages/werkzeug/serving.py", line 398, in handle
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/server.py", line 496, in handle
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/server.py", line 484, in handle_one_request
+  File "/opt/homebrew/lib/python3.14/site-packages/werkzeug/serving.py", line 390, in run_wsgi
+  File "<frozen importlib._bootstrap>", line 1371, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1342, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 938, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 755, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 892, in get_code
+  File "<frozen importlib._bootstrap_external>", line 950, in get_data
+OSError: [Errno 24] Too many open files: '/opt/homebrew/lib/python3.14/site-packages/werkzeug/debug/__init__.py'
+----------------------------------------
+[2026-04-17 02:55:08,710] ERROR in app: Exception on /api/log-action [POST]
+Traceback (most recent call last):
+  File "/opt/homebrew/lib/python3.14/site-packages/flask/app.py", line 1511, in wsgi_app
+  File "/opt/homebrew/lib/python3.14/site-packages/flask/app.py", line 919, in full_dispatch_request
+  File "/opt/homebrew/lib/python3.14/site-packages/flask/app.py", line 917, in full_dispatch_request
+  File "/opt/homebrew/lib/python3.14/site-packages/flask/app.py", line 902, in dispatch_request
+  File "/Users/steven/CCProject/rabbit-care/app.py", line 705, in api_log_action
+  File "/Users/steven/CCProject/rabbit-care/app.py", line 59, in get_db
+sqlite3.OperationalError: unable to open database file
+127.0.0.1 - - [17/Apr/2026 02:55:08] "[35m[1mPOST /api/log-action HTTP/1.1[0m" 500 -
+----------------------------------------
+Exception occurred during processing of request from ('127.0.0.1', 50596)
+Traceback (most recent call last):
+  File "/opt/homebrew/lib/python3.14/site-packages/werkzeug/serving.py", line 370, in run_wsgi
+  File "/opt/homebrew/lib/python3.14/site-packages/werkzeug/serving.py", line 346, in execute
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/selectors.py", line 493, in __init__
+OSError: [Errno 24] Too many open files
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 697, in process_request_thread
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 362, in finish_request
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 766, in __init__
+  File "/opt/homebrew/lib/python3.14/site-packages/werkzeug/serving.py", line 398, in handle
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/server.py", line 496, in handle
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/server.py", line 484, in handle_one_request
+  File "/opt/homebrew/lib/python3.14/site-packages/werkzeug/serving.py", line 390, in run_wsgi
+  File "<frozen importlib._bootstrap>", line 1371, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1342, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 938, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 755, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 892, in get_code
+  File "<frozen importlib._bootstrap_external>", line 950, in get_data
+OSError: [Errno 24] Too many open files: '/opt/homebrew/lib/python3.14/site-packages/werkzeug/debug/__init__.py'
+----------------------------------------
+127.0.0.1 - - [17/Apr/2026 03:06:56] "[32mHEAD / HTTP/1.1[0m" 302 -
+----------------------------------------
+Exception occurred during processing of request from ('127.0.0.1', 50662)
+Traceback (most recent call last):
+  File "/opt/homebrew/lib/python3.14/site-packages/werkzeug/serving.py", line 370, in run_wsgi
+  File "/opt/homebrew/lib/python3.14/site-packages/werkzeug/serving.py", line 346, in execute
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/selectors.py", line 493, in __init__
+OSError: [Errno 24] Too many open files
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 697, in process_request_thread
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 362, in finish_request
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 766, in __init__
+  File "/opt/homebrew/lib/python3.14/site-packages/werkzeug/serving.py", line 398, in handle
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/server.py", line 496, in handle
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/server.py", line 484, in handle_one_request
+  File "/opt/homebrew/lib/python3.14/site-packages/werkzeug/serving.py", line 390, in run_wsgi
+  File "<frozen importlib._bootstrap>", line 1371, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1342, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 938, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 755, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 892, in get_code
+  File "<frozen importlib._bootstrap_external>", line 950, in get_data
+OSError: [Errno 24] Too many open files: '/opt/homebrew/lib/python3.14/site-packages/werkzeug/debug/__init__.py'
+----------------------------------------
+127.0.0.1 - - [17/Apr/2026 03:06:56] "HEAD /login HTTP/1.1" 200 -
+----------------------------------------
+Exception occurred during processing of request from ('127.0.0.1', 50664)
+Traceback (most recent call last):
+  File "/opt/homebrew/lib/python3.14/site-packages/werkzeug/serving.py", line 370, in run_wsgi
+  File "/opt/homebrew/lib/python3.14/site-packages/werkzeug/serving.py", line 346, in execute
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/selectors.py", line 493, in __init__
+OSError: [Errno 24] Too many open files
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 697, in process_request_thread
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 362, in finish_request
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 766, in __init__
+  File "/opt/homebrew/lib/python3.14/site-packages/werkzeug/serving.py", line 398, in handle
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/server.py", line 496, in handle
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/server.py", line 484, in handle_one_request
+  File "/opt/homebrew/lib/python3.14/site-packages/werkzeug/serving.py", line 390, in run_wsgi
+  File "<frozen importlib._bootstrap>", line 1371, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1342, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 938, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 755, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 892, in get_code
+  File "<frozen importlib._bootstrap_external>", line 950, in get_data
+OSError: [Errno 24] Too many open files: '/opt/homebrew/lib/python3.14/site-packages/werkzeug/debug/__init__.py'
+----------------------------------------
+[2026-04-17 04:25:24,368] ERROR in app: Exception on /api/log-action [POST]
+Traceback (most recent call last):
+  File "/opt/homebrew/lib/python3.14/site-packages/flask/app.py", line 1511, in wsgi_app
+  File "/opt/homebrew/lib/python3.14/site-packages/flask/app.py", line 919, in full_dispatch_request
+  File "/opt/homebrew/lib/python3.14/site-packages/flask/app.py", line 917, in full_dispatch_request
+  File "/opt/homebrew/lib/python3.14/site-packages/flask/app.py", line 902, in dispatch_request
+  File "/Users/steven/CCProject/rabbit-care/app.py", line 705, in api_log_action
+  File "/Users/steven/CCProject/rabbit-care/app.py", line 59, in get_db
+sqlite3.OperationalError: unable to open database file
+127.0.0.1 - - [17/Apr/2026 04:25:24] "[35m[1mPOST /api/log-action HTTP/1.1[0m" 500 -
+----------------------------------------
+Exception occurred during processing of request from ('127.0.0.1', 51180)
+Traceback (most recent call last):
+  File "/opt/homebrew/lib/python3.14/site-packages/werkzeug/serving.py", line 370, in run_wsgi
+  File "/opt/homebrew/lib/python3.14/site-packages/werkzeug/serving.py", line 346, in execute
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/selectors.py", line 493, in __init__
+OSError: [Errno 24] Too many open files
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 697, in process_request_thread
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 362, in finish_request
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 766, in __init__
+  File "/opt/homebrew/lib/python3.14/site-packages/werkzeug/serving.py", line 398, in handle
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/server.py", line 496, in handle
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/server.py", line 484, in handle_one_request
+  File "/opt/homebrew/lib/python3.14/site-packages/werkzeug/serving.py", line 390, in run_wsgi
+  File "<frozen importlib._bootstrap>", line 1371, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1342, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 938, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 755, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 892, in get_code
+  File "<frozen importlib._bootstrap_external>", line 950, in get_data
+OSError: [Errno 24] Too many open files: '/opt/homebrew/lib/python3.14/site-packages/werkzeug/debug/__init__.py'
+----------------------------------------
+[2026-04-17 04:39:34,602] ERROR in app: Exception on /api/log-action [POST]
+Traceback (most recent call last):
+  File "/opt/homebrew/lib/python3.14/site-packages/flask/app.py", line 1511, in wsgi_app
+  File "/opt/homebrew/lib/python3.14/site-packages/flask/app.py", line 919, in full_dispatch_request
+  File "/opt/homebrew/lib/python3.14/site-packages/flask/app.py", line 917, in full_dispatch_request
+  File "/opt/homebrew/lib/python3.14/site-packages/flask/app.py", line 902, in dispatch_request
+  File "/Users/steven/CCProject/rabbit-care/app.py", line 705, in api_log_action
+  File "/Users/steven/CCProject/rabbit-care/app.py", line 59, in get_db
+sqlite3.OperationalError: unable to open database file
+127.0.0.1 - - [17/Apr/2026 04:39:34] "[35m[1mPOST /api/log-action HTTP/1.1[0m" 500 -
+----------------------------------------
+Exception occurred during processing of request from ('127.0.0.1', 51300)
+Traceback (most recent call last):
+  File "/opt/homebrew/lib/python3.14/site-packages/werkzeug/serving.py", line 370, in run_wsgi
+  File "/opt/homebrew/lib/python3.14/site-packages/werkzeug/serving.py", line 346, in execute
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/selectors.py", line 493, in __init__
+OSError: [Errno 24] Too many open files
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 697, in process_request_thread
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 362, in finish_request
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 766, in __init__
+  File "/opt/homebrew/lib/python3.14/site-packages/werkzeug/serving.py", line 398, in handle
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/server.py", line 496, in handle
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/server.py", line 484, in handle_one_request
+  File "/opt/homebrew/lib/python3.14/site-packages/werkzeug/serving.py", line 390, in run_wsgi
+  File "<frozen importlib._bootstrap>", line 1371, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1342, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 938, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 755, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 892, in get_code
+  File "<frozen importlib._bootstrap_external>", line 950, in get_data
+OSError: [Errno 24] Too many open files: '/opt/homebrew/lib/python3.14/site-packages/werkzeug/debug/__init__.py'
+----------------------------------------
+[2026-04-17 04:49:16,717] ERROR in app: Exception on /api/log-action [POST]
+Traceback (most recent call last):
+  File "/opt/homebrew/lib/python3.14/site-packages/flask/app.py", line 1511, in wsgi_app
+  File "/opt/homebrew/lib/python3.14/site-packages/flask/app.py", line 919, in full_dispatch_request
+  File "/opt/homebrew/lib/python3.14/site-packages/flask/app.py", line 917, in full_dispatch_request
+  File "/opt/homebrew/lib/python3.14/site-packages/flask/app.py", line 902, in dispatch_request
+  File "/Users/steven/CCProject/rabbit-care/app.py", line 705, in api_log_action
+  File "/Users/steven/CCProject/rabbit-care/app.py", line 59, in get_db
+sqlite3.OperationalError: unable to open database file
+127.0.0.1 - - [17/Apr/2026 04:49:16] "[35m[1mPOST /api/log-action HTTP/1.1[0m" 500 -
+----------------------------------------
+Exception occurred during processing of request from ('127.0.0.1', 51371)
+Traceback (most recent call last):
+  File "/opt/homebrew/lib/python3.14/site-packages/werkzeug/serving.py", line 370, in run_wsgi
+  File "/opt/homebrew/lib/python3.14/site-packages/werkzeug/serving.py", line 346, in execute
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/selectors.py", line 493, in __init__
+OSError: [Errno 24] Too many open files
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 697, in process_request_thread
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 362, in finish_request
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 766, in __init__
+  File "/opt/homebrew/lib/python3.14/site-packages/werkzeug/serving.py", line 398, in handle
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/server.py", line 496, in handle
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/server.py", line 484, in handle_one_request
+  File "/opt/homebrew/lib/python3.14/site-packages/werkzeug/serving.py", line 390, in run_wsgi
+  File "<frozen importlib._bootstrap>", line 1371, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1342, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 938, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 755, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 892, in get_code
+  File "<frozen importlib._bootstrap_external>", line 950, in get_data
+OSError: [Errno 24] Too many open files: '/opt/homebrew/lib/python3.14/site-packages/werkzeug/debug/__init__.py'
+----------------------------------------
+[2026-04-17 04:59:26,920] ERROR in app: Exception on /api/log-action [POST]
+Traceback (most recent call last):
+  File "/opt/homebrew/lib/python3.14/site-packages/flask/app.py", line 1511, in wsgi_app
+  File "/opt/homebrew/lib/python3.14/site-packages/flask/app.py", line 919, in full_dispatch_request
+  File "/opt/homebrew/lib/python3.14/site-packages/flask/app.py", line 917, in full_dispatch_request
+  File "/opt/homebrew/lib/python3.14/site-packages/flask/app.py", line 902, in dispatch_request
+  File "/Users/steven/CCProject/rabbit-care/app.py", line 705, in api_log_action
+  File "/Users/steven/CCProject/rabbit-care/app.py", line 59, in get_db
+sqlite3.OperationalError: unable to open database file
+127.0.0.1 - - [17/Apr/2026 04:59:26] "[35m[1mPOST /api/log-action HTTP/1.1[0m" 500 -
+----------------------------------------
+Exception occurred during processing of request from ('127.0.0.1', 51419)
+Traceback (most recent call last):
+  File "/opt/homebrew/lib/python3.14/site-packages/werkzeug/serving.py", line 370, in run_wsgi
+  File "/opt/homebrew/lib/python3.14/site-packages/werkzeug/serving.py", line 346, in execute
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/selectors.py", line 493, in __init__
+OSError: [Errno 24] Too many open files
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 697, in process_request_thread
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 362, in finish_request
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 766, in __init__
+  File "/opt/homebrew/lib/python3.14/site-packages/werkzeug/serving.py", line 398, in handle
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/server.py", line 496, in handle
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/server.py", line 484, in handle_one_request
+  File "/opt/homebrew/lib/python3.14/site-packages/werkzeug/serving.py", line 390, in run_wsgi
+  File "<frozen importlib._bootstrap>", line 1371, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1342, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 938, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 755, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 892, in get_code
+  File "<frozen importlib._bootstrap_external>", line 950, in get_data
+OSError: [Errno 24] Too many open files: '/opt/homebrew/lib/python3.14/site-packages/werkzeug/debug/__init__.py'
+----------------------------------------
+[2026-04-17 05:06:56,564] ERROR in app: Exception on /api/log-action [POST]
+Traceback (most recent call last):
+  File "/opt/homebrew/lib/python3.14/site-packages/flask/app.py", line 1511, in wsgi_app
+  File "/opt/homebrew/lib/python3.14/site-packages/flask/app.py", line 919, in full_dispatch_request
+  File "/opt/homebrew/lib/python3.14/site-packages/flask/app.py", line 917, in full_dispatch_request
+  File "/opt/homebrew/lib/python3.14/site-packages/flask/app.py", line 902, in dispatch_request
+  File "/Users/steven/CCProject/rabbit-care/app.py", line 705, in api_log_action
+  File "/Users/steven/CCProject/rabbit-care/app.py", line 59, in get_db
+sqlite3.OperationalError: unable to open database file
+127.0.0.1 - - [17/Apr/2026 05:06:56] "[35m[1mPOST /api/log-action HTTP/1.1[0m" 500 -
+----------------------------------------
+Exception occurred during processing of request from ('127.0.0.1', 51472)
+Traceback (most recent call last):
+  File "/opt/homebrew/lib/python3.14/site-packages/werkzeug/serving.py", line 370, in run_wsgi
+  File "/opt/homebrew/lib/python3.14/site-packages/werkzeug/serving.py", line 346, in execute
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/selectors.py", line 493, in __init__
+OSError: [Errno 24] Too many open files
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 697, in process_request_thread
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 362, in finish_request
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 766, in __init__
+  File "/opt/homebrew/lib/python3.14/site-packages/werkzeug/serving.py", line 398, in handle
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/server.py", line 496, in handle
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/server.py", line 484, in handle_one_request
+  File "/opt/homebrew/lib/python3.14/site-packages/werkzeug/serving.py", line 390, in run_wsgi
+  File "<frozen importlib._bootstrap>", line 1371, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1342, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 938, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 755, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 892, in get_code
+  File "<frozen importlib._bootstrap_external>", line 950, in get_data
+OSError: [Errno 24] Too many open files: '/opt/homebrew/lib/python3.14/site-packages/werkzeug/debug/__init__.py'
+----------------------------------------
+[2026-04-17 05:22:30,541] ERROR in app: Exception on /api/log-action [POST]
+Traceback (most recent call last):
+  File "/opt/homebrew/lib/python3.14/site-packages/flask/app.py", line 1511, in wsgi_app
+  File "/opt/homebrew/lib/python3.14/site-packages/flask/app.py", line 919, in full_dispatch_request
+  File "/opt/homebrew/lib/python3.14/site-packages/flask/app.py", line 917, in full_dispatch_request
+  File "/opt/homebrew/lib/python3.14/site-packages/flask/app.py", line 902, in dispatch_request
+  File "/Users/steven/CCProject/rabbit-care/app.py", line 705, in api_log_action
+  File "/Users/steven/CCProject/rabbit-care/app.py", line 59, in get_db
+sqlite3.OperationalError: unable to open database file
+127.0.0.1 - - [17/Apr/2026 05:22:30] "[35m[1mPOST /api/log-action HTTP/1.1[0m" 500 -
+----------------------------------------
+Exception occurred during processing of request from ('127.0.0.1', 51559)
+Traceback (most recent call last):
+  File "/opt/homebrew/lib/python3.14/site-packages/werkzeug/serving.py", line 370, in run_wsgi
+  File "/opt/homebrew/lib/python3.14/site-packages/werkzeug/serving.py", line 346, in execute
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/selectors.py", line 493, in __init__
+OSError: [Errno 24] Too many open files
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 697, in process_request_thread
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 362, in finish_request
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 766, in __init__
+  File "/opt/homebrew/lib/python3.14/site-packages/werkzeug/serving.py", line 398, in handle
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/server.py", line 496, in handle
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/server.py", line 484, in handle_one_request
+  File "/opt/homebrew/lib/python3.14/site-packages/werkzeug/serving.py", line 390, in run_wsgi
+  File "<frozen importlib._bootstrap>", line 1371, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1342, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 938, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 755, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 892, in get_code
+  File "<frozen importlib._bootstrap_external>", line 950, in get_data
+OSError: [Errno 24] Too many open files: '/opt/homebrew/lib/python3.14/site-packages/werkzeug/debug/__init__.py'
+----------------------------------------
