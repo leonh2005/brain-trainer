@@ -82,6 +82,19 @@ def api_index_data():
         return jsonify({'error': str(e)}), 500
 
 
+@app.route('/api/subscribe', methods=['POST'])
+def api_subscribe():
+    body = request.get_json() or {}
+    stock_id = body.get('stock', '')
+    if not stock_id:
+        return jsonify({'error': 'stock required'}), 400
+    try:
+        data.subscribe_realtime(stock_id)
+        return jsonify({'ok': True, 'stock': stock_id})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
 if __name__ == '__main__':
     print('[daytrade-replay] 啟動 http://localhost:5400')
     app.run(host='0.0.0.0', port=5400, debug=False)

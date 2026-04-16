@@ -337,7 +337,7 @@ function isMarketOpen() {
 // 今日即時模式：到達末尾後輪詢新 K 棒
 async function startLiveRefresh(stockId, dateStr) {
   if (liveRefreshTimer) return;  // 避免重複啟動
-  setStatus('等待新K棒...');
+  setStatus('即時模式 — 等待新K棒...');
   liveRefreshTimer = setInterval(async () => {
     if (!isMarketOpen()) {
       clearInterval(liveRefreshTimer);
@@ -367,7 +367,7 @@ async function startLiveRefresh(stockId, dateStr) {
       } catch(e) {}
       if (isPlaying) scheduleNext();
     } catch(e) {}
-  }, 60000);  // 每分鐘輪詢一次
+  }, 5000);  // 即時模式每 5 秒輪詢一次
 }
 
 async function loadKbars(stockId, dateStr) {
@@ -380,6 +380,14 @@ async function loadKbars(stockId, dateStr) {
   allBars = [];          // 清掉舊資料（resetReplay 本身不清，僅在重載時手動清）
   setStatus('載入K棒資料...');
 
+  // 今日資料 → 啟動後端 tick 訂閱（非同步，不阻塞 K 棒載入）
+  if (isToday(dateStr)) {
+    fetch('/api/subscribe', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ stock: stockId }),
+    }).catch(() => {});
+  }
   const data = await fetch(`/api/kbars?stock=${stockId}&date=${dateStr}`).then(r => r.json());
   if (data.error) { setStatus('錯誤: ' + data.error); showLoading(false); return; }
 

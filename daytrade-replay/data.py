@@ -12,7 +12,99 @@ import time
 from collections import defaultdict
 from datetime import date, datetime, timedelta
 
+import threading
+from datetime import time as _time
+
 import pandas as pd
+
+
+class RealTimeFeed:
+    """
+    訂閱 Shioaji tick 串流，在記憶體組合 1 分 K 棒。
+    執行緒安全（_lock 保護所有狀態）。
+    只保留「已完成」的 bar（minute 已結束），避免前端顯示不完整 bar。
+    """
+
+    def __init__(self):
+        self._lock = threading.Lock()
+        self._stock_id: str | None = None
+        self._completed: list[dict] = []   # [{ts, open, high, low, close, volume}, ...]
+        self._forming: dict | None = None  # 目前正在形成的 bar
+
+    # ── 供外部呼叫 ────────────────────────────────────────────────────────────
+
+    def set_stock(self, stock_id: str) -> None:
+        """切換訂閱股票，清空舊資料。由 subscribe_realtime() 呼叫。"""
+        with self._lock:
+            if self._stock_id == stock_id:
+                return
+            self._stock_id = stock_id
+            self._completed = []
+            self._forming = None
+        print(f'[feed] 切換訂閱股票 → {stock_id}')
+
+    def on_tick(self, tick) -> None:
+        """
+        Shioaji on_tick_stk_v1 callback 呼叫此方法。
+        tick 為 TickSTKv1 instance，有 code, datetime, close, volume 等欄位。
+        """
+        try:
+            tick_dt = tick.datetime
+            t = tick_dt.time()
+            # 只處理盤中 09:00~13:30
+            if t < _time(9, 0) or t > _time(13, 30):
+                return
+
+            # 取「分鐘開始」時間字串，例如 "2026-04-16 10:41"
+            minute_str = tick_dt.strftime('%Y-%m-%d %H:%M')
+            price  = round(float(tick.close), 2)
+            volume = int(tick.volume)
+
+            with self._lock:
+                # 不是我們訂閱的股票，略過
+                if self._stock_id and tick.code != self._stock_id:
+                    return
+
+                if self._forming is None:
+                    # 第一根 bar
+                    self._forming = _make_bar(minute_str, price, volume)
+                elif self._forming['ts'] == minute_str:
+                    # 同一分鐘，更新 forming bar
+                    b = self._forming
+                    b['high']   = max(b['high'],  price)
+                    b['low']    = min(b['low'],   price)
+                    b['close']  = price
+                    b['volume'] += volume
+                else:
+                    # 新的一分鐘開始 → 把 forming bar 存入 completed
+                    self._completed.append(dict(self._forming))
+                    self._forming = _make_bar(minute_str, price, volume)
+        except Exception as e:
+            print(f'[feed] on_tick error: {e}')
+
+    def get_bars(self, date_str: str, include_forming: bool = False) -> list[dict]:
+        """回傳 date_str 當日所有已完成的 1 分 K bar。
+        include_forming=True 時也包含正在形成的 bar（收盤最後一根用）。"""
+        prefix = date_str + ' '
+        with self._lock:
+            bars = [dict(b) for b in self._completed if b['ts'].startswith(prefix)]
+            if include_forming and self._forming and self._forming['ts'].startswith(prefix):
+                bars.append(dict(self._forming))
+            return bars
+
+    def current_stock(self) -> str | None:
+        with self._lock:
+            return self._stock_id
+
+
+def _make_bar(ts: str, price: float, volume: int) -> dict:
+    return {'ts': ts, 'open': price, 'high': price,
+            'low': price, 'close': price, 'volume': volume}
+
+
+# 全域單例
+_realtime_feed = RealTimeFeed()
+
 
 CACHE_FILE = '/tmp/daytrade_top30_cache.json'
 
@@ -151,18 +243,44 @@ def _sj_stock_1min(stock_id: str, date_str: str) -> list:
 
 def get_1min_kbars(stock_id: str, date_str: str) -> list:
     """
-    取指定股票指定日的1分K（Shioaji 優先，失敗 fallback yfinance）。
-    只保留 09:01~13:30，volume 單位：股。
+    取指定股票指定日的1分K。
+    今日：歷史 kbars() + 即時 tick bars 合併回傳（tick-built 優先）。
+    非今日：Shioaji kbars() 優先，失敗 fallback yfinance。
+    只保留 09:00~13:30，volume 單位：股（Shioaji）。
     今日資料不快取（持續更新）。
     """
+    today_str = str(date.today())
+
+    if date_str == today_str:
+        # ── 今日：歷史 + 即時合併 ──────────────────────────────────────────
+        hist_bars = _sj_stock_1min(stock_id, date_str)   # up to ~20min ago
+        # 收盤後 include_forming=True 讓最後一根 13:30 bar 也出現
+        from datetime import datetime as _dt
+        _now_t = _dt.now().time()
+        from datetime import time as _t
+        after_close = _now_t >= _t(13, 30)
+        live_bars = _realtime_feed.get_bars(date_str, include_forming=after_close)
+
+        if not hist_bars and not live_bars:
+            return []
+
+        # 以 ts 為 key 合併，tick-built bars 優先（live 覆蓋 hist 相同 ts）
+        merged: dict = {}
+        for b in hist_bars:
+            merged[b['ts']] = b
+        for b in live_bars:
+            merged[b['ts']] = b   # tick-built 覆蓋同 ts 的歷史 bar
+
+        return sorted(merged.values(), key=lambda b: b['ts'])
+
+    # ── 非今日：Shioaji kbars() 優先，失敗 fallback yfinance ──────────────
     bars = _sj_stock_1min(stock_id, date_str)
     if bars:
         return bars
 
     # Fallback: yfinance（最近7天）
-    today_str_yf = str(date.today())
     cache_path = f'/tmp/kbar_{stock_id}_{date_str}.json'
-    if date_str != today_str_yf and os.path.exists(cache_path):
+    if os.path.exists(cache_path):
         return json.load(open(cache_path))
 
     import yfinance as yf
@@ -188,8 +306,7 @@ def get_1min_kbars(stock_id: str, date_str: str) -> list:
     df['ts'] = df['ts'].dt.strftime('%Y-%m-%d %H:%M')
     df['volume'] = df['volume'].fillna(0).astype(int)
     result = df[['ts', 'open', 'high', 'low', 'close', 'volume']].to_dict('records')
-    if date_str != today_str_yf:
-        json.dump(result, open(cache_path, 'w'), ensure_ascii=False)
+    json.dump(result, open(cache_path, 'w'), ensure_ascii=False)
     return result
 
 
@@ -261,6 +378,13 @@ def _get_sj():
             secret_key=os.environ['SHIOAJI_SECRET_KEY'],
         )
         print('[sj] 永豐 API 登入成功')
+
+        # 登記 tick callback（per-api-instance，重連後必須重新登記）
+        @api.on_tick_stk_v1()
+        def _on_tick_stk(exchange, tick):
+            _realtime_feed.on_tick(tick)
+
+        print('[sj] tick callback 已登記')
         return api
 
     if _sj_api is None:
@@ -279,6 +403,43 @@ def _get_sj():
         _sj_api = _login()
 
     return _sj_api
+
+
+def subscribe_realtime(stock_id: str) -> None:
+    """
+    對指定股票開始 Shioaji tick 訂閱。
+    切換股票時自動取消舊訂閱再訂新的。
+    只在今日盤中才需要呼叫。
+    訂閱失敗時會 raise Exception，由呼叫端處理。
+    """
+    import shioaji as sj
+    api = _get_sj()
+
+    old_id = _realtime_feed.current_stock()
+    # 取消舊訂閱（不同股票才需要，失敗不影響後續訂閱）
+    if old_id and old_id != stock_id:
+        try:
+            old_contract = api.Contracts.Stocks[old_id]
+            api.quote.unsubscribe(
+                old_contract,
+                quote_type=sj.constant.QuoteType.Tick,
+                version=sj.constant.QuoteVersion.v1,
+            )
+            print(f'[sj] 取消訂閱 {old_id}')
+        except Exception as e:
+            print(f'[sj] 取消訂閱失敗（繼續）: {e}')
+
+    # 切換 feed 的目標股票（清空舊 bars）
+    _realtime_feed.set_stock(stock_id)
+
+    # 訂閱新股票（失敗時 raise）
+    contract = api.Contracts.Stocks[stock_id]
+    api.quote.subscribe(
+        contract,
+        quote_type=sj.constant.QuoteType.Tick,
+        version=sj.constant.QuoteVersion.v1,
+    )
+    print(f'[sj] 訂閱 {stock_id} tick 成功')
 
 
 # 產業別 → TSE 指數代碼
