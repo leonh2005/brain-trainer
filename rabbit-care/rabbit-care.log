@@ -33155,3 +33155,13 @@ Port 5200 is in use by another program. Either identify and stop that program, o
 127.0.0.1 - - [16/Apr/2026 13:11:27] "GET / HTTP/1.1" 200 -
 127.0.0.1 - - [16/Apr/2026 13:11:30] "GET /static/action_screenshots/20260416_121831_eating.jpg HTTP/1.1" 200 -
 127.0.0.1 - - [16/Apr/2026 13:20:39] "POST /api/log-action HTTP/1.1" 200 -
+127.0.0.1 - - [16/Apr/2026 15:47:09] "POST /api/log-action HTTP/1.1" 200 -
+127.0.0.1 - - [16/Apr/2026 16:27:07] "GET /vet HTTP/1.1" 200 -
+127.0.0.1 - - [16/Apr/2026 16:28:15] "[32mPOST /vet HTTP/1.1[0m" 302 -
+127.0.0.1 - - [16/Apr/2026 16:28:15] "GET /vet HTTP/1.1" 200 -
+127.0.0.1 - - [16/Apr/2026 16:28:26] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [16/Apr/2026 16:28:28] "GET /static/action_screenshots/20260416_154709_eating.jpg HTTP/1.1" 200 -
+127.0.0.1 - - [16/Apr/2026 18:17:33] "POST /api/log-action HTTP/1.1" 200 -
+127.0.0.1 - - [16/Apr/2026 18:34:02] "POST /api/log-action HTTP/1.1" 200 -
+127.0.0.1 - - [16/Apr/2026 19:06:31] "POST /api/log-action HTTP/1.1" 200 -
+127.0.0.1 - - [16/Apr/2026 19:22:44] "POST /api/log-action HTTP/1.1" 200 -
