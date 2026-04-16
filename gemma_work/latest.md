@@ -1,128 +1,87 @@
-# Claude Handoff 20260416_1940
+# Claude Handoff 20260417_0040
 
 ## Git 狀態（未提交）
 ```
 M claude_cycle_monitor.log
- M claude_cycle_monitor.py
  M daytrade-replay/server.log
  M rabbit-care/motion-watcher.log
  M rabbit-care/rabbit-care.log
  M rabbit-care/rabbit.db
- D rabbit-care/static/action_screenshots/20260409_135217_eating.jpg
- D rabbit-care/static/action_screenshots/20260409_135750_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260409_140416_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260409_143003_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260409_164637_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260409_173650_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260409_182308_eating.jpg
- D rabbit-care/static/action_screenshots/20260409_190123_sleeping.jpg
-?? .handoff_context.md
-?? kbar_0415.png
-?? kbar_fixed.png
-?? kbar_issue.png
-?? kbar_loaded.png
-?? kbar_playing.png
-?? rabbit-care/static/action_screenshots/20260416_154709_eating.jpg
-?? rabbit-care/static/action_screenshots/20260416_181733_eating.jpg
-?? rabbit-care/static/action_screenshots/20260416_183402_eating.jpg
-?? rabbit-care/static/action_screenshots/20260416_190631_eating.jpg
-?? rabbit-care/static/action_screenshots/20260416_192244_eating.jpg
-?? sync_hermes_memory.py
+ D rabbit-care/static/action_screenshots/20260409_195301_eating.jpg
+ D rabbit-care/static/action_screenshots/20260409_201456_sleeping.jpg
+ D rabbit-care/static/action_screenshots/20260409_211339_eating.jpg
+ D rabbit-care/static/action_screenshots/20260409_221843_eating.jpg
+ D rabbit-care/static/action_screenshots/20260409_234218_eating.jpg
+ M stock-screener-ai
+?? docs/superpowers/plans/2026-04-16-stock-screener-ai.md
+?? rabbit-care/static/action_screenshots/20260416_220540_eating.jpg
+?? rabbit-care/static/action_screenshots/20260416_222113_eating.jpg
+?? rabbit-care/static/action_screenshots/20260416_231412_eating.jpg
+?? rabbit-care/static/action_screenshots/20260416_231927_eating.jpg
+?? rabbit-care/static/action_screenshots/20260416_232431_eating.jpg
+?? rabbit-care/static/action_screenshots/20260416_233455_eating.jpg
+?? rabbit-care/static/action_screenshots/20260416_235019_sleeping.jpg
 ```
 
 ## 近期 Commits
 ```
+5d4995a fix: FINMIND_TOKEN 改用 with open 避免 FD leak
+b47e5a5 chore: 自動同步 2026-04-16 19:41
 ff00847 fix(daytrade-replay): yfinance volume 單位換算 + 價格 round + fd 洩漏修復
 7d24073 chore: 自動同步 2026-04-16 14:40
 b8f99ac feat(daytrade-replay): 改用 Shioaji tick 訂閱取代 kbars() 輪詢
 864798b chore: 自動同步 2026-04-16 09:40
 5cce3d2 chore: 自動同步 2026-04-16 04:40
 0888faa chore: 自動同步 2026-04-15 23:40
-023cd2a chore: 自動同步 2026-04-15 18:40
-0fa160b chore: 自動同步 2026-04-15 13:40
 ```
 
 ## 未提交的變更
 ```diff
 diff --git a/claude_cycle_monitor.log b/claude_cycle_monitor.log
-index 4613f48..e710a45 100644
+index 9c14cef..14b23ec 100644
 --- a/claude_cycle_monitor.log
 +++ b/claude_cycle_monitor.log
-@@ -265,3 +265,12 @@ google.genai.errors.ServerError: 503 UNAVAILABLE. {'error': {'code': 503, 'messa
- [09:40] 自動同步完成
- [09:41] 下一事件：midpoint @ 12:30（169 分鐘後）
- [12:31] 下一事件：end_warn @ 14:40（129 分鐘後）
-+[14:40] 自動同步完成
-+[14:41] 下一事件：midpoint @ 17:30（169 分鐘後）
-+[17:15] Claude 週期監測啟動
-+[17:15] 下一事件：midpoint @ 17:30（14 分鐘後）
-+[17:19] Claude 週期監測啟動
-+[17:19] 下一事件：midpoint @ 17:30（11 分鐘後）
-+[17:31] 下一事件：end_warn @ 19:40（129 分鐘後）
-+[17:59] Claude 週期監測啟動
-+[17:59] 下一事件：end_warn @ 19:40（101 分鐘後）
-diff --git a/claude_cycle_monitor.py b/claude_cycle_monitor.py
-index 29ab349..92d0b6e 100644
---- a/claude_cycle_monitor.py
-+++ b/claude_cycle_monitor.py
-@@ -118,6 +118,93 @@ def rsync_vm() -> str:
-         return f"❌ rsync 例外：{str(e)[:60]}"
+@@ -322,3 +322,10 @@ google.genai.errors.ServerError: 503 UNAVAILABLE. {'error': {'code': 503, 'messa
+     raise ServerError(status_code, response_json, response)
+ google.genai.errors.ServerError: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.', 'status': 'UNAVAILABLE'}}
  
- 
-+def handoff_to_gemma() -> str:
-+    """把當前工作 context 寫入 handoff 檔，用 Hermes 建立 session 繼續"""
-+    context_parts = []
-+
-+    # 1. 讀取任務描述檔
-+    handoff_file = os.path.expanduser('~/CCProject/.handoff_context.md')
-+    if os.path.exists(handoff_file):
-+        task_desc = open(handoff_file).read().strip()
-+        if task_desc and '目前沒有進行中的任務' not in task_desc:
-+            context_parts.append(f"## 當前任務\n{task_desc}")
-+
-+    # 2. Git 狀態
-+    repo = os.path.expanduser('~/CCProject')
-+    r = subprocess.run(['git', 'status', '--short'], cwd=repo, capture_output=True, text=True)
-+    if r.stdout.strip():
-+        context_parts.append(f"## Git 狀態（未提交）\n```\n{r.stdout.strip()}\n```")
-+
-+    # 3. 近期 commits
-+    r = subprocess.run(['git', 'log', '--oneline', '-8'], cwd=repo, capture_output=True, text=True)
-+    if r.stdout.strip():
-+        context_parts.append(f"## 近期 Commits\n```\n{r.stdout.strip()}\n```")
-+
-+    # 4. Git diff
-+    r = subprocess.run(['git', 'diff', 'HEAD'], cwd=repo, capture_output=True, text=True)
-+    if r.stdout.strip():
-+        diff_preview = r.stdout.strip()[:3000]
-+        context_parts.append(f"## 未提交的變更\n```diff\n{diff_preview}\n```")
-+
-+    if not context_parts:
-+        return "ℹ️ 無工作 context，跳過 Gemma handoff"
-+
-+    # 寫入 handoff 檔
-+    work_dir = os.path.expanduser('~/CCProject/gemma_work')
-+    os.makedirs(work_dir, exist_ok=True)
-+    ts = datetime.now(TZ).strftime('%Y%m%d_%H%M')
-+    context_file = os.path.join(work_dir, f'handoff_{ts}.md')
-+    with open(context_file, 'w') as f:
-+        f.write(f"# Claude Handoff {ts}\n\n")
-+        f.write('\n\n'.join(context_parts))
-+        f.write("\n\n---\n\n## Hermes 工作記錄\n\n（Hermes 將在此記錄進度）\n")
-+
-+    # 同時更新 latest 捷徑（Hermes 會在此附加進度，Claude 重啟後讀這個）
-+    latest = os.path.join(work_dir, 'latest.md')
-+    import shutil
-+    shutil.copy(context_file, latest)
-+    # 加上提示讓 Hermes 知道要附加在哪
-+    with open(latest, 'a') as f:
-+        f.write("\n\n<!-- Hermes：請在此處附加你的進度更新 -->\n")
-+
-+    # 用 Hermes 建立 session（-Q 安靜模式，不等互動）
-+    query = (
-+        f"請閱讀並分析這份工作移交文件：{context_file}\n\n"
-+        "分析完後：\n"
-+        "1. 用繁體中文說明目前做
++[19:40] 自動同步完成
++[19:43] 下一事件：midpoint @ 22:30（167 分鐘後）
++[22:31] 下一事件：end_warn @ 00:40（129 分鐘後）
++Python(42908) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
++Python(42909) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
++Python(42911) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
++Python(42912) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+diff --git a/daytrade-replay/server.log b/daytrade-replay/server.log
+index 26df8d1..ec8e72a 100644
+--- a/daytrade-replay/server.log
++++ b/daytrade-replay/server.log
+@@ -42484,3 +42484,12 @@ Port 5400 is in use by another program. Either identify and stop that program, o
+ Address already in use
+ Port 5400 is in use by another program. Either identify and stop that program, or start the server with a different port.
+ 127.0.0.1 - - [16/Apr/2026 16:38:55] "GET /api/stocks HTTP/1.1" 200 -
++127.0.0.1 - - [16/Apr/2026 20:14:52] "GET / HTTP/1.1" 200 -
++127.0.0.1 - - [16/Apr/2026 20:14:52] "[36mGET /static/lightweight-charts.js HTTP/1.1[0m" 304 -
++127.0.0.1 - - [16/Apr/2026 20:14:52] "GET /static/app.js HTTP/1.1" 200 -
++127.0.0.1 - - [16/Apr/2026 20:14:52] "GET /api/stocks HTTP/1.1" 200 -
++127.0.0.1 - - [16/Apr/2026 20:14:54] "GET /api/dates?stock=6770 HTTP/1.1" 200 -
++2026-04-16 20:14:57.605 | WARNING  | importlib._bootstrap:_call_with_frames_removed:491 - Optional: pip install shioaji[speed] or uv add shioaji --extra speed for better performance.
++127.0.0.1 - - [16/Apr/2026 20:14:59] "POST /api/subscribe HTTP/1.1" 200 -
++127.0.0.1 - - [16/Apr/2026 20:14:59] "GET /api/kbars?stock=6770&date=2026-04-16 HTTP/1.1" 200 -
++127.0.0.1 - - [16/Apr/2026 20:17:42] "[33mGET /api/health HTTP/1.1[0m" 404 -
+diff --git a/rabbit-care/motion-watcher.log b/rabbit-care/motion-watcher.log
+index 266e6c2..1b7e3ff 100644
+--- a/rabbit-care/motion-watcher.log
++++ b/rabbit-care/motion-watcher.log
+@@ -202742,3 +202742,3994 @@ TypeError: unsupported operand type(s) for |: 'type' and 'NoneType'
+ 2026-04-16 19:41:43,040 INFO 移動持續 15 秒，強制觸發分析
+ 2026-04-16 19:41:43,041 INFO 分析條件: motion_frames=61 cooldown剩餘=101s
+ 2026-04-16 19:41:43,279 INFO 偵測到移動，開始收集影格
++2026-04-16 19:41:58,396 INFO 移動持續 15 秒，強制觸發分析
++2026-04-16 19:41:58,397 INFO 分析條件: motion_frames=56 cooldown剩餘=86s
++2026-04-16 19:41:58,705 INFO 偵測到移動，開始收集影格
++2026-04-16 19:42:13,981 INFO 移動持續 15 秒，強制觸發分析
++2026
 ```
 
 ---

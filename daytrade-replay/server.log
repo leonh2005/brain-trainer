@@ -42484,3 +42484,12 @@ Port 5400 is in use by another program. Either identify and stop that program, o
 Address already in use
 Port 5400 is in use by another program. Either identify and stop that program, or start the server with a different port.
 127.0.0.1 - - [16/Apr/2026 16:38:55] "GET /api/stocks HTTP/1.1" 200 -
+127.0.0.1 - - [16/Apr/2026 20:14:52] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [16/Apr/2026 20:14:52] "[36mGET /static/lightweight-charts.js HTTP/1.1[0m" 304 -
+127.0.0.1 - - [16/Apr/2026 20:14:52] "GET /static/app.js HTTP/1.1" 200 -
+127.0.0.1 - - [16/Apr/2026 20:14:52] "GET /api/stocks HTTP/1.1" 200 -
+127.0.0.1 - - [16/Apr/2026 20:14:54] "GET /api/dates?stock=6770 HTTP/1.1" 200 -
+2026-04-16 20:14:57.605 | WARNING  | importlib._bootstrap:_call_with_frames_removed:491 - Optional: pip install shioaji[speed] or uv add shioaji --extra speed for better performance.
+127.0.0.1 - - [16/Apr/2026 20:14:59] "POST /api/subscribe HTTP/1.1" 200 -
+127.0.0.1 - - [16/Apr/2026 20:14:59] "GET /api/kbars?stock=6770&date=2026-04-16 HTTP/1.1" 200 -
+127.0.0.1 - - [16/Apr/2026 20:17:42] "[33mGET /api/health HTTP/1.1[0m" 404 -
