@@ -118,6 +118,93 @@ def rsync_vm() -> str:
         return f"❌ rsync 例外：{str(e)[:60]}"
 
 
+def handoff_to_gemma() -> str:
+    """把當前工作 context 寫入 handoff 檔，用 Hermes 建立 session 繼續"""
+    context_parts = []
+
+    # 1. 讀取任務描述檔
+    handoff_file = os.path.expanduser('~/CCProject/.handoff_context.md')
+    if os.path.exists(handoff_file):
+        task_desc = open(handoff_file).read().strip()
+        if task_desc and '目前沒有進行中的任務' not in task_desc:
+            context_parts.append(f"## 當前任務\n{task_desc}")
+
+    # 2. Git 狀態
+    repo = os.path.expanduser('~/CCProject')
+    r = subprocess.run(['git', 'status', '--short'], cwd=repo, capture_output=True, text=True)
+    if r.stdout.strip():
+        context_parts.append(f"## Git 狀態（未提交）\n```\n{r.stdout.strip()}\n```")
+
+    # 3. 近期 commits
+    r = subprocess.run(['git', 'log', '--oneline', '-8'], cwd=repo, capture_output=True, text=True)
+    if r.stdout.strip():
+        context_parts.append(f"## 近期 Commits\n```\n{r.stdout.strip()}\n```")
+
+    # 4. Git diff
+    r = subprocess.run(['git', 'diff', 'HEAD'], cwd=repo, capture_output=True, text=True)
+    if r.stdout.strip():
+        diff_preview = r.stdout.strip()[:3000]
+        context_parts.append(f"## 未提交的變更\n```diff\n{diff_preview}\n```")
+
+    if not context_parts:
+        return "ℹ️ 無工作 context，跳過 Gemma handoff"
+
+    # 寫入 handoff 檔
+    work_dir = os.path.expanduser('~/CCProject/gemma_work')
+    os.makedirs(work_dir, exist_ok=True)
+    ts = datetime.now(TZ).strftime('%Y%m%d_%H%M')
+    context_file = os.path.join(work_dir, f'handoff_{ts}.md')
+    with open(context_file, 'w') as f:
+        f.write(f"# Claude Handoff {ts}\n\n")
+        f.write('\n\n'.join(context_parts))
+        f.write("\n\n---\n\n## Hermes 工作記錄\n\n（Hermes 將在此記錄進度）\n")
+
+    # 同時更新 latest 捷徑（Hermes 會在此附加進度，Claude 重啟後讀這個）
+    latest = os.path.join(work_dir, 'latest.md')
+    import shutil
+    shutil.copy(context_file, latest)
+    # 加上提示讓 Hermes 知道要附加在哪
+    with open(latest, 'a') as f:
+        f.write("\n\n<!-- Hermes：請在此處附加你的進度更新 -->\n")
+
+    # 用 Hermes 建立 session（-Q 安靜模式，不等互動）
+    query = (
+        f"請閱讀並分析這份工作移交文件：{context_file}\n\n"
+        "分析完後：\n"
+        "1. 用繁體中文說明目前做到哪裡\n"
+        "2. 列出具體的下一步行動\n"
+        "3. 如果你可以繼續做，請直接動手\n\n"
+        "完成後把進度摘要附加到該檔案最後。"
+    )
+
+    try:
+        r = subprocess.run(
+            ['/Users/steven/.local/bin/hermes', 'chat', '-q', query, '--yolo', '-Q'],
+            capture_output=True, text=True, timeout=300,
+            env={**os.environ, 'PATH': '/usr/local/bin:/opt/homebrew/bin:/Users/steven/.local/bin:/usr/bin:/bin'}
+        )
+        output = (r.stdout + r.stderr).strip()
+
+        # 從輸出中抓 session ID（hermes 結束時會印出）
+        session_id = ''
+        for line in output.splitlines():
+            if 'session' in line.lower() and ('id:' in line.lower() or 'session_id' in line.lower()):
+                session_id = line.strip()
+                break
+
+        # 把 session ID 存起來供後續 --continue 使用
+        if session_id:
+            with open(os.path.join(work_dir, 'last_session.txt'), 'w') as f:
+                f.write(session_id)
+
+        preview = output[:400] + ('...' if len(output) > 400 else '')
+        return f"🤖 Hermes session 建立完成\n可用 `hermes chat -c` 繼續\n\n{preview}"
+    except subprocess.TimeoutExpired:
+        return f"⏱️ Hermes 分析中（背景執行）\n可用 `hermes chat -c` 繼續"
+    except Exception as e:
+        return f"❌ Hermes handoff 失敗：{str(e)[:100]}"
+
+
 def auto_update_memory() -> str:
     """用 Gemini 分析近期 git 變更，自動更新記憶檔案"""
     import google.genai as genai
@@ -176,10 +263,18 @@ def auto_update_memory() -> str:
 
 
 def run_auto_session_end():
-    """自動執行登出流程：記憶更新 → commit/push → VM rsync"""
+    """自動執行登出流程：Gemma handoff → 記憶更新 → commit/push → VM rsync"""
     results = []
 
-    # 1. 記憶更新（Claude API）
+    # 0. 同步 Hermes 記憶
+    r = subprocess.run(['python3', os.path.expanduser('~/CCProject/sync_hermes_memory.py')],
+                       capture_output=True, text=True)
+    results.append(r.stdout.strip() or f"⚠️ Hermes 記憶同步失敗：{r.stderr[:80]}")
+
+    # 1. Gemma handoff（移交未完成任務）
+    results.append(handoff_to_gemma())
+
+    # 1. 記憶更新（Gemini API）
     results.append(auto_update_memory())
 
     # 2. Commit & push 各 repo
