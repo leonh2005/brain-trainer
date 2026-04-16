@@ -159,7 +159,8 @@ def get_top30_stocks() -> list:
     today_str = str(date.today())
     if os.path.exists(CACHE_FILE):
         try:
-            cached = json.load(open(CACHE_FILE))
+            with open(CACHE_FILE) as f:
+                cached = json.load(f)
             if cached.get('date') == today_str:
                 return cached['stocks']
         except Exception:
@@ -192,7 +193,8 @@ def get_top30_stocks() -> list:
 
     stocks = sorted(stocks_raw, key=lambda x: x['avg_vol'], reverse=True)[:30]
 
-    json.dump({'date': today_str, 'stocks': stocks}, open(CACHE_FILE, 'w'), ensure_ascii=False)
+    with open(CACHE_FILE, 'w') as f:
+        json.dump({'date': today_str, 'stocks': stocks}, f, ensure_ascii=False)
     if stocks:
         print(f'[data] top30 完成，第1名: {stocks[0]["code"]} {stocks[0]["name"]} {stocks[0]["avg_vol"]:,}張')
     return stocks
@@ -209,7 +211,8 @@ def _sj_stock_1min(stock_id: str, date_str: str) -> list:
     today_str = str(date.today())
     cache_path = f'/tmp/sj_kbar_{stock_id}_{date_str}.json'
     if date_str != today_str and os.path.exists(cache_path):
-        return json.load(open(cache_path))
+        with open(cache_path) as f:
+            return json.load(f)
     try:
         api = _get_sj()
         contract = api.Contracts.Stocks[stock_id]
@@ -234,7 +237,8 @@ def _sj_stock_1min(stock_id: str, date_str: str) -> list:
                    'close':  round(float(row['Close']),  2),
                    'volume': int(row['Volume'])} for _, row in df.iterrows()]
         if date_str != today_str:
-            json.dump(result, open(cache_path, 'w'), ensure_ascii=False)
+            with open(cache_path, 'w') as f:
+                json.dump(result, f, ensure_ascii=False)
         return result
     except Exception as e:
         print(f'[sj] stock kbar {stock_id} {date_str} 失敗: {e}')
@@ -281,7 +285,8 @@ def get_1min_kbars(stock_id: str, date_str: str) -> list:
     # Fallback: yfinance（最近7天）
     cache_path = f'/tmp/kbar_{stock_id}_{date_str}.json'
     if os.path.exists(cache_path):
-        return json.load(open(cache_path))
+        with open(cache_path) as f:
+            return json.load(f)
 
     import yfinance as yf
     ticker = _yf_ticker(stock_id)
@@ -304,9 +309,13 @@ def get_1min_kbars(stock_id: str, date_str: str) -> list:
     df.rename(columns={'Datetime': 'ts', 'Open': 'open', 'High': 'high',
                        'Low': 'low', 'Close': 'close', 'Volume': 'volume'}, inplace=True)
     df['ts'] = df['ts'].dt.strftime('%Y-%m-%d %H:%M')
-    df['volume'] = df['volume'].fillna(0).astype(int)
+    for col in ('open', 'high', 'low', 'close'):
+        df[col] = df[col].round(2)
+    # yfinance volume 單位為股，除以 1000 轉換為張（與 Shioaji kbars 一致）
+    df['volume'] = (df['volume'].fillna(0) / 1000).astype(int)
     result = df[['ts', 'open', 'high', 'low', 'close', 'volume']].to_dict('records')
-    json.dump(result, open(cache_path, 'w'), ensure_ascii=False)
+    with open(cache_path, 'w') as f:
+        json.dump(result, f, ensure_ascii=False)
     return result
 
 
@@ -498,7 +507,8 @@ def _sj_index_1min(tse_code: str, date_str: str) -> list:
     today_str = str(date.today())
     cache_path = f'/tmp/sj_idx_{tse_code}_{date_str}.json'
     if date_str != today_str and os.path.exists(cache_path):
-        return json.load(open(cache_path))
+        with open(cache_path) as f:
+            return json.load(f)
     try:
         api = _get_sj()
         contract = api.Contracts.Indexs.TSE[tse_code]
@@ -514,7 +524,8 @@ def _sj_index_1min(tse_code: str, date_str: str) -> list:
         df = df[(df['ts'].dt.time >= t_open) & (df['ts'].dt.time <= t_close)]
         result = [{'ts': row['ts'].strftime('%Y-%m-%d %H:%M'), 'close': round(float(row['Close']), 2)}
                   for _, row in df.iterrows()]
-        json.dump(result, open(cache_path, 'w'))
+        with open(cache_path, 'w') as f:
+            json.dump(result, f)
         return result
     except Exception as e:
         print(f'[sj] index {tse_code} {date_str} 失敗: {e}')
@@ -533,7 +544,8 @@ def get_taiex_1min(date_str: str) -> list:
     today_str_tx = str(date.today())
     cache_path = f'/tmp/taiex_1min_{date_str}.json'
     if date_str != today_str_tx and os.path.exists(cache_path):
-        return json.load(open(cache_path))
+        with open(cache_path) as f:
+            return json.load(f)
     import yfinance as yf
     try:
         df = yf.download('^TWII', interval='1m', period='7d', progress=False, auto_adjust=True)
@@ -551,7 +563,8 @@ def get_taiex_1min(date_str: str) -> list:
         df_day['ts'] = df_day['ts'].dt.strftime('%Y-%m-%d %H:%M')
         result = df_day[['ts', 'close']].round({'close': 2}).to_dict('records')
         if date_str != today_str_tx:
-            json.dump(result, open(cache_path, 'w'))
+            with open(cache_path, 'w') as f:
+                json.dump(result, f)
         return result
     except Exception as e:
         print(f'[taiex] yfinance fallback 失敗: {e}')
@@ -564,11 +577,13 @@ def get_stock_sector(stock_id: str) -> str:
     """從 FinMind TaiwanStockInfo 取股票產業類別"""
     cache_path = f'/tmp/stock_sector_{stock_id}.json'
     if os.path.exists(cache_path):
-        return json.load(open(cache_path)).get('industry', '')
+        with open(cache_path) as f:
+            return json.load(f).get('industry', '')
 
     try:
         import requests as _req
-        token = open('/Users/steven/CCProject/.secrets/finmind_token.txt').read().strip()
+        with open('/Users/steven/CCProject/.secrets/finmind_token.txt') as f:
+            token = f.read().strip()
         res = _req.get(
             'https://api.finmindtrade.com/api/v4/data',
             params={'dataset': 'TaiwanStockInfo', 'data_id': stock_id, 'token': token},
@@ -576,7 +591,8 @@ def get_stock_sector(stock_id: str) -> str:
         )
         rows = res.json().get('data', [])
         industry = rows[0].get('industry_category', '') if rows else ''
-        json.dump({'industry': industry}, open(cache_path, 'w'), ensure_ascii=False)
+        with open(cache_path, 'w') as f:
+            json.dump({'industry': industry}, f, ensure_ascii=False)
         return industry
     except Exception as e:
         print(f'[finmind] sector {stock_id} 失敗: {e}')
