@@ -470,3 +470,24 @@ Python(56229) MallocStackLogging: can't turn off malloc stack logging because it
 Python(56230) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
 Python(56288) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
 Python(56290) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(56291) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(56294) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(56301) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(56302) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(56303) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(56306) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(56314) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(56318) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(56319) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+[10:40] 自動同步完成
+[10:42] 下一事件：midpoint @ 13:30（168 分鐘後）
+[13:31] 下一事件：end_warn @ 15:40（129 分鐘後）
+Python(66359) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(66360) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(66362) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(66363) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(66365) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(66390) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(66391) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(66395) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(66397) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
