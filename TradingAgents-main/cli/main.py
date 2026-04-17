@@ -602,8 +602,13 @@ def get_user_selections():
 
 
 def get_ticker():
-    """Get ticker symbol from user input."""
-    return typer.prompt("", default="SPY")
+    """Get ticker symbol from user input. Taiwan 4-digit codes auto-converted to .TW suffix."""
+    raw = typer.prompt("", default="SPY").strip()
+    if raw.isdigit() and len(raw) == 4:
+        ticker = raw + ".TW"
+        console.print(f"[dim]→ 台股代碼，自動轉換為 {ticker}[/dim]")
+        return ticker
+    return raw.upper()
 
 
 def get_analysis_date():

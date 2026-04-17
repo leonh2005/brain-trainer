@@ -11,6 +11,7 @@ import shioaji as sj
 import os
 from datetime import datetime, date, timedelta
 from dotenv import load_dotenv
+from ai_analysis import analyze_stock, format_ai_block
 
 def trading_days_ago(n):
     from datetime import date, timedelta
@@ -183,10 +184,17 @@ if candidates:
     lines.append(f"✅ 符合 {len(candidates)} 檔：\n")
     for c in candidates:
         pos_emoji = "🔴" if c['close_pos'] >= 80 else "🟡" if c['close_pos'] >= 50 else "🟢"
+        ai = analyze_stock(
+            code=c['code'], name=c['name'], close=c['close'],
+            chg_pct=c['chg_pct'], amp_pct=c['amp_pct'],
+            vol_k=c['vol_k'], avg5=c['avg5'], close_pos=c['close_pos'],
+            fi_net=0, signal="", strategy="當沖"
+        )
         lines.append(
             f"{pos_emoji} <b>{c['code']} {c['name']}</b>\n"
             f"   收:{c['close']:.1f}  漲:{c['chg_pct']:+.1f}%  振:{c['amp_pct']:.1f}%\n"
             f"   量:{c['vol_k']:,}張  近5均:{c['avg5']:,}張  收盤位:{c['close_pos']:.0f}%\n"
+            f"{format_ai_block(ai)}\n"
         )
     lines.append("⚡ 進場參考：開盤後5~15分鐘確認方向再進")
     lines.append("🛑 停損：跌破進場價 -1.5% 出清")

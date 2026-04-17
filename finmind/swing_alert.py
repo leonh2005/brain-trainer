@@ -11,6 +11,7 @@ import shioaji as sj
 import os
 from datetime import datetime, date, timedelta
 from dotenv import load_dotenv
+from ai_analysis import analyze_stock, format_ai_block
 
 def trading_days_ago(n):
     """往回數 n 個交易日（跳過週末，未排除國定假日）"""
@@ -282,11 +283,18 @@ lines.append("量&gt;5000張 ＋ 漲&gt;2% ＋ 收高70%+ ＋ 外資買超\n")
 if candidates:
     lines.append(f"✅ 符合 {len(candidates)} 檔：\n")
     for c in candidates[:8]:
+        ai = analyze_stock(
+            code=c['code'], name=c['name'], close=c['close'],
+            chg_pct=c['chg_pct'], amp_pct=c['amp_pct'],
+            vol_k=c['vol_k'], avg5=c['avg5'], close_pos=c['close_pos'],
+            fi_net=c['fi_net'], signal=c['signal'], strategy="隔日沖"
+        )
         lines.append(
             f"🟢 <b>{c['code']} {c['name']}</b>\n"
             f"   收:{c['close']:.1f}  漲:{c['chg_pct']:+.1f}%  收盤位:{c['close_pos']:.0f}%\n"
             f"   量:{c['vol_k']:,}張（均{c['avg5']:,}）  外資:{c['fi_net']:+,}張\n"
             f"   {c['signal']}\n"
+            f"{format_ai_block(ai)}\n"
         )
     lines.append("⚡ 進場：收盤前30分鐘（14:00~14:30）確認量增收高再買")
     lines.append("🛑 出場：隔日開盤漲2~4%賣，開盤跳空綠立刻出\n")
