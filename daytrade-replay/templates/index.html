@@ -29,6 +29,39 @@
     cursor: pointer;
   }
   select:focus { outline: none; border-color: #58a6ff; }
+  #stock-input-wrap { position: relative; }
+  #stock-input {
+    background: #21262d;
+    border: 1px solid #30363d;
+    color: #e6edf3;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 13px;
+    width: 110px;
+  }
+  #stock-input::placeholder { color: #484f58; }
+  #stock-input:focus { outline: none; border-color: #58a6ff; }
+  #stock-autocomplete {
+    display: none;
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    min-width: 180px;
+    background: #21262d;
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    overflow: hidden;
+    z-index: 500;
+    box-shadow: 0 4px 16px rgba(0,0,0,.5);
+  }
+  .ac-item {
+    padding: 6px 10px;
+    cursor: pointer;
+    font-size: 13px;
+    color: #e6edf3;
+    white-space: nowrap;
+  }
+  .ac-item:hover, .ac-item.active { background: #1f6feb; }
   .btn {
     background: #21262d;
     border: 1px solid #30363d;
@@ -313,6 +346,10 @@
 <div id="toolbar">
   <h1>⚡ 當沖回放</h1>
   <select id="stock-select"><option value="">載入中...</option></select>
+  <div id="stock-input-wrap">
+    <input id="stock-input" type="text" maxlength="10" placeholder="代號或股名" autocomplete="off">
+    <div id="stock-autocomplete"></div>
+  </div>
   <select id="date-select"><option value="">選股票</option></select>
   <div id="speed-group">
     <button class="btn" onclick="setSpeed(0.5)" id="s0_5">0.5x</button>

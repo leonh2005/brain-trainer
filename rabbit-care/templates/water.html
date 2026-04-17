@@ -1,0 +1,175 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-title">💧 每日喝水紀錄</div>
+
+<!-- 今日累計 -->
+<div class="card" style="text-align:center; padding:32px 24px;">
+  <div style="font-size:13px; color:#888; margin-bottom:6px;">{{ today }} 今日累計</div>
+  <div id="total-display" style="font-size:56px; font-weight:bold; color:#1976d2; line-height:1;">
+    {{ today_total }}<span style="font-size:22px; color:#90a4ae; margin-left:4px;">cc</span>
+  </div>
+</div>
+
+<!-- 快速新增 -->
+<div class="card">
+  <h2>快速新增</h2>
+  <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:16px;">
+    <button class="quick-btn" data-cc="50">+50 cc</button>
+    <button class="quick-btn" data-cc="100">+100 cc</button>
+    <button class="quick-btn" data-cc="150">+150 cc</button>
+    <button class="quick-btn" data-cc="200">+200 cc</button>
+  </div>
+  <div style="display:flex; gap:10px; align-items:flex-end; flex-wrap:wrap;">
+    <div class="form-group" style="margin:0; flex:1; min-width:120px;">
+      <label>自訂 cc 數</label>
+      <input type="number" id="custom-cc" min="1" max="9999" placeholder="輸入數量">
+    </div>
+    <div class="form-group" style="margin:0; flex:2; min-width:160px;">
+      <label>備注（選填）</label>
+      <input type="text" id="custom-note" placeholder="例：換水、餵水">
+    </div>
+    <button class="btn btn-primary" onclick="addWater()" style="margin-bottom:0; white-space:nowrap;">新增</button>
+  </div>
+  <div id="add-msg" style="margin-top:10px; font-size:14px; color:#2e7d32; display:none;"></div>
+</div>
+
+<!-- 今日明細 -->
+<div class="card">
+  <h2>今日紀錄</h2>
+  <div id="records-list">
+  {% if today_records %}
+  <table>
+    <tr><th>時間</th><th>cc 數</th><th>備注</th><th></th></tr>
+    {% for r in today_records %}
+    <tr id="row-{{ r.id }}">
+      <td>{{ r.log_time }}</td>
+      <td><strong>{{ r.amount_cc }} cc</strong></td>
+      <td style="color:#888;">{{ r.note or '' }}</td>
+      <td>
+        <button class="btn btn-danger btn-sm" onclick="deleteRecord({{ r.id }})">✕</button>
+      </td>
+    </tr>
+    {% endfor %}
+  </table>
+  {% else %}
+  <p class="text-muted" id="empty-hint">今天還沒有紀錄</p>
+  {% endif %}
+  </div>
+</div>
+
+<!-- 7天趨勢 -->
+<div class="card">
+  <h2>📈 近 7 天趨勢</h2>
+  <canvas id="waterChart" height="80"></canvas>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+new Chart(document.getElementById('waterChart'), {
+  type: 'bar',
+  data: {
+    labels: {{ hist_labels | safe }},
+    datasets: [{
+      label: '喝水量 (cc)',
+      data: {{ hist_values | safe }},
+      backgroundColor: 'rgba(25,118,210,0.18)',
+      borderColor: '#1976d2',
+      borderWidth: 2,
+      borderRadius: 6,
+    }]
+  },
+  options: {
+    plugins: { legend: { display: false } },
+    scales: { y: { beginAtZero: true, ticks: { callback: v => v + ' cc' } } }
+  }
+});
+</script>
+
+<style>
+.quick-btn {
+  padding: 12px 22px;
+  border: 2px solid #1976d2;
+  border-radius: 10px;
+  background: #e3f2fd;
+  color: #1565c0;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all .15s;
+}
+.quick-btn:hover { background: #1976d2; color: #fff; }
+</style>
+
+<script>
+let totalCC = {{ today_total }};
+
+function updateTotal(newTotal) {
+  totalCC = newTotal;
+  document.getElementById('total-display').innerHTML =
+    newTotal + '<span style="font-size:22px;color:#90a4ae;margin-left:4px;">cc</span>';
+}
+
+function addWaterCC(cc, note) {
+  fetch('/api/water', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({amount_cc: cc, note: note || ''})
+  })
+  .then(r => r.json())
+  .then(data => {
+    if (!data.ok) { alert(data.error || '新增失敗'); return; }
+    updateTotal(data.today_total);
+    // 加入表格
+    const tbody = document.querySelector('#records-list table tbody') ||
+                  (() => {
+                    const empty = document.getElementById('empty-hint');
+                    if (empty) empty.remove();
+                    const t = document.createElement('table');
+                    t.innerHTML = '<thead><tr><th>時間</th><th>cc 數</th><th>備注</th><th></th></tr></thead><tbody></tbody>';
+                    document.getElementById('records-list').appendChild(t);
+                    return t.querySelector('tbody');
+                  })();
+    const tr = document.createElement('tr');
+    tr.id = 'row-new-' + Date.now();
+    tr.innerHTML = `<td>${data.record.log_time}</td>
+      <td><strong>${data.record.amount_cc} cc</strong></td>
+      <td style="color:#888;">${data.record.note || ''}</td>
+      <td><button class="btn btn-danger btn-sm" onclick="this.closest('tr').remove(); /* reload total via page */ location.reload()">✕</button></td>`;
+    tbody.appendChild(tr);
+    // 顯示成功訊息
+    const msg = document.getElementById('add-msg');
+    msg.textContent = `✓ 已新增 ${cc} cc`;
+    msg.style.display = 'block';
+    setTimeout(() => msg.style.display = 'none', 2000);
+  });
+}
+
+document.querySelectorAll('.quick-btn').forEach(btn => {
+  btn.addEventListener('click', () => addWaterCC(parseInt(btn.dataset.cc), ''));
+});
+
+function addWater() {
+  const cc = parseInt(document.getElementById('custom-cc').value);
+  const note = document.getElementById('custom-note').value.trim();
+  if (!cc || cc <= 0) { alert('請輸入正確 cc 數'); return; }
+  addWaterCC(cc, note);
+  document.getElementById('custom-cc').value = '';
+  document.getElementById('custom-note').value = '';
+}
+
+document.getElementById('custom-cc').addEventListener('keydown', e => {
+  if (e.key === 'Enter') addWater();
+});
+
+function deleteRecord(id) {
+  if (!confirm('確定刪除這筆紀錄？')) return;
+  fetch('/api/water/' + id, {method:'DELETE'})
+    .then(r => r.json())
+    .then(data => {
+      if (data.ok) {
+        document.getElementById('row-' + id).remove();
+        updateTotal(data.today_total);
+      }
+    });
+}
+</script>
+{% endblock %}
