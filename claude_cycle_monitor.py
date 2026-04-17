@@ -267,7 +267,7 @@ def run_auto_session_end():
     results = []
 
     # 0. 同步 Hermes 記憶
-    r = subprocess.run(['python3', os.path.expanduser('~/CCProject/sync_hermes_memory.py')],
+    r = subprocess.run(['/opt/homebrew/bin/python3.13', os.path.expanduser('~/CCProject/sync_hermes_memory.py')],
                        capture_output=True, text=True)
     results.append(r.stdout.strip() or f"⚠️ Hermes 記憶同步失敗：{r.stderr[:80]}")
 
