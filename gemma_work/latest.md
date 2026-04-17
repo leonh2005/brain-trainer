@@ -1,78 +1,82 @@
-# Claude Handoff 20260417_2040
+# Claude Handoff 20260418_0140
 
 ## Git 狀態（未提交）
 ```
-M claude_cycle_monitor.log
+M daytrade-replay/server.log
  M rabbit-care/motion-watcher.log
  M rabbit-care/rabbit-care.log
  M rabbit-care/rabbit.db
+ D rabbit-care/static/action_screenshots/20260410_231905_eating.jpg
+ D rabbit-care/static/action_screenshots/20260410_231912_eating.jpg
+ D rabbit-care/static/action_screenshots/20260410_232423_eating.jpg
+ D rabbit-care/static/action_screenshots/20260410_233431_eating.jpg
+ D rabbit-care/static/action_screenshots/20260410_233435_eating.jpg
+ D rabbit-care/static/action_screenshots/20260410_233938_eating.jpg
+ D rabbit-care/static/action_screenshots/20260410_233943_eating.jpg
  m stock-screener-ai
-?? rabbit-care/static/action_screenshots/20260417_181844_drinking.jpg
-?? rabbit-care/static/action_screenshots/20260417_183939_eating.jpg
-?? rabbit-care/static/action_screenshots/20260417_193644_eating.jpg
-?? rabbit-care/static/action_screenshots/20260417_201811_eating.jpg
-?? shopee_stock_check.py
+?? TradingAgents-main/eval_results/
+?? logs/shopee_stock.log
+?? rabbit-care/static/action_screenshots/20260418_000455_sleeping.jpg
+?? rabbit-care/static/action_screenshots/20260418_004121_eating.jpg
+?? ta-autocomplete-final.png
 ```
 
 ## 近期 Commits
 ```
+e1feefb feat: TradingAgents 台股整合 + AI 買賣點分析 + 選股系統多Agent分頁
+687b6f8 fix: 改用 python3.13 避免 Python 3.14 GC segfault
+a7fd92b chore: 自動同步 2026-04-17 20:41
 12a7f02 chore: 自動同步 2026-04-17 15:41
 aab9dc3 chore: 自動同步 2026-04-17 10:41
 5f04924 chore: 自動同步 2026-04-17 05:41
 a2abe84 chore: 自動同步 2026-04-17 00:40
 5d4995a fix: FINMIND_TOKEN 改用 with open 避免 FD leak
-b47e5a5 chore: 自動同步 2026-04-16 19:41
-ff00847 fix(daytrade-replay): yfinance volume 單位換算 + 價格 round + fd 洩漏修復
-7d24073 chore: 自動同步 2026-04-16 14:40
 ```
 
 ## 未提交的變更
 ```diff
-diff --git a/claude_cycle_monitor.log b/claude_cycle_monitor.log
-index d42fa72..b675d15 100644
---- a/claude_cycle_monitor.log
-+++ b/claude_cycle_monitor.log
-@@ -491,3 +491,19 @@ Python(66390) MallocStackLogging: can't turn off malloc stack logging because it
- Python(66391) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
- Python(66395) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
- Python(66397) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
-+Python(66399) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
-+Python(66402) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
-+Python(66409) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
-+Python(66410) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
-+Python(66411) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
-+Python(66414) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
-+Python(66421) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
-+Python(66425) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
-+Python(66427) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
-+[15:40] 自動同步完成
-+[15:42] 下一事件：midpoint @ 18:30（168 分鐘後）
-+[18:31] 下一事件：end_warn @ 20:40（129 分鐘後）
-+Python(80042) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
-+Python(80043) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
-+Python(80045) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
-+Python(80046) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
-diff --git a/rabbit-care/motion-watcher.log b/rabbit-care/motion-watcher.log
-index f1d83fe..0f7c20b 100644
---- a/rabbit-care/motion-watcher.log
-+++ b/rabbit-care/motion-watcher.log
-@@ -216860,3 +216860,3355 @@ TypeError: unsupported operand type(s) for |: 'type' and 'NoneType'
- 2026-04-17 15:40:43,142 INFO 靜止 30 幀，觸發分析
- 2026-04-17 15:40:43,142 INFO 分析條件: motion_frames=2 cooldown剩餘=255s
- 2026-04-17 15:40:45,587 INFO 偵測到移動，開始收集影格
-+2026-04-17 15:41:06,754 INFO 靜止 30 幀，觸發分析
-+2026-04-17 15:41:06,754 INFO 分析條件: motion_frames=5 cooldown剩餘=232s
-+2026-04-17 15:41:09,581 INFO 偵測到移動，開始收集影格
-+2026-04-17 15:41:24,632 INFO 靜止 30 幀，觸發分析
-+2026-04-17 15:41:24,633 INFO 分析條件: motion_frames=4 cooldown剩餘=214s
-+2026-04-17 15:41:25,969 INFO 偵測到移動，開始收集影格
-+2026-04-17 15:41:42,776 INFO 移動持續 15 秒，強制觸發分析
-+2026-04-17 15:41:42,778 INFO 分析條件: motion_frames=9 cooldown剩餘=196s
-+2026-04-17 15:41:43,603 INFO 偵測到移動，開始收集影格
-+2026-04-17 15:41:59,405 INFO 移動持續 15 秒，強制觸發分析
-+2026-04-17 15:41:59,411 INFO 分析條件: motion_frames=21 cooldown剩餘=179s
-+2026-04-17 15:42:03,601 INFO 偵測到移動，開始收集影格
-+202
+diff --git a/daytrade-replay/server.log b/daytrade-replay/server.log
+index 1a5b498..9804273 100644
+--- a/daytrade-replay/server.log
++++ b/daytrade-replay/server.log
+@@ -61347,3 +61347,261 @@ Port 5400 is in use by another program. Either identify and stop that program, o
+ 127.0.0.1 - - [17/Apr/2026 23:48:31] "POST /api/signals HTTP/1.1" 200 -
+ 127.0.0.1 - - [17/Apr/2026 23:48:32] "POST /api/signals HTTP/1.1" 200 -
+ 127.0.0.1 - - [17/Apr/2026 23:48:33] "POST /api/signals HTTP/1.1" 200 -
++127.0.0.1 - - [18/Apr/2026 00:35:18] "GET /api/search?q=ux0 HTTP/1.1" 200 -
++127.0.0.1 - - [18/Apr/2026 00:35:18] "GET /api/search?q=ux06 HTTP/1.1" 200 -
++127.0.0.1 - - [18/Apr/2026 00:35:19] "GET /api/search?q=ux06j HTTP/1.1" 200 -
++127.0.0.1 - - [18/Apr/2026 00:35:20] "GET /api/search?q=j HTTP/1.1" 200 -
++127.0.0.1 - - [18/Apr/2026 00:35:21] "GET /api/search?q=jㄨ HTTP/1.1" 200 -
++127.0.0.1 - - [18/Apr/2026 00:35:22] "GET /api/search?q=ㄌㄧㄢ HTTP/1.1" 200 -
++127.0.0.1 - - [18/Apr/2026 00:35:23] "GET /api/search?q=連ㄉㄧㄢ HTTP/1.1" 200 -
++127.0.0.1 - - [18/Apr/2026 00:35:23] "GET /api/search?q=連電 HTTP/1.1" 200 -
++127.0.0.1 - - [18/Apr/2026 00:35:24] "GET /api/search?q=連電 HTTP/1.1" 200 -
++127.0.0.1 - - [18/Apr/2026 00:35:25] "GET /api/search?q=聯電 HTTP/1.1" 200 -
++127.0.0.1 - - [18/Apr/2026 00:35:27] "GET /api/dates?stock=2303 HTTP/1.1" 200 -
++127.0.0.1 - - [18/Apr/2026 00:35:30] "GET /api/kbars?stock=2303&date=2026-04-17 HTTP/1.1" 200 -
++127.0.0.1 - - [18/Apr/2026 00:35:30] "GET /api/index_data?stock=2303&date=2026-04-17 HTTP/1.1" 200 -
++127.0.0.1 - - [18/Apr/2026 00:35:32] "POST /api/signals HTTP/1.1" 200 -
++127.0.0.1 - - [18/Apr/2026 00:35:32] "POST /api/signals HTTP/1.1" 200 -
++127.0.0.1 - - [18/Apr/2026 00:35:32] "POST /api/signals HTTP/1.1" 200 -
++127.0.0.1 - - [18/Apr/2026 00:35:32] "POST /api/signals HTTP/1.1" 200 -
++127.0.0.1 - - [18/Apr/2026 00:35:32] "POST /api/signals HTTP/1.1" 200 -
++127.0.0.1 - - [18/Apr/2026 00:35:32] "POST /api/signals HTTP/1.1" 200 -
++127.0.0.1 - - [18/Apr/2026 00:35:32] "POST /api/signals HTTP/1.1" 200 -
++127.0.0.1 - - [18/Apr/2026 00:35:32] "POST /api/signals HTTP/1.1" 200 -
++127.0.0.1 - - [18/Apr/2026 00:35:32] "POST /api/signals HTTP/1.1" 200 -
++127.0.0.1 - - [18/Apr/2026 00:35:32] "POST /api/signals HTTP/1.1" 200 -
++127.0.0.1 - - [18/Apr/2026 00:35:33] "POST /api/signals HTTP/1.1" 200 -
++127.0.0.1 - - [18/Apr/2026 00:35:33] "POST /api/signals HTTP/1.1" 200 -
++127.0.0.1 - - [18/Apr/2026 00:35:33] "POST /api/signals HTTP/1.1" 200 -
++127.0.0.1 - - [18/Apr/2026 00:35:33] "POST /api/signals HTTP/1.1" 200 -
++127.0.0.1 - - [18/Apr/2026 00:35:33] "POST /api/signals HTTP/1.1" 200 -
++127.0.0.1 - - [18/Apr/2026 00:35:33] "POST /api/signals HTTP/1.1" 200 -
++127.0.0.1 - - [18/Apr/2026 00:35:33] "POST /api/signals HTTP/1.1" 200 -
++127.0.0.1 - - [18/Apr/2026 00:35:33] "POST /api/signals HTTP/1.1" 200 -
++127.0.0.1 - - [18/Apr/2026 00:35:33] "POST /api/signals HTTP/1.1" 200 -
++127.0.0.1 - - [18/Apr/2026 00:35:33] "POST /api/signals HTTP/1.1" 200 -
++
 ```
 
 ---
@@ -80,3 +84,6 @@ index f1d83fe..0f7c20b 100644
 ## Hermes 工作記錄
 
 （Hermes 將在此記錄進度）
+
+
+<!-- Hermes：請在此處附加你的進度更新 -->
