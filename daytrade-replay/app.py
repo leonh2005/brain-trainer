@@ -82,6 +82,18 @@ def api_index_data():
         return jsonify({'error': str(e)}), 500
 
 
+@app.route('/api/search')
+def api_search():
+    q = request.args.get('q', '').strip()
+    if not q:
+        return jsonify({'results': []})
+    try:
+        results = data.search_stocks(q)
+        return jsonify({'results': results})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
 @app.route('/api/subscribe', methods=['POST'])
 def api_subscribe():
     body = request.get_json() or {}

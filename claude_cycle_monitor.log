@@ -451,3 +451,22 @@ google.genai.errors.ServerError: 503 UNAVAILABLE. {'error': {'code': 503, 'messa
 
 Python(46160) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
 Python(46162) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(46164) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(46167) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(46174) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(46175) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(46176) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(46180) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(46182) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+[05:40] 自動同步完成
+[05:42] 下一事件：midpoint @ 08:30（168 分鐘後）
+[08:31] 下一事件：end_warn @ 10:40（129 分鐘後）
+Python(55412) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(55413) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(55415) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(55416) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(55437) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(56229) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(56230) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(56288) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(56290) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.

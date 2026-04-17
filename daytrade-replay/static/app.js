@@ -301,7 +301,88 @@ async function loadStocks() {
     opt.textContent = `${s.code} ${s.name} (${s.avg_vol.toLocaleString()}張)`;
     sel.appendChild(opt);
   }
-  sel.onchange = () => loadDates(sel.value);
+  sel.onchange = () => {
+    document.getElementById('stock-input').value = '';
+    hideAC();
+    loadDates(sel.value);
+  };
+
+  // 自行輸入（代號 or 中文股名）
+  const inp = document.getElementById('stock-input');
+  const ac  = document.getElementById('stock-autocomplete');
+  let acItems = [], acIndex = -1, debounceTimer = null;
+
+  function hideAC() {
+    ac.style.display = 'none';
+    acItems = []; acIndex = -1;
+  }
+
+  function selectACItem(item) {
+    inp.value = `${item.code} ${item.name}`;
+    hideAC();
+    sel.value = '';
+    loadDates(item.code);
+  }
+
+  function renderAC(results) {
+    if (!results.length) { hideAC(); return; }
+    acItems = results; acIndex = -1;
+    ac.innerHTML = '';
+    results.forEach((r, i) => {
+      const div = document.createElement('div');
+      div.className = 'ac-item';
+      div.textContent = `${r.code} ${r.name}`;
+      div.addEventListener('mousedown', (e) => { e.preventDefault(); selectACItem(r); });
+      ac.appendChild(div);
+    });
+    ac.style.display = 'block';
+  }
+
+  inp.addEventListener('input', () => {
+    clearTimeout(debounceTimer);
+    const q = inp.value.trim();
+    if (!q) { hideAC(); return; }
+    debounceTimer = setTimeout(async () => {
+      const res = await fetch('/api/search?q=' + encodeURIComponent(q));
+      const { results } = await res.json();
+      renderAC(results || []);
+    }, 200);
+  });
+
+  inp.addEventListener('keydown', (e) => {
+    if (ac.style.display === 'block') {
+      const items = ac.querySelectorAll('.ac-item');
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        acIndex = Math.min(acIndex + 1, items.length - 1);
+        items.forEach((el, i) => el.classList.toggle('active', i === acIndex));
+        return;
+      }
+      if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        acIndex = Math.max(acIndex - 1, -1);
+        items.forEach((el, i) => el.classList.toggle('active', i === acIndex));
+        return;
+      }
+      if (e.key === 'Enter' && acIndex >= 0) {
+        e.preventDefault();
+        selectACItem(acItems[acIndex]);
+        return;
+      }
+      if (e.key === 'Escape') { hideAC(); return; }
+    }
+    if (e.key === 'Enter') {
+      const q = inp.value.trim();
+      if (!q) return;
+      // 純數字代號直接用
+      if (/^\d+$/.test(q)) {
+        hideAC(); sel.value = '';
+        loadDates(q); inp.blur();
+      }
+    }
+  });
+
+  inp.addEventListener('blur', () => setTimeout(hideAC, 150));
 }
 
 async function loadDates(stockId) {

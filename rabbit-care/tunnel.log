@@ -197,3 +197,4 @@
 [Fri Apr 17 04:34:12 CST 2026] 2026-04-16T20:34:12Z INF Retrying connection in up to 1m4s connIndex=0 event=0 ip=198.41.200.193
 [Fri Apr 17 04:34:33 CST 2026] 2026-04-16T20:34:33Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveP256] connIndex=0 event=0 ip=198.41.200.53
 [Fri Apr 17 04:34:37 CST 2026] 2026-04-16T20:34:37Z INF Registered tunnel connection connIndex=0 connection=14874f01-dd93-4548-b59c-7773b7926d75 event=0 ip=198.41.200.53 location=tpe01 protocol=quic
+[Fri Apr 17 07:30:15 CST 2026] 2026-04-16T23:30:15Z ERR update check failed error="no release found"

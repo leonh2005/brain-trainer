@@ -119,6 +119,15 @@ def init_db():
                 screenshot TEXT,
                 created_at TEXT DEFAULT (datetime('now','localtime'))
             );
+
+            CREATE TABLE IF NOT EXISTS water_log (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                log_date TEXT NOT NULL,
+                log_time TEXT NOT NULL,
+                amount_cc INTEGER NOT NULL,
+                note TEXT,
+                created_at TEXT DEFAULT (datetime('now','localtime'))
+            );
         ''')
         # 補欄位（舊資料庫升級）
         try:
@@ -769,6 +778,80 @@ def action_history():
         summary=summary,
         available_dates=available_dates,
     )
+
+
+# ── 路由：喝水紀錄 ───────────────────────────────────────────
+
+@app.route('/water')
+@login_required
+def water_log():
+    today = date.today().isoformat()
+    with get_db() as conn:
+        today_records = conn.execute(
+            'SELECT * FROM water_log WHERE log_date=? ORDER BY log_time ASC',
+            (today,)
+        ).fetchall()
+        today_total = conn.execute(
+            'SELECT COALESCE(SUM(amount_cc),0) as total FROM water_log WHERE log_date=?',
+            (today,)
+        ).fetchone()['total']
+        # 最近 7 天每日總量
+        history = conn.execute(
+            '''SELECT log_date, SUM(amount_cc) as total
+               FROM water_log
+               WHERE log_date >= date('now','localtime','-6 days')
+               GROUP BY log_date
+               ORDER BY log_date ASC''',
+        ).fetchall()
+    # 補齊 7 天（沒紀錄的日期填 0）
+    from datetime import timedelta
+    hist_map = {r['log_date']: r['total'] for r in history}
+    hist_labels, hist_values = [], []
+    for i in range(6, -1, -1):
+        d = (date.today() - timedelta(days=i)).isoformat()
+        hist_labels.append(d[5:])   # MM-DD
+        hist_values.append(hist_map.get(d, 0))
+    return render_template('water.html',
+        today=today,
+        today_records=today_records,
+        today_total=today_total,
+        hist_labels=json.dumps(hist_labels),
+        hist_values=json.dumps(hist_values),
+    )
+
+
+@app.route('/api/water', methods=['POST'])
+@login_required
+def api_add_water():
+    data = request.get_json()
+    amount = int(data.get('amount_cc', 0))
+    note = data.get('note', '').strip()
+    if amount <= 0:
+        return jsonify({'error': '請輸入正確 cc 數'}), 400
+    now = datetime.now()
+    with get_db() as conn:
+        conn.execute(
+            'INSERT INTO water_log (log_date, log_time, amount_cc, note) VALUES (?,?,?,?)',
+            (now.strftime('%Y-%m-%d'), now.strftime('%H:%M'), amount, note or None)
+        )
+        total = conn.execute(
+            'SELECT COALESCE(SUM(amount_cc),0) as t FROM water_log WHERE log_date=?',
+            (now.strftime('%Y-%m-%d'),)
+        ).fetchone()['t']
+    return jsonify({'ok': True, 'today_total': total,
+                    'record': {'log_time': now.strftime('%H:%M'), 'amount_cc': amount, 'note': note}})
+
+
+@app.route('/api/water/<int:record_id>', methods=['DELETE'])
+@login_required
+def api_delete_water(record_id):
+    with get_db() as conn:
+        conn.execute('DELETE FROM water_log WHERE id=?', (record_id,))
+        total = conn.execute(
+            'SELECT COALESCE(SUM(amount_cc),0) as t FROM water_log WHERE log_date=?',
+            (date.today().isoformat(),)
+        ).fetchone()['t']
+    return jsonify({'ok': True, 'today_total': total})
 
 
 if __name__ == '__main__':

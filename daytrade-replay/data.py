@@ -223,10 +223,9 @@ def _sj_stock_1min(stock_id: str, date_str: str) -> list:
         if df.empty:
             return []
         df['ts'] = pd.to_datetime(df['ts'])
-        # Shioaji 時戳為收盤時間（end-time），往前移 1 分鐘轉為開盤時間（start-time）
-        df['ts'] = df['ts'] - pd.Timedelta(minutes=1)
+        # Shioaji 時戳為開盤時間（start-time），不需偏移
         t_open  = pd.Timestamp('09:00').time()
-        t_close = pd.Timestamp('13:29').time()
+        t_close = pd.Timestamp('13:30').time()
         df = df[(df['ts'].dt.time >= t_open) & (df['ts'].dt.time <= t_close)]
         if df.empty:
             return []
@@ -373,13 +372,16 @@ def get_avg5_and_yday(stock_id: str, date_str: str) -> tuple:
 # ── Shioaji singleton（指數用）───────────────────────────────────────────────
 
 _sj_api = None
+_sj_last_check: float = 0   # 上次 heartbeat 時間戳（time.time()）
+_SJ_CHECK_INTERVAL = 300    # 每 5 分鐘才做一次 heartbeat，避免 FD 洩漏
 
 def _get_sj():
-    global _sj_api
+    global _sj_api, _sj_last_check
     import shioaji as sj
     from dotenv import load_dotenv
 
     def _login():
+        global _sj_last_check
         load_dotenv(os.path.join(os.path.dirname(__file__), '../finmind/.env'))
         api = sj.Shioaji(simulation=False)
         api.login(
@@ -394,24 +396,79 @@ def _get_sj():
             _realtime_feed.on_tick(tick)
 
         print('[sj] tick callback 已登記')
+        _sj_last_check = time.time()
         return api
 
     if _sj_api is None:
         _sj_api = _login()
         return _sj_api
 
-    # 每次使用前用 heartbeat 確認 session，斷線則重連
-    try:
-        _sj_api.Contracts.Indexs.TSE['001']  # 輕量測試
-    except Exception:
-        print('[sj] session 失效，重新登入...')
+    # 每 5 分鐘才做一次 heartbeat，避免每次呼叫都開 FD
+    now = time.time()
+    if now - _sj_last_check >= _SJ_CHECK_INTERVAL:
         try:
-            _sj_api.logout()
+            _sj_api.list_accounts()
+            _sj_last_check = now
         except Exception:
-            pass
-        _sj_api = _login()
+            print('[sj] session 失效，重新登入...')
+            try:
+                _sj_api.logout()
+            except Exception:
+                pass
+            _sj_api = None
+            _sj_api = _login()
 
     return _sj_api
+
+
+_stock_index: list[dict] | None = None  # [{code, name}] 全庫快取
+
+
+def _build_stock_index() -> list[dict]:
+    """從 Shioaji 合約庫建立代號+名稱索引（只建一次）"""
+    global _stock_index
+    if _stock_index is not None:
+        return _stock_index
+    api = _get_sj()
+    idx = []
+    for exchange in api.Contracts.Stocks:
+        for contract in exchange:
+            try:
+                idx.append({'code': contract.code, 'name': contract.name})
+            except Exception:
+                pass
+    _stock_index = idx
+    print(f'[search] 股票索引建立完成，共 {len(idx)} 檔')
+    return _stock_index
+
+
+def search_stocks(query: str, limit: int = 8) -> list[dict]:
+    """搜尋股票：代號前綴或名稱包含 query，一般股（4位代號）優先"""
+    idx = _build_stock_index()
+    seen = set()
+
+    def _add(bucket, s):
+        if s['code'] not in seen:
+            seen.add(s['code'])
+            bucket.append(s)
+
+    # 分桶：一般股（4位）vs 其他（權證/債券）
+    exact_stock, exact_other = [], []
+    prefix_stock, prefix_other = [], []
+    name_stock, name_other = [], []
+
+    for s in idx:
+        code, name = s['code'], s['name']
+        is_stock = len(code) == 4 and code.isdigit()
+        if code == query:
+            _add(exact_stock if is_stock else exact_other, s)
+        elif code.startswith(query):
+            _add(prefix_stock if is_stock else prefix_other, s)
+        elif query in name:
+            _add(name_stock if is_stock else name_other, s)
+
+    ordered = exact_stock + exact_other + prefix_stock + name_stock + prefix_other + name_other
+    return ordered[:limit]
 
 
 def subscribe_realtime(stock_id: str) -> None:
@@ -517,10 +574,9 @@ def _sj_index_1min(tse_code: str, date_str: str) -> list:
         if df.empty:
             return []
         df['ts'] = pd.to_datetime(df['ts'])
-        # Shioaji 時戳為收盤時間，往前移 1 分鐘轉為開盤時間
-        df['ts'] = df['ts'] - pd.Timedelta(minutes=1)
+        # Shioaji 時戳為開盤時間（start-time），不需偏移
         t_open  = pd.Timestamp('09:00').time()
-        t_close = pd.Timestamp('13:29').time()
+        t_close = pd.Timestamp('13:30').time()
         df = df[(df['ts'].dt.time >= t_open) & (df['ts'].dt.time <= t_close)]
         result = [{'ts': row['ts'].strftime('%Y-%m-%d %H:%M'), 'close': round(float(row['Close']), 2)}
                   for _, row in df.iterrows()]
