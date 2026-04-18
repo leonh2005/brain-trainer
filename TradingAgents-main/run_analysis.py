@@ -32,9 +32,9 @@ from tradingagents.graph.trading_graph import TradingAgentsGraph
 from tradingagents.default_config import DEFAULT_CONFIG
 
 config = DEFAULT_CONFIG.copy()
-config["llm_provider"]    = "google"
-config["deep_think_llm"]  = "gemini-2.5-flash-lite"
-config["quick_think_llm"] = "gemini-2.5-flash-lite"
+config["llm_provider"]    = "deepseek"
+config["deep_think_llm"]  = "deepseek-chat"
+config["quick_think_llm"] = "deepseek-chat"
 config["max_debate_rounds"] = 1
 config["max_risk_discuss_rounds"] = 1
 
