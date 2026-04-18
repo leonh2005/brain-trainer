@@ -644,3 +644,21 @@ google.genai.errors.ServerError: 503 UNAVAILABLE. {'error': {'code': 503, 'messa
 [21:40] 自動同步完成
 [21:43] 下一事件：midpoint @ 00:30（167 分鐘後）
 [00:31] 下一事件：end_warn @ 02:40（129 分鐘後）
+warning: adding embedded git repository: banini-tracker
+hint: You've added another git repository inside your current repository.
+hint: Clones of the outer repository will not contain the contents of
+hint: the embedded repository and will not know how to obtain it.
+hint: If you meant to add a submodule, use:
+hint:
+hint: 	git submodule add <url> banini-tracker
+hint:
+hint: If you added this path by mistake, you can remove it from the
+hint: index with:
+hint:
+hint: 	git rm --cached banini-tracker
+hint:
+hint: See "git help submodule" for more information.
+hint: Disable this message with "git config set advice.addEmbeddedRepo false"
+[02:40] 自動同步完成
+[02:42] 下一事件：midpoint @ 05:30（167 分鐘後）
+[05:31] 下一事件：end_warn @ 07:40（129 分鐘後）

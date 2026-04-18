@@ -1,38 +1,24 @@
-# Claude Handoff 20260419_0240
+# Claude Handoff 20260419_0740
 
 ## Git 狀態（未提交）
 ```
-M TradingAgents-main/run_analysis.py
- M TradingAgents-main/tradingagents/dataflows/interface.py
+m banini-tracker
  M claude_cycle_monitor.log
- M logs/nightly_check.log
+ M logs/market-dashboard.log
  M logs/shopee_stock.log
+ M logs/thread_summarizer.log
+ M logs/thread_summarizer_error.log
+ M market-dashboard/fg_history.json
+ M market-dashboard/index.html
+ M market-dashboard/sp_state.json
  M rabbit-care/motion-watcher.log
- M rabbit-care/rabbit-care.log
- M rabbit-care/rabbit.db
- D rabbit-care/static/action_screenshots/20260411_233632_eating.jpg
- D rabbit-care/static/action_screenshots/20260411_235251_eating.jpg
- D rabbit-care/static/action_screenshots/20260412_001931_eating.jpg
- D rabbit-care/static/action_screenshots/20260412_011607_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260412_012207_eating.jpg
- D rabbit-care/static/action_screenshots/20260412_014834_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260412_015412_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260412_015922_sleeping.jpg
+ M rabbit-care/tunnel.log
  m stock-screener-ai
-?? TradingAgents-main/tradingagents/dataflows/finmind_tw.py
-?? banini-tracker/
-?? rabbit-care/static/action_screenshots/20260418_222934_eating.jpg
-?? rabbit-care/static/action_screenshots/20260418_225506_eating.jpg
-?? rabbit-care/static/action_screenshots/20260418_231550_eating.jpg
-?? rabbit-care/static/action_screenshots/20260418_233107_eating.jpg
-?? rabbit-care/static/action_screenshots/20260418_234629_sleeping.jpg
-?? rabbit-care/static/action_screenshots/20260419_004949_sleeping.jpg
-?? rabbit-care/static/action_screenshots/20260419_022500_sleeping.jpg
-?? ta_history_actions.png
 ```
 
 ## 近期 Commits
 ```
+e0e2618 chore: 自動同步 2026-04-19 02:41
 2e835e5 chore: 自動同步 2026-04-18 21:41
 b195ce1 chore: 自動同步 2026-04-18 16:41
 68e5dcd chore: 自動同步 2026-04-18 11:40
@@ -40,90 +26,57 @@ b195ce1 chore: 自動同步 2026-04-18 16:41
 7432232 chore: 自動同步 2026-04-18 01:41
 e1feefb feat: TradingAgents 台股整合 + AI 買賣點分析 + 選股系統多Agent分頁
 687b6f8 fix: 改用 python3.13 避免 Python 3.14 GC segfault
-a7fd92b chore: 自動同步 2026-04-17 20:41
 ```
 
 ## 未提交的變更
 ```diff
-diff --git a/TradingAgents-main/run_analysis.py b/TradingAgents-main/run_analysis.py
-index 0ad89f1..331b086 100644
---- a/TradingAgents-main/run_analysis.py
-+++ b/TradingAgents-main/run_analysis.py
-@@ -38,6 +38,19 @@ config["quick_think_llm"] = "deepseek-chat"
- config["max_debate_rounds"] = 1
- config["max_risk_discuss_rounds"] = 1
- 
-+# 台股（.TW）自動路由到 FinMind 取得更準確的財報資料
-+if ticker.endswith(".TW"):
-+    log("[init] 偵測到台股，資料來源切換為 FinMind")
-+    config["data_vendors"] = {
-+        "core_stock_apis":     "finmind",   # OHLCV 價格
-+        "technical_indicators": "finmind",  # 技術指標（FinMind 價格 + stockstats）
-+        "fundamental_data":    "finmind",   # 財報、資產負債表、損益表、現金流
-+        "news_data":           "yfinance",  # 新聞仍走 yfinance（FinMind 無新聞）
-+    }
-+    config["tool_vendors"] = {
-+        "get_insider_transactions": "finmind",  # 三大法人取代 insider transactions
-+    }
-+
- log("[init] 初始化 TradingAgentsGraph...")
- ta = TradingAgentsGraph(
-     selected_analysts=["market", "news", "fundamentals"],
-diff --git a/TradingAgents-main/tradingagents/dataflows/interface.py b/TradingAgents-main/tradingagents/dataflows/interface.py
-index 0caf4b6..8aa89c8 100644
---- a/TradingAgents-main/tradingagents/dataflows/interface.py
-+++ b/TradingAgents-main/tradingagents/dataflows/interface.py
-@@ -23,6 +23,15 @@ from .alpha_vantage import (
-     get_global_news as get_alpha_vantage_global_news,
- )
- from .alpha_vantage_common import AlphaVantageRateLimitError
-+from .finmind_tw import (
-+    get_stock_data as get_finmind_stock_data,
-+    get_indicators as get_finmind_indicators,
-+    get_fundamentals as get_finmind_fundamentals,
-+    get_balance_sheet as get_finmind_balance_sheet,
-+    get_cashflow as get_finmind_cashflow,
-+    get_income_statement as get_finmind_income_statement,
-+    get_insider_transactions as get_finmind_insider_transactions,
-+)
- 
- # Configuration and routing logic
- from .config import get_config
-@@ -63,38 +72,45 @@ TOOLS_CATEGORIES = {
- VENDOR_LIST = [
-     "yfinance",
-     "alpha_vantage",
-+    "finmind",
- ]
- 
- # Mapping of methods to their vendor-specific implementations
- VENDOR_METHODS = {
-     # core_stock_apis
-     "get_stock_data": {
-+        "finmind": get_finmind_stock_data,
-         "alpha_vantage": get_alpha_vantage_stock,
-         "yfinance": get_YFin_data_online,
-     },
-     # technical_indicators
-     "get_indicators": {
-+        "finmind": get_finmind_indicators,
-         "alpha_vantage": get_alpha_vantage_indicator,
-         "yfinance": get_stock_stats_indicators_window,
-     },
-     # fundamental_data
-     "get_fundamentals": {
-+        "finmind": get_finmind_fundamentals,
-         "alpha_vantage": get_alpha_vantage_fundamentals,
-         "yfinance": get_yfinance_fundamentals,
-     },
-     "get_balance_sheet": {
-+        "finmind": get_finmind_balance_sheet,
-         "alpha_vantage": get_alpha_vantage_balance_sheet,
-         "yfinance": get_yfinance_balance_sheet,
-     },
-     "get_cashflow": {
-+        "finmind": get_finmind_cashflow,
-         "alp
+diff --git a/banini-tracker b/banini-tracker
+--- a/banini-tracker
++++ b/banini-tracker
+@@ -1 +1 @@
+-Subproject commit 811be48e6702a2b8519e5297ed00c8a24d7cfe29
++Subproject commit 811be48e6702a2b8519e5297ed00c8a24d7cfe29-dirty
+diff --git a/claude_cycle_monitor.log b/claude_cycle_monitor.log
+index 6b09435..659d03b 100644
+--- a/claude_cycle_monitor.log
++++ b/claude_cycle_monitor.log
+@@ -644,3 +644,21 @@ google.genai.errors.ServerError: 503 UNAVAILABLE. {'error': {'code': 503, 'messa
+ [21:40] 自動同步完成
+ [21:43] 下一事件：midpoint @ 00:30（167 分鐘後）
+ [00:31] 下一事件：end_warn @ 02:40（129 分鐘後）
++warning: adding embedded git repository: banini-tracker
++hint: You've added another git repository inside your current repository.
++hint: Clones of the outer repository will not contain the contents of
++hint: the embedded repository and will not know how to obtain it.
++hint: If you meant to add a submodule, use:
++hint:
++hint: 	git submodule add <url> banini-tracker
++hint:
++hint: If you added this path by mistake, you can remove it from the
++hint: index with:
++hint:
++hint: 	git rm --cached banini-tracker
++hint:
++hint: See "git help submodule" for more information.
++hint: Disable this message with "git config set advice.addEmbeddedRepo false"
++[02:40] 自動同步完成
++[02:42] 下一事件：midpoint @ 05:30（167 分鐘後）
++[05:31] 下一事件：end_warn @ 07:40（129 分鐘後）
+diff --git a/logs/market-dashboard.log b/logs/market-dashboard.log
+index d3ce381..638fde3 100644
+--- a/logs/market-dashboard.log
++++ b/logs/market-dashboard.log
+@@ -154,3 +154,20 @@
+ [07:00:07] 完成 → /Users/steven/CCProject/market-dashboard/index.html
+   VIX: 17.47  |  S&P: 7126.06  |  200MA: 6683.79  |  高於 200MA (+6.61%)  |  F&G: 68.08 (greed)
+   加權指數: 36804.33  |  200MA: 28036.28  |  vs 200MA: +31.27%  |  距高點: -0.9%  |  ATH: 37132.01
++/Users/steven/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
++  warnings.warn(
++/Users/steven/Library/Python/3.9/lib/python/site-packages/urllib3/connectionpool.py:1097: InsecureRequestWarning: Unverified HTTPS request is being made to host 'www.twse.com.tw'. Adding certificate verification is strongly advised. See: https://urllib3.readthedocs.io/en/latest/advanced-usage.html#tls-warnings
++  warnings.warn(
++/Users/steven/Library/Python/3.9/lib/python/site-packages/urllib3/connectionpool.py:1097: InsecureRequestWarning: Unverified HTTPS request is being made to host 'www.twse.com.tw'. Adding certificate verification is strongly advised. See: https://urllib3.readthedocs.io/en/latest/advanced-usage.html#tls-warnings
++  warnings.warn(
++/Users/steven/Library/Python/3.9/lib/python/site-packages/urllib3/connectionpool.py:1097: InsecureRequestWarning: Unverified HTTPS request is being made to host 'www.twse.com.tw'. Adding certificate verification is strongly advised. See: https://urllib3.readthedocs.io/en/latest/advanced-usage.htm
 ```
 
 ---
