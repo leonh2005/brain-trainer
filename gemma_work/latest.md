@@ -1,32 +1,39 @@
-# Claude Handoff 20260418_2140
+# Claude Handoff 20260419_0240
 
 ## Git 狀態（未提交）
 ```
-M claude_cycle_monitor.log
+M TradingAgents-main/run_analysis.py
+ M TradingAgents-main/tradingagents/dataflows/interface.py
+ M claude_cycle_monitor.log
+ M logs/nightly_check.log
  M logs/shopee_stock.log
  M rabbit-care/motion-watcher.log
  M rabbit-care/rabbit-care.log
  M rabbit-care/rabbit.db
- D rabbit-care/static/action_screenshots/20260411_181333_drinking.jpg
- D rabbit-care/static/action_screenshots/20260411_185212_eating.jpg
- D rabbit-care/static/action_screenshots/20260411_191320_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260411_191829_eating.jpg
- D rabbit-care/static/action_screenshots/20260411_192404_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260411_193417_eating.jpg
+ D rabbit-care/static/action_screenshots/20260411_233632_eating.jpg
+ D rabbit-care/static/action_screenshots/20260411_235251_eating.jpg
+ D rabbit-care/static/action_screenshots/20260412_001931_eating.jpg
+ D rabbit-care/static/action_screenshots/20260412_011607_sleeping.jpg
+ D rabbit-care/static/action_screenshots/20260412_012207_eating.jpg
+ D rabbit-care/static/action_screenshots/20260412_014834_sleeping.jpg
+ D rabbit-care/static/action_screenshots/20260412_015412_sleeping.jpg
+ D rabbit-care/static/action_screenshots/20260412_015922_sleeping.jpg
  m stock-screener-ai
-?? rabbit-care/static/action_screenshots/20260418_164411_eating.jpg
-?? rabbit-care/static/action_screenshots/20260418_170012_eating.jpg
-?? rabbit-care/static/action_screenshots/20260418_170520_eating.jpg
-?? rabbit-care/static/action_screenshots/20260418_193537_eating.jpg
-?? rabbit-care/static/action_screenshots/20260418_195041_eating.jpg
-?? rabbit-care/static/action_screenshots/20260418_195555_eating.jpg
-?? rabbit-care/static/action_screenshots/20260418_200624_eating.jpg
-?? rabbit-care/static/action_screenshots/20260418_201135_eating.jpg
-?? rabbit-care/static/action_screenshots/20260418_202144_eating.jpg
+?? TradingAgents-main/tradingagents/dataflows/finmind_tw.py
+?? banini-tracker/
+?? rabbit-care/static/action_screenshots/20260418_222934_eating.jpg
+?? rabbit-care/static/action_screenshots/20260418_225506_eating.jpg
+?? rabbit-care/static/action_screenshots/20260418_231550_eating.jpg
+?? rabbit-care/static/action_screenshots/20260418_233107_eating.jpg
+?? rabbit-care/static/action_screenshots/20260418_234629_sleeping.jpg
+?? rabbit-care/static/action_screenshots/20260419_004949_sleeping.jpg
+?? rabbit-care/static/action_screenshots/20260419_022500_sleeping.jpg
+?? ta_history_actions.png
 ```
 
 ## 近期 Commits
 ```
+2e835e5 chore: 自動同步 2026-04-18 21:41
 b195ce1 chore: 自動同步 2026-04-18 16:41
 68e5dcd chore: 自動同步 2026-04-18 11:40
 4a8c342 chore: 自動同步 2026-04-18 06:40
@@ -34,70 +41,89 @@ b195ce1 chore: 自動同步 2026-04-18 16:41
 e1feefb feat: TradingAgents 台股整合 + AI 買賣點分析 + 選股系統多Agent分頁
 687b6f8 fix: 改用 python3.13 避免 Python 3.14 GC segfault
 a7fd92b chore: 自動同步 2026-04-17 20:41
-12a7f02 chore: 自動同步 2026-04-17 15:41
 ```
 
 ## 未提交的變更
 ```diff
-diff --git a/claude_cycle_monitor.log b/claude_cycle_monitor.log
-index 4f3150d..192171b 100644
---- a/claude_cycle_monitor.log
-+++ b/claude_cycle_monitor.log
-@@ -638,3 +638,6 @@ google.genai.errors.ServerError: 503 UNAVAILABLE. {'error': {'code': 503, 'messa
- [11:40] 自動同步完成
- [11:42] 下一事件：midpoint @ 14:30（168 分鐘後）
- [14:31] 下一事件：end_warn @ 16:40（129 分鐘後）
-+[16:40] 自動同步完成
-+[16:42] 下一事件：midpoint @ 19:30（167 分鐘後）
-+[19:31] 下一事件：end_warn @ 21:40（129 分鐘後）
-diff --git a/logs/shopee_stock.log b/logs/shopee_stock.log
-index 02ad0ac..ded892d 100644
---- a/logs/shopee_stock.log
-+++ b/logs/shopee_stock.log
-@@ -3,3 +3,4 @@
- [2026-04-18 08:13:42] SOLD_OUT
- [2026-04-18 12:21:29] 
- [2026-04-18 16:26:08] 
-+[2026-04-18 20:20:01] 
-diff --git a/rabbit-care/motion-watcher.log b/rabbit-care/motion-watcher.log
-index 449b479..9ad4aa1 100644
---- a/rabbit-care/motion-watcher.log
-+++ b/rabbit-care/motion-watcher.log
-@@ -234423,3 +234423,3194 @@ TypeError: unsupported operand type(s) for |: 'type' and 'NoneType'
- 2026-04-18 16:40:55,898 INFO 靜止 30 幀，觸發分析
- 2026-04-18 16:40:55,899 INFO 分析條件: motion_frames=2 cooldown剩餘=20s
- 2026-04-18 16:41:00,822 INFO 偵測到移動，開始收集影格
-+2026-04-18 16:41:16,932 INFO 移動持續 15 秒，強制觸發分析
-+2026-04-18 16:41:16,932 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
-+2026-04-18 16:41:17,211 INFO 偵測到移動，開始收集影格
-+2026-04-18 16:41:25,124 INFO 靜止 30 幀，觸發分析
-+2026-04-18 16:41:25,124 INFO 分析條件: motion_frames=1 cooldown剩餘=0s
-+2026-04-18 16:41:30,599 INFO 偵測到移動，開始收集影格
-+2026-04-18 16:41:50,968 INFO 移動持續 15 秒，強制觸發分析
-+2026-04-18 16:41:50,968 INFO 分析條件: motion_frames=8 cooldown剩餘=0s
-+2026-04-18 16:41:57,866 INFO 偵測到移動，開始收集影格
-+2026-04-18 16:42:18,136 INFO 移動持續 15 秒，強制觸發分析
-+2026-04-18 16:42:18,137 INFO 分析條件: motion_frames=7 cooldown剩餘=0s
-+2026-04-18 16:42:18,710 INFO 偵測到移動，開始收集影格
-+2026-04-18 16:42:38,926 INFO 移動持續 15 秒，強制觸發分析
-+2026-04-18 16:42:38,926 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
-+2026-04-18 16:42:45,620 INFO 偵測到移動，開始收集影格
-+2026-04-18 16:43:05,920 INFO 移動持續 15 秒，強制觸發分析
-+2026-04-18 16:43:05,921 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
-+2026-04-18 16:43:12,277 INFO 偵測到移動，開始收集影格
-+2026-04-18 16:43:34,359 INFO 移動持續 15 秒，強制觸發分析
-+2026-04-18 16:43:34,360 INFO 分析條件: motion_frames=9 cooldown剩餘=0s
-+2026-04-18 16:43:40,680 INFO 偵測到移動，開始收集影格
-+2026-04-18 16:43:55,905 INFO 移動持續 15 秒，強制觸發分析
-+2026-04-18 16:43:55,906 INFO 分析條件: motion_frames=12 cooldown剩餘=0s
-+2026-04-18 16:43:55,993 INFO AFC is enabled with max remote calls: 10.
-+2026-04-18 16:44:04,038 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 429 Too Many Requests"
-+2026-04-18 16:44:04,040 WARNING Gemini 日配額耗盡，直接 fallback
-+2026-04-18 16:44:04,041 WARNING Gemini 分析無結果，fallback 至 OpenAI
-+2026-04-18 16:44:11,769 INFO HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
-+2026-04-18 16:44:11,816 INFO 已記錄動作: eating (信心: 0.85) 截圖: action_screenshots/20260418_164411_eating.jpg
-+2026-04-18 16:44:23,648 INFO 偵測到移動，開始收集影格
-+2026-04-18 16:44:44,734 INFO
+diff --git a/TradingAgents-main/run_analysis.py b/TradingAgents-main/run_analysis.py
+index 0ad89f1..331b086 100644
+--- a/TradingAgents-main/run_analysis.py
++++ b/TradingAgents-main/run_analysis.py
+@@ -38,6 +38,19 @@ config["quick_think_llm"] = "deepseek-chat"
+ config["max_debate_rounds"] = 1
+ config["max_risk_discuss_rounds"] = 1
+ 
++# 台股（.TW）自動路由到 FinMind 取得更準確的財報資料
++if ticker.endswith(".TW"):
++    log("[init] 偵測到台股，資料來源切換為 FinMind")
++    config["data_vendors"] = {
++        "core_stock_apis":     "finmind",   # OHLCV 價格
++        "technical_indicators": "finmind",  # 技術指標（FinMind 價格 + stockstats）
++        "fundamental_data":    "finmind",   # 財報、資產負債表、損益表、現金流
++        "news_data":           "yfinance",  # 新聞仍走 yfinance（FinMind 無新聞）
++    }
++    config["tool_vendors"] = {
++        "get_insider_transactions": "finmind",  # 三大法人取代 insider transactions
++    }
++
+ log("[init] 初始化 TradingAgentsGraph...")
+ ta = TradingAgentsGraph(
+     selected_analysts=["market", "news", "fundamentals"],
+diff --git a/TradingAgents-main/tradingagents/dataflows/interface.py b/TradingAgents-main/tradingagents/dataflows/interface.py
+index 0caf4b6..8aa89c8 100644
+--- a/TradingAgents-main/tradingagents/dataflows/interface.py
++++ b/TradingAgents-main/tradingagents/dataflows/interface.py
+@@ -23,6 +23,15 @@ from .alpha_vantage import (
+     get_global_news as get_alpha_vantage_global_news,
+ )
+ from .alpha_vantage_common import AlphaVantageRateLimitError
++from .finmind_tw import (
++    get_stock_data as get_finmind_stock_data,
++    get_indicators as get_finmind_indicators,
++    get_fundamentals as get_finmind_fundamentals,
++    get_balance_sheet as get_finmind_balance_sheet,
++    get_cashflow as get_finmind_cashflow,
++    get_income_statement as get_finmind_income_statement,
++    get_insider_transactions as get_finmind_insider_transactions,
++)
+ 
+ # Configuration and routing logic
+ from .config import get_config
+@@ -63,38 +72,45 @@ TOOLS_CATEGORIES = {
+ VENDOR_LIST = [
+     "yfinance",
+     "alpha_vantage",
++    "finmind",
+ ]
+ 
+ # Mapping of methods to their vendor-specific implementations
+ VENDOR_METHODS = {
+     # core_stock_apis
+     "get_stock_data": {
++        "finmind": get_finmind_stock_data,
+         "alpha_vantage": get_alpha_vantage_stock,
+         "yfinance": get_YFin_data_online,
+     },
+     # technical_indicators
+     "get_indicators": {
++        "finmind": get_finmind_indicators,
+         "alpha_vantage": get_alpha_vantage_indicator,
+         "yfinance": get_stock_stats_indicators_window,
+     },
+     # fundamental_data
+     "get_fundamentals": {
++        "finmind": get_finmind_fundamentals,
+         "alpha_vantage": get_alpha_vantage_fundamentals,
+         "yfinance": get_yfinance_fundamentals,
+     },
+     "get_balance_sheet": {
++        "finmind": get_finmind_balance_sheet,
+         "alpha_vantage": get_alpha_vantage_balance_sheet,
+         "yfinance": get_yfinance_balance_sheet,
+     },
+     "get_cashflow": {
++        "finmind": get_finmind_cashflow,
+         "alp
 ```
 
 ---

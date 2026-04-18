@@ -38,6 +38,19 @@ config["quick_think_llm"] = "deepseek-chat"
 config["max_debate_rounds"] = 1
 config["max_risk_discuss_rounds"] = 1
 
+# 台股（.TW）自動路由到 FinMind 取得更準確的財報資料
+if ticker.endswith(".TW"):
+    log("[init] 偵測到台股，資料來源切換為 FinMind")
+    config["data_vendors"] = {
+        "core_stock_apis":     "finmind",   # OHLCV 價格
+        "technical_indicators": "finmind",  # 技術指標（FinMind 價格 + stockstats）
+        "fundamental_data":    "finmind",   # 財報、資產負債表、損益表、現金流
+        "news_data":           "yfinance",  # 新聞仍走 yfinance（FinMind 無新聞）
+    }
+    config["tool_vendors"] = {
+        "get_insider_transactions": "finmind",  # 三大法人取代 insider transactions
+    }
+
 log("[init] 初始化 TradingAgentsGraph...")
 ta = TradingAgentsGraph(
     selected_analysts=["market", "news", "fundamentals"],
