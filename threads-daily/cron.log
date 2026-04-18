@@ -13,3 +13,7 @@
 沒有新珍藏，跳過分析。
 [08:00] 開始抓取 Threads 珍藏...
 沒有新珍藏，跳過分析。
+Traceback (most recent call last):
+  File "/Users/steven/CCProject/threads-daily/threads_analyzer.py", line 13, in <module>
+    from groq import Groq
+ModuleNotFoundError: No module named 'groq'
