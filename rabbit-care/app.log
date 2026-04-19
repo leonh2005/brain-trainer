@@ -1,60 +1,6 @@
-[scheduler] 啟動失敗：No module named 'apscheduler'
+[scheduler] 每日摘要排程已啟動（08:00）
 兔子照護系統啟動：http://localhost:5200
  * Serving Flask app 'app'
  * Debug mode: off
-[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
- * Running on all addresses (0.0.0.0)
- * Running on http://127.0.0.1:5200
- * Running on http://192.168.68.123:5200
-[33mPress CTRL+C to quit[0m
-127.0.0.1 - - [01/Apr/2026 16:44:26] "[32mPOST /login HTTP/1.1[0m" 302 -
-127.0.0.1 - - [01/Apr/2026 16:44:26] "GET / HTTP/1.1" 200 -
-127.0.0.1 - - [01/Apr/2026 19:12:00] "GET / HTTP/1.1" 200 -
-127.0.0.1 - - [01/Apr/2026 19:12:01] "GET / HTTP/1.1" 200 -
-127.0.0.1 - - [01/Apr/2026 19:12:03] "DELETE /api/action-log/8 HTTP/1.1" 200 -
-127.0.0.1 - - [01/Apr/2026 19:12:05] "DELETE /api/action-log/9 HTTP/1.1" 200 -
-127.0.0.1 - - [01/Apr/2026 19:12:12] "GET / HTTP/1.1" 200 -
-127.0.0.1 - - [01/Apr/2026 19:12:12] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
-127.0.0.1 - - [01/Apr/2026 20:19:34] "GET / HTTP/1.1" 200 -
-127.0.0.1 - - [01/Apr/2026 20:19:34] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
-127.0.0.1 - - [01/Apr/2026 20:19:36] "GET / HTTP/1.1" 200 -
-127.0.0.1 - - [01/Apr/2026 20:19:36] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
-127.0.0.1 - - [01/Apr/2026 20:19:37] "GET / HTTP/1.1" 200 -
-127.0.0.1 - - [01/Apr/2026 20:58:43] "GET / HTTP/1.1" 200 -
-127.0.0.1 - - [01/Apr/2026 20:58:46] "GET / HTTP/1.1" 200 -
-127.0.0.1 - - [01/Apr/2026 20:58:47] "GET / HTTP/1.1" 200 -
-127.0.0.1 - - [01/Apr/2026 20:58:48] "GET / HTTP/1.1" 200 -
-127.0.0.1 - - [01/Apr/2026 20:58:49] "GET / HTTP/1.1" 200 -
-127.0.0.1 - - [01/Apr/2026 20:58:49] "GET / HTTP/1.1" 200 -
-127.0.0.1 - - [01/Apr/2026 20:58:50] "GET / HTTP/1.1" 200 -
-127.0.0.1 - - [01/Apr/2026 20:58:50] "GET / HTTP/1.1" 200 -
-127.0.0.1 - - [01/Apr/2026 20:58:51] "GET / HTTP/1.1" 200 -
-127.0.0.1 - - [01/Apr/2026 20:58:51] "GET / HTTP/1.1" 200 -
-127.0.0.1 - - [01/Apr/2026 20:58:52] "GET / HTTP/1.1" 200 -
-127.0.0.1 - - [01/Apr/2026 20:58:52] "GET / HTTP/1.1" 200 -
-127.0.0.1 - - [01/Apr/2026 21:03:26] "POST /api/log-action HTTP/1.1" 200 -
-127.0.0.1 - - [01/Apr/2026 21:08:52] "POST /api/log-action HTTP/1.1" 200 -
-127.0.0.1 - - [01/Apr/2026 21:14:02] "POST /api/log-action HTTP/1.1" 200 -
-127.0.0.1 - - [01/Apr/2026 21:23:46] "POST /api/log-action HTTP/1.1" 200 -
-127.0.0.1 - - [01/Apr/2026 21:29:10] "POST /api/log-action HTTP/1.1" 200 -
-127.0.0.1 - - [01/Apr/2026 21:37:10] "POST /api/log-action HTTP/1.1" 200 -
-127.0.0.1 - - [01/Apr/2026 21:49:41] "POST /api/log-action HTTP/1.1" 200 -
-127.0.0.1 - - [01/Apr/2026 21:54:54] "POST /api/log-action HTTP/1.1" 200 -
-127.0.0.1 - - [01/Apr/2026 22:00:12] "POST /api/log-action HTTP/1.1" 200 -
-127.0.0.1 - - [01/Apr/2026 22:11:58] "POST /api/log-action HTTP/1.1" 200 -
-127.0.0.1 - - [01/Apr/2026 22:21:46] "POST /api/log-action HTTP/1.1" 200 -
-127.0.0.1 - - [01/Apr/2026 22:22:09] "GET / HTTP/1.1" 200 -
-127.0.0.1 - - [01/Apr/2026 22:22:12] "GET /static/action_screenshots/20260401_222146_sleeping.jpg HTTP/1.1" 200 -
-127.0.0.1 - - [01/Apr/2026 22:22:21] "DELETE /api/action-log/31 HTTP/1.1" 200 -
-127.0.0.1 - - [01/Apr/2026 22:22:22] "GET /static/action_screenshots/20260401_221158_eating.jpg HTTP/1.1" 200 -
-127.0.0.1 - - [01/Apr/2026 22:22:28] "GET /static/action_screenshots/20260401_220012_eating.jpg HTTP/1.1" 200 -
-127.0.0.1 - - [01/Apr/2026 22:24:49] "POST /api/log-action HTTP/1.1" 200 -
-127.0.0.1 - - [01/Apr/2026 22:34:08] "POST /api/log-action HTTP/1.1" 200 -
-127.0.0.1 - - [01/Apr/2026 22:45:19] "POST /api/log-action HTTP/1.1" 200 -
-127.0.0.1 - - [01/Apr/2026 23:14:05] "POST /api/log-action HTTP/1.1" 200 -
-127.0.0.1 - - [02/Apr/2026 04:25:11] "POST /api/log-action HTTP/1.1" 200 -
-127.0.0.1 - - [02/Apr/2026 05:34:16] "POST /api/log-action HTTP/1.1" 200 -
-127.0.0.1 - - [02/Apr/2026 06:49:47] "POST /api/log-action HTTP/1.1" 200 -
-127.0.0.1 - - [02/Apr/2026 07:28:02] "[32mGET / HTTP/1.1[0m" 302 -
-127.0.0.1 - - [02/Apr/2026 07:28:35] "[32mGET / HTTP/1.1[0m" 302 -
-127.0.0.1 - - [02/Apr/2026 07:28:36] "GET /login HTTP/1.1" 200 -
+Address already in use
+Port 5200 is in use by another program. Either identify and stop that program, or start the server with a different port.

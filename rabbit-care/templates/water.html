@@ -37,7 +37,7 @@
 <div class="card">
   <h2>今日紀錄</h2>
   <div id="records-list">
-  {% if today_records %}
+  {% if today_records or dl_today_rows %}
   <table>
     <tr><th>時間</th><th>cc 數</th><th>備注</th><th></th></tr>
     {% for r in today_records %}
@@ -50,6 +50,14 @@
       </td>
     </tr>
     {% endfor %}
+    {% for r in dl_today_rows %}
+    <tr style="opacity:0.75;">
+      <td style="color:#90a4ae;">日誌</td>
+      <td><strong>{{ r.cc }} cc</strong></td>
+      <td style="color:#90a4ae;">{{ r.water }}（日誌匯入）</td>
+      <td></td>
+    </tr>
+    {% endfor %}
   </table>
   {% else %}
   <p class="text-muted" id="empty-hint">今天還沒有紀錄</p>
@@ -59,27 +67,43 @@
 
 <!-- 7天趨勢 -->
 <div class="card">
-  <h2>📈 近 7 天趨勢</h2>
-  <canvas id="waterChart" height="80"></canvas>
+  <h2>📈 近 7 天每日喝水</h2>
+  <canvas id="waterChart" height="90"></canvas>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
 new Chart(document.getElementById('waterChart'), {
-  type: 'bar',
+  type: 'line',
   data: {
     labels: {{ hist_labels | safe }},
     datasets: [{
       label: '喝水量 (cc)',
       data: {{ hist_values | safe }},
-      backgroundColor: 'rgba(25,118,210,0.18)',
+      fill: true,
+      backgroundColor: 'rgba(25,118,210,0.08)',
       borderColor: '#1976d2',
-      borderWidth: 2,
-      borderRadius: 6,
+      borderWidth: 2.5,
+      pointBackgroundColor: '#1976d2',
+      pointRadius: 5,
+      pointHoverRadius: 7,
+      tension: 0.35,
     }]
   },
   options: {
-    plugins: { legend: { display: false } },
-    scales: { y: { beginAtZero: true, ticks: { callback: v => v + ' cc' } } }
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: { label: ctx => ' ' + ctx.parsed.y + ' cc' }
+      }
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        ticks: { callback: v => v + ' cc' },
+        grid: { color: 'rgba(0,0,0,0.05)' }
+      },
+      x: { grid: { display: false } }
+    }
   }
 });
 </script>

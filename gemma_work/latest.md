@@ -1,23 +1,77 @@
-# Claude Handoff 20260419_0740
+# Claude Handoff 20260419_1240
 
 ## Git 狀態（未提交）
 ```
-m banini-tracker
+M TradingAgents-main/tradingagents/dataflows/finmind_tw.py
+ M TradingAgents-main/tradingagents/dataflows/interface.py
+ M TradingAgents-main/tradingagents/default_config.py
+ m banini-tracker
  M claude_cycle_monitor.log
- M logs/market-dashboard.log
+ M daytrade-replay/server.log
+ M logs/shopee_keepalive.log
  M logs/shopee_stock.log
- M logs/thread_summarizer.log
- M logs/thread_summarizer_error.log
- M market-dashboard/fg_history.json
- M market-dashboard/index.html
- M market-dashboard/sp_state.json
+ M logs/voice_ideas_report.log
+ M rabbit-care/app.log
+ M rabbit-care/app.py
  M rabbit-care/motion-watcher.log
- M rabbit-care/tunnel.log
+ M rabbit-care/rabbit-care.log
+ M rabbit-care/rabbit.db
+ D rabbit-care/static/action_screenshots/20260412_055427_sleeping.jpg
+ D rabbit-care/static/action_screenshots/20260412_064615_sleeping.jpg
+ D rabbit-care/static/action_screenshots/20260412_072326_sleeping.jpg
+ D rabbit-care/static/action_screenshots/20260412_090406_sleeping.jpg
+ D rabbit-care/static/action_screenshots/20260412_091426_eating.jpg
+ D rabbit-care/static/action_screenshots/20260412_091930_sleeping.jpg
+ D rabbit-care/static/action_screenshots/20260412_092432_sleeping.jpg
+ D rabbit-care/static/action_screenshots/20260412_093515_eating.jpg
+ D rabbit-care/static/action_screenshots/20260412_094028_eating.jpg
+ D rabbit-care/static/action_screenshots/20260412_094533_eating.jpg
+ D rabbit-care/static/action_screenshots/20260412_100055_eating.jpg
+ D rabbit-care/static/action_screenshots/20260412_101720_eating.jpg
+ D rabbit-care/static/action_screenshots/20260412_104458_eating.jpg
+ D rabbit-care/static/action_screenshots/20260412_111951_sleeping.jpg
+ D rabbit-care/static/action_screenshots/20260412_112639_sleeping.jpg
+ D rabbit-care/static/action_screenshots/20260412_113711_sleeping.jpg
+ D rabbit-care/static/action_screenshots/20260412_114419_sleeping.jpg
+ D rabbit-care/static/action_screenshots/20260412_115734_sleeping.jpg
+ D rabbit-care/static/action_screenshots/20260412_120353_sleeping.jpg
+ M rabbit-care/templates/water.html
  m stock-screener-ai
+ M stock-screener/screener.log
+ M threads-daily/cron.log
+?? rabbit-care/static/action_screenshots/20260419_075756_sleeping.jpg
+?? rabbit-care/static/action_screenshots/20260419_082923_eating.jpg
+?? rabbit-care/static/action_screenshots/20260419_083600_eating.jpg
+?? rabbit-care/static/action_screenshots/20260419_085232_sleeping.jpg
+?? rabbit-care/static/action_screenshots/20260419_085853_sleeping.jpg
+?? rabbit-care/static/action_screenshots/20260419_092217_sleeping.jpg
+?? rabbit-care/static/action_screenshots/20260419_092723_sleeping.jpg
+?? rabbit-care/static/action_screenshots/20260419_093244_sleeping.jpg
+?? rabbit-care/static/action_screenshots/20260419_094439_sleeping.jpg
+?? rabbit-care/static/action_screenshots/20260419_100558_eating.jpg
+?? rabbit-care/static/action_screenshots/20260419_101111_eating.jpg
+?? rabbit-care/static/action_screenshots/20260419_101620_eating.jpg
+?? rabbit-care/static/action_screenshots/20260419_102129_eating.jpg
+?? rabbit-care/static/action_screenshots/20260419_103144_eating.jpg
+?? rabbit-care/static/action_screenshots/20260419_103701_sleeping.jpg
+?? rabbit-care/static/action_screenshots/20260419_104156_eating.jpg
+?? rabbit-care/static/action_screenshots/20260419_111836_eating.jpg
+?? rabbit-care/static/action_screenshots/20260419_113112_sleeping.jpg
+?? rabbit-care/static/action_screenshots/20260419_113822_sleeping.jpg
+?? rabbit-care/static/action_screenshots/20260419_114436_sleeping.jpg
+?? rabbit-care/static/action_screenshots/20260419_115057_sleeping.jpg
+?? rabbit-care/static/action_screenshots/20260419_120107_eating.jpg
+?? rabbit-care/static/action_screenshots/20260419_120617_eating.jpg
+?? rabbit-care/static/action_screenshots/20260419_121125_eating.jpg
+?? rabbit-care/static/action_screenshots/20260419_123742_eating.jpg
+?? ta_history_name.png
+?? water_chart.png
+?? water_fixed.png
 ```
 
 ## 近期 Commits
 ```
+4fe3a8e chore: 自動同步 2026-04-19 07:41
 e0e2618 chore: 自動同步 2026-04-19 02:41
 2e835e5 chore: 自動同步 2026-04-18 21:41
 b195ce1 chore: 自動同步 2026-04-18 16:41
@@ -25,11 +79,59 @@ b195ce1 chore: 自動同步 2026-04-18 16:41
 4a8c342 chore: 自動同步 2026-04-18 06:40
 7432232 chore: 自動同步 2026-04-18 01:41
 e1feefb feat: TradingAgents 台股整合 + AI 買賣點分析 + 選股系統多Agent分頁
-687b6f8 fix: 改用 python3.13 避免 Python 3.14 GC segfault
 ```
 
 ## 未提交的變更
 ```diff
+diff --git a/TradingAgents-main/tradingagents/dataflows/finmind_tw.py b/TradingAgents-main/tradingagents/dataflows/finmind_tw.py
+index fd3081e..9693e1b 100644
+--- a/TradingAgents-main/tradingagents/dataflows/finmind_tw.py
++++ b/TradingAgents-main/tradingagents/dataflows/finmind_tw.py
+@@ -84,9 +84,6 @@ def get_indicators(
+     if not _is_tw(symbol):
+         return f"{symbol} 非台股代碼"
+ 
+-    from .stockstats_utils import get_stock_stats_indicators_window as _ss
+-    # stockstats_utils 內部用 yfinance 抓資料，但我們先試圖換成 FinMind 價格
+-    # 若 FinMind 資料取得失敗，fallback 到 yfinance
+     end_dt = datetime.strptime(curr_date, "%Y-%m-%d")
+     start_dt = end_dt - timedelta(days=look_back_days + 60)  # 多抓一些供指標計算
+ 
+diff --git a/TradingAgents-main/tradingagents/dataflows/interface.py b/TradingAgents-main/tradingagents/dataflows/interface.py
+index 8aa89c8..b6fba41 100644
+--- a/TradingAgents-main/tradingagents/dataflows/interface.py
++++ b/TradingAgents-main/tradingagents/dataflows/interface.py
+@@ -164,6 +164,11 @@ def route_to_vendor(method: str, *args, **kwargs):
+         if vendor not in fallback_vendors:
+             fallback_vendors.append(vendor)
+ 
++    # 台股（.TW）非新聞類別：只允許 finmind，不 fallback 到 yfinance / alpha_vantage
++    first_arg = args[0] if args else (kwargs.get('symbol') or kwargs.get('ticker') or '')
++    if isinstance(first_arg, str) and first_arg.upper().endswith('.TW') and category != 'news_data':
++        fallback_vendors = [v for v in fallback_vendors if v == 'finmind']
++
+     for vendor in fallback_vendors:
+         if vendor not in VENDOR_METHODS[method]:
+             continue
+diff --git a/TradingAgents-main/tradingagents/default_config.py b/TradingAgents-main/tradingagents/default_config.py
+index f79e655..c85f95e 100644
+--- a/TradingAgents-main/tradingagents/default_config.py
++++ b/TradingAgents-main/tradingagents/default_config.py
+@@ -23,10 +23,10 @@ DEFAULT_CONFIG = {
+     # Data vendor configuration
+     # Category-level configuration (default for all tools in category)
+     "data_vendors": {
+-        "core_stock_apis": "yfinance",       # Options: alpha_vantage, yfinance
+-        "technical_indicators": "yfinance",  # Options: alpha_vantage, yfinance
+-        "fundamental_data": "yfinance",      # Options: alpha_vantage, yfinance
+-        "news_data": "yfinance",             # Options: alpha_vantage, yfinance
++        "core_stock_apis": "alpha_vantage, yfinance",
++        "technical_indicators": "alpha_vantage, yfinance",
++        "fundamental_data": "alpha_vantage, yfinance",
++        "news_data": "alpha_vantage, yfinance",
+     },
+     # Tool-level configuration (takes precedence over category-level)
+     "tool_vendors": {
 diff --git a/banini-tracker b/banini-tracker
 --- a/banini-tracker
 +++ b/banini-tracker
@@ -37,46 +139,8 @@ diff --git a/banini-tracker b/banini-tracker
 -Subproject commit 811be48e6702a2b8519e5297ed00c8a24d7cfe29
 +Subproject commit 811be48e6702a2b8519e5297ed00c8a24d7cfe29-dirty
 diff --git a/claude_cycle_monitor.log b/claude_cycle_monitor.log
-index 6b09435..659d03b 100644
---- a/claude_cycle_monitor.log
-+++ b/claude_cycle_monitor.log
-@@ -644,3 +644,21 @@ google.genai.errors.ServerError: 503 UNAVAILABLE. {'error': {'code': 503, 'messa
- [21:40] 自動同步完成
- [21:43] 下一事件：midpoint @ 00:30（167 分鐘後）
- [00:31] 下一事件：end_warn @ 02:40（129 分鐘後）
-+warning: adding embedded git repository: banini-tracker
-+hint: You've added another git repository inside your current repository.
-+hint: Clones of the outer repository will not contain the contents of
-+hint: the embedded repository and will not know how to obtain it.
-+hint: If you meant to add a submodule, use:
-+hint:
-+hint: 	git submodule add <url> banini-tracker
-+hint:
-+hint: If you added this path by mistake, you can remove it from the
-+hint: index with:
-+hint:
-+hint: 	git rm --cached banini-tracker
-+hint:
-+hint: See "git help submodule" for more information.
-+hint: Disable this message with "git config set advice.addEmbeddedRepo false"
-+[02:40] 自動同步完成
-+[02:42] 下一事件：midpoint @ 05:30（167 分鐘後）
-+[05:31] 下一事件：end_warn @ 07:40（129 分鐘後）
-diff --git a/logs/market-dashboard.log b/logs/market-dashboard.log
-index d3ce381..638fde3 100644
---- a/logs/market-dashboard.log
-+++ b/logs/market-dashboard.log
-@@ -154,3 +154,20 @@
- [07:00:07] 完成 → /Users/steven/CCProject/market-dashboard/index.html
-   VIX: 17.47  |  S&P: 7126.06  |  200MA: 6683.79  |  高於 200MA (+6.61%)  |  F&G: 68.08 (greed)
-   加權指數: 36804.33  |  200MA: 28036.28  |  vs 200MA: +31.27%  |  距高點: -0.9%  |  ATH: 37132.01
-+/Users/steven/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
-+  warnings.warn(
-+/Users/steven/Library/Python/3.9/lib/python/site-packages/urllib3/connectionpool.py:1097: InsecureRequestWarning: Unverified HTTPS request is being made to host 'www.twse.com.tw'. Adding certificate verification is strongly advised. See: https://urllib3.readthedocs.io/en/latest/advanced-usage.html#tls-warnings
-+  warnings.warn(
-+/Users/steven/Library/Python/3.9/lib/python/site-packages/urllib3/connectionpool.py:1097: InsecureRequestWarning: Unverified HTTPS request is being made to host 'www.twse.com.tw'. Adding certificate verification is strongly advised. See: https://urllib3.readthedocs.io/en/latest/advanced-usage.html#tls-warnings
-+  warnings.warn(
-+/Users/steven/Library/Python/3.9/lib/python/site-packages/urllib3/connectionpool.py:1097: InsecureRequestWarning: Unverified HTTPS request is being made to host 'www.twse.com.tw'. Adding certificate verification is strongly advised. See: https://urllib3.readthedocs.io/en/latest/advanced-usage.htm
+index 659d03b..27bdc4b 100644
+--- a/claude_
 ```
 
 ---

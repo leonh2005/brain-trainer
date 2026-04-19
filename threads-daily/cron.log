@@ -17,3 +17,7 @@ Traceback (most recent call last):
   File "/Users/steven/CCProject/threads-daily/threads_analyzer.py", line 13, in <module>
     from groq import Groq
 ModuleNotFoundError: No module named 'groq'
+Traceback (most recent call last):
+  File "/Users/steven/CCProject/threads-daily/threads_analyzer.py", line 13, in <module>
+    from groq import Groq
+ModuleNotFoundError: No module named 'groq'
