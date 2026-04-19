@@ -1,44 +1,36 @@
-# Claude Handoff 20260419_1740
+# Claude Handoff 20260419_2240
 
 ## Git 狀態（未提交）
 ```
 m banini-tracker
  M claude_cycle_monitor.log
+ M dashboard/dashboard.log
  M daytrade-replay/server.log
  M logs/shopee_stock.log
  M rabbit-care/motion-watcher.log
  M rabbit-care/rabbit-care.log
  M rabbit-care/rabbit.db
- D rabbit-care/static/action_screenshots/20260412_124412_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260412_125101_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260412_130532_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260412_131301_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260412_132311_drinking.jpg
- D rabbit-care/static/action_screenshots/20260412_133846_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260412_134422_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260412_140625_eating.jpg
- D rabbit-care/static/action_screenshots/20260412_144227_eating.jpg
+ D rabbit-care/static/action_screenshots/20260412_171903_eating.jpg
+ D rabbit-care/static/action_screenshots/20260412_173504_eating.jpg
+ D rabbit-care/static/action_screenshots/20260412_175345_eating.jpg
+ D rabbit-care/static/action_screenshots/20260412_182634_eating.jpg
+ D rabbit-care/static/action_screenshots/20260412_183134_eating.jpg
+ D rabbit-care/static/action_screenshots/20260412_200010_eating.jpg
+ D rabbit-care/static/action_screenshots/20260412_211244_eating.jpg
  m stock-screener-ai
  M stock-screener/screener.log
-?? dashboard.png
-?? dashboard/
-?? rabbit-care/static/action_screenshots/20260419_125759_eating.jpg
-?? rabbit-care/static/action_screenshots/20260419_130310_eating.jpg
-?? rabbit-care/static/action_screenshots/20260419_130822_eating.jpg
-?? rabbit-care/static/action_screenshots/20260419_131338_eating.jpg
-?? rabbit-care/static/action_screenshots/20260419_140047_sleeping.jpg
-?? rabbit-care/static/action_screenshots/20260419_140701_sleeping.jpg
-?? rabbit-care/static/action_screenshots/20260419_141204_sleeping.jpg
-?? rabbit-care/static/action_screenshots/20260419_141841_sleeping.jpg
-?? rabbit-care/static/action_screenshots/20260419_143514_eating.jpg
-?? rabbit-care/static/action_screenshots/20260419_150250_sleeping.jpg
-?? rabbit-care/static/action_screenshots/20260419_164222_eating.jpg
-?? rabbit-care/static/action_screenshots/20260419_165525_eating.jpg
-?? rabbit-care/static/action_screenshots/20260419_171829_eating.jpg
+?? rabbit-care/static/action_screenshots/20260419_175346_sleeping.jpg
+?? rabbit-care/static/action_screenshots/20260419_181021_eating.jpg
+?? rabbit-care/static/action_screenshots/20260419_182539_eating.jpg
+?? rabbit-care/static/action_screenshots/20260419_185136_eating.jpg
+?? rabbit-care/static/action_screenshots/20260419_193241_eating.jpg
+?? rabbit-care/static/action_screenshots/20260419_203535_eating.jpg
+?? rabbit-care/static/action_screenshots/20260419_220211_eating.jpg
 ```
 
 ## 近期 Commits
 ```
+c456d93 chore: 自動同步 2026-04-19 17:41
 c6ca667 chore: 自動同步 2026-04-19 12:40
 4fe3a8e chore: 自動同步 2026-04-19 07:41
 e0e2618 chore: 自動同步 2026-04-19 02:41
@@ -46,7 +38,6 @@ e0e2618 chore: 自動同步 2026-04-19 02:41
 b195ce1 chore: 自動同步 2026-04-18 16:41
 68e5dcd chore: 自動同步 2026-04-18 11:40
 4a8c342 chore: 自動同步 2026-04-18 06:40
-7432232 chore: 自動同步 2026-04-18 01:41
 ```
 
 ## 未提交的變更
@@ -58,49 +49,52 @@ diff --git a/banini-tracker b/banini-tracker
 -Subproject commit 811be48e6702a2b8519e5297ed00c8a24d7cfe29
 +Subproject commit 811be48e6702a2b8519e5297ed00c8a24d7cfe29-dirty
 diff --git a/claude_cycle_monitor.log b/claude_cycle_monitor.log
-index 27bdc4b..019d277 100644
+index 019d277..de7c66f 100644
 --- a/claude_cycle_monitor.log
 +++ b/claude_cycle_monitor.log
-@@ -665,3 +665,6 @@ hint: Disable this message with "git config set advice.addEmbeddedRepo false"
- [07:40] 自動同步完成
- [07:42] 下一事件：midpoint @ 10:30（167 分鐘後）
- [10:31] 下一事件：end_warn @ 12:40（129 分鐘後）
-+[12:40] 自動同步完成
-+[12:42] 下一事件：midpoint @ 15:30（168 分鐘後）
-+[15:31] 下一事件：end_warn @ 17:40（129 分鐘後）
-diff --git a/daytrade-replay/server.log b/daytrade-replay/server.log
-index 1a94810..5225af7 100644
---- a/daytrade-replay/server.log
-+++ b/daytrade-replay/server.log
-@@ -61621,3 +61621,432 @@ Port 5400 is in use by another program. Either identify and stop that program, o
-  * Running on http://127.0.0.1:5400
-  * Running on http://192.168.68.123:5400
- [33mPress CTRL+C to quit[0m
-+127.0.0.1 - - [19/Apr/2026 14:06:06] "[33mGET /api/health HTTP/1.1[0m" 404 -
-+127.0.0.1 - - [19/Apr/2026 14:06:09] "[33mGET /api/health HTTP/1.1[0m" 404 -
-+127.0.0.1 - - [19/Apr/2026 14:06:39] "[33mGET /api/health HTTP/1.1[0m" 404 -
-+127.0.0.1 - - [19/Apr/2026 14:07:09] "[33mGET /api/health HTTP/1.1[0m" 404 -
-+127.0.0.1 - - [19/Apr/2026 14:07:39] "[33mGET /api/health HTTP/1.1[0m" 404 -
-+127.0.0.1 - - [19/Apr/2026 14:08:09] "[33mGET /api/health HTTP/1.1[0m" 404 -
-+127.0.0.1 - - [19/Apr/2026 14:08:39] "[33mGET /api/health HTTP/1.1[0m" 404 -
-+127.0.0.1 - - [19/Apr/2026 14:09:09] "[33mGET /api/health HTTP/1.1[0m" 404 -
-+127.0.0.1 - - [19/Apr/2026 14:09:39] "[33mGET /api/health HTTP/1.1[0m" 404 -
-+127.0.0.1 - - [19/Apr/2026 14:10:09] "[33mGET /api/health HTTP/1.1[0m" 404 -
-+127.0.0.1 - - [19/Apr/2026 14:10:39] "[33mGET /api/health HTTP/1.1[0m" 404 -
-+127.0.0.1 - - [19/Apr/2026 14:11:09] "[33mGET /api/health HTTP/1.1[0m" 404 -
-+127.0.0.1 - - [19/Apr/2026 14:11:40] "[33mGET /api/health HTTP/1.1[0m" 404 -
-+127.0.0.1 - - [19/Apr/2026 14:12:10] "[33mGET /api/health HTTP/1.1[0m" 404 -
-+127.0.0.1 - - [19/Apr/2026 14:12:40] "[33mGET /api/health HTTP/1.1[0m" 404 -
-+127.0.0.1 - - [19/Apr/2026 14:13:10] "[33mGET /api/health HTTP/1.1[0m" 404 -
-+127.0.0.1 - - [19/Apr/2026 14:13:40] "[33mGET /api/health HTTP/1.1[0m" 404 -
-+127.0.0.1 - - [19/Apr/2026 14:14:10] "[33mGET /api/health HTTP/1.1[0m" 404 -
-+127.0.0.1 - - [19/Apr/2026 14:14:40] "[33mGET /api/health HTTP/1.1[0m" 404 -
-+127.0.0.1 - - [19/Apr/2026 14:15:10] "[33mGET /api/health HTTP/1.1[0m" 404 -
-+127.0.0.1 - - [19/Apr/2026 14:15:40] "[33mGET /api/health HTTP/1.1[0m" 404 -
-+127.0.0.1 - - [19/Apr/2026 14:16:10] "[33mGET /api/health HTTP/1.1[0m" 404 -
-+127.0.0.1 - - [19/Apr/2026 14:16:40] "[33mGET /api/health HTTP/1.1[0m" 404 -
-+127.0.0.1 - - [19/Apr/2026 14:17:10] "[33mGET /api/health HTTP/1.1[0m" 404 -
-+127.0.0.1 - - [19/Apr/202
+@@ -668,3 +668,6 @@ hint: Disable this message with "git config set advice.addEmbeddedRepo false"
+ [12:40] 自動同步完成
+ [12:42] 下一事件：midpoint @ 15:30（168 分鐘後）
+ [15:31] 下一事件：end_warn @ 17:40（129 分鐘後）
++[17:40] 自動同步完成
++[17:42] 下一事件：midpoint @ 20:30（168 分鐘後）
++[20:31] 下一事件：end_warn @ 22:40（129 分鐘後）
+diff --git a/dashboard/dashboard.log b/dashboard/dashboard.log
+index 4a2971c..fbfa73d 100644
+--- a/dashboard/dashboard.log
++++ b/dashboard/dashboard.log
+@@ -440,7 +440,3434 @@
+ 127.0.0.1 - - [19/Apr/2026 17:39:57] "GET /api/status HTTP/1.1" 200 -
+ 127.0.0.1 - - [19/Apr/2026 17:40:27] "GET /api/status HTTP/1.1" 200 -
+ 127.0.0.1 - - [19/Apr/2026 17:40:57] "GET /api/status HTTP/1.1" 200 -
+-er identify and stop that program, or start the server with a different port.
++127.0.0.1 - - [19/Apr/2026 17:41:27] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [19/Apr/2026 17:41:57] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [19/Apr/2026 17:42:27] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [19/Apr/2026 17:42:57] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [19/Apr/2026 17:43:27] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [19/Apr/2026 17:43:57] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [19/Apr/2026 17:44:27] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [19/Apr/2026 17:44:57] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [19/Apr/2026 17:45:28] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [19/Apr/2026 17:45:58] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [19/Apr/2026 17:46:28] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [19/Apr/2026 17:46:58] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [19/Apr/2026 17:47:28] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [19/Apr/2026 17:47:58] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [19/Apr/2026 17:48:28] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [19/Apr/2026 17:48:58] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [19/Apr/2026 17:49:28] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [19/Apr/2026 17:49:58] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [19/Apr/2026 17:50:28] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [19/Apr/2026 17:50:58] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [19/Apr/2026 17:51:28] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [19/Apr/2026 17:51:58] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [19/Apr/2026 17:52:28] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [19/Apr/2026 17:52:58] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [19/Apr/2026 17:53:28] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [19/Apr/2026 17:53:58] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - -
 ```
 
 ---
