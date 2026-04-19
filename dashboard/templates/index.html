@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Steven's Dashboard</title>
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --card: #12121a;
+      --border: #1e1e2e;
+      --accent: #a78bfa;
+      --green: #34d399;
+      --red: #f87171;
+      --yellow: #fbbf24;
+      --text: #e2e2f0;
+      --muted: #6b6b8a;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      padding: 28px 24px;
+      min-height: 100vh;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 32px;
+      padding-bottom: 18px;
+      border-bottom: 1px solid var(--border);
+    }
+    h1 { font-size: 20px; color: var(--accent); letter-spacing: 0.5px; }
+    .header-meta { font-size: 12px; color: var(--muted); line-height: 1.8; text-align: right; }
+    .header-date { font-size: 13px; color: var(--text); }
+
+    .section-label {
+      font-size: 11px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 14px;
+    }
+
+    /* ── 服務卡片 ── */
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+      gap: 12px;
+      margin-bottom: 36px;
+    }
+    .svc-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+      transition: border-color .2s, transform .15s;
+    }
+    .svc-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+    .svc-card.up      { border-left-color: var(--green); }
+    .svc-card.down    { border-left-color: var(--red); }
+    .svc-card.timeout { border-left-color: var(--yellow); }
+    .svc-card.loading { border-left-color: var(--border); opacity: 0.6; }
+    .svc-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+    .svc-name { font-size: 14px; font-weight: 600; }
+    .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--muted); flex-shrink: 0; }
+    .dot.up      { background: var(--green); box-shadow: 0 0 6px var(--green); }
+    .dot.down    { background: var(--red); }
+    .dot.timeout { background: var(--yellow); }
+    .svc-port  { font-size: 12px; color: var(--muted); }
+    .svc-meta  { display: flex; gap: 8px; align-items: center; margin-top: 8px; }
+    .badge-la  { font-size: 10px; background: #1e1e3a; color: var(--accent); padding: 2px 7px; border-radius: 10px; }
+    .latency   { font-size: 11px; color: var(--muted); }
+    .svc-status-text { font-size: 11px; margin-top: 4px; }
+    .svc-status-text.up      { color: var(--green); }
+    .svc-status-text.down    { color: var(--red); }
+    .svc-status-text.timeout { color: var(--yellow); }
+
+    /* ── 排程卡片 ── */
+    .crons-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 10px;
+    }
+    .cron-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .cron-icon { font-size: 22px; flex-shrink: 0; }
+    .cron-label  { font-size: 13px; font-weight: 600; }
+    .cron-sched  { font-size: 11px; color: var(--muted); margin-top: 3px; }
+    .cron-run    { font-size: 11px; margin-top: 5px; }
+    .cron-run.ran    { color: var(--green); }
+    .cron-run.notran { color: var(--muted); }
+
+    .skeleton { background: linear-gradient(90deg, var(--card) 25%, #1a1a2e 50%, var(--card) 75%);
+                background-size: 400% 100%; animation: shimmer 1.5s infinite; border-radius: 4px; }
+    @keyframes shimmer { 0%{background-position:100% 0} 100%{background-position:-100% 0} }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>⬡ Steven's Dashboard</h1>
+    </div>
+    <div class="header-meta">
+      <div class="header-date" id="today-date">—</div>
+      <div>更新於 <span id="last-updated">—</span> &nbsp;·&nbsp; <span id="countdown">30</span>s 後刷新</div>
+    </div>
+  </header>
+
+  <div class="section-label">Flask Services</div>
+  <div class="services-grid" id="services-grid">
+    <div class="svc-card loading skeleton" style="height:90px;"></div>
+    <div class="svc-card loading skeleton" style="height:90px;"></div>
+    <div class="svc-card loading skeleton" style="height:90px;"></div>
+    <div class="svc-card loading skeleton" style="height:90px;"></div>
+    <div class="svc-card loading skeleton" style="height:90px;"></div>
+  </div>
+
+  <div class="section-label">排程任務 — 今日狀態</div>
+  <div class="crons-grid" id="crons-grid">
+    <div class="cron-card skeleton" style="height:72px;"></div>
+    <div class="cron-card skeleton" style="height:72px;"></div>
+    <div class="cron-card skeleton" style="height:72px;"></div>
+    <div class="cron-card skeleton" style="height:72px;"></div>
+  </div>
+
+  <script>
+    let countdownVal = 30;
+    let countdownTimer = null;
+
+    function renderServices(services) {
+      document.getElementById('services-grid').innerHTML = services.map(s => {
+        const statusText = s.status === 'up' ? 'Online' : s.status === 'timeout' ? 'Timeout' : 'Offline';
+        const latency = s.latency_ms != null ? `<span class="latency">${s.latency_ms}ms</span>` : '';
+        const la = s.launch_agent ? '<span class="badge-la">LaunchAgent</span>' : '';
+        return `
+          <a class="svc-card ${s.status}" href="${s.url}" target="_blank" rel="noopener">
+            <div class="svc-top">
+              <span class="svc-name">${s.name}</span>
+              <span class="dot ${s.status}"></span>
+            </div>
+            <div class="svc-port">:${s.port}</div>
+            <div class="svc-status-text ${s.status}">${statusText}</div>
+            <div class="svc-meta">${la}${latency}</div>
+          </a>`;
+      }).join('');
+    }
+
+    function renderCrons(crons) {
+      document.getElementById('crons-grid').innerHTML = crons.map(c => {
+        const icon = c.ran_today ? '🟢' : '🔴';
+        const runClass = c.ran_today ? 'ran' : 'notran';
+        const runText = c.ran_today
+          ? (c.last_run ? `上次執行 ${c.last_run}` : '今日已執行')
+          : '今日未執行';
+        return `
+          <div class="cron-card">
+            <div class="cron-icon">${icon}</div>
+            <div>
+              <div class="cron-label">${c.label}</div>
+              <div class="cron-sched">${c.schedule}</div>
+              <div class="cron-run ${runClass}">${runText}</div>
+            </div>
+          </div>`;
+      }).join('');
+    }
+
+    async function fetchStatus() {
+      const res = await fetch('/api/status');
+      const data = await res.json();
+      renderServices(data.services);
+      renderCrons(data.crons);
+      document.getElementById('today-date').textContent = data.today;
+      document.getElementById('last-updated').textContent =
+        new Date(data.generated_at).toLocaleTimeString('zh-TW');
+    }
+
+    function startCountdown() {
+      clearInterval(countdownTimer);
+      countdownVal = 30;
+      document.getElementById('countdown').textContent = countdownVal;
+      countdownTimer = setInterval(() => {
+        countdownVal--;
+        document.getElementById('countdown').textContent = countdownVal;
+        if (countdownVal <= 0) {
+          clearInterval(countdownTimer);
+          fetchStatus().then(startCountdown);
+        }
+      }, 1000);
+    }
+
+    fetchStatus().then(startCountdown);
+  </script>
+</body>
+</html>
