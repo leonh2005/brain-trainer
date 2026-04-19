@@ -42,14 +42,16 @@
       text-transform: uppercase;
       letter-spacing: 1.5px;
       margin-bottom: 14px;
+      margin-top: 32px;
     }
+    .section-label:first-of-type { margin-top: 0; }
 
     /* ── 服務卡片 ── */
     .services-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
       gap: 12px;
-      margin-bottom: 36px;
+      margin-bottom: 8px;
     }
     .svc-card {
       background: var(--card);
@@ -76,11 +78,37 @@
     .svc-port  { font-size: 12px; color: var(--muted); }
     .svc-meta  { display: flex; gap: 8px; align-items: center; margin-top: 8px; }
     .badge-la  { font-size: 10px; background: #1e1e3a; color: var(--accent); padding: 2px 7px; border-radius: 10px; }
+    .badge-vm  { font-size: 10px; background: #1a2e1e; color: var(--green); padding: 2px 7px; border-radius: 10px; }
     .latency   { font-size: 11px; color: var(--muted); }
     .svc-status-text { font-size: 11px; margin-top: 4px; }
     .svc-status-text.up      { color: var(--green); }
     .svc-status-text.down    { color: var(--red); }
     .svc-status-text.timeout { color: var(--yellow); }
+
+    /* ── 背景程序 ── */
+    .bg-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+    .bg-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .bg-card.up   { border-left-color: var(--green); }
+    .bg-card.down { border-left-color: var(--red); }
+    .bg-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--muted); flex-shrink: 0; }
+    .bg-dot.up   { background: var(--green); box-shadow: 0 0 5px var(--green); }
+    .bg-dot.down { background: var(--red); }
+    .bg-label { font-size: 13px; font-weight: 600; }
+    .bg-meta  { font-size: 11px; color: var(--muted); margin-top: 3px; }
 
     /* ── 排程卡片 ── */
     .crons-grid {
@@ -103,6 +131,7 @@
     .cron-run    { font-size: 11px; margin-top: 5px; }
     .cron-run.ran    { color: var(--green); }
     .cron-run.notran { color: var(--muted); }
+    .cron-run.unknown { color: var(--yellow); }
 
     .skeleton { background: linear-gradient(90deg, var(--card) 25%, #1a1a2e 50%, var(--card) 75%);
                 background-size: 400% 100%; animation: shimmer 1.5s infinite; border-radius: 4px; }
@@ -120,18 +149,35 @@
     </div>
   </header>
 
-  <div class="section-label">Flask Services</div>
-  <div class="services-grid" id="services-grid">
-    <div class="svc-card loading skeleton" style="height:90px;"></div>
-    <div class="svc-card loading skeleton" style="height:90px;"></div>
+  <div class="section-label">本地 Flask 服務</div>
+  <div class="services-grid" id="local-services-grid">
     <div class="svc-card loading skeleton" style="height:90px;"></div>
     <div class="svc-card loading skeleton" style="height:90px;"></div>
     <div class="svc-card loading skeleton" style="height:90px;"></div>
   </div>
 
-  <div class="section-label">排程任務 — 今日狀態</div>
-  <div class="crons-grid" id="crons-grid">
+  <div class="section-label">Oracle VM 服務</div>
+  <div class="services-grid" id="vm-services-grid">
+    <div class="svc-card loading skeleton" style="height:90px;"></div>
+    <div class="svc-card loading skeleton" style="height:90px;"></div>
+  </div>
+
+  <div class="section-label">背景程序</div>
+  <div class="bg-grid" id="bg-grid">
+    <div class="bg-card skeleton" style="height:64px;"></div>
+    <div class="bg-card skeleton" style="height:64px;"></div>
+    <div class="bg-card skeleton" style="height:64px;"></div>
+  </div>
+
+  <div class="section-label">本地排程任務 — 今日狀態</div>
+  <div class="crons-grid" id="local-crons-grid">
     <div class="cron-card skeleton" style="height:72px;"></div>
+    <div class="cron-card skeleton" style="height:72px;"></div>
+    <div class="cron-card skeleton" style="height:72px;"></div>
+  </div>
+
+  <div class="section-label">VM 排程任務 — 今日狀態</div>
+  <div class="crons-grid" id="vm-crons-grid">
     <div class="cron-card skeleton" style="height:72px;"></div>
     <div class="cron-card skeleton" style="height:72px;"></div>
     <div class="cron-card skeleton" style="height:72px;"></div>
@@ -141,11 +187,13 @@
     let countdownVal = 30;
     let countdownTimer = null;
 
-    function renderServices(services) {
-      document.getElementById('services-grid').innerHTML = services.map(s => {
+    function renderServices(containerId, services, isVM) {
+      document.getElementById(containerId).innerHTML = services.map(s => {
         const statusText = s.status === 'up' ? 'Online' : s.status === 'timeout' ? 'Timeout' : 'Offline';
         const latency = s.latency_ms != null ? `<span class="latency">${s.latency_ms}ms</span>` : '';
-        const la = s.launch_agent ? '<span class="badge-la">LaunchAgent</span>' : '';
+        const badge = isVM
+          ? '<span class="badge-vm">VM</span>'
+          : (s.launch_agent ? '<span class="badge-la">LaunchAgent</span>' : '');
         return `
           <a class="svc-card ${s.status}" href="${s.url}" target="_blank" rel="noopener">
             <div class="svc-top">
@@ -154,18 +202,33 @@
             </div>
             <div class="svc-port">:${s.port}</div>
             <div class="svc-status-text ${s.status}">${statusText}</div>
-            <div class="svc-meta">${la}${latency}</div>
+            <div class="svc-meta">${badge}${latency}</div>
           </a>`;
       }).join('');
     }
 
-    function renderCrons(crons) {
-      document.getElementById('crons-grid').innerHTML = crons.map(c => {
-        const icon = c.ran_today ? '🟢' : '🔴';
-        const runClass = c.ran_today ? 'ran' : 'notran';
-        const runText = c.ran_today
-          ? (c.last_run ? `上次執行 ${c.last_run}` : '今日已執行')
-          : '今日未執行';
+    function renderBgProcs(procs) {
+      document.getElementById('bg-grid').innerHTML = procs.map(p => {
+        const seen = p.last_seen ? `最後活動 ${p.last_seen}` : '無記錄';
+        return `
+          <div class="bg-card ${p.status}">
+            <div class="bg-dot ${p.status}"></div>
+            <div>
+              <div class="bg-label">${p.label}</div>
+              <div class="bg-meta">${p.status === 'up' ? '運行中' : '疑似停止'} · ${seen}</div>
+            </div>
+          </div>`;
+      }).join('');
+    }
+
+    function renderCrons(containerId, crons) {
+      document.getElementById(containerId).innerHTML = crons.map(c => {
+        const isVmOffline = c.source === 'vm_offline';
+        const icon = isVmOffline ? '🟡' : (c.ran_today ? '🟢' : '🔴');
+        const runClass = isVmOffline ? 'unknown' : (c.ran_today ? 'ran' : 'notran');
+        const runText = isVmOffline
+          ? 'VM 無法連線'
+          : (c.ran_today ? (c.last_run ? `上次執行 ${c.last_run}` : '今日已執行') : '今日未執行');
         return `
           <div class="cron-card">
             <div class="cron-icon">${icon}</div>
@@ -181,8 +244,11 @@
     async function fetchStatus() {
       const res = await fetch('/api/status');
       const data = await res.json();
-      renderServices(data.services);
-      renderCrons(data.crons);
+      renderServices('local-services-grid', data.local_services, false);
+      renderServices('vm-services-grid', data.vm_services, true);
+      renderBgProcs(data.bg_procs);
+      renderCrons('local-crons-grid', data.local_crons);
+      renderCrons('vm-crons-grid', data.vm_crons);
       document.getElementById('today-date').textContent = data.today;
       document.getElementById('last-updated').textContent =
         new Date(data.generated_at).toLocaleTimeString('zh-TW');

@@ -42,7 +42,9 @@
         {% if entry.screenshot %}
         <a href="/static/{{ entry.screenshot }}" target="_blank" class="btn btn-sm btn-outline-secondary py-0 px-2 me-1">截圖</a>
         {% endif %}
+        {% if session.get('logged_in') %}
         <button class="btn btn-sm btn-outline-danger py-0 px-2" onclick="askDelete({{ entry.id }})">✕</button>
+        {% endif %}
       </span>
     </li>
     {% endfor %}
@@ -80,7 +82,7 @@
     </div>
     {% endif %}
   </div>
-  <a href="/rabbit" class="btn btn-primary btn-sm">編輯</a>
+  {% if session.get('logged_in') %}<a href="/rabbit" class="btn btn-primary btn-sm">編輯</a>{% endif %}
 </div>
 
 <!-- 體重趨勢 -->
@@ -151,7 +153,7 @@ function doDelete(id) {
   <p class="text-muted">尚無日誌</p>
   {% endif %}
   <div class="mt-16" style="display:flex; gap:8px;">
-    <a href="/log" class="btn btn-primary btn-sm">新增日誌</a>
+    {% if session.get('logged_in') %}<a href="/log" class="btn btn-primary btn-sm">新增日誌</a>{% endif %}
     <a href="/export/logs" class="btn btn-sm" style="background:#e8f5e9; color:#2e7d32;">📥 匯出</a>
   </div>
 </div>
@@ -174,7 +176,7 @@ function doDelete(id) {
   <p class="text-muted">尚無就醫紀錄</p>
   {% endif %}
   <div class="mt-16" style="display:flex; gap:8px;">
-    <a href="/vet" class="btn btn-primary btn-sm">新增紀錄</a>
+    {% if session.get('logged_in') %}<a href="/vet" class="btn btn-primary btn-sm">新增紀錄</a>{% endif %}
     <a href="/export/vet" class="btn btn-sm" style="background:#e8f5e9; color:#2e7d32;">📥 匯出</a>
   </div>
 </div>
@@ -196,13 +198,16 @@ function doDelete(id) {
     </tr>
     {% endfor %}
   </table>
+  {% if session.get('logged_in') %}
   <div class="mt-16">
     <a href="/med" class="btn btn-primary btn-sm">管理用藥</a>
   </div>
+  {% endif %}
 </div>
 {% endif %}
 
-<!-- 快速新增日誌 -->
+<!-- 快速新增日誌（僅登入者可見） -->
+{% if session.get('logged_in') %}
 <div class="card">
   <h2>⚡ 快速記錄今日狀況</h2>
   <form method="POST" action="/log">
@@ -240,6 +245,7 @@ function doDelete(id) {
     <button type="submit" class="btn btn-primary">儲存</button>
   </form>
 </div>
+{% endif %}
 
 {% endif %}
 {% endblock %}

@@ -2,6 +2,7 @@
 {% block content %}
 <div class="page-title">🏥 就醫紀錄</div>
 
+{% if session.get('logged_in') %}
 <div class="card">
   <h2>新增就醫紀錄</h2>
   <form method="POST">
@@ -40,12 +41,13 @@
     <button type="submit" class="btn btn-primary">儲存</button>
   </form>
 </div>
+{% endif %}
 
 <div class="card">
   <h2>就醫歷史</h2>
   {% if visits %}
   <table>
-    <tr><th>日期</th><th>症狀</th><th>診斷</th><th>治療</th><th>醫師</th><th>回診</th><th></th></tr>
+    <tr><th>日期</th><th>症狀</th><th>診斷</th><th>治療</th><th>醫師</th><th>回診</th>{% if session.get('logged_in') %}<th></th>{% endif %}</tr>
     {% for v in visits %}
     <tr>
       <td>{{ v.visit_date }}</td>
@@ -55,6 +57,7 @@
       <td>{{ v.vet_name or '-' }}</td>
       <td>{% if v.next_visit %}<span class="badge badge-orange">{{ v.next_visit }}</span>{% else %}-{% endif %}</td>
       <td style="white-space:nowrap;">
+        {% if session.get('logged_in') %}
         <button class="btn btn-sm" style="background:#e8f5e9;color:#2e7d32;border:1px solid #c8e6c9;"
           onclick="openEditVet({{ v.id }},'{{ v.visit_date }}',
             '{{ (v.symptoms or '')|replace("'","\\'") }}',
@@ -67,6 +70,7 @@
               onsubmit="return confirm('確定刪除？')">
           <button type="submit" class="btn btn-sm btn-danger">刪除</button>
         </form>
+        {% endif %}
       </td>
     </tr>
     {% endfor %}
@@ -79,6 +83,7 @@
   {% endif %}
 </div>
 
+{% if session.get('logged_in') %}
 <!-- 編輯彈窗 -->
 <div id="edit-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.4);
      z-index:1000; align-items:center; justify-content:center;">
@@ -146,4 +151,5 @@ document.getElementById('edit-modal').addEventListener('click', function(e) {
   if (e.target === this) closeEditVet();
 });
 </script>
+{% endif %}
 {% endblock %}

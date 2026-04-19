@@ -2,6 +2,7 @@
 {% block content %}
 <div class="page-title">📋 每日日誌</div>
 
+{% if session.get('logged_in') %}
 <div class="card">
   <h2>新增紀錄</h2>
   <form method="POST">
@@ -52,6 +53,7 @@
     </div>
   </form>
 </div>
+{% endif %}
 
 <!-- 歷史紀錄 -->
 <div class="card">
@@ -59,7 +61,7 @@
   {% if logs %}
   <table>
     <tr>
-      <th>日期</th><th>體重</th><th>食物</th><th>飲水</th><th>排便</th><th>觀察</th><th></th>
+      <th>日期</th><th>體重</th><th>食物</th><th>飲水</th><th>排便</th><th>觀察</th>{% if session.get('logged_in') %}<th></th>{% endif %}
     </tr>
     {% for log in logs %}
     <tr>
@@ -79,6 +81,7 @@
         {% else %}-{% endif %}
       </td>
       <td style="max-width:200px;">{{ log.health_note or '-' }}</td>
+      {% if session.get('logged_in') %}
       <td style="white-space:nowrap;">
         <button class="btn btn-sm" style="background:#e8f5e9;color:#2e7d32;border:1px solid #c8e6c9;"
           onclick="openEditLog({{ log.id }},'{{ log.log_date }}','{{ log.weight or '' }}',
@@ -89,6 +92,7 @@
           <button type="submit" class="btn btn-sm btn-danger">刪除</button>
         </form>
       </td>
+      {% endif %}
     </tr>
     {% endfor %}
   </table>
@@ -97,6 +101,7 @@
   {% endif %}
 </div>
 
+{% if session.get('logged_in') %}
 <!-- 編輯彈窗 -->
 <div id="edit-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.4);
      z-index:1000; align-items:center; justify-content:center;">
@@ -170,4 +175,5 @@ document.getElementById('edit-modal').addEventListener('click', function(e) {
   if (e.target === this) closeEditLog();
 });
 </script>
+{% endif %}
 {% endblock %}

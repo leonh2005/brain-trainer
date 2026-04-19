@@ -10,6 +10,7 @@
   </div>
 </div>
 
+{% if session.get('logged_in') %}
 <!-- 快速新增 -->
 <div class="card">
   <h2>快速新增</h2>
@@ -32,6 +33,7 @@
   </div>
   <div id="add-msg" style="margin-top:10px; font-size:14px; color:#2e7d32; display:none;"></div>
 </div>
+{% endif %}
 
 <!-- 今日明細 -->
 <div class="card">
@@ -46,7 +48,9 @@
       <td><strong>{{ r.amount_cc }} cc</strong></td>
       <td style="color:#888;">{{ r.note or '' }}</td>
       <td>
+        {% if session.get('logged_in') %}
         <button class="btn btn-danger btn-sm" onclick="deleteRecord({{ r.id }})">✕</button>
+        {% endif %}
       </td>
     </tr>
     {% endfor %}
