@@ -1,76 +1,45 @@
-# Claude Handoff 20260419_1240
+# Claude Handoff 20260419_1740
 
 ## Git 狀態（未提交）
 ```
-M TradingAgents-main/tradingagents/dataflows/finmind_tw.py
- M TradingAgents-main/tradingagents/dataflows/interface.py
- M TradingAgents-main/tradingagents/default_config.py
- m banini-tracker
+m banini-tracker
  M claude_cycle_monitor.log
  M daytrade-replay/server.log
- M logs/shopee_keepalive.log
  M logs/shopee_stock.log
- M logs/voice_ideas_report.log
- M rabbit-care/app.log
- M rabbit-care/app.py
  M rabbit-care/motion-watcher.log
  M rabbit-care/rabbit-care.log
  M rabbit-care/rabbit.db
- D rabbit-care/static/action_screenshots/20260412_055427_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260412_064615_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260412_072326_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260412_090406_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260412_091426_eating.jpg
- D rabbit-care/static/action_screenshots/20260412_091930_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260412_092432_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260412_093515_eating.jpg
- D rabbit-care/static/action_screenshots/20260412_094028_eating.jpg
- D rabbit-care/static/action_screenshots/20260412_094533_eating.jpg
- D rabbit-care/static/action_screenshots/20260412_100055_eating.jpg
- D rabbit-care/static/action_screenshots/20260412_101720_eating.jpg
- D rabbit-care/static/action_screenshots/20260412_104458_eating.jpg
- D rabbit-care/static/action_screenshots/20260412_111951_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260412_112639_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260412_113711_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260412_114419_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260412_115734_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260412_120353_sleeping.jpg
- M rabbit-care/templates/water.html
+ D rabbit-care/static/action_screenshots/20260412_124412_sleeping.jpg
+ D rabbit-care/static/action_screenshots/20260412_125101_sleeping.jpg
+ D rabbit-care/static/action_screenshots/20260412_130532_sleeping.jpg
+ D rabbit-care/static/action_screenshots/20260412_131301_sleeping.jpg
+ D rabbit-care/static/action_screenshots/20260412_132311_drinking.jpg
+ D rabbit-care/static/action_screenshots/20260412_133846_sleeping.jpg
+ D rabbit-care/static/action_screenshots/20260412_134422_sleeping.jpg
+ D rabbit-care/static/action_screenshots/20260412_140625_eating.jpg
+ D rabbit-care/static/action_screenshots/20260412_144227_eating.jpg
  m stock-screener-ai
  M stock-screener/screener.log
- M threads-daily/cron.log
-?? rabbit-care/static/action_screenshots/20260419_075756_sleeping.jpg
-?? rabbit-care/static/action_screenshots/20260419_082923_eating.jpg
-?? rabbit-care/static/action_screenshots/20260419_083600_eating.jpg
-?? rabbit-care/static/action_screenshots/20260419_085232_sleeping.jpg
-?? rabbit-care/static/action_screenshots/20260419_085853_sleeping.jpg
-?? rabbit-care/static/action_screenshots/20260419_092217_sleeping.jpg
-?? rabbit-care/static/action_screenshots/20260419_092723_sleeping.jpg
-?? rabbit-care/static/action_screenshots/20260419_093244_sleeping.jpg
-?? rabbit-care/static/action_screenshots/20260419_094439_sleeping.jpg
-?? rabbit-care/static/action_screenshots/20260419_100558_eating.jpg
-?? rabbit-care/static/action_screenshots/20260419_101111_eating.jpg
-?? rabbit-care/static/action_screenshots/20260419_101620_eating.jpg
-?? rabbit-care/static/action_screenshots/20260419_102129_eating.jpg
-?? rabbit-care/static/action_screenshots/20260419_103144_eating.jpg
-?? rabbit-care/static/action_screenshots/20260419_103701_sleeping.jpg
-?? rabbit-care/static/action_screenshots/20260419_104156_eating.jpg
-?? rabbit-care/static/action_screenshots/20260419_111836_eating.jpg
-?? rabbit-care/static/action_screenshots/20260419_113112_sleeping.jpg
-?? rabbit-care/static/action_screenshots/20260419_113822_sleeping.jpg
-?? rabbit-care/static/action_screenshots/20260419_114436_sleeping.jpg
-?? rabbit-care/static/action_screenshots/20260419_115057_sleeping.jpg
-?? rabbit-care/static/action_screenshots/20260419_120107_eating.jpg
-?? rabbit-care/static/action_screenshots/20260419_120617_eating.jpg
-?? rabbit-care/static/action_screenshots/20260419_121125_eating.jpg
-?? rabbit-care/static/action_screenshots/20260419_123742_eating.jpg
-?? ta_history_name.png
-?? water_chart.png
-?? water_fixed.png
+?? dashboard.png
+?? dashboard/
+?? rabbit-care/static/action_screenshots/20260419_125759_eating.jpg
+?? rabbit-care/static/action_screenshots/20260419_130310_eating.jpg
+?? rabbit-care/static/action_screenshots/20260419_130822_eating.jpg
+?? rabbit-care/static/action_screenshots/20260419_131338_eating.jpg
+?? rabbit-care/static/action_screenshots/20260419_140047_sleeping.jpg
+?? rabbit-care/static/action_screenshots/20260419_140701_sleeping.jpg
+?? rabbit-care/static/action_screenshots/20260419_141204_sleeping.jpg
+?? rabbit-care/static/action_screenshots/20260419_141841_sleeping.jpg
+?? rabbit-care/static/action_screenshots/20260419_143514_eating.jpg
+?? rabbit-care/static/action_screenshots/20260419_150250_sleeping.jpg
+?? rabbit-care/static/action_screenshots/20260419_164222_eating.jpg
+?? rabbit-care/static/action_screenshots/20260419_165525_eating.jpg
+?? rabbit-care/static/action_screenshots/20260419_171829_eating.jpg
 ```
 
 ## 近期 Commits
 ```
+c6ca667 chore: 自動同步 2026-04-19 12:40
 4fe3a8e chore: 自動同步 2026-04-19 07:41
 e0e2618 chore: 自動同步 2026-04-19 02:41
 2e835e5 chore: 自動同步 2026-04-18 21:41
@@ -78,60 +47,10 @@ b195ce1 chore: 自動同步 2026-04-18 16:41
 68e5dcd chore: 自動同步 2026-04-18 11:40
 4a8c342 chore: 自動同步 2026-04-18 06:40
 7432232 chore: 自動同步 2026-04-18 01:41
-e1feefb feat: TradingAgents 台股整合 + AI 買賣點分析 + 選股系統多Agent分頁
 ```
 
 ## 未提交的變更
 ```diff
-diff --git a/TradingAgents-main/tradingagents/dataflows/finmind_tw.py b/TradingAgents-main/tradingagents/dataflows/finmind_tw.py
-index fd3081e..9693e1b 100644
---- a/TradingAgents-main/tradingagents/dataflows/finmind_tw.py
-+++ b/TradingAgents-main/tradingagents/dataflows/finmind_tw.py
-@@ -84,9 +84,6 @@ def get_indicators(
-     if not _is_tw(symbol):
-         return f"{symbol} 非台股代碼"
- 
--    from .stockstats_utils import get_stock_stats_indicators_window as _ss
--    # stockstats_utils 內部用 yfinance 抓資料，但我們先試圖換成 FinMind 價格
--    # 若 FinMind 資料取得失敗，fallback 到 yfinance
-     end_dt = datetime.strptime(curr_date, "%Y-%m-%d")
-     start_dt = end_dt - timedelta(days=look_back_days + 60)  # 多抓一些供指標計算
- 
-diff --git a/TradingAgents-main/tradingagents/dataflows/interface.py b/TradingAgents-main/tradingagents/dataflows/interface.py
-index 8aa89c8..b6fba41 100644
---- a/TradingAgents-main/tradingagents/dataflows/interface.py
-+++ b/TradingAgents-main/tradingagents/dataflows/interface.py
-@@ -164,6 +164,11 @@ def route_to_vendor(method: str, *args, **kwargs):
-         if vendor not in fallback_vendors:
-             fallback_vendors.append(vendor)
- 
-+    # 台股（.TW）非新聞類別：只允許 finmind，不 fallback 到 yfinance / alpha_vantage
-+    first_arg = args[0] if args else (kwargs.get('symbol') or kwargs.get('ticker') or '')
-+    if isinstance(first_arg, str) and first_arg.upper().endswith('.TW') and category != 'news_data':
-+        fallback_vendors = [v for v in fallback_vendors if v == 'finmind']
-+
-     for vendor in fallback_vendors:
-         if vendor not in VENDOR_METHODS[method]:
-             continue
-diff --git a/TradingAgents-main/tradingagents/default_config.py b/TradingAgents-main/tradingagents/default_config.py
-index f79e655..c85f95e 100644
---- a/TradingAgents-main/tradingagents/default_config.py
-+++ b/TradingAgents-main/tradingagents/default_config.py
-@@ -23,10 +23,10 @@ DEFAULT_CONFIG = {
-     # Data vendor configuration
-     # Category-level configuration (default for all tools in category)
-     "data_vendors": {
--        "core_stock_apis": "yfinance",       # Options: alpha_vantage, yfinance
--        "technical_indicators": "yfinance",  # Options: alpha_vantage, yfinance
--        "fundamental_data": "yfinance",      # Options: alpha_vantage, yfinance
--        "news_data": "yfinance",             # Options: alpha_vantage, yfinance
-+        "core_stock_apis": "alpha_vantage, yfinance",
-+        "technical_indicators": "alpha_vantage, yfinance",
-+        "fundamental_data": "alpha_vantage, yfinance",
-+        "news_data": "alpha_vantage, yfinance",
-     },
-     # Tool-level configuration (takes precedence over category-level)
-     "tool_vendors": {
 diff --git a/banini-tracker b/banini-tracker
 --- a/banini-tracker
 +++ b/banini-tracker
@@ -139,8 +58,49 @@ diff --git a/banini-tracker b/banini-tracker
 -Subproject commit 811be48e6702a2b8519e5297ed00c8a24d7cfe29
 +Subproject commit 811be48e6702a2b8519e5297ed00c8a24d7cfe29-dirty
 diff --git a/claude_cycle_monitor.log b/claude_cycle_monitor.log
-index 659d03b..27bdc4b 100644
---- a/claude_
+index 27bdc4b..019d277 100644
+--- a/claude_cycle_monitor.log
++++ b/claude_cycle_monitor.log
+@@ -665,3 +665,6 @@ hint: Disable this message with "git config set advice.addEmbeddedRepo false"
+ [07:40] 自動同步完成
+ [07:42] 下一事件：midpoint @ 10:30（167 分鐘後）
+ [10:31] 下一事件：end_warn @ 12:40（129 分鐘後）
++[12:40] 自動同步完成
++[12:42] 下一事件：midpoint @ 15:30（168 分鐘後）
++[15:31] 下一事件：end_warn @ 17:40（129 分鐘後）
+diff --git a/daytrade-replay/server.log b/daytrade-replay/server.log
+index 1a94810..5225af7 100644
+--- a/daytrade-replay/server.log
++++ b/daytrade-replay/server.log
+@@ -61621,3 +61621,432 @@ Port 5400 is in use by another program. Either identify and stop that program, o
+  * Running on http://127.0.0.1:5400
+  * Running on http://192.168.68.123:5400
+ [33mPress CTRL+C to quit[0m
++127.0.0.1 - - [19/Apr/2026 14:06:06] "[33mGET /api/health HTTP/1.1[0m" 404 -
++127.0.0.1 - - [19/Apr/2026 14:06:09] "[33mGET /api/health HTTP/1.1[0m" 404 -
++127.0.0.1 - - [19/Apr/2026 14:06:39] "[33mGET /api/health HTTP/1.1[0m" 404 -
++127.0.0.1 - - [19/Apr/2026 14:07:09] "[33mGET /api/health HTTP/1.1[0m" 404 -
++127.0.0.1 - - [19/Apr/2026 14:07:39] "[33mGET /api/health HTTP/1.1[0m" 404 -
++127.0.0.1 - - [19/Apr/2026 14:08:09] "[33mGET /api/health HTTP/1.1[0m" 404 -
++127.0.0.1 - - [19/Apr/2026 14:08:39] "[33mGET /api/health HTTP/1.1[0m" 404 -
++127.0.0.1 - - [19/Apr/2026 14:09:09] "[33mGET /api/health HTTP/1.1[0m" 404 -
++127.0.0.1 - - [19/Apr/2026 14:09:39] "[33mGET /api/health HTTP/1.1[0m" 404 -
++127.0.0.1 - - [19/Apr/2026 14:10:09] "[33mGET /api/health HTTP/1.1[0m" 404 -
++127.0.0.1 - - [19/Apr/2026 14:10:39] "[33mGET /api/health HTTP/1.1[0m" 404 -
++127.0.0.1 - - [19/Apr/2026 14:11:09] "[33mGET /api/health HTTP/1.1[0m" 404 -
++127.0.0.1 - - [19/Apr/2026 14:11:40] "[33mGET /api/health HTTP/1.1[0m" 404 -
++127.0.0.1 - - [19/Apr/2026 14:12:10] "[33mGET /api/health HTTP/1.1[0m" 404 -
++127.0.0.1 - - [19/Apr/2026 14:12:40] "[33mGET /api/health HTTP/1.1[0m" 404 -
++127.0.0.1 - - [19/Apr/2026 14:13:10] "[33mGET /api/health HTTP/1.1[0m" 404 -
++127.0.0.1 - - [19/Apr/2026 14:13:40] "[33mGET /api/health HTTP/1.1[0m" 404 -
++127.0.0.1 - - [19/Apr/2026 14:14:10] "[33mGET /api/health HTTP/1.1[0m" 404 -
++127.0.0.1 - - [19/Apr/2026 14:14:40] "[33mGET /api/health HTTP/1.1[0m" 404 -
++127.0.0.1 - - [19/Apr/2026 14:15:10] "[33mGET /api/health HTTP/1.1[0m" 404 -
++127.0.0.1 - - [19/Apr/2026 14:15:40] "[33mGET /api/health HTTP/1.1[0m" 404 -
++127.0.0.1 - - [19/Apr/2026 14:16:10] "[33mGET /api/health HTTP/1.1[0m" 404 -
++127.0.0.1 - - [19/Apr/2026 14:16:40] "[33mGET /api/health HTTP/1.1[0m" 404 -
++127.0.0.1 - - [19/Apr/2026 14:17:10] "[33mGET /api/health HTTP/1.1[0m" 404 -
++127.0.0.1 - - [19/Apr/202
 ```
 
 ---
