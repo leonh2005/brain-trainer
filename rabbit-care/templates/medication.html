@@ -2,6 +2,7 @@
 {% block content %}
 <div class="page-title">💊 藥物紀錄</div>
 
+{% if session.get('logged_in') %}
 <!-- 新增藥物 -->
 <div class="card">
   <h2>新增用藥</h2>
@@ -39,6 +40,7 @@
     <button type="submit" class="btn btn-primary">新增</button>
   </form>
 </div>
+{% endif %}
 
 <!-- 用藥清單 -->
 {% if meds %}
@@ -69,6 +71,7 @@
       <td>{{ m.end_date or '持續中' }}</td>
       <td class="text-muted">{{ m.note or '-' }}</td>
       <td>
+        {% if session.get('logged_in') %}
         <button class="btn btn-sm btn-primary" onclick="openEdit({{ m.id }}, '{{ m.name }}', '{{ m.dose or '' }}', '{{ m.frequency or '' }}', '{{ m.start_date }}', '{{ m.end_date or '' }}', '{{ m.note or '' }}', {{ m.active }})">編輯</button>
         {% if m.active %}
         <form method="POST" action="/med/{{ m.id }}/stop" style="display:inline;">
@@ -78,6 +81,7 @@
         <form method="POST" action="/med/{{ m.id }}/delete" style="display:inline;">
           <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('確認刪除？')">刪除</button>
         </form>
+        {% endif %}
       </td>
     </tr>
     {% endfor %}
@@ -94,6 +98,7 @@
 </div>
 {% endif %}
 
+{% if session.get('logged_in') %}
 <!-- 編輯 Modal -->
 <div id="edit-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.45); z-index:200; align-items:center; justify-content:center;">
   <div style="background:white; border-radius:16px; padding:28px; width:90%; max-width:480px; box-shadow:0 8px 32px rgba(0,0,0,0.2);">
@@ -164,4 +169,5 @@ document.getElementById('edit-modal').addEventListener('click', function(e) {
   if (e.target === this) closeEdit();
 });
 </script>
+{% endif %}
 {% endblock %}

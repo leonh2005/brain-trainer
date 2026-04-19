@@ -39,6 +39,16 @@ def login_required(f):
     return decorated
 
 
+def write_login_required(f):
+    """GET 公開，POST/DELETE/PUT 需登入"""
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        if request.method != 'GET' and not session.get('logged_in'):
+            return redirect(url_for('login'))
+        return f(*args, **kwargs)
+    return decorated
+
+
 # ── Telegram ────────────────────────────────────────────────
 
 def send_telegram(text: str):
@@ -283,7 +293,6 @@ def logout():
 # ── 路由：首頁 ──────────────────────────────────────────────
 
 @app.route('/')
-@login_required
 def index():
     rabbit = get_rabbit()
     age = calc_age(rabbit['birthday']) if rabbit else ''
@@ -340,7 +349,7 @@ def index():
 # ── 路由：兔子資料 ───────────────────────────────────────────
 
 @app.route('/rabbit', methods=['GET', 'POST'])
-@login_required
+@write_login_required
 def rabbit_profile():
     if request.method == 'POST':
         data = request.form
@@ -379,7 +388,6 @@ def rabbit_profile():
 
 
 @app.route('/uploads/<filename>')
-@login_required
 def uploaded_file(filename):
     return send_from_directory(UPLOAD_FOLDER, filename)
 
@@ -387,7 +395,7 @@ def uploaded_file(filename):
 # ── 路由：日誌 ──────────────────────────────────────────────
 
 @app.route('/log', methods=['GET', 'POST'])
-@login_required
+@write_login_required
 def daily_log():
     if request.method == 'POST':
         data = request.form
@@ -439,7 +447,7 @@ def delete_log(log_id):
 # ── 路由：就醫紀錄 ───────────────────────────────────────────
 
 @app.route('/vet', methods=['GET', 'POST'])
-@login_required
+@write_login_required
 def vet_visit():
     if request.method == 'POST':
         data = request.form
@@ -488,7 +496,7 @@ def delete_vet(visit_id):
 # ── 路由：藥物紀錄 ───────────────────────────────────────────
 
 @app.route('/med', methods=['GET', 'POST'])
-@login_required
+@write_login_required
 def medication():
     if request.method == 'POST':
         data = request.form
@@ -545,7 +553,6 @@ def delete_med(med_id):
 # ── 路由：CSV 匯出 ───────────────────────────────────────────
 
 @app.route('/export/logs')
-@login_required
 def export_logs():
     with get_db() as conn:
         logs = conn.execute('SELECT * FROM daily_log ORDER BY log_date DESC').fetchall()
@@ -568,7 +575,6 @@ def export_logs():
 
 
 @app.route('/export/vet')
-@login_required
 def export_vet():
     with get_db() as conn:
         visits = conn.execute('SELECT * FROM vet_visit ORDER BY visit_date DESC').fetchall()
@@ -590,7 +596,6 @@ def export_vet():
 
 
 @app.route('/export/med')
-@login_required
 def export_med():
     with get_db() as conn:
         meds = conn.execute('SELECT * FROM medication ORDER BY start_date DESC').fetchall()
@@ -615,7 +620,6 @@ def export_med():
 # ── 路由：AI 諮詢 ────────────────────────────────────────────
 
 @app.route('/ai')
-@login_required
 def ai_chat():
     return render_template('ai_chat.html')
 
@@ -740,7 +744,6 @@ def api_today_actions():
 
 
 @app.route('/actions')
-@login_required
 def action_history():
     target_date = request.args.get('date', date.today().isoformat())
     action_labels = {
@@ -792,7 +795,6 @@ def _parse_cc(text):
 
 
 @app.route('/water')
-@login_required
 def water_log():
     from datetime import timedelta
     today = date.today().isoformat()

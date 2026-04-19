@@ -2,6 +2,7 @@
 {% block content %}
 <div class="page-title">🐰 兔子基本資料</div>
 
+{% if session.get('logged_in') %}
 <div class="card">
   <form method="POST" enctype="multipart/form-data">
     <!-- 照片上傳 -->
@@ -52,6 +53,12 @@
     <button type="submit" class="btn btn-primary">儲存</button>
   </form>
 </div>
+{% else %}
+<div class="card" style="text-align:center; padding:40px; color:#888;">
+  <div style="font-size:48px; margin-bottom:12px;">🔒</div>
+  <p>此頁面僅供管理員查看編輯</p>
+</div>
+{% endif %}
 
 <script>
 function previewPhoto(input) {
