@@ -164,6 +164,11 @@ def route_to_vendor(method: str, *args, **kwargs):
         if vendor not in fallback_vendors:
             fallback_vendors.append(vendor)
 
+    # 台股（.TW）非新聞類別：只允許 finmind，不 fallback 到 yfinance / alpha_vantage
+    first_arg = args[0] if args else (kwargs.get('symbol') or kwargs.get('ticker') or '')
+    if isinstance(first_arg, str) and first_arg.upper().endswith('.TW') and category != 'news_data':
+        fallback_vendors = [v for v in fallback_vendors if v == 'finmind']
+
     for vendor in fallback_vendors:
         if vendor not in VENDOR_METHODS[method]:
             continue

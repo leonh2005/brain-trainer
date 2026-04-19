@@ -5,6 +5,7 @@
 
 import os
 import io
+import re
 import csv
 import json
 import sqlite3
@@ -782,20 +783,45 @@ def action_history():
 
 # ── 路由：喝水紀錄 ───────────────────────────────────────────
 
+def _parse_cc(text):
+    """從文字中提取第一個數字作為 cc 數，例如 '25cc'、'早上喝15cc' → int。"""
+    if not text:
+        return None
+    m = re.search(r'(\d+)', str(text))
+    return int(m.group(1)) if m else None
+
+
 @app.route('/water')
 @login_required
 def water_log():
+    from datetime import timedelta
     today = date.today().isoformat()
     with get_db() as conn:
+        # water_log 今日紀錄
         today_records = conn.execute(
             'SELECT * FROM water_log WHERE log_date=? ORDER BY log_time ASC',
             (today,)
         ).fetchall()
-        today_total = conn.execute(
+        wl_total = conn.execute(
             'SELECT COALESCE(SUM(amount_cc),0) as total FROM water_log WHERE log_date=?',
             (today,)
         ).fetchone()['total']
-        # 最近 7 天每日總量
+
+        # daily_log 今日水量（解析 cc）
+        dl_today = conn.execute(
+            'SELECT water FROM daily_log WHERE log_date=? AND water IS NOT NULL',
+            (today,)
+        ).fetchall()
+        dl_today_cc = sum((_parse_cc(r['water']) or 0) for r in dl_today)
+        today_total = wl_total + dl_today_cc
+
+        # 今日來自日誌的紀錄（供前端顯示唯讀列）
+        dl_today_rows = [
+            {'water': r['water'], 'cc': _parse_cc(r['water'])}
+            for r in dl_today if _parse_cc(r['water'])
+        ]
+
+        # water_log 近 7 天
         history = conn.execute(
             '''SELECT log_date, SUM(amount_cc) as total
                FROM water_log
@@ -803,9 +829,19 @@ def water_log():
                GROUP BY log_date
                ORDER BY log_date ASC''',
         ).fetchall()
-    # 補齊 7 天（沒紀錄的日期填 0）
-    from datetime import timedelta
-    hist_map = {r['log_date']: r['total'] for r in history}
+        hist_map = {r['log_date']: r['total'] for r in history}
+
+        # daily_log 近 7 天（疊加）
+        dl_hist = conn.execute(
+            '''SELECT log_date, water FROM daily_log
+               WHERE log_date >= date('now','localtime','-6 days')
+               AND water IS NOT NULL''',
+        ).fetchall()
+        for r in dl_hist:
+            cc = _parse_cc(r['water'])
+            if cc:
+                hist_map[r['log_date']] = hist_map.get(r['log_date'], 0) + cc
+
     hist_labels, hist_values = [], []
     for i in range(6, -1, -1):
         d = (date.today() - timedelta(days=i)).isoformat()
@@ -814,6 +850,7 @@ def water_log():
     return render_template('water.html',
         today=today,
         today_records=today_records,
+        dl_today_rows=dl_today_rows,
         today_total=today_total,
         hist_labels=json.dumps(hist_labels),
         hist_values=json.dumps(hist_values),

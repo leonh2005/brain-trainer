@@ -84,9 +84,6 @@ def get_indicators(
     if not _is_tw(symbol):
         return f"{symbol} 非台股代碼"
 
-    from .stockstats_utils import get_stock_stats_indicators_window as _ss
-    # stockstats_utils 內部用 yfinance 抓資料，但我們先試圖換成 FinMind 價格
-    # 若 FinMind 資料取得失敗，fallback 到 yfinance
     end_dt = datetime.strptime(curr_date, "%Y-%m-%d")
     start_dt = end_dt - timedelta(days=look_back_days + 60)  # 多抓一些供指標計算
 
