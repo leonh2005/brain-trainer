@@ -3,29 +3,26 @@ import logging
 import os
 import re
 import time
-from groq import Groq
+from openai import OpenAI
 from dotenv import load_dotenv
 
 load_dotenv()
 logger = logging.getLogger(__name__)
 
 BATCH_SIZE = 20
-GROQ_MODELS = [
-    "llama-3.1-8b-instant",
-    "qwen/qwen3-32b",
-    "meta-llama/llama-4-scout-17b-16e-instruct",
+MODELS = [
+    "gpt-4o-mini",
 ]
 _current_model_idx = 0
 
 
 def get_model() -> str:
-    return GROQ_MODELS[_current_model_idx]
+    return MODELS[_current_model_idx]
 
 
 def next_model() -> str | None:
-    """切換到下一個備用模型，回傳新模型名稱；已是最後一個則回傳 None。"""
     global _current_model_idx
-    if _current_model_idx + 1 < len(GROQ_MODELS):
+    if _current_model_idx + 1 < len(MODELS):
         _current_model_idx += 1
         logger.warning(f"切換模型 → {get_model()}")
         return get_model()
@@ -50,17 +47,12 @@ BASE_SINGLE_PROMPT = """你是財經市場情緒分析師。分析以下新聞�
 {"id": <原id>, "relevant": <true/false>, "score": <1-10整數，不相關填5>, "summary": "<15字內，不相關填空字串>", "tags": ["標籤1","標籤2"]}"""
 
 
-def build_groq_client():
-    return Groq(api_key=os.getenv("GROQ_API_KEY"))
-
-
-def _no_think_prefix() -> str:
-    """qwen3 需要 /no_think 關閉思考模式才能穩定輸出 JSON。"""
-    return "/no_think\n" if "qwen3" in get_model() else ""
+def build_client():
+    return OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 
 def build_system_prompt(irrelevant_examples=None):
-    prompt = _no_think_prefix() + BASE_SYSTEM_PROMPT
+    prompt = BASE_SYSTEM_PROMPT
     if irrelevant_examples:
         examples_text = "\n".join(f"- {t}" for t in irrelevant_examples)
         prompt += f"\n\n以下是過去被標記為「不相關」的新聞標題範例，請參考類似模式：\n{examples_text}"
@@ -68,7 +60,7 @@ def build_system_prompt(irrelevant_examples=None):
 
 
 def build_single_prompt(irrelevant_examples=None):
-    prompt = _no_think_prefix() + BASE_SINGLE_PROMPT
+    prompt = BASE_SINGLE_PROMPT
     if irrelevant_examples:
         examples_text = "\n".join(f"- {t}" for t in irrelevant_examples)
         prompt += f"\n\n不相關範例：\n{examples_text}"
@@ -102,7 +94,7 @@ def extract_json(text):
 
 def analyze_single(client, article, irrelevant_examples=None):
     """單篇分析，作為 batch 失敗的 fallback。遇到 429 會切換模型重試一次。"""
-    for attempt in range(len(GROQ_MODELS)):
+    for attempt in range(len(MODELS)):
         try:
             content_text = (article.get("content") or "")[:200]
             completion = client.chat.completions.create(
@@ -133,9 +125,9 @@ def analyze_batch(articles, irrelevant_examples=None):
     """Send articles to Groq for sentiment analysis, return enriched list."""
     if not articles:
         return []
-    client = build_groq_client()
+    client = build_client()
 
-    for attempt in range(len(GROQ_MODELS)):
+    for attempt in range(len(MODELS)):
         try:
             articles_text = "\n".join(
                 f'[id={a["id"]}] 標題：{a["title"]} 內容：{(a.get("content") or "")[:200]}'
@@ -184,7 +176,7 @@ def analyze_batch(articles, irrelevant_examples=None):
                     continue
                 logger.warning("所有模型配額已耗盡，放棄此 batch")
                 return []
-            logger.warning(f"Groq analyze_batch failed: {e}, falling back to single analyze")
+            logger.warning(f"analyze_batch failed: {e}, falling back to single analyze")
             break
 
     # 整個 batch 失敗 → 逐篇
