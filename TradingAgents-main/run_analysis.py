@@ -42,14 +42,16 @@ config["max_risk_discuss_rounds"] = 1
 if ticker.endswith(".TW"):
     log("[init] 偵測到台股，資料來源切換為 FinMind")
     config["data_vendors"] = {
-        "core_stock_apis":     "finmind",   # OHLCV 價格
-        "technical_indicators": "finmind",  # 技術指標（FinMind 價格 + stockstats）
-        "fundamental_data":    "finmind",   # 財報、資產負債表、損益表、現金流
-        "news_data":           "yfinance",  # 新聞仍走 yfinance（FinMind 無新聞）
+        "core_stock_apis":     "finmind",
+        "technical_indicators": "finmind",
+        "fundamental_data":    "finmind",
+        "news_data":           "yfinance",
     }
     config["tool_vendors"] = {
-        "get_insider_transactions": "finmind",  # 三大法人取代 insider transactions
+        "get_insider_transactions": "finmind",
     }
+else:
+    log("[init] 偵測到美股，使用預設 yfinance / alpha_vantage")
 
 log("[init] 初始化 TradingAgentsGraph...")
 ta = TradingAgentsGraph(
