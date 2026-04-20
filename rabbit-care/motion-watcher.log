@@ -271122,3 +271122,3146 @@ OpenCV: Couldn't read video stream from file "rtsp://stevenhung:FREDjuik12@192.1
 2026-04-20 23:40:48,189 INFO 移動持續 15 秒，強制觸發分析
 2026-04-20 23:40:48,189 INFO 分析條件: motion_frames=44 cooldown剩餘=16s
 2026-04-20 23:40:48,533 INFO 偵測到移動，開始收集影格
+2026-04-20 23:41:03,789 INFO 移動持續 15 秒，強制觸發分析
+2026-04-20 23:41:03,789 INFO 分析條件: motion_frames=46 cooldown剩餘=1s
+2026-04-20 23:41:04,149 INFO 偵測到移動，開始收集影格
+2026-04-20 23:41:19,486 INFO 移動持續 15 秒，強制觸發分析
+2026-04-20 23:41:19,486 INFO 分析條件: motion_frames=47 cooldown剩餘=0s
+2026-04-20 23:41:19,539 INFO AFC is enabled with max remote calls: 10.
+2026-04-20 23:41:29,334 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 429 Too Many Requests"
+2026-04-20 23:41:29,337 WARNING Gemini 日配額耗盡，直接 fallback
+2026-04-20 23:41:29,337 WARNING Gemini 分析無結果，fallback 至 OpenAI
+2026-04-20 23:41:33,381 INFO HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-20 23:41:33,383 INFO 識別為休息，略過記錄 (信心: 0.95)
+2026-04-20 23:41:33,706 INFO 偵測到移動，開始收集影格
+2026-04-20 23:41:48,730 INFO 移動持續 15 秒，強制觸發分析
+2026-04-20 23:41:48,731 INFO 分析條件: motion_frames=47 cooldown剩餘=271s
+2026-04-20 23:41:49,002 INFO 偵測到移動，開始收集影格
+2026-04-20 23:42:04,165 INFO 移動持續 15 秒，強制觸發分析
+2026-04-20 23:42:04,166 INFO 分析條件: motion_frames=47 cooldown剩餘=255s
+2026-04-20 23:42:04,523 INFO 偵測到移動，開始收集影格
+2026-04-20 23:42:19,587 INFO 移動持續 15 秒，強制觸發分析
+2026-04-20 23:42:19,587 INFO 分析條件: motion_frames=48 cooldown剩餘=240s
+2026-04-20 23:42:19,945 INFO 偵測到移動，開始收集影格
+2026-04-20 23:42:35,441 INFO 移動持續 15 秒，強制觸發分析
+2026-04-20 23:42:35,443 INFO 分析條件: motion_frames=27 cooldown剩餘=224s
+2026-04-20 23:42:37,528 INFO 偵測到移動，開始收集影格
+2026-04-20 23:42:54,739 INFO 移動持續 15 秒，強制觸發分析
+2026-04-20 23:42:54,740 INFO 分析條件: motion_frames=39 cooldown剩餘=205s
+2026-04-20 23:42:55,311 INFO 偵測到移動，開始收集影格
+2026-04-20 23:43:15,728 INFO 移動持續 15 秒，強制觸發分析
+2026-04-20 23:43:15,728 INFO 分析條件: motion_frames=14 cooldown剩餘=184s
+2026-04-20 23:43:16,010 INFO 偵測到移動，開始收集影格
+2026-04-20 23:43:31,028 INFO 移動持續 15 秒，強制觸發分析
+2026-04-20 23:43:31,030 INFO 分析條件: motion_frames=47 cooldown剩餘=168s
+2026-04-20 23:43:31,306 INFO 偵測到移動，開始收集影格
+2026-04-20 23:43:46,359 INFO 移動持續 15 秒，強制觸發分析
+2026-04-20 23:43:46,361 INFO 分析條件: motion_frames=58 cooldown剩餘=153s
+2026-04-20 23:43:46,650 INFO 偵測到移動，開始收集影格
+2026-04-20 23:44:01,753 INFO 移動持續 15 秒，強制觸發分析
+2026-04-20 23:44:01,754 INFO 分析條件: motion_frames=58 cooldown剩餘=138s
+2026-04-20 23:44:02,041 INFO 偵測到移動，開始收集影格
+[h264 @ 0xa80dad880] reference picture missing during reorder
+[h264 @ 0xa80dad880] Missing reference picture, default is 65537
+[h264 @ 0xa80dadc00] mmco: unref short failure
+[h264 @ 0xa80dadc00] illegal short term buffer state detected
+2026-04-20 23:44:17,052 INFO 移動持續 15 秒，強制觸發分析
+2026-04-20 23:44:17,053 INFO 分析條件: motion_frames=52 cooldown剩餘=122s
+2026-04-20 23:44:17,319 INFO 偵測到移動，開始收集影格
+2026-04-20 23:44:32,579 INFO 移動持續 15 秒，強制觸發分析
+2026-04-20 23:44:32,581 INFO 分析條件: motion_frames=59 cooldown剩餘=107s
+2026-04-20 23:44:32,868 INFO 偵測到移動，開始收集影格
+2026-04-20 23:44:47,889 INFO 移動持續 15 秒，強制觸發分析
+2026-04-20 23:44:47,889 INFO 分析條件: motion_frames=57 cooldown剩餘=92s
+2026-04-20 23:44:48,171 INFO 偵測到移動，開始收集影格
+2026-04-20 23:45:03,430 INFO 移動持續 15 秒，強制觸發分析
+2026-04-20 23:45:03,432 INFO 分析條件: motion_frames=54 cooldown剩餘=76s
+2026-04-20 23:45:04,717 INFO 偵測到移動，開始收集影格
+2026-04-20 23:45:19,832 INFO 移動持續 15 秒，強制觸發分析
+2026-04-20 23:45:19,832 INFO 分析條件: motion_frames=52 cooldown剩餘=60s
+2026-04-20 23:45:20,116 INFO 偵測到移動，開始收集影格
+2026-04-20 23:45:35,396 INFO 移動持續 15 秒，強制觸發分析
+2026-04-20 23:45:35,398 INFO 分析條件: motion_frames=59 cooldown剩餘=44s
+2026-04-20 23:45:35,691 INFO 偵測到移動，開始收集影格
+2026-04-20 23:45:50,843 INFO 移動持續 15 秒，強制觸發分析
+2026-04-20 23:45:50,844 INFO 分析條件: motion_frames=51 cooldown剩餘=29s
+2026-04-20 23:45:51,106 INFO 偵測到移動，開始收集影格
+2026-04-20 23:46:06,222 INFO 移動持續 15 秒，強制觸發分析
+2026-04-20 23:46:06,223 INFO 分析條件: motion_frames=60 cooldown剩餘=13s
+2026-04-20 23:46:06,487 INFO 偵測到移動，開始收集影格
+2026-04-20 23:46:22,069 INFO 移動持續 15 秒，強制觸發分析
+2026-04-20 23:46:22,070 INFO 分析條件: motion_frames=52 cooldown剩餘=0s
+2026-04-20 23:46:22,117 INFO AFC is enabled with max remote calls: 10.
+2026-04-20 23:46:26,203 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 429 Too Many Requests"
+2026-04-20 23:46:26,241 WARNING Gemini 日配額耗盡，直接 fallback
+2026-04-20 23:46:26,242 WARNING Gemini 分析無結果，fallback 至 OpenAI
+2026-04-20 23:46:31,480 INFO HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-20 23:46:31,482 INFO 識別為休息，略過記錄 (信心: 0.95)
+2026-04-20 23:46:31,785 INFO 偵測到移動，開始收集影格
+2026-04-20 23:46:47,015 INFO 移動持續 15 秒，強制觸發分析
+2026-04-20 23:46:47,015 INFO 分析條件: motion_frames=57 cooldown剩餘=275s
+2026-04-20 23:46:47,284 INFO 偵測到移動，開始收集影格
+2026-04-20 23:47:02,444 INFO 移動持續 15 秒，強制觸發分析
+2026-04-20 23:47:02,444 INFO 分析條件: motion_frames=56 cooldown剩餘=260s
+2026-04-20 23:47:02,669 INFO 偵測到移動，開始收集影格
+2026-04-20 23:47:17,710 INFO 移動持續 15 秒，強制觸發分析
+2026-04-20 23:47:17,710 INFO 分析條件: motion_frames=57 cooldown剩餘=244s
+2026-04-20 23:47:17,996 INFO 偵測到移動，開始收集影格
+2026-04-20 23:47:33,435 INFO 移動持續 15 秒，強制觸發分析
+2026-04-20 23:47:33,435 INFO 分析條件: motion_frames=55 cooldown剩餘=229s
+2026-04-20 23:47:33,688 INFO 偵測到移動，開始收集影格
+2026-04-20 23:47:48,853 INFO 移動持續 15 秒，強制觸發分析
+2026-04-20 23:47:48,853 INFO 分析條件: motion_frames=53 cooldown剩餘=213s
+2026-04-20 23:47:49,133 INFO 偵測到移動，開始收集影格
+2026-04-20 23:48:04,254 INFO 移動持續 15 秒，強制觸發分析
+2026-04-20 23:48:04,254 INFO 分析條件: motion_frames=55 cooldown剩餘=198s
+2026-04-20 23:48:04,533 INFO 偵測到移動，開始收集影格
+2026-04-20 23:48:21,096 INFO 移動持續 15 秒，強制觸發分析
+2026-04-20 23:48:21,096 INFO 分析條件: motion_frames=55 cooldown剩餘=181s
+2026-04-20 23:48:22,414 INFO 偵測到移動，開始收集影格
+2026-04-20 23:48:37,446 INFO 移動持續 15 秒，強制觸發分析
+2026-04-20 23:48:37,447 INFO 分析條件: motion_frames=20 cooldown剩餘=165s
+2026-04-20 23:48:37,723 INFO 偵測到移動，開始收集影格
+2026-04-20 23:48:53,021 INFO 移動持續 15 秒，強制觸發分析
+2026-04-20 23:48:53,022 INFO 分析條件: motion_frames=46 cooldown剩餘=149s
+2026-04-20 23:48:53,309 INFO 偵測到移動，開始收集影格
+2026-04-20 23:49:08,689 INFO 移動持續 15 秒，強制觸發分析
+2026-04-20 23:49:08,690 INFO 分析條件: motion_frames=55 cooldown剩餘=133s
+2026-04-20 23:49:08,955 INFO 偵測到移動，開始收集影格
+2026-04-20 23:49:24,453 INFO 移動持續 15 秒，強制觸發分析
+2026-04-20 23:49:24,454 INFO 分析條件: motion_frames=28 cooldown剩餘=118s
+2026-04-20 23:49:26,310 INFO 偵測到移動，開始收集影格
+2026-04-20 23:49:43,243 INFO 移動持續 15 秒，強制觸發分析
+2026-04-20 23:49:43,244 INFO 分析條件: motion_frames=9 cooldown剩餘=99s
+2026-04-20 23:49:44,316 INFO 偵測到移動，開始收集影格
+2026-04-20 23:50:01,503 INFO 移動持續 15 秒，強制觸發分析
+2026-04-20 23:50:01,503 INFO 分析條件: motion_frames=4 cooldown剩餘=81s
+2026-04-20 23:50:01,784 INFO 偵測到移動，開始收集影格
+2026-04-20 23:50:17,071 INFO 移動持續 15 秒，強制觸發分析
+2026-04-20 23:50:17,072 INFO 分析條件: motion_frames=48 cooldown剩餘=65s
+2026-04-20 23:50:22,566 INFO 偵測到移動，開始收集影格
+2026-04-20 23:50:31,466 INFO 靜止 30 幀，觸發分析
+2026-04-20 23:50:31,467 INFO 分析條件: motion_frames=3 cooldown剩餘=51s
+2026-04-20 23:50:35,955 INFO 偵測到移動，開始收集影格
+2026-04-20 23:50:56,805 INFO 移動持續 15 秒，強制觸發分析
+2026-04-20 23:50:56,805 INFO 分析條件: motion_frames=7 cooldown剩餘=25s
+2026-04-20 23:51:02,380 INFO 偵測到移動，開始收集影格
+2026-04-20 23:51:24,138 INFO 靜止 30 幀，觸發分析
+2026-04-20 23:51:24,139 INFO 分析條件: motion_frames=7 cooldown剩餘=0s
+2026-04-20 23:51:28,565 INFO 偵測到移動，開始收集影格
+2026-04-20 23:51:43,714 INFO 移動持續 15 秒，強制觸發分析
+2026-04-20 23:51:43,715 INFO 分析條件: motion_frames=7 cooldown剩餘=0s
+2026-04-20 23:51:44,523 INFO 偵測到移動，開始收集影格
+2026-04-20 23:52:04,141 INFO 移動持續 15 秒，強制觸發分析
+2026-04-20 23:52:04,141 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-20 23:52:09,620 INFO 偵測到移動，開始收集影格
+2026-04-20 23:52:25,499 INFO 移動持續 15 秒，強制觸發分析
+2026-04-20 23:52:25,499 INFO 分析條件: motion_frames=8 cooldown剩餘=0s
+2026-04-20 23:52:25,756 INFO 偵測到移動，開始收集影格
+2026-04-20 23:52:47,283 INFO 靜止 30 幀，觸發分析
+2026-04-20 23:52:47,283 INFO 分析條件: motion_frames=7 cooldown剩餘=0s
+2026-04-20 23:52:51,883 INFO 偵測到移動，開始收集影格
+2026-04-20 23:53:08,232 INFO 移動持續 15 秒，強制觸發分析
+2026-04-20 23:53:08,232 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-20 23:53:14,759 INFO 偵測到移動，開始收集影格
+2026-04-20 23:53:34,437 INFO 移動持續 15 秒，強制觸發分析
+2026-04-20 23:53:34,437 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-20 23:53:34,722 INFO 偵測到移動，開始收集影格
+2026-04-20 23:53:55,781 INFO 移動持續 15 秒，強制觸發分析
+2026-04-20 23:53:55,782 INFO 分析條件: motion_frames=6 cooldown剩餘=0s
+2026-04-20 23:54:02,065 INFO 偵測到移動，開始收集影格
+2026-04-20 23:54:23,377 INFO 移動持續 15 秒，強制觸發分析
+2026-04-20 23:54:23,377 INFO 分析條件: motion_frames=9 cooldown剩餘=0s
+2026-04-20 23:54:23,620 INFO 偵測到移動，開始收集影格
+2026-04-20 23:54:44,547 INFO 移動持續 15 秒，強制觸發分析
+2026-04-20 23:54:44,548 INFO 分析條件: motion_frames=9 cooldown剩餘=0s
+2026-04-20 23:54:51,239 INFO 偵測到移動，開始收集影格
+2026-04-20 23:54:59,322 INFO 靜止 30 幀，觸發分析
+2026-04-20 23:54:59,322 INFO 分析條件: motion_frames=2 cooldown剩餘=0s
+2026-04-20 23:55:04,489 INFO 偵測到移動，開始收集影格
+2026-04-20 23:55:25,270 INFO 移動持續 15 秒，強制觸發分析
+2026-04-20 23:55:25,270 INFO 分析條件: motion_frames=6 cooldown剩餘=0s
+2026-04-20 23:55:31,937 INFO 偵測到移動，開始收集影格
+2026-04-20 23:55:50,472 INFO 移動持續 15 秒，強制觸發分析
+2026-04-20 23:55:50,472 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-20 23:55:57,275 INFO 偵測到移動，開始收集影格
+2026-04-20 23:56:17,229 INFO 移動持續 15 秒，強制觸發分析
+2026-04-20 23:56:17,229 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-20 23:56:23,611 INFO 偵測到移動，開始收集影格
+2026-04-20 23:56:31,306 INFO 靜止 30 幀，觸發分析
+2026-04-20 23:56:31,307 INFO 分析條件: motion_frames=1 cooldown剩餘=0s
+2026-04-20 23:56:36,365 INFO 偵測到移動，開始收集影格
+2026-04-20 23:56:51,860 INFO 移動持續 15 秒，強制觸發分析
+2026-04-20 23:56:51,862 INFO 分析條件: motion_frames=19 cooldown剩餘=0s
+2026-04-20 23:56:51,910 INFO AFC is enabled with max remote calls: 10.
+2026-04-20 23:56:57,702 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 429 Too Many Requests"
+2026-04-20 23:56:57,703 WARNING Gemini 日配額耗盡，直接 fallback
+2026-04-20 23:56:57,703 WARNING Gemini 分析無結果，fallback 至 OpenAI
+2026-04-20 23:57:05,703 INFO HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-20 23:57:05,733 INFO 已記錄動作: sleeping (信心: 0.95) 截圖: action_screenshots/20260420_235705_sleeping.jpg
+2026-04-20 23:57:15,395 INFO 偵測到移動，開始收集影格
+2026-04-20 23:57:33,914 INFO 靜止 30 幀，觸發分析
+2026-04-20 23:57:33,916 INFO 分析條件: motion_frames=39 cooldown剩餘=258s
+2026-04-20 23:57:38,916 INFO 偵測到移動，開始收集影格
+2026-04-20 23:57:54,198 INFO 移動持續 15 秒，強制觸發分析
+2026-04-20 23:57:54,198 INFO 分析條件: motion_frames=10 cooldown剩餘=238s
+2026-04-20 23:58:01,317 INFO 偵測到移動，開始收集影格
+2026-04-20 23:58:21,353 INFO 移動持續 15 秒，強制觸發分析
+2026-04-20 23:58:21,354 INFO 分析條件: motion_frames=7 cooldown剩餘=211s
+2026-04-20 23:58:28,430 INFO 偵測到移動，開始收集影格
+2026-04-20 23:58:48,414 INFO 移動持續 15 秒，強制觸發分析
+2026-04-20 23:58:48,414 INFO 分析條件: motion_frames=6 cooldown剩餘=183s
+2026-04-20 23:58:52,679 INFO 偵測到移動，開始收集影格
+2026-04-20 23:59:03,588 INFO 靜止 30 幀，觸發分析
+2026-04-20 23:59:03,588 INFO 分析條件: motion_frames=2 cooldown剩餘=168s
+2026-04-20 23:59:04,961 INFO 偵測到移動，開始收集影格
+2026-04-20 23:59:24,488 INFO 移動持續 15 秒，強制觸發分析
+2026-04-20 23:59:24,489 INFO 分析條件: motion_frames=5 cooldown剩餘=147s
+2026-04-20 23:59:31,153 INFO 偵測到移動，開始收集影格
+2026-04-20 23:59:46,965 INFO 移動持續 15 秒，強制觸發分析
+2026-04-20 23:59:46,966 INFO 分析條件: motion_frames=6 cooldown剩餘=125s
+2026-04-20 23:59:47,242 INFO 偵測到移動，開始收集影格
+2026-04-21 00:00:05,927 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:00:05,927 INFO 分析條件: motion_frames=5 cooldown剩餘=106s
+2026-04-21 00:00:13,118 INFO 偵測到移動，開始收集影格
+2026-04-21 00:00:32,453 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:00:32,453 INFO 分析條件: motion_frames=7 cooldown剩餘=79s
+2026-04-21 00:00:39,710 INFO 偵測到移動，開始收集影格
+2026-04-21 00:00:58,255 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:00:58,255 INFO 分析條件: motion_frames=7 cooldown剩餘=54s
+2026-04-21 00:00:58,535 INFO 偵測到移動，開始收集影格
+2026-04-21 00:01:13,557 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:01:13,558 INFO 分析條件: motion_frames=43 cooldown剩餘=38s
+2026-04-21 00:01:13,820 INFO 偵測到移動，開始收集影格
+2026-04-21 00:01:28,943 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:01:28,944 INFO 分析條件: motion_frames=33 cooldown剩餘=23s
+2026-04-21 00:01:29,223 INFO 偵測到移動，開始收集影格
+2026-04-21 00:01:44,365 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:01:44,366 INFO 分析條件: motion_frames=58 cooldown剩餘=7s
+2026-04-21 00:01:44,651 INFO 偵測到移動，開始收集影格
+2026-04-21 00:01:59,665 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:01:59,665 INFO 分析條件: motion_frames=44 cooldown剩餘=0s
+2026-04-21 00:01:59,706 INFO AFC is enabled with max remote calls: 10.
+2026-04-21 00:02:07,977 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 429 Too Many Requests"
+2026-04-21 00:02:07,978 WARNING Gemini 日配額耗盡，直接 fallback
+2026-04-21 00:02:07,979 WARNING Gemini 分析無結果，fallback 至 OpenAI
+2026-04-21 00:02:13,024 INFO HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-21 00:02:13,240 INFO 偵測到移動，開始收集影格
+2026-04-21 00:02:28,412 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:02:28,412 INFO 分析條件: motion_frames=36 cooldown剩餘=0s
+2026-04-21 00:02:28,446 INFO AFC is enabled with max remote calls: 10.
+2026-04-21 00:02:33,003 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 429 Too Many Requests"
+2026-04-21 00:02:33,004 WARNING Gemini 日配額耗盡，直接 fallback
+2026-04-21 00:02:33,004 WARNING Gemini 分析無結果，fallback 至 OpenAI
+2026-04-21 00:02:39,359 INFO HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-21 00:02:39,624 INFO 偵測到移動，開始收集影格
+2026-04-21 00:02:55,171 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:02:55,173 INFO 分析條件: motion_frames=34 cooldown剩餘=0s
+2026-04-21 00:02:55,223 INFO AFC is enabled with max remote calls: 10.
+2026-04-21 00:03:00,642 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 429 Too Many Requests"
+2026-04-21 00:03:00,643 WARNING Gemini 日配額耗盡，直接 fallback
+2026-04-21 00:03:00,643 WARNING Gemini 分析無結果，fallback 至 OpenAI
+2026-04-21 00:03:08,477 INFO HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-21 00:03:08,949 INFO 偵測到移動，開始收集影格
+2026-04-21 00:03:24,131 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:03:24,131 INFO 分析條件: motion_frames=43 cooldown剩餘=0s
+2026-04-21 00:03:24,161 INFO AFC is enabled with max remote calls: 10.
+2026-04-21 00:03:32,915 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 429 Too Many Requests"
+2026-04-21 00:03:32,915 WARNING Gemini 日配額耗盡，直接 fallback
+2026-04-21 00:03:32,916 WARNING Gemini 分析無結果，fallback 至 OpenAI
+2026-04-21 00:03:45,922 INFO HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-21 00:03:46,193 INFO 偵測到移動，開始收集影格
+2026-04-21 00:04:01,204 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:04:01,205 INFO 分析條件: motion_frames=48 cooldown剩餘=0s
+2026-04-21 00:04:01,259 INFO AFC is enabled with max remote calls: 10.
+2026-04-21 00:04:16,143 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 429 Too Many Requests"
+2026-04-21 00:04:16,144 WARNING Gemini 日配額耗盡，直接 fallback
+2026-04-21 00:04:16,144 WARNING Gemini 分析無結果，fallback 至 OpenAI
+2026-04-21 00:04:20,689 INFO HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-21 00:04:20,933 INFO 偵測到移動，開始收集影格
+2026-04-21 00:04:32,792 WARNING 讀取影格失敗，重新連線
+2026-04-21 00:04:34,458 INFO RTSP 串流連線成功
+2026-04-21 00:04:36,096 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:04:36,097 INFO 分析條件: motion_frames=38 cooldown剩餘=0s
+2026-04-21 00:04:36,137 INFO AFC is enabled with max remote calls: 10.
+2026-04-21 00:04:41,828 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 429 Too Many Requests"
+2026-04-21 00:04:41,829 WARNING Gemini 日配額耗盡，直接 fallback
+2026-04-21 00:04:41,830 WARNING Gemini 分析無結果，fallback 至 OpenAI
+2026-04-21 00:04:48,003 INFO HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-21 00:04:48,357 INFO 偵測到移動，開始收集影格
+2026-04-21 00:05:03,519 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:05:03,519 INFO 分析條件: motion_frames=50 cooldown剩餘=0s
+2026-04-21 00:05:03,560 INFO AFC is enabled with max remote calls: 10.
+2026-04-21 00:05:07,966 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 429 Too Many Requests"
+2026-04-21 00:05:07,967 WARNING Gemini 日配額耗盡，直接 fallback
+2026-04-21 00:05:07,967 WARNING Gemini 分析無結果，fallback 至 OpenAI
+2026-04-21 00:05:13,758 INFO HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-21 00:05:13,760 INFO 識別為休息，略過記錄 (信心: 0.85)
+2026-04-21 00:05:14,117 INFO 偵測到移動，開始收集影格
+2026-04-21 00:05:29,245 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:05:29,246 INFO 分析條件: motion_frames=50 cooldown剩餘=274s
+2026-04-21 00:05:29,596 INFO 偵測到移動，開始收集影格
+2026-04-21 00:05:44,767 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:05:44,768 INFO 分析條件: motion_frames=50 cooldown剩餘=259s
+2026-04-21 00:05:45,010 INFO 偵測到移動，開始收集影格
+2026-04-21 00:06:00,156 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:06:00,156 INFO 分析條件: motion_frames=49 cooldown剩餘=243s
+2026-04-21 00:06:00,485 INFO 偵測到移動，開始收集影格
+2026-04-21 00:06:15,499 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:06:15,499 INFO 分析條件: motion_frames=56 cooldown剩餘=228s
+2026-04-21 00:06:15,729 INFO 偵測到移動，開始收集影格
+2026-04-21 00:06:31,116 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:06:31,117 INFO 分析條件: motion_frames=56 cooldown剩餘=212s
+2026-04-21 00:06:32,416 INFO 偵測到移動，開始收集影格
+2026-04-21 00:06:50,667 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:06:50,667 INFO 分析條件: motion_frames=8 cooldown剩餘=193s
+2026-04-21 00:06:50,950 INFO 偵測到移動，開始收集影格
+2026-04-21 00:07:10,784 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:07:10,784 INFO 分析條件: motion_frames=6 cooldown剩餘=173s
+2026-04-21 00:07:17,014 INFO 偵測到移動，開始收集影格
+2026-04-21 00:07:36,720 INFO 靜止 30 幀，觸發分析
+2026-04-21 00:07:36,721 INFO 分析條件: motion_frames=7 cooldown剩餘=147s
+2026-04-21 00:07:41,836 INFO 偵測到移動，開始收集影格
+2026-04-21 00:08:01,935 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:08:01,935 INFO 分析條件: motion_frames=6 cooldown剩餘=122s
+2026-04-21 00:08:08,397 INFO 偵測到移動，開始收集影格
+2026-04-21 00:08:27,931 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:08:27,931 INFO 分析條件: motion_frames=5 cooldown剩餘=96s
+2026-04-21 00:08:34,617 INFO 偵測到移動，開始收集影格
+2026-04-21 00:08:53,382 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:08:53,383 INFO 分析條件: motion_frames=9 cooldown剩餘=70s
+2026-04-21 00:08:55,212 INFO 偵測到移動，開始收集影格
+2026-04-21 00:09:10,449 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:09:10,449 INFO 分析條件: motion_frames=9 cooldown剩餘=53s
+2026-04-21 00:09:10,725 INFO 偵測到移動，開始收集影格
+2026-04-21 00:09:26,154 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:09:26,155 INFO 分析條件: motion_frames=11 cooldown剩餘=37s
+2026-04-21 00:09:29,500 INFO 偵測到移動，開始收集影格
+2026-04-21 00:09:49,294 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:09:49,294 INFO 分析條件: motion_frames=5 cooldown剩餘=14s
+2026-04-21 00:09:53,190 INFO 偵測到移動，開始收集影格
+2026-04-21 00:10:12,489 INFO 靜止 30 幀，觸發分析
+2026-04-21 00:10:12,490 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-21 00:10:14,820 INFO 偵測到移動，開始收集影格
+2026-04-21 00:10:36,044 INFO 靜止 30 幀，觸發分析
+2026-04-21 00:10:36,045 INFO 分析條件: motion_frames=6 cooldown剩餘=0s
+2026-04-21 00:10:41,049 INFO 偵測到移動，開始收集影格
+2026-04-21 00:11:00,646 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:11:00,646 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-21 00:11:07,075 INFO 偵測到移動，開始收集影格
+2026-04-21 00:11:23,444 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:11:23,445 INFO 分析條件: motion_frames=20 cooldown剩餘=0s
+2026-04-21 00:11:23,484 INFO AFC is enabled with max remote calls: 10.
+2026-04-21 00:11:29,393 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 429 Too Many Requests"
+2026-04-21 00:11:29,394 WARNING Gemini 日配額耗盡，直接 fallback
+2026-04-21 00:11:29,394 WARNING Gemini 分析無結果，fallback 至 OpenAI
+2026-04-21 00:11:35,094 INFO HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-21 00:11:35,095 INFO 識別為休息，略過記錄 (信心: 0.95)
+2026-04-21 00:11:36,366 INFO 偵測到移動，開始收集影格
+2026-04-21 00:11:53,978 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:11:53,979 INFO 分析條件: motion_frames=9 cooldown剩餘=269s
+2026-04-21 00:11:54,195 INFO 偵測到移動，開始收集影格
+2026-04-21 00:12:13,001 INFO 靜止 30 幀，觸發分析
+2026-04-21 00:12:13,002 INFO 分析條件: motion_frames=12 cooldown剩餘=250s
+2026-04-21 00:12:13,230 INFO 偵測到移動，開始收集影格
+2026-04-21 00:12:28,443 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:12:28,443 INFO 分析條件: motion_frames=32 cooldown剩餘=235s
+2026-04-21 00:12:28,682 INFO 偵測到移動，開始收集影格
+2026-04-21 00:12:43,774 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:12:43,774 INFO 分析條件: motion_frames=30 cooldown剩餘=220s
+2026-04-21 00:12:44,058 INFO 偵測到移動，開始收集影格
+2026-04-21 00:13:05,482 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:13:05,482 INFO 分析條件: motion_frames=20 cooldown剩餘=198s
+2026-04-21 00:13:06,275 INFO 偵測到移動，開始收集影格
+2026-04-21 00:13:24,645 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:13:24,645 INFO 分析條件: motion_frames=4 cooldown剩餘=179s
+2026-04-21 00:13:28,216 INFO 偵測到移動，開始收集影格
+2026-04-21 00:13:47,230 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:13:47,230 INFO 分析條件: motion_frames=16 cooldown剩餘=156s
+2026-04-21 00:13:48,290 INFO 偵測到移動，開始收集影格
+2026-04-21 00:13:56,369 INFO 靜止 30 幀，觸發分析
+2026-04-21 00:13:56,369 INFO 分析條件: motion_frames=1 cooldown剩餘=147s
+2026-04-21 00:14:00,673 INFO 偵測到移動，開始收集影格
+2026-04-21 00:14:15,759 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:14:15,759 INFO 分析條件: motion_frames=6 cooldown剩餘=128s
+2026-04-21 00:14:15,989 INFO 偵測到移動，開始收集影格
+2026-04-21 00:14:34,429 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:14:34,429 INFO 分析條件: motion_frames=16 cooldown剩餘=109s
+2026-04-21 00:14:40,634 INFO 偵測到移動，開始收集影格
+2026-04-21 00:14:59,308 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:14:59,308 INFO 分析條件: motion_frames=7 cooldown剩餘=84s
+2026-04-21 00:14:59,590 INFO 偵測到移動，開始收集影格
+2026-04-21 00:15:07,067 INFO 靜止 30 幀，觸發分析
+2026-04-21 00:15:07,068 INFO 分析條件: motion_frames=1 cooldown剩餘=76s
+2026-04-21 00:15:08,715 INFO 偵測到移動，開始收集影格
+2026-04-21 00:15:24,822 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:15:24,822 INFO 分析條件: motion_frames=8 cooldown剩餘=59s
+2026-04-21 00:15:25,109 INFO 偵測到移動，開始收集影格
+2026-04-21 00:15:46,269 INFO 靜止 30 幀，觸發分析
+2026-04-21 00:15:46,269 INFO 分析條件: motion_frames=6 cooldown剩餘=37s
+2026-04-21 00:15:47,586 INFO 偵測到移動，開始收集影格
+2026-04-21 00:16:04,423 INFO 靜止 30 幀，觸發分析
+2026-04-21 00:16:04,423 INFO 分析條件: motion_frames=8 cooldown剩餘=19s
+2026-04-21 00:16:08,333 INFO 偵測到移動，開始收集影格
+2026-04-21 00:16:23,336 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:16:23,336 INFO 分析條件: motion_frames=28 cooldown剩餘=0s
+2026-04-21 00:16:23,566 INFO 偵測到移動，開始收集影格
+2026-04-21 00:16:38,644 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:16:38,644 INFO 分析條件: motion_frames=60 cooldown剩餘=0s
+2026-04-21 00:16:38,686 INFO AFC is enabled with max remote calls: 10.
+2026-04-21 00:16:46,512 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 429 Too Many Requests"
+2026-04-21 00:16:46,514 WARNING Gemini 日配額耗盡，直接 fallback
+2026-04-21 00:16:46,514 WARNING Gemini 分析無結果，fallback 至 OpenAI
+2026-04-21 00:16:53,929 INFO HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-21 00:16:53,932 INFO 識別為休息，略過記錄 (信心: 0.80)
+2026-04-21 00:16:54,225 INFO 偵測到移動，開始收集影格
+2026-04-21 00:17:09,476 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:17:09,476 INFO 分析條件: motion_frames=53 cooldown剩餘=269s
+2026-04-21 00:17:09,712 INFO 偵測到移動，開始收集影格
+2026-04-21 00:17:24,836 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:17:24,836 INFO 分析條件: motion_frames=45 cooldown剩餘=254s
+2026-04-21 00:17:25,060 INFO 偵測到移動，開始收集影格
+2026-04-21 00:17:40,642 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:17:40,642 INFO 分析條件: motion_frames=14 cooldown剩餘=238s
+2026-04-21 00:17:42,950 INFO 偵測到移動，開始收集影格
+2026-04-21 00:17:57,996 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:17:57,996 INFO 分析條件: motion_frames=36 cooldown剩餘=221s
+2026-04-21 00:17:58,279 INFO 偵測到移動，開始收集影格
+2026-04-21 00:18:16,015 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:18:16,015 INFO 分析條件: motion_frames=15 cooldown剩餘=203s
+2026-04-21 00:18:23,675 INFO 偵測到移動，開始收集影格
+2026-04-21 00:18:38,694 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:18:38,694 INFO 分析條件: motion_frames=53 cooldown剩餘=180s
+2026-04-21 00:18:38,955 INFO 偵測到移動，開始收集影格
+2026-04-21 00:18:54,004 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:18:54,004 INFO 分析條件: motion_frames=59 cooldown剩餘=165s
+2026-04-21 00:18:54,286 INFO 偵測到移動，開始收集影格
+2026-04-21 00:19:09,494 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:19:09,494 INFO 分析條件: motion_frames=31 cooldown剩餘=149s
+2026-04-21 00:19:09,746 INFO 偵測到移動，開始收集影格
+2026-04-21 00:19:24,832 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:19:24,832 INFO 分析條件: motion_frames=60 cooldown剩餘=134s
+2026-04-21 00:19:25,088 INFO 偵測到移動，開始收集影格
+2026-04-21 00:19:40,128 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:19:40,128 INFO 分析條件: motion_frames=46 cooldown剩餘=119s
+2026-04-21 00:19:40,416 INFO 偵測到移動，開始收集影格
+2026-04-21 00:19:55,511 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:19:55,512 INFO 分析條件: motion_frames=60 cooldown剩餘=103s
+2026-04-21 00:19:55,798 INFO 偵測到移動，開始收集影格
+2026-04-21 00:20:10,839 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:20:10,839 INFO 分析條件: motion_frames=58 cooldown剩餘=88s
+2026-04-21 00:20:11,550 INFO 偵測到移動，開始收集影格
+2026-04-21 00:20:26,577 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:20:26,578 INFO 分析條件: motion_frames=42 cooldown剩餘=72s
+2026-04-21 00:20:26,853 INFO 偵測到移動，開始收集影格
+2026-04-21 00:20:41,962 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:20:41,963 INFO 分析條件: motion_frames=41 cooldown剩餘=57s
+2026-04-21 00:20:42,196 INFO 偵測到移動，開始收集影格
+2026-04-21 00:20:57,478 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:20:57,478 INFO 分析條件: motion_frames=44 cooldown剩餘=41s
+2026-04-21 00:20:57,753 INFO 偵測到移動，開始收集影格
+2026-04-21 00:21:13,470 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:21:13,471 INFO 分析條件: motion_frames=36 cooldown剩餘=25s
+2026-04-21 00:21:13,730 INFO 偵測到移動，開始收集影格
+2026-04-21 00:21:29,341 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:21:29,341 INFO 分析條件: motion_frames=39 cooldown剩餘=9s
+2026-04-21 00:21:29,555 INFO 偵測到移動，開始收集影格
+2026-04-21 00:21:44,928 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:21:44,928 INFO 分析條件: motion_frames=25 cooldown剩餘=0s
+2026-04-21 00:21:44,957 INFO AFC is enabled with max remote calls: 10.
+2026-04-21 00:21:49,760 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 429 Too Many Requests"
+2026-04-21 00:21:49,761 WARNING Gemini 日配額耗盡，直接 fallback
+2026-04-21 00:21:49,762 WARNING Gemini 分析無結果，fallback 至 OpenAI
+2026-04-21 00:21:57,008 INFO HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-21 00:21:57,009 INFO 識別為休息，略過記錄 (信心: 0.95)
+2026-04-21 00:21:59,334 INFO 偵測到移動，開始收集影格
+2026-04-21 00:22:14,544 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:22:14,544 INFO 分析條件: motion_frames=15 cooldown剩餘=270s
+2026-04-21 00:22:14,822 INFO 偵測到移動，開始收集影格
+2026-04-21 00:22:30,542 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:22:30,542 INFO 分析條件: motion_frames=33 cooldown剩餘=254s
+2026-04-21 00:22:30,828 INFO 偵測到移動，開始收集影格
+2026-04-21 00:22:46,242 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:22:46,242 INFO 分析條件: motion_frames=10 cooldown剩餘=239s
+2026-04-21 00:22:47,031 INFO 偵測到移動，開始收集影格
+2026-04-21 00:23:02,069 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:23:02,070 INFO 分析條件: motion_frames=52 cooldown剩餘=223s
+2026-04-21 00:23:02,354 INFO 偵測到移動，開始收集影格
+2026-04-21 00:23:17,467 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:23:17,468 INFO 分析條件: motion_frames=60 cooldown剩餘=207s
+2026-04-21 00:23:17,723 INFO 偵測到移動，開始收集影格
+2026-04-21 00:23:32,790 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:23:32,790 INFO 分析條件: motion_frames=54 cooldown剩餘=192s
+2026-04-21 00:23:33,066 INFO 偵測到移動，開始收集影格
+2026-04-21 00:23:48,176 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:23:48,176 INFO 分析條件: motion_frames=40 cooldown剩餘=177s
+2026-04-21 00:23:48,441 INFO 偵測到移動，開始收集影格
+2026-04-21 00:24:03,600 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:24:03,600 INFO 分析條件: motion_frames=58 cooldown剩餘=161s
+2026-04-21 00:24:03,841 INFO 偵測到移動，開始收集影格
+2026-04-21 00:24:18,947 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:24:18,947 INFO 分析條件: motion_frames=60 cooldown剩餘=146s
+2026-04-21 00:24:19,217 INFO 偵測到移動，開始收集影格
+2026-04-21 00:24:34,865 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:24:34,865 INFO 分析條件: motion_frames=27 cooldown剩餘=130s
+2026-04-21 00:24:36,070 INFO 偵測到移動，開始收集影格
+2026-04-21 00:24:51,108 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:24:51,108 INFO 分析條件: motion_frames=30 cooldown剩餘=114s
+2026-04-21 00:24:51,388 INFO 偵測到移動，開始收集影格
+2026-04-21 00:25:06,915 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:25:06,915 INFO 分析條件: motion_frames=52 cooldown剩餘=98s
+2026-04-21 00:25:07,151 INFO 偵測到移動，開始收集影格
+2026-04-21 00:25:22,319 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:25:22,320 INFO 分析條件: motion_frames=58 cooldown剩餘=83s
+2026-04-21 00:25:22,543 INFO 偵測到移動，開始收集影格
+2026-04-21 00:25:35,328 INFO 靜止 30 幀，觸發分析
+2026-04-21 00:25:35,329 INFO 分析條件: motion_frames=11 cooldown剩餘=70s
+2026-04-21 00:25:37,926 INFO 偵測到移動，開始收集影格
+2026-04-21 00:25:52,985 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:25:52,986 INFO 分析條件: motion_frames=60 cooldown剩餘=52s
+2026-04-21 00:25:53,214 INFO 偵測到移動，開始收集影格
+2026-04-21 00:26:10,500 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:26:10,500 INFO 分析條件: motion_frames=30 cooldown剩餘=34s
+2026-04-21 00:26:11,948 INFO 偵測到移動，開始收集影格
+2026-04-21 00:26:29,319 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:26:29,320 INFO 分析條件: motion_frames=42 cooldown剩餘=16s
+2026-04-21 00:26:32,974 INFO 偵測到移動，開始收集影格
+2026-04-21 00:26:48,132 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:26:48,133 INFO 分析條件: motion_frames=49 cooldown剩餘=0s
+2026-04-21 00:26:48,172 INFO AFC is enabled with max remote calls: 10.
+2026-04-21 00:26:58,420 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 429 Too Many Requests"
+2026-04-21 00:26:58,421 WARNING Gemini 日配額耗盡，直接 fallback
+2026-04-21 00:26:58,421 WARNING Gemini 分析無結果，fallback 至 OpenAI
+2026-04-21 00:27:03,051 INFO HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-21 00:27:03,052 INFO 識別為休息，略過記錄 (信心: 0.85)
+2026-04-21 00:27:03,299 INFO 偵測到移動，開始收集影格
+2026-04-21 00:27:18,976 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:27:18,977 INFO 分析條件: motion_frames=45 cooldown剩餘=269s
+2026-04-21 00:27:19,259 INFO 偵測到移動，開始收集影格
+2026-04-21 00:27:34,341 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:27:34,341 INFO 分析條件: motion_frames=56 cooldown剩餘=254s
+2026-04-21 00:27:34,613 INFO 偵測到移動，開始收集影格
+2026-04-21 00:27:49,693 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:27:49,693 INFO 分析條件: motion_frames=44 cooldown剩餘=238s
+2026-04-21 00:27:56,810 INFO 偵測到移動，開始收集影格
+2026-04-21 00:28:04,524 INFO 靜止 30 幀，觸發分析
+2026-04-21 00:28:04,524 INFO 分析條件: motion_frames=1 cooldown剩餘=224s
+2026-04-21 00:28:05,035 INFO 偵測到移動，開始收集影格
+2026-04-21 00:28:17,530 INFO 靜止 30 幀，觸發分析
+2026-04-21 00:28:17,530 INFO 分析條件: motion_frames=3 cooldown剩餘=211s
+2026-04-21 00:28:20,691 INFO 偵測到移動，開始收集影格
+2026-04-21 00:28:35,762 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:28:35,763 INFO 分析條件: motion_frames=4 cooldown剩餘=192s
+2026-04-21 00:28:43,710 INFO 偵測到移動，開始收集影格
+2026-04-21 00:28:58,790 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:28:58,791 INFO 分析條件: motion_frames=28 cooldown剩餘=169s
+2026-04-21 00:28:59,029 INFO 偵測到移動，開始收集影格
+2026-04-21 00:29:16,918 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:29:16,918 INFO 分析條件: motion_frames=13 cooldown剩餘=151s
+2026-04-21 00:29:17,129 INFO 偵測到移動，開始收集影格
+2026-04-21 00:29:33,839 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:29:33,840 INFO 分析條件: motion_frames=6 cooldown剩餘=134s
+2026-04-21 00:29:35,387 INFO 偵測到移動，開始收集影格
+2026-04-21 00:29:50,512 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:29:50,513 INFO 分析條件: motion_frames=57 cooldown剩餘=118s
+2026-04-21 00:29:51,480 INFO 偵測到移動，開始收集影格
+2026-04-21 00:30:06,665 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:30:06,665 INFO 分析條件: motion_frames=35 cooldown剩餘=101s
+2026-04-21 00:30:06,916 INFO 偵測到移動，開始收集影格
+2026-04-21 00:30:22,117 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:30:22,118 INFO 分析條件: motion_frames=60 cooldown剩餘=86s
+[h264 @ 0xa80c14e00] left block unavailable for requested intra4x4 mode -1
+[h264 @ 0xa80c14e00] error while decoding MB 0 51, bytestream 6521
+2026-04-21 00:30:22,976 INFO 偵測到移動，開始收集影格
+2026-04-21 00:30:38,123 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:30:38,123 INFO 分析條件: motion_frames=55 cooldown剩餘=70s
+2026-04-21 00:30:38,405 INFO 偵測到移動，開始收集影格
+2026-04-21 00:30:53,476 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:30:53,476 INFO 分析條件: motion_frames=58 cooldown剩餘=55s
+2026-04-21 00:30:53,702 INFO 偵測到移動，開始收集影格
+2026-04-21 00:31:08,745 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:31:08,745 INFO 分析條件: motion_frames=55 cooldown剩餘=39s
+2026-04-21 00:31:09,020 INFO 偵測到移動，開始收集影格
+[h264 @ 0xa80c14700] left block unavailable for requested intra4x4 mode -1
+[h264 @ 0xa80c14700] error while decoding MB 0 57, bytestream 3339
+2026-04-21 00:31:24,073 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:31:24,073 INFO 分析條件: motion_frames=58 cooldown剩餘=24s
+2026-04-21 00:31:24,319 INFO 偵測到移動，開始收集影格
+2026-04-21 00:31:39,540 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:31:39,540 INFO 分析條件: motion_frames=60 cooldown剩餘=9s
+2026-04-21 00:31:39,805 INFO 偵測到移動，開始收集影格
+2026-04-21 00:31:55,031 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:31:55,031 INFO 分析條件: motion_frames=59 cooldown剩餘=0s
+2026-04-21 00:31:55,075 INFO AFC is enabled with max remote calls: 10.
+2026-04-21 00:32:01,009 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 429 Too Many Requests"
+2026-04-21 00:32:01,010 WARNING Gemini 日配額耗盡，直接 fallback
+2026-04-21 00:32:01,010 WARNING Gemini 分析無結果，fallback 至 OpenAI
+2026-04-21 00:32:06,056 INFO HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-21 00:32:06,057 INFO 識別為休息，略過記錄 (信心: 0.90)
+2026-04-21 00:32:06,322 INFO 偵測到移動，開始收集影格
+2026-04-21 00:32:21,508 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:32:21,508 INFO 分析條件: motion_frames=60 cooldown剩餘=274s
+2026-04-21 00:32:21,724 INFO 偵測到移動，開始收集影格
+2026-04-21 00:32:36,735 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:32:36,736 INFO 分析條件: motion_frames=58 cooldown剩餘=258s
+2026-04-21 00:32:36,995 INFO 偵測到移動，開始收集影格
+2026-04-21 00:32:52,055 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:32:52,055 INFO 分析條件: motion_frames=58 cooldown剩餘=243s
+2026-04-21 00:32:52,337 INFO 偵測到移動，開始收集影格
+2026-04-21 00:33:07,342 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:33:07,342 INFO 分析條件: motion_frames=58 cooldown剩餘=228s
+2026-04-21 00:33:07,616 INFO 偵測到移動，開始收集影格
+2026-04-21 00:33:22,823 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:33:22,823 INFO 分析條件: motion_frames=58 cooldown剩餘=212s
+2026-04-21 00:33:23,068 INFO 偵測到移動，開始收集影格
+2026-04-21 00:33:38,118 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:33:38,118 INFO 分析條件: motion_frames=60 cooldown剩餘=197s
+2026-04-21 00:33:38,328 INFO 偵測到移動，開始收集影格
+2026-04-21 00:33:53,500 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:33:53,500 INFO 分析條件: motion_frames=59 cooldown剩餘=182s
+2026-04-21 00:33:53,764 INFO 偵測到移動，開始收集影格
+2026-04-21 00:34:08,786 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:34:08,786 INFO 分析條件: motion_frames=58 cooldown剩餘=166s
+2026-04-21 00:34:09,059 INFO 偵測到移動，開始收集影格
+2026-04-21 00:34:24,263 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:34:24,263 INFO 分析條件: motion_frames=60 cooldown剩餘=151s
+2026-04-21 00:34:24,478 INFO 偵測到移動，開始收集影格
+2026-04-21 00:34:39,499 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:34:39,499 INFO 分析條件: motion_frames=59 cooldown剩餘=136s
+2026-04-21 00:34:39,760 INFO 偵測到移動，開始收集影格
+2026-04-21 00:34:54,914 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:34:54,914 INFO 分析條件: motion_frames=59 cooldown剩餘=120s
+2026-04-21 00:34:55,202 INFO 偵測到移動，開始收集影格
+2026-04-21 00:35:10,445 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:35:10,446 INFO 分析條件: motion_frames=55 cooldown剩餘=105s
+2026-04-21 00:35:10,691 INFO 偵測到移動，開始收集影格
+2026-04-21 00:35:25,712 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:35:25,712 INFO 分析條件: motion_frames=49 cooldown剩餘=89s
+2026-04-21 00:35:25,964 INFO 偵測到移動，開始收集影格
+2026-04-21 00:35:45,239 INFO 靜止 30 幀，觸發分析
+2026-04-21 00:35:45,240 INFO 分析條件: motion_frames=20 cooldown剩餘=70s
+2026-04-21 00:35:46,510 INFO 偵測到移動，開始收集影格
+2026-04-21 00:36:00,987 INFO 靜止 30 幀，觸發分析
+2026-04-21 00:36:00,987 INFO 分析條件: motion_frames=23 cooldown剩餘=54s
+2026-04-21 00:36:03,568 INFO 偵測到移動，開始收集影格
+2026-04-21 00:36:11,852 INFO 靜止 30 幀，觸發分析
+2026-04-21 00:36:11,852 INFO 分析條件: motion_frames=3 cooldown剩餘=43s
+2026-04-21 00:36:16,787 INFO 偵測到移動，開始收集影格
+2026-04-21 00:36:37,552 INFO 靜止 30 幀，觸發分析
+2026-04-21 00:36:37,552 INFO 分析條件: motion_frames=5 cooldown剩餘=17s
+2026-04-21 00:36:41,155 INFO 偵測到移動，開始收集影格
+2026-04-21 00:36:57,752 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:36:57,752 INFO 分析條件: motion_frames=13 cooldown剩餘=0s
+2026-04-21 00:36:57,791 INFO AFC is enabled with max remote calls: 10.
+2026-04-21 00:37:03,760 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 429 Too Many Requests"
+2026-04-21 00:37:03,762 WARNING Gemini 日配額耗盡，直接 fallback
+2026-04-21 00:37:03,762 WARNING Gemini 分析無結果，fallback 至 OpenAI
+2026-04-21 00:37:10,094 INFO HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-21 00:37:10,095 INFO 識別為休息，略過記錄 (信心: 0.85)
+2026-04-21 00:37:10,372 INFO 偵測到移動，開始收集影格
+2026-04-21 00:37:29,394 INFO 靜止 30 幀，觸發分析
+2026-04-21 00:37:29,394 INFO 分析條件: motion_frames=6 cooldown剩餘=268s
+2026-04-21 00:37:29,943 INFO 偵測到移動，開始收集影格
+2026-04-21 00:37:49,291 INFO 靜止 30 幀，觸發分析
+2026-04-21 00:37:49,291 INFO 分析條件: motion_frames=41 cooldown剩餘=248s
+2026-04-21 00:37:50,069 INFO 偵測到移動，開始收集影格
+2026-04-21 00:38:05,232 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:38:05,232 INFO 分析條件: motion_frames=47 cooldown剩餘=233s
+2026-04-21 00:38:08,903 INFO 偵測到移動，開始收集影格
+2026-04-21 00:38:16,656 INFO 靜止 30 幀，觸發分析
+2026-04-21 00:38:16,656 INFO 分析條件: motion_frames=1 cooldown剩餘=221s
+2026-04-21 00:38:18,225 INFO 偵測到移動，開始收集影格
+2026-04-21 00:38:38,694 INFO 靜止 30 幀，觸發分析
+2026-04-21 00:38:38,694 INFO 分析條件: motion_frames=4 cooldown剩餘=199s
+2026-04-21 00:38:40,983 INFO 偵測到移動，開始收集影格
+2026-04-21 00:38:57,051 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:38:57,051 INFO 分析條件: motion_frames=5 cooldown剩餘=181s
+2026-04-21 00:39:07,554 INFO 偵測到移動，開始收集影格
+2026-04-21 00:39:21,648 INFO 靜止 30 幀，觸發分析
+2026-04-21 00:39:21,648 INFO 分析條件: motion_frames=3 cooldown剩餘=156s
+2026-04-21 00:39:22,948 INFO 偵測到移動，開始收集影格
+2026-04-21 00:39:43,454 INFO 靜止 30 幀，觸發分析
+2026-04-21 00:39:43,454 INFO 分析條件: motion_frames=4 cooldown剩餘=134s
+2026-04-21 00:39:45,796 INFO 偵測到移動，開始收集影格
+2026-04-21 00:40:04,227 INFO 靜止 30 幀，觸發分析
+2026-04-21 00:40:04,228 INFO 分析條件: motion_frames=8 cooldown剩餘=114s
+2026-04-21 00:40:06,231 INFO 偵測到移動，開始收集影格
+2026-04-21 00:40:15,629 INFO 靜止 30 幀，觸發分析
+2026-04-21 00:40:15,630 INFO 分析條件: motion_frames=2 cooldown剩餘=102s
+2026-04-21 00:40:17,590 INFO 偵測到移動，開始收集影格
+2026-04-21 00:40:35,542 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:40:35,542 INFO 分析條件: motion_frames=9 cooldown剩餘=82s
+2026-04-21 00:40:43,060 INFO 偵測到移動，開始收集影格
+2026-04-21 00:41:03,492 INFO 靜止 30 幀，觸發分析
+2026-04-21 00:41:03,493 INFO 分析條件: motion_frames=4 cooldown剩餘=54s
+2026-04-21 00:41:05,572 INFO 偵測到移動，開始收集影格
+2026-04-21 00:41:19,708 INFO 靜止 30 幀，觸發分析
+2026-04-21 00:41:19,708 INFO 分析條件: motion_frames=3 cooldown剩餘=38s
+2026-04-21 00:41:21,410 INFO 偵測到移動，開始收集影格
+2026-04-21 00:41:35,338 INFO 靜止 30 幀，觸發分析
+2026-04-21 00:41:35,339 INFO 分析條件: motion_frames=4 cooldown剩餘=22s
+2026-04-21 00:41:35,856 INFO 偵測到移動，開始收集影格
+2026-04-21 00:41:56,314 INFO 靜止 30 幀，觸發分析
+2026-04-21 00:41:56,314 INFO 分析條件: motion_frames=4 cooldown剩餘=1s
+2026-04-21 00:41:58,125 INFO 偵測到移動，開始收集影格
+2026-04-21 00:42:14,311 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:42:14,312 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-21 00:42:14,573 INFO 偵測到移動，開始收集影格
+2026-04-21 00:42:24,586 INFO 靜止 30 幀，觸發分析
+2026-04-21 00:42:24,586 INFO 分析條件: motion_frames=2 cooldown剩餘=0s
+2026-04-21 00:42:26,418 INFO 偵測到移動，開始收集影格
+2026-04-21 00:42:42,653 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:42:42,654 INFO 分析條件: motion_frames=6 cooldown剩餘=0s
+2026-04-21 00:42:49,388 INFO 偵測到移動，開始收集影格
+2026-04-21 00:43:04,433 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:43:04,433 INFO 分析條件: motion_frames=9 cooldown剩餘=0s
+2026-04-21 00:43:04,717 INFO 偵測到移動，開始收集影格
+2026-04-21 00:43:21,707 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:43:21,707 INFO 分析條件: motion_frames=7 cooldown剩餘=0s
+2026-04-21 00:43:24,937 INFO 偵測到移動，開始收集影格
+2026-04-21 00:43:32,728 INFO 靜止 30 幀，觸發分析
+2026-04-21 00:43:32,728 INFO 分析條件: motion_frames=1 cooldown剩餘=0s
+2026-04-21 00:43:34,534 INFO 偵測到移動，開始收集影格
+2026-04-21 00:43:49,101 INFO 靜止 30 幀，觸發分析
+2026-04-21 00:43:49,102 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-21 00:43:51,302 INFO 偵測到移動，開始收集影格
+2026-04-21 00:43:59,325 INFO 靜止 30 幀，觸發分析
+2026-04-21 00:43:59,326 INFO 分析條件: motion_frames=2 cooldown剩餘=0s
+2026-04-21 00:44:01,204 INFO 偵測到移動，開始收集影格
+2026-04-21 00:44:17,223 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:44:17,223 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-21 00:44:17,503 INFO 偵測到移動，開始收集影格
+2026-04-21 00:44:39,696 INFO 靜止 30 幀，觸發分析
+2026-04-21 00:44:39,696 INFO 分析條件: motion_frames=8 cooldown剩餘=0s
+2026-04-21 00:44:41,215 INFO 偵測到移動，開始收集影格
+2026-04-21 00:44:55,278 INFO 靜止 30 幀，觸發分析
+2026-04-21 00:44:55,278 INFO 分析條件: motion_frames=3 cooldown剩餘=0s
+2026-04-21 00:44:57,533 INFO 偵測到移動，開始收集影格
+2026-04-21 00:45:09,545 INFO 靜止 30 幀，觸發分析
+2026-04-21 00:45:09,546 INFO 分析條件: motion_frames=6 cooldown剩餘=0s
+2026-04-21 00:45:10,804 INFO 偵測到移動，開始收集影格
+2026-04-21 00:45:25,295 INFO 靜止 30 幀，觸發分析
+2026-04-21 00:45:25,295 INFO 分析條件: motion_frames=3 cooldown剩餘=0s
+2026-04-21 00:45:27,558 INFO 偵測到移動，開始收集影格
+2026-04-21 00:45:48,427 INFO 靜止 30 幀，觸發分析
+2026-04-21 00:45:48,428 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-21 00:45:49,952 INFO 偵測到移動，開始收集影格
+2026-04-21 00:46:09,771 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:46:09,771 INFO 分析條件: motion_frames=6 cooldown剩餘=0s
+2026-04-21 00:46:12,336 INFO 偵測到移動，開始收集影格
+2026-04-21 00:46:20,033 INFO 靜止 30 幀，觸發分析
+2026-04-21 00:46:20,034 INFO 分析條件: motion_frames=1 cooldown剩餘=0s
+2026-04-21 00:46:21,568 INFO 偵測到移動，開始收集影格
+2026-04-21 00:46:35,440 INFO 靜止 30 幀，觸發分析
+2026-04-21 00:46:35,440 INFO 分析條件: motion_frames=3 cooldown剩餘=0s
+2026-04-21 00:46:38,057 INFO 偵測到移動，開始收集影格
+2026-04-21 00:46:53,991 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:46:53,991 INFO 分析條件: motion_frames=6 cooldown剩餘=0s
+2026-04-21 00:46:57,826 INFO 偵測到移動，開始收集影格
+2026-04-21 00:47:05,575 INFO 靜止 30 幀，觸發分析
+2026-04-21 00:47:05,576 INFO 分析條件: motion_frames=1 cooldown剩餘=0s
+2026-04-21 00:47:06,813 INFO 偵測到移動，開始收集影格
+2026-04-21 00:47:26,426 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:47:26,426 INFO 分析條件: motion_frames=6 cooldown剩餘=0s
+2026-04-21 00:47:28,190 INFO 偵測到移動，開始收集影格
+2026-04-21 00:47:35,952 INFO 靜止 30 幀，觸發分析
+2026-04-21 00:47:35,952 INFO 分析條件: motion_frames=1 cooldown剩餘=0s
+2026-04-21 00:47:37,260 INFO 偵測到移動，開始收集影格
+2026-04-21 00:47:57,021 INFO 靜止 30 幀，觸發分析
+2026-04-21 00:47:57,021 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-21 00:47:58,399 INFO 偵測到移動，開始收集影格
+2026-04-21 00:48:20,614 INFO 靜止 30 幀，觸發分析
+2026-04-21 00:48:20,614 INFO 分析條件: motion_frames=6 cooldown剩餘=0s
+2026-04-21 00:48:22,328 INFO 偵測到移動，開始收集影格
+2026-04-21 00:48:32,880 INFO 靜止 30 幀，觸發分析
+2026-04-21 00:48:32,880 INFO 分析條件: motion_frames=2 cooldown剩餘=0s
+2026-04-21 00:48:35,472 INFO 偵測到移動，開始收集影格
+2026-04-21 00:48:50,888 INFO 靜止 30 幀，觸發分析
+2026-04-21 00:48:50,889 INFO 分析條件: motion_frames=3 cooldown剩餘=0s
+2026-04-21 00:48:52,249 INFO 偵測到移動，開始收集影格
+2026-04-21 00:49:14,983 INFO 靜止 30 幀，觸發分析
+2026-04-21 00:49:14,983 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-21 00:49:15,977 INFO 偵測到移動，開始收集影格
+2026-04-21 00:49:33,240 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:49:33,240 INFO 分析條件: motion_frames=28 cooldown剩餘=0s
+2026-04-21 00:49:33,278 INFO AFC is enabled with max remote calls: 10.
+2026-04-21 00:49:39,088 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 429 Too Many Requests"
+2026-04-21 00:49:39,089 WARNING Gemini 日配額耗盡，直接 fallback
+2026-04-21 00:49:39,089 WARNING Gemini 分析無結果，fallback 至 OpenAI
+2026-04-21 00:49:45,988 INFO HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-21 00:49:46,039 INFO 已記錄動作: sleeping (信心: 0.95) 截圖: action_screenshots/20260421_004945_sleeping.jpg
+2026-04-21 00:49:49,707 INFO 偵測到移動，開始收集影格
+2026-04-21 00:49:57,565 INFO 靜止 30 幀，觸發分析
+2026-04-21 00:49:57,566 INFO 分析條件: motion_frames=1 cooldown剩餘=276s
+2026-04-21 00:49:59,921 INFO 偵測到移動，開始收集影格
+2026-04-21 00:50:19,030 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:50:19,030 INFO 分析條件: motion_frames=6 cooldown剩餘=254s
+2026-04-21 00:50:20,827 INFO 偵測到移動，開始收集影格
+2026-04-21 00:50:28,615 INFO 靜止 30 幀，觸發分析
+2026-04-21 00:50:28,615 INFO 分析條件: motion_frames=1 cooldown剩餘=245s
+2026-04-21 00:50:29,566 INFO 偵測到移動，開始收集影格
+2026-04-21 00:50:45,244 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:50:45,244 INFO 分析條件: motion_frames=6 cooldown剩餘=228s
+2026-04-21 00:50:51,732 INFO 偵測到移動，開始收集影格
+2026-04-21 00:51:00,033 INFO 靜止 30 幀，觸發分析
+2026-04-21 00:51:00,033 INFO 分析條件: motion_frames=2 cooldown剩餘=213s
+2026-04-21 00:51:00,833 INFO 偵測到移動，開始收集影格
+2026-04-21 00:51:11,061 INFO 靜止 30 幀，觸發分析
+2026-04-21 00:51:11,062 INFO 分析條件: motion_frames=2 cooldown剩餘=202s
+2026-04-21 00:51:11,879 INFO 偵測到移動，開始收集影格
+2026-04-21 00:51:20,844 INFO 靜止 30 幀，觸發分析
+2026-04-21 00:51:20,844 INFO 分析條件: motion_frames=2 cooldown剩餘=192s
+2026-04-21 00:51:21,575 INFO 偵測到移動，開始收集影格
+2026-04-21 00:51:42,575 INFO 靜止 30 幀，觸發分析
+2026-04-21 00:51:42,575 INFO 分析條件: motion_frames=5 cooldown剩餘=171s
+2026-04-21 00:51:43,365 INFO 偵測到移動，開始收集影格
+2026-04-21 00:52:04,014 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:52:04,014 INFO 分析條件: motion_frames=7 cooldown剩餘=149s
+2026-04-21 00:52:06,073 INFO 偵測到移動，開始收集影格
+2026-04-21 00:52:26,503 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:52:26,503 INFO 分析條件: motion_frames=6 cooldown剩餘=127s
+2026-04-21 00:52:27,855 INFO 偵測到移動，開始收集影格
+2026-04-21 00:52:48,324 INFO 靜止 30 幀，觸發分析
+2026-04-21 00:52:48,325 INFO 分析條件: motion_frames=4 cooldown剩餘=105s
+2026-04-21 00:52:48,852 INFO 偵測到移動，開始收集影格
+2026-04-21 00:53:10,662 INFO 靜止 30 幀，觸發分析
+2026-04-21 00:53:10,662 INFO 分析條件: motion_frames=5 cooldown剩餘=83s
+2026-04-21 00:53:11,170 INFO 偵測到移動，開始收集影格
+2026-04-21 00:53:30,184 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:53:30,184 INFO 分析條件: motion_frames=7 cooldown剩餘=63s
+2026-04-21 00:53:32,513 INFO 偵測到移動，開始收集影格
+2026-04-21 00:53:41,894 INFO 靜止 30 幀，觸發分析
+2026-04-21 00:53:41,894 INFO 分析條件: motion_frames=2 cooldown剩餘=51s
+2026-04-21 00:53:42,141 INFO 偵測到移動，開始收集影格
+2026-04-21 00:54:00,972 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:54:00,972 INFO 分析條件: motion_frames=6 cooldown剩餘=32s
+2026-04-21 00:54:04,878 INFO 偵測到移動，開始收集影格
+2026-04-21 00:54:18,227 INFO 靜止 30 幀，觸發分析
+2026-04-21 00:54:18,227 INFO 分析條件: motion_frames=6 cooldown剩餘=15s
+2026-04-21 00:54:20,080 INFO 偵測到移動，開始收集影格
+2026-04-21 00:54:38,162 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:54:38,163 INFO 分析條件: motion_frames=6 cooldown剩餘=0s
+2026-04-21 00:54:42,373 INFO 偵測到移動，開始收集影格
+2026-04-21 00:54:54,930 INFO 靜止 30 幀，觸發分析
+2026-04-21 00:54:54,930 INFO 分析條件: motion_frames=8 cooldown剩餘=0s
+2026-04-21 00:54:55,157 INFO 偵測到移動，開始收集影格
+2026-04-21 00:55:05,032 INFO 靜止 30 幀，觸發分析
+2026-04-21 00:55:05,033 INFO 分析條件: motion_frames=2 cooldown剩餘=0s
+2026-04-21 00:55:05,283 INFO 偵測到移動，開始收集影格
+2026-04-21 00:55:14,817 INFO 靜止 30 幀，觸發分析
+2026-04-21 00:55:14,817 INFO 分析條件: motion_frames=2 cooldown剩餘=0s
+2026-04-21 00:55:15,105 INFO 偵測到移動，開始收集影格
+2026-04-21 00:55:33,047 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:55:33,048 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-21 00:55:34,809 INFO 偵測到移動，開始收集影格
+[h264 @ 0xa80c16a00] reference picture missing during reorder
+[h264 @ 0xa80c16a00] Missing reference picture, default is 65536
+[h264 @ 0xa80c17480] mmco: unref short failure
+[h264 @ 0xa80c17480] illegal short term buffer state detected
+2026-04-21 00:55:49,890 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:55:49,891 INFO 分析條件: motion_frames=6 cooldown剩餘=0s
+2026-04-21 00:55:50,147 INFO 偵測到移動，開始收集影格
+2026-04-21 00:56:03,933 INFO 靜止 30 幀，觸發分析
+2026-04-21 00:56:03,933 INFO 分析條件: motion_frames=3 cooldown剩餘=0s
+2026-04-21 00:56:07,787 INFO 偵測到移動，開始收集影格
+2026-04-21 00:56:28,443 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:56:28,443 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-21 00:56:33,767 INFO 偵測到移動，開始收集影格
+2026-04-21 00:56:54,110 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:56:54,110 INFO 分析條件: motion_frames=6 cooldown剩餘=0s
+2026-04-21 00:56:59,593 INFO 偵測到移動，開始收集影格
+2026-04-21 00:57:17,663 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:57:17,663 INFO 分析條件: motion_frames=8 cooldown剩餘=0s
+2026-04-21 00:57:20,181 INFO 偵測到移動，開始收集影格
+2026-04-21 00:57:38,554 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:57:38,554 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-21 00:57:39,631 INFO 偵測到移動，開始收集影格
+2026-04-21 00:57:58,099 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:57:58,100 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-21 00:57:58,344 INFO 偵測到移動，開始收集影格
+2026-04-21 00:58:19,303 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:58:19,303 INFO 分析條件: motion_frames=9 cooldown剩餘=0s
+2026-04-21 00:58:19,592 INFO 偵測到移動，開始收集影格
+2026-04-21 00:58:35,281 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:58:35,281 INFO 分析條件: motion_frames=8 cooldown剩餘=0s
+2026-04-21 00:58:41,755 INFO 偵測到移動，開始收集影格
+2026-04-21 00:58:56,957 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:58:56,957 INFO 分析條件: motion_frames=31 cooldown剩餘=0s
+2026-04-21 00:58:57,000 INFO AFC is enabled with max remote calls: 10.
+2026-04-21 00:59:10,896 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 429 Too Many Requests"
+2026-04-21 00:59:10,897 WARNING Gemini 日配額耗盡，直接 fallback
+2026-04-21 00:59:10,897 WARNING Gemini 分析無結果，fallback 至 OpenAI
+2026-04-21 00:59:16,705 INFO HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-21 00:59:16,707 INFO 識別為休息，略過記錄 (信心: 0.95)
+2026-04-21 00:59:16,944 INFO 偵測到移動，開始收集影格
+2026-04-21 00:59:32,054 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 00:59:32,054 INFO 分析條件: motion_frames=32 cooldown剩餘=265s
+2026-04-21 00:59:44,433 INFO 偵測到移動，開始收集影格
+2026-04-21 01:00:00,144 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:00:00,144 INFO 分析條件: motion_frames=10 cooldown剩餘=237s
+2026-04-21 01:00:00,400 INFO 偵測到移動，開始收集影格
+2026-04-21 01:00:19,552 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:00:19,552 INFO 分析條件: motion_frames=13 cooldown剩餘=217s
+2026-04-21 01:00:24,871 INFO 偵測到移動，開始收集影格
+2026-04-21 01:00:33,348 INFO 靜止 30 幀，觸發分析
+2026-04-21 01:00:33,349 INFO 分析條件: motion_frames=2 cooldown剩餘=204s
+2026-04-21 01:00:35,397 INFO 偵測到移動，開始收集影格
+2026-04-21 01:00:50,468 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:00:50,468 INFO 分析條件: motion_frames=38 cooldown剩餘=186s
+2026-04-21 01:00:50,681 INFO 偵測到移動，開始收集影格
+2026-04-21 01:01:05,799 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:01:05,801 INFO 分析條件: motion_frames=59 cooldown剩餘=171s
+2026-04-21 01:01:06,090 INFO 偵測到移動，開始收集影格
+2026-04-21 01:01:22,863 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:01:22,863 INFO 分析條件: motion_frames=23 cooldown剩餘=154s
+2026-04-21 01:01:23,148 INFO 偵測到移動，開始收集影格
+2026-04-21 01:01:38,310 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:01:38,311 INFO 分析條件: motion_frames=58 cooldown剩餘=139s
+2026-04-21 01:01:38,554 INFO 偵測到移動，開始收集影格
+2026-04-21 01:01:53,682 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:01:53,682 INFO 分析條件: motion_frames=59 cooldown剩餘=123s
+2026-04-21 01:01:53,914 INFO 偵測到移動，開始收集影格
+2026-04-21 01:02:09,105 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:02:09,106 INFO 分析條件: motion_frames=52 cooldown剩餘=108s
+2026-04-21 01:02:09,390 INFO 偵測到移動，開始收集影格
+2026-04-21 01:02:27,329 INFO 靜止 30 幀，觸發分析
+2026-04-21 01:02:27,329 INFO 分析條件: motion_frames=27 cooldown剩餘=90s
+2026-04-21 01:02:28,889 INFO 偵測到移動，開始收集影格
+2026-04-21 01:02:43,933 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:02:43,933 INFO 分析條件: motion_frames=17 cooldown剩餘=73s
+2026-04-21 01:02:44,219 INFO 偵測到移動，開始收集影格
+2026-04-21 01:02:59,352 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:02:59,352 INFO 分析條件: motion_frames=56 cooldown剩餘=58s
+2026-04-21 01:02:59,638 INFO 偵測到移動，開始收集影格
+2026-04-21 01:03:14,869 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:03:14,869 INFO 分析條件: motion_frames=49 cooldown剩餘=42s
+2026-04-21 01:03:15,142 INFO 偵測到移動，開始收集影格
+2026-04-21 01:03:30,168 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:03:30,168 INFO 分析條件: motion_frames=48 cooldown剩餘=27s
+2026-04-21 01:03:30,419 INFO 偵測到移動，開始收集影格
+2026-04-21 01:03:45,757 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:03:45,757 INFO 分析條件: motion_frames=36 cooldown剩餘=11s
+2026-04-21 01:03:46,042 INFO 偵測到移動，開始收集影格
+2026-04-21 01:04:01,046 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:04:01,047 INFO 分析條件: motion_frames=46 cooldown剩餘=0s
+2026-04-21 01:04:01,079 INFO AFC is enabled with max remote calls: 10.
+2026-04-21 01:04:06,088 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 429 Too Many Requests"
+2026-04-21 01:04:06,089 WARNING Gemini 日配額耗盡，直接 fallback
+2026-04-21 01:04:06,089 WARNING Gemini 分析無結果，fallback 至 OpenAI
+2026-04-21 01:04:11,932 INFO HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-21 01:04:11,934 INFO 識別為休息，略過記錄 (信心: 0.95)
+2026-04-21 01:04:12,526 INFO 偵測到移動，開始收集影格
+2026-04-21 01:04:27,670 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:04:27,670 INFO 分析條件: motion_frames=39 cooldown剩餘=273s
+2026-04-21 01:04:27,919 INFO 偵測到移動，開始收集影格
+2026-04-21 01:04:43,046 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:04:43,046 INFO 分析條件: motion_frames=59 cooldown剩餘=258s
+2026-04-21 01:04:43,287 INFO 偵測到移動，開始收集影格
+2026-04-21 01:04:58,289 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:04:58,289 INFO 分析條件: motion_frames=58 cooldown剩餘=243s
+2026-04-21 01:04:58,540 INFO 偵測到移動，開始收集影格
+2026-04-21 01:05:17,087 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:05:17,087 INFO 分析條件: motion_frames=24 cooldown剩餘=224s
+2026-04-21 01:05:17,373 INFO 偵測到移動，開始收集影格
+2026-04-21 01:05:25,000 INFO 靜止 30 幀，觸發分析
+2026-04-21 01:05:25,000 INFO 分析條件: motion_frames=1 cooldown剩餘=216s
+2026-04-21 01:05:29,818 INFO 偵測到移動，開始收集影格
+2026-04-21 01:05:48,680 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:05:48,681 INFO 分析條件: motion_frames=5 cooldown剩餘=192s
+2026-04-21 01:05:54,079 INFO 偵測到移動，開始收集影格
+2026-04-21 01:06:05,209 INFO 靜止 30 幀，觸發分析
+2026-04-21 01:06:05,209 INFO 分析條件: motion_frames=2 cooldown剩餘=176s
+2026-04-21 01:06:07,933 INFO 偵測到移動，開始收集影格
+2026-04-21 01:06:16,332 INFO 靜止 30 幀，觸發分析
+2026-04-21 01:06:16,332 INFO 分析條件: motion_frames=3 cooldown剩餘=165s
+2026-04-21 01:06:20,293 INFO 偵測到移動，開始收集影格
+2026-04-21 01:06:34,391 INFO 靜止 30 幀，觸發分析
+2026-04-21 01:06:34,391 INFO 分析條件: motion_frames=3 cooldown剩餘=147s
+2026-04-21 01:06:34,676 INFO 偵測到移動，開始收集影格
+2026-04-21 01:06:55,482 INFO 靜止 30 幀，觸發分析
+2026-04-21 01:06:55,482 INFO 分析條件: motion_frames=4 cooldown剩餘=126s
+2026-04-21 01:06:57,737 INFO 偵測到移動，開始收集影格
+2026-04-21 01:07:16,328 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:07:16,328 INFO 分析條件: motion_frames=11 cooldown剩餘=105s
+2026-04-21 01:07:17,360 INFO 偵測到移動，開始收集影格
+2026-04-21 01:07:26,610 INFO 靜止 30 幀，觸發分析
+2026-04-21 01:07:26,611 INFO 分析條件: motion_frames=7 cooldown剩餘=94s
+2026-04-21 01:07:29,510 INFO 偵測到移動，開始收集影格
+2026-04-21 01:07:43,198 INFO 靜止 30 幀，觸發分析
+2026-04-21 01:07:43,198 INFO 分析條件: motion_frames=3 cooldown剩餘=78s
+2026-04-21 01:07:44,453 INFO 偵測到移動，開始收集影格
+2026-04-21 01:08:00,118 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:08:00,118 INFO 分析條件: motion_frames=5 cooldown剩餘=61s
+2026-04-21 01:08:10,332 INFO 偵測到移動，開始收集影格
+2026-04-21 01:08:30,793 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:08:30,794 INFO 分析條件: motion_frames=6 cooldown剩餘=30s
+2026-04-21 01:08:31,070 INFO 偵測到移動，開始收集影格
+2026-04-21 01:08:50,501 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:08:50,501 INFO 分析條件: motion_frames=51 cooldown剩餘=11s
+2026-04-21 01:08:55,771 INFO 偵測到移動，開始收集影格
+2026-04-21 01:09:17,600 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:09:17,601 INFO 分析條件: motion_frames=11 cooldown剩餘=0s
+2026-04-21 01:09:17,642 INFO AFC is enabled with max remote calls: 10.
+2026-04-21 01:09:22,686 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 429 Too Many Requests"
+2026-04-21 01:09:22,687 WARNING Gemini 日配額耗盡，直接 fallback
+2026-04-21 01:09:22,687 WARNING Gemini 分析無結果，fallback 至 OpenAI
+2026-04-21 01:09:26,883 INFO HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-21 01:09:26,884 INFO 識別為休息，略過記錄 (信心: 0.95)
+2026-04-21 01:09:32,349 INFO 偵測到移動，開始收集影格
+2026-04-21 01:09:44,429 INFO 靜止 30 幀，觸發分析
+2026-04-21 01:09:44,429 INFO 分析條件: motion_frames=2 cooldown剩餘=273s
+2026-04-21 01:09:45,397 INFO 偵測到移動，開始收集影格
+2026-04-21 01:10:01,259 INFO 靜止 30 幀，觸發分析
+2026-04-21 01:10:01,259 INFO 分析條件: motion_frames=5 cooldown剩餘=256s
+2026-04-21 01:10:03,160 INFO 偵測到移動，開始收集影格
+2026-04-21 01:10:19,768 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:10:19,769 INFO 分析條件: motion_frames=5 cooldown剩餘=238s
+2026-04-21 01:10:28,270 INFO 偵測到移動，開始收集影格
+2026-04-21 01:10:42,101 INFO 靜止 30 幀，觸發分析
+2026-04-21 01:10:42,101 INFO 分析條件: motion_frames=3 cooldown剩餘=215s
+2026-04-21 01:10:45,488 INFO 偵測到移動，開始收集影格
+2026-04-21 01:11:04,968 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:11:04,968 INFO 分析條件: motion_frames=5 cooldown剩餘=193s
+2026-04-21 01:11:11,262 INFO 偵測到移動，開始收集影格
+2026-04-21 01:11:19,719 INFO 靜止 30 幀，觸發分析
+2026-04-21 01:11:19,720 INFO 分析條件: motion_frames=4 cooldown剩餘=178s
+2026-04-21 01:11:20,708 INFO 偵測到移動，開始收集影格
+2026-04-21 01:11:37,748 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:11:37,748 INFO 分析條件: motion_frames=5 cooldown剩餘=160s
+2026-04-21 01:11:38,014 INFO 偵測到移動，開始收集影格
+2026-04-21 01:11:55,108 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:11:55,109 INFO 分析條件: motion_frames=6 cooldown剩餘=142s
+2026-04-21 01:12:00,722 INFO 偵測到移動，開始收集影格
+2026-04-21 01:12:08,979 INFO 靜止 30 幀，觸發分析
+2026-04-21 01:12:08,979 INFO 分析條件: motion_frames=2 cooldown剩餘=129s
+2026-04-21 01:12:13,777 INFO 偵測到移動，開始收集影格
+2026-04-21 01:12:34,121 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:12:34,121 INFO 分析條件: motion_frames=5 cooldown剩餘=103s
+2026-04-21 01:12:40,426 INFO 偵測到移動，開始收集影格
+2026-04-21 01:12:54,458 INFO 靜止 30 幀，觸發分析
+2026-04-21 01:12:54,458 INFO 分析條件: motion_frames=3 cooldown剩餘=83s
+2026-04-21 01:12:58,980 INFO 偵測到移動，開始收集影格
+2026-04-21 01:13:07,765 INFO 靜止 30 幀，觸發分析
+2026-04-21 01:13:07,765 INFO 分析條件: motion_frames=3 cooldown剩餘=70s
+2026-04-21 01:13:09,288 INFO 偵測到移動，開始收集影格
+2026-04-21 01:13:23,338 INFO 靜止 30 幀，觸發分析
+2026-04-21 01:13:23,338 INFO 分析條件: motion_frames=3 cooldown剩餘=54s
+2026-04-21 01:13:25,971 INFO 偵測到移動，開始收集影格
+2026-04-21 01:13:34,332 INFO 靜止 30 幀，觸發分析
+2026-04-21 01:13:34,332 INFO 分析條件: motion_frames=2 cooldown剩餘=43s
+2026-04-21 01:13:37,256 INFO 偵測到移動，開始收集影格
+2026-04-21 01:13:44,886 INFO 靜止 30 幀，觸發分析
+2026-04-21 01:13:44,886 INFO 分析條件: motion_frames=1 cooldown剩餘=33s
+2026-04-21 01:13:46,704 INFO 偵測到移動，開始收集影格
+2026-04-21 01:14:05,879 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:14:05,880 INFO 分析條件: motion_frames=5 cooldown剩餘=12s
+2026-04-21 01:14:07,928 INFO 偵測到移動，開始收集影格
+2026-04-21 01:14:16,375 INFO 靜止 30 幀，觸發分析
+2026-04-21 01:14:16,376 INFO 分析條件: motion_frames=2 cooldown剩餘=1s
+2026-04-21 01:14:18,475 INFO 偵測到移動，開始收集影格
+2026-04-21 01:14:34,570 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:14:34,570 INFO 分析條件: motion_frames=21 cooldown剩餘=0s
+2026-04-21 01:14:34,613 INFO AFC is enabled with max remote calls: 10.
+2026-04-21 01:14:39,215 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 429 Too Many Requests"
+2026-04-21 01:14:39,216 WARNING Gemini 日配額耗盡，直接 fallback
+2026-04-21 01:14:39,217 WARNING Gemini 分析無結果，fallback 至 OpenAI
+2026-04-21 01:14:43,880 INFO HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-21 01:14:43,882 INFO 識別為休息，略過記錄 (信心: 0.95)
+2026-04-21 01:14:49,990 INFO 偵測到移動，開始收集影格
+2026-04-21 01:15:05,288 INFO 靜止 30 幀，觸發分析
+2026-04-21 01:15:05,289 INFO 分析條件: motion_frames=6 cooldown剩餘=269s
+2026-04-21 01:15:05,817 INFO 偵測到移動，開始收集影格
+2026-04-21 01:15:13,363 INFO 靜止 30 幀，觸發分析
+2026-04-21 01:15:13,363 INFO 分析條件: motion_frames=1 cooldown剩餘=261s
+2026-04-21 01:15:15,582 INFO 偵測到移動，開始收集影格
+2026-04-21 01:15:34,619 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:15:34,619 INFO 分析條件: motion_frames=6 cooldown剩餘=240s
+2026-04-21 01:15:37,215 INFO 偵測到移動，開始收集影格
+2026-04-21 01:15:59,661 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:15:59,661 INFO 分析條件: motion_frames=11 cooldown剩餘=215s
+2026-04-21 01:16:03,964 INFO 偵測到移動，開始收集影格
+2026-04-21 01:16:15,697 INFO 靜止 30 幀，觸發分析
+2026-04-21 01:16:15,697 INFO 分析條件: motion_frames=2 cooldown剩餘=199s
+2026-04-21 01:16:17,463 INFO 偵測到移動，開始收集影格
+2026-04-21 01:16:37,324 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:16:37,325 INFO 分析條件: motion_frames=8 cooldown剩餘=177s
+2026-04-21 01:16:49,984 INFO 偵測到移動，開始收集影格
+2026-04-21 01:17:10,259 INFO 靜止 30 幀，觸發分析
+2026-04-21 01:17:10,259 INFO 分析條件: motion_frames=4 cooldown剩餘=144s
+2026-04-21 01:17:14,739 INFO 偵測到移動，開始收集影格
+2026-04-21 01:17:30,087 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:17:30,088 INFO 分析條件: motion_frames=5 cooldown剩餘=124s
+2026-04-21 01:17:33,297 INFO 偵測到移動，開始收集影格
+2026-04-21 01:17:54,492 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:17:54,492 INFO 分析條件: motion_frames=5 cooldown剩餘=100s
+2026-04-21 01:17:56,833 INFO 偵測到移動，開始收集影格
+2026-04-21 01:18:04,690 INFO 靜止 30 幀，觸發分析
+2026-04-21 01:18:04,691 INFO 分析條件: motion_frames=1 cooldown剩餘=90s
+2026-04-21 01:18:07,499 INFO 偵測到移動，開始收集影格
+2026-04-21 01:18:22,881 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:18:22,881 INFO 分析條件: motion_frames=6 cooldown剩餘=72s
+2026-04-21 01:18:27,165 INFO 偵測到移動，開始收集影格
+2026-04-21 01:18:39,180 INFO 靜止 30 幀，觸發分析
+2026-04-21 01:18:39,180 INFO 分析條件: motion_frames=2 cooldown剩餘=55s
+2026-04-21 01:18:41,999 INFO 偵測到移動，開始收集影格
+2026-04-21 01:19:01,426 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:19:01,427 INFO 分析條件: motion_frames=6 cooldown剩餘=33s
+2026-04-21 01:19:01,668 INFO 偵測到移動，開始收集影格
+2026-04-21 01:19:22,222 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:19:22,222 INFO 分析條件: motion_frames=14 cooldown剩餘=12s
+2026-04-21 01:19:25,929 INFO 偵測到移動，開始收集影格
+2026-04-21 01:19:42,752 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:19:42,753 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-21 01:19:51,718 INFO 偵測到移動，開始收集影格
+2026-04-21 01:20:08,316 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:20:08,316 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-21 01:20:17,332 INFO 偵測到移動，開始收集影格
+2026-04-21 01:20:31,768 INFO 靜止 30 幀，觸發分析
+2026-04-21 01:20:31,768 INFO 分析條件: motion_frames=3 cooldown剩餘=0s
+2026-04-21 01:20:33,007 INFO 偵測到移動，開始收集影格
+2026-04-21 01:20:49,691 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:20:49,691 INFO 分析條件: motion_frames=20 cooldown剩餘=0s
+2026-04-21 01:20:49,735 INFO AFC is enabled with max remote calls: 10.
+2026-04-21 01:21:00,072 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 429 Too Many Requests"
+2026-04-21 01:21:00,074 WARNING Gemini 日配額耗盡，直接 fallback
+2026-04-21 01:21:00,075 WARNING Gemini 分析無結果，fallback 至 OpenAI
+2026-04-21 01:21:03,664 INFO HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-21 01:21:03,667 INFO 識別為休息，略過記錄 (信心: 0.90)
+2026-04-21 01:21:03,932 INFO 偵測到移動，開始收集影格
+2026-04-21 01:21:20,374 INFO 靜止 30 幀，觸發分析
+2026-04-21 01:21:20,374 INFO 分析條件: motion_frames=3 cooldown剩餘=269s
+2026-04-21 01:21:21,574 INFO 偵測到移動，開始收集影格
+2026-04-21 01:21:37,758 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:21:37,759 INFO 分析條件: motion_frames=26 cooldown剩餘=252s
+2026-04-21 01:21:38,864 INFO 偵測到移動，開始收集影格
+2026-04-21 01:21:49,986 INFO 靜止 30 幀，觸發分析
+2026-04-21 01:21:49,986 INFO 分析條件: motion_frames=4 cooldown剩餘=240s
+2026-04-21 01:21:51,276 INFO 偵測到移動，開始收集影格
+2026-04-21 01:22:11,143 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:22:11,144 INFO 分析條件: motion_frames=6 cooldown剩餘=219s
+2026-04-21 01:22:20,330 INFO 偵測到移動，開始收集影格
+2026-04-21 01:22:34,584 INFO 靜止 30 幀，觸發分析
+2026-04-21 01:22:34,585 INFO 分析條件: motion_frames=3 cooldown剩餘=195s
+2026-04-21 01:22:37,164 INFO 偵測到移動，開始收集影格
+2026-04-21 01:22:53,045 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:22:53,045 INFO 分析條件: motion_frames=5 cooldown剩餘=177s
+2026-04-21 01:23:03,586 INFO 偵測到移動，開始收集影格
+2026-04-21 01:23:24,512 INFO 靜止 30 幀，觸發分析
+2026-04-21 01:23:24,512 INFO 分析條件: motion_frames=10 cooldown剩餘=145s
+2026-04-21 01:23:25,872 INFO 偵測到移動，開始收集影格
+2026-04-21 01:23:40,728 INFO 靜止 30 幀，觸發分析
+2026-04-21 01:23:40,728 INFO 分析條件: motion_frames=3 cooldown剩餘=129s
+2026-04-21 01:23:43,265 INFO 偵測到移動，開始收集影格
+2026-04-21 01:23:58,709 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:23:58,709 INFO 分析條件: motion_frames=11 cooldown剩餘=111s
+2026-04-21 01:24:05,577 INFO 偵測到移動，開始收集影格
+2026-04-21 01:24:22,737 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:24:22,737 INFO 分析條件: motion_frames=6 cooldown剩餘=87s
+2026-04-21 01:24:24,120 INFO 偵測到移動，開始收集影格
+2026-04-21 01:24:40,126 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:24:40,126 INFO 分析條件: motion_frames=10 cooldown剩餘=70s
+2026-04-21 01:24:50,823 INFO 偵測到移動，開始收集影格
+2026-04-21 01:25:06,630 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:25:06,630 INFO 分析條件: motion_frames=6 cooldown剩餘=43s
+2026-04-21 01:25:08,421 INFO 偵測到移動，開始收集影格
+2026-04-21 01:25:16,338 INFO 靜止 30 幀，觸發分析
+2026-04-21 01:25:16,338 INFO 分析條件: motion_frames=1 cooldown剩餘=33s
+2026-04-21 01:25:17,732 INFO 偵測到移動，開始收集影格
+2026-04-21 01:25:34,747 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:25:34,747 INFO 分析條件: motion_frames=10 cooldown剩餘=15s
+2026-04-21 01:25:40,353 INFO 偵測到移動，開始收集影格
+2026-04-21 01:25:55,990 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:25:55,991 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-21 01:26:07,211 INFO 偵測到移動，開始收集影格
+2026-04-21 01:26:24,625 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:26:24,625 INFO 分析條件: motion_frames=12 cooldown剩餘=0s
+2026-04-21 01:26:24,667 INFO AFC is enabled with max remote calls: 10.
+2026-04-21 01:26:33,720 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 429 Too Many Requests"
+2026-04-21 01:26:33,722 WARNING Gemini 日配額耗盡，直接 fallback
+2026-04-21 01:26:33,722 WARNING Gemini 分析無結果，fallback 至 OpenAI
+2026-04-21 01:26:39,086 INFO HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-21 01:26:39,088 INFO 識別為休息，略過記錄 (信心: 0.95)
+2026-04-21 01:26:39,602 INFO 偵測到移動，開始收集影格
+2026-04-21 01:26:55,821 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:26:55,822 INFO 分析條件: motion_frames=9 cooldown剩餘=269s
+2026-04-21 01:26:56,101 INFO 偵測到移動，開始收集影格
+2026-04-21 01:27:06,136 INFO 靜止 30 幀，觸發分析
+2026-04-21 01:27:06,137 INFO 分析條件: motion_frames=4 cooldown剩餘=258s
+2026-04-21 01:27:09,550 INFO 偵測到移動，開始收集影格
+2026-04-21 01:27:30,733 INFO 靜止 30 幀，觸發分析
+2026-04-21 01:27:30,734 INFO 分析條件: motion_frames=4 cooldown剩餘=234s
+2026-04-21 01:27:31,236 INFO 偵測到移動，開始收集影格
+2026-04-21 01:27:49,373 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:27:49,373 INFO 分析條件: motion_frames=6 cooldown剩餘=215s
+2026-04-21 01:27:57,953 INFO 偵測到移動，開始收集影格
+2026-04-21 01:28:12,601 INFO 靜止 30 幀，觸發分析
+2026-04-21 01:28:12,601 INFO 分析條件: motion_frames=6 cooldown剩餘=192s
+2026-04-21 01:28:16,339 INFO 偵測到移動，開始收集影格
+2026-04-21 01:28:32,090 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:28:32,090 INFO 分析條件: motion_frames=9 cooldown剩餘=173s
+2026-04-21 01:28:43,073 INFO 偵測到移動，開始收集影格
+2026-04-21 01:28:53,292 INFO 靜止 30 幀，觸發分析
+2026-04-21 01:28:53,294 INFO 分析條件: motion_frames=4 cooldown剩餘=151s
+2026-04-21 01:28:56,950 INFO 偵測到移動，開始收集影格
+2026-04-21 01:29:19,335 INFO 靜止 30 幀，觸發分析
+2026-04-21 01:29:19,336 INFO 分析條件: motion_frames=5 cooldown剩餘=125s
+2026-04-21 01:29:22,947 INFO 偵測到移動，開始收集影格
+2026-04-21 01:29:44,498 INFO 靜止 30 幀，觸發分析
+2026-04-21 01:29:44,498 INFO 分析條件: motion_frames=9 cooldown剩餘=100s
+2026-04-21 01:29:44,786 INFO 偵測到移動，開始收集影格
+2026-04-21 01:29:59,405 INFO 靜止 30 幀，觸發分析
+2026-04-21 01:29:59,405 INFO 分析條件: motion_frames=3 cooldown剩餘=85s
+2026-04-21 01:30:03,130 INFO 偵測到移動，開始收集影格
+2026-04-21 01:30:24,237 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:30:24,237 INFO 分析條件: motion_frames=7 cooldown剩餘=60s
+2026-04-21 01:30:25,581 INFO 偵測到移動，開始收集影格
+2026-04-21 01:30:33,579 INFO 靜止 30 幀，觸發分析
+2026-04-21 01:30:33,580 INFO 分析條件: motion_frames=1 cooldown剩餘=51s
+2026-04-21 01:30:34,831 INFO 偵測到移動，開始收集影格
+2026-04-21 01:30:53,467 INFO 靜止 30 幀，觸發分析
+2026-04-21 01:30:53,468 INFO 分析條件: motion_frames=6 cooldown剩餘=31s
+2026-04-21 01:30:57,339 INFO 偵測到移動，開始收集影格
+2026-04-21 01:31:12,475 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:31:12,476 INFO 分析條件: motion_frames=8 cooldown剩餘=12s
+2026-04-21 01:31:24,277 INFO 偵測到移動，開始收集影格
+2026-04-21 01:31:41,261 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:31:41,262 INFO 分析條件: motion_frames=6 cooldown剩餘=0s
+2026-04-21 01:31:43,146 INFO 偵測到移動，開始收集影格
+2026-04-21 01:31:58,500 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:31:58,501 INFO 分析條件: motion_frames=6 cooldown剩餘=0s
+2026-04-21 01:32:04,107 INFO 偵測到移動，開始收集影格
+2026-04-21 01:32:19,202 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:32:19,203 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-21 01:32:19,487 INFO 偵測到移動，開始收集影格
+2026-04-21 01:32:41,599 INFO 靜止 30 幀，觸發分析
+2026-04-21 01:32:41,599 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-21 01:32:45,826 INFO 偵測到移動，開始收集影格
+2026-04-21 01:33:00,900 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:33:00,901 INFO 分析條件: motion_frames=11 cooldown剩餘=0s
+2026-04-21 01:33:00,944 INFO AFC is enabled with max remote calls: 10.
+2026-04-21 01:33:09,384 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 429 Too Many Requests"
+2026-04-21 01:33:09,385 WARNING Gemini 日配額耗盡，直接 fallback
+2026-04-21 01:33:09,386 WARNING Gemini 分析無結果，fallback 至 OpenAI
+2026-04-21 01:33:15,918 INFO HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-21 01:33:15,920 INFO 識別為休息，略過記錄 (信心: 0.85)
+2026-04-21 01:33:16,213 INFO 偵測到移動，開始收集影格
+2026-04-21 01:33:28,800 INFO 靜止 30 幀，觸發分析
+2026-04-21 01:33:28,800 INFO 分析條件: motion_frames=19 cooldown剩餘=272s
+2026-04-21 01:33:29,900 INFO 偵測到移動，開始收集影格
+2026-04-21 01:33:48,608 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:33:48,608 INFO 分析條件: motion_frames=16 cooldown剩餘=252s
+2026-04-21 01:33:57,718 INFO 偵測到移動，開始收集影格
+2026-04-21 01:34:18,562 INFO 靜止 30 幀，觸發分析
+2026-04-21 01:34:18,562 INFO 分析條件: motion_frames=5 cooldown剩餘=222s
+2026-04-21 01:34:21,422 INFO 偵測到移動，開始收集影格
+2026-04-21 01:34:42,161 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:34:42,161 INFO 分析條件: motion_frames=6 cooldown剩餘=199s
+2026-04-21 01:34:44,868 INFO 偵測到移動，開始收集影格
+2026-04-21 01:35:06,108 INFO 靜止 30 幀，觸發分析
+2026-04-21 01:35:06,108 INFO 分析條件: motion_frames=4 cooldown剩餘=175s
+2026-04-21 01:35:08,056 INFO 偵測到移動，開始收集影格
+2026-04-21 01:35:21,892 INFO 靜止 30 幀，觸發分析
+2026-04-21 01:35:21,893 INFO 分析條件: motion_frames=3 cooldown剩餘=159s
+2026-04-21 01:35:24,257 INFO 偵測到移動，開始收集影格
+2026-04-21 01:35:43,840 INFO 靜止 30 幀，觸發分析
+2026-04-21 01:35:43,840 INFO 分析條件: motion_frames=5 cooldown剩餘=137s
+2026-04-21 01:35:45,937 INFO 偵測到移動，開始收集影格
+2026-04-21 01:36:04,214 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:36:04,215 INFO 分析條件: motion_frames=7 cooldown剩餘=117s
+2026-04-21 01:36:07,104 INFO 偵測到移動，開始收集影格
+2026-04-21 01:36:24,690 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:36:24,691 INFO 分析條件: motion_frames=8 cooldown剩餘=96s
+2026-04-21 01:36:30,093 INFO 偵測到移動，開始收集影格
+2026-04-21 01:36:42,065 INFO 靜止 30 幀，觸發分析
+2026-04-21 01:36:42,065 INFO 分析條件: motion_frames=4 cooldown剩餘=79s
+2026-04-21 01:36:43,868 INFO 偵測到移動，開始收集影格
+2026-04-21 01:36:59,963 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:36:59,963 INFO 分析條件: motion_frames=5 cooldown剩餘=61s
+2026-04-21 01:37:00,197 INFO 偵測到移動，開始收集影格
+2026-04-21 01:37:16,320 INFO 靜止 30 幀，觸發分析
+2026-04-21 01:37:16,320 INFO 分析條件: motion_frames=3 cooldown剩餘=45s
+2026-04-21 01:37:18,878 INFO 偵測到移動，開始收集影格
+2026-04-21 01:37:32,941 INFO 靜止 30 幀，觸發分析
+2026-04-21 01:37:32,941 INFO 分析條件: motion_frames=3 cooldown剩餘=28s
+2026-04-21 01:37:34,539 INFO 偵測到移動，開始收集影格
+2026-04-21 01:37:55,074 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:37:55,074 INFO 分析條件: motion_frames=6 cooldown剩餘=6s
+2026-04-21 01:37:56,344 INFO 偵測到移動，開始收集影格
+2026-04-21 01:38:11,812 INFO 靜止 30 幀，觸發分析
+2026-04-21 01:38:11,812 INFO 分析條件: motion_frames=8 cooldown剩餘=0s
+2026-04-21 01:38:16,655 INFO 偵測到移動，開始收集影格
+2026-04-21 01:38:24,154 INFO 靜止 30 幀，觸發分析
+2026-04-21 01:38:24,154 INFO 分析條件: motion_frames=1 cooldown剩餘=0s
+2026-04-21 01:38:25,600 INFO 偵測到移動，開始收集影格
+2026-04-21 01:38:39,425 INFO 靜止 30 幀，觸發分析
+2026-04-21 01:38:39,425 INFO 分析條件: motion_frames=3 cooldown剩餘=0s
+2026-04-21 01:38:42,342 INFO 偵測到移動，開始收集影格
+2026-04-21 01:39:03,335 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:39:03,335 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-21 01:39:08,881 INFO 偵測到移動，開始收集影格
+2026-04-21 01:39:28,428 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:39:28,428 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-21 01:39:34,726 INFO 偵測到移動，開始收集影格
+2026-04-21 01:39:43,074 INFO 靜止 30 幀，觸發分析
+2026-04-21 01:39:43,074 INFO 分析條件: motion_frames=2 cooldown剩餘=0s
+[h264 @ 0xa80c16300] left block unavailable for requested intra4x4 mode -1
+[h264 @ 0xa80c16300] error while decoding MB 0 85, bytestream 91950
+2026-04-21 01:39:47,399 INFO 偵測到移動，開始收集影格
+2026-04-21 01:40:06,142 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:40:06,142 INFO 分析條件: motion_frames=10 cooldown剩餘=0s
+2026-04-21 01:40:06,185 INFO AFC is enabled with max remote calls: 10.
+2026-04-21 01:40:15,306 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 429 Too Many Requests"
+2026-04-21 01:40:15,308 WARNING Gemini 日配額耗盡，直接 fallback
+2026-04-21 01:40:15,308 WARNING Gemini 分析無結果，fallback 至 OpenAI
+2026-04-21 01:40:22,058 INFO HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-21 01:40:22,059 INFO 識別為休息，略過記錄 (信心: 0.95)
+2026-04-21 01:40:22,290 INFO 偵測到移動，開始收集影格
+2026-04-21 01:40:38,572 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:40:38,572 INFO 分析條件: motion_frames=5 cooldown剩餘=268s
+2026-04-21 01:40:44,431 INFO 偵測到移動，開始收集影格
+2026-04-21 01:41:01,509 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:41:01,509 INFO 分析條件: motion_frames=6 cooldown剩餘=245s
+2026-04-21 01:41:09,653 INFO 偵測到移動，開始收集影格
+2026-04-21 01:41:24,834 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:41:24,834 INFO 分析條件: motion_frames=16 cooldown剩餘=221s
+2026-04-21 01:41:26,488 INFO 偵測到移動，開始收集影格
+2026-04-21 01:41:34,762 INFO 靜止 30 幀，觸發分析
+2026-04-21 01:41:34,762 INFO 分析條件: motion_frames=2 cooldown剩餘=211s
+2026-04-21 01:41:39,258 INFO 偵測到移動，開始收集影格
+2026-04-21 01:41:57,098 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:41:57,098 INFO 分析條件: motion_frames=9 cooldown剩餘=189s
+2026-04-21 01:42:00,235 INFO 偵測到移動，開始收集影格
+2026-04-21 01:42:15,728 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:42:15,729 INFO 分析條件: motion_frames=5 cooldown剩餘=170s
+2026-04-21 01:42:16,015 INFO 偵測到移動，開始收集影格
+2026-04-21 01:42:31,601 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:42:31,601 INFO 分析條件: motion_frames=17 cooldown剩餘=155s
+2026-04-21 01:42:32,430 INFO 偵測到移動，開始收集影格
+2026-04-21 01:42:48,774 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:42:48,774 INFO 分析條件: motion_frames=10 cooldown剩餘=137s
+2026-04-21 01:42:49,276 INFO 偵測到移動，開始收集影格
+2026-04-21 01:42:58,320 INFO 靜止 30 幀，觸發分析
+2026-04-21 01:42:58,320 INFO 分析條件: motion_frames=4 cooldown剩餘=128s
+2026-04-21 01:43:00,928 INFO 偵測到移動，開始收集影格
+2026-04-21 01:43:16,076 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:43:16,076 INFO 分析條件: motion_frames=42 cooldown剩餘=110s
+2026-04-21 01:43:16,332 INFO 偵測到移動，開始收集影格
+2026-04-21 01:43:31,501 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:43:31,502 INFO 分析條件: motion_frames=43 cooldown剩餘=95s
+2026-04-21 01:43:31,780 INFO 偵測到移動，開始收集影格
+2026-04-21 01:43:46,781 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:43:46,781 INFO 分析條件: motion_frames=37 cooldown剩餘=79s
+2026-04-21 01:43:47,280 INFO 偵測到移動，開始收集影格
+2026-04-21 01:44:02,795 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:44:02,796 INFO 分析條件: motion_frames=43 cooldown剩餘=63s
+2026-04-21 01:44:03,295 INFO 偵測到移動，開始收集影格
+2026-04-21 01:44:18,590 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:44:18,590 INFO 分析條件: motion_frames=32 cooldown剩餘=48s
+2026-04-21 01:44:18,852 INFO 偵測到移動，開始收集影格
+2026-04-21 01:44:34,225 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:44:34,226 INFO 分析條件: motion_frames=33 cooldown剩餘=32s
+2026-04-21 01:44:34,774 INFO 偵測到移動，開始收集影格
+2026-04-21 01:44:50,596 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:44:50,597 INFO 分析條件: motion_frames=30 cooldown剩餘=16s
+2026-04-21 01:44:50,832 INFO 偵測到移動，開始收集影格
+2026-04-21 01:45:05,851 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:45:05,852 INFO 分析條件: motion_frames=31 cooldown剩餘=0s
+2026-04-21 01:45:06,141 INFO 偵測到移動，開始收集影格
+2026-04-21 01:45:21,386 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:45:21,386 INFO 分析條件: motion_frames=25 cooldown剩餘=0s
+2026-04-21 01:45:21,427 INFO AFC is enabled with max remote calls: 10.
+2026-04-21 01:45:31,804 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 429 Too Many Requests"
+2026-04-21 01:45:31,805 WARNING Gemini 日配額耗盡，直接 fallback
+2026-04-21 01:45:31,806 WARNING Gemini 分析無結果，fallback 至 OpenAI
+2026-04-21 01:45:39,115 INFO HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-21 01:45:39,117 INFO 識別為休息，略過記錄 (信心: 0.95)
+2026-04-21 01:45:39,340 INFO 偵測到移動，開始收集影格
+2026-04-21 01:45:55,503 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:45:55,503 INFO 分析條件: motion_frames=38 cooldown剩餘=266s
+2026-04-21 01:45:56,296 INFO 偵測到移動，開始收集影格
+2026-04-21 01:46:11,345 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:46:11,345 INFO 分析條件: motion_frames=37 cooldown剩餘=250s
+2026-04-21 01:46:12,340 INFO 偵測到移動，開始收集影格
+2026-04-21 01:46:27,677 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:46:27,677 INFO 分析條件: motion_frames=19 cooldown剩餘=234s
+2026-04-21 01:46:28,740 INFO 偵測到移動，開始收集影格
+2026-04-21 01:46:46,217 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:46:46,217 INFO 分析條件: motion_frames=18 cooldown剩餘=215s
+2026-04-21 01:46:50,552 INFO 偵測到移動，開始收集影格
+2026-04-21 01:47:08,466 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:47:08,466 INFO 分析條件: motion_frames=34 cooldown剩餘=193s
+2026-04-21 01:47:08,753 INFO 偵測到移動，開始收集影格
+2026-04-21 01:47:26,083 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:47:26,084 INFO 分析條件: motion_frames=6 cooldown剩餘=175s
+2026-04-21 01:47:35,366 INFO 偵測到移動，開始收集影格
+2026-04-21 01:47:50,615 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:47:50,616 INFO 分析條件: motion_frames=20 cooldown剩餘=151s
+2026-04-21 01:47:50,896 INFO 偵測到移動，開始收集影格
+2026-04-21 01:48:07,107 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:48:07,108 INFO 分析條件: motion_frames=34 cooldown剩餘=134s
+2026-04-21 01:48:07,374 INFO 偵測到移動，開始收集影格
+2026-04-21 01:48:23,352 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:48:23,352 INFO 分析條件: motion_frames=12 cooldown剩餘=118s
+2026-04-21 01:48:23,576 INFO 偵測到移動，開始收集影格
+2026-04-21 01:48:39,621 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:48:39,622 INFO 分析條件: motion_frames=33 cooldown剩餘=102s
+2026-04-21 01:48:43,990 INFO 偵測到移動，開始收集影格
+2026-04-21 01:49:05,186 INFO 靜止 30 幀，觸發分析
+2026-04-21 01:49:05,187 INFO 分析條件: motion_frames=6 cooldown剩餘=76s
+2026-04-21 01:49:08,073 INFO 偵測到移動，開始收集影格
+2026-04-21 01:49:29,609 INFO 靜止 30 幀，觸發分析
+2026-04-21 01:49:29,609 INFO 分析條件: motion_frames=6 cooldown剩餘=52s
+2026-04-21 01:49:34,292 INFO 偵測到移動，開始收集影格
+2026-04-21 01:49:53,216 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:49:53,216 INFO 分析條件: motion_frames=5 cooldown剩餘=28s
+2026-04-21 01:49:59,503 INFO 偵測到移動，開始收集影格
+2026-04-21 01:50:14,604 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:50:14,604 INFO 分析條件: motion_frames=47 cooldown剩餘=7s
+2026-04-21 01:50:14,868 INFO 偵測到移動，開始收集影格
+2026-04-21 01:50:29,940 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:50:29,940 INFO 分析條件: motion_frames=35 cooldown剩餘=0s
+2026-04-21 01:50:29,972 INFO AFC is enabled with max remote calls: 10.
+2026-04-21 01:50:38,244 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 429 Too Many Requests"
+2026-04-21 01:50:38,246 WARNING Gemini 日配額耗盡，直接 fallback
+2026-04-21 01:50:38,246 WARNING Gemini 分析無結果，fallback 至 OpenAI
+2026-04-21 01:50:44,765 INFO HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-21 01:50:44,767 INFO 識別為休息，略過記錄 (信心: 0.90)
+2026-04-21 01:50:45,045 INFO 偵測到移動，開始收集影格
+2026-04-21 01:51:00,127 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:51:00,129 INFO 分析條件: motion_frames=57 cooldown剩餘=270s
+2026-04-21 01:51:00,414 INFO 偵測到移動，開始收集影格
+2026-04-21 01:51:15,497 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:51:15,498 INFO 分析條件: motion_frames=52 cooldown剩餘=254s
+2026-04-21 01:51:15,750 INFO 偵測到移動，開始收集影格
+2026-04-21 01:51:30,820 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:51:30,821 INFO 分析條件: motion_frames=56 cooldown剩餘=239s
+2026-04-21 01:51:31,091 INFO 偵測到移動，開始收集影格
+2026-04-21 01:51:46,230 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:51:46,230 INFO 分析條件: motion_frames=59 cooldown剩餘=224s
+2026-04-21 01:51:46,500 INFO 偵測到移動，開始收集影格
+2026-04-21 01:52:01,729 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:52:01,729 INFO 分析條件: motion_frames=58 cooldown剩餘=208s
+2026-04-21 01:52:01,990 INFO 偵測到移動，開始收集影格
+2026-04-21 01:52:17,222 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:52:17,222 INFO 分析條件: motion_frames=57 cooldown剩餘=193s
+2026-04-21 01:52:17,470 INFO 偵測到移動，開始收集影格
+2026-04-21 01:52:32,606 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:52:32,606 INFO 分析條件: motion_frames=58 cooldown剩餘=177s
+2026-04-21 01:52:32,893 INFO 偵測到移動，開始收集影格
+2026-04-21 01:52:48,077 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:52:48,077 INFO 分析條件: motion_frames=59 cooldown剩餘=162s
+2026-04-21 01:52:48,340 INFO 偵測到移動，開始收集影格
+2026-04-21 01:53:03,362 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:53:03,363 INFO 分析條件: motion_frames=58 cooldown剩餘=147s
+2026-04-21 01:53:03,596 INFO 偵測到移動，開始收集影格
+2026-04-21 01:53:18,771 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:53:18,771 INFO 分析條件: motion_frames=56 cooldown剩餘=131s
+2026-04-21 01:53:19,050 INFO 偵測到移動，開始收集影格
+2026-04-21 01:53:34,155 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:53:34,155 INFO 分析條件: motion_frames=27 cooldown剩餘=116s
+2026-04-21 01:53:35,300 INFO 偵測到移動，開始收集影格
+2026-04-21 01:53:50,337 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:53:50,337 INFO 分析條件: motion_frames=18 cooldown剩餘=100s
+2026-04-21 01:53:50,624 INFO 偵測到移動，開始收集影格
+2026-04-21 01:54:05,880 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:54:05,880 INFO 分析條件: motion_frames=24 cooldown剩餘=84s
+2026-04-21 01:54:06,140 INFO 偵測到移動，開始收集影格
+2026-04-21 01:54:21,282 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:54:21,282 INFO 分析條件: motion_frames=59 cooldown剩餘=69s
+2026-04-21 01:54:21,572 INFO 偵測到移動，開始收集影格
+2026-04-21 01:54:36,948 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:54:36,949 INFO 分析條件: motion_frames=56 cooldown剩餘=53s
+2026-04-21 01:54:37,465 INFO 偵測到移動，開始收集影格
+2026-04-21 01:54:52,646 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:54:52,647 INFO 分析條件: motion_frames=58 cooldown剩餘=37s
+2026-04-21 01:54:52,905 INFO 偵測到移動，開始收集影格
+2026-04-21 01:55:08,002 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:55:08,003 INFO 分析條件: motion_frames=58 cooldown剩餘=22s
+2026-04-21 01:55:08,232 INFO 偵測到移動，開始收集影格
+2026-04-21 01:55:23,429 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:55:23,429 INFO 分析條件: motion_frames=58 cooldown剩餘=7s
+2026-04-21 01:55:23,718 INFO 偵測到移動，開始收集影格
+2026-04-21 01:55:38,965 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:55:38,966 INFO 分析條件: motion_frames=59 cooldown剩餘=0s
+2026-04-21 01:55:39,009 INFO AFC is enabled with max remote calls: 10.
+2026-04-21 01:55:51,570 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 429 Too Many Requests"
+2026-04-21 01:55:51,571 WARNING Gemini 日配額耗盡，直接 fallback
+2026-04-21 01:55:51,571 WARNING Gemini 分析無結果，fallback 至 OpenAI
+2026-04-21 01:56:00,351 INFO HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-21 01:56:00,353 INFO 識別為休息，略過記錄 (信心: 0.85)
+2026-04-21 01:56:00,916 INFO 偵測到移動，開始收集影格
+[h264 @ 0xa80c14e00] error while decoding MB 17 1, bytestream -7
+2026-04-21 01:56:13,667 WARNING 讀取影格失敗，重新連線
+2026-04-21 01:56:16,170 INFO RTSP 串流連線成功
+2026-04-21 01:56:16,723 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:56:16,723 INFO 分析條件: motion_frames=46 cooldown剩餘=262s
+2026-04-21 01:56:16,987 INFO 偵測到移動，開始收集影格
+2026-04-21 01:56:32,115 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:56:32,116 INFO 分析條件: motion_frames=59 cooldown剩餘=247s
+2026-04-21 01:56:32,393 INFO 偵測到移動，開始收集影格
+2026-04-21 01:56:47,471 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:56:47,471 INFO 分析條件: motion_frames=58 cooldown剩餘=231s
+2026-04-21 01:56:47,760 INFO 偵測到移動，開始收集影格
+2026-04-21 01:57:03,001 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:57:03,001 INFO 分析條件: motion_frames=59 cooldown剩餘=216s
+2026-04-21 01:57:03,224 INFO 偵測到移動，開始收集影格
+2026-04-21 01:57:18,327 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:57:18,328 INFO 分析條件: motion_frames=59 cooldown剩餘=201s
+2026-04-21 01:57:18,559 INFO 偵測到移動，開始收集影格
+2026-04-21 01:57:33,827 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:57:33,828 INFO 分析條件: motion_frames=58 cooldown剩餘=185s
+2026-04-21 01:57:34,058 INFO 偵測到移動，開始收集影格
+2026-04-21 01:57:49,173 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:57:49,173 INFO 分析條件: motion_frames=59 cooldown剩餘=170s
+2026-04-21 01:57:49,397 INFO 偵測到移動，開始收集影格
+2026-04-21 01:58:04,601 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:58:04,601 INFO 分析條件: motion_frames=56 cooldown剩餘=154s
+2026-04-21 01:58:04,887 INFO 偵測到移動，開始收集影格
+2026-04-21 01:58:20,010 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:58:20,010 INFO 分析條件: motion_frames=58 cooldown剩餘=139s
+2026-04-21 01:58:20,247 INFO 偵測到移動，開始收集影格
+2026-04-21 01:58:35,273 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:58:35,273 INFO 分析條件: motion_frames=58 cooldown剩餘=124s
+2026-04-21 01:58:35,559 INFO 偵測到移動，開始收集影格
+2026-04-21 01:58:50,595 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:58:50,595 INFO 分析條件: motion_frames=58 cooldown剩餘=108s
+2026-04-21 01:58:50,880 INFO 偵測到移動，開始收集影格
+2026-04-21 01:59:05,982 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:59:05,982 INFO 分析條件: motion_frames=58 cooldown剩餘=93s
+2026-04-21 01:59:06,237 INFO 偵測到移動，開始收集影格
+2026-04-21 01:59:21,390 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:59:21,390 INFO 分析條件: motion_frames=58 cooldown剩餘=78s
+2026-04-21 01:59:21,677 INFO 偵測到移動，開始收集影格
+2026-04-21 01:59:36,793 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:59:36,794 INFO 分析條件: motion_frames=58 cooldown剩餘=62s
+2026-04-21 01:59:37,047 INFO 偵測到移動，開始收集影格
+2026-04-21 01:59:52,172 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 01:59:52,172 INFO 分析條件: motion_frames=58 cooldown剩餘=47s
+2026-04-21 01:59:52,458 INFO 偵測到移動，開始收集影格
+2026-04-21 02:00:07,606 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:00:07,606 INFO 分析條件: motion_frames=58 cooldown剩餘=31s
+2026-04-21 02:00:07,817 INFO 偵測到移動，開始收集影格
+2026-04-21 02:00:23,501 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:00:23,501 INFO 分析條件: motion_frames=57 cooldown剩餘=15s
+2026-04-21 02:00:30,043 INFO 偵測到移動，開始收集影格
+2026-04-21 02:00:45,882 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:00:45,883 INFO 分析條件: motion_frames=30 cooldown剩餘=0s
+2026-04-21 02:00:45,928 INFO AFC is enabled with max remote calls: 10.
+2026-04-21 02:00:54,190 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 429 Too Many Requests"
+2026-04-21 02:00:54,192 WARNING Gemini 日配額耗盡，直接 fallback
+2026-04-21 02:00:54,192 WARNING Gemini 分析無結果，fallback 至 OpenAI
+2026-04-21 02:00:58,813 INFO HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-21 02:00:58,814 INFO 識別為休息，略過記錄 (信心: 0.85)
+2026-04-21 02:01:00,908 INFO 偵測到移動，開始收集影格
+2026-04-21 02:01:17,217 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:01:17,217 INFO 分析條件: motion_frames=38 cooldown剩餘=269s
+2026-04-21 02:01:17,471 INFO 偵測到移動，開始收集影格
+2026-04-21 02:01:34,452 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:01:34,453 INFO 分析條件: motion_frames=47 cooldown剩餘=251s
+2026-04-21 02:01:41,685 INFO 偵測到移動，開始收集影格
+2026-04-21 02:01:56,942 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:01:56,943 INFO 分析條件: motion_frames=13 cooldown剩餘=229s
+2026-04-21 02:01:57,461 INFO 偵測到移動，開始收集影格
+2026-04-21 02:02:13,369 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:02:13,370 INFO 分析條件: motion_frames=7 cooldown剩餘=213s
+2026-04-21 02:02:14,425 INFO 偵測到移動，開始收集影格
+2026-04-21 02:02:33,371 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:02:33,372 INFO 分析條件: motion_frames=21 cooldown剩餘=193s
+2026-04-21 02:02:33,924 INFO 偵測到移動，開始收集影格
+2026-04-21 02:02:50,922 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:02:50,923 INFO 分析條件: motion_frames=25 cooldown剩餘=175s
+2026-04-21 02:02:51,209 INFO 偵測到移動，開始收集影格
+2026-04-21 02:03:09,081 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:03:09,081 INFO 分析條件: motion_frames=24 cooldown剩餘=157s
+2026-04-21 02:03:09,325 INFO 偵測到移動，開始收集影格
+2026-04-21 02:03:24,387 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:03:24,387 INFO 分析條件: motion_frames=38 cooldown剩餘=141s
+2026-04-21 02:03:24,628 INFO 偵測到移動，開始收集影格
+2026-04-21 02:03:39,655 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:03:39,656 INFO 分析條件: motion_frames=36 cooldown剩餘=126s
+2026-04-21 02:03:41,695 INFO 偵測到移動，開始收集影格
+2026-04-21 02:03:54,456 INFO 靜止 30 幀，觸發分析
+2026-04-21 02:03:54,456 INFO 分析條件: motion_frames=18 cooldown剩餘=111s
+2026-04-21 02:03:58,430 INFO 偵測到移動，開始收集影格
+2026-04-21 02:04:12,628 INFO 靜止 30 幀，觸發分析
+2026-04-21 02:04:12,629 INFO 分析條件: motion_frames=3 cooldown剩餘=93s
+2026-04-21 02:04:12,915 INFO 偵測到移動，開始收集影格
+2026-04-21 02:04:29,910 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:04:29,910 INFO 分析條件: motion_frames=5 cooldown剩餘=76s
+2026-04-21 02:04:39,024 INFO 偵測到移動，開始收集影格
+2026-04-21 02:05:01,525 INFO 靜止 30 幀，觸發分析
+2026-04-21 02:05:01,525 INFO 分析條件: motion_frames=6 cooldown剩餘=44s
+2026-04-21 02:05:05,399 INFO 偵測到移動，開始收集影格
+2026-04-21 02:05:18,179 INFO 靜止 30 幀，觸發分析
+2026-04-21 02:05:18,179 INFO 分析條件: motion_frames=4 cooldown剩餘=28s
+2026-04-21 02:05:19,198 INFO 偵測到移動，開始收集影格
+2026-04-21 02:05:28,588 INFO 靜止 30 幀，觸發分析
+2026-04-21 02:05:28,588 INFO 分析條件: motion_frames=3 cooldown剩餘=17s
+[h264 @ 0xa80dad500] left block unavailable for requested intra mode
+[h264 @ 0xa80dad500] error while decoding MB 0 57, bytestream 13446
+2026-04-21 02:05:32,151 INFO 偵測到移動，開始收集影格
+2026-04-21 02:05:43,251 INFO 靜止 30 幀，觸發分析
+2026-04-21 02:05:43,251 INFO 分析條件: motion_frames=5 cooldown剩餘=3s
+2026-04-21 02:05:47,697 INFO 偵測到移動，開始收集影格
+2026-04-21 02:06:08,378 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:06:08,378 INFO 分析條件: motion_frames=7 cooldown剩餘=0s
+2026-04-21 02:06:14,745 INFO 偵測到移動，開始收集影格
+2026-04-21 02:06:22,952 INFO 靜止 30 幀，觸發分析
+2026-04-21 02:06:22,953 INFO 分析條件: motion_frames=2 cooldown剩餘=0s
+2026-04-21 02:06:27,300 INFO 偵測到移動，開始收集影格
+2026-04-21 02:06:38,947 INFO 靜止 30 幀，觸發分析
+2026-04-21 02:06:38,947 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-21 02:06:41,367 INFO 偵測到移動，開始收集影格
+2026-04-21 02:07:00,039 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:07:00,039 INFO 分析條件: motion_frames=6 cooldown剩餘=0s
+2026-04-21 02:07:06,386 INFO 偵測到移動，開始收集影格
+2026-04-21 02:07:20,926 INFO 靜止 30 幀，觸發分析
+2026-04-21 02:07:20,926 INFO 分析條件: motion_frames=3 cooldown剩餘=0s
+2026-04-21 02:07:21,443 INFO 偵測到移動，開始收集影格
+2026-04-21 02:07:41,892 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:07:41,893 INFO 分析條件: motion_frames=7 cooldown剩餘=0s
+2026-04-21 02:07:42,674 INFO 偵測到移動，開始收集影格
+2026-04-21 02:08:05,271 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:08:05,271 INFO 分析條件: motion_frames=9 cooldown剩餘=0s
+2026-04-21 02:08:10,345 INFO 偵測到移動，開始收集影格
+2026-04-21 02:08:20,863 INFO 靜止 30 幀，觸發分析
+2026-04-21 02:08:20,863 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-21 02:08:23,967 INFO 偵測到移動，開始收集影格
+2026-04-21 02:08:39,224 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:08:39,225 INFO 分析條件: motion_frames=11 cooldown剩餘=0s
+2026-04-21 02:08:39,265 INFO AFC is enabled with max remote calls: 10.
+2026-04-21 02:08:45,677 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 429 Too Many Requests"
+2026-04-21 02:08:45,707 WARNING Gemini 日配額耗盡，直接 fallback
+2026-04-21 02:08:45,707 WARNING Gemini 分析無結果，fallback 至 OpenAI
+2026-04-21 02:08:49,996 INFO HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-21 02:08:49,998 INFO 識別為休息，略過記錄 (信心: 0.85)
+2026-04-21 02:08:50,282 INFO 偵測到移動，開始收集影格
+2026-04-21 02:09:05,444 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:09:05,444 INFO 分析條件: motion_frames=57 cooldown剩餘=274s
+2026-04-21 02:09:05,733 INFO 偵測到移動，開始收集影格
+2026-04-21 02:09:20,831 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:09:20,832 INFO 分析條件: motion_frames=50 cooldown剩餘=258s
+2026-04-21 02:09:21,086 INFO 偵測到移動，開始收集影格
+2026-04-21 02:09:36,112 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:09:36,113 INFO 分析條件: motion_frames=55 cooldown剩餘=243s
+2026-04-21 02:09:36,327 INFO 偵測到移動，開始收集影格
+2026-04-21 02:09:51,649 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:09:51,649 INFO 分析條件: motion_frames=36 cooldown剩餘=228s
+2026-04-21 02:09:51,873 INFO 偵測到移動，開始收集影格
+2026-04-21 02:10:08,347 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:10:08,348 INFO 分析條件: motion_frames=28 cooldown剩餘=211s
+2026-04-21 02:10:08,571 INFO 偵測到移動，開始收集影格
+2026-04-21 02:10:23,852 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:10:23,853 INFO 分析條件: motion_frames=37 cooldown剩餘=195s
+2026-04-21 02:10:24,393 INFO 偵測到移動，開始收集影格
+2026-04-21 02:10:39,474 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:10:39,475 INFO 分析條件: motion_frames=47 cooldown剩餘=180s
+2026-04-21 02:10:40,023 INFO 偵測到移動，開始收集影格
+2026-04-21 02:10:55,602 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:10:55,603 INFO 分析條件: motion_frames=7 cooldown剩餘=164s
+2026-04-21 02:11:00,829 INFO 偵測到移動，開始收集影格
+2026-04-21 02:11:19,348 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:11:19,348 INFO 分析條件: motion_frames=7 cooldown剩餘=140s
+2026-04-21 02:11:20,432 INFO 偵測到移動，開始收集影格
+2026-04-21 02:11:30,933 INFO 靜止 30 幀，觸發分析
+2026-04-21 02:11:30,934 INFO 分析條件: motion_frames=5 cooldown剩餘=128s
+2026-04-21 02:11:31,475 INFO 偵測到移動，開始收集影格
+2026-04-21 02:11:44,552 INFO 靜止 30 幀，觸發分析
+2026-04-21 02:11:44,552 INFO 分析條件: motion_frames=3 cooldown剩餘=115s
+2026-04-21 02:11:47,255 INFO 偵測到移動，開始收集影格
+2026-04-21 02:12:06,107 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:12:06,107 INFO 分析條件: motion_frames=20 cooldown剩餘=93s
+2026-04-21 02:12:11,347 INFO 偵測到移動，開始收集影格
+2026-04-21 02:12:25,134 INFO 靜止 30 幀，觸發分析
+2026-04-21 02:12:25,135 INFO 分析條件: motion_frames=5 cooldown剩餘=74s
+2026-04-21 02:12:27,479 INFO 偵測到移動，開始收集影格
+2026-04-21 02:12:42,779 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:12:42,779 INFO 分析條件: motion_frames=23 cooldown剩餘=56s
+2026-04-21 02:12:43,594 INFO 偵測到移動，開始收集影格
+2026-04-21 02:12:59,300 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:12:59,300 INFO 分析條件: motion_frames=17 cooldown剩餘=40s
+2026-04-21 02:13:00,332 INFO 偵測到移動，開始收集影格
+2026-04-21 02:13:16,213 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:13:16,213 INFO 分析條件: motion_frames=14 cooldown剩餘=23s
+2026-04-21 02:13:16,465 INFO 偵測到移動，開始收集影格
+2026-04-21 02:13:33,777 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:13:33,777 INFO 分析條件: motion_frames=13 cooldown剩餘=5s
+2026-04-21 02:13:34,818 INFO 偵測到移動，開始收集影格
+2026-04-21 02:13:51,744 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:13:51,744 INFO 分析條件: motion_frames=21 cooldown剩餘=0s
+2026-04-21 02:13:51,773 INFO AFC is enabled with max remote calls: 10.
+2026-04-21 02:13:57,925 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 429 Too Many Requests"
+2026-04-21 02:13:57,926 WARNING Gemini 日配額耗盡，直接 fallback
+2026-04-21 02:13:57,926 WARNING Gemini 分析無結果，fallback 至 OpenAI
+2026-04-21 02:14:07,420 INFO HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-21 02:14:07,422 INFO 識別為休息，略過記錄 (信心: 0.95)
+2026-04-21 02:14:08,218 INFO 偵測到移動，開始收集影格
+2026-04-21 02:14:15,940 INFO 靜止 30 幀，觸發分析
+2026-04-21 02:14:15,940 INFO 分析條件: motion_frames=1 cooldown剩餘=276s
+2026-04-21 02:14:16,791 INFO 偵測到移動，開始收集影格
+2026-04-21 02:14:31,882 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:14:31,882 INFO 分析條件: motion_frames=53 cooldown剩餘=260s
+2026-04-21 02:14:32,124 INFO 偵測到移動，開始收集影格
+2026-04-21 02:14:47,163 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:14:47,163 INFO 分析條件: motion_frames=59 cooldown剩餘=245s
+2026-04-21 02:14:47,388 INFO 偵測到移動，開始收集影格
+2026-04-21 02:15:02,588 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:15:02,589 INFO 分析條件: motion_frames=52 cooldown剩餘=229s
+2026-04-21 02:15:02,874 INFO 偵測到移動，開始收集影格
+2026-04-21 02:15:18,142 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:15:18,143 INFO 分析條件: motion_frames=58 cooldown剩餘=214s
+2026-04-21 02:15:18,360 INFO 偵測到移動，開始收集影格
+2026-04-21 02:15:33,466 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:15:33,467 INFO 分析條件: motion_frames=59 cooldown剩餘=198s
+2026-04-21 02:15:33,741 INFO 偵測到移動，開始收集影格
+2026-04-21 02:15:48,918 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:15:48,918 INFO 分析條件: motion_frames=58 cooldown剩餘=183s
+2026-04-21 02:15:49,171 INFO 偵測到移動，開始收集影格
+2026-04-21 02:16:04,382 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:16:04,382 INFO 分析條件: motion_frames=58 cooldown剩餘=167s
+2026-04-21 02:16:04,670 INFO 偵測到移動，開始收集影格
+2026-04-21 02:16:19,834 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:16:19,835 INFO 分析條件: motion_frames=58 cooldown剩餘=152s
+2026-04-21 02:16:20,110 INFO 偵測到移動，開始收集影格
+2026-04-21 02:16:38,979 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:16:38,979 INFO 分析條件: motion_frames=55 cooldown剩餘=133s
+2026-04-21 02:16:44,118 INFO 偵測到移動，開始收集影格
+2026-04-21 02:16:59,387 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:16:59,387 INFO 分析條件: motion_frames=38 cooldown剩餘=112s
+2026-04-21 02:16:59,599 INFO 偵測到移動，開始收集影格
+2026-04-21 02:17:12,601 INFO 靜止 30 幀，觸發分析
+2026-04-21 02:17:12,601 INFO 分析條件: motion_frames=20 cooldown剩餘=99s
+2026-04-21 02:17:17,112 INFO 偵測到移動，開始收集影格
+2026-04-21 02:17:36,028 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:17:36,028 INFO 分析條件: motion_frames=5 cooldown剩餘=76s
+2026-04-21 02:17:42,392 INFO 偵測到移動，開始收集影格
+2026-04-21 02:17:57,592 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:17:57,592 INFO 分析條件: motion_frames=24 cooldown剩餘=54s
+2026-04-21 02:17:57,859 INFO 偵測到移動，開始收集影格
+2026-04-21 02:18:12,859 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:18:12,860 INFO 分析條件: motion_frames=57 cooldown剩餘=39s
+2026-04-21 02:18:13,079 INFO 偵測到移動，開始收集影格
+2026-04-21 02:18:28,280 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:18:28,280 INFO 分析條件: motion_frames=57 cooldown剩餘=23s
+2026-04-21 02:18:28,551 INFO 偵測到移動，開始收集影格
+2026-04-21 02:18:43,749 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:18:43,749 INFO 分析條件: motion_frames=60 cooldown剩餘=8s
+2026-04-21 02:18:43,968 INFO 偵測到移動，開始收集影格
+2026-04-21 02:18:59,079 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:18:59,079 INFO 分析條件: motion_frames=56 cooldown剩餘=0s
+2026-04-21 02:18:59,122 INFO AFC is enabled with max remote calls: 10.
+2026-04-21 02:19:06,628 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 429 Too Many Requests"
+2026-04-21 02:19:06,630 WARNING Gemini 日配額耗盡，直接 fallback
+2026-04-21 02:19:06,630 WARNING Gemini 分析無結果，fallback 至 OpenAI
+2026-04-21 02:19:12,373 INFO HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-21 02:19:12,404 INFO 已記錄動作: eating (信心: 0.90) 截圖: action_screenshots/20260421_021912_eating.jpg
+2026-04-21 02:19:15,520 INFO 偵測到移動，開始收集影格
+2026-04-21 02:19:30,556 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:19:30,556 INFO 分析條件: motion_frames=51 cooldown剩餘=269s
+2026-04-21 02:19:30,839 INFO 偵測到移動，開始收集影格
+2026-04-21 02:19:45,910 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:19:45,910 INFO 分析條件: motion_frames=58 cooldown剩餘=253s
+2026-04-21 02:19:46,159 INFO 偵測到移動，開始收集影格
+2026-04-21 02:20:01,345 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:20:01,346 INFO 分析條件: motion_frames=27 cooldown剩餘=238s
+2026-04-21 02:20:01,619 INFO 偵測到移動，開始收集影格
+2026-04-21 02:20:16,622 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:20:16,624 INFO 分析條件: motion_frames=30 cooldown剩餘=222s
+2026-04-21 02:20:16,877 INFO 偵測到移動，開始收集影格
+2026-04-21 02:20:33,352 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:20:33,353 INFO 分析條件: motion_frames=38 cooldown剩餘=206s
+2026-04-21 02:20:33,641 INFO 偵測到移動，開始收集影格
+2026-04-21 02:20:48,728 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:20:48,728 INFO 分析條件: motion_frames=58 cooldown剩餘=190s
+2026-04-21 02:20:48,941 INFO 偵測到移動，開始收集影格
+2026-04-21 02:21:04,077 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:21:04,077 INFO 分析條件: motion_frames=40 cooldown剩餘=175s
+2026-04-21 02:21:04,346 INFO 偵測到移動，開始收集影格
+2026-04-21 02:21:21,074 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:21:21,074 INFO 分析條件: motion_frames=27 cooldown剩餘=158s
+2026-04-21 02:21:21,339 INFO 偵測到移動，開始收集影格
+2026-04-21 02:21:36,376 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:21:36,376 INFO 分析條件: motion_frames=41 cooldown剩餘=143s
+2026-04-21 02:21:36,625 INFO 偵測到移動，開始收集影格
+2026-04-21 02:21:51,756 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:21:51,756 INFO 分析條件: motion_frames=56 cooldown剩餘=127s
+2026-04-21 02:21:52,040 INFO 偵測到移動，開始收集影格
+2026-04-21 02:22:07,310 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:22:07,310 INFO 分析條件: motion_frames=51 cooldown剩餘=112s
+2026-04-21 02:22:07,571 INFO 偵測到移動，開始收集影格
+2026-04-21 02:22:22,659 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:22:22,660 INFO 分析條件: motion_frames=45 cooldown剩餘=96s
+2026-04-21 02:22:22,931 INFO 偵測到移動，開始收集影格
+2026-04-21 02:22:38,085 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:22:38,086 INFO 分析條件: motion_frames=27 cooldown剩餘=81s
+2026-04-21 02:22:38,370 INFO 偵測到移動，開始收集影格
+2026-04-21 02:22:53,570 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:22:53,571 INFO 分析條件: motion_frames=42 cooldown剩餘=66s
+2026-04-21 02:22:53,859 INFO 偵測到移動，開始收集影格
+2026-04-21 02:23:09,050 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:23:09,051 INFO 分析條件: motion_frames=58 cooldown剩餘=50s
+2026-04-21 02:23:09,310 INFO 偵測到移動，開始收集影格
+2026-04-21 02:23:24,445 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:23:24,445 INFO 分析條件: motion_frames=40 cooldown剩餘=35s
+2026-04-21 02:23:24,667 INFO 偵測到移動，開始收集影格
+2026-04-21 02:23:39,901 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:23:39,902 INFO 分析條件: motion_frames=58 cooldown剩餘=19s
+2026-04-21 02:23:40,190 INFO 偵測到移動，開始收集影格
+2026-04-21 02:23:55,340 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:23:55,340 INFO 分析條件: motion_frames=21 cooldown剩餘=4s
+2026-04-21 02:23:55,558 INFO 偵測到移動，開始收集影格
+2026-04-21 02:24:10,592 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:24:10,592 INFO 分析條件: motion_frames=28 cooldown剩餘=0s
+2026-04-21 02:24:10,634 INFO AFC is enabled with max remote calls: 10.
+2026-04-21 02:24:16,209 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 429 Too Many Requests"
+2026-04-21 02:24:16,210 WARNING Gemini 日配額耗盡，直接 fallback
+2026-04-21 02:24:16,210 WARNING Gemini 分析無結果，fallback 至 OpenAI
+2026-04-21 02:24:24,272 INFO HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-21 02:24:24,273 INFO 識別為休息，略過記錄 (信心: 0.95)
+2026-04-21 02:24:24,547 INFO 偵測到移動，開始收集影格
+2026-04-21 02:24:39,660 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:24:39,660 INFO 分析條件: motion_frames=57 cooldown剩餘=271s
+2026-04-21 02:24:39,941 INFO 偵測到移動，開始收集影格
+2026-04-21 02:24:55,159 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:24:55,159 INFO 分析條件: motion_frames=57 cooldown剩餘=255s
+2026-04-21 02:24:55,443 INFO 偵測到移動，開始收集影格
+2026-04-21 02:25:11,645 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:25:11,645 INFO 分析條件: motion_frames=14 cooldown剩餘=239s
+2026-04-21 02:25:12,770 INFO 偵測到移動，開始收集影格
+2026-04-21 02:25:32,625 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:25:32,625 INFO 分析條件: motion_frames=8 cooldown剩餘=218s
+2026-04-21 02:25:38,639 INFO 偵測到移動，開始收集影格
+2026-04-21 02:25:58,520 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:25:58,520 INFO 分析條件: motion_frames=5 cooldown剩餘=192s
+2026-04-21 02:26:03,781 INFO 偵測到移動，開始收集影格
+2026-04-21 02:26:12,864 INFO 靜止 30 幀，觸發分析
+2026-04-21 02:26:12,865 INFO 分析條件: motion_frames=2 cooldown剩餘=178s
+2026-04-21 02:26:14,199 INFO 偵測到移動，開始收集影格
+2026-04-21 02:26:29,833 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:26:29,834 INFO 分析條件: motion_frames=5 cooldown剩餘=161s
+2026-04-21 02:26:31,148 INFO 偵測到移動，開始收集影格
+2026-04-21 02:26:50,952 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:26:50,952 INFO 分析條件: motion_frames=5 cooldown剩餘=140s
+2026-04-21 02:26:56,053 INFO 偵測到移動，開始收集影格
+2026-04-21 02:27:14,093 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:27:14,093 INFO 分析條件: motion_frames=29 cooldown剩餘=116s
+2026-04-21 02:27:20,944 INFO 偵測到移動，開始收集影格
+2026-04-21 02:27:36,360 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:27:36,361 INFO 分析條件: motion_frames=8 cooldown剩餘=94s
+2026-04-21 02:27:41,279 INFO 偵測到移動，開始收集影格
+2026-04-21 02:27:57,183 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:27:57,183 INFO 分析條件: motion_frames=14 cooldown剩餘=73s
+2026-04-21 02:28:02,307 INFO 偵測到移動，開始收集影格
+2026-04-21 02:28:21,867 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:28:21,867 INFO 分析條件: motion_frames=10 cooldown剩餘=49s
+2026-04-21 02:28:26,967 INFO 偵測到移動，開始收集影格
+2026-04-21 02:28:42,436 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:28:42,436 INFO 分析條件: motion_frames=4 cooldown剩餘=28s
+2026-04-21 02:28:43,247 INFO 偵測到移動，開始收集影格
+2026-04-21 02:29:06,103 INFO 靜止 30 幀，觸發分析
+2026-04-21 02:29:06,103 INFO 分析條件: motion_frames=4 cooldown剩餘=4s
+2026-04-21 02:29:06,355 INFO 偵測到移動，開始收集影格
+2026-04-21 02:29:26,251 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:29:26,252 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-21 02:29:26,732 INFO 偵測到移動，開始收集影格
+2026-04-21 02:29:39,516 INFO 靜止 30 幀，觸發分析
+2026-04-21 02:29:39,516 INFO 分析條件: motion_frames=2 cooldown剩餘=0s
+2026-04-21 02:29:40,025 INFO 偵測到移動，開始收集影格
+2026-04-21 02:29:58,071 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:29:58,071 INFO 分析條件: motion_frames=6 cooldown剩餘=0s
+2026-04-21 02:30:02,126 INFO 偵測到移動，開始收集影格
+2026-04-21 02:30:17,439 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:30:17,439 INFO 分析條件: motion_frames=32 cooldown剩餘=0s
+2026-04-21 02:30:17,485 INFO AFC is enabled with max remote calls: 10.
+2026-04-21 02:30:25,525 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 429 Too Many Requests"
+2026-04-21 02:30:25,526 WARNING Gemini 日配額耗盡，直接 fallback
+2026-04-21 02:30:25,526 WARNING Gemini 分析無結果，fallback 至 OpenAI
+2026-04-21 02:30:36,618 INFO HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-21 02:30:36,620 INFO 識別為休息，略過記錄 (信心: 0.85)
+2026-04-21 02:30:36,842 INFO 偵測到移動，開始收集影格
+2026-04-21 02:30:52,480 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:30:52,480 INFO 分析條件: motion_frames=22 cooldown剩餘=265s
+2026-04-21 02:30:52,755 INFO 偵測到移動，開始收集影格
+2026-04-21 02:31:09,363 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:31:09,364 INFO 分析條件: motion_frames=20 cooldown剩餘=248s
+2026-04-21 02:31:09,862 INFO 偵測到移動，開始收集影格
+2026-04-21 02:31:25,066 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:31:25,066 INFO 分析條件: motion_frames=12 cooldown剩餘=232s
+2026-04-21 02:31:25,324 INFO 偵測到移動，開始收集影格
+2026-04-21 02:31:40,479 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:31:40,480 INFO 分析條件: motion_frames=57 cooldown剩餘=217s
+2026-04-21 02:31:40,770 INFO 偵測到移動，開始收集影格
+2026-04-21 02:31:55,843 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:31:55,843 INFO 分析條件: motion_frames=48 cooldown剩餘=202s
+2026-04-21 02:31:56,134 INFO 偵測到移動，開始收集影格
+2026-04-21 02:32:11,910 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:32:11,910 INFO 分析條件: motion_frames=12 cooldown剩餘=186s
+2026-04-21 02:32:13,226 INFO 偵測到移動，開始收集影格
+2026-04-21 02:32:21,109 INFO 靜止 30 幀，觸發分析
+2026-04-21 02:32:21,109 INFO 分析條件: motion_frames=1 cooldown剩餘=176s
+2026-04-21 02:32:25,020 INFO 偵測到移動，開始收集影格
+2026-04-21 02:32:42,368 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:32:42,368 INFO 分析條件: motion_frames=7 cooldown剩餘=155s
+2026-04-21 02:32:50,272 INFO 偵測到移動，開始收集影格
+2026-04-21 02:32:59,575 INFO 靜止 30 幀，觸發分析
+2026-04-21 02:32:59,576 INFO 分析條件: motion_frames=2 cooldown剩餘=138s
+2026-04-21 02:33:04,949 INFO 偵測到移動，開始收集影格
+2026-04-21 02:33:24,520 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:33:24,521 INFO 分析條件: motion_frames=7 cooldown剩餘=113s
+2026-04-21 02:33:31,910 INFO 偵測到移動，開始收集影格
+2026-04-21 02:33:47,075 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:33:47,075 INFO 分析條件: motion_frames=53 cooldown剩餘=90s
+2026-04-21 02:33:47,358 INFO 偵測到移動，開始收集影格
+2026-04-21 02:34:03,401 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:34:03,402 INFO 分析條件: motion_frames=23 cooldown剩餘=74s
+2026-04-21 02:34:03,640 INFO 偵測到移動，開始收集影格
+2026-04-21 02:34:20,098 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:34:20,099 INFO 分析條件: motion_frames=39 cooldown剩餘=57s
+2026-04-21 02:34:20,333 INFO 偵測到移動，開始收集影格
+2026-04-21 02:34:35,466 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:34:35,466 INFO 分析條件: motion_frames=49 cooldown剩餘=42s
+2026-04-21 02:34:35,727 INFO 偵測到移動，開始收集影格
+2026-04-21 02:34:50,770 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:34:50,771 INFO 分析條件: motion_frames=51 cooldown剩餘=27s
+2026-04-21 02:34:51,050 INFO 偵測到移動，開始收集影格
+2026-04-21 02:35:06,243 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:35:06,243 INFO 分析條件: motion_frames=50 cooldown剩餘=11s
+2026-04-21 02:35:06,524 INFO 偵測到移動，開始收集影格
+2026-04-21 02:35:21,800 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:35:21,800 INFO 分析條件: motion_frames=53 cooldown剩餘=0s
+2026-04-21 02:35:21,845 INFO AFC is enabled with max remote calls: 10.
+2026-04-21 02:35:28,710 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 429 Too Many Requests"
+2026-04-21 02:35:28,712 WARNING Gemini 日配額耗盡，直接 fallback
+2026-04-21 02:35:28,712 WARNING Gemini 分析無結果，fallback 至 OpenAI
+2026-04-21 02:35:34,499 INFO HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-21 02:35:34,507 INFO 識別為休息，略過記錄 (信心: 0.85)
+2026-04-21 02:35:34,733 INFO 偵測到移動，開始收集影格
+2026-04-21 02:35:53,517 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:35:53,517 INFO 分析條件: motion_frames=35 cooldown剩餘=268s
+2026-04-21 02:36:01,426 INFO 偵測到移動，開始收集影格
+2026-04-21 02:36:16,448 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:36:16,448 INFO 分析條件: motion_frames=51 cooldown剩餘=245s
+2026-04-21 02:36:16,735 INFO 偵測到移動，開始收集影格
+2026-04-21 02:36:31,769 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:36:31,769 INFO 分析條件: motion_frames=50 cooldown剩餘=230s
+2026-04-21 02:36:32,053 INFO 偵測到移動，開始收集影格
+2026-04-21 02:36:47,286 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:36:47,286 INFO 分析條件: motion_frames=58 cooldown剩餘=215s
+2026-04-21 02:36:47,547 INFO 偵測到移動，開始收集影格
+2026-04-21 02:37:04,717 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:37:04,718 INFO 分析條件: motion_frames=36 cooldown剩餘=197s
+2026-04-21 02:37:08,549 INFO 偵測到移動，開始收集影格
+2026-04-21 02:37:27,513 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:37:27,514 INFO 分析條件: motion_frames=8 cooldown剩餘=174s
+2026-04-21 02:37:27,797 INFO 偵測到移動，開始收集影格
+2026-04-21 02:37:43,901 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:37:43,901 INFO 分析條件: motion_frames=34 cooldown剩餘=158s
+2026-04-21 02:37:44,930 INFO 偵測到移動，開始收集影格
+2026-04-21 02:38:00,022 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:38:00,023 INFO 分析條件: motion_frames=25 cooldown剩餘=142s
+2026-04-21 02:38:00,240 INFO 偵測到移動，開始收集影格
+2026-04-21 02:38:15,245 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:38:15,245 INFO 分析條件: motion_frames=57 cooldown剩餘=127s
+2026-04-21 02:38:15,506 INFO 偵測到移動，開始收集影格
+2026-04-21 02:38:30,660 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:38:30,661 INFO 分析條件: motion_frames=56 cooldown剩餘=111s
+2026-04-21 02:38:30,950 INFO 偵測到移動，開始收集影格
+2026-04-21 02:38:45,980 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:38:45,980 INFO 分析條件: motion_frames=57 cooldown剩餘=96s
+2026-04-21 02:38:46,245 INFO 偵測到移動，開始收集影格
+2026-04-21 02:39:03,031 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:39:03,032 INFO 分析條件: motion_frames=18 cooldown剩餘=79s
+2026-04-21 02:39:03,266 INFO 偵測到移動，開始收集影格
+2026-04-21 02:39:18,294 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:39:18,295 INFO 分析條件: motion_frames=10 cooldown剩餘=64s
+2026-04-21 02:39:18,574 INFO 偵測到移動，開始收集影格
+2026-04-21 02:39:34,527 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:39:34,528 INFO 分析條件: motion_frames=47 cooldown剩餘=47s
+2026-04-21 02:39:41,116 INFO 偵測到移動，開始收集影格
+2026-04-21 02:39:56,604 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:39:56,604 INFO 分析條件: motion_frames=53 cooldown剩餘=25s
+2026-04-21 02:39:56,893 INFO 偵測到移動，開始收集影格
+2026-04-21 02:40:11,911 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:40:11,911 INFO 分析條件: motion_frames=53 cooldown剩餘=10s
+2026-04-21 02:40:12,130 INFO 偵測到移動，開始收集影格
+2026-04-21 02:40:27,262 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:40:27,263 INFO 分析條件: motion_frames=51 cooldown剩餘=0s
+2026-04-21 02:40:27,325 INFO AFC is enabled with max remote calls: 10.
+2026-04-21 02:40:35,890 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 429 Too Many Requests"
+2026-04-21 02:40:35,892 WARNING Gemini 日配額耗盡，直接 fallback
+2026-04-21 02:40:35,892 WARNING Gemini 分析無結果，fallback 至 OpenAI
+2026-04-21 02:40:42,075 INFO HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-21 02:40:42,076 INFO 識別為休息，略過記錄 (信心: 0.95)
+2026-04-21 02:40:42,388 INFO 偵測到移動，開始收集影格
+2026-04-21 02:40:57,482 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:40:57,483 INFO 分析條件: motion_frames=42 cooldown剩餘=270s
+2026-04-21 02:40:57,728 INFO 偵測到移動，開始收集影格
+2026-04-21 02:41:13,084 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:41:13,084 INFO 分析條件: motion_frames=37 cooldown剩餘=254s
+2026-04-21 02:41:13,350 INFO 偵測到移動，開始收集影格
+2026-04-21 02:41:28,373 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:41:28,373 INFO 分析條件: motion_frames=30 cooldown剩餘=239s
+2026-04-21 02:41:29,100 INFO 偵測到移動，開始收集影格
+2026-04-21 02:41:44,362 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:41:44,362 INFO 分析條件: motion_frames=51 cooldown剩餘=223s
+2026-04-21 02:41:44,576 INFO 偵測到移動，開始收集影格
+2026-04-21 02:41:59,589 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:41:59,589 INFO 分析條件: motion_frames=48 cooldown剩餘=208s
+2026-04-21 02:42:00,897 INFO 偵測到移動，開始收集影格
+2026-04-21 02:42:15,932 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:42:15,932 INFO 分析條件: motion_frames=32 cooldown剩餘=191s
+2026-04-21 02:42:16,205 INFO 偵測到移動，開始收集影格
+2026-04-21 02:42:31,218 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:42:31,218 INFO 分析條件: motion_frames=56 cooldown剩餘=176s
+2026-04-21 02:42:31,494 INFO 偵測到移動，開始收集影格
+2026-04-21 02:42:46,580 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:42:46,581 INFO 分析條件: motion_frames=54 cooldown剩餘=161s
+2026-04-21 02:42:46,809 INFO 偵測到移動，開始收集影格
+2026-04-21 02:43:02,097 INFO 靜止 30 幀，觸發分析
+2026-04-21 02:43:02,098 INFO 分析條件: motion_frames=25 cooldown剩餘=145s
+2026-04-21 02:43:04,953 INFO 偵測到移動，開始收集影格
+2026-04-21 02:43:20,230 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:43:20,230 INFO 分析條件: motion_frames=52 cooldown剩餘=127s
+2026-04-21 02:43:20,512 INFO 偵測到移動，開始收集影格
+2026-04-21 02:43:35,547 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:43:35,547 INFO 分析條件: motion_frames=17 cooldown剩餘=112s
+2026-04-21 02:43:43,429 INFO 偵測到移動，開始收集影格
+2026-04-21 02:43:55,703 INFO 靜止 30 幀，觸發分析
+2026-04-21 02:43:55,704 INFO 分析條件: motion_frames=2 cooldown剩餘=92s
+2026-04-21 02:43:59,470 INFO 偵測到移動，開始收集影格
+2026-04-21 02:44:14,745 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:44:14,746 INFO 分析條件: motion_frames=15 cooldown剩餘=73s
+2026-04-21 02:44:23,235 INFO 偵測到移動，開始收集影格
+2026-04-21 02:44:39,228 INFO 靜止 30 幀，觸發分析
+2026-04-21 02:44:39,229 INFO 分析條件: motion_frames=3 cooldown剩餘=48s
+2026-04-21 02:44:41,207 INFO 偵測到移動，開始收集影格
+2026-04-21 02:45:02,928 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:45:02,928 INFO 分析條件: motion_frames=5 cooldown剩餘=24s
+2026-04-21 02:45:07,443 INFO 偵測到移動，開始收集影格
+2026-04-21 02:45:29,055 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:45:29,055 INFO 分析條件: motion_frames=7 cooldown剩餘=0s
+2026-04-21 02:45:34,786 INFO 偵測到移動，開始收集影格
+2026-04-21 02:45:45,041 INFO 靜止 30 幀，觸發分析
+2026-04-21 02:45:45,042 INFO 分析條件: motion_frames=2 cooldown剩餘=0s
+2026-04-21 02:45:47,877 INFO 偵測到移動，開始收集影格
+2026-04-21 02:46:08,987 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:46:08,987 INFO 分析條件: motion_frames=6 cooldown剩餘=0s
+2026-04-21 02:46:11,628 INFO 偵測到移動，開始收集影格
+2026-04-21 02:46:31,844 INFO 靜止 30 幀，觸發分析
+2026-04-21 02:46:31,844 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-21 02:46:32,595 INFO 偵測到移動，開始收集影格
+2026-04-21 02:46:51,118 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:46:51,118 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-21 02:46:58,605 INFO 偵測到移動，開始收集影格
+2026-04-21 02:47:06,917 INFO 靜止 30 幀，觸發分析
+2026-04-21 02:47:06,918 INFO 分析條件: motion_frames=2 cooldown剩餘=0s
+2026-04-21 02:47:12,026 INFO 偵測到移動，開始收集影格
+2026-04-21 02:47:28,132 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:47:28,133 INFO 分析條件: motion_frames=6 cooldown剩餘=0s
+2026-04-21 02:47:28,375 INFO 偵測到移動，開始收集影格
+2026-04-21 02:47:46,928 INFO 靜止 30 幀，觸發分析
+2026-04-21 02:47:46,929 INFO 分析條件: motion_frames=25 cooldown剩餘=0s
+2026-04-21 02:47:46,969 INFO AFC is enabled with max remote calls: 10.
+2026-04-21 02:47:54,265 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 429 Too Many Requests"
+2026-04-21 02:47:54,266 WARNING Gemini 日配額耗盡，直接 fallback
+2026-04-21 02:47:54,266 WARNING Gemini 分析無結果，fallback 至 OpenAI
+2026-04-21 02:47:58,466 INFO HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-21 02:47:58,468 INFO 識別為休息，略過記錄 (信心: 0.85)
+2026-04-21 02:47:59,392 INFO 偵測到移動，開始收集影格
+2026-04-21 02:48:16,634 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:48:16,635 INFO 分析條件: motion_frames=4 cooldown剩餘=270s
+2026-04-21 02:48:23,708 INFO 偵測到移動，開始收集影格
+2026-04-21 02:48:31,941 INFO 靜止 30 幀，觸發分析
+2026-04-21 02:48:31,941 INFO 分析條件: motion_frames=2 cooldown剩餘=255s
+2026-04-21 02:48:37,201 INFO 偵測到移動，開始收集影格
+2026-04-21 02:48:46,189 INFO 靜止 30 幀，觸發分析
+2026-04-21 02:48:46,190 INFO 分析條件: motion_frames=4 cooldown剩餘=241s
+2026-04-21 02:48:51,377 INFO 偵測到移動，開始收集影格
+2026-04-21 02:49:06,967 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:49:06,967 INFO 分析條件: motion_frames=4 cooldown剩餘=220s
+2026-04-21 02:49:17,464 INFO 偵測到移動，開始收集影格
+2026-04-21 02:49:33,484 INFO 靜止 30 幀，觸發分析
+2026-04-21 02:49:33,485 INFO 分析條件: motion_frames=6 cooldown剩餘=193s
+2026-04-21 02:49:37,666 INFO 偵測到移動，開始收集影格
+2026-04-21 02:49:59,978 INFO 靜止 30 幀，觸發分析
+2026-04-21 02:49:59,978 INFO 分析條件: motion_frames=6 cooldown剩餘=167s
+2026-04-21 02:50:05,368 INFO 偵測到移動，開始收集影格
+2026-04-21 02:50:25,456 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:50:25,457 INFO 分析條件: motion_frames=9 cooldown剩餘=141s
+2026-04-21 02:50:38,805 INFO 偵測到移動，開始收集影格
+2026-04-21 02:50:56,481 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:50:56,481 INFO 分析條件: motion_frames=6 cooldown剩餘=110s
+2026-04-21 02:50:56,768 INFO 偵測到移動，開始收集影格
+2026-04-21 02:51:17,544 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:51:17,544 INFO 分析條件: motion_frames=7 cooldown剩餘=89s
+2026-04-21 02:51:23,774 INFO 偵測到移動，開始收集影格
+2026-04-21 02:51:39,437 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:51:39,437 INFO 分析條件: motion_frames=42 cooldown剩餘=67s
+2026-04-21 02:51:39,724 INFO 偵測到移動，開始收集影格
+2026-04-21 02:51:56,967 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:51:56,968 INFO 分析條件: motion_frames=27 cooldown剩餘=50s
+2026-04-21 02:51:57,232 INFO 偵測到移動，開始收集影格
+2026-04-21 02:52:07,244 INFO 靜止 30 幀，觸發分析
+2026-04-21 02:52:07,245 INFO 分析條件: motion_frames=2 cooldown剩餘=40s
+2026-04-21 02:52:12,500 INFO 偵測到移動，開始收集影格
+2026-04-21 02:52:33,185 INFO 靜止 30 幀，觸發分析
+2026-04-21 02:52:33,186 INFO 分析條件: motion_frames=9 cooldown剩餘=14s
+2026-04-21 02:52:37,862 INFO 偵測到移動，開始收集影格
+2026-04-21 02:52:59,493 INFO 靜止 30 幀，觸發分析
+2026-04-21 02:52:59,493 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-21 02:53:01,635 INFO 偵測到移動，開始收集影格
+2026-04-21 02:53:18,902 INFO 靜止 30 幀，觸發分析
+2026-04-21 02:53:18,902 INFO 分析條件: motion_frames=7 cooldown剩餘=0s
+2026-04-21 02:53:20,139 INFO 偵測到移動，開始收集影格
+2026-04-21 02:53:42,438 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:53:42,438 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-21 02:53:43,759 INFO 偵測到移動，開始收集影格
+2026-04-21 02:54:04,776 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:54:04,777 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-21 02:54:10,910 INFO 偵測到移動，開始收集影格
+2026-04-21 02:54:27,062 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:54:27,063 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-21 02:54:34,928 INFO 偵測到移動，開始收集影格
+2026-04-21 02:54:51,247 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:54:51,248 INFO 分析條件: motion_frames=12 cooldown剩餘=0s
+2026-04-21 02:54:51,288 INFO AFC is enabled with max remote calls: 10.
+2026-04-21 02:54:57,939 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 429 Too Many Requests"
+2026-04-21 02:54:57,941 WARNING Gemini 日配額耗盡，直接 fallback
+2026-04-21 02:54:57,941 WARNING Gemini 分析無結果，fallback 至 OpenAI
+2026-04-21 02:55:05,027 INFO HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-21 02:55:05,049 INFO 已記錄動作: sleeping (信心: 0.85) 截圖: action_screenshots/20260421_025505_sleeping.jpg
+2026-04-21 02:55:11,862 INFO 偵測到移動，開始收集影格
+2026-04-21 02:55:32,468 INFO 靜止 30 幀，觸發分析
+2026-04-21 02:55:32,468 INFO 分析條件: motion_frames=4 cooldown剩餘=259s
+2026-04-21 02:55:33,519 INFO 偵測到移動，開始收集影格
+2026-04-21 02:55:47,941 INFO 靜止 30 幀，觸發分析
+2026-04-21 02:55:47,941 INFO 分析條件: motion_frames=3 cooldown剩餘=243s
+2026-04-21 02:55:50,874 INFO 偵測到移動，開始收集影格
+2026-04-21 02:56:06,611 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:56:06,611 INFO 分析條件: motion_frames=5 cooldown剩餘=225s
+2026-04-21 02:56:17,088 INFO 偵測到移動，開始收集影格
+2026-04-21 02:56:37,880 INFO 靜止 30 幀，觸發分析
+2026-04-21 02:56:37,880 INFO 分析條件: motion_frames=4 cooldown剩餘=193s
+2026-04-21 02:56:39,261 INFO 偵測到移動，開始收集影格
+2026-04-21 02:56:53,547 INFO 靜止 30 幀，觸發分析
+2026-04-21 02:56:53,548 INFO 分析條件: motion_frames=3 cooldown剩餘=178s
+2026-04-21 02:56:56,087 INFO 偵測到移動，開始收集影格
+2026-04-21 02:57:11,298 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:57:11,298 INFO 分析條件: motion_frames=6 cooldown剩餘=160s
+2026-04-21 02:57:11,554 INFO 偵測到移動，開始收集影格
+2026-04-21 02:57:28,646 INFO 靜止 30 幀，觸發分析
+2026-04-21 02:57:28,647 INFO 分析條件: motion_frames=4 cooldown剩餘=143s
+2026-04-21 02:57:29,677 INFO 偵測到移動，開始收集影格
+2026-04-21 02:57:50,385 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:57:50,385 INFO 分析條件: motion_frames=7 cooldown剩餘=121s
+2026-04-21 02:57:50,668 INFO 偵測到移動，開始收集影格
+2026-04-21 02:58:13,039 INFO 靜止 30 幀，觸發分析
+2026-04-21 02:58:13,040 INFO 分析條件: motion_frames=24 cooldown剩餘=98s
+2026-04-21 02:58:13,796 INFO 偵測到移動，開始收集影格
+2026-04-21 02:58:28,267 INFO 靜止 30 幀，觸發分析
+2026-04-21 02:58:28,268 INFO 分析條件: motion_frames=3 cooldown剩餘=83s
+2026-04-21 02:58:31,482 INFO 偵測到移動，開始收集影格
+2026-04-21 02:58:40,634 INFO 靜止 30 幀，觸發分析
+2026-04-21 02:58:40,635 INFO 分析條件: motion_frames=6 cooldown剩餘=71s
+2026-04-21 02:58:41,374 INFO 偵測到移動，開始收集影格
+2026-04-21 02:58:55,890 INFO 靜止 30 幀，觸發分析
+2026-04-21 02:58:55,891 INFO 分析條件: motion_frames=3 cooldown剩餘=55s
+2026-04-21 02:58:58,969 INFO 偵測到移動，開始收集影格
+2026-04-21 02:59:14,662 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:59:14,662 INFO 分析條件: motion_frames=6 cooldown剩餘=37s
+2026-04-21 02:59:21,112 INFO 偵測到移動，開始收集影格
+2026-04-21 02:59:32,295 INFO 靜止 30 幀，觸發分析
+2026-04-21 02:59:32,295 INFO 分析條件: motion_frames=5 cooldown剩餘=19s
+2026-04-21 02:59:35,388 INFO 偵測到移動，開始收集影格
+2026-04-21 02:59:50,450 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 02:59:50,451 INFO 分析條件: motion_frames=5 cooldown剩餘=1s
+2026-04-21 03:00:01,845 INFO 偵測到移動，開始收集影格
+2026-04-21 03:00:17,445 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 03:00:17,445 INFO 分析條件: motion_frames=9 cooldown剩餘=0s
+2026-04-21 03:00:26,846 INFO 偵測到移動，開始收集影格
+2026-04-21 03:00:36,765 INFO 靜止 30 幀，觸發分析
+2026-04-21 03:00:36,765 INFO 分析條件: motion_frames=2 cooldown剩餘=0s
+2026-04-21 03:00:40,058 INFO 偵測到移動，開始收集影格
+2026-04-21 03:00:55,332 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 03:00:55,332 INFO 分析條件: motion_frames=8 cooldown剩餘=0s
+2026-04-21 03:00:55,566 INFO 偵測到移動，開始收集影格
+2026-04-21 03:01:18,211 INFO 靜止 30 幀，觸發分析
+2026-04-21 03:01:18,211 INFO 分析條件: motion_frames=13 cooldown剩餘=0s
+2026-04-21 03:01:18,250 INFO AFC is enabled with max remote calls: 10.
+2026-04-21 03:01:25,267 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 429 Too Many Requests"
+2026-04-21 03:01:25,268 WARNING Gemini 日配額耗盡，直接 fallback
+2026-04-21 03:01:25,269 WARNING Gemini 分析無結果，fallback 至 OpenAI
+2026-04-21 03:01:28,427 INFO HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-21 03:01:28,428 INFO 識別為休息，略過記錄 (信心: 0.90)
+2026-04-21 03:01:31,966 INFO 偵測到移動，開始收集影格
+2026-04-21 03:01:47,709 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 03:01:47,709 INFO 分析條件: motion_frames=9 cooldown剩餘=271s
+2026-04-21 03:01:52,949 INFO 偵測到移動，開始收集影格
+2026-04-21 03:02:08,923 INFO 靜止 30 幀，觸發分析
+2026-04-21 03:02:08,923 INFO 分析條件: motion_frames=9 cooldown剩餘=249s
+2026-04-21 03:02:12,511 INFO 偵測到移動，開始收集影格
+2026-04-21 03:02:33,719 INFO 靜止 30 幀，觸發分析
+2026-04-21 03:02:33,719 INFO 分析條件: motion_frames=4 cooldown剩餘=224s
+2026-04-21 03:02:34,005 INFO 偵測到移動，開始收集影格
+2026-04-21 03:02:53,354 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 03:02:53,354 INFO 分析條件: motion_frames=9 cooldown剩餘=205s
+2026-04-21 03:02:54,865 INFO 偵測到移動，開始收集影格
+2026-04-21 03:03:02,765 INFO 靜止 30 幀，觸發分析
+2026-04-21 03:03:02,765 INFO 分析條件: motion_frames=1 cooldown剩餘=195s
+2026-04-21 03:03:06,500 INFO 偵測到移動，開始收集影格
+2026-04-21 03:03:29,470 INFO 靜止 30 幀，觸發分析
+2026-04-21 03:03:29,470 INFO 分析條件: motion_frames=6 cooldown剩餘=169s
+2026-04-21 03:03:30,462 INFO 偵測到移動，開始收集影格
+2026-04-21 03:03:48,331 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 03:03:48,331 INFO 分析條件: motion_frames=5 cooldown剩餘=150s
+2026-04-21 03:03:48,618 INFO 偵測到移動，開始收集影格
+2026-04-21 03:04:03,628 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 03:04:03,628 INFO 分析條件: motion_frames=26 cooldown剩餘=135s
+2026-04-21 03:04:03,912 INFO 偵測到移動，開始收集影格
+2026-04-21 03:04:25,481 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 03:04:25,481 INFO 分析條件: motion_frames=21 cooldown剩餘=113s
+2026-04-21 03:04:30,679 INFO 偵測到移動，開始收集影格
+2026-04-21 03:04:47,471 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 03:04:47,472 INFO 分析條件: motion_frames=14 cooldown剩餘=91s
+2026-04-21 03:04:52,047 INFO 偵測到移動，開始收集影格
+2026-04-21 03:05:14,331 INFO 靜止 30 幀，觸發分析
+2026-04-21 03:05:14,332 INFO 分析條件: motion_frames=6 cooldown剩餘=64s
+2026-04-21 03:05:18,641 INFO 偵測到移動，開始收集影格
+2026-04-21 03:05:41,458 INFO 靜止 30 幀，觸發分析
+2026-04-21 03:05:41,458 INFO 分析條件: motion_frames=7 cooldown剩餘=37s
+2026-04-21 03:05:45,725 INFO 偵測到移動，開始收集影格
+2026-04-21 03:06:03,793 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 03:06:03,794 INFO 分析條件: motion_frames=8 cooldown剩餘=14s
+2026-04-21 03:06:04,864 INFO 偵測到移動，開始收集影格
+2026-04-21 03:06:12,877 INFO 靜止 30 幀，觸發分析
+2026-04-21 03:06:12,877 INFO 分析條件: motion_frames=1 cooldown剩餘=5s
+2026-04-21 03:06:17,155 INFO 偵測到移動，開始收集影格
+2026-04-21 03:06:39,776 INFO 靜止 30 幀，觸發分析
+2026-04-21 03:06:39,777 INFO 分析條件: motion_frames=8 cooldown剩餘=0s
+2026-04-21 03:06:43,842 INFO 偵測到移動，開始收集影格
+2026-04-21 03:07:01,776 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 03:07:01,777 INFO 分析條件: motion_frames=8 cooldown剩餘=0s
+2026-04-21 03:07:07,586 INFO 偵測到移動，開始收集影格
+2026-04-21 03:07:27,397 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 03:07:27,398 INFO 分析條件: motion_frames=22 cooldown剩餘=0s
+2026-04-21 03:07:27,440 INFO AFC is enabled with max remote calls: 10.
+2026-04-21 03:07:34,714 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 429 Too Many Requests"
+2026-04-21 03:07:34,715 WARNING Gemini 日配額耗盡，直接 fallback
+2026-04-21 03:07:34,715 WARNING Gemini 分析無結果，fallback 至 OpenAI
+2026-04-21 03:07:39,313 INFO HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-21 03:07:39,314 INFO 識別為休息，略過記錄 (信心: 0.95)
+2026-04-21 03:07:40,125 INFO 偵測到移動，開始收集影格
+2026-04-21 03:07:48,052 INFO 靜止 30 幀，觸發分析
+2026-04-21 03:07:48,052 INFO 分析條件: motion_frames=1 cooldown剩餘=279s
+2026-04-21 03:07:52,596 INFO 偵測到移動，開始收集影格
+2026-04-21 03:08:10,348 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 03:08:10,348 INFO 分析條件: motion_frames=9 cooldown剩餘=257s
+2026-04-21 03:08:11,169 INFO 偵測到移動，開始收集影格
+2026-04-21 03:08:32,070 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 03:08:32,070 INFO 分析條件: motion_frames=5 cooldown剩餘=235s
+2026-04-21 03:08:32,590 INFO 偵測到移動，開始收集影格
+2026-04-21 03:08:40,502 INFO 靜止 30 幀，觸發分析
+2026-04-21 03:08:40,503 INFO 分析條件: motion_frames=1 cooldown剩餘=227s
+2026-04-21 03:08:45,245 INFO 偵測到移動，開始收集影格
+2026-04-21 03:09:05,594 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 03:09:05,594 INFO 分析條件: motion_frames=7 cooldown剩餘=202s
+2026-04-21 03:09:06,679 INFO 偵測到移動，開始收集影格
+2026-04-21 03:09:15,061 INFO 靜止 30 幀，觸發分析
+2026-04-21 03:09:15,061 INFO 分析條件: motion_frames=2 cooldown剩餘=192s
+2026-04-21 03:09:19,896 INFO 偵測到移動，開始收集影格
+2026-04-21 03:09:41,668 INFO 靜止 30 幀，觸發分析
+2026-04-21 03:09:41,668 INFO 分析條件: motion_frames=5 cooldown剩餘=166s
+2026-04-21 03:09:46,374 INFO 偵測到移動，開始收集影格
+2026-04-21 03:10:03,422 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 03:10:03,422 INFO 分析條件: motion_frames=11 cooldown剩餘=144s
+2026-04-21 03:10:03,708 INFO 偵測到移動，開始收集影格
+2026-04-21 03:10:19,914 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 03:10:19,914 INFO 分析條件: motion_frames=6 cooldown剩餘=127s
+2026-04-21 03:10:22,068 INFO 偵測到移動，開始收集影格
+2026-04-21 03:10:42,570 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 03:10:42,570 INFO 分析條件: motion_frames=30 cooldown剩餘=105s
+2026-04-21 03:10:48,824 INFO 偵測到移動，開始收集影格
+2026-04-21 03:11:09,874 INFO 靜止 30 幀，觸發分析
+2026-04-21 03:11:09,874 INFO 分析條件: motion_frames=4 cooldown剩餘=78s
+2026-04-21 03:11:14,953 INFO 偵測到移動，開始收集影格
+2026-04-21 03:11:23,768 INFO 靜止 30 幀，觸發分析
+2026-04-21 03:11:23,769 INFO 分析條件: motion_frames=2 cooldown剩餘=64s
+2026-04-21 03:11:25,659 INFO 偵測到移動，開始收集影格
+2026-04-21 03:11:34,026 INFO 靜止 30 幀，觸發分析
+2026-04-21 03:11:34,026 INFO 分析條件: motion_frames=3 cooldown剩餘=53s
+2026-04-21 03:11:39,058 INFO 偵測到移動，開始收集影格
+2026-04-21 03:11:53,142 INFO 靜止 30 幀，觸發分析
+2026-04-21 03:11:53,142 INFO 分析條件: motion_frames=6 cooldown剩餘=34s
+[h264 @ 0xa80dac380] cabac decode of qscale diff failed at 139 23
+[h264 @ 0xa80dac380] error while decoding MB 139 23, bytestream 613
+2026-04-21 03:11:56,032 INFO 偵測到移動，開始收集影格
+2026-04-21 03:12:15,111 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 03:12:15,111 INFO 分析條件: motion_frames=5 cooldown剩餘=12s
+2026-04-21 03:12:16,675 INFO 偵測到移動，開始收集影格
+2026-04-21 03:12:24,754 INFO 靜止 30 幀，觸發分析
+2026-04-21 03:12:24,754 INFO 分析條件: motion_frames=1 cooldown剩餘=3s
+2026-04-21 03:12:30,130 INFO 偵測到移動，開始收集影格
+2026-04-21 03:12:50,235 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 03:12:50,235 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-21 03:12:56,734 INFO 偵測到移動，開始收集影格
+2026-04-21 03:13:04,679 INFO 靜止 30 幀，觸發分析
+2026-04-21 03:13:04,679 INFO 分析條件: motion_frames=1 cooldown剩餘=0s
+2026-04-21 03:13:09,841 INFO 偵測到移動，開始收集影格
+2026-04-21 03:13:31,168 INFO 靜止 30 幀，觸發分析
+2026-04-21 03:13:31,168 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-21 03:13:36,220 INFO 偵測到移動，開始收集影格
+2026-04-21 03:13:52,159 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 03:13:52,159 INFO 分析條件: motion_frames=9 cooldown剩餘=0s
+2026-04-21 03:13:58,513 INFO 偵測到移動，開始收集影格
+2026-04-21 03:14:13,698 INFO 靜止 30 幀，觸發分析
+2026-04-21 03:14:13,698 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-21 03:14:18,704 INFO 偵測到移動，開始收集影格
+2026-04-21 03:14:27,893 INFO 靜止 30 幀，觸發分析
+2026-04-21 03:14:27,893 INFO 分析條件: motion_frames=6 cooldown剩餘=0s
+2026-04-21 03:14:32,909 INFO 偵測到移動，開始收集影格
+2026-04-21 03:14:41,509 INFO 靜止 30 幀，觸發分析
+2026-04-21 03:14:41,510 INFO 分析條件: motion_frames=3 cooldown剩餘=0s
+2026-04-21 03:14:44,622 INFO 偵測到移動，開始收集影格
+2026-04-21 03:15:00,790 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 03:15:00,791 INFO 分析條件: motion_frames=10 cooldown剩餘=0s
+2026-04-21 03:15:00,840 INFO AFC is enabled with max remote calls: 10.
+2026-04-21 03:15:10,729 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 429 Too Many Requests"
+2026-04-21 03:15:10,731 WARNING Gemini 日配額耗盡，直接 fallback
+2026-04-21 03:15:10,731 WARNING Gemini 分析無結果，fallback 至 OpenAI
+2026-04-21 03:15:18,377 INFO HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-21 03:15:18,399 INFO 已記錄動作: sleeping (信心: 0.90) 截圖: action_screenshots/20260421_031518_sleeping.jpg
+2026-04-21 03:15:23,831 INFO 偵測到移動，開始收集影格
+2026-04-21 03:15:40,214 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 03:15:40,214 INFO 分析條件: motion_frames=10 cooldown剩餘=261s
+2026-04-21 03:15:44,038 INFO 偵測到移動，開始收集影格
+[h264 @ 0xa80daf100] error while decoding MB 133 62, bytestream -5
+2026-04-21 03:15:59,235 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 03:15:59,235 INFO 分析條件: motion_frames=7 cooldown剩餘=242s
+2026-04-21 03:15:59,236 WARNING 讀取影格失敗，重新連線
+2026-04-21 03:16:01,388 INFO RTSP 串流連線成功
+2026-04-21 03:16:12,375 INFO 偵測到移動，開始收集影格
+2026-04-21 03:16:27,703 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 03:16:27,703 INFO 分析條件: motion_frames=5 cooldown剩餘=213s
+2026-04-21 03:16:38,551 INFO 偵測到移動，開始收集影格
+2026-04-21 03:16:53,232 INFO 靜止 30 幀，觸發分析
+2026-04-21 03:16:53,232 INFO 分析條件: motion_frames=4 cooldown剩餘=188s
+2026-04-21 03:16:54,361 INFO 偵測到移動，開始收集影格
+2026-04-21 03:17:15,778 INFO 靜止 30 幀，觸發分析
+2026-04-21 03:17:15,778 INFO 分析條件: motion_frames=5 cooldown剩餘=165s
+2026-04-21 03:17:18,180 INFO 偵測到移動，開始收集影格
+2026-04-21 03:17:33,604 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 03:17:33,604 INFO 分析條件: motion_frames=5 cooldown剩餘=147s
+2026-04-21 03:17:44,156 INFO 偵測到移動，開始收集影格
+2026-04-21 03:17:58,637 INFO 靜止 30 幀，觸發分析
+2026-04-21 03:17:58,637 INFO 分析條件: motion_frames=3 cooldown剩餘=122s
+2026-04-21 03:17:59,615 INFO 偵測到移動，開始收集影格
+2026-04-21 03:18:20,505 INFO 靜止 30 幀，觸發分析
+2026-04-21 03:18:20,506 INFO 分析條件: motion_frames=4 cooldown剩餘=100s
+2026-04-21 03:18:23,402 INFO 偵測到移動，開始收集影格
+2026-04-21 03:18:38,929 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 03:18:38,930 INFO 分析條件: motion_frames=5 cooldown剩餘=82s
+2026-04-21 03:18:49,826 INFO 偵測到移動，開始收集影格
+2026-04-21 03:19:02,339 INFO 靜止 30 幀，觸發分析
+2026-04-21 03:19:02,340 INFO 分析條件: motion_frames=3 cooldown剩餘=58s
+2026-04-21 03:19:05,230 INFO 偵測到移動，開始收集影格
+2026-04-21 03:19:13,380 INFO 靜止 30 幀，觸發分析
+2026-04-21 03:19:13,380 INFO 分析條件: motion_frames=1 cooldown剩餘=47s
+2026-04-21 03:19:15,092 INFO 偵測到移動，開始收集影格
+2026-04-21 03:19:31,769 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 03:19:31,769 INFO 分析條件: motion_frames=11 cooldown剩餘=29s
+2026-04-21 03:19:32,024 INFO 偵測到移動，開始收集影格
+2026-04-21 03:19:50,443 INFO 靜止 30 幀，觸發分析
+2026-04-21 03:19:50,443 INFO 分析條件: motion_frames=4 cooldown剩餘=10s
+2026-04-21 03:19:53,083 INFO 偵測到移動，開始收集影格
+2026-04-21 03:20:09,559 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 03:20:09,560 INFO 分析條件: motion_frames=8 cooldown剩餘=0s
+2026-04-21 03:20:20,028 INFO 偵測到移動，開始收集影格
+2026-04-21 03:20:34,585 INFO 靜止 30 幀，觸發分析
+2026-04-21 03:20:34,585 INFO 分析條件: motion_frames=3 cooldown剩餘=0s
+2026-04-21 03:20:35,875 INFO 偵測到移動，開始收集影格
+2026-04-21 03:20:58,362 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 03:20:58,362 INFO 分析條件: motion_frames=6 cooldown剩餘=0s
+2026-04-21 03:21:01,280 INFO 偵測到移動，開始收集影格
+[h264 @ 0xa80c15c00] left block unavailable for requested intra4x4 mode -1
+[h264 @ 0xa80c15c00] error while decoding MB 0 67, bytestream 92063
+2026-04-21 03:21:22,344 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 03:21:22,345 INFO 分析條件: motion_frames=12 cooldown剩餘=0s
+2026-04-21 03:21:22,390 INFO AFC is enabled with max remote calls: 10.
+2026-04-21 03:21:30,136 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 429 Too Many Requests"
+2026-04-21 03:21:30,138 WARNING Gemini 日配額耗盡，直接 fallback
+2026-04-21 03:21:30,138 WARNING Gemini 分析無結果，fallback 至 OpenAI
+2026-04-21 03:21:36,568 INFO HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-21 03:21:36,569 INFO 識別為休息，略過記錄 (信心: 0.95)
+2026-04-21 03:21:39,434 INFO 偵測到移動，開始收集影格
+[h264 @ 0xa80c17480] error while decoding MB 98 43, bytestream -5
+2026-04-21 03:21:53,325 WARNING 讀取影格失敗，重新連線
+2026-04-21 03:21:55,693 INFO RTSP 串流連線成功
+2026-04-21 03:22:03,658 INFO 靜止 30 幀，觸發分析
+2026-04-21 03:22:03,658 INFO 分析條件: motion_frames=39 cooldown剩餘=259s
+2026-04-21 03:22:06,274 INFO 偵測到移動，開始收集影格
+2026-04-21 03:22:20,621 INFO 靜止 30 幀，觸發分析
+2026-04-21 03:22:20,622 INFO 分析條件: motion_frames=3 cooldown剩餘=242s
+2026-04-21 03:22:21,889 INFO 偵測到移動，開始收集影格
+2026-04-21 03:22:42,365 INFO 靜止 30 幀，觸發分析
+2026-04-21 03:22:42,365 INFO 分析條件: motion_frames=4 cooldown剩餘=220s
+2026-04-21 03:22:44,934 INFO 偵測到移動，開始收集影格
+2026-04-21 03:23:00,650 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 03:23:00,651 INFO 分析條件: motion_frames=5 cooldown剩餘=202s
+2026-04-21 03:23:10,800 INFO 偵測到移動，開始收集影格
+2026-04-21 03:23:25,237 INFO 靜止 30 幀，觸發分析
+2026-04-21 03:23:25,237 INFO 分析條件: motion_frames=3 cooldown剩餘=177s
+2026-04-21 03:23:26,738 INFO 偵測到移動，開始收集影格
+2026-04-21 03:23:47,635 INFO 靜止 30 幀，觸發分析
+2026-04-21 03:23:47,635 INFO 分析條件: motion_frames=4 cooldown剩餘=155s
+2026-04-21 03:23:50,167 INFO 偵測到移動，開始收集影格
+2026-04-21 03:24:05,806 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 03:24:05,806 INFO 分析條件: motion_frames=5 cooldown剩餘=137s
+2026-04-21 03:24:15,913 INFO 偵測到移動，開始收集影格
+2026-04-21 03:24:30,509 INFO 靜止 30 幀，觸發分析
+2026-04-21 03:24:30,509 INFO 分析條件: motion_frames=3 cooldown剩餘=112s
+2026-04-21 03:24:32,050 INFO 偵測到移動，開始收集影格
+2026-04-21 03:24:48,805 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 03:24:48,805 INFO 分析條件: motion_frames=5 cooldown剩餘=94s
+2026-04-21 03:24:58,953 INFO 偵測到移動，開始收集影格
+2026-04-21 03:25:18,280 INFO 靜止 30 幀，觸發分析
+2026-04-21 03:25:18,280 INFO 分析條件: motion_frames=10 cooldown剩餘=64s
+2026-04-21 03:25:21,864 INFO 偵測到移動，開始收集影格
+2026-04-21 03:25:39,392 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 03:25:39,393 INFO 分析條件: motion_frames=12 cooldown剩餘=43s
+2026-04-21 03:25:49,114 INFO 偵測到移動，開始收集影格
+2026-04-21 03:26:05,929 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 03:26:05,929 INFO 分析條件: motion_frames=5 cooldown剩餘=16s
+2026-04-21 03:26:16,101 INFO 偵測到移動，開始收集影格
+2026-04-21 03:26:30,571 INFO 靜止 30 幀，觸發分析
+2026-04-21 03:26:30,572 INFO 分析條件: motion_frames=3 cooldown剩餘=0s
+2026-04-21 03:26:32,429 INFO 偵測到移動，開始收集影格
+2026-04-21 03:26:53,214 INFO 靜止 30 幀，觸發分析
+2026-04-21 03:26:53,214 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-21 03:26:55,341 INFO 偵測到移動，開始收集影格
+2026-04-21 03:27:11,241 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 03:27:11,241 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-21 03:27:20,692 INFO 偵測到移動，開始收集影格
+2026-04-21 03:27:35,478 INFO 靜止 30 幀，觸發分析
+2026-04-21 03:27:35,479 INFO 分析條件: motion_frames=3 cooldown剩餘=0s
+2026-04-21 03:27:37,369 INFO 偵測到移動，開始收集影格
+2026-04-21 03:27:58,180 INFO 靜止 30 幀，觸發分析
+2026-04-21 03:27:58,181 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-21 03:28:00,343 INFO 偵測到移動，開始收集影格
+2026-04-21 03:28:22,401 INFO 靜止 30 幀，觸發分析
+2026-04-21 03:28:22,401 INFO 分析條件: motion_frames=9 cooldown剩餘=0s
+2026-04-21 03:28:23,729 INFO 偵測到移動，開始收集影格
+2026-04-21 03:28:44,016 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 03:28:44,016 INFO 分析條件: motion_frames=7 cooldown剩餘=0s
+2026-04-21 03:28:46,902 INFO 偵測到移動，開始收集影格
+2026-04-21 03:29:02,336 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 03:29:02,337 INFO 分析條件: motion_frames=9 cooldown剩餘=0s
+2026-04-21 03:29:02,623 INFO 偵測到移動，開始收集影格
+2026-04-21 03:29:10,637 INFO 靜止 30 幀，觸發分析
+2026-04-21 03:29:10,638 INFO 分析條件: motion_frames=2 cooldown剩餘=0s
+2026-04-21 03:29:12,249 INFO 偵測到移動，開始收集影格
+2026-04-21 03:29:29,001 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 03:29:29,001 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-21 03:29:38,546 INFO 偵測到移動，開始收集影格
+2026-04-21 03:29:53,684 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 03:29:53,684 INFO 分析條件: motion_frames=10 cooldown剩餘=0s
+2026-04-21 03:29:53,727 INFO AFC is enabled with max remote calls: 10.
+2026-04-21 03:30:06,856 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 429 Too Many Requests"
+2026-04-21 03:30:06,858 WARNING Gemini 日配額耗盡，直接 fallback
+2026-04-21 03:30:06,858 WARNING Gemini 分析無結果，fallback 至 OpenAI
+2026-04-21 03:30:16,471 INFO HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-21 03:30:16,473 INFO 識別為休息，略過記錄 (信心: 0.95)
+2026-04-21 03:30:17,043 INFO 偵測到移動，開始收集影格
+2026-04-21 03:30:32,861 INFO 靜止 30 幀，觸發分析
+2026-04-21 03:30:32,861 INFO 分析條件: motion_frames=7 cooldown剩餘=261s
+2026-04-21 03:30:34,383 INFO 偵測到移動，開始收集影格
+[h264 @ 0xa80dafb80] error while decoding MB 49 54, bytestream -5
+2026-04-21 03:30:39,128 WARNING 讀取影格失敗，重新連線
+2026-04-21 03:30:41,135 INFO RTSP 串流連線成功
+2026-04-21 03:30:50,426 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 03:30:50,426 INFO 分析條件: motion_frames=17 cooldown剩餘=243s
+2026-04-21 03:30:50,639 INFO 偵測到移動，開始收集影格
+2026-04-21 03:31:06,262 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 03:31:06,262 INFO 分析條件: motion_frames=5 cooldown剩餘=227s
+2026-04-21 03:31:07,849 INFO 偵測到移動，開始收集影格
+2026-04-21 03:31:25,755 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 03:31:25,756 INFO 分析條件: motion_frames=20 cooldown剩餘=208s
+2026-04-21 03:31:27,585 INFO 偵測到移動，開始收集影格
+2026-04-21 03:31:45,617 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 03:31:45,618 INFO 分析條件: motion_frames=8 cooldown剩餘=188s
+2026-04-21 03:31:47,300 INFO 偵測到移動，開始收集影格
+2026-04-21 03:31:54,964 INFO 靜止 30 幀，觸發分析
+2026-04-21 03:31:54,964 INFO 分析條件: motion_frames=1 cooldown剩餘=179s
+2026-04-21 03:31:58,919 INFO 偵測到移動，開始收集影格
+2026-04-21 03:32:21,456 INFO 靜止 30 幀，觸發分析
+2026-04-21 03:32:21,456 INFO 分析條件: motion_frames=5 cooldown剩餘=152s
+2026-04-21 03:32:25,191 INFO 偵測到移動，開始收集影格
+2026-04-21 03:32:42,767 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 03:32:42,767 INFO 分析條件: motion_frames=8 cooldown剩餘=131s
+2026-04-21 03:32:43,036 INFO 偵測到移動，開始收集影格
+2026-04-21 03:32:59,013 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 03:32:59,014 INFO 分析條件: motion_frames=13 cooldown剩餘=115s
+2026-04-21 03:32:59,266 INFO 偵測到移動，開始收集影格
+2026-04-21 03:33:15,181 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 03:33:15,181 INFO 分析條件: motion_frames=12 cooldown剩餘=99s
+2026-04-21 03:33:19,303 INFO 偵測到移動，開始收集影格
+2026-04-21 03:33:34,882 INFO 靜止 30 幀，觸發分析
+2026-04-21 03:33:34,882 INFO 分析條件: motion_frames=6 cooldown剩餘=79s
+2026-04-21 03:33:38,236 INFO 偵測到移動，開始收集影格
+2026-04-21 03:33:52,760 INFO 靜止 30 幀，觸發分析
+2026-04-21 03:33:52,760 INFO 分析條件: motion_frames=3 cooldown剩餘=61s
+2026-04-21 03:33:53,238 INFO 偵測到移動，開始收集影格
+2026-04-21 03:34:14,109 INFO 靜止 30 幀，觸發分析
+2026-04-21 03:34:14,109 INFO 分析條件: motion_frames=4 cooldown剩餘=40s
+2026-04-21 03:34:17,318 INFO 偵測到移動，開始收集影格
+2026-04-21 03:34:32,429 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 03:34:32,429 INFO 分析條件: motion_frames=5 cooldown剩餘=21s
+2026-04-21 03:34:34,272 INFO 偵測到移動，開始收集影格
+2026-04-21 03:34:48,368 INFO 靜止 30 幀，觸發分析
+2026-04-21 03:34:48,369 INFO 分析條件: motion_frames=8 cooldown剩餘=5s
+2026-04-21 03:34:51,730 INFO 偵測到移動，開始收集影格
+2026-04-21 03:35:05,746 INFO 靜止 30 幀，觸發分析
+2026-04-21 03:35:05,747 INFO 分析條件: motion_frames=3 cooldown剩餘=0s
+2026-04-21 03:35:06,524 INFO 偵測到移動，開始收集影格
+2026-04-21 03:35:24,668 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 03:35:24,668 INFO 分析條件: motion_frames=7 cooldown剩餘=0s
+2026-04-21 03:35:24,945 INFO 偵測到移動，開始收集影格
+2026-04-21 03:35:33,694 INFO 靜止 30 幀，觸發分析
+2026-04-21 03:35:33,694 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-21 03:35:36,891 INFO 偵測到移動，開始收集影格
+2026-04-21 03:35:54,393 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 03:35:54,394 INFO 分析條件: motion_frames=30 cooldown剩餘=0s
+2026-04-21 03:35:54,437 INFO AFC is enabled with max remote calls: 10.
+2026-04-21 03:36:01,265 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 429 Too Many Requests"
+2026-04-21 03:36:01,266 WARNING Gemini 日配額耗盡，直接 fallback
+2026-04-21 03:36:01,266 WARNING Gemini 分析無結果，fallback 至 OpenAI
+2026-04-21 03:36:08,500 INFO HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-21 03:36:08,502 INFO 識別為休息，略過記錄 (信心: 0.95)
+2026-04-21 03:36:08,769 INFO 偵測到移動，開始收集影格
+2026-04-21 03:36:29,734 INFO 靜止 30 幀，觸發分析
+2026-04-21 03:36:29,735 INFO 分析條件: motion_frames=4 cooldown剩餘=265s
+2026-04-21 03:36:32,776 INFO 偵測到移動，開始收集影格
+2026-04-21 03:36:47,012 INFO 靜止 30 幀，觸發分析
+2026-04-21 03:36:47,013 INFO 分析條件: motion_frames=3 cooldown剩餘=247s
+2026-04-21 03:36:47,842 INFO 偵測到移動，開始收集影格
+2026-04-21 03:37:00,243 INFO 靜止 30 幀，觸發分析
+2026-04-21 03:37:00,244 INFO 分析條件: motion_frames=3 cooldown剩餘=234s
+2026-04-21 03:37:01,015 INFO 偵測到移動，開始收集影格
+2026-04-21 03:37:22,469 INFO 靜止 30 幀，觸發分析
+2026-04-21 03:37:22,470 INFO 分析條件: motion_frames=4 cooldown剩餘=212s
+2026-04-21 03:37:25,458 INFO 偵測到移動，開始收集影格
+2026-04-21 03:37:41,074 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 03:37:41,074 INFO 分析條件: motion_frames=5 cooldown剩餘=193s
+2026-04-21 03:37:51,825 INFO 偵測到移動，開始收集影格
+2026-04-21 03:38:05,933 INFO 靜止 30 幀，觸發分析
+2026-04-21 03:38:05,933 INFO 分析條件: motion_frames=6 cooldown剩餘=168s
+2026-04-21 03:38:06,495 INFO 偵測到移動，開始收集影格
+2026-04-21 03:38:18,293 INFO 靜止 30 幀，觸發分析
+2026-04-21 03:38:18,293 INFO 分析條件: motion_frames=2 cooldown剩餘=156s
+2026-04-21 03:38:19,385 INFO 偵測到移動，開始收集影格
+2026-04-21 03:38:36,117 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 03:38:36,118 INFO 分析條件: motion_frames=5 cooldown剩餘=138s
+2026-04-21 03:38:36,619 INFO 偵測到移動，開始收集影格
+2026-04-21 03:38:53,922 INFO 靜止 30 幀，觸發分析
+2026-04-21 03:38:53,922 INFO 分析條件: motion_frames=5 cooldown剩餘=120s
+2026-04-21 03:38:56,605 INFO 偵測到移動，開始收集影格
+2026-04-21 03:39:18,096 INFO 靜止 30 幀，觸發分析
+2026-04-21 03:39:18,097 INFO 分析條件: motion_frames=5 cooldown剩餘=96s
+2026-04-21 03:39:20,832 INFO 偵測到移動，開始收集影格
+2026-04-21 03:39:35,350 INFO 靜止 30 幀，觸發分析
+2026-04-21 03:39:35,350 INFO 分析條件: motion_frames=3 cooldown剩餘=79s
+2026-04-21 03:39:36,611 INFO 偵測到移動，開始收集影格
+2026-04-21 03:39:55,532 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 03:39:55,532 INFO 分析條件: motion_frames=5 cooldown剩餘=59s
+2026-04-21 03:40:06,116 INFO 偵測到移動，開始收集影格
+2026-04-21 03:40:17,383 INFO 靜止 30 幀，觸發分析
+2026-04-21 03:40:17,383 INFO 分析條件: motion_frames=5 cooldown剩餘=37s
+2026-04-21 03:40:20,037 INFO 偵測到移動，開始收集影格
+2026-04-21 03:40:34,212 INFO 靜止 30 幀，觸發分析
+2026-04-21 03:40:34,213 INFO 分析條件: motion_frames=3 cooldown剩餘=20s
+2026-04-21 03:40:35,761 INFO 偵測到移動，開始收集影格
+2026-04-21 03:40:51,533 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 03:40:51,533 INFO 分析條件: motion_frames=13 cooldown剩餘=3s
+2026-04-21 03:41:00,741 INFO 偵測到移動，開始收集影格
+2026-04-21 03:41:22,117 INFO 靜止 30 幀，觸發分析
+2026-04-21 03:41:22,118 INFO 分析條件: motion_frames=6 cooldown剩餘=0s
+2026-04-21 03:41:24,572 INFO 偵測到移動，開始收集影格
+2026-04-21 03:41:40,744 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 03:41:40,744 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-21 03:41:50,888 INFO 偵測到移動，開始收集影格
+2026-04-21 03:42:05,219 INFO 靜止 30 幀，觸發分析
+2026-04-21 03:42:05,219 INFO 分析條件: motion_frames=3 cooldown剩餘=0s
+2026-04-21 03:42:06,840 INFO 偵測到移動，開始收集影格
+2026-04-21 03:42:14,870 INFO 靜止 30 幀，觸發分析
+2026-04-21 03:42:14,870 INFO 分析條件: motion_frames=2 cooldown剩餘=0s
+2026-04-21 03:42:17,288 INFO 偵測到移動，開始收集影格
+2026-04-21 03:42:31,872 INFO 靜止 30 幀，觸發分析
+2026-04-21 03:42:31,872 INFO 分析條件: motion_frames=3 cooldown剩餘=0s
+2026-04-21 03:42:33,496 INFO 偵測到移動，開始收集影格
+2026-04-21 03:42:50,778 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 03:42:50,779 INFO 分析條件: motion_frames=7 cooldown剩餘=0s
+2026-04-21 03:42:57,618 INFO 偵測到移動，開始收集影格
+2026-04-21 03:43:17,497 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 03:43:17,497 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-21 03:43:27,572 INFO 偵測到移動，開始收集影格
+2026-04-21 03:43:37,154 INFO 靜止 30 幀，觸發分析
+2026-04-21 03:43:37,154 INFO 分析條件: motion_frames=2 cooldown剩餘=0s
+2026-04-21 03:43:37,991 INFO 偵測到移動，開始收集影格
+2026-04-21 03:43:45,690 INFO 靜止 30 幀，觸發分析
+2026-04-21 03:43:45,690 INFO 分析條件: motion_frames=1 cooldown剩餘=0s
+2026-04-21 03:43:47,577 INFO 偵測到移動，開始收集影格
+2026-04-21 03:44:07,668 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 03:44:07,668 INFO 分析條件: motion_frames=6 cooldown剩餘=0s
+2026-04-21 03:44:08,868 INFO 偵測到移動，開始收集影格
+2026-04-21 03:44:25,861 INFO 靜止 30 幀，觸發分析
+2026-04-21 03:44:25,861 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-21 03:44:27,979 INFO 偵測到移動，開始收集影格
+2026-04-21 03:44:43,222 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 03:44:43,223 INFO 分析條件: motion_frames=18 cooldown剩餘=0s
+2026-04-21 03:44:43,272 INFO AFC is enabled with max remote calls: 10.
+2026-04-21 03:44:51,125 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 429 Too Many Requests"
+2026-04-21 03:44:51,127 WARNING Gemini 日配額耗盡，直接 fallback
+2026-04-21 03:44:51,127 WARNING Gemini 分析無結果，fallback 至 OpenAI
+2026-04-21 03:44:57,870 INFO HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-21 03:44:57,871 INFO 識別為休息，略過記錄 (信心: 0.95)
+2026-04-21 03:44:58,145 INFO 偵測到移動，開始收集影格
+2026-04-21 03:45:19,634 INFO 靜止 30 幀，觸發分析
+2026-04-21 03:45:19,634 INFO 分析條件: motion_frames=5 cooldown剩餘=264s
+2026-04-21 03:45:20,206 INFO 偵測到移動，開始收集影格
+2026-04-21 03:45:35,828 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 03:45:35,828 INFO 分析條件: motion_frames=34 cooldown剩餘=247s
+2026-04-21 03:45:36,401 INFO 偵測到移動，開始收集影格
+2026-04-21 03:45:51,482 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 03:45:51,483 INFO 分析條件: motion_frames=44 cooldown剩餘=232s
+2026-04-21 03:45:51,759 INFO 偵測到移動，開始收集影格
+2026-04-21 03:46:06,999 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 03:46:06,999 INFO 分析條件: motion_frames=39 cooldown剩餘=216s
+2026-04-21 03:46:08,037 INFO 偵測到移動，開始收集影格
+2026-04-21 03:46:23,984 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 03:46:23,984 INFO 分析條件: motion_frames=9 cooldown剩餘=199s
+2026-04-21 03:46:24,266 INFO 偵測到移動，開始收集影格
+2026-04-21 03:46:41,421 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 03:46:41,422 INFO 分析條件: motion_frames=36 cooldown剩餘=182s
+2026-04-21 03:46:41,646 INFO 偵測到移動，開始收集影格
+2026-04-21 03:46:51,976 INFO 靜止 30 幀，觸發分析
+2026-04-21 03:46:51,976 INFO 分析條件: motion_frames=11 cooldown剩餘=171s
+2026-04-21 03:46:53,275 INFO 偵測到移動，開始收集影格
+2026-04-21 03:47:10,471 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 03:47:10,471 INFO 分析條件: motion_frames=5 cooldown剩餘=153s
+2026-04-21 03:47:10,740 INFO 偵測到移動，開始收集影格
+2026-04-21 03:47:32,074 INFO 靜止 30 幀，觸發分析
+2026-04-21 03:47:32,074 INFO 分析條件: motion_frames=4 cooldown剩餘=131s
+2026-04-21 03:47:33,437 INFO 偵測到移動，開始收集影格
+2026-04-21 03:47:50,787 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 03:47:50,788 INFO 分析條件: motion_frames=5 cooldown剩餘=112s
+2026-04-21 03:47:59,896 INFO 偵測到移動，開始收集影格
+2026-04-21 03:48:14,506 INFO 靜止 30 幀，觸發分析
+2026-04-21 03:48:14,506 INFO 分析條件: motion_frames=3 cooldown剩餘=89s
+2026-04-21 03:48:17,237 INFO 偵測到移動，開始收集影格
+2026-04-21 03:48:38,079 INFO 靜止 30 幀，觸發分析
+2026-04-21 03:48:38,079 INFO 分析條件: motion_frames=12 cooldown剩餘=65s
+2026-04-21 03:48:39,092 INFO 偵測到移動，開始收集影格
+2026-04-21 03:48:54,796 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 03:48:54,796 INFO 分析條件: motion_frames=6 cooldown剩餘=48s
+2026-04-21 03:49:01,199 INFO 偵測到移動，開始收集影格
+2026-04-21 03:49:15,382 INFO 靜止 30 幀，觸發分析
+2026-04-21 03:49:15,383 INFO 分析條件: motion_frames=9 cooldown剩餘=28s
+2026-04-21 03:49:15,850 INFO 偵測到移動，開始收集影格
+2026-04-21 03:49:33,646 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 03:49:33,646 INFO 分析條件: motion_frames=7 cooldown剩餘=10s
+2026-04-21 03:49:36,101 INFO 偵測到移動，開始收集影格
+2026-04-21 03:49:51,181 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 03:49:51,181 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-21 03:49:55,366 INFO 偵測到移動，開始收集影格
+2026-04-21 03:50:03,367 INFO 靜止 30 幀，觸發分析
+2026-04-21 03:50:03,368 INFO 分析條件: motion_frames=1 cooldown剩餘=0s
+2026-04-21 03:50:04,389 INFO 偵測到移動，開始收集影格
+2026-04-21 03:50:19,036 INFO 靜止 30 幀，觸發分析
+2026-04-21 03:50:19,037 INFO 分析條件: motion_frames=3 cooldown剩餘=0s
+2026-04-21 03:50:22,069 INFO 偵測到移動，開始收集影格
+2026-04-21 03:50:42,819 INFO 靜止 30 幀，觸發分析
+2026-04-21 03:50:42,819 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-21 03:50:43,920 INFO 偵測到移動，開始收集影格
+2026-04-21 03:51:01,247 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 03:51:01,248 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-21 03:51:10,115 INFO 偵測到移動，開始收集影格
+2026-04-21 03:51:24,624 INFO 靜止 30 幀，觸發分析
+2026-04-21 03:51:24,624 INFO 分析條件: motion_frames=3 cooldown剩餘=0s
+2026-04-21 03:51:27,442 INFO 偵測到移動，開始收集影格
+2026-04-21 03:51:38,617 INFO 靜止 30 幀，觸發分析
+2026-04-21 03:51:38,618 INFO 分析條件: motion_frames=6 cooldown剩餘=0s
+2026-04-21 03:51:38,903 INFO 偵測到移動，開始收集影格
+2026-04-21 03:51:54,322 INFO 靜止 30 幀，觸發分析
+2026-04-21 03:51:54,322 INFO 分析條件: motion_frames=3 cooldown剩餘=0s
+2026-04-21 03:51:54,892 INFO 偵測到移動，開始收集影格
+2026-04-21 03:52:11,240 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 03:52:11,241 INFO 分析條件: motion_frames=8 cooldown剩餘=0s
+2026-04-21 03:52:13,367 INFO 偵測到移動，開始收集影格
+2026-04-21 03:52:30,445 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 03:52:30,445 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-21 03:52:34,877 INFO 偵測到移動，開始收集影格
+2026-04-21 03:52:42,679 INFO 靜止 30 幀，觸發分析
+2026-04-21 03:52:42,679 INFO 分析條件: motion_frames=1 cooldown剩餘=0s
+2026-04-21 03:52:43,433 INFO 偵測到移動，開始收集影格
+2026-04-21 03:52:57,919 INFO 靜止 30 幀，觸發分析
+2026-04-21 03:52:57,919 INFO 分析條件: motion_frames=3 cooldown剩餘=0s
+2026-04-21 03:53:01,126 INFO 偵測到移動，開始收集影格
+2026-04-21 03:53:20,306 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 03:53:20,306 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-21 03:53:20,572 INFO 偵測到移動，開始收集影格
+2026-04-21 03:53:28,552 INFO 靜止 30 幀，觸發分析
+2026-04-21 03:53:28,552 INFO 分析條件: motion_frames=2 cooldown剩餘=0s
+2026-04-21 03:53:29,318 INFO 偵測到移動，開始收集影格
+2026-04-21 03:53:48,932 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 03:53:48,932 INFO 分析條件: motion_frames=11 cooldown剩餘=0s
+2026-04-21 03:53:48,973 INFO AFC is enabled with max remote calls: 10.
+2026-04-21 03:53:57,809 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 429 Too Many Requests"
+2026-04-21 03:53:57,811 WARNING Gemini 日配額耗盡，直接 fallback
+2026-04-21 03:53:57,811 WARNING Gemini 分析無結果，fallback 至 OpenAI
+2026-04-21 03:54:04,353 INFO HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-21 03:54:04,380 INFO 已記錄動作: sleeping (信心: 0.95) 截圖: action_screenshots/20260421_035404_sleeping.jpg
+2026-04-21 03:54:12,096 INFO 偵測到移動，開始收集影格
+[h264 @ 0xa80c15500] cabac decode of qscale diff failed at 129 72
+[h264 @ 0xa80c15500] error while decoding MB 129 72, bytestream -3
+2026-04-21 03:54:30,460 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 03:54:30,461 INFO 分析條件: motion_frames=5 cooldown剩餘=258s
+2026-04-21 03:54:30,461 WARNING 讀取影格失敗，重新連線
+2026-04-21 03:54:32,755 INFO RTSP 串流連線成功
+2026-04-21 03:54:35,643 INFO 偵測到移動，開始收集影格
+2026-04-21 03:54:56,298 INFO 靜止 30 幀，觸發分析
+2026-04-21 03:54:56,299 INFO 分析條件: motion_frames=4 cooldown剩餘=233s
+2026-04-21 03:54:59,567 INFO 偵測到移動，開始收集影格
+2026-04-21 03:55:19,810 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 03:55:19,810 INFO 分析條件: motion_frames=5 cooldown剩餘=209s
+2026-04-21 03:55:25,499 INFO 偵測到移動，開始收集影格
+2026-04-21 03:55:33,983 INFO 靜止 30 幀，觸發分析
+2026-04-21 03:55:33,984 INFO 分析條件: motion_frames=2 cooldown剩餘=195s
+2026-04-21 03:55:38,608 INFO 偵測到移動，開始收集影格
+2026-04-21 03:55:59,707 INFO 靜止 30 幀，觸發分析
+2026-04-21 03:55:59,707 INFO 分析條件: motion_frames=4 cooldown剩餘=169s
+2026-04-21 03:56:03,563 INFO 偵測到移動，開始收集影格
+2026-04-21 03:56:17,817 INFO 靜止 30 幀，觸發分析
+2026-04-21 03:56:17,817 INFO 分析條件: motion_frames=3 cooldown剩餘=151s
+2026-04-21 03:56:18,098 INFO 偵測到移動，開始收集影格
+2026-04-21 03:56:39,077 INFO 靜止 30 幀，觸發分析
+2026-04-21 03:56:39,078 INFO 分析條件: motion_frames=4 cooldown剩餘=130s
+2026-04-21 03:56:41,474 INFO 偵測到移動，開始收集影格
+2026-04-21 03:56:57,745 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 03:56:57,745 INFO 分析條件: motion_frames=5 cooldown剩餘=111s
+2026-04-21 03:57:07,090 INFO 偵測到移動，開始收集影格
+2026-04-21 03:57:25,596 INFO 靜止 30 幀，觸發分析
+2026-04-21 03:57:25,597 INFO 分析條件: motion_frames=5 cooldown剩餘=83s
+2026-04-21 03:57:27,631 INFO 偵測到移動，開始收集影格
+2026-04-21 03:57:44,434 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 03:57:44,434 INFO 分析條件: motion_frames=5 cooldown剩餘=64s
+2026-04-21 03:57:48,653 INFO 偵測到移動，開始收集影格
+2026-04-21 03:58:08,799 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 03:58:08,800 INFO 分析條件: motion_frames=8 cooldown剩餘=40s
+2026-04-21 03:58:11,768 INFO 偵測到移動，開始收集影格
+2026-04-21 03:58:29,499 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 03:58:29,499 INFO 分析條件: motion_frames=5 cooldown剩餘=19s
+2026-04-21 03:58:33,580 INFO 偵測到移動，開始收集影格
+2026-04-21 03:58:56,401 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 03:58:56,402 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-21 03:59:02,331 INFO 偵測到移動，開始收集影格
+2026-04-21 03:59:23,452 INFO 靜止 30 幀，觸發分析
+2026-04-21 03:59:23,452 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-21 03:59:28,032 INFO 偵測到移動，開始收集影格
+2026-04-21 03:59:49,496 INFO 靜止 30 幀，觸發分析
+2026-04-21 03:59:49,497 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-21 03:59:51,571 INFO 偵測到移動，開始收集影格
+2026-04-21 04:00:07,145 INFO 靜止 30 幀，觸發分析
+2026-04-21 04:00:07,145 INFO 分析條件: motion_frames=3 cooldown剩餘=0s
+2026-04-21 04:00:07,620 INFO 偵測到移動，開始收集影格
+2026-04-21 04:00:30,358 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 04:00:30,358 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-21 04:00:33,674 INFO 偵測到移動，開始收集影格
+2026-04-21 04:00:41,636 INFO 靜止 30 幀，觸發分析
+2026-04-21 04:00:41,637 INFO 分析條件: motion_frames=1 cooldown剩餘=0s
+2026-04-21 04:00:46,176 INFO 偵測到移動，開始收集影格
+2026-04-21 04:01:07,990 INFO 靜止 30 幀，觸發分析
+2026-04-21 04:01:07,990 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-21 04:01:09,843 INFO 偵測到移動，開始收集影格
+2026-04-21 04:01:26,171 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 04:01:26,171 INFO 分析條件: motion_frames=10 cooldown剩餘=0s
+2026-04-21 04:01:26,203 INFO AFC is enabled with max remote calls: 10.
+2026-04-21 04:01:37,887 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 429 Too Many Requests"
+2026-04-21 04:01:37,888 WARNING Gemini 日配額耗盡，直接 fallback
+2026-04-21 04:01:37,888 WARNING Gemini 分析無結果，fallback 至 OpenAI
+2026-04-21 04:01:45,281 INFO HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-21 04:01:45,307 INFO 已記錄動作: sleeping (信心: 0.90) 截圖: action_screenshots/20260421_040145_sleeping.jpg
+2026-04-21 04:01:56,632 INFO 偵測到移動，開始收集影格
+[h264 @ 0xa80dae300] error while decoding MB 155 62, bytestream -5
+2026-04-21 04:02:07,239 WARNING 讀取影格失敗，重新連線
+2026-04-21 04:02:08,570 INFO RTSP 串流連線成功
+2026-04-21 04:02:13,054 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 04:02:13,054 INFO 分析條件: motion_frames=8 cooldown剩餘=253s
+2026-04-21 04:02:19,746 INFO 偵測到移動，開始收集影格
+2026-04-21 04:02:30,171 INFO 靜止 30 幀，觸發分析
+2026-04-21 04:02:30,171 INFO 分析條件: motion_frames=2 cooldown剩餘=236s
+2026-04-21 04:02:32,946 INFO 偵測到移動，開始收集影格
+2026-04-21 04:02:48,475 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 04:02:48,475 INFO 分析條件: motion_frames=5 cooldown剩餘=218s
+2026-04-21 04:02:59,306 INFO 偵測到移動，開始收集影格
+2026-04-21 04:03:13,656 INFO 靜止 30 幀，觸發分析
+2026-04-21 04:03:13,656 INFO 分析條件: motion_frames=3 cooldown剩餘=193s
+2026-04-21 04:03:14,746 INFO 偵測到移動，開始收集影格
+2026-04-21 04:03:35,703 INFO 靜止 30 幀，觸發分析
+2026-04-21 04:03:35,703 INFO 分析條件: motion_frames=4 cooldown剩餘=170s
+2026-04-21 04:03:38,558 INFO 偵測到移動，開始收集影格
+2026-04-21 04:03:54,123 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 04:03:54,124 INFO 分析條件: motion_frames=5 cooldown剩餘=152s
+2026-04-21 04:04:04,902 INFO 偵測到移動，開始收集影格
+2026-04-21 04:04:19,621 INFO 靜止 30 幀，觸發分析
+2026-04-21 04:04:19,622 INFO 分析條件: motion_frames=3 cooldown剩餘=127s
+2026-04-21 04:04:20,728 INFO 偵測到移動，開始收集影格
+2026-04-21 04:04:41,689 INFO 靜止 30 幀，觸發分析
+2026-04-21 04:04:41,689 INFO 分析條件: motion_frames=4 cooldown剩餘=104s
+2026-04-21 04:04:44,383 INFO 偵測到移動，開始收集影格
+2026-04-21 04:05:03,794 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 04:05:03,795 INFO 分析條件: motion_frames=7 cooldown剩餘=82s
+2026-04-21 04:05:04,079 INFO 偵測到移動，開始收集影格
+2026-04-21 04:05:21,319 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 04:05:21,319 INFO 分析條件: motion_frames=6 cooldown剩餘=65s
+2026-04-21 04:05:23,170 INFO 偵測到移動，開始收集影格
+2026-04-21 04:05:37,788 INFO 靜止 30 幀，觸發分析
+2026-04-21 04:05:37,788 INFO 分析條件: motion_frames=15 cooldown剩餘=48s
+2026-04-21 04:05:40,185 INFO 偵測到移動，開始收集影格
+2026-04-21 04:05:57,410 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 04:05:57,410 INFO 分析條件: motion_frames=5 cooldown剩餘=29s
+2026-04-21 04:06:02,321 INFO 偵測到移動，開始收集影格
+2026-04-21 04:06:23,052 INFO 靜止 30 幀，觸發分析
+2026-04-21 04:06:23,053 INFO 分析條件: motion_frames=4 cooldown剩餘=3s
+2026-04-21 04:06:25,459 INFO 偵測到移動，開始收集影格
+2026-04-21 04:06:41,198 INFO 靜止 30 幀，觸發分析
+2026-04-21 04:06:41,198 INFO 分析條件: motion_frames=6 cooldown剩餘=0s
+2026-04-21 04:06:42,495 INFO 偵測到移動，開始收集影格
+2026-04-21 04:07:03,549 INFO 靜止 30 幀，觸發分析
+2026-04-21 04:07:03,549 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-21 04:07:05,966 INFO 偵測到移動，開始收集影格
+2026-04-21 04:07:21,865 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 04:07:21,865 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-21 04:07:22,144 INFO 偵測到移動，開始收集影格
+2026-04-21 04:07:36,965 INFO 靜止 30 幀，觸發分析
+2026-04-21 04:07:36,965 INFO 分析條件: motion_frames=7 cooldown剩餘=0s
+2026-04-21 04:07:38,798 INFO 偵測到移動，開始收集影格
+2026-04-21 04:07:56,573 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 04:07:56,574 INFO 分析條件: motion_frames=8 cooldown剩餘=0s
+2026-04-21 04:07:59,098 INFO 偵測到移動，開始收集影格
+2026-04-21 04:08:07,665 INFO 靜止 30 幀，觸發分析
+2026-04-21 04:08:07,665 INFO 分析條件: motion_frames=3 cooldown剩餘=0s
+2026-04-21 04:08:09,858 INFO 偵測到移動，開始收集影格
+2026-04-21 04:08:26,276 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 04:08:26,276 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-21 04:08:36,110 INFO 偵測到移動，開始收集影格
+2026-04-21 04:08:50,405 INFO 靜止 30 幀，觸發分析
+2026-04-21 04:08:50,406 INFO 分析條件: motion_frames=3 cooldown剩餘=0s
+2026-04-21 04:08:52,250 INFO 偵測到移動，開始收集影格
+2026-04-21 04:09:13,957 INFO 靜止 30 幀，觸發分析
+2026-04-21 04:09:13,957 INFO 分析條件: motion_frames=6 cooldown剩餘=0s
+2026-04-21 04:09:15,748 INFO 偵測到移動，開始收集影格
+2026-04-21 04:09:32,222 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 04:09:32,222 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-21 04:09:35,446 INFO 偵測到移動，開始收集影格
+2026-04-21 04:09:56,536 INFO 靜止 30 幀，觸發分析
+2026-04-21 04:09:56,536 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-21 04:09:58,406 INFO 偵測到移動，開始收集影格
+2026-04-21 04:10:12,497 INFO 靜止 30 幀，觸發分析
+2026-04-21 04:10:12,497 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-21 04:10:14,268 INFO 偵測到移動，開始收集影格
+2026-04-21 04:10:33,543 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 04:10:33,544 INFO 分析條件: motion_frames=6 cooldown剩餘=0s
+2026-04-21 04:10:42,969 INFO 偵測到移動，開始收集影格
+2026-04-21 04:11:00,097 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 04:11:00,097 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-21 04:11:00,342 INFO 偵測到移動，開始收集影格
+2026-04-21 04:11:18,456 INFO 靜止 30 幀，觸發分析
+2026-04-21 04:11:18,457 INFO 分析條件: motion_frames=4 cooldown剩餘=0s
+2026-04-21 04:11:19,495 INFO 偵測到移動，開始收集影格
+2026-04-21 04:11:40,535 INFO 靜止 30 幀，觸發分析
+2026-04-21 04:11:40,536 INFO 分析條件: motion_frames=7 cooldown剩餘=0s
+2026-04-21 04:11:42,019 INFO 偵測到移動，開始收集影格
+2026-04-21 04:11:57,035 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 04:11:57,037 INFO 分析條件: motion_frames=21 cooldown剩餘=0s
+2026-04-21 04:11:57,110 INFO AFC is enabled with max remote calls: 10.
+2026-04-21 04:12:03,271 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 429 Too Many Requests"
+2026-04-21 04:12:03,274 WARNING Gemini 日配額耗盡，直接 fallback
+2026-04-21 04:12:03,274 WARNING Gemini 分析無結果，fallback 至 OpenAI
+2026-04-21 04:12:08,698 INFO HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-21 04:12:08,738 INFO 已記錄動作: sleeping (信心: 0.90) 截圖: action_screenshots/20260421_041208_sleeping.jpg
+2026-04-21 04:12:10,120 INFO 偵測到移動，開始收集影格
+2026-04-21 04:12:25,743 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 04:12:25,743 INFO 分析條件: motion_frames=12 cooldown剩餘=271s
+2026-04-21 04:12:37,561 INFO 偵測到移動，開始收集影格
+2026-04-21 04:12:56,412 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 04:12:56,412 INFO 分析條件: motion_frames=5 cooldown剩餘=241s
+2026-04-21 04:13:02,377 INFO 偵測到移動，開始收集影格
+2026-04-21 04:13:13,370 INFO 靜止 30 幀，觸發分析
+2026-04-21 04:13:13,371 INFO 分析條件: motion_frames=6 cooldown剩餘=224s
+2026-04-21 04:13:15,377 INFO 偵測到移動，開始收集影格
+2026-04-21 04:13:30,617 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 04:13:30,617 INFO 分析條件: motion_frames=36 cooldown剩餘=206s
+2026-04-21 04:13:31,179 INFO 偵測到移動，開始收集影格
+2026-04-21 04:13:48,442 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 04:13:48,442 INFO 分析條件: motion_frames=44 cooldown剩餘=189s
+2026-04-21 04:13:54,769 INFO 偵測到移動，開始收集影格
+2026-04-21 04:14:09,086 INFO 靜止 30 幀，觸發分析
+2026-04-21 04:14:09,086 INFO 分析條件: motion_frames=3 cooldown剩餘=168s
+2026-04-21 04:14:11,948 INFO 偵測到移動，開始收集影格
+2026-04-21 04:14:27,132 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 04:14:27,132 INFO 分析條件: motion_frames=6 cooldown剩餘=150s
+2026-04-21 04:14:27,415 INFO 偵測到移動，開始收集影格
+2026-04-21 04:14:35,374 INFO 靜止 30 幀，觸發分析
+2026-04-21 04:14:35,374 INFO 分析條件: motion_frames=1 cooldown剩餘=142s
+2026-04-21 04:14:36,938 INFO 偵測到移動，開始收集影格
+2026-04-21 04:14:53,377 INFO 靜止 30 幀，觸發分析
+2026-04-21 04:14:53,377 INFO 分析條件: motion_frames=11 cooldown剩餘=124s
+2026-04-21 04:14:53,609 INFO 偵測到移動，開始收集影格
+2026-04-21 04:15:11,348 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 04:15:11,348 INFO 分析條件: motion_frames=6 cooldown剩餘=106s
+2026-04-21 04:15:19,700 INFO 偵測到移動，開始收集影格
+2026-04-21 04:15:40,360 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 04:15:40,360 INFO 分析條件: motion_frames=7 cooldown剩餘=77s
+2026-04-21 04:15:41,486 INFO 偵測到移動，開始收集影格
+2026-04-21 04:16:01,094 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 04:16:01,094 INFO 分析條件: motion_frames=7 cooldown剩餘=56s
+2026-04-21 04:16:07,764 INFO 偵測到移動，開始收集影格
+2026-04-21 04:16:27,106 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 04:16:27,106 INFO 分析條件: motion_frames=8 cooldown剩餘=30s
+2026-04-21 04:16:33,400 INFO 偵測到移動，開始收集影格
+2026-04-21 04:16:45,750 INFO 靜止 30 幀，觸發分析
+2026-04-21 04:16:45,750 INFO 分析條件: motion_frames=7 cooldown剩餘=11s
+2026-04-21 04:16:49,276 INFO 偵測到移動，開始收集影格
+2026-04-21 04:17:07,812 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 04:17:07,813 INFO 分析條件: motion_frames=8 cooldown剩餘=0s
+2026-04-21 04:17:14,348 INFO 偵測到移動，開始收集影格
+2026-04-21 04:17:29,804 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 04:17:29,804 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-21 04:17:42,171 INFO 偵測到移動，開始收集影格
+2026-04-21 04:17:58,959 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 04:17:58,959 INFO 分析條件: motion_frames=6 cooldown剩餘=0s
+2026-04-21 04:18:02,151 INFO 偵測到移動，開始收集影格
+2026-04-21 04:18:10,032 INFO 靜止 30 幀，觸發分析
+2026-04-21 04:18:10,032 INFO 分析條件: motion_frames=1 cooldown剩餘=0s
+2026-04-21 04:18:11,642 INFO 偵測到移動，開始收集影格
+2026-04-21 04:18:25,947 INFO 靜止 30 幀，觸發分析
+2026-04-21 04:18:25,947 INFO 分析條件: motion_frames=3 cooldown剩餘=0s
+2026-04-21 04:18:28,555 INFO 偵測到移動，開始收集影格
+2026-04-21 04:18:49,395 INFO 靜止 30 幀，觸發分析
+2026-04-21 04:18:49,396 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-21 04:18:53,901 INFO 偵測到移動，開始收集影格
+2026-04-21 04:19:16,427 INFO 靜止 30 幀，觸發分析
+2026-04-21 04:19:16,427 INFO 分析條件: motion_frames=6 cooldown剩餘=0s
+2026-04-21 04:19:18,658 INFO 偵測到移動，開始收集影格
+2026-04-21 04:19:36,402 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 04:19:36,403 INFO 分析條件: motion_frames=11 cooldown剩餘=0s
+2026-04-21 04:19:36,442 INFO AFC is enabled with max remote calls: 10.
+2026-04-21 04:19:42,719 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 429 Too Many Requests"
+2026-04-21 04:19:42,721 WARNING Gemini 日配額耗盡，直接 fallback
+2026-04-21 04:19:42,721 WARNING Gemini 分析無結果，fallback 至 OpenAI
+2026-04-21 04:19:51,438 INFO HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-21 04:19:51,461 INFO 已記錄動作: sleeping (信心: 0.90) 截圖: action_screenshots/20260421_041951_sleeping.jpg
+2026-04-21 04:19:57,466 INFO 偵測到移動，開始收集影格
+2026-04-21 04:20:08,785 INFO 靜止 30 幀，觸發分析
+2026-04-21 04:20:08,786 INFO 分析條件: motion_frames=14 cooldown剩餘=268s
+2026-04-21 04:20:09,313 INFO 偵測到移動，開始收集影格
+2026-04-21 04:20:23,635 INFO 靜止 30 幀，觸發分析
+2026-04-21 04:20:23,636 INFO 分析條件: motion_frames=3 cooldown剩餘=253s
+2026-04-21 04:20:26,504 INFO 偵測到移動，開始收集影格
+2026-04-21 04:20:34,349 INFO 靜止 30 幀，觸發分析
+2026-04-21 04:20:34,350 INFO 分析條件: motion_frames=1 cooldown剩餘=242s
+2026-04-21 04:20:36,863 INFO 偵測到移動，開始收集影格
+[h264 @ 0xa80c14700] error while decoding MB 118 12, bytestream -5
+2026-04-21 04:20:39,813 WARNING 讀取影格失敗，重新連線
+2026-04-21 04:20:41,765 INFO RTSP 串流連線成功
+2026-04-21 04:20:55,097 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 04:20:55,097 INFO 分析條件: motion_frames=4 cooldown剩餘=221s
+2026-04-21 04:20:55,382 INFO 偵測到移動，開始收集影格
+2026-04-21 04:21:14,157 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 04:21:14,157 INFO 分析條件: motion_frames=4 cooldown剩餘=202s
+2026-04-21 04:21:20,778 INFO 偵測到移動，開始收集影格
+2026-04-21 04:21:29,237 INFO 靜止 30 幀，觸發分析
+2026-04-21 04:21:29,237 INFO 分析條件: motion_frames=2 cooldown剩餘=187s
+2026-04-21 04:21:33,313 INFO 偵測到移動，開始收集影格
+2026-04-21 04:21:47,361 INFO 靜止 30 幀，觸發分析
+2026-04-21 04:21:47,361 INFO 分析條件: motion_frames=3 cooldown剩餘=169s
+2026-04-21 04:21:47,583 INFO 偵測到移動，開始收集影格
+2026-04-21 04:22:04,582 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 04:22:04,582 INFO 分析條件: motion_frames=5 cooldown剩餘=152s
+2026-04-21 04:22:13,808 INFO 偵測到移動，開始收集影格
+2026-04-21 04:22:34,663 INFO 靜止 30 幀，觸發分析
+2026-04-21 04:22:34,663 INFO 分析條件: motion_frames=4 cooldown剩餘=122s
+2026-04-21 04:22:35,625 INFO 偵測到移動，開始收集影格
+2026-04-21 04:22:49,835 INFO 靜止 30 幀，觸發分析
+2026-04-21 04:22:49,835 INFO 分析條件: motion_frames=3 cooldown剩餘=107s
+2026-04-21 04:22:52,983 INFO 偵測到移動，開始收集影格
+2026-04-21 04:23:14,555 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 04:23:14,556 INFO 分析條件: motion_frames=10 cooldown剩餘=82s
+2026-04-21 04:23:25,750 INFO 偵測到移動，開始收集影格
+2026-04-21 04:23:33,544 INFO 靜止 30 幀，觸發分析
+2026-04-21 04:23:33,544 INFO 分析條件: motion_frames=1 cooldown剩餘=63s
+2026-04-21 04:23:34,310 INFO 偵測到移動，開始收集影格
+2026-04-21 04:23:54,333 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 04:23:54,334 INFO 分析條件: motion_frames=5 cooldown剩餘=42s
+2026-04-21 04:23:56,283 INFO 偵測到移動，開始收集影格
+2026-04-21 04:24:13,786 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 04:24:13,786 INFO 分析條件: motion_frames=7 cooldown剩餘=23s
+2026-04-21 04:24:19,515 INFO 偵測到移動，開始收集影格
+2026-04-21 04:24:40,607 INFO 靜止 30 幀，觸發分析
+2026-04-21 04:24:40,607 INFO 分析條件: motion_frames=3 cooldown剩餘=0s
+2026-04-21 04:24:45,252 INFO 偵測到移動，開始收集影格
+2026-04-21 04:25:04,198 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 04:25:04,198 INFO 分析條件: motion_frames=11 cooldown剩餘=0s
+2026-04-21 04:25:04,238 INFO AFC is enabled with max remote calls: 10.
+2026-04-21 04:25:10,772 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 429 Too Many Requests"
+2026-04-21 04:25:10,773 WARNING Gemini 日配額耗盡，直接 fallback
+2026-04-21 04:25:10,773 WARNING Gemini 分析無結果，fallback 至 OpenAI
+2026-04-21 04:25:15,863 INFO HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-21 04:25:15,887 INFO 已記錄動作: sleeping (信心: 0.95) 截圖: action_screenshots/20260421_042515_sleeping.jpg
+2026-04-21 04:25:24,607 INFO 偵測到移動，開始收集影格
+2026-04-21 04:25:43,062 INFO 靜止 30 幀，觸發分析
+2026-04-21 04:25:43,062 INFO 分析條件: motion_frames=13 cooldown剩餘=261s
+2026-04-21 04:25:43,548 INFO 偵測到移動，開始收集影格
+2026-04-21 04:26:04,581 INFO 靜止 30 幀，觸發分析
+2026-04-21 04:26:04,581 INFO 分析條件: motion_frames=8 cooldown剩餘=240s
+2026-04-21 04:26:05,970 INFO 偵測到移動，開始收集影格
+2026-04-21 04:26:22,263 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 04:26:22,264 INFO 分析條件: motion_frames=5 cooldown剩餘=222s
+2026-04-21 04:26:28,727 INFO 偵測到移動，開始收集影格
+2026-04-21 04:26:41,247 INFO 靜止 30 幀，觸發分析
+2026-04-21 04:26:41,248 INFO 分析條件: motion_frames=4 cooldown剩餘=203s
+2026-04-21 04:26:45,938 INFO 偵測到移動，開始收集影格
+2026-04-21 04:27:02,628 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 04:27:02,628 INFO 分析條件: motion_frames=5 cooldown剩餘=182s
+2026-04-21 04:27:09,011 INFO 偵測到移動，開始收集影格
+2026-04-21 04:27:23,261 INFO 靜止 30 幀，觸發分析
+2026-04-21 04:27:23,261 INFO 分析條件: motion_frames=3 cooldown剩餘=161s
+2026-04-21 04:27:26,253 INFO 偵測到移動，開始收集影格
+2026-04-21 04:27:42,583 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 04:27:42,584 INFO 分析條件: motion_frames=8 cooldown剩餘=142s
+2026-04-21 04:27:45,424 INFO 偵測到移動，開始收集影格
+2026-04-21 04:27:53,530 INFO 靜止 30 幀，觸發分析
+2026-04-21 04:27:53,530 INFO 分析條件: motion_frames=1 cooldown剩餘=131s
+2026-04-21 04:27:55,972 INFO 偵測到移動，開始收集影格
+2026-04-21 04:28:13,758 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 04:28:13,759 INFO 分析條件: motion_frames=12 cooldown剩餘=110s
+2026-04-21 04:28:13,989 INFO 偵測到移動，開始收集影格
+2026-04-21 04:28:31,926 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 04:28:31,926 INFO 分析條件: motion_frames=5 cooldown剩餘=92s
+2026-04-21 04:28:40,959 INFO 偵測到移動，開始收集影格
+2026-04-21 04:28:58,488 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 04:28:58,489 INFO 分析條件: motion_frames=5 cooldown剩餘=66s
+2026-04-21 04:29:03,981 INFO 偵測到移動，開始收集影格
+2026-04-21 04:29:19,411 INFO 靜止 30 幀，觸發分析
+2026-04-21 04:29:19,411 INFO 分析條件: motion_frames=3 cooldown剩餘=45s
+2026-04-21 04:29:22,793 INFO 偵測到移動，開始收集影格
+2026-04-21 04:29:36,960 INFO 靜止 30 幀，觸發分析
+2026-04-21 04:29:36,961 INFO 分析條件: motion_frames=3 cooldown剩餘=27s
+2026-04-21 04:29:38,010 INFO 偵測到移動，開始收集影格
+2026-04-21 04:29:54,410 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 04:29:54,410 INFO 分析條件: motion_frames=5 cooldown剩餘=10s
+2026-04-21 04:30:04,416 INFO 偵測到移動，開始收集影格
+2026-04-21 04:30:19,560 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 04:30:19,560 INFO 分析條件: motion_frames=17 cooldown剩餘=0s
+2026-04-21 04:30:19,603 INFO AFC is enabled with max remote calls: 10.
+2026-04-21 04:30:25,014 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 429 Too Many Requests"
+2026-04-21 04:30:25,015 WARNING Gemini 日配額耗盡，直接 fallback
+2026-04-21 04:30:25,016 WARNING Gemini 分析無結果，fallback 至 OpenAI
+2026-04-21 04:30:30,132 INFO HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-21 04:30:30,134 INFO 識別為休息，略過記錄 (信心: 0.95)
+2026-04-21 04:30:30,372 INFO 偵測到移動，開始收集影格
+2026-04-21 04:30:45,808 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 04:30:45,809 INFO 分析條件: motion_frames=10 cooldown剩餘=274s
+2026-04-21 04:30:46,595 INFO 偵測到移動，開始收集影格
+2026-04-21 04:31:01,788 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 04:31:01,788 INFO 分析條件: motion_frames=4 cooldown剩餘=258s
+2026-04-21 04:31:09,646 INFO 偵測到移動，開始收集影格
+2026-04-21 04:31:19,626 INFO 靜止 30 幀，觸發分析
+2026-04-21 04:31:19,627 INFO 分析條件: motion_frames=2 cooldown剩餘=240s
+2026-04-21 04:31:24,911 INFO 偵測到移動，開始收集影格
+2026-04-21 04:31:46,580 INFO 靜止 30 幀，觸發分析
+2026-04-21 04:31:46,580 INFO 分析條件: motion_frames=5 cooldown剩餘=213s
+2026-04-21 04:31:49,300 INFO 偵測到移動，開始收集影格
+2026-04-21 04:32:05,289 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 04:32:05,290 INFO 分析條件: motion_frames=4 cooldown剩餘=194s
+2026-04-21 04:32:05,580 INFO 偵測到移動，開始收集影格
+2026-04-21 04:32:13,453 INFO 靜止 30 幀，觸發分析
+2026-04-21 04:32:13,453 INFO 分析條件: motion_frames=1 cooldown剩餘=186s
+2026-04-21 04:32:18,626 INFO 偵測到移動，開始收集影格
+2026-04-21 04:32:37,252 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 04:32:37,253 INFO 分析條件: motion_frames=11 cooldown剩餘=162s
+2026-04-21 04:32:44,331 INFO 偵測到移動，開始收集影格
+2026-04-21 04:33:01,837 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 04:33:01,837 INFO 分析條件: motion_frames=6 cooldown剩餘=138s
+2026-04-21 04:33:03,152 INFO 偵測到移動，開始收集影格
+2026-04-21 04:33:22,480 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 04:33:22,480 INFO 分析條件: motion_frames=7 cooldown剩餘=117s
+2026-04-21 04:33:27,488 INFO 偵測到移動，開始收集影格
+2026-04-21 04:33:43,685 INFO 靜止 30 幀，觸發分析
+2026-04-21 04:33:43,685 INFO 分析條件: motion_frames=3 cooldown剩餘=96s
+2026-04-21 04:33:47,348 INFO 偵測到移動，開始收集影格
+2026-04-21 04:34:10,402 INFO 靜止 30 幀，觸發分析
+2026-04-21 04:34:10,403 INFO 分析條件: motion_frames=6 cooldown剩餘=69s
+2026-04-21 04:34:14,001 INFO 偵測到移動，開始收集影格
+2026-04-21 04:34:32,435 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 04:34:32,435 INFO 分析條件: motion_frames=6 cooldown剩餘=47s
+2026-04-21 04:34:34,006 INFO 偵測到移動，開始收集影格
+2026-04-21 04:34:41,877 INFO 靜止 30 幀，觸發分析
+2026-04-21 04:34:41,877 INFO 分析條件: motion_frames=1 cooldown剩餘=38s
+2026-04-21 04:34:44,297 INFO 偵測到移動，開始收集影格
+2026-04-21 04:35:03,876 INFO 靜止 30 幀，觸發分析
+2026-04-21 04:35:03,876 INFO 分析條件: motion_frames=12 cooldown剩餘=16s
+2026-04-21 04:35:07,196 INFO 偵測到移動，開始收集影格
+2026-04-21 04:35:23,589 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 04:35:23,590 INFO 分析條件: motion_frames=9 cooldown剩餘=0s
+2026-04-21 04:35:24,585 INFO 偵測到移動，開始收集影格
+2026-04-21 04:35:32,377 INFO 靜止 30 幀，觸發分析
+2026-04-21 04:35:32,377 INFO 分析條件: motion_frames=1 cooldown剩餘=0s
+2026-04-21 04:35:36,483 INFO 偵測到移動，開始收集影格
+2026-04-21 04:35:57,132 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 04:35:57,133 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-21 04:36:02,788 INFO 偵測到移動，開始收集影格
+2026-04-21 04:36:18,490 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 04:36:18,490 INFO 分析條件: motion_frames=6 cooldown剩餘=0s
+2026-04-21 04:36:30,713 INFO 偵測到移動，開始收集影格
+2026-04-21 04:36:51,085 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 04:36:51,085 INFO 分析條件: motion_frames=5 cooldown剩餘=0s
+2026-04-21 04:36:56,717 INFO 偵測到移動，開始收集影格
+2026-04-21 04:37:12,895 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 04:37:12,895 INFO 分析條件: motion_frames=9 cooldown剩餘=0s
+2026-04-21 04:37:13,184 INFO 偵測到移動，開始收集影格
+2026-04-21 04:37:28,185 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 04:37:28,186 INFO 分析條件: motion_frames=29 cooldown剩餘=0s
+2026-04-21 04:37:28,230 INFO AFC is enabled with max remote calls: 10.
+2026-04-21 04:37:35,061 INFO HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 429 Too Many Requests"
+2026-04-21 04:37:35,100 WARNING Gemini 日配額耗盡，直接 fallback
+2026-04-21 04:37:35,101 WARNING Gemini 分析無結果，fallback 至 OpenAI
+2026-04-21 04:37:41,419 INFO HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-21 04:37:41,421 INFO 識別為休息，略過記錄 (信心: 0.80)
+2026-04-21 04:37:41,684 INFO 偵測到移動，開始收集影格
+2026-04-21 04:37:59,916 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 04:37:59,917 INFO 分析條件: motion_frames=19 cooldown剩餘=268s
+2026-04-21 04:38:01,202 INFO 偵測到移動，開始收集影格
+2026-04-21 04:38:16,359 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 04:38:16,359 INFO 分析條件: motion_frames=22 cooldown剩餘=252s
+2026-04-21 04:38:16,573 INFO 偵測到移動，開始收集影格
+2026-04-21 04:38:35,771 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 04:38:35,771 INFO 分析條件: motion_frames=41 cooldown剩餘=232s
+2026-04-21 04:38:42,063 INFO 偵測到移動，開始收集影格
+2026-04-21 04:39:00,147 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 04:39:00,147 INFO 分析條件: motion_frames=6 cooldown剩餘=208s
+2026-04-21 04:39:00,631 INFO 偵測到移動，開始收集影格
+2026-04-21 04:39:21,317 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 04:39:21,317 INFO 分析條件: motion_frames=9 cooldown剩餘=187s
+2026-04-21 04:39:27,593 INFO 偵測到移動，開始收集影格
+2026-04-21 04:39:45,142 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 04:39:45,143 INFO 分析條件: motion_frames=5 cooldown剩餘=163s
+2026-04-21 04:39:45,396 INFO 偵測到移動，開始收集影格
+2026-04-21 04:40:04,784 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 04:40:04,784 INFO 分析條件: motion_frames=21 cooldown剩餘=143s
+2026-04-21 04:40:05,034 INFO 偵測到移動，開始收集影格
+2026-04-21 04:40:12,711 INFO 靜止 30 幀，觸發分析
+2026-04-21 04:40:12,712 INFO 分析條件: motion_frames=1 cooldown剩餘=135s
+2026-04-21 04:40:17,512 INFO 偵測到移動，開始收集影格
+2026-04-21 04:40:38,133 INFO 移動持續 15 秒，強制觸發分析
+2026-04-21 04:40:38,134 INFO 分析條件: motion_frames=8 cooldown剩餘=110s
+2026-04-21 04:40:44,311 INFO 偵測到移動，開始收集影格
