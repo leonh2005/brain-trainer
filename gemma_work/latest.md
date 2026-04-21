@@ -1,41 +1,54 @@
-# Claude Handoff 20260421_0440
+# Claude Handoff 20260421_0940
 
 ## Git 狀態（未提交）
 ```
-M TradingAgents-main/run_analysis.py
- m banini-tracker
+m banini-tracker
  M claude_cycle_monitor.log
  M dashboard/dashboard.log
  M daytrade-replay/server.log
- M logs/nightly_check.log
+ M logs/daytrade.log
+ M logs/market-dashboard.log
+ M logs/shopee_keepalive.log
  M logs/shopee_stock.log
+ M logs/thread_summarizer.log
+ M logs/thread_summarizer_error.log
+ M logs/voice_ideas_report.log
+ M market-dashboard/fg_history.json
+ M market-dashboard/index.html
+ M market-dashboard/sp_state.json
  M rabbit-care/motion-watcher.log
  M rabbit-care/rabbit-care.log
  M rabbit-care/rabbit.db
- D rabbit-care/static/action_screenshots/20260414_000024_eating.jpg
- D rabbit-care/static/action_screenshots/20260414_015137_eating.jpg
- D rabbit-care/static/action_screenshots/20260414_025641_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260414_030227_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260414_032934_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260414_034350_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260414_035926_sleeping.jpg
+ D rabbit-care/static/action_screenshots/20260414_051629_sleeping.jpg
+ D rabbit-care/static/action_screenshots/20260414_054213_sleeping.jpg
+ D rabbit-care/static/action_screenshots/20260414_055245_sleeping.jpg
+ D rabbit-care/static/action_screenshots/20260414_060009_sleeping.jpg
+ D rabbit-care/static/action_screenshots/20260414_061805_sleeping.jpg
+ D rabbit-care/static/action_screenshots/20260414_071756_sleeping.jpg
+ D rabbit-care/static/action_screenshots/20260414_072336_sleeping.jpg
+ D rabbit-care/static/action_screenshots/20260414_072951_sleeping.jpg
+ D rabbit-care/static/action_screenshots/20260414_081256_sleeping.jpg
+ D rabbit-care/static/action_screenshots/20260414_090234_eating.jpg
  m stock-screener-ai
  M stock-screener/screener.log
-?? TradingAgents-main/eval_results/DXYZ/
-?? rabbit-care/static/action_screenshots/20260420_235705_sleeping.jpg
-?? rabbit-care/static/action_screenshots/20260421_004945_sleeping.jpg
-?? rabbit-care/static/action_screenshots/20260421_021912_eating.jpg
-?? rabbit-care/static/action_screenshots/20260421_025505_sleeping.jpg
-?? rabbit-care/static/action_screenshots/20260421_031518_sleeping.jpg
-?? rabbit-care/static/action_screenshots/20260421_035404_sleeping.jpg
-?? rabbit-care/static/action_screenshots/20260421_040145_sleeping.jpg
-?? rabbit-care/static/action_screenshots/20260421_041208_sleeping.jpg
-?? rabbit-care/static/action_screenshots/20260421_041951_sleeping.jpg
-?? rabbit-care/static/action_screenshots/20260421_042515_sleeping.jpg
+ M threads-daily/cron.log
+?? rabbit-care/static/action_screenshots/20260421_051442_sleeping.jpg
+?? rabbit-care/static/action_screenshots/20260421_052014_sleeping.jpg
+?? rabbit-care/static/action_screenshots/20260421_052743_sleeping.jpg
+?? rabbit-care/static/action_screenshots/20260421_053318_sleeping.jpg
+?? rabbit-care/static/action_screenshots/20260421_055005_sleeping.jpg
+?? rabbit-care/static/action_screenshots/20260421_060335_eating.jpg
+?? rabbit-care/static/action_screenshots/20260421_062757_sleeping.jpg
+?? rabbit-care/static/action_screenshots/20260421_070844_sleeping.jpg
+?? rabbit-care/static/action_screenshots/20260421_085802_eating.jpg
+?? rabbit-care/static/action_screenshots/20260421_090843_eating.jpg
+?? rabbit-care/static/action_screenshots/20260421_091535_eating.jpg
+?? rabbit-care/static/action_screenshots/20260421_092038_eating.jpg
 ```
 
 ## 近期 Commits
 ```
+2734d8b chore: 自動同步 2026-04-21 04:41
 814e1ed chore: 自動同步 2026-04-20 23:40
 55b11ce chore: 自動同步 2026-04-20 18:40
 82adff4 chore: 自動同步 2026-04-20 13:41
@@ -43,37 +56,10 @@ M TradingAgents-main/run_analysis.py
 5450427 chore: 自動同步 2026-04-20 03:40
 7dc0f40 chore: 對話結束同步
 6e7f7b4 chore: 自動同步 2026-04-19 22:40
-c456d93 chore: 自動同步 2026-04-19 17:41
 ```
 
 ## 未提交的變更
 ```diff
-diff --git a/TradingAgents-main/run_analysis.py b/TradingAgents-main/run_analysis.py
-index 331b086..cd42744 100644
---- a/TradingAgents-main/run_analysis.py
-+++ b/TradingAgents-main/run_analysis.py
-@@ -42,14 +42,16 @@ config["max_risk_discuss_rounds"] = 1
- if ticker.endswith(".TW"):
-     log("[init] 偵測到台股，資料來源切換為 FinMind")
-     config["data_vendors"] = {
--        "core_stock_apis":     "finmind",   # OHLCV 價格
--        "technical_indicators": "finmind",  # 技術指標（FinMind 價格 + stockstats）
--        "fundamental_data":    "finmind",   # 財報、資產負債表、損益表、現金流
--        "news_data":           "yfinance",  # 新聞仍走 yfinance（FinMind 無新聞）
-+        "core_stock_apis":     "finmind",
-+        "technical_indicators": "finmind",
-+        "fundamental_data":    "finmind",
-+        "news_data":           "yfinance",
-     }
-     config["tool_vendors"] = {
--        "get_insider_transactions": "finmind",  # 三大法人取代 insider transactions
-+        "get_insider_transactions": "finmind",
-     }
-+else:
-+    log("[init] 偵測到美股，使用預設 yfinance / alpha_vantage")
- 
- log("[init] 初始化 TradingAgentsGraph...")
- ta = TradingAgentsGraph(
 diff --git a/banini-tracker b/banini-tracker
 --- a/banini-tracker
 +++ b/banini-tracker
@@ -81,32 +67,48 @@ diff --git a/banini-tracker b/banini-tracker
 -Subproject commit 811be48e6702a2b8519e5297ed00c8a24d7cfe29
 +Subproject commit 811be48e6702a2b8519e5297ed00c8a24d7cfe29-dirty
 diff --git a/claude_cycle_monitor.log b/claude_cycle_monitor.log
-index 4749077..1286fa2 100644
+index edf1bd8..fa7b2b4 100644
 --- a/claude_cycle_monitor.log
 +++ b/claude_cycle_monitor.log
-@@ -731,3 +731,6 @@ hint: Disable this message with "git config set advice.addEmbeddedRepo false"
+@@ -779,3 +779,6 @@ google.genai.errors.ServerError: 503 UNAVAILABLE. {'error': {'code': 503, 'messa
      raise ServerError(status_code, response_json, response)
  google.genai.errors.ServerError: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.', 'status': 'UNAVAILABLE'}}
  
-+[23:40] 自動同步完成
-+[23:42] 下一事件：midpoint @ 02:30（168 分鐘後）
-+[02:31] 下一事件：end_warn @ 04:40（129 分鐘後）
++[04:40] 自動同步完成
++[04:42] 下一事件：midpoint @ 07:30（168 分鐘後）
++[07:31] 下一事件：end_warn @ 09:40（129 分鐘後）
 diff --git a/dashboard/dashboard.log b/dashboard/dashboard.log
-index 3927d69..982a13a 100644
+index 0bdf392..fb6a838 100644
 --- a/dashboard/dashboard.log
 +++ b/dashboard/dashboard.log
-@@ -10137,3 +10137,395 @@ Port 5600 is in use by another program. Either identify and stop that program, o
- 127.0.0.1 - - [20/Apr/2026 23:38:53] "GET /api/status HTTP/1.1" 200 -
- 127.0.0.1 - - [20/Apr/2026 23:39:37] "GET /api/status HTTP/1.1" 200 -
- 127.0.0.1 - - [20/Apr/2026 23:40:21] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [20/Apr/2026 23:41:06] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [20/Apr/2026 23:41:52] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [20/Apr/2026 23:42:39] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [20/Apr/2026 23:43:23] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [20/Apr/2026 23:44:10] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [20/Apr/2026 23:44:56] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [20/Apr/2026 23:45:41] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [20/Apr/2026 23:46:25] "GET /api/status HT
+@@ -10530,3 +10530,398 @@ Port 5600 is in use by another program. Either identify and stop that program, o
+ 127.0.0.1 - - [21/Apr/2026 04:39:03] "GET /api/status HTTP/1.1" 200 -
+ 127.0.0.1 - - [21/Apr/2026 04:39:48] "GET /api/status HTTP/1.1" 200 -
+ 127.0.0.1 - - [21/Apr/2026 04:40:34] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [21/Apr/2026 04:41:18] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [21/Apr/2026 04:42:09] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [21/Apr/2026 04:42:54] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [21/Apr/2026 04:43:39] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [21/Apr/2026 04:44:28] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [21/Apr/2026 04:45:13] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [21/Apr/2026 04:45:57] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [21/Apr/2026 04:46:40] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [21/Apr/2026 04:47:24] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [21/Apr/2026 04:48:08] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [21/Apr/2026 04:48:52] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [21/Apr/2026 04:49:37] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [21/Apr/2026 04:50:22] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [21/Apr/2026 04:51:09] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [21/Apr/2026 04:51:52] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [21/Apr/2026 04:52:37] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [21/Apr/2026 04:53:23] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [21/Apr/2026 04:54:09] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [21/Apr/2026 04:54:53] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [21/Apr/2026 04:55:39] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [21/Apr/2026 04:56:24] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [21/Apr/2026 04:57:10] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [21/Apr/2026 04:57:55] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [21/Apr/
 ```
 
 ---
