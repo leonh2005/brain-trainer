@@ -56,9 +56,10 @@
 2026-04-21T05:44:14Z INF Retrying connection in up to 1s connIndex=0 event=0 ip=198.41.200.13
 2026-04-21T05:44:15Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveP256] connIndex=0 event=0 ip=198.41.200.13
 2026-04-21T05:44:16Z INF Registered tunnel connection connIndex=0 connection=19f44a7f-b8ee-4bc1-a997-2608860123e6 event=0 ip=198.41.200.13 location=tpe01 protocol=quic
-5:57Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveP256] connIndex=0 event=0 ip=198.41.200.53
-[Mon Apr 20 05:46:02 CST 2026] 2026-04-19T21:46:02Z ERR Failed to dial a quic connection error="failed to dial to edge with quic: timeout: no recent network activity" connIndex=0 event=0 ip=198.41.200.53
-[Mon Apr 20 05:46:02 CST 2026] 2026-04-19T21:46:02Z INF Retrying connection in up to 8s connIndex=0 event=0 ip=198.41.200.53
+2026-04-21T08:04:03Z ERR Failed to refresh DNS local resolver error="lookup region1.v2.argotunnel.com: i/o timeout"
+2026-04-21T08:34:13Z ERR Failed to refresh DNS local resolver error="lookup region1.v2.argotunnel.com: i/o timeout"
+2026-04-21T08:54:18Z ERR Failed to refresh DNS local resolver error="lookup region1.v2.argotunnel.com: i/o timeout"
+26-04-19T21:46:02Z INF Retrying connection in up to 8s connIndex=0 event=0 ip=198.41.200.53
 [Mon Apr 20 05:46:06 CST 2026] 2026-04-19T21:46:06Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveP256] connIndex=0 event=0 ip=198.41.192.67
 [Mon Apr 20 05:46:11 CST 2026] 2026-04-19T21:46:11Z ERR Failed to dial a quic connection error="failed to dial to edge with quic: timeout: no recent network activity" connIndex=0 event=0 ip=198.41.192.67
 [Mon Apr 20 05:46:11 CST 2026] 2026-04-19T21:46:11Z INF Retrying connection in up to 16s connIndex=0 event=0 ip=198.41.192.67
@@ -78,3 +79,7 @@
 [Tue Apr 21 13:44:15 CST 2026] 2026-04-21T05:44:15Z INF Retrying connection in up to 1s connIndex=0 event=0 ip=198.41.192.67
 [Tue Apr 21 13:44:17 CST 2026] 2026-04-21T05:44:17Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveP256] connIndex=0 event=0 ip=198.41.192.67
 [Tue Apr 21 13:44:17 CST 2026] 2026-04-21T05:44:17Z INF Registered tunnel connection connIndex=0 connection=e40b514f-a2cb-46c0-8fe1-b3bcbe89b420 event=0 ip=198.41.192.67 location=khh01 protocol=quic
+[Tue Apr 21 16:04:03 CST 2026] 2026-04-21T08:04:03Z ERR Failed to refresh DNS local resolver error="lookup region1.v2.argotunnel.com: i/o timeout"
+[Tue Apr 21 16:34:13 CST 2026] 2026-04-21T08:34:13Z ERR Failed to refresh DNS local resolver error="lookup region1.v2.argotunnel.com: i/o timeout"
+[Tue Apr 21 16:54:18 CST 2026] 2026-04-21T08:54:18Z ERR Failed to refresh DNS local resolver error="lookup region1.v2.argotunnel.com: i/o timeout"
+[Tue Apr 21 18:30:19 CST 2026] 2026-04-21T10:30:19Z ERR Failed to refresh feature selector error="lookup cfd-features.argotunnel.com on 192.168.68.1:53: dial udp 192.168.68.1:53: i/o timeout"
