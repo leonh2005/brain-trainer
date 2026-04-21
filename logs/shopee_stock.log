@@ -23,3 +23,26 @@
 [2026-04-21 16:26:49] 
 [2026-04-21 20:14:07] SOLD_OUT
 [2026-04-22 00:26:25] 
+Traceback (most recent call last):
+  File "/Users/steven/CCProject/shopee_stock_check.py", line 28, in <module>
+    driver = webdriver.Firefox(options=opts)
+  File "/Users/steven/CCProject/daytrade-replay/venv/lib/python3.14/site-packages/selenium/webdriver/firefox/webdriver.py", line 69, in __init__
+    super().__init__(command_executor=executor, options=self.options)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/steven/CCProject/daytrade-replay/venv/lib/python3.14/site-packages/selenium/webdriver/common/webdriver.py", line 25, in __init__
+    super().__init__(*args, **kwargs)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/Users/steven/CCProject/daytrade-replay/venv/lib/python3.14/site-packages/selenium/webdriver/remote/webdriver.py", line 274, in __init__
+    self.start_session(capabilities)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/Users/steven/CCProject/daytrade-replay/venv/lib/python3.14/site-packages/selenium/webdriver/remote/webdriver.py", line 370, in start_session
+    response = self.execute(Command.NEW_SESSION, caps)["value"]
+               ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/steven/CCProject/daytrade-replay/venv/lib/python3.14/site-packages/selenium/webdriver/remote/webdriver.py", line 450, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "/Users/steven/CCProject/daytrade-replay/venv/lib/python3.14/site-packages/selenium/webdriver/remote/errorhandler.py", line 232, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.WebDriverException: Message: Process unexpectedly closed with status 0
+
+[2026-04-22 04:11:43] 
