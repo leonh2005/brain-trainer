@@ -158,26 +158,25 @@ function doDelete(id) {
   </div>
 </div>
 
-<!-- 就醫紀錄 -->
+<!-- 喝水紀錄 -->
 <div class="card">
-  <h2>🏥 就醫紀錄</h2>
-  {% if recent_visits %}
+  <h2>💧 喝水紀錄</h2>
+  {% if recent_water %}
   <table>
-    <tr><th>日期</th><th>症狀</th><th>診斷</th></tr>
-    {% for v in recent_visits %}
+    <tr><th>日期</th><th>飲水量</th></tr>
+    {% for w in recent_water %}
     <tr>
-      <td>{{ v.visit_date }}</td>
-      <td>{{ v.symptoms or '-' }}</td>
-      <td>{{ v.diagnosis or '-' }}</td>
+      <td>{{ w.log_date }}</td>
+      <td>{{ w.total_cc }} cc</td>
     </tr>
     {% endfor %}
   </table>
   {% else %}
-  <p class="text-muted">尚無就醫紀錄</p>
+  <p class="text-muted">尚無喝水紀錄</p>
   {% endif %}
   <div class="mt-16" style="display:flex; gap:8px;">
-    {% if session.get('logged_in') %}<a href="/vet" class="btn btn-primary btn-sm">新增紀錄</a>{% endif %}
-    <a href="/export/vet" class="btn btn-sm" style="background:#e8f5e9; color:#2e7d32;">📥 匯出</a>
+    {% if session.get('logged_in') %}<a href="/water" class="btn btn-primary btn-sm">新增紀錄</a>{% endif %}
+    <a href="/water" class="btn btn-sm" style="background:#e3f2fd; color:#1565c0;">📋 詳細</a>
   </div>
 </div>
 
