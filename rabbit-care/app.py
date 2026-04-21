@@ -300,8 +300,11 @@ def index():
         recent_logs = conn.execute(
             'SELECT * FROM daily_log ORDER BY log_date DESC LIMIT 7'
         ).fetchall()
-        recent_visits = conn.execute(
-            'SELECT * FROM vet_visit ORDER BY visit_date DESC LIMIT 3'
+        recent_water = conn.execute(
+            '''SELECT log_date, SUM(amount_cc) as total_cc
+               FROM water_log
+               GROUP BY log_date
+               ORDER BY log_date DESC LIMIT 7'''
         ).fetchall()
         weight_data = conn.execute(
             'SELECT log_date, weight FROM daily_log WHERE weight IS NOT NULL ORDER BY log_date ASC LIMIT 30'
@@ -335,7 +338,7 @@ def index():
     return render_template('index.html',
         rabbit=rabbit, age=age,
         recent_logs=recent_logs,
-        recent_visits=recent_visits,
+        recent_water=recent_water,
         active_meds=active_meds,
         weight_labels=json.dumps(weight_labels),
         weight_values=json.dumps(weight_values),

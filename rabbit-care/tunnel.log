@@ -59,27 +59,79 @@
 2026-04-21T08:04:03Z ERR Failed to refresh DNS local resolver error="lookup region1.v2.argotunnel.com: i/o timeout"
 2026-04-21T08:34:13Z ERR Failed to refresh DNS local resolver error="lookup region1.v2.argotunnel.com: i/o timeout"
 2026-04-21T08:54:18Z ERR Failed to refresh DNS local resolver error="lookup region1.v2.argotunnel.com: i/o timeout"
-26-04-19T21:46:02Z INF Retrying connection in up to 8s connIndex=0 event=0 ip=198.41.200.53
-[Mon Apr 20 05:46:06 CST 2026] 2026-04-19T21:46:06Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveP256] connIndex=0 event=0 ip=198.41.192.67
-[Mon Apr 20 05:46:11 CST 2026] 2026-04-19T21:46:11Z ERR Failed to dial a quic connection error="failed to dial to edge with quic: timeout: no recent network activity" connIndex=0 event=0 ip=198.41.192.67
-[Mon Apr 20 05:46:11 CST 2026] 2026-04-19T21:46:11Z INF Retrying connection in up to 16s connIndex=0 event=0 ip=198.41.192.67
-[Mon Apr 20 05:46:17 CST 2026] 2026-04-19T21:46:17Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveP256] connIndex=0 event=0 ip=198.41.200.63
-[Mon Apr 20 05:46:22 CST 2026] 2026-04-19T21:46:22Z ERR Failed to dial a quic connection error="failed to dial to edge with quic: timeout: no recent network activity" connIndex=0 event=0 ip=198.41.200.63
-[Mon Apr 20 05:46:22 CST 2026] 2026-04-19T21:46:22Z INF Retrying connection in up to 32s connIndex=0 event=0 ip=198.41.200.63
-[Mon Apr 20 05:46:47 CST 2026] 2026-04-19T21:46:47Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveP256] connIndex=0 event=0 ip=198.41.200.193
-[Mon Apr 20 05:46:52 CST 2026] 2026-04-19T21:46:52Z ERR Failed to dial a quic connection error="failed to dial to edge with quic: timeout: no recent network activity" connIndex=0 event=0 ip=198.41.200.193
-[Mon Apr 20 05:46:52 CST 2026] 2026-04-19T21:46:52Z INF Retrying connection in up to 1m4s connIndex=0 event=0 ip=198.41.200.193
-[Mon Apr 20 05:47:19 CST 2026] 2026-04-19T21:47:19Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveP256] connIndex=0 event=0 ip=198.41.192.67
-[Mon Apr 20 05:47:19 CST 2026] 2026-04-19T21:47:19Z INF Registered tunnel connection connIndex=0 connection=4d1e753d-25ec-46f1-a3ee-819e5116a4d7 event=0 ip=198.41.192.67 location=khh01 protocol=quic
-[Mon Apr 20 23:30:09 CST 2026] 2026-04-20T15:30:09Z ERR update check failed error="no release found"
-[Tue Apr 21 13:44:15 CST 2026] 2026-04-21T05:44:15Z ERR failed to run the datagram handler error="timeout: no recent network activity" connIndex=0 event=0 ip=198.41.192.67
-[Tue Apr 21 13:44:15 CST 2026] 2026-04-21T05:44:15Z ERR failed to accept incoming stream requests error="failed to accept QUIC stream: timeout: no recent network activity" connIndex=0 event=0 ip=198.41.192.67
-[Tue Apr 21 13:44:15 CST 2026] 2026-04-21T05:44:15Z ERR failed to serve tunnel connection error="datagram manager encountered a failure while serving" connIndex=0 event=0 ip=198.41.192.67
-[Tue Apr 21 13:44:15 CST 2026] 2026-04-21T05:44:15Z ERR Serve tunnel error error="datagram manager encountered a failure while serving" connIndex=0 event=0 ip=198.41.192.67
-[Tue Apr 21 13:44:15 CST 2026] 2026-04-21T05:44:15Z INF Retrying connection in up to 1s connIndex=0 event=0 ip=198.41.192.67
-[Tue Apr 21 13:44:17 CST 2026] 2026-04-21T05:44:17Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveP256] connIndex=0 event=0 ip=198.41.192.67
-[Tue Apr 21 13:44:17 CST 2026] 2026-04-21T05:44:17Z INF Registered tunnel connection connIndex=0 connection=e40b514f-a2cb-46c0-8fe1-b3bcbe89b420 event=0 ip=198.41.192.67 location=khh01 protocol=quic
-[Tue Apr 21 16:04:03 CST 2026] 2026-04-21T08:04:03Z ERR Failed to refresh DNS local resolver error="lookup region1.v2.argotunnel.com: i/o timeout"
-[Tue Apr 21 16:34:13 CST 2026] 2026-04-21T08:34:13Z ERR Failed to refresh DNS local resolver error="lookup region1.v2.argotunnel.com: i/o timeout"
-[Tue Apr 21 16:54:18 CST 2026] 2026-04-21T08:54:18Z ERR Failed to refresh DNS local resolver error="lookup region1.v2.argotunnel.com: i/o timeout"
-[Tue Apr 21 18:30:19 CST 2026] 2026-04-21T10:30:19Z ERR Failed to refresh feature selector error="lookup cfd-features.argotunnel.com on 192.168.68.1:53: dial udp 192.168.68.1:53: i/o timeout"
+2026-04-21T12:50:56Z ERR failed to accept incoming stream requests error="failed to accept QUIC stream: timeout: no recent network activity" connIndex=0 event=0 ip=198.41.200.13
+2026-04-21T12:50:56Z ERR failed to run the datagram handler error="timeout: no recent network activity" connIndex=0 event=0 ip=198.41.200.13
+2026-04-21T12:50:56Z ERR failed to serve tunnel connection error="accept stream listener encountered a failure while serving" connIndex=0 event=0 ip=198.41.200.13
+2026-04-21T12:50:56Z ERR Serve tunnel error error="accept stream listener encountered a failure while serving" connIndex=0 event=0 ip=198.41.200.13
+2026-04-21T12:50:56Z INF Retrying connection in up to 1s connIndex=0 event=0 ip=198.41.200.13
+2026-04-21T12:50:56Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveP256] connIndex=0 event=0 ip=198.41.200.13
+2026-04-21T12:51:15Z ERR failed to accept incoming stream requests error="failed to accept QUIC stream: timeout: no recent network activity" connIndex=0 event=0 ip=198.41.200.13
+2026-04-21T12:51:15Z ERR failed to run the datagram handler error="timeout: no recent network activity" connIndex=0 event=0 ip=198.41.200.13
+2026-04-21T12:51:15Z ERR failed to serve tunnel connection error="control stream encountered a failure while serving" connIndex=0 event=0 ip=198.41.200.13
+2026-04-21T12:51:15Z ERR Serve tunnel error error="control stream encountered a failure while serving" connIndex=0 event=0 ip=198.41.200.13
+2026-04-21T12:51:15Z INF Retrying connection in up to 4s connIndex=0 event=0 ip=198.41.200.13
+2026-04-21T12:51:19Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveP256] connIndex=0 event=0 ip=198.41.200.13
+2026-04-21T12:51:19Z INF Registered tunnel connection connIndex=0 connection=55c2e664-5900-48e6-a44b-207e645b40de event=0 ip=198.41.200.13 location=tpe01 protocol=quic
+2026-04-21T13:39:44Z ERR Failed to refresh DNS local resolver error="lookup region1.v2.argotunnel.com: i/o timeout"
+2026-04-21T14:05:27Z ERR failed to accept incoming stream requests error="failed to accept QUIC stream: write udp4 0.0.0.0:59379->198.41.200.13:7844: sendmsg: no route to host" connIndex=0 event=0 ip=198.41.200.13
+2026-04-21T14:05:27Z ERR failed to run the datagram handler error="write udp4 0.0.0.0:59379->198.41.200.13:7844: sendmsg: no route to host" connIndex=0 event=0 ip=198.41.200.13
+2026-04-21T14:05:27Z ERR failed to serve tunnel connection error="accept stream listener encountered a failure while serving" connIndex=0 event=0 ip=198.41.200.13
+2026-04-21T14:05:27Z ERR Serve tunnel error error="accept stream listener encountered a failure while serving" connIndex=0 event=0 ip=198.41.200.13
+2026-04-21T14:05:27Z INF Retrying connection in up to 1s connIndex=0 event=0 ip=198.41.200.13
+2026-04-21T14:05:27Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveP256] connIndex=0 event=0 ip=198.41.200.13
+2026-04-21T14:05:27Z ERR Failed to dial a quic connection error="failed to dial to edge with quic: write udp4 0.0.0.0:59379->198.41.200.13:7844: sendmsg: no route to host" connIndex=0 event=0 ip=198.41.200.13
+2026-04-21T14:05:27Z INF Retrying connection in up to 4s connIndex=0 event=0 ip=198.41.200.13
+2026-04-21T14:05:31Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveP256] connIndex=0 event=0 ip=198.41.200.43
+2026-04-21T14:05:31Z ERR Failed to dial a quic connection error="failed to dial to edge with quic: write udp4 0.0.0.0:59379->198.41.200.43:7844: sendmsg: no route to host" connIndex=0 event=0 ip=198.41.200.43
+2026-04-21T14:05:31Z INF Retrying connection in up to 8s connIndex=0 event=0 ip=198.41.200.43
+2026-04-21T14:05:36Z INF Initiating graceful shutdown due to signal terminated ...
+2026-04-21T14:05:36Z ERR Connection terminated connIndex=0
+2026-04-21T14:05:36Z ERR no more connections active and exiting
+2026-04-21T14:05:36Z INF Tunnel server stopped
+2026-04-21T14:05:36Z INF Metrics server stopped
+RR failed to accept incoming stream requests error="failed to accept QUIC stream: timeout: no recent network activity" connIndex=0 event=0 ip=198.41.192.67
+[Tue Apr 21 20:50:56 CST 2026] 2026-04-21T12:50:56Z ERR failed to run the datagram handler error="timeout: no recent network activity" connIndex=0 event=0 ip=198.41.192.67
+[Tue Apr 21 20:50:56 CST 2026] 2026-04-21T12:50:56Z ERR failed to serve tunnel connection error="accept stream listener encountered a failure while serving" connIndex=0 event=0 ip=198.41.192.67
+[Tue Apr 21 20:50:56 CST 2026] 2026-04-21T12:50:56Z ERR Serve tunnel error error="accept stream listener encountered a failure while serving" connIndex=0 event=0 ip=198.41.192.67
+[Tue Apr 21 20:50:56 CST 2026] 2026-04-21T12:50:56Z INF Retrying connection in up to 1s connIndex=0 event=0 ip=198.41.192.67
+[Tue Apr 21 20:50:58 CST 2026] 2026-04-21T12:50:58Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveP256] connIndex=0 event=0 ip=198.41.192.67
+[Tue Apr 21 20:51:06 CST 2026] 2026-04-21T12:51:06Z ERR failed to run the datagram handler error="timeout: no recent network activity" connIndex=0 event=0 ip=198.41.192.67
+[Tue Apr 21 20:51:06 CST 2026] 2026-04-21T12:51:06Z ERR failed to accept incoming stream requests error="failed to accept QUIC stream: timeout: no recent network activity" connIndex=0 event=0 ip=198.41.192.67
+[Tue Apr 21 20:51:06 CST 2026] 2026-04-21T12:51:06Z ERR failed to serve tunnel connection error="control stream encountered a failure while serving" connIndex=0 event=0 ip=198.41.192.67
+[Tue Apr 21 20:51:06 CST 2026] 2026-04-21T12:51:06Z ERR Serve tunnel error error="control stream encountered a failure while serving" connIndex=0 event=0 ip=198.41.192.67
+[Tue Apr 21 20:51:06 CST 2026] 2026-04-21T12:51:06Z INF Retrying connection in up to 4s connIndex=0 event=0 ip=198.41.192.67
+[Tue Apr 21 20:51:07 CST 2026] 2026-04-21T12:51:07Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveP256] connIndex=0 event=0 ip=198.41.192.67
+[Tue Apr 21 20:51:09 CST 2026] 2026-04-21T12:51:09Z INF Registered tunnel connection connIndex=0 connection=3552c439-c062-4664-bc07-a36707c467ca event=0 ip=198.41.192.67 location=khh01 protocol=quic
+[Tue Apr 21 21:39:44 CST 2026] 2026-04-21T13:39:44Z ERR Failed to refresh DNS local resolver error="lookup region1.v2.argotunnel.com: i/o timeout"
+[Tue Apr 21 22:12:34 CST 2026] 啟動 tunnel...
+[Tue Apr 21 22:12:39 CST 2026] 2026-04-21T14:12:39Z INF Thank you for trying Cloudflare Tunnel. Doing so, without a Cloudflare account, is a quick way to experiment and try it out. However, be aware that these account-less Tunnels have no uptime guarantee, are subject to the Cloudflare Online Services Terms of Use (https://www.cloudflare.com/website-terms/), and Cloudflare reserves the right to investigate your use of Tunnels for violations of such terms. If you intend to use Tunnels in production you should use a pre-created named tunnel by following: https://developers.cloudflare.com/cloudflare-one/connections/connect-apps
+[Tue Apr 21 22:12:39 CST 2026] 2026-04-21T14:12:39Z INF Requesting new quick Tunnel on trycloudflare.com...
+[Tue Apr 21 22:12:42 CST 2026] 2026-04-21T14:12:42Z INF +--------------------------------------------------------------------------------------------+
+[Tue Apr 21 22:12:42 CST 2026] 2026-04-21T14:12:42Z INF |  Your quick Tunnel has been created! Visit it at (it may take some time to be reachable):  |
+[Tue Apr 21 22:12:42 CST 2026] 2026-04-21T14:12:42Z INF |  https://shapes-momentum-fuzzy-producing.trycloudflare.com                                 |
+{"ok":true,"result":{"message_id":1565,"from":{"id":8666778924,"is_bot":true,"first_name":"Ccagent","username":"CcagentForsteven_bot"},"chat":{"id":7556217543,"first_name":"Steven","type":"private"},"date":1776780764,"text":"\ud83d\udc30 \u5154\u5b50\u7167\u8b77\u7cfb\u7d71\u5916\u90e8\u9023\u7d50\uff1a\nhttps://shapes-momentum-fuzzy-producing.trycloudflare.com\n\n\u5bc6\u78bc\uff1amomo2026","entities":[{"offset":15,"length":57,"type":"url"}],"link_preview_options":{"url":"https://shapes-momentum-fuzzy-producing.trycloudflare.com/"}}}[Tue Apr 21 22:12:44 CST 2026] URL 已傳送：https://shapes-momentum-fuzzy-producing.trycloudflare.com
+[Tue Apr 21 22:12:44 CST 2026] 2026-04-21T14:12:42Z INF +--------------------------------------------------------------------------------------------+
+[Tue Apr 21 22:12:44 CST 2026] 2026-04-21T14:12:42Z INF Cannot determine default configuration path. No file [config.yml config.yaml] in [~/.cloudflared ~/.cloudflare-warp ~/cloudflare-warp /etc/cloudflared /usr/local/etc/cloudflared]
+[Tue Apr 21 22:12:44 CST 2026] 2026-04-21T14:12:42Z INF Version 2026.3.0 (Checksum 99f099a3834e0b20ec2a18ac77d3d77261b77652310d97eca18fc1797d4349d0)
+[Tue Apr 21 22:12:44 CST 2026] 2026-04-21T14:12:42Z INF GOOS: darwin, GOVersion: go1.26.1, GoArch: arm64
+[Tue Apr 21 22:12:44 CST 2026] 2026-04-21T14:12:42Z INF Settings: map[ha-connections:1 no-autoupdate:true protocol:quic url:http://localhost:5200]
+[Tue Apr 21 22:12:44 CST 2026] 2026-04-21T14:12:42Z INF cloudflared will not automatically update if installed by a package manager.
+[Tue Apr 21 22:12:44 CST 2026] 2026-04-21T14:12:42Z INF Generated Connector ID: 3b08e98b-4333-49de-b09e-40c8e14f16c4
+[Tue Apr 21 22:12:44 CST 2026] 2026-04-21T14:12:43Z INF Initial protocol quic
+[Tue Apr 21 22:12:44 CST 2026] 2026-04-21T14:12:43Z INF ICMP proxy will use 192.168.68.123 as source for IPv4
+[Tue Apr 21 22:12:44 CST 2026] 2026-04-21T14:12:43Z INF ICMP proxy will use fe80::491:2e05:26cf:cfbf in zone en1 as source for IPv6
+[Tue Apr 21 22:12:44 CST 2026] 2026-04-21T14:12:43Z INF Created ICMP proxy listening on 192.168.68.123:0
+[Tue Apr 21 22:12:44 CST 2026] 2026-04-21T14:12:43Z INF ICMP proxy will use 192.168.68.123 as source for IPv4
+[Tue Apr 21 22:12:44 CST 2026] 2026-04-21T14:12:43Z INF ICMP proxy will use fe80::491:2e05:26cf:cfbf in zone en1 as source for IPv6
+[Tue Apr 21 22:12:44 CST 2026] 2026-04-21T14:12:43Z INF Starting metrics server on 127.0.0.1:20241/metrics
+[Tue Apr 21 22:12:44 CST 2026] 2026-04-21T14:12:43Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveP256] connIndex=0 event=0 ip=198.41.192.67
+[Tue Apr 21 22:12:44 CST 2026] 2026-04-21T14:12:44Z INF Registered tunnel connection connIndex=0 connection=8361ef27-1538-4e10-bcd1-0030a657f63c event=0 ip=198.41.192.67 location=khh01 protocol=quic
+[Tue Apr 21 23:37:50 CST 2026] 2026-04-21T15:37:50Z ERR Failed to refresh DNS local resolver error="lookup region1.v2.argotunnel.com: i/o timeout"
+[Tue Apr 21 23:42:55 CST 2026] 2026-04-21T15:42:55Z ERR Failed to refresh DNS local resolver error="lookup region1.v2.argotunnel.com: i/o timeout"
+[Wed Apr 22 00:25:34 CST 2026] 2026-04-21T16:25:34Z ERR failed to run the datagram handler error="timeout: no recent network activity" connIndex=0 event=0 ip=198.41.192.67
+[Wed Apr 22 00:25:34 CST 2026] 2026-04-21T16:25:34Z ERR failed to accept incoming stream requests error="failed to accept QUIC stream: timeout: no recent network activity" connIndex=0 event=0 ip=198.41.192.67
+[Wed Apr 22 00:25:34 CST 2026] 2026-04-21T16:25:34Z ERR failed to serve tunnel connection error="datagram manager encountered a failure while serving" connIndex=0 event=0 ip=198.41.192.67
+[Wed Apr 22 00:25:34 CST 2026] 2026-04-21T16:25:34Z ERR Serve tunnel error error="datagram manager encountered a failure while serving" connIndex=0 event=0 ip=198.41.192.67
+[Wed Apr 22 00:25:34 CST 2026] 2026-04-21T16:25:34Z INF Retrying connection in up to 1s connIndex=0 event=0 ip=198.41.192.67
+[Wed Apr 22 00:25:36 CST 2026] 2026-04-21T16:25:36Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveP256] connIndex=0 event=0 ip=198.41.192.67
+[Wed Apr 22 00:25:36 CST 2026] 2026-04-21T16:25:36Z INF Registered tunnel connection connIndex=0 connection=b59abae4-2667-4831-b724-f8a4472f39ad event=0 ip=198.41.192.67 location=khh01 protocol=quic
