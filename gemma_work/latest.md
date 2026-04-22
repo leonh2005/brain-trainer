@@ -1,50 +1,36 @@
-# Claude Handoff 20260422_1040
+# Claude Handoff 20260422_1540
 
 ## Git 狀態（未提交）
 ```
 m banini-tracker
  M claude_cycle_monitor.log
- M dashboard/dashboard.log
- M daytrade-replay/server.log
- M logs/daytrade.log
- M logs/market-dashboard.log
- M logs/shopee_keepalive.log
+ M logs/screener.log
  M logs/shopee_stock.log
- M logs/thread_summarizer.log
- M logs/thread_summarizer_error.log
- M logs/voice_ideas_report.log
- M market-dashboard/fg_history.json
- M market-dashboard/index.html
- M market-dashboard/sp_state.json
  M rabbit-care/motion-watcher.log
  M rabbit-care/rabbit-care.log
  M rabbit-care/rabbit.db
- D rabbit-care/static/action_screenshots/20260415_092127_eating.jpg
- D rabbit-care/static/action_screenshots/20260415_095316_eating.jpg
- D rabbit-care/static/action_screenshots/20260415_100948_eating.jpg
+ D rabbit-care/static/action_screenshots/20260415_101954_eating.jpg
+ D rabbit-care/static/action_screenshots/20260415_102506_eating.jpg
+ D rabbit-care/static/action_screenshots/20260415_110528_sleeping.jpg
+ D rabbit-care/static/action_screenshots/20260415_111603_eating.jpg
+ D rabbit-care/static/action_screenshots/20260415_120626_eating.jpg
+ D rabbit-care/static/action_screenshots/20260415_121137_eating.jpg
+ D rabbit-care/static/action_screenshots/20260415_123314_eating.jpg
+ D rabbit-care/static/action_screenshots/20260415_125507_eating.jpg
+ D rabbit-care/static/action_screenshots/20260415_132734_sleeping.jpg
+ D rabbit-care/static/action_screenshots/20260415_133245_eating.jpg
  m stock-screener-ai
- M stock-screener/screener.log
- M threads-daily/cron.log
-?? rabbit-care/static/action_screenshots/20260422_054137_sleeping.jpg
-?? rabbit-care/static/action_screenshots/20260422_060950_sleeping.jpg
-?? rabbit-care/static/action_screenshots/20260422_061828_sleeping.jpg
-?? rabbit-care/static/action_screenshots/20260422_062445_sleeping.jpg
-?? rabbit-care/static/action_screenshots/20260422_064544_sleeping.jpg
-?? rabbit-care/static/action_screenshots/20260422_072759_sleeping.jpg
-?? rabbit-care/static/action_screenshots/20260422_073309_sleeping.jpg
-?? rabbit-care/static/action_screenshots/20260422_075333_sleeping.jpg
-?? rabbit-care/static/action_screenshots/20260422_084509_sleeping.jpg
-?? rabbit-care/static/action_screenshots/20260422_090305_sleeping.jpg
-?? rabbit-care/static/action_screenshots/20260422_091336_sleeping.jpg
-?? rabbit-care/static/action_screenshots/20260422_092002_eating.jpg
-?? rabbit-care/static/action_screenshots/20260422_092512_eating.jpg
-?? rabbit-care/static/action_screenshots/20260422_093722_sleeping.jpg
-?? rabbit-care/static/action_screenshots/20260422_100733_sleeping.jpg
-?? rabbit-care/static/action_screenshots/20260422_101240_eating.jpg
+?? rabbit-care/static/action_screenshots/20260422_123253_eating.jpg
+?? rabbit-care/static/action_screenshots/20260422_123757_eating.jpg
+?? rabbit-care/static/action_screenshots/20260422_125951_sleeping.jpg
+?? rabbit-care/static/action_screenshots/20260422_132809_sleeping.jpg
+?? rabbit-care/static/action_screenshots/20260422_134441_sleeping.jpg
+?? rabbit-care/static/action_screenshots/20260422_135127_sleeping.jpg
 ```
 
 ## 近期 Commits
 ```
+3911dd9 chore: 自動同步 2026-04-22 10:40
 6dccd08 chore: 自動同步 2026-04-22 05:41
 c779a13 chore: 自動同步 2026-04-22 00:40
 d8a098e chore: 自動同步 2026-04-21 20:10
@@ -52,7 +38,6 @@ cb3a656 chore: 自動同步 2026-04-21 19:40
 d625c81 chore: 自動同步 2026-04-21 14:40
 da9893b chore: 自動同步 2026-04-21 09:41
 2734d8b chore: 自動同步 2026-04-21 04:41
-814e1ed chore: 自動同步 2026-04-20 23:40
 ```
 
 ## 未提交的變更
@@ -64,51 +49,64 @@ diff --git a/banini-tracker b/banini-tracker
 -Subproject commit 811be48e6702a2b8519e5297ed00c8a24d7cfe29
 +Subproject commit 811be48e6702a2b8519e5297ed00c8a24d7cfe29-dirty
 diff --git a/claude_cycle_monitor.log b/claude_cycle_monitor.log
-index 1baf503..3e6522c 100644
+index 3e6522c..f45ed7a 100644
 --- a/claude_cycle_monitor.log
 +++ b/claude_cycle_monitor.log
-@@ -886,3 +886,6 @@ google.genai.errors.ServerError: 503 UNAVAILABLE. {'error': {'code': 503, 'messa
- [00:40] 自動同步完成
- [00:42] 下一事件：midpoint @ 03:30（168 分鐘後）
- [03:30] 下一事件：end_warn @ 05:40（129 分鐘後）
-+[05:40] 自動同步完成
-+[05:42] 下一事件：midpoint @ 08:30（167 分鐘後）
-+[08:31] 下一事件：end_warn @ 10:40（129 分鐘後）
-diff --git a/dashboard/dashboard.log b/dashboard/dashboard.log
-index f2493e2..0a71454 100644
---- a/dashboard/dashboard.log
-+++ b/dashboard/dashboard.log
-@@ -12333,3 +12333,309 @@ Port 5600 is in use by another program. Either identify and stop that program, o
- 127.0.0.1 - - [22/Apr/2026 05:39:34] "GET /api/status HTTP/1.1" 200 -
- 127.0.0.1 - - [22/Apr/2026 05:40:19] "GET /api/status HTTP/1.1" 200 -
- 127.0.0.1 - - [22/Apr/2026 05:41:02] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [22/Apr/2026 05:41:47] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [22/Apr/2026 05:42:31] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [22/Apr/2026 05:43:15] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [22/Apr/2026 05:44:00] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [22/Apr/2026 05:44:45] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [22/Apr/2026 05:45:28] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [22/Apr/2026 05:46:13] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [22/Apr/2026 05:46:57] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [22/Apr/2026 05:47:41] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [22/Apr/2026 05:48:25] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [22/Apr/2026 05:49:10] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [22/Apr/2026 05:49:55] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [22/Apr/2026 05:50:39] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [22/Apr/2026 05:51:24] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [22/Apr/2026 05:52:08] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [22/Apr/2026 05:52:52] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [22/Apr/2026 05:53:37] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [22/Apr/2026 05:54:21] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [22/Apr/2026 05:55:06] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [22/Apr/2026 05:55:50] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [22/Apr/2026 05:56:34] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [22/Apr/2026 05:57:18] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [22/Apr/2026 05:58:02] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [22/Apr/2026 05:58:46] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [22/Apr/2026 05:59:31] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [22/Apr/2026 06:00:15] "GET /api/status HTTP/1.1" 200 -
-+127.0
+@@ -889,3 +889,6 @@ google.genai.errors.ServerError: 503 UNAVAILABLE. {'error': {'code': 503, 'messa
+ [05:40] 自動同步完成
+ [05:42] 下一事件：midpoint @ 08:30（167 分鐘後）
+ [08:31] 下一事件：end_warn @ 10:40（129 分鐘後）
++[10:40] 自動同步完成
++[10:42] 下一事件：midpoint @ 13:30（168 分鐘後）
++[13:31] 下一事件：end_warn @ 15:40（129 分鐘後）
+diff --git a/logs/screener.log b/logs/screener.log
+index cdbf8be..3df1910 100644
+--- a/logs/screener.log
++++ b/logs/screener.log
+@@ -152,3 +152,25 @@ Response Code: 0 | Event Code: 0 | Info: host '210.59.255.161:80', hostname '210
+ • 現價 > VWAP 且 > 開盤
+ • 現價距日高 < 8%
+ • 三大法人淨買超 ≥ 0
++2026-04-22 13:01:01.710 | WARNING  | importlib._bootstrap:_call_with_frames_removed:488 - Optional: pip install shioaji[speed] or uv add shioaji --extra speed for better performance.
++2026-04-22 13:01:01,772 INFO ===== 開始隔日沖選股（Shioaji）=====
++2026-04-22 13:01:03,016 INFO [sj] 永豐 API 登入成功
++2026-04-22 13:01:03,037 INFO [sj] 取得 2316 檔股票合約
++2026-04-22 13:01:03,441 INFO 初步篩選（漲幅3-7%）: 共 0 檔
++2026-04-22 13:01:03,442 INFO 無初步候選股，可能是非交易日或 API 無資料
++Response Code: 0 | Event Code: 0 | Info: host '210.59.255.161:80', hostname '210.59.255.161:80' IP 210.59.255.161:80 (host 1 of 1) (host connection attempt 1 of 1) (total connection attempt 1 of 1) | Event: Session up
++Response Code: 200 | Event Code: 16 | Info: APISUB/V1/SYS/CONTRACT | Event: Subscribe or Unsubscribe ok
++📊 隔日沖選股 04/22 13:01
++
++⚠️ 今日無符合所有條件的標的
++
++篩選條件（楊永興一夜持股法）：
++• 漲幅 3%~5%
++• 量比 > 1
++• 換手率 3%~8%
++• 市值 50~300億
++• 成交量台階式放大
++• 均線多頭排列
++• 現價 > VWAP 且 > 開盤
++• 現價距日高 < 8%
++• 三大法人淨買超 ≥ 0
+diff --git a/logs/shopee_stock.log b/logs/shopee_stock.log
+index 8703bef..48b8468 100644
+--- a/logs/shopee_stock.log
++++ b/logs/shopee_stock.log
+@@ -157,3 +157,4 @@ Traceback (most recent call last):
+     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ urllib3.exceptions.MaxRetryError: HTTPConnectionPool(host='localhost', port=60522): Max retries exceeded with url: /session/3e7aee2f-e3e6-4586-a668-407ee0b4ab3c/element/7d3c4e94-a8aa-49b4-94ec-8075b7cf1a1c/text (Caused by ReadTimeoutError("HTTPConnectionPool(host='localhost', port=60522): Read timed out. (read timeout=120)"))
+ [2026-04-22 08:26:08] ERROR
++[2026-04-22 12:13:08] SOLD_OUT
+diff --git a/rabbit-care/motion-watcher.log b/rabbit-care/motion-watcher.log
+index 7758fe5..9666b72 100644
+--- a/rabbit-care/motion-watcher.log
++++ b/rabbit-care/motion-watcher.log
+@@ -292829,3 +292829,3239 @@ OpenCV: Couldn't read video stream from file "rtsp://stevenhung:FREDjuik12@192.1
+ 2026-04-22 10:40:36,318 INFO 偵測到移動，開始收集影格
+ 2026-04-22 10:40:53,670 INFO 移動持續 15 秒，強制觸發分析
+ 2026-04-22 10:40:53,670 INFO 分析條件: motion_frames=10 cooldown剩餘=273s
++20
 ```
 
 ---
