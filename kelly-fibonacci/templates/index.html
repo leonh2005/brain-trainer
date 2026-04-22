@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>凱利×費波那契×週期 倉位計算器</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', sans-serif; background: #0f1117; color: #e2e8f0; min-height: 100vh; }
+    header { background: linear-gradient(135deg, #1a1f35, #2d3561); padding: 24px 32px; border-bottom: 1px solid #2d3748; }
+    header h1 { font-size: 1.6rem; font-weight: 700; color: #63b3ed; }
+    header p { color: #a0aec0; font-size: 0.9rem; margin-top: 4px; }
+    .container { max-width: 1100px; margin: 0 auto; padding: 32px 24px; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    .card { background: #1a202c; border-radius: 12px; padding: 24px; border: 1px solid #2d3748; }
+    .card h2 { font-size: 1rem; font-weight: 600; color: #90cdf4; margin-bottom: 16px; text-transform: uppercase; letter-spacing: 0.05em; }
+    .form-group { margin-bottom: 16px; }
+    label { display: block; font-size: 0.85rem; color: #a0aec0; margin-bottom: 6px; }
+    input[type=number], select {
+      width: 100%; padding: 10px 12px; background: #2d3748; border: 1px solid #4a5568;
+      border-radius: 8px; color: #e2e8f0; font-size: 0.95rem;
+    }
+    input[type=range] { width: 100%; accent-color: #63b3ed; }
+    .range-row { display: flex; align-items: center; gap: 12px; }
+    .range-value { min-width: 32px; text-align: right; font-weight: 600; color: #63b3ed; font-size: 0.95rem; }
+    .btn-calc {
+      width: 100%; padding: 14px; background: linear-gradient(135deg, #3182ce, #2b6cb0);
+      border: none; border-radius: 8px; color: white; font-size: 1rem; font-weight: 600;
+      cursor: pointer; margin-top: 8px; transition: opacity 0.2s;
+    }
+    .btn-calc:hover { opacity: 0.85; }
+    .result-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #2d3748; }
+    .result-row:last-child { border-bottom: none; }
+    .result-label { color: #a0aec0; font-size: 0.9rem; }
+    .result-value { font-weight: 700; font-size: 1rem; color: #68d391; }
+    .result-value.highlight { color: #f6ad55; font-size: 1.15rem; }
+    .result-value.big { color: #63b3ed; font-size: 1.2rem; }
+    .btn-download {
+      width: 100%; padding: 12px; background: linear-gradient(135deg, #276749, #2f855a);
+      border: none; border-radius: 8px; color: white; font-size: 0.95rem; font-weight: 600;
+      cursor: pointer; margin-top: 16px; transition: opacity 0.2s;
+    }
+    .btn-download:hover { opacity: 0.85; }
+    .btn-download:disabled { opacity: 0.4; cursor: not-allowed; }
+    .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
+    .stat-box { background: #2d3748; border-radius: 8px; padding: 10px 14px; }
+    .stat-box .label { font-size: 0.75rem; color: #718096; }
+    .stat-box .val { font-size: 1rem; font-weight: 700; color: #e2e8f0; margin-top: 2px; }
+    details { margin-top: 32px; background: #1a202c; border-radius: 12px; border: 1px solid #2d3748; }
+    summary { padding: 18px 24px; cursor: pointer; font-weight: 600; color: #90cdf4; font-size: 1rem; user-select: none; }
+    .help-content { padding: 0 24px 24px; }
+    .help-section { margin-bottom: 20px; }
+    .help-section h3 { color: #f6ad55; font-size: 0.9rem; font-weight: 600; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.04em; }
+    .help-item { margin-bottom: 10px; }
+    .help-item strong { color: #63b3ed; }
+    .help-item p { color: #a0aec0; font-size: 0.88rem; line-height: 1.6; margin-top: 2px; }
+    .tag { display: inline-block; background: #2d3748; border-radius: 4px; padding: 1px 6px; font-size: 0.75rem; color: #90cdf4; margin-right: 4px; }
+    #loading { display: none; text-align: center; color: #a0aec0; padding: 20px; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>凱利 × 費波那契 × 四大週期　倉位計算器</h1>
+    <p>整合凱利公式、費波那契回檔位與基欽/朱格拉/庫茲涅茨/康波四大經濟週期，計算最佳倉位並生成蒙地卡羅風險模型</p>
+  </header>
+
+  <div class="container">
+    <div class="grid">
+      <!-- Left: Input -->
+      <div>
+        <div class="card">
+          <h2>基本參數</h2>
+          <div class="form-group">
+            <label>初始資金 ($)</label>
+            <input type="number" id="capital" value="200000" min="1000">
+          </div>
+          <div class="form-group">
+            <label>勝率 (%)</label>
+            <div class="range-row">
+              <input type="range" id="win_rate" min="1" max="99" value="55" oninput="document.getElementById('win_rate_val').textContent=this.value+'%'">
+              <span class="range-value" id="win_rate_val">55%</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>費波那契回檔位入場點</label>
+            <select id="fib_level">
+              <option value="23.6">23.6%（淺回檔，較保守）</option>
+              <option value="38.2">38.2%（常見支撐）</option>
+              <option value="50.0">50.0%（黃金中點）</option>
+              <option value="61.8" selected>61.8%（黃金比例，強支撐）</option>
+              <option value="78.6">78.6%（深度回檔，高報酬）</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:16px">
+          <h2>四大經濟週期位置</h2>
+          <p style="font-size:0.8rem;color:#718096;margin-bottom:16px">-2 = 深度收縮　0 = 中性　+2 = 強勁擴張</p>
+
+          <div class="form-group">
+            <label>基欽週期（3-4年　庫存循環）</label>
+            <div class="range-row">
+              <input type="range" id="kitchin" min="-2" max="2" step="0.5" value="0" oninput="document.getElementById('kitchin_val').textContent=this.value">
+              <span class="range-value" id="kitchin_val">0</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>朱格拉週期（7-11年　固定資產投資）</label>
+            <div class="range-row">
+              <input type="range" id="juglar" min="-2" max="2" step="0.5" value="0" oninput="document.getElementById('juglar_val').textContent=this.value">
+              <span class="range-value" id="juglar_val">0</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>庫茲涅茨週期（15-25年　房地產人口）</label>
+            <div class="range-row">
+              <input type="range" id="kuznets" min="-2" max="2" step="0.5" value="0" oninput="document.getElementById('kuznets_val').textContent=this.value">
+              <span class="range-value" id="kuznets_val">0</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>康波週期（50-60年　技術革命）</label>
+            <div class="range-row">
+              <input type="range" id="kondratiev" min="-2" max="2" step="0.5" value="0" oninput="document.getElementById('kondratiev_val').textContent=this.value">
+              <span class="range-value" id="kondratiev_val">0</span>
+            </div>
+          </div>
+
+          <button class="btn-calc" onclick="calculate()">計算最佳倉位</button>
+        </div>
+      </div>
+
+      <!-- Right: Results -->
+      <div>
+        <div class="card" id="results-card">
+          <h2>計算結果</h2>
+          <div id="loading">計算中...</div>
+          <div id="results-body">
+            <p style="color:#718096;font-size:0.9rem">填入左側參數後點擊「計算最佳倉位」</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Help Section -->
+    <details>
+      <summary>📖 使用說明與參數解釋</summary>
+      <div class="help-content">
+        <div class="help-section">
+          <h3>基本參數</h3>
+          <div class="help-item">
+            <strong>初始資金</strong>
+            <p>這筆交易投入的總資本。凱利公式會計算應動用其中幾%。</p>
+          </div>
+          <div class="help-item">
+            <strong>勝率</strong>
+            <p>根據歷史回測或主觀判斷，這個策略預期獲利的機率。55% 代表十次交易約五到六次賺錢。</p>
+          </div>
+          <div class="help-item">
+            <strong>費波那契回檔位入場點</strong>
+            <p>你計劃在哪個回檔位置入場。越深的回檔位（61.8%、78.6%）代表更強的歷史支撐，系統自動帶入較高的入場乘數與更佳的風險報酬比。<br>
+            <span class="tag">23.6%</span>保守；<span class="tag">38.2%</span>常見；<span class="tag">61.8%</span>黃金比例；<span class="tag">78.6%</span>激進</p>
+          </div>
+        </div>
+
+        <div class="help-section">
+          <h3>四大經濟週期（-2 到 +2）</h3>
+          <div class="help-item">
+            <strong>基欽週期（3-4 年）</strong>
+            <p>庫存循環。+2 代表企業正積極補庫存（擴張）；-2 代表去庫存（收縮）。通常看企業庫存月數、PMI 庫存分項。</p>
+          </div>
+          <div class="help-item">
+            <strong>朱格拉週期（7-11 年）</strong>
+            <p>固定資產投資循環（廠房設備）。+2 代表資本支出高峰期；-2 代表投資低谷。可參考工業設備訂單、企業資本支出數據。</p>
+          </div>
+          <div class="help-item">
+            <strong>庫茲涅茨週期（15-25 年）</strong>
+            <p>房地產與人口結構週期。+2 代表建設高峰與人口紅利；-2 代表房市低迷與人口老化壓力。</p>
+          </div>
+          <div class="help-item">
+            <strong>康波週期（50-60 年）</strong>
+            <p>技術革命浪潮（蒸汽機→電力→IT→AI）。+2 代表新技術大規模擴散與生產力爆發；-2 代表舊技術衰退與創新低谷。目前 AI 革命可能處於早期擴散階段（+1 至 +2）。</p>
+          </div>
+        </div>
+
+        <div class="help-section">
+          <h3>輸出結果解讀</h3>
+          <div class="help-item">
+            <strong>原始凱利%</strong>
+            <p>純以勝率與費波那契帶入的賠率計算的數學最佳倉位比例，不含週期調整。</p>
+          </div>
+          <div class="help-item">
+            <strong>週期共振乘數</strong>
+            <p>四個週期加權後的市場環境係數。0.5 代表全面收縮應大幅縮倉；1.5 代表全面擴張可適度加倉；1.0 為中性。</p>
+          </div>
+          <div class="help-item">
+            <strong>調整後凱利%</strong>
+            <p>= 原始凱利% × 週期乘數 × 費波那契入場乘數。這是最終建議的倉位占資本比例。</p>
+          </div>
+          <div class="help-item">
+            <strong>全凱利 vs 半凱利</strong>
+            <p><strong>全凱利</strong>：數學最佳化，長期期望值最大，但短期波動劇烈。<br>
+            <strong>半凱利</strong>：實務上多數專業交易者採用，犧牲約 25% 期望值但波動降低約 50%，心理上更容易執行。</p>
+          </div>
+          <div class="help-item">
+            <strong>蒙地卡羅統計（1000 次模擬）</strong>
+            <p>模擬 1000 種不同的隨機交易路徑（各 200 筆）。<br>
+            <span class="tag">中位數結果</span>50% 的情境最終資金高於此值。<br>
+            <span class="tag">破產率</span>資金跌破初始 50% 的路徑比例，越低越安全。</p>
+          </div>
+        </div>
+      </div>
+    </details>
+  </div>
+
+  <script>
+    let lastParams = null;
+
+    async function calculate() {
+      const params = {
+        capital: document.getElementById('capital').value,
+        win_rate: document.getElementById('win_rate').value,
+        fib_level: document.getElementById('fib_level').value,
+        kitchin: document.getElementById('kitchin').value,
+        juglar: document.getElementById('juglar').value,
+        kuznets: document.getElementById('kuznets').value,
+        kondratiev: document.getElementById('kondratiev').value,
+      };
+      lastParams = params;
+
+      document.getElementById('loading').style.display = 'block';
+      document.getElementById('results-body').innerHTML = '';
+
+      const resp = await fetch('/calculate', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(params),
+      });
+      const d = await resp.json();
+      document.getElementById('loading').style.display = 'none';
+
+      const fmt = n => '$' + Number(n).toLocaleString('en-US', {minimumFractionDigits: 0});
+
+      document.getElementById('results-body').innerHTML = `
+        <div class="result-row">
+          <span class="result-label">原始凱利%</span>
+          <span class="result-value">${d.raw_kelly}%</span>
+        </div>
+        <div class="result-row">
+          <span class="result-label">費波那契入場乘數 <small style="color:#718096">（回檔位 ${params.fib_level}%，賠率 ${d.odds}:1）</small></span>
+          <span class="result-value">${d.fib_multiplier}×</span>
+        </div>
+        <div class="result-row">
+          <span class="result-label">週期共振分數 → 乘數</span>
+          <span class="result-value">${d.cycle_score} → ${d.cycle_multiplier}×</span>
+        </div>
+        <div class="result-row">
+          <span class="result-label">調整後凱利%</span>
+          <span class="result-value highlight">${d.adj_kelly}%</span>
+        </div>
+        <div class="result-row">
+          <span class="result-label">建議全凱利倉位</span>
+          <span class="result-value big">${fmt(d.full_kelly_amt)}</span>
+        </div>
+        <div class="result-row">
+          <span class="result-label">建議半凱利倉位（推薦）</span>
+          <span class="result-value big">${fmt(d.half_kelly_amt)}</span>
+        </div>
+
+        <div style="margin-top:16px">
+          <p style="font-size:0.8rem;color:#718096;margin-bottom:10px">蒙地卡羅模擬（1000次，各 200 筆交易）</p>
+          <div class="stats-grid">
+            <div class="stat-box"><div class="label">最終資金中位數</div><div class="val">${fmt(d.stats.p50)}</div></div>
+            <div class="stat-box"><div class="label">最終資金 5th %ile</div><div class="val">${fmt(d.stats.p5)}</div></div>
+            <div class="stat-box"><div class="label">最終資金 95th %ile</div><div class="val">${fmt(d.stats.p95)}</div></div>
+            <div class="stat-box"><div class="label">破產率（跌破50%）</div><div class="val" style="color:${d.stats.ruin_rate > 10 ? '#fc8181' : '#68d391'}">${d.stats.ruin_rate}%</div></div>
+            <div class="stat-box"><div class="label">平均最大回撤</div><div class="val">${d.stats.max_drawdown_mean}%</div></div>
+            <div class="stat-box"><div class="label">最差回撤</div><div class="val" style="color:#fc8181">${d.stats.max_drawdown_worst}%</div></div>
+          </div>
+        </div>
+
+        <button class="btn-download" onclick="downloadExcel()">⬇ 下載 Excel 完整模型（含蒙地卡羅圖表）</button>
+      `;
+    }
+
+    async function downloadExcel() {
+      if (!lastParams) return;
+      const btn = document.querySelector('.btn-download');
+      btn.disabled = true;
+      btn.textContent = '產出中...';
+      const resp = await fetch('/download', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(lastParams),
+      });
+      const blob = await resp.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'kelly_fibonacci_model.xlsx';
+      a.click();
+      URL.revokeObjectURL(url);
+      btn.disabled = false;
+      btn.textContent = '⬇ 下載 Excel 完整模型（含蒙地卡羅圖表）';
+    }
+  </script>
+</body>
+</html>
