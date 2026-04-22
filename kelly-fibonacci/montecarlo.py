@@ -30,7 +30,9 @@ def simulation_stats(curves: np.ndarray, initial_capital: float) -> dict:
 
     # Max drawdown per path: peak-to-trough
     running_max = np.maximum.accumulate(curves, axis=1)
-    drawdowns = (running_max - curves) / running_max
+    # Compute drawdown safely: clip to [0, 1] to avoid fp issues
+    raw_dd = (running_max - curves) / np.maximum(running_max, 1e-300)
+    drawdowns = np.clip(raw_dd, 0.0, 1.0)
     max_drawdowns = np.max(drawdowns, axis=1)
 
     ruin_threshold = initial_capital * 0.5
@@ -40,8 +42,8 @@ def simulation_stats(curves: np.ndarray, initial_capital: float) -> dict:
         'p5': round(p5, 2),
         'p50': round(p50, 2),
         'p95': round(p95, 2),
-        'max_drawdown_mean': round(float(np.mean(max_drawdowns)) * 100, 2),
-        'max_drawdown_std': round(float(np.std(max_drawdowns)) * 100, 2),
-        'max_drawdown_worst': round(float(np.max(max_drawdowns)) * 100, 2),
+        'max_drawdown_mean': round(float(np.nanmean(max_drawdowns)) * 100, 2),
+        'max_drawdown_std': round(float(np.nanstd(max_drawdowns)) * 100, 2),
+        'max_drawdown_worst': round(float(np.nanmax(max_drawdowns)) * 100, 2),
         'ruin_rate': round(ruin_rate * 100, 2),
     }
