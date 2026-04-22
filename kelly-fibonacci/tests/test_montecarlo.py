@@ -21,4 +21,4 @@ def test_stats_keys():
 def test_ruin_rate_type():
     curves = run_simulation(0.55, 0.2, 100000, n_trades=50, n_simulations=100, seed=42)
     stats = simulation_stats(curves, initial_capital=100000)
-    assert 0.0 <= stats['ruin_rate'] <= 1.0
+    assert 0.0 <= stats['ruin_rate'] <= 100.0

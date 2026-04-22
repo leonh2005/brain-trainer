@@ -43,5 +43,5 @@ def simulation_stats(curves: np.ndarray, initial_capital: float) -> dict:
         'max_drawdown_mean': round(float(np.mean(max_drawdowns)) * 100, 2),
         'max_drawdown_std': round(float(np.std(max_drawdowns)) * 100, 2),
         'max_drawdown_worst': round(float(np.max(max_drawdowns)) * 100, 2),
-        'ruin_rate': round(ruin_rate, 4),
+        'ruin_rate': round(ruin_rate * 100, 2),
     }
