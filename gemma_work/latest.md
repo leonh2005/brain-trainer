@@ -1,43 +1,34 @@
-# Claude Handoff 20260422_1540
+# Claude Handoff 20260422_2040
 
 ## Git 狀態（未提交）
 ```
 m banini-tracker
  M claude_cycle_monitor.log
- M logs/screener.log
  M logs/shopee_stock.log
  M rabbit-care/motion-watcher.log
  M rabbit-care/rabbit-care.log
  M rabbit-care/rabbit.db
- D rabbit-care/static/action_screenshots/20260415_101954_eating.jpg
- D rabbit-care/static/action_screenshots/20260415_102506_eating.jpg
- D rabbit-care/static/action_screenshots/20260415_110528_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260415_111603_eating.jpg
- D rabbit-care/static/action_screenshots/20260415_120626_eating.jpg
- D rabbit-care/static/action_screenshots/20260415_121137_eating.jpg
- D rabbit-care/static/action_screenshots/20260415_123314_eating.jpg
- D rabbit-care/static/action_screenshots/20260415_125507_eating.jpg
- D rabbit-care/static/action_screenshots/20260415_132734_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260415_133245_eating.jpg
+ D rabbit-care/static/action_screenshots/20260415_144109_eating.jpg
+ D rabbit-care/static/action_screenshots/20260415_160502_eating.jpg
+ D rabbit-care/static/action_screenshots/20260415_163902_eating.jpg
+ D rabbit-care/static/action_screenshots/20260415_165129_eating.jpg
+ D rabbit-care/static/action_screenshots/20260415_170143_eating.jpg
  m stock-screener-ai
-?? rabbit-care/static/action_screenshots/20260422_123253_eating.jpg
-?? rabbit-care/static/action_screenshots/20260422_123757_eating.jpg
-?? rabbit-care/static/action_screenshots/20260422_125951_sleeping.jpg
-?? rabbit-care/static/action_screenshots/20260422_132809_sleeping.jpg
-?? rabbit-care/static/action_screenshots/20260422_134441_sleeping.jpg
-?? rabbit-care/static/action_screenshots/20260422_135127_sleeping.jpg
+?? rabbit-care/static/action_screenshots/20260422_174544_sleeping.jpg
+?? rabbit-care/static/action_screenshots/20260422_175131_sleeping.jpg
+?? rabbit-care/static/action_screenshots/20260422_175655_sleeping.jpg
 ```
 
 ## 近期 Commits
 ```
+585dd62 chore: 對話結束同步 - 喝水快捷CC/Flask重啟記憶/抖音監測記憶
+84aba85 chore: 自動同步 2026-04-22 15:40
 3911dd9 chore: 自動同步 2026-04-22 10:40
 6dccd08 chore: 自動同步 2026-04-22 05:41
 c779a13 chore: 自動同步 2026-04-22 00:40
 d8a098e chore: 自動同步 2026-04-21 20:10
 cb3a656 chore: 自動同步 2026-04-21 19:40
 d625c81 chore: 自動同步 2026-04-21 14:40
-da9893b chore: 自動同步 2026-04-21 09:41
-2734d8b chore: 自動同步 2026-04-21 04:41
 ```
 
 ## 未提交的變更
@@ -49,64 +40,47 @@ diff --git a/banini-tracker b/banini-tracker
 -Subproject commit 811be48e6702a2b8519e5297ed00c8a24d7cfe29
 +Subproject commit 811be48e6702a2b8519e5297ed00c8a24d7cfe29-dirty
 diff --git a/claude_cycle_monitor.log b/claude_cycle_monitor.log
-index 3e6522c..f45ed7a 100644
+index f45ed7a..8b3faac 100644
 --- a/claude_cycle_monitor.log
 +++ b/claude_cycle_monitor.log
-@@ -889,3 +889,6 @@ google.genai.errors.ServerError: 503 UNAVAILABLE. {'error': {'code': 503, 'messa
- [05:40] 自動同步完成
- [05:42] 下一事件：midpoint @ 08:30（167 分鐘後）
- [08:31] 下一事件：end_warn @ 10:40（129 分鐘後）
-+[10:40] 自動同步完成
-+[10:42] 下一事件：midpoint @ 13:30（168 分鐘後）
-+[13:31] 下一事件：end_warn @ 15:40（129 分鐘後）
-diff --git a/logs/screener.log b/logs/screener.log
-index cdbf8be..3df1910 100644
---- a/logs/screener.log
-+++ b/logs/screener.log
-@@ -152,3 +152,25 @@ Response Code: 0 | Event Code: 0 | Info: host '210.59.255.161:80', hostname '210
- • 現價 > VWAP 且 > 開盤
- • 現價距日高 < 8%
- • 三大法人淨買超 ≥ 0
-+2026-04-22 13:01:01.710 | WARNING  | importlib._bootstrap:_call_with_frames_removed:488 - Optional: pip install shioaji[speed] or uv add shioaji --extra speed for better performance.
-+2026-04-22 13:01:01,772 INFO ===== 開始隔日沖選股（Shioaji）=====
-+2026-04-22 13:01:03,016 INFO [sj] 永豐 API 登入成功
-+2026-04-22 13:01:03,037 INFO [sj] 取得 2316 檔股票合約
-+2026-04-22 13:01:03,441 INFO 初步篩選（漲幅3-7%）: 共 0 檔
-+2026-04-22 13:01:03,442 INFO 無初步候選股，可能是非交易日或 API 無資料
-+Response Code: 0 | Event Code: 0 | Info: host '210.59.255.161:80', hostname '210.59.255.161:80' IP 210.59.255.161:80 (host 1 of 1) (host connection attempt 1 of 1) (total connection attempt 1 of 1) | Event: Session up
-+Response Code: 200 | Event Code: 16 | Info: APISUB/V1/SYS/CONTRACT | Event: Subscribe or Unsubscribe ok
-+📊 隔日沖選股 04/22 13:01
-+
-+⚠️ 今日無符合所有條件的標的
-+
-+篩選條件（楊永興一夜持股法）：
-+• 漲幅 3%~5%
-+• 量比 > 1
-+• 換手率 3%~8%
-+• 市值 50~300億
-+• 成交量台階式放大
-+• 均線多頭排列
-+• 現價 > VWAP 且 > 開盤
-+• 現價距日高 < 8%
-+• 三大法人淨買超 ≥ 0
+@@ -892,3 +892,6 @@ google.genai.errors.ServerError: 503 UNAVAILABLE. {'error': {'code': 503, 'messa
+ [10:40] 自動同步完成
+ [10:42] 下一事件：midpoint @ 13:30（168 分鐘後）
+ [13:31] 下一事件：end_warn @ 15:40（129 分鐘後）
++[15:40] 自動同步完成
++[15:42] 下一事件：midpoint @ 18:30（168 分鐘後）
++[18:31] 下一事件：end_warn @ 20:40（129 分鐘後）
 diff --git a/logs/shopee_stock.log b/logs/shopee_stock.log
-index 8703bef..48b8468 100644
+index 48b8468..8826770 100644
 --- a/logs/shopee_stock.log
 +++ b/logs/shopee_stock.log
-@@ -157,3 +157,4 @@ Traceback (most recent call last):
-     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+@@ -158,3 +158,225 @@ Traceback (most recent call last):
  urllib3.exceptions.MaxRetryError: HTTPConnectionPool(host='localhost', port=60522): Max retries exceeded with url: /session/3e7aee2f-e3e6-4586-a668-407ee0b4ab3c/element/7d3c4e94-a8aa-49b4-94ec-8075b7cf1a1c/text (Caused by ReadTimeoutError("HTTPConnectionPool(host='localhost', port=60522): Read timed out. (read timeout=120)"))
  [2026-04-22 08:26:08] ERROR
-+[2026-04-22 12:13:08] SOLD_OUT
-diff --git a/rabbit-care/motion-watcher.log b/rabbit-care/motion-watcher.log
-index 7758fe5..9666b72 100644
---- a/rabbit-care/motion-watcher.log
-+++ b/rabbit-care/motion-watcher.log
-@@ -292829,3 +292829,3239 @@ OpenCV: Couldn't read video stream from file "rtsp://stevenhung:FREDjuik12@192.1
- 2026-04-22 10:40:36,318 INFO 偵測到移動，開始收集影格
- 2026-04-22 10:40:53,670 INFO 移動持續 15 秒，強制觸發分析
- 2026-04-22 10:40:53,670 INFO 分析條件: motion_frames=10 cooldown剩餘=273s
-+20
+ [2026-04-22 12:13:08] SOLD_OUT
++ERROR: HTTPConnectionPool(host='localhost', port=51179): Max retries exceeded with url: /session/352a5cf4-8078-453b-b67e-6a23504e62cc/element/563ead47-d61b-48f5-afcc-9eb93db5ed40/text (Caused by ReadTimeoutError("HTTPConnectionPool(host='localhost', port=51179): Read timed out. (read timeout=120)"))
++Traceback (most recent call last):
++  File "/Users/steven/CCProject/daytrade-replay/venv/lib/python3.14/site-packages/urllib3/connectionpool.py", line 534, in _make_request
++    response = conn.getresponse()
++  File "/Users/steven/CCProject/daytrade-replay/venv/lib/python3.14/site-packages/urllib3/connection.py", line 571, in getresponse
++    httplib_response = super().getresponse()
++  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/client.py", line 1450, in getresponse
++    response.begin()
++    ~~~~~~~~~~~~~~^^
++  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/client.py", line 336, in begin
++    version, status, reason = self._read_status()
++                              ~~~~~~~~~~~~~~~~~^^
++  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/client.py", line 297, in _read_status
++    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
++               ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
++  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socket.py", line 725, in readinto
++    return self._sock.recv_into(b)
++           ~~~~~~~~~~~~~~~~~~~~^^^
++TimeoutError: timed out
++
++The above exception was the direct cause of the following exception:
++
++Traceback (most recent call l
 ```
 
 ---
