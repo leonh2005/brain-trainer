@@ -1,34 +1,42 @@
-# Claude Handoff 20260422_2040
+# Claude Handoff 20260423_0140
 
 ## Git 狀態（未提交）
 ```
 m banini-tracker
  M claude_cycle_monitor.log
+ M dashboard/dashboard.log
+ M daytrade-replay/server.log
  M logs/shopee_stock.log
  M rabbit-care/motion-watcher.log
  M rabbit-care/rabbit-care.log
  M rabbit-care/rabbit.db
- D rabbit-care/static/action_screenshots/20260415_144109_eating.jpg
- D rabbit-care/static/action_screenshots/20260415_160502_eating.jpg
- D rabbit-care/static/action_screenshots/20260415_163902_eating.jpg
- D rabbit-care/static/action_screenshots/20260415_165129_eating.jpg
- D rabbit-care/static/action_screenshots/20260415_170143_eating.jpg
+ D rabbit-care/static/action_screenshots/20260415_190243_eating.jpg
+ D rabbit-care/static/action_screenshots/20260415_190754_eating.jpg
+ D rabbit-care/static/action_screenshots/20260415_191808_eating.jpg
+ D rabbit-care/static/action_screenshots/20260415_202707_eating.jpg
+ D rabbit-care/static/action_screenshots/20260415_211105_eating.jpg
+ D rabbit-care/static/action_screenshots/20260415_213343_eating.jpg
+ D rabbit-care/static/action_screenshots/20260415_213934_eating.jpg
+ D rabbit-care/static/action_screenshots/20260415_230717_eating.jpg
+ D rabbit-care/static/action_screenshots/20260415_231733_eating.jpg
+ D rabbit-care/static/action_screenshots/20260415_233302_eating.jpg
+ M rabbit-care/tunnel-fixed.log
  m stock-screener-ai
-?? rabbit-care/static/action_screenshots/20260422_174544_sleeping.jpg
-?? rabbit-care/static/action_screenshots/20260422_175131_sleeping.jpg
-?? rabbit-care/static/action_screenshots/20260422_175655_sleeping.jpg
+ M stock-screener/screener.log
+?? rabbit-care/static/action_screenshots/20260422_234159_eating.jpg
+?? rabbit-care/static/action_screenshots/20260422_235217_eating.jpg
 ```
 
 ## 近期 Commits
 ```
-585dd62 chore: 對話結束同步 - 喝水快捷CC/Flask重啟記憶/抖音監測記憶
-84aba85 chore: 自動同步 2026-04-22 15:40
-3911dd9 chore: 自動同步 2026-04-22 10:40
-6dccd08 chore: 自動同步 2026-04-22 05:41
-c779a13 chore: 自動同步 2026-04-22 00:40
-d8a098e chore: 自動同步 2026-04-21 20:10
-cb3a656 chore: 自動同步 2026-04-21 19:40
-d625c81 chore: 自動同步 2026-04-21 14:40
+70403e6 feat: kelly-fibonacci calculator complete - Flask + Monte Carlo + Excel
+76bb71a feat: single-page UI with results display and help section
+367eb1f feat: Flask routes /calculate and /download
+5e9750c feat: Excel builder with 4 sheets and embedded charts
+8f75762 fix: ruin_rate stored as percentage (0-100) not fraction
+36c07ef feat: Monte Carlo simulation with equity curves and drawdown stats
+7ac037c feat: Kelly formula core with cycle and fibonacci adjustments
+81a9ef5 feat: four-cycle resonance score calculation
 ```
 
 ## 未提交的變更
@@ -40,47 +48,48 @@ diff --git a/banini-tracker b/banini-tracker
 -Subproject commit 811be48e6702a2b8519e5297ed00c8a24d7cfe29
 +Subproject commit 811be48e6702a2b8519e5297ed00c8a24d7cfe29-dirty
 diff --git a/claude_cycle_monitor.log b/claude_cycle_monitor.log
-index f45ed7a..8b3faac 100644
+index 8a0e3ec..207f23d 100644
 --- a/claude_cycle_monitor.log
 +++ b/claude_cycle_monitor.log
-@@ -892,3 +892,6 @@ google.genai.errors.ServerError: 503 UNAVAILABLE. {'error': {'code': 503, 'messa
- [10:40] 自動同步完成
- [10:42] 下一事件：midpoint @ 13:30（168 分鐘後）
- [13:31] 下一事件：end_warn @ 15:40（129 分鐘後）
-+[15:40] 自動同步完成
-+[15:42] 下一事件：midpoint @ 18:30（168 分鐘後）
-+[18:31] 下一事件：end_warn @ 20:40（129 分鐘後）
-diff --git a/logs/shopee_stock.log b/logs/shopee_stock.log
-index 48b8468..8826770 100644
---- a/logs/shopee_stock.log
-+++ b/logs/shopee_stock.log
-@@ -158,3 +158,225 @@ Traceback (most recent call last):
- urllib3.exceptions.MaxRetryError: HTTPConnectionPool(host='localhost', port=60522): Max retries exceeded with url: /session/3e7aee2f-e3e6-4586-a668-407ee0b4ab3c/element/7d3c4e94-a8aa-49b4-94ec-8075b7cf1a1c/text (Caused by ReadTimeoutError("HTTPConnectionPool(host='localhost', port=60522): Read timed out. (read timeout=120)"))
- [2026-04-22 08:26:08] ERROR
- [2026-04-22 12:13:08] SOLD_OUT
-+ERROR: HTTPConnectionPool(host='localhost', port=51179): Max retries exceeded with url: /session/352a5cf4-8078-453b-b67e-6a23504e62cc/element/563ead47-d61b-48f5-afcc-9eb93db5ed40/text (Caused by ReadTimeoutError("HTTPConnectionPool(host='localhost', port=51179): Read timed out. (read timeout=120)"))
-+Traceback (most recent call last):
-+  File "/Users/steven/CCProject/daytrade-replay/venv/lib/python3.14/site-packages/urllib3/connectionpool.py", line 534, in _make_request
-+    response = conn.getresponse()
-+  File "/Users/steven/CCProject/daytrade-replay/venv/lib/python3.14/site-packages/urllib3/connection.py", line 571, in getresponse
-+    httplib_response = super().getresponse()
-+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/client.py", line 1450, in getresponse
-+    response.begin()
-+    ~~~~~~~~~~~~~~^^
-+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/client.py", line 336, in begin
-+    version, status, reason = self._read_status()
-+                              ~~~~~~~~~~~~~~~~~^^
-+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/client.py", line 297, in _read_status
-+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
-+               ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
-+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socket.py", line 725, in readinto
-+    return self._sock.recv_into(b)
-+           ~~~~~~~~~~~~~~~~~~~~^^^
-+TimeoutError: timed out
-+
-+The above exception was the direct cause of the following exception:
-+
-+Traceback (most recent call l
+@@ -940,3 +940,6 @@ google.genai.errors.ServerError: 503 UNAVAILABLE. {'error': {'code': 503, 'messa
+     raise ServerError(status_code, response_json, response)
+ google.genai.errors.ServerError: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.', 'status': 'UNAVAILABLE'}}
+ 
++[20:39] 自動同步完成
++[20:42] 下一事件：midpoint @ 23:30（168 分鐘後）
++[23:31] 下一事件：end_warn @ 01:40（129 分鐘後）
+diff --git a/dashboard/dashboard.log b/dashboard/dashboard.log
+index 0a71454..19477d3 100644
+--- a/dashboard/dashboard.log
++++ b/dashboard/dashboard.log
+@@ -12639,3 +12639,173 @@ Port 5600 is in use by another program. Either identify and stop that program, o
+ 127.0.0.1 - - [22/Apr/2026 09:25:20] "GET /api/status HTTP/1.1" 200 -
+ 127.0.0.1 - - [22/Apr/2026 09:26:04] "GET /api/status HTTP/1.1" 200 -
+ 127.0.0.1 - - [22/Apr/2026 09:26:50] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [22/Apr/2026 23:38:48] "GET / HTTP/1.1" 200 -
++127.0.0.1 - - [22/Apr/2026 23:39:02] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [22/Apr/2026 23:39:44] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [22/Apr/2026 23:40:28] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [22/Apr/2026 23:41:11] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [22/Apr/2026 23:41:54] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [22/Apr/2026 23:42:37] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [22/Apr/2026 23:43:21] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [22/Apr/2026 23:44:04] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [22/Apr/2026 23:44:48] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [22/Apr/2026 23:45:31] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [22/Apr/2026 23:46:14] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [22/Apr/2026 23:46:57] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [22/Apr/2026 23:47:40] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [22/Apr/2026 23:48:23] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [22/Apr/2026 23:49:07] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [22/Apr/2026 23:49:50] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [22/Apr/2026 23:50:34] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [22/Apr/2026 23:51:17] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [22/Apr/2026 23:52:00] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [22/Apr/2026 23:52:43] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [22/Apr/2026 23:53:26] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [22/Apr/2026 23:54:10] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [22/Apr/2026 23:54
 ```
 
 ---
