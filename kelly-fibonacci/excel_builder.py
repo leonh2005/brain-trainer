@@ -26,12 +26,11 @@ def _sheet_summary(wb, params, results):
     ws = wb.add_worksheet('總覽')
     bold = wb.add_format({'bold': True})
     money = wb.add_format({'num_format': '#,##0'})
-    pct = wb.add_format({'num_format': '0.00%'})
 
     rows = [
         ('=== 輸入參數 ===', ''),
         ('初始資金', params['capital']),
-        ('勝率', params['win_rate'] / 100),
+        ('勝率', f"{params['win_rate']:.1f}%"),
         ('賠率（風險報酬比）', params['odds']),
         ('費波那契回檔位', f"{params['fib_level']}%"),
         ('基欽週期位置', params['kitchin']),
@@ -40,11 +39,11 @@ def _sheet_summary(wb, params, results):
         ('康波週期位置', params['kondratiev']),
         ('', ''),
         ('=== 計算結果 ===', ''),
-        ('原始凱利%', results['raw_kelly'] / 100),
+        ('原始凱利%', f"{results['raw_kelly']:.2f}%"),
         ('週期共振分數', results['cycle_score']),
         ('週期共振乘數', results['cycle_multiplier']),
         ('費波那契入場乘數', results['fib_multiplier']),
-        ('調整後凱利%', results['adj_kelly'] / 100),
+        ('調整後凱利%', f"{results['adj_kelly']:.2f}%"),
         ('建議全凱利倉位（$）', results['full_kelly_amt']),
         ('建議半凱利倉位（$）', results['half_kelly_amt']),
         ('', ''),
@@ -125,7 +124,8 @@ def _sheet_drawdown(wb, curves, initial_capital, stats):
     bold = wb.add_format({'bold': True})
 
     running_max = np.maximum.accumulate(curves, axis=1)
-    drawdowns = (running_max - curves) / running_max
+    drawdowns = (running_max - curves) / np.maximum(running_max, 1e-300)
+    drawdowns = np.clip(drawdowns, 0, 1)
     max_drawdowns = np.max(drawdowns, axis=1) * 100
 
     # Histogram: 10 bins from 0% to 100%
