@@ -135,3 +135,26 @@ RR failed to accept incoming stream requests error="failed to accept QUIC stream
 [Wed Apr 22 00:25:34 CST 2026] 2026-04-21T16:25:34Z INF Retrying connection in up to 1s connIndex=0 event=0 ip=198.41.192.67
 [Wed Apr 22 00:25:36 CST 2026] 2026-04-21T16:25:36Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveP256] connIndex=0 event=0 ip=198.41.192.67
 [Wed Apr 22 00:25:36 CST 2026] 2026-04-21T16:25:36Z INF Registered tunnel connection connIndex=0 connection=b59abae4-2667-4831-b724-f8a4472f39ad event=0 ip=198.41.192.67 location=khh01 protocol=quic
+[Thu Apr 23 17:46:29 CST 2026] 啟動 tunnel...
+[Thu Apr 23 17:46:34 CST 2026] 2026-04-23T09:46:34Z INF Thank you for trying Cloudflare Tunnel. Doing so, without a Cloudflare account, is a quick way to experiment and try it out. However, be aware that these account-less Tunnels have no uptime guarantee, are subject to the Cloudflare Online Services Terms of Use (https://www.cloudflare.com/website-terms/), and Cloudflare reserves the right to investigate your use of Tunnels for violations of such terms. If you intend to use Tunnels in production you should use a pre-created named tunnel by following: https://developers.cloudflare.com/cloudflare-one/connections/connect-apps
+[Thu Apr 23 17:46:34 CST 2026] 2026-04-23T09:46:34Z INF Requesting new quick Tunnel on trycloudflare.com...
+[Thu Apr 23 17:46:39 CST 2026] 2026-04-23T09:46:39Z INF +--------------------------------------------------------------------------------------------+
+[Thu Apr 23 17:46:39 CST 2026] 2026-04-23T09:46:39Z INF |  Your quick Tunnel has been created! Visit it at (it may take some time to be reachable):  |
+[Thu Apr 23 17:46:39 CST 2026] 2026-04-23T09:46:39Z INF |  https://operations-exec-discrete-mandatory.trycloudflare.com                              |
+{"ok":true,"result":{"message_id":1711,"from":{"id":8666778924,"is_bot":true,"first_name":"Ccagent","username":"CcagentForsteven_bot"},"chat":{"id":7556217543,"first_name":"Steven","type":"private"},"date":1776937600,"text":"\ud83d\udc30 \u5154\u5b50\u7167\u8b77\u7cfb\u7d71\u5916\u90e8\u9023\u7d50\uff1a\nhttps://operations-exec-discrete-mandatory.trycloudflare.com\n\n\u5bc6\u78bc\uff1amomo2026","entities":[{"offset":15,"length":60,"type":"url"}],"link_preview_options":{"url":"https://operations-exec-discrete-mandatory.trycloudflare.com/"}}}[Thu Apr 23 17:46:40 CST 2026] URL 已傳送：https://operations-exec-discrete-mandatory.trycloudflare.com
+[Thu Apr 23 17:46:40 CST 2026] 2026-04-23T09:46:39Z INF +--------------------------------------------------------------------------------------------+
+[Thu Apr 23 17:46:40 CST 2026] 2026-04-23T09:46:39Z INF Cannot determine default configuration path. No file [config.yml config.yaml] in [~/.cloudflared ~/.cloudflare-warp ~/cloudflare-warp /etc/cloudflared /usr/local/etc/cloudflared]
+[Thu Apr 23 17:46:40 CST 2026] 2026-04-23T09:46:39Z INF Version 2026.3.0 (Checksum 99f099a3834e0b20ec2a18ac77d3d77261b77652310d97eca18fc1797d4349d0)
+[Thu Apr 23 17:46:40 CST 2026] 2026-04-23T09:46:39Z INF GOOS: darwin, GOVersion: go1.26.1, GoArch: arm64
+[Thu Apr 23 17:46:40 CST 2026] 2026-04-23T09:46:39Z INF Settings: map[ha-connections:1 no-autoupdate:true protocol:quic url:http://localhost:5200]
+[Thu Apr 23 17:46:40 CST 2026] 2026-04-23T09:46:39Z INF cloudflared will not automatically update if installed by a package manager.
+[Thu Apr 23 17:46:40 CST 2026] 2026-04-23T09:46:39Z INF Generated Connector ID: 9ce58b02-c034-49df-8104-7e21c11c522d
+[Thu Apr 23 17:46:40 CST 2026] 2026-04-23T09:46:39Z INF Initial protocol quic
+[Thu Apr 23 17:46:40 CST 2026] 2026-04-23T09:46:39Z INF ICMP proxy will use 192.168.68.123 as source for IPv4
+[Thu Apr 23 17:46:40 CST 2026] 2026-04-23T09:46:39Z INF ICMP proxy will use fe80::491:2e05:26cf:cfbf in zone en1 as source for IPv6
+[Thu Apr 23 17:46:40 CST 2026] 2026-04-23T09:46:39Z INF Created ICMP proxy listening on 192.168.68.123:0
+[Thu Apr 23 17:46:40 CST 2026] 2026-04-23T09:46:39Z INF ICMP proxy will use 192.168.68.123 as source for IPv4
+[Thu Apr 23 17:46:40 CST 2026] 2026-04-23T09:46:39Z INF ICMP proxy will use fe80::491:2e05:26cf:cfbf in zone en1 as source for IPv6
+[Thu Apr 23 17:46:40 CST 2026] 2026-04-23T09:46:39Z INF Starting metrics server on 127.0.0.1:20241/metrics
+[Thu Apr 23 17:46:40 CST 2026] 2026-04-23T09:46:39Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveP256] connIndex=0 event=0 ip=198.41.192.27
+[Thu Apr 23 17:46:40 CST 2026] 2026-04-23T09:46:40Z INF Registered tunnel connection connIndex=0 connection=fa6e6575-3e1a-4517-8489-225cde3563b7 event=0 ip=198.41.192.27 location=khh01 protocol=quic
