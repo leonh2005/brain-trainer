@@ -130,7 +130,7 @@ def get_articles(source=None, date=None, score_min=None, score_max=None, query=N
     with get_conn(db_path) as conn:
         total = conn.execute(f"SELECT COUNT(*) FROM articles {where}", params).fetchone()[0]
         rows = conn.execute(
-            f"SELECT * FROM articles {where} ORDER BY fetched_at DESC LIMIT ? OFFSET ?",
+            f"SELECT * FROM articles {where} ORDER BY fetched_at DESC, id DESC LIMIT ? OFFSET ?",
             params + [limit, offset],
         ).fetchall()
         return {"total": total, "articles": [dict(r) for r in rows]}
