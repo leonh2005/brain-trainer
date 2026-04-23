@@ -141,3 +141,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+    os._exit(0)  # 跳過 GC teardown，避免 shioaji C extension 引發 SIGSEGV
