@@ -174,3 +174,90 @@ Response Code: 200 | Event Code: 16 | Info: APISUB/V1/SYS/CONTRACT | Event: Subs
 • 現價 > VWAP 且 > 開盤
 • 現價距日高 < 8%
 • 三大法人淨買超 ≥ 0
+2026-04-23 13:01:08.558 | WARNING  | importlib._bootstrap:_call_with_frames_removed:488 - Optional: pip install shioaji[speed] or uv add shioaji --extra speed for better performance.
+2026-04-23 13:01:08,621 INFO ===== 開始隔日沖選股（Shioaji）=====
+2026-04-23 13:01:09,364 ERROR {'status': {'status_code': 451}, 'response': {'token': '', 'accounts': [], 'detail': 'Too Many Connections.', 'ip_address': '220.141.9.217', 'person_id': 'N124711691', 'client_name': '', 'contract_download': False, 'web_token': '', 'solace_props': None}}
+2026-04-23 13:01:09,365 WARNING Shioaji 不可用，改用 TWSE: {'status': {'status_code': 451}, 'response': {'token': '', 'accounts': [], 'detail': 'Too Many Connections.', 'ip_address': '220.141.9.217', 'person_id': 'N124711691', 'client_name': '', 'contract_download': False, 'web_token': '', 'solace_props': None}}
+2026-04-23 13:01:10,989 WARNING 三大法人(上市)資料失敗: Expecting value: line 1 column 1 (char 0)
+2026-04-23 13:01:11,139 WARNING 三大法人(上櫃)資料失敗: Expecting value: line 1 column 1 (char 0)
+2026-04-23 13:01:11,139 INFO 三大法人資料載入：0 檔
+2026-04-23 13:01:27,933 ERROR HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: 2066.TW"}}}
+2026-04-23 13:01:28,581 ERROR $2066.TW: possibly delisted; no price data found  (period=90d) (Yahoo error = "No data found, symbol may be delisted")
+2026-04-23 13:01:29,879 ERROR HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: 2719.TW"}}}
+2026-04-23 13:01:30,635 ERROR $2719.TW: possibly delisted; no price data found  (period=90d) (Yahoo error = "No data found, symbol may be delisted")
+2026-04-23 13:01:32,706 ERROR $3171.TW: possibly delisted; no price data found  (period=90d) (Yahoo error = "No data found, symbol may be delisted")
+2026-04-23 13:01:34,124 ERROR $3219.TW: possibly delisted; no price data found  (period=90d) (Yahoo error = "No data found, symbol may be delisted")
+2026-04-23 13:01:36,007 ERROR $3306.TW: possibly delisted; no price data found  (period=90d) (Yahoo error = "No data found, symbol may be delisted")
+2026-04-23 13:01:37,510 ERROR $3402.TW: possibly delisted; no price data found  (period=90d) (Yahoo error = "No data found, symbol may be delisted")
+2026-04-23 13:01:39,034 ERROR $3438.TW: possibly delisted; no price data found  (period=90d) (Yahoo error = "No data found, symbol may be delisted")
+2026-04-23 13:01:40,358 ERROR $3490.TW: possibly delisted; no price data found  (period=90d) (Yahoo error = "No data found, symbol may be delisted")
+2026-04-23 13:01:41,392 ERROR $4951.TW: possibly delisted; no price data found  (period=90d) (Yahoo error = "No data found, symbol may be delisted")
+2026-04-23 13:01:42,702 ERROR $4973.TW: possibly delisted; no price data found  (period=90d) (Yahoo error = "No data found, symbol may be delisted")
+2026-04-23 13:01:44,073 ERROR $5299.TW: possibly delisted; no price data found  (period=90d) (Yahoo error = "No data found, symbol may be delisted")
+2026-04-23 13:01:45,901 ERROR $5314.TW: possibly delisted; no price data found  (period=90d) (Yahoo error = "No data found, symbol may be delisted")
+2026-04-23 13:01:46,948 ERROR $5347.TW: possibly delisted; no price data found  (period=90d) (Yahoo error = "No data found, symbol may be delisted")
+2026-04-23 13:01:48,340 ERROR $5351.TW: possibly delisted; no price data found  (period=90d) (Yahoo error = "No data found, symbol may be delisted")
+2026-04-23 13:01:49,369 ERROR $5386.TW: possibly delisted; no price data found  (period=90d) (Yahoo error = "No data found, symbol may be delisted")
+2026-04-23 13:01:50,681 ERROR $5457.TW: possibly delisted; no price data found  (period=90d) (Yahoo error = "No data found, symbol may be delisted")
+2026-04-23 13:01:51,886 ERROR $5493.TW: possibly delisted; no price data found  (period=90d) (Yahoo error = "No data found, symbol may be delisted")
+2026-04-23 13:01:53,186 ERROR $6121.TW: possibly delisted; no price data found  (period=90d) (Yahoo error = "No data found, symbol may be delisted")
+2026-04-23 13:01:54,643 ERROR $6138.TW: possibly delisted; no price data found  (period=90d) (Yahoo error = "No data found, symbol may be delisted")
+2026-04-23 13:01:55,969 ERROR $6143.TW: possibly delisted; no price data found  (period=90d) (Yahoo error = "No data found, symbol may be delisted")
+2026-04-23 13:01:57,564 ERROR $6147.TW: possibly delisted; no price data found  (period=90d) (Yahoo error = "No data found, symbol may be delisted")
+2026-04-23 13:01:58,672 ERROR $6182.TW: possibly delisted; no price data found  (period=90d) (Yahoo error = "No data found, symbol may be delisted")
+2026-04-23 13:02:00,360 ERROR $6188.TW: possibly delisted; no price data found  (period=90d) (Yahoo error = "No data found, symbol may be delisted")
+2026-04-23 13:02:01,920 ERROR $6217.TW: possibly delisted; no price data found  (period=90d) (Yahoo error = "No data found, symbol may be delisted")
+2026-04-23 13:02:03,542 ERROR $6276.TW: possibly delisted; no price data found  (period=90d) (Yahoo error = "No data found, symbol may be delisted")
+2026-04-23 13:02:04,950 ERROR $6290.TW: possibly delisted; no price data found  (period=90d) (Yahoo error = "No data found, symbol may be delisted")
+2026-04-23 13:02:06,526 ERROR $6411.TW: possibly delisted; no price data found  (period=90d) (Yahoo error = "No data found, symbol may be delisted")
+2026-04-23 13:02:07,909 ERROR $6435.TW: possibly delisted; no price data found  (period=90d) (Yahoo error = "No data found, symbol may be delisted")
+2026-04-23 13:02:10,210 ERROR $6499.TW: possibly delisted; no price data found  (period=90d) (Yahoo error = "No data found, symbol may be delisted")
+2026-04-23 13:02:11,405 ERROR $6516.TW: possibly delisted; no price data found  (period=90d) (Yahoo error = "No data found, symbol may be delisted")
+2026-04-23 13:02:12,612 ERROR $6538.TW: possibly delisted; no price data found  (period=90d) (Yahoo error = "No data found, symbol may be delisted")
+2026-04-23 13:02:13,695 ERROR $6576.TW: possibly delisted; no price data found  (period=90d) (Yahoo error = "No data found, symbol may be delisted")
+2026-04-23 13:02:14,950 ERROR $6577.TW: possibly delisted; no price data found  (period=90d) (Yahoo error = "No data found, symbol may be delisted")
+2026-04-23 13:02:16,621 ERROR $6597.TW: possibly delisted; no price data found  (period=90d) (Yahoo error = "No data found, symbol may be delisted")
+2026-04-23 13:02:17,612 ERROR $6690.TW: possibly delisted; no price data found  (period=90d) (Yahoo error = "No data found, symbol may be delisted")
+2026-04-23 13:02:18,719 ERROR $6751.TW: possibly delisted; no price data found  (period=90d) (Yahoo error = "No data found, symbol may be delisted")
+2026-04-23 13:02:19,762 ERROR $6752.TW: possibly delisted; no price data found  (period=90d) (Yahoo error = "No data found, symbol may be delisted")
+2026-04-23 13:02:21,002 ERROR $6761.TW: possibly delisted; no price data found  (period=90d) (Yahoo error = "No data found, symbol may be delisted")
+2026-04-23 13:02:22,020 ERROR $6843.TW: possibly delisted; no price data found  (period=90d) (Yahoo error = "No data found, symbol may be delisted")
+2026-04-23 13:02:23,302 ERROR $6922.TW: possibly delisted; no price data found  (period=90d) (Yahoo error = "No data found, symbol may be delisted")
+2026-04-23 13:02:24,500 ERROR $6967.TW: possibly delisted; no price data found  (period=90d) (Yahoo error = "No data found, symbol may be delisted")
+2026-04-23 13:02:25,981 ERROR $7770.TW: possibly delisted; no price data found  (period=90d) (Yahoo error = "No data found, symbol may be delisted")
+2026-04-23 13:02:27,109 ERROR $8043.TW: possibly delisted; no price data found  (period=90d) (Yahoo error = "No data found, symbol may be delisted")
+2026-04-23 13:02:28,503 ERROR $8047.TW: possibly delisted; no price data found  (period=90d) (Yahoo error = "No data found, symbol may be delisted")
+2026-04-23 13:02:29,567 ERROR $8069.TW: possibly delisted; no price data found  (period=90d) (Yahoo error = "No data found, symbol may be delisted")
+2026-04-23 13:02:30,930 ERROR $8109.TW: possibly delisted; no price data found  (period=90d) (Yahoo error = "No data found, symbol may be delisted")
+2026-04-23 13:02:32,220 ERROR $8431.TW: possibly delisted; no price data found  (period=90d) (Yahoo error = "No data found, symbol may be delisted")
+2026-04-23 13:02:33,212 INFO ===== 選股完成：3 檔 =====
+Response Code: 0 | Event Code: 0 | Info: host '210.59.255.161:80', hostname '210.59.255.161:80' IP 210.59.255.161:80 (host 1 of 1) (host connection attempt 1 of 1) (total connection attempt 1 of 1) | Event: Session up
+📊 隔日沖選股 04/23 13:02
+符合條件：3 檔
+──────────────────────
+
+1. 3402 漢科
+   💰 140.0 元 (+4.1%)
+   📊 量比 2454.3  換手 5.1%
+   🏢 市值 102.3 億
+   📈 MA5:135.3  MA10:129.55  MA20:124.8
+   💵 VWAP：140.0  日高：144.5
+   🏦 三大法人：無資料
+
+2. 6435 大中
+   💰 189.5 元 (+5.0%)
+   📊 量比 1842.2  換手 6.4%
+   🏢 市值 71.0 億
+   📈 MA5:180.4  MA10:171.2  MA20:164.02
+   💵 VWAP：189.5  日高：198.5
+   🏦 三大法人：無資料
+
+3. 4739 康普
+   💰 95.3 元 (+3.1%)
+   📊 量比 1326.9  換手 4.7%
+   🏢 市值 118.8 億
+   📈 MA5:93.36  MA10:90.56  MA20:85.5
+   💵 VWAP：94.0  日高：95.9
+   🏦 三大法人：無資料
+
+⚠️ 僅供參考，投資有風險，請自行判斷
