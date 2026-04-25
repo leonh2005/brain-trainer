@@ -1388,3 +1388,225 @@ Traceback (most recent call last):
     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 urllib3.exceptions.MaxRetryError: HTTPConnectionPool(host='localhost', port=54800): Max retries exceeded with url: /session/8eb68682-dd08-4a8e-aca0-447bb64642ab/element/7be090d4-fd09-4099-82c5-68ecf36ba37c/text (Caused by ReadTimeoutError("HTTPConnectionPool(host='localhost', port=54800): Read timed out. (read timeout=120)"))
 [2026-04-25 20:25:31] ERROR
+ERROR: HTTPConnectionPool(host='localhost', port=61459): Max retries exceeded with url: /session/62dca3f0-fc0e-4877-8479-de9b9919b96b/element/1c68baeb-4b85-4465-aad1-528771e075aa/text (Caused by ReadTimeoutError("HTTPConnectionPool(host='localhost', port=61459): Read timed out. (read timeout=120)"))
+Traceback (most recent call last):
+  File "/Users/steven/CCProject/daytrade-replay/venv/lib/python3.14/site-packages/urllib3/connectionpool.py", line 534, in _make_request
+    response = conn.getresponse()
+  File "/Users/steven/CCProject/daytrade-replay/venv/lib/python3.14/site-packages/urllib3/connection.py", line 571, in getresponse
+    httplib_response = super().getresponse()
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/client.py", line 1450, in getresponse
+    response.begin()
+    ~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/client.py", line 336, in begin
+    version, status, reason = self._read_status()
+                              ~~~~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/client.py", line 297, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+               ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socket.py", line 725, in readinto
+    return self._sock.recv_into(b)
+           ~~~~~~~~~~~~~~~~~~~~^^^
+TimeoutError: timed out
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/steven/CCProject/daytrade-replay/venv/lib/python3.14/site-packages/urllib3/connectionpool.py", line 787, in urlopen
+    response = self._make_request(
+        conn,
+    ...<10 lines>...
+        **response_kw,
+    )
+  File "/Users/steven/CCProject/daytrade-replay/venv/lib/python3.14/site-packages/urllib3/connectionpool.py", line 536, in _make_request
+    self._raise_timeout(err=e, url=url, timeout_value=read_timeout)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/steven/CCProject/daytrade-replay/venv/lib/python3.14/site-packages/urllib3/connectionpool.py", line 367, in _raise_timeout
+    raise ReadTimeoutError(
+        self, url, f"Read timed out. (read timeout={timeout_value})"
+    ) from err
+urllib3.exceptions.ReadTimeoutError: HTTPConnectionPool(host='localhost', port=61459): Read timed out. (read timeout=120)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/steven/CCProject/shopee_stock_check.py", line 36, in <module>
+    if 'stevenhung' not in driver.find_element(By.TAG_NAME, 'body').text:
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/steven/CCProject/daytrade-replay/venv/lib/python3.14/site-packages/selenium/webdriver/remote/webelement.py", line 105, in text
+    return self._execute(Command.GET_ELEMENT_TEXT)["value"]
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/steven/CCProject/daytrade-replay/venv/lib/python3.14/site-packages/selenium/webdriver/remote/webelement.py", line 508, in _execute
+    return self._parent.execute(command, params)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/Users/steven/CCProject/daytrade-replay/venv/lib/python3.14/site-packages/selenium/webdriver/remote/webdriver.py", line 447, in execute
+    response = cast(RemoteConnection, self.command_executor).execute(driver_command, params)
+  File "/Users/steven/CCProject/daytrade-replay/venv/lib/python3.14/site-packages/selenium/webdriver/remote/remote_connection.py", line 407, in execute
+    return self._request(command_info[0], url, body=data)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/steven/CCProject/daytrade-replay/venv/lib/python3.14/site-packages/selenium/webdriver/remote/remote_connection.py", line 431, in _request
+    response = self._conn.request(method, url, body=body, headers=headers, timeout=self._client_config.timeout)
+  File "/Users/steven/CCProject/daytrade-replay/venv/lib/python3.14/site-packages/urllib3/_request_methods.py", line 135, in request
+    return self.request_encode_url(
+           ~~~~~~~~~~~~~~~~~~~~~~~^
+        method,
+        ^^^^^^^
+    ...<3 lines>...
+        **urlopen_kw,
+        ^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/steven/CCProject/daytrade-replay/venv/lib/python3.14/site-packages/urllib3/_request_methods.py", line 182, in request_encode_url
+    return self.urlopen(method, url, **extra_kw)
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/steven/CCProject/daytrade-replay/venv/lib/python3.14/site-packages/urllib3/poolmanager.py", line 457, in urlopen
+    response = conn.urlopen(method, u.request_uri, **kw)
+  File "/Users/steven/CCProject/daytrade-replay/venv/lib/python3.14/site-packages/urllib3/connectionpool.py", line 871, in urlopen
+    return self.urlopen(
+           ~~~~~~~~~~~~^
+        method,
+        ^^^^^^^
+    ...<13 lines>...
+        **response_kw,
+        ^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/steven/CCProject/daytrade-replay/venv/lib/python3.14/site-packages/urllib3/connectionpool.py", line 871, in urlopen
+    return self.urlopen(
+           ~~~~~~~~~~~~^
+        method,
+        ^^^^^^^
+    ...<13 lines>...
+        **response_kw,
+        ^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/steven/CCProject/daytrade-replay/venv/lib/python3.14/site-packages/urllib3/connectionpool.py", line 871, in urlopen
+    return self.urlopen(
+           ~~~~~~~~~~~~^
+        method,
+        ^^^^^^^
+    ...<13 lines>...
+        **response_kw,
+        ^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/steven/CCProject/daytrade-replay/venv/lib/python3.14/site-packages/urllib3/connectionpool.py", line 841, in urlopen
+    retries = retries.increment(
+        method, url, error=new_e, _pool=self, _stacktrace=sys.exc_info()[2]
+    )
+  File "/Users/steven/CCProject/daytrade-replay/venv/lib/python3.14/site-packages/urllib3/util/retry.py", line 535, in increment
+    raise MaxRetryError(_pool, url, reason) from reason  # type: ignore[arg-type]
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+urllib3.exceptions.MaxRetryError: HTTPConnectionPool(host='localhost', port=61459): Max retries exceeded with url: /session/62dca3f0-fc0e-4877-8479-de9b9919b96b/element/1c68baeb-4b85-4465-aad1-528771e075aa/text (Caused by ReadTimeoutError("HTTPConnectionPool(host='localhost', port=61459): Read timed out. (read timeout=120)"))
+[2026-04-26 00:24:53] ERROR
+ERROR: HTTPConnectionPool(host='localhost', port=50954): Max retries exceeded with url: /session/aad3bcd0-906c-4e2e-b664-5c1de9efb157/element/1d5043b8-bf91-49e5-90c6-be4d8fa172ca/text (Caused by ReadTimeoutError("HTTPConnectionPool(host='localhost', port=50954): Read timed out. (read timeout=120)"))
+Traceback (most recent call last):
+  File "/Users/steven/CCProject/daytrade-replay/venv/lib/python3.14/site-packages/urllib3/connectionpool.py", line 534, in _make_request
+    response = conn.getresponse()
+  File "/Users/steven/CCProject/daytrade-replay/venv/lib/python3.14/site-packages/urllib3/connection.py", line 571, in getresponse
+    httplib_response = super().getresponse()
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/client.py", line 1450, in getresponse
+    response.begin()
+    ~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/client.py", line 336, in begin
+    version, status, reason = self._read_status()
+                              ~~~~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/client.py", line 297, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+               ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socket.py", line 725, in readinto
+    return self._sock.recv_into(b)
+           ~~~~~~~~~~~~~~~~~~~~^^^
+TimeoutError: timed out
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/steven/CCProject/daytrade-replay/venv/lib/python3.14/site-packages/urllib3/connectionpool.py", line 787, in urlopen
+    response = self._make_request(
+        conn,
+    ...<10 lines>...
+        **response_kw,
+    )
+  File "/Users/steven/CCProject/daytrade-replay/venv/lib/python3.14/site-packages/urllib3/connectionpool.py", line 536, in _make_request
+    self._raise_timeout(err=e, url=url, timeout_value=read_timeout)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/steven/CCProject/daytrade-replay/venv/lib/python3.14/site-packages/urllib3/connectionpool.py", line 367, in _raise_timeout
+    raise ReadTimeoutError(
+        self, url, f"Read timed out. (read timeout={timeout_value})"
+    ) from err
+urllib3.exceptions.ReadTimeoutError: HTTPConnectionPool(host='localhost', port=50954): Read timed out. (read timeout=120)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/steven/CCProject/shopee_stock_check.py", line 36, in <module>
+    if 'stevenhung' not in driver.find_element(By.TAG_NAME, 'body').text:
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/steven/CCProject/daytrade-replay/venv/lib/python3.14/site-packages/selenium/webdriver/remote/webelement.py", line 105, in text
+    return self._execute(Command.GET_ELEMENT_TEXT)["value"]
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/steven/CCProject/daytrade-replay/venv/lib/python3.14/site-packages/selenium/webdriver/remote/webelement.py", line 508, in _execute
+    return self._parent.execute(command, params)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/Users/steven/CCProject/daytrade-replay/venv/lib/python3.14/site-packages/selenium/webdriver/remote/webdriver.py", line 447, in execute
+    response = cast(RemoteConnection, self.command_executor).execute(driver_command, params)
+  File "/Users/steven/CCProject/daytrade-replay/venv/lib/python3.14/site-packages/selenium/webdriver/remote/remote_connection.py", line 407, in execute
+    return self._request(command_info[0], url, body=data)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/steven/CCProject/daytrade-replay/venv/lib/python3.14/site-packages/selenium/webdriver/remote/remote_connection.py", line 431, in _request
+    response = self._conn.request(method, url, body=body, headers=headers, timeout=self._client_config.timeout)
+  File "/Users/steven/CCProject/daytrade-replay/venv/lib/python3.14/site-packages/urllib3/_request_methods.py", line 135, in request
+    return self.request_encode_url(
+           ~~~~~~~~~~~~~~~~~~~~~~~^
+        method,
+        ^^^^^^^
+    ...<3 lines>...
+        **urlopen_kw,
+        ^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/steven/CCProject/daytrade-replay/venv/lib/python3.14/site-packages/urllib3/_request_methods.py", line 182, in request_encode_url
+    return self.urlopen(method, url, **extra_kw)
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/steven/CCProject/daytrade-replay/venv/lib/python3.14/site-packages/urllib3/poolmanager.py", line 457, in urlopen
+    response = conn.urlopen(method, u.request_uri, **kw)
+  File "/Users/steven/CCProject/daytrade-replay/venv/lib/python3.14/site-packages/urllib3/connectionpool.py", line 871, in urlopen
+    return self.urlopen(
+           ~~~~~~~~~~~~^
+        method,
+        ^^^^^^^
+    ...<13 lines>...
+        **response_kw,
+        ^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/steven/CCProject/daytrade-replay/venv/lib/python3.14/site-packages/urllib3/connectionpool.py", line 871, in urlopen
+    return self.urlopen(
+           ~~~~~~~~~~~~^
+        method,
+        ^^^^^^^
+    ...<13 lines>...
+        **response_kw,
+        ^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/steven/CCProject/daytrade-replay/venv/lib/python3.14/site-packages/urllib3/connectionpool.py", line 871, in urlopen
+    return self.urlopen(
+           ~~~~~~~~~~~~^
+        method,
+        ^^^^^^^
+    ...<13 lines>...
+        **response_kw,
+        ^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/steven/CCProject/daytrade-replay/venv/lib/python3.14/site-packages/urllib3/connectionpool.py", line 841, in urlopen
+    retries = retries.increment(
+        method, url, error=new_e, _pool=self, _stacktrace=sys.exc_info()[2]
+    )
+  File "/Users/steven/CCProject/daytrade-replay/venv/lib/python3.14/site-packages/urllib3/util/retry.py", line 535, in increment
+    raise MaxRetryError(_pool, url, reason) from reason  # type: ignore[arg-type]
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+urllib3.exceptions.MaxRetryError: HTTPConnectionPool(host='localhost', port=50954): Max retries exceeded with url: /session/aad3bcd0-906c-4e2e-b664-5c1de9efb157/element/1d5043b8-bf91-49e5-90c6-be4d8fa172ca/text (Caused by ReadTimeoutError("HTTPConnectionPool(host='localhost', port=50954): Read timed out. (read timeout=120)"))
+[2026-04-26 04:24:56] ERROR
