@@ -57,7 +57,7 @@ REPORT+="\n📄 今日摘要：${SUMMARY_COUNT} 支"
 # ── 5. Oracle VM ────────────────────────────────
 REPORT+="\n\n[Oracle VM]"
 
-VM_OUT=$($SSH "df -h / | tail -1; free -h | grep Mem; systemctl is-active tele-bot.service; systemctl is-active stock-screener.service" 2>&1)
+VM_OUT=$($SSH "df -h / | tail -1; free -h | grep Mem; systemctl is-active tele-bot.service; systemctl is-active stock-screener.service; exit 0" 2>&1)
 
 if [ $? -ne 0 ]; then
     REPORT+="\n$FAIL 連線失敗"
