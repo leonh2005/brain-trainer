@@ -231,3 +231,4 @@ RR failed to accept incoming stream requests error="failed to accept QUIC stream
 [Sun Apr 26 11:46:09 CST 2026] 2026-04-26T03:46:09Z INF Retrying connection in up to 1s connIndex=0 event=0 ip=198.41.200.193
 [Sun Apr 26 11:46:10 CST 2026] 2026-04-26T03:46:10Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveP256] connIndex=0 event=0 ip=198.41.200.193
 [Sun Apr 26 11:46:11 CST 2026] 2026-04-26T03:46:11Z INF Registered tunnel connection connIndex=0 connection=0c8c26cc-1ef8-48cc-a0a0-dde5c0b3b7a9 event=0 ip=198.41.200.193 location=tpe01 protocol=quic
+[Sun Apr 26 17:46:40 CST 2026] 2026-04-26T09:46:40Z ERR update check failed error="no release found"
