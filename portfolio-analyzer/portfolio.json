@@ -1,0 +1,23 @@
+{
+  "taiwan": [
+    {"ticker": "2301.TW", "name": "光寶科", "shares": 6000},
+    {"ticker": "2408.TW", "name": "南亞科", "shares": 4000},
+    {"ticker": "00687B.TWO", "name": "國泰20年美債", "shares": 70000},
+    {"ticker": "00937B.TWO", "name": "群益ESG投等債20+", "shares": 117000},
+    {"ticker": "2317.TW", "name": "鴻海", "shares": 3000},
+    {"ticker": "2303.TW", "name": "聯電", "shares": 9000}
+  ],
+  "us": [
+    {"ticker": "CEG", "name": "Constellation Energy", "shares": 10},
+    {"ticker": "GOLD", "name": "Barrick Gold", "shares": 10}
+  ],
+  "target": [
+    {"ticker": "VWRA.L", "name": "VWRA", "target_pct": 0.30},
+    {"ticker": "0050.TW", "name": "元大台灣50", "target_pct": 0.15},
+    {"ticker": "00881.TW", "name": "國泰台灣5G+", "target_pct": 0.10},
+    {"ticker": "00864B.TW", "name": "中信優先順位資產擔保債", "target_pct": 0.10},
+    {"ticker": "GLD", "name": "黃金ETF", "target_pct": 0.10},
+    {"ticker": "GRID", "name": "First Trust智慧電網", "target_pct": 0.125},
+    {"ticker": "XLU", "name": "公用事業ETF", "target_pct": 0.125}
+  ]
+}
