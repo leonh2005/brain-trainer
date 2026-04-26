@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>投資組合分析</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #0f1117; color: #e1e4e8; font-family: -apple-system, 'Helvetica Neue', sans-serif; min-height: 100vh; }
+
+    header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 18px 32px; border-bottom: 1px solid #21262d; background: #161b22;
+    }
+    header h1 { font-size: 18px; font-weight: 600; letter-spacing: -0.3px; }
+    .updated { font-size: 11px; color: #8b949e; margin-top: 3px; }
+    btn { background: #1f6feb; color: #fff; border: none; padding: 7px 16px; border-radius: 6px; cursor: pointer; font-size: 13px; }
+    button { background: #1f6feb; color: #fff; border: none; padding: 7px 16px; border-radius: 6px; cursor: pointer; font-size: 13px; }
+    button:hover { background: #388bfd; }
+
+    .container { padding: 24px 32px; max-width: 1440px; margin: 0 auto; }
+
+    .cards { display: grid; grid-template-columns: repeat(6, 1fr); gap: 14px; margin-bottom: 22px; }
+    @media (max-width: 1200px) { .cards { grid-template-columns: repeat(3, 1fr); } }
+    .card { background: #161b22; border: 1px solid #21262d; border-radius: 10px; padding: 18px 20px; }
+    .card-label { font-size: 11px; color: #8b949e; letter-spacing: 0.4px; text-transform: uppercase; margin-bottom: 8px; }
+    .card-value { font-size: 22px; font-weight: 700; line-height: 1; }
+    .card-sub { font-size: 12px; color: #8b949e; margin-top: 5px; }
+
+    .pos { color: #3fb950; }
+    .neg { color: #f85149; }
+    .blue { color: #58a6ff; }
+    .neutral { color: #e1e4e8; }
+
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin-bottom: 22px; }
+    @media (max-width: 900px) { .row { grid-template-columns: 1fr; } }
+
+    .section { background: #161b22; border: 1px solid #21262d; border-radius: 10px; padding: 20px; }
+    .section-title { font-size: 11px; font-weight: 600; color: #8b949e; letter-spacing: 0.8px; text-transform: uppercase; margin-bottom: 16px; }
+
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th { text-align: left; color: #8b949e; font-weight: 500; font-size: 11px; padding: 6px 10px; border-bottom: 1px solid #21262d; }
+    td { padding: 11px 10px; border-bottom: 1px solid #1c2128; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: #1c2128; }
+    .ticker { font-weight: 700; font-family: 'SF Mono', monospace; color: #58a6ff; font-size: 13px; }
+
+    .bar-wrap { display: flex; align-items: center; gap: 8px; }
+    .bar { height: 4px; background: #1f6feb; border-radius: 2px; min-width: 2px; }
+
+    .chart-wrap { position: relative; height: 260px; }
+
+    .target-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #21262d; font-size: 13px; }
+    .target-row:last-child { border-bottom: none; }
+
+    .loading { text-align: center; padding: 60px; color: #8b949e; font-size: 14px; }
+    .err { color: #f85149; text-align: center; padding: 40px; }
+
+    .rate-note { text-align: right; color: #6e7681; font-size: 11px; margin-top: 6px; }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>投資組合分析</h1>
+      <div class="updated" id="ts">載入中...</div>
+    </div>
+    <button onclick="doRefresh()">↻ 重新整理</button>
+  </header>
+
+  <div class="container">
+    <div id="app"><div class="loading">資料載入中，請稍候...</div></div>
+  </div>
+
+  <script>
+    let pie = null;
+
+    const fmt  = n => Math.round(n).toLocaleString('zh-TW');
+    const pct  = n => (n >= 0 ? '+' : '') + n.toFixed(2) + '%';
+    const cls  = n => n >= 0 ? 'pos' : 'neg';
+    const COLORS = ['#1f6feb','#388bfd','#58a6ff','#79c0ff','#3fb950','#56d364','#ffa657','#f85149','#d29922','#8957e5'];
+
+    async function load(refresh = false) {
+      const r = await fetch(refresh ? '/api/refresh' : '/api/data');
+      const j = await r.json();
+      if (!j.ok) throw new Error(j.error);
+      return j.data;
+    }
+
+    function render(d) {
+      const m = d.metrics;
+      const p = d.positions;
+
+      document.getElementById('ts').textContent = '更新：' + d.updated_at;
+
+      const sharpeColor = m.sharpe >= 1 ? 'pos' : m.sharpe >= 0 ? 'blue' : 'neg';
+
+      document.getElementById('app').innerHTML = `
+        <div class="cards">
+          <div class="card">
+            <div class="card-label">總市值（台幣）</div>
+            <div class="card-value neutral">NT$${fmt(d.total_twd)}</div>
+            <div class="card-sub">≈ US$${fmt(d.total_usd)}</div>
+          </div>
+          <div class="card">
+            <div class="card-label">年化報酬</div>
+            <div class="card-value ${cls(m.annual_return)}">${pct(m.annual_return)}</div>
+            <div class="card-sub">歷史1年</div>
+          </div>
+          <div class="card">
+            <div class="card-label">年化波動</div>
+            <div class="card-value neutral">${pct(m.annual_vol)}</div>
+            <div class="card-sub">標準差</div>
+          </div>
+          <div class="card">
+            <div class="card-label">Sharpe Ratio</div>
+            <div class="card-value ${sharpeColor}">${m.sharpe.toFixed(2)}</div>
+            <div class="card-sub">> 1 為佳</div>
+          </div>
+          <div class="card">
+            <div class="card-label">VaR 95%（日）</div>
+            <div class="card-value neg">${m.var_95.toFixed(2)}%</div>
+            <div class="card-sub">≈ NT$${fmt(Math.abs(m.var_95 / 100 * d.total_twd))}</div>
+          </div>
+          <div class="card">
+            <div class="card-label">最大回撤</div>
+            <div class="card-value neg">${m.max_drawdown.toFixed(2)}%</div>
+            <div class="card-sub">歷史最大</div>
+          </div>
+        </div>
+
+        <div class="section" style="margin-bottom:22px">
+          <div class="section-title">持倉明細</div>
+          <table>
+            <thead>
+              <tr>
+                <th>代號</th><th>名稱</th><th>股數／單位</th>
+                <th>現價</th><th>市值（台幣）</th><th>佔比</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${p.map(pos => `
+                <tr>
+                  <td class="ticker">${pos.ticker.replace('.TW','').replace('.L','')}</td>
+                  <td>${pos.name}</td>
+                  <td>${fmt(pos.shares)}</td>
+                  <td>${pos.currency === 'USD' ? 'US$' : 'NT$'}${pos.price.toFixed(2)}</td>
+                  <td>NT$${fmt(pos.value_twd)}</td>
+                  <td>
+                    <div class="bar-wrap">
+                      <span>${pos.weight.toFixed(1)}%</span>
+                      <div class="bar" style="width:${Math.min(pos.weight * 3, 80)}px"></div>
+                    </div>
+                  </td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+
+        <div class="row">
+          <div class="section">
+            <div class="section-title">現有配置</div>
+            <div class="chart-wrap"><canvas id="pieChart"></canvas></div>
+          </div>
+          <div class="section">
+            <div class="section-title">目標配置</div>
+            ${d.target.map(t => `
+              <div class="target-row">
+                <span class="ticker">${t.ticker.replace('.TW','').replace('.L','')}</span>
+                <span style="color:#8b949e;font-size:12px">${t.name}</span>
+                <span class="blue" style="font-weight:600">${(t.target_pct * 100).toFixed(0)}%</span>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+
+        <div class="rate-note">USD/TWD：${d.usdtwd} ｜ 資料來源：Yahoo Finance</div>
+      `;
+
+      // 畫圓餅圖
+      if (pie) pie.destroy();
+      pie = new Chart(document.getElementById('pieChart'), {
+        type: 'doughnut',
+        data: {
+          labels: p.map(x => x.ticker.replace('.TW','').replace('.L','')),
+          datasets: [{
+            data: p.map(x => x.value_twd),
+            backgroundColor: COLORS.slice(0, p.length),
+            borderWidth: 2, borderColor: '#161b22'
+          }]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          plugins: {
+            legend: { position: 'right', labels: { color: '#8b949e', font: { size: 11 }, boxWidth: 12 } },
+            tooltip: { callbacks: { label: c => ` NT$${fmt(c.raw)} (${(c.raw/d.total_twd*100).toFixed(1)}%)` } }
+          }
+        }
+      });
+    }
+
+    async function doRefresh() {
+      document.getElementById('app').innerHTML = '<div class="loading">重新整理中...</div>';
+      try { render(await load(true)); }
+      catch(e) { document.getElementById('app').innerHTML = `<div class="err">錯誤：${e.message}</div>`; }
+    }
+
+    (async () => {
+      try { render(await load()); }
+      catch(e) { document.getElementById('app').innerHTML = `<div class="err">載入失敗：${e.message}</div>`; }
+    })();
+  </script>
+</body>
+</html>

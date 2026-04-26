@@ -1,38 +1,25 @@
-# Claude Handoff 20260426_1940
+# Claude Handoff 20260427_0040
 
 ## Git 狀態（未提交）
 ```
 m banini-tracker
  M claude_cycle_monitor.log
  m daily-stock-analysis
- M dashboard/dashboard.log
- M daytrade-replay/server.log
  M logs/shopee_stock.log
  M rabbit-care/motion-watcher.log
  M rabbit-care/rabbit-care.log
  M rabbit-care/rabbit.db
- D rabbit-care/static/action_screenshots/20260419_141841_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260419_143514_eating.jpg
- D rabbit-care/static/action_screenshots/20260419_150250_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260419_164222_eating.jpg
- D rabbit-care/static/action_screenshots/20260419_165525_eating.jpg
- D rabbit-care/static/action_screenshots/20260419_171829_eating.jpg
- D rabbit-care/static/action_screenshots/20260419_175346_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260419_181021_eating.jpg
- D rabbit-care/static/action_screenshots/20260419_182539_eating.jpg
- D rabbit-care/static/action_screenshots/20260419_185136_eating.jpg
- D rabbit-care/static/action_screenshots/20260419_193241_eating.jpg
- M rabbit-care/tunnel.log
+ D rabbit-care/static/action_screenshots/20260419_203535_eating.jpg
+ D rabbit-care/static/action_screenshots/20260419_220211_eating.jpg
  m stock-screener-ai
- M stock-screener/screener.log
-?? rabbit-care/static/action_screenshots/20260426_145219_sleeping.jpg
-?? rabbit-care/static/action_screenshots/20260426_155145_sleeping.jpg
-?? rabbit-care/static/action_screenshots/20260426_173304_eating.jpg
-?? rabbit-care/static/action_screenshots/20260426_193820_eating.jpg
+?? portfolio-analyzer/
+?? rabbit-care/static/action_screenshots/20260426_212526_eating.jpg
+?? rabbit-care/static/action_screenshots/20260426_232441_eating.jpg
 ```
 
 ## 近期 Commits
 ```
+286b6c1 chore: 自動同步 2026-04-26 19:40
 5c797b6 chore: 自動同步 2026-04-26 14:40
 f9e1d1b chore: 自動同步 2026-04-26 09:40
 60b7013 chore: 自動同步 2026-04-26 04:40
@@ -40,7 +27,6 @@ f9e1d1b chore: 自動同步 2026-04-26 09:40
 b89593c chore: 自動同步 2026-04-25 18:40
 9b6edaf chore: 自動同步 2026-04-25 13:40
 1e01544 chore: 自動同步 2026-04-25 08:40
-7406f50 chore: 自動同步 2026-04-25 04:13
 ```
 
 ## 未提交的變更
@@ -52,53 +38,46 @@ diff --git a/banini-tracker b/banini-tracker
 -Subproject commit 811be48e6702a2b8519e5297ed00c8a24d7cfe29
 +Subproject commit 811be48e6702a2b8519e5297ed00c8a24d7cfe29-dirty
 diff --git a/claude_cycle_monitor.log b/claude_cycle_monitor.log
-index 0404f5c..c2d63d5 100644
+index c2d63d5..0e167ba 100644
 --- a/claude_cycle_monitor.log
 +++ b/claude_cycle_monitor.log
-@@ -1190,3 +1190,6 @@ google.genai.errors.ServerError: 503 UNAVAILABLE. {'error': {'code': 503, 'messa
- [09:40] 自動同步完成
- [09:44] 下一事件：midpoint @ 12:30（166 分鐘後）
- [12:31] 下一事件：end_warn @ 14:40（129 分鐘後）
-+[14:40] 自動同步完成
-+[14:43] 下一事件：midpoint @ 17:30（166 分鐘後）
-+[17:31] 下一事件：end_warn @ 19:40（129 分鐘後）
+@@ -1193,3 +1193,6 @@ google.genai.errors.ServerError: 503 UNAVAILABLE. {'error': {'code': 503, 'messa
+ [14:40] 自動同步完成
+ [14:43] 下一事件：midpoint @ 17:30（166 分鐘後）
+ [17:31] 下一事件：end_warn @ 19:40（129 分鐘後）
++[19:40] 自動同步完成
++[19:45] 下一事件：midpoint @ 22:30（165 分鐘後）
++[22:31] 下一事件：end_warn @ 00:40（129 分鐘後）
 diff --git a/daily-stock-analysis b/daily-stock-analysis
 --- a/daily-stock-analysis
 +++ b/daily-stock-analysis
 @@ -1 +1 @@
 -Subproject commit dbdf30d170decf562896d5af8e3376918dc66806
 +Subproject commit dbdf30d170decf562896d5af8e3376918dc66806-dirty
-diff --git a/dashboard/dashboard.log b/dashboard/dashboard.log
-index 93bd424..e91bef6 100644
---- a/dashboard/dashboard.log
-+++ b/dashboard/dashboard.log
-@@ -19939,3 +19939,173 @@ Port 5600 is in use by another program. Either identify and stop that program, o
- 127.0.0.1 - - [26/Apr/2026 14:38:07] "GET /api/status HTTP/1.1" 200 -
- 127.0.0.1 - - [26/Apr/2026 14:38:50] "GET /api/status HTTP/1.1" 200 -
- 127.0.0.1 - - [26/Apr/2026 14:39:34] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [26/Apr/2026 14:40:17] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [26/Apr/2026 14:41:00] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [26/Apr/2026 14:41:44] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [26/Apr/2026 14:42:27] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [26/Apr/2026 14:43:11] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [26/Apr/2026 14:43:54] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [26/Apr/2026 14:44:38] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [26/Apr/2026 14:45:21] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [26/Apr/2026 14:46:05] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [26/Apr/2026 14:46:48] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [26/Apr/2026 14:47:32] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [26/Apr/2026 14:48:15] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [26/Apr/2026 14:48:59] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [26/Apr/2026 14:49:42] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [26/Apr/2026 14:50:26] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [26/Apr/2026 14:51:09] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [26/Apr/2026 14:51:53] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [26/Apr/2026 14:52:36] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [26/Apr/2026 14:53:20] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [26/Apr/2026 14:54:03] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [26/Apr/2026 14:54:46] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [26/Apr/2026 14:55:30] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [26/Apr/2026 14:56:13] "
+diff --git a/logs/shopee_stock.log b/logs/shopee_stock.log
+index 657e8bb..e8c8211 100644
+--- a/logs/shopee_stock.log
++++ b/logs/shopee_stock.log
+@@ -1943,3 +1943,225 @@ Traceback (most recent call last):
+     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ urllib3.exceptions.MaxRetryError: HTTPConnectionPool(host='localhost', port=53443): Max retries exceeded with url: /session/406b7112-c7a2-4b22-8450-0068a3a491d4/element/77fc3971-aba8-4fad-a459-d8036e680196/text (Caused by ReadTimeoutError("HTTPConnectionPool(host='localhost', port=53443): Read timed out. (read timeout=120)"))
+ [2026-04-26 16:25:39] ERROR
++ERROR: HTTPConnectionPool(host='localhost', port=58574): Max retries exceeded with url: /session/f86e5edc-b822-46a3-9e2c-b9518fd00454/element/e128546e-be54-46d0-bff5-c22d9702b9e8/text (Caused by ReadTimeoutError("HTTPConnectionPool(host='localhost', port=58574): Read timed out. (read timeout=120)"))
++Traceback (most recent call last):
++  File "/Users/steven/CCProject/daytrade-replay/venv/lib/python3.14/site-packages/urllib3/connectionpool.py", line 534, in _make_request
++    response = conn.getresponse()
++  File "/Users/steven/CCProject/daytrade-replay/venv/lib/python3.14/site-packages/urllib3/connection.py", line 571, in getresponse
++    httplib_response = super().getresponse()
++  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/client.py", line 1450, in getresponse
++    response.begin()
++    ~~~~~~~~~~~~~~^^
++  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/client.py", line 336, in begin
++    version, status, reason = self._read_status()
++                              ~~~~~~~~~~~~~~~~~^^
++  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/client.py", line 297, in _read_status
++    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
++               ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
++  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Pyt
 ```
 
 ---
