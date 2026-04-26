@@ -39,6 +39,30 @@
     .section { background: #161b22; border: 1px solid #21262d; border-radius: 10px; padding: 20px; }
     .section-title { font-size: 11px; font-weight: 600; color: #8b949e; letter-spacing: 0.8px; text-transform: uppercase; margin-bottom: 16px; }
 
+    /* 分頁 */
+    .tabs { display: flex; gap: 4px; margin-bottom: 22px; border-bottom: 1px solid #21262d; padding-bottom: 0; }
+    .tab { padding: 8px 18px; cursor: pointer; font-size: 13px; color: #8b949e; border-bottom: 2px solid transparent; margin-bottom: -1px; background: none; border-top: none; border-left: none; border-right: none; border-radius: 0; }
+    .tab:hover { color: #e1e4e8; background: none; }
+    .tab.active { color: #58a6ff; border-bottom-color: #1f6feb; }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    /* AI 大師 */
+    .masters-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+    @media (max-width: 900px) { .masters-grid { grid-template-columns: 1fr; } }
+    .master-card { background: #161b22; border: 1px solid #21262d; border-radius: 10px; padding: 22px; }
+    .master-header { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+    .master-avatar { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 700; flex-shrink: 0; }
+    .master-name { font-size: 14px; font-weight: 600; }
+    .master-sub { font-size: 11px; color: #8b949e; }
+    .master-body { font-size: 13px; line-height: 1.7; color: #cdd5df; white-space: pre-wrap; }
+    .master-error { font-size: 12px; color: #f85149; }
+    .ai-loading { text-align: center; padding: 60px; color: #8b949e; }
+    .ai-actions { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+    .ai-actions button { background: #238636; }
+    .ai-actions button:hover { background: #2ea043; }
+    .ai-note { font-size: 11px; color: #6e7681; }
+
     table { width: 100%; border-collapse: collapse; font-size: 13px; }
     th { text-align: left; color: #8b949e; font-weight: 500; font-size: 11px; padding: 6px 10px; border-bottom: 1px solid #21262d; }
     td { padding: 11px 10px; border-bottom: 1px solid #1c2128; }
@@ -70,11 +94,71 @@
   </header>
 
   <div class="container">
-    <div id="app"><div class="loading">資料載入中，請稍候...</div></div>
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('portfolio', this)">投資組合</button>
+      <button class="tab" onclick="switchTab('ai', this)">AI 大師分析</button>
+    </div>
+    <div id="tab-portfolio" class="tab-content active">
+      <div id="app"><div class="loading">資料載入中，請稍候...</div></div>
+    </div>
+    <div id="tab-ai" class="tab-content">
+      <div class="ai-actions">
+        <button onclick="loadAI(false)">▶ 執行分析</button>
+        <button onclick="loadAI(true)" style="background:#6e3b9c">↻ 重新分析</button>
+        <span class="ai-note">每次分析約需 30 秒，結果快取 1 小時</span>
+      </div>
+      <div id="ai-content"><div class="ai-loading">點擊「執行分析」讓四位大師評論你的投資組合</div></div>
+    </div>
   </div>
 
   <script>
     let pie = null;
+
+    function switchTab(name, el) {
+      document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.getElementById('tab-' + name).classList.add('active');
+      el.classList.add('active');
+    }
+
+    const MASTER_COLORS = { buffett: '#f0a500', lynch: '#3fb950', graham: '#58a6ff', dalio: '#e57c5b' };
+    const MASTER_INITIALS = { buffett: 'WB', lynch: 'PL', graham: 'BG', dalio: 'RD' };
+
+    async function loadAI(refresh = false) {
+      document.getElementById('ai-content').innerHTML = '<div class="ai-loading">分析中，請稍候約 30 秒...</div>';
+      try {
+        const url = refresh ? '/api/ai-analysis?refresh=1' : '/api/ai-analysis';
+        const r = await fetch(url);
+        const j = await r.json();
+        if (!j.ok) throw new Error(j.error);
+        renderAI(j.data);
+      } catch(e) {
+        document.getElementById('ai-content').innerHTML = `<div class="err">分析失敗：${e.message}</div>`;
+      }
+    }
+
+    function renderAI(data) {
+      const order = ['buffett', 'lynch', 'graham', 'dalio'];
+      const html = `<div class="masters-grid">${order.map(key => {
+        const m = data[key];
+        const color = MASTER_COLORS[key];
+        const initials = MASTER_INITIALS[key];
+        return `
+          <div class="master-card">
+            <div class="master-header">
+              <div class="master-avatar" style="background:${color}22;color:${color}">${initials}</div>
+              <div>
+                <div class="master-name">${m.title} <span style="color:#8b949e;font-size:11px">${m.name}</span></div>
+              </div>
+            </div>
+            ${m.error
+              ? `<div class="master-error">分析失敗：${m.error}</div>`
+              : `<div class="master-body">${m.analysis}</div>`
+            }
+          </div>`;
+      }).join('')}</div>`;
+      document.getElementById('ai-content').innerHTML = html;
+    }
 
     const fmt  = n => Math.round(n).toLocaleString('zh-TW');
     const pct  = n => (n >= 0 ? '+' : '') + n.toFixed(2) + '%';
