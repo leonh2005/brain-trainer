@@ -139,3 +139,6 @@ System is going down. Unprivileged users are not permitted to log in anymore. Fo
 Connection closed by 161.33.6.190 port 22
 ssh: connect to host 161.33.6.190 port 22: Operation timed out
 ssh: connect to host 161.33.6.190 port 22: Operation timed out
+Connection to 161.33.6.190 closed by remote host.
+kex_exchange_identification: read: Connection reset by peer
+Connection reset by 161.33.6.190 port 22
