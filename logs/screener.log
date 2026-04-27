@@ -283,3 +283,25 @@ Response Code: 200 | Event Code: 16 | Info: APISUB/V1/SYS/CONTRACT | Event: Subs
 • 現價 > VWAP 且 > 開盤
 • 現價距日高 < 8%
 • 三大法人淨買超 ≥ 0
+2026-04-27 13:01:01.719 | WARNING  | importlib._bootstrap:_call_with_frames_removed:488 - Optional: pip install shioaji[speed] or uv add shioaji --extra speed for better performance.
+2026-04-27 13:01:01,785 INFO ===== 開始隔日沖選股（Shioaji）=====
+2026-04-27 13:01:03,124 INFO [sj] 永豐 API 登入成功
+2026-04-27 13:01:03,159 INFO [sj] 取得 2315 檔股票合約
+2026-04-27 13:01:03,707 INFO 初步篩選（漲幅3-7%）: 共 0 檔
+2026-04-27 13:01:03,708 INFO 無初步候選股，可能是非交易日或 API 無資料
+Response Code: 0 | Event Code: 0 | Info: host '210.59.255.161:80', hostname '210.59.255.161:80' IP 210.59.255.161:80 (host 1 of 1) (host connection attempt 1 of 1) (total connection attempt 1 of 1) | Event: Session up
+Response Code: 200 | Event Code: 16 | Info: APISUB/V1/SYS/CONTRACT | Event: Subscribe or Unsubscribe ok
+📊 隔日沖選股 04/27 13:01
+
+⚠️ 今日無符合所有條件的標的
+
+篩選條件（楊永興一夜持股法）：
+• 漲幅 3%~5%
+• 量比 > 1
+• 換手率 3%~8%
+• 市值 50~300億
+• 成交量台階式放大
+• 均線多頭排列
+• 現價 > VWAP 且 > 開盤
+• 現價距日高 < 8%
+• 三大法人淨買超 ≥ 0

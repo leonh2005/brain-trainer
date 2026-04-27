@@ -21,7 +21,10 @@ LOCAL_SERVICES = [
     {"name": "daytrade-replay",   "port": 5400, "url": "http://localhost:5400", "launch_agent": True},
     {"name": "stock-screener-ai", "port": 5500, "url": "http://localhost:5500", "launch_agent": True},
     {"name": "stock-screener",    "port": 5001, "url": "http://localhost:5001", "launch_agent": False},
-    {"name": "banini-tracker",    "port": 3099, "url": "http://localhost:3099", "launch_agent": True},
+    {"name": "banini-tracker",      "port": 3099, "url": "http://localhost:3099", "launch_agent": True},
+    {"name": "kelly-fibonacci",     "port": 5700, "url": "http://localhost:5700", "launch_agent": True},
+    {"name": "daily-stock-analysis","port": 5650, "url": "http://localhost:5650", "launch_agent": True},
+    {"name": "portfolio-analyzer",  "port": 5800, "url": "http://localhost:5800", "launch_agent": False},
 ]
 
 # ── VM Flask 服務 ─────────────────────────────────────────────
