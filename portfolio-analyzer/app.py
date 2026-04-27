@@ -1,4 +1,6 @@
 from flask import Flask, render_template, jsonify, request
+from dotenv import load_dotenv
+load_dotenv()
 from analysis import get_portfolio_data
 from ai_masters import get_all_analyses
 

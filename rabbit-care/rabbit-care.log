@@ -48117,3 +48117,264 @@ Run time of job "send_daily_summary (trigger: cron[hour='8', minute='0'], next r
 127.0.0.1 - - [27/Apr/2026 05:20:30] "POST /api/log-action HTTP/1.1" 200 -
 127.0.0.1 - - [27/Apr/2026 05:26:33] "POST /api/log-action HTTP/1.1" 200 -
 127.0.0.1 - - [27/Apr/2026 05:34:18] "GET / HTTP/1.0" 200 -
+127.0.0.1 - - [27/Apr/2026 05:43:39] "GET / HTTP/1.0" 200 -
+127.0.0.1 - - [27/Apr/2026 05:43:50] "HEAD / HTTP/1.0" 200 -
+127.0.0.1 - - [27/Apr/2026 05:43:50] "GET / HTTP/1.0" 200 -
+127.0.0.1 - - [27/Apr/2026 05:43:51] "GET /rabbit HTTP/1.0" 200 -
+127.0.0.1 - - [27/Apr/2026 05:43:51] "GET /ai HTTP/1.0" 200 -
+127.0.0.1 - - [27/Apr/2026 05:43:51] "GET /login HTTP/1.0" 200 -
+127.0.0.1 - - [27/Apr/2026 05:43:51] "GET /med HTTP/1.0" 200 -
+127.0.0.1 - - [27/Apr/2026 05:43:51] "GET /water HTTP/1.0" 200 -
+127.0.0.1 - - [27/Apr/2026 05:43:51] "GET /vet HTTP/1.0" 200 -
+127.0.0.1 - - [27/Apr/2026 05:43:51] "GET /log HTTP/1.0" 200 -
+127.0.0.1 - - [27/Apr/2026 05:43:51] "GET /actions HTTP/1.0" 200 -
+127.0.0.1 - - [27/Apr/2026 05:43:51] "GET /static/action_screenshots/20260427_052633_sleeping.jpg HTTP/1.0" 200 -
+127.0.0.1 - - [27/Apr/2026 05:43:51] "GET /static/action_screenshots/20260427_051453_sleeping.jpg HTTP/1.0" 200 -
+127.0.0.1 - - [27/Apr/2026 05:43:51] "GET /static/action_screenshots/20260427_052030_sleeping.jpg HTTP/1.0" 200 -
+127.0.0.1 - - [27/Apr/2026 05:43:51] "GET /static/action_screenshots/20260427_020945_eating.jpg HTTP/1.0" 200 -
+127.0.0.1 - - [27/Apr/2026 05:43:52] "GET /static/action_screenshots/20260427_034226_eating.jpg HTTP/1.0" 200 -
+127.0.0.1 - - [27/Apr/2026 05:43:52] "GET /static/action_screenshots/20260427_042554_sleeping.jpg HTTP/1.0" 200 -
+127.0.0.1 - - [27/Apr/2026 05:43:52] "GET /static/action_screenshots/20260427_031103_sleeping.jpg HTTP/1.0" 200 -
+127.0.0.1 - - [27/Apr/2026 05:43:52] "GET /static/action_screenshots/20260427_044508_sleeping.jpg HTTP/1.0" 200 -
+127.0.0.1 - - [27/Apr/2026 05:43:52] "GET /static/action_screenshots/20260427_015930_eating.jpg HTTP/1.0" 200 -
+127.0.0.1 - - [27/Apr/2026 05:43:52] "GET /export/logs HTTP/1.0" 200 -
+127.0.0.1 - - [27/Apr/2026 05:43:52] "GET /export/vet HTTP/1.0" 200 -
+127.0.0.1 - - [27/Apr/2026 05:43:52] "GET /static/action_screenshots/20260427_013853_sleeping.jpg HTTP/1.0" 200 -
+127.0.0.1 - - [27/Apr/2026 05:43:53] "GET /actions?date=2026-04-27 HTTP/1.0" 200 -
+127.0.0.1 - - [27/Apr/2026 05:43:53] "GET /actions?date=2026-04-26 HTTP/1.0" 200 -
+127.0.0.1 - - [27/Apr/2026 05:43:53] "GET /actions?date=2026-04-24 HTTP/1.0" 200 -
+127.0.0.1 - - [27/Apr/2026 05:43:53] "GET /actions?date=2026-04-25 HTTP/1.0" 200 -
+127.0.0.1 - - [27/Apr/2026 05:43:53] "GET /actions?date=2026-04-23 HTTP/1.0" 200 -
+127.0.0.1 - - [27/Apr/2026 05:43:53] "GET /actions?date=2026-04-21 HTTP/1.0" 200 -
+127.0.0.1 - - [27/Apr/2026 05:43:53] "GET /actions?date=2026-04-22 HTTP/1.0" 200 -
+127.0.0.1 - - [27/Apr/2026 05:43:53] "GET /actions?date=2026-04-20 HTTP/1.0" 200 -
+127.0.0.1 - - [27/Apr/2026 05:43:53] "GET /actions?date=2026-04-19 HTTP/1.0" 200 -
+127.0.0.1 - - [27/Apr/2026 05:43:53] "GET /actions?date=2026-04-18 HTTP/1.0" 200 -
+127.0.0.1 - - [27/Apr/2026 05:43:53] "GET /actions?date=2026-04-16 HTTP/1.0" 200 -
+127.0.0.1 - - [27/Apr/2026 05:43:53] "GET /actions?date=2026-04-17 HTTP/1.0" 200 -
+127.0.0.1 - - [27/Apr/2026 05:43:54] "GET /actions?date=2026-04-15 HTTP/1.0" 200 -
+127.0.0.1 - - [27/Apr/2026 05:43:54] "GET /actions?date=2026-04-13 HTTP/1.0" 200 -
+127.0.0.1 - - [27/Apr/2026 05:43:54] "GET /actions?date=2026-04-14 HTTP/1.0" 200 -
+127.0.0.1 - - [27/Apr/2026 05:43:54] "GET /actions?date=2026-04-12 HTTP/1.0" 200 -
+127.0.0.1 - - [27/Apr/2026 05:43:54] "GET /actions?date=2026-04-11 HTTP/1.0" 200 -
+127.0.0.1 - - [27/Apr/2026 05:43:54] "GET /actions?date=2026-04-10 HTTP/1.0" 200 -
+127.0.0.1 - - [27/Apr/2026 05:43:54] "GET /actions?date=2026-04-09 HTTP/1.0" 200 -
+127.0.0.1 - - [27/Apr/2026 05:43:54] "GET /actions?date=2026-04-08 HTTP/1.0" 200 -
+127.0.0.1 - - [27/Apr/2026 05:43:54] "GET /actions?date=2026-04-07 HTTP/1.0" 200 -
+127.0.0.1 - - [27/Apr/2026 05:43:54] "GET /actions?date=2026-04-06 HTTP/1.0" 200 -
+127.0.0.1 - - [27/Apr/2026 05:43:54] "GET /actions?date=2026-04-05 HTTP/1.0" 200 -
+127.0.0.1 - - [27/Apr/2026 05:43:54] "GET /actions?date=2026-04-04 HTTP/1.0" 200 -
+127.0.0.1 - - [27/Apr/2026 05:43:54] "GET /actions?date=2026-04-02 HTTP/1.0" 200 -
+127.0.0.1 - - [27/Apr/2026 05:43:54] "GET /actions?date=2026-04-01 HTTP/1.0" 200 -
+127.0.0.1 - - [27/Apr/2026 05:53:31] "GET / HTTP/1.0" 200 -
+127.0.0.1 - - [27/Apr/2026 06:15:15] "GET /login HTTP/1.0" 200 -
+127.0.0.1 - - [27/Apr/2026 06:34:25] "GET / HTTP/1.0" 200 -
+127.0.0.1 - - [27/Apr/2026 06:55:54] "GET / HTTP/1.0" 200 -
+127.0.0.1 - - [27/Apr/2026 07:08:36] "[33mGET /SDK/webLanguage HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 07:27:17] "GET / HTTP/1.0" 200 -
+127.0.0.1 - - [27/Apr/2026 07:28:21] "GET / HTTP/1.0" 200 -
+127.0.0.1 - - [27/Apr/2026 07:28:21] "[33mGET /awsc_probe_4fa8e15ddd048bf596c278f1 HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 07:28:22] "[33mGET /settings-local.yaml HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 07:28:22] "[33mGET /.aws/credentials HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 07:28:23] "[33mGET /secrets.json HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 07:28:23] "[33mGET /local.settings.json HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 07:28:23] "[33mGET /.config/gcloud/application_default_credentials.json HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 07:28:23] "[33mGET /.dockerconfigjson HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 07:28:23] "[33mGET /env HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 07:28:23] "[33mGET /.env.local HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 07:28:23] "[33mGET /application-prod.yml HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 07:28:23] "[33mGET /credentials.json HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 07:28:23] "[33mGET /application-production.yml HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 07:28:23] "[33mGET /service-account.json HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 07:28:23] "[33mGET /secrets.yml HTTP/1.0[0m" 404 -
+----------------------------------------
+Exception occurred during processing of request from ('127.0.0.1', 50231)
+127.0.0.1 - - [27/Apr/2026 07:28:23] "[33mGET /config.toml HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 07:28:23] "[33mGET /.aws/config HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 07:28:23] "[33mGET /home/ubuntu/.aws/credentials HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 07:28:23] "[33mGET /docker-compose.yaml HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 07:28:23] "[33mGET /.boto HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 07:28:23] "[33mGET /.config/rclone/rclone.conf HTTP/1.0[0m" 404 -
+Traceback (most recent call last):
+  File "/opt/homebrew/lib/python3.14/site-packages/werkzeug/serving.py", line 370, in run_wsgi
+    execute(self.server.app)
+    ~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/lib/python3.14/site-packages/werkzeug/serving.py", line 346, in execute
+    selector = selectors.DefaultSelector()
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/selectors.py", line 493, in __init__
+    self._selector = select.kqueue()
+                     ~~~~~~~~~~~~~^^
+OSError: [Errno 24] Too many open files
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+Error on request:
+Traceback (most recent call last):
+  File "/opt/homebrew/lib/python3.14/site-packages/werkzeug/serving.py", line 370, in run_wsgi
+    execute(self.server.app)
+    ~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/lib/python3.14/site-packages/werkzeug/serving.py", line 346, in execute
+    selector = selectors.DefaultSelector()
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/selectors.py", line 493, in __init__
+    self._selector = select.kqueue()
+                     ~~~~~~~~~~~~~^^
+OSError: [Errno 24] Too many open files
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 697, in process_request_thread
+    self.finish_request(request, client_address)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+Error on request:
+Traceback (most recent call last):
+  File "/opt/homebrew/lib/python3.14/site-packages/werkzeug/serving.py", line 370, in run_wsgi
+    execute(self.server.app)
+    ~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/lib/python3.14/site-packages/werkzeug/serving.py", line 346, in execute
+    selector = selectors.DefaultSelector()
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/selectors.py", line 493, in __init__
+    self._selector = select.kqueue()
+                     ~~~~~~~~~~~~~^^
+OSError: [Errno 24] Too many open files
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 362, in finish_request
+    self.RequestHandlerClass(request, client_address, self)
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 766, in __init__
+    self.handle()
+    ~~~~~~~~~~~^^
+  File "/opt/homebrew/lib/python3.14/site-packages/werkzeug/serving.py", line 398, in handle
+    super().handle()
+    ~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/server.py", line 496, in handle
+    self.handle_one_request()
+    ~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/server.py", line 484, in handle_one_request
+    method()
+    ~~~~~~^^
+  File "/opt/homebrew/lib/python3.14/site-packages/werkzeug/serving.py", line 390, in run_wsgi
+    from .debug.tbtools import DebugTraceback
+  File "<frozen importlib._bootstrap>", line 1371, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1342, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 938, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 755, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 892, in get_code
+  File "<frozen importlib._bootstrap_external>", line 950, in get_data
+OSError: [Errno 24] Too many open files: '/opt/homebrew/lib/python3.14/site-packages/werkzeug/debug/__init__.py'
+----------------------------------------
+127.0.0.1 - - [27/Apr/2026 07:28:23] "[33mGET /.config/gcloud/credentials.db HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 07:28:24] "[33mGET /.aws/cli/cache/ HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 07:28:24] "[33mGET /key.yaml HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 07:28:24] "[33mGET /settings-docker.yaml HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 07:28:24] "[33mGET /firebase-adminsdk.json HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 07:28:24] "[33mGET /.vault-token HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 07:28:24] "[33mGET /gcp-service-account.json HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 07:28:24] "[33mGET /aws/config HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 07:28:24] "[33mGET /root/.aws/credentials HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 07:28:24] "[33mGET /home/ec2-user/.aws/credentials HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 07:28:24] "[33mGET /.env.dev HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 07:28:24] "[33mGET /.env.production HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 07:28:24] "[33mGET /.env HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 07:28:24] "[33mGET /.aws/cli/cache/ HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 07:28:24] "[33mGET /.env.bak HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 07:28:24] "[33mGET /values.yml HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 07:28:24] "[33mGET /settings.yml HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 07:28:24] "[33mGET /rclone.conf HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 07:28:24] "[33mGET /config.yml HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 07:28:24] "[33mGET /.env.backup HTTP/1.0[0m" 404 -
+Error on request:
+Traceback (most recent call last):
+  File "/opt/homebrew/lib/python3.14/site-packages/werkzeug/serving.py", line 370, in run_wsgi
+    execute(self.server.app)
+    ~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/lib/python3.14/site-packages/werkzeug/serving.py", line 346, in execute
+    selector = selectors.DefaultSelector()
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/selectors.py", line 493, in __init__
+    self._selector = select.kqueue()
+                     ~~~~~~~~~~~~~^^
+OSError: [Errno 24] Too many open files
+Error on request:
+Traceback (most recent call last):
+  File "/opt/homebrew/lib/python3.14/site-packages/werkzeug/serving.py", line 370, in run_wsgi
+    execute(self.server.app)
+    ~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/lib/python3.14/site-packages/werkzeug/serving.py", line 346, in execute
+    selector = selectors.DefaultSelector()
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/selectors.py", line 493, in __init__
+    self._selector = select.kqueue()
+                     ~~~~~~~~~~~~~^^
+OSError: [Errno 24] Too many open files
+127.0.0.1 - - [27/Apr/2026 07:28:24] "[33mGET /.aws/boto/config HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 07:28:24] "[33mGET /aws/credentials HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 07:28:24] "[33mGET /actuator/configprops HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 07:28:24] "[33mGET /application-prod.properties HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 07:28:24] "[33mGET /settings.yaml HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 07:28:24] "[33mGET /.azure/accessTokens.json HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 07:28:24] "[33mGET /application.properties HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 07:28:24] "[33mGET /credentials.json HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 07:28:24] "[33mGET /config.yaml HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 07:28:24] "[33mGET /config/secrets.yml HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 07:28:24] "[33mGET /secrets.yaml HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 07:28:24] "[33mGET /.azure/azureProfile.json HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 07:28:24] "[33mGET /actuator/heapdump HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 07:28:24] "[33mGET /config.json HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 07:28:24] "[33mGET /wp-config.php.bak HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 07:28:24] "[33mGET /credentials.yml HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 07:28:24] "[33mGET /config.php HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 07:28:24] "[33mGET /auth.json HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 07:28:24] "[33mGET /.config/gcloud/access_tokens.db HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 07:28:24] "[33mGET /connections.json HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 07:28:24] "[33mGET /application.yml HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 07:28:24] "[33mGET /web.config HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 07:28:24] "[33mGET /.s3cfg HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 07:28:25] "[33mGET /_netrc HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 07:28:25] "[33mGET /settings.py HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 07:28:25] "[33mGET /heapdump HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 07:28:25] "[33mGET /secrets.yml HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 07:28:25] "[33mGET /actuator/env HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 07:28:25] "[33mGET /.netrc HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 07:28:25] "[33mGET /home/ubuntu/.aws/credentials HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 07:28:25] "[33mGET /wp-config.php HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 07:28:25] "[33mGET /.dockerconfigjson HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 07:28:25] "[33mGET /docker-compose.yaml HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 07:28:25] "[33mGET /application-prod.yml HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 07:28:25] "[33mGET /settings-docker.yaml HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 07:28:25] "[33mGET /.vault-token HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 07:28:25] "[33mGET /.config/rclone/rclone.conf HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 07:28:25] "[33mGET /config.toml HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 07:28:25] "[33mGET /.boto HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 07:28:25] "[33mGET /secrets.json HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 07:28:25] "[33mGET /.env.local HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 07:28:25] "[33mGET /.config/gcloud/application_default_credentials.json HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 07:28:25] "[33mGET /application-production.yml HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 07:28:25] "[33mGET /.aws/config HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 07:28:25] "[33mGET /env HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 07:28:25] "[33mGET /key.yaml HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 07:28:25] "[33mGET /.aws/credentials HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 07:28:25] "[33mGET /.config/gcloud/credentials.db HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 07:28:25] "[33mGET /docker-compose.yml HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 07:28:25] "[33mGET /values.yaml HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 07:28:25] "[33mGET /.env.prod HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 07:28:25] "[33mGET /kubeconfig HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 07:28:25] "[33mGET /.env.development HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 07:28:25] "[33mGET /.aws/sso/cache/ HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 07:28:25] "[33mGET /credentials.yaml HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 07:28:25] "[33mGET /firebase-adminsdk.json HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 07:28:25] "[33mGET /gcp-service-account.json HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 07:28:25] "[33mGET /settings.json HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 08:02:12] "GET / HTTP/1.0" 200 -
+127.0.0.1 - - [27/Apr/2026 08:13:24] "GET / HTTP/1.0" 200 -
+127.0.0.1 - - [27/Apr/2026 08:16:56] "[33mGET /aaa9 HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 08:17:00] "[33mGET /aab8 HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 08:17:13] "GET /login HTTP/1.0" 200 -
+127.0.0.1 - - [27/Apr/2026 08:37:43] "GET / HTTP/1.0" 200 -
+127.0.0.1 - - [27/Apr/2026 09:04:43] "POST /api/log-action HTTP/1.1" 200 -
+127.0.0.1 - - [27/Apr/2026 09:05:45] "GET / HTTP/1.0" 200 -
+127.0.0.1 - - [27/Apr/2026 09:24:54] "POST /api/log-action HTTP/1.1" 200 -
+127.0.0.1 - - [27/Apr/2026 09:25:32] "GET / HTTP/1.0" 200 -
+127.0.0.1 - - [27/Apr/2026 09:32:00] "POST /api/log-action HTTP/1.1" 200 -
+127.0.0.1 - - [27/Apr/2026 09:34:29] "GET /water HTTP/1.1" 200 -
+127.0.0.1 - - [27/Apr/2026 09:34:30] "POST /api/water HTTP/1.1" 200 -
+127.0.0.1 - - [27/Apr/2026 09:36:59] "POST /api/log-action HTTP/1.1" 200 -
+127.0.0.1 - - [27/Apr/2026 09:48:43] "GET /login HTTP/1.0" 200 -
+127.0.0.1 - - [27/Apr/2026 09:48:50] "[33mGET /favicon.ico HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 09:48:53] "[33mGET /lw25q8xmvp0 HTTP/1.0[0m" 404 -
+127.0.0.1 - - [27/Apr/2026 09:50:26] "GET / HTTP/1.0" 200 -
+127.0.0.1 - - [27/Apr/2026 09:50:57] "POST /api/log-action HTTP/1.1" 200 -
