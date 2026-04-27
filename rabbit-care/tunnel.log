@@ -250,3 +250,26 @@ RR failed to accept incoming stream requests error="failed to accept QUIC stream
 [Tue Apr 28 00:01:17 CST 2026] 2026-04-27T16:01:17Z INF Retrying connection in up to 4s connIndex=0 event=0 ip=198.41.200.193
 [Tue Apr 28 00:01:17 CST 2026] 2026-04-27T16:01:17Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveP256] connIndex=0 event=0 ip=198.41.192.47
 [Tue Apr 28 00:01:18 CST 2026] 2026-04-27T16:01:18Z INF Registered tunnel connection connIndex=0 connection=af26b966-29a0-431c-8312-17718ffffa7e event=0 ip=198.41.192.47 location=khh01 protocol=quic
+[Tue Apr 28 03:41:48 CST 2026] 2026-04-27T19:41:48Z ERR failed to run the datagram handler error="timeout: no recent network activity" connIndex=0 event=0 ip=198.41.192.47
+[Tue Apr 28 03:41:48 CST 2026] 2026-04-27T19:41:48Z ERR failed to accept incoming stream requests error="failed to accept QUIC stream: timeout: no recent network activity" connIndex=0 event=0 ip=198.41.192.47
+[Tue Apr 28 03:41:48 CST 2026] 2026-04-27T19:41:48Z ERR failed to serve tunnel connection error="datagram manager encountered a failure while serving" connIndex=0 event=0 ip=198.41.192.47
+[Tue Apr 28 03:41:48 CST 2026] 2026-04-27T19:41:48Z ERR Serve tunnel error error="datagram manager encountered a failure while serving" connIndex=0 event=0 ip=198.41.192.47
+[Tue Apr 28 03:41:48 CST 2026] 2026-04-27T19:41:48Z INF Retrying connection in up to 1s connIndex=0 event=0 ip=198.41.192.47
+[Tue Apr 28 03:41:50 CST 2026] 2026-04-27T19:41:50Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveP256] connIndex=0 event=0 ip=198.41.192.47
+[Tue Apr 28 03:41:55 CST 2026] 2026-04-27T19:41:55Z ERR Failed to dial a quic connection error="failed to dial to edge with quic: timeout: no recent network activity" connIndex=0 event=0 ip=198.41.192.47
+[Tue Apr 28 03:41:55 CST 2026] 2026-04-27T19:41:55Z INF Retrying connection in up to 4s connIndex=0 event=0 ip=198.41.192.47
+[Tue Apr 28 03:41:56 CST 2026] 2026-04-27T19:41:56Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveP256] connIndex=0 event=0 ip=198.41.200.63
+[Tue Apr 28 03:42:01 CST 2026] 2026-04-27T19:42:01Z ERR Failed to dial a quic connection error="failed to dial to edge with quic: timeout: no recent network activity" connIndex=0 event=0 ip=198.41.200.63
+[Tue Apr 28 03:42:01 CST 2026] 2026-04-27T19:42:01Z INF Retrying connection in up to 8s connIndex=0 event=0 ip=198.41.200.63
+[Tue Apr 28 03:42:05 CST 2026] 2026-04-27T19:42:05Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveP256] connIndex=0 event=0 ip=198.41.192.37
+[Tue Apr 28 03:42:10 CST 2026] 2026-04-27T19:42:10Z ERR Failed to dial a quic connection error="failed to dial to edge with quic: timeout: no recent network activity" connIndex=0 event=0 ip=198.41.192.37
+[Tue Apr 28 03:42:10 CST 2026] 2026-04-27T19:42:10Z INF Retrying connection in up to 16s connIndex=0 event=0 ip=198.41.192.37
+[Tue Apr 28 03:42:19 CST 2026] 2026-04-27T19:42:19Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveP256] connIndex=0 event=0 ip=198.41.192.67
+[Tue Apr 28 03:42:24 CST 2026] 2026-04-27T19:42:24Z ERR Failed to dial a quic connection error="failed to dial to edge with quic: timeout: no recent network activity" connIndex=0 event=0 ip=198.41.192.67
+[Tue Apr 28 03:42:24 CST 2026] 2026-04-27T19:42:24Z INF Retrying connection in up to 32s connIndex=0 event=0 ip=198.41.192.67
+[Tue Apr 28 03:42:32 CST 2026] 2026-04-27T19:42:32Z ERR Failed to refresh DNS local resolver error="lookup region1.v2.argotunnel.com on 192.168.68.1:53: server misbehaving"
+[Tue Apr 28 03:42:54 CST 2026] 2026-04-27T19:42:54Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveP256] connIndex=0 event=0 ip=198.41.200.63
+[Tue Apr 28 03:42:59 CST 2026] 2026-04-27T19:42:59Z ERR Failed to dial a quic connection error="failed to dial to edge with quic: timeout: no recent network activity" connIndex=0 event=0 ip=198.41.200.63
+[Tue Apr 28 03:42:59 CST 2026] 2026-04-27T19:42:59Z INF Retrying connection in up to 1m4s connIndex=0 event=0 ip=198.41.200.63
+[Tue Apr 28 03:43:26 CST 2026] 2026-04-27T19:43:26Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveP256] connIndex=0 event=0 ip=198.41.200.13
+[Tue Apr 28 03:43:27 CST 2026] 2026-04-27T19:43:27Z INF Registered tunnel connection connIndex=0 connection=7be937cd-6076-47e0-a734-30836a6e1fe3 event=0 ip=198.41.200.13 location=tpe01 protocol=quic
