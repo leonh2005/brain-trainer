@@ -1,46 +1,52 @@
-# Claude Handoff 20260427_0540
+# Claude Handoff 20260427_1039
 
 ## Git 狀態（未提交）
 ```
 m banini-tracker
  M claude_cycle_monitor.log
  m daily-stock-analysis
- M logs/nightly_check.log
+ M daytrade-replay/server.log
+ M kelly-fibonacci/server.log
+ M logs/daytrade.log
+ M logs/market-dashboard.log
+ M logs/shopee_keepalive.log
  M logs/shopee_stock.log
+ M logs/thread_summarizer.log
+ M logs/thread_summarizer_error.log
+ M logs/voice_ideas_report.log
+ M market-dashboard/fg_history.json
+ M market-dashboard/index.html
+ M market-dashboard/sp_state.json
+ M portfolio-analyzer/ai_masters.py
  M portfolio-analyzer/app.py
- M portfolio-analyzer/templates/index.html
  M rabbit-care/motion-watcher.log
  M rabbit-care/rabbit-care.log
  M rabbit-care/rabbit.db
- D rabbit-care/static/action_screenshots/20260419_233910_eating.jpg
- D rabbit-care/static/action_screenshots/20260419_234914_eating.jpg
- D rabbit-care/static/action_screenshots/20260419_235926_eating.jpg
- D rabbit-care/static/action_screenshots/20260420_001004_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260420_024748_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260420_030020_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260420_031420_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260420_031941_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260420_032442_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260420_042040_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260420_045030_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260420_045643_sleeping.jpg
- M rabbit-care/tunnel-fixed.log
+ D rabbit-care/static/action_screenshots/20260420_053712_sleeping.jpg
+ D rabbit-care/static/action_screenshots/20260420_054825_sleeping.jpg
+ D rabbit-care/static/action_screenshots/20260420_065441_sleeping.jpg
+ D rabbit-care/static/action_screenshots/20260420_072723_sleeping.jpg
+ D rabbit-care/static/action_screenshots/20260420_075336_sleeping.jpg
+ D rabbit-care/static/action_screenshots/20260420_075916_sleeping.jpg
+ D rabbit-care/static/action_screenshots/20260420_082309_sleeping.jpg
+ D rabbit-care/static/action_screenshots/20260420_083508_sleeping.jpg
+ D rabbit-care/static/action_screenshots/20260420_084622_sleeping.jpg
+ D rabbit-care/static/action_screenshots/20260420_090414_sleeping.jpg
+ D rabbit-care/static/action_screenshots/20260420_091006_sleeping.jpg
+ D rabbit-care/static/action_screenshots/20260420_091511_eating.jpg
+ M rabbit-care/tunnel.log
  m stock-screener-ai
-?? portfolio-analyzer/ai_masters.py
-?? rabbit-care/static/action_screenshots/20260427_013853_sleeping.jpg
-?? rabbit-care/static/action_screenshots/20260427_015930_eating.jpg
-?? rabbit-care/static/action_screenshots/20260427_020945_eating.jpg
-?? rabbit-care/static/action_screenshots/20260427_031103_sleeping.jpg
-?? rabbit-care/static/action_screenshots/20260427_034226_eating.jpg
-?? rabbit-care/static/action_screenshots/20260427_042554_sleeping.jpg
-?? rabbit-care/static/action_screenshots/20260427_044508_sleeping.jpg
-?? rabbit-care/static/action_screenshots/20260427_051453_sleeping.jpg
-?? rabbit-care/static/action_screenshots/20260427_052030_sleeping.jpg
-?? rabbit-care/static/action_screenshots/20260427_052633_sleeping.jpg
+ M threads-daily/cron.log
+?? rabbit-care/static/action_screenshots/20260427_090443_eating.jpg
+?? rabbit-care/static/action_screenshots/20260427_092454_eating.jpg
+?? rabbit-care/static/action_screenshots/20260427_093200_eating.jpg
+?? rabbit-care/static/action_screenshots/20260427_093659_eating.jpg
+?? rabbit-care/static/action_screenshots/20260427_095057_eating.jpg
 ```
 
 ## 近期 Commits
 ```
+79044b2 chore: 自動同步 2026-04-27 05:40
 3010d0f chore: 自動同步 2026-04-27 00:40
 286b6c1 chore: 自動同步 2026-04-26 19:40
 5c797b6 chore: 自動同步 2026-04-26 14:40
@@ -48,7 +54,6 @@ f9e1d1b chore: 自動同步 2026-04-26 09:40
 60b7013 chore: 自動同步 2026-04-26 04:40
 379d19a chore: 自動同步 2026-04-25 23:40
 b89593c chore: 自動同步 2026-04-25 18:40
-9b6edaf chore: 自動同步 2026-04-25 13:40
 ```
 
 ## 未提交的變更
@@ -60,95 +65,39 @@ diff --git a/banini-tracker b/banini-tracker
 -Subproject commit 811be48e6702a2b8519e5297ed00c8a24d7cfe29
 +Subproject commit 811be48e6702a2b8519e5297ed00c8a24d7cfe29-dirty
 diff --git a/claude_cycle_monitor.log b/claude_cycle_monitor.log
-index 0e167ba..9951da8 100644
+index 9951da8..2cb6a1c 100644
 --- a/claude_cycle_monitor.log
 +++ b/claude_cycle_monitor.log
-@@ -1196,3 +1196,6 @@ google.genai.errors.ServerError: 503 UNAVAILABLE. {'error': {'code': 503, 'messa
- [19:40] 自動同步完成
- [19:45] 下一事件：midpoint @ 22:30（165 分鐘後）
- [22:31] 下一事件：end_warn @ 00:40（129 分鐘後）
-+[00:40] 自動同步完成
-+[00:44] 下一事件：midpoint @ 03:30（166 分鐘後）
-+[03:31] 下一事件：end_warn @ 05:40（129 分鐘後）
+@@ -1199,3 +1199,6 @@ google.genai.errors.ServerError: 503 UNAVAILABLE. {'error': {'code': 503, 'messa
+ [00:40] 自動同步完成
+ [00:44] 下一事件：midpoint @ 03:30（166 分鐘後）
+ [03:31] 下一事件：end_warn @ 05:40（129 分鐘後）
++[05:40] 自動同步完成
++[05:44] 下一事件：midpoint @ 08:30（165 分鐘後）
++[08:31] 下一事件：end_warn @ 10:40（129 分鐘後）
 diff --git a/daily-stock-analysis b/daily-stock-analysis
 --- a/daily-stock-analysis
 +++ b/daily-stock-analysis
 @@ -1 +1 @@
 -Subproject commit dbdf30d170decf562896d5af8e3376918dc66806
 +Subproject commit dbdf30d170decf562896d5af8e3376918dc66806-dirty
-diff --git a/logs/nightly_check.log b/logs/nightly_check.log
-index a11cc5a..d6acd94 100644
---- a/logs/nightly_check.log
-+++ b/logs/nightly_check.log
-@@ -781,3 +781,37 @@ VM 的 journalctl 最近 5 條 error 均為 SSH kex_exchange_identification（
- 
- [修復動作]
- 無需修復
-+【半夜巡邏報告】2026-04-27 02:00
+diff --git a/daytrade-replay/server.log b/daytrade-replay/server.log
+index be70b48..d4b50f1 100644
+--- a/daytrade-replay/server.log
++++ b/daytrade-replay/server.log
+@@ -132795,3 +132795,13 @@ Response Code: 0 | Event Code: 1 | Info: Session connect timeout | Event: Sessio
+ [data] top30 完成，第1名: 2409 友達 445,852張
+ 127.0.0.1 - - [26/Apr/2026 17:08:30] "GET /api/stocks HTTP/1.1" 200 -
+ 127.0.0.1 - - [26/Apr/2026 17:08:55] "GET / HTTP/1.1" 200 -
++127.0.0.1 - - [27/Apr/2026 09:35:10] "GET /api/dates?stock=2303 HTTP/1.1" 200 -
++[sj] 取消訂閱 2317[09:35:12.984971] [62424070423] [/Users/ec666/builds/glrtr-IB/0/ec666/pysolace/src/core/sol.cpp:504:SendRequest] [E] [thread 6826512] Not ready
 +
-+[Mac 服務]
-+✅ rabbit-care (port 5200)
-+✅ stock-screener (port 5001)
-+✅ youtube-monitor
-+📄 今日摘要：3 支
-+
-+[Oracle VM]
-+✅ 連線正常
-+💾 磁碟：16% 使用
-+🧠 記憶體：可用 373Mi
-+✅ tele-bot
-+❌ stock-screener (VM)
-+
-+[修復動作]
-+- VM stock-screener 嘗試重啟
-+【半夜巡邏報告】2026-04-27 02:00
-+
-+[Mac 服務]
-+✅ rabbit-care (port 5200)
-+✅ stock-screener (port 5001)
-+✅ youtube-monitor
-+📄 今日摘要：3 支
-+
-+[Oracle VM]
-+✅ 連線正常
-+💾 磁碟：16% 使用
-+🧠 記憶體：可用 373Mi
-+✅ tele-bot
-+❌ stock-screener (VM)
-+
-+[修復動作]
-+- VM stock-screener 嘗試重啟
-diff --git a/logs/shopee_stock.log b/logs/shopee_stock.log
-index e8c8211..a10dbcf 100644
---- a/logs/shopee_stock.log
-+++ b/logs/shopee_stock.log
-@@ -2165,3 +2165,4 @@ Traceback (most recent call last):
-     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
- urllib3.exceptions.MaxRetryError: HTTPConnectionPool(host='localhost', port=63103): Max retries exceeded with url: /session/a44b598f-2159-4002-ba48-8177e2d84577/element/913a4e3f-970e-42a7-89c4-c3714487e807/text (Caused by ReadTimeoutError("HTTPConnectionPool(host='localhost', port=63103): Read timed out. (read timeout=120)"))
- [2026-04-27 00:24:34] ERROR
-+[2026-04-27 04:13:36] SOLD_OUT
-diff --git a/portfolio-analyzer/app.py b/portfolio-analyzer/app.py
-index 96cd3fd..9546d8d 100644
---- a/portfolio-analyzer/app.py
-+++ b/portfolio-analyzer/app.py
-@@ -1,5 +1,6 @@
--from flask import Flask, render_template, jsonify
-+from flask import Flask, render_template, jsonify, request
- from analysis import get_portfolio_data
-+from ai_masters import get_all_analyses
- 
- app = Flask(__name__)
- 
-@@ -25,5 +26,16 @@ def api_refresh():
-         return jsonify({"ok": False, "error": str(e)}), 500
- 
- 
-+@app.route("/api/ai-analysis")
-+def api_ai():
-+    try:
-+        force = request.args.get("refresh") == "1"
-+        portfolio_data = get_portfolio_data()
-+        results = g
++[feed] 切換訂閱股票 → 2303
++[sj] 訂閱 2303 tick 成功
++127.0.0.1 - - [27/Apr/2026 09:35:13] "POST /api/subscribe HTTP/1.1" 200 -
++Response Code: 0 | Event Code: 4 | Info: No Router Response or Subscription Error Information Missing in Router Response | Event: Subscription problem on session
++Response Code: 0 | Event Code: 4 | Info: TIC/v1/STK/*/TSE/2303 | Event: Subscription problem on session
++[sj] stock kbar 2303 2026-04-27 失敗: Topic: api/v1/data/kbars, Corr: c10, Client: PYAPI/N124711691/0424/035019/941912/220.141.12.193, payload: {'token': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYmYiOjE3NzcwMDI2MjAsImV4cCI6MTc3NzA4OTAyMCwic2ltdWxhdGlvbiI6ZmFsc2UsInBlcnNvbl9pZCI6Ik4xMjQ3MTE2OTEiLCJ2ZXJzaW9uIjoiMS4zLjMiLCJwMnAiOiIjUDJQL3Y6YmNzb2xhY2UwMS9Pcnlma3FxbS9QWUFQSS9OMTI0NzExNjkxLzA0MjQvMDM1MDE5Lzk0MTkxMi8yMjAuMTQxLjEyLjE5My8jIiwiaXAiOiIyMjAuMTQxLjEyLjE5MyIsInBlcm1pc3Npb25zIjpbIkRhdGEiXSwibGV2ZWwiOjAsImNhX3JlcXVpcmVkIjp0cnVlfQ.K1WhxxbH-IEUbP65hKz-DEFqLzl8J7PktHHyXhJLDCA', 'contract': {'security_type': 'STK', 'exchange': 'TSE', 'code': '2303', 'symbol': 'TSE2303', 'name': '聯電', 'category': '24', 'currency': 'TWD', 'delivery_month': '', 'delivery_date': '', 'strike_price': 0, 'option_right': '', 'underlying_kind': '', 'underlying_code': '', 'unit': 1000, 'multiplier': 0, 'limit_up': 80.9, 'limit_down': 66.3, 'reference': 73.6, 'update_date': '2026/04/24', 'margin_trading_balance': 92
 ```
 
 ---

@@ -1,25 +1,25 @@
-import anthropic
-import json
+import os
 import time
+from groq import Groq
 
 _cache = {"data": None, "time": 0}
-CACHE_TTL = 3600  # 1 小時
+CACHE_TTL = 3600
 
 MASTERS = {
     "buffett": {
         "name": "Warren Buffett",
         "title": "巴菲特",
-        "prompt": "You are Warren Buffett. Analyze this portfolio from your perspective: focus on economic moats, long-term competitive advantages, quality of earnings, return on equity, and whether you'd hold each position for 10+ years. Be direct and use your characteristic plain-spoken style. Reply in Traditional Chinese (繁體中文)."
+        "prompt": "You are Warren Buffett. Analyze this portfolio: focus on economic moats, long-term competitive advantages, quality of earnings, return on equity, and whether you'd hold each position for 10+ years. Be direct and plain-spoken. Reply in Traditional Chinese (繁體中文)."
     },
     "lynch": {
         "name": "Peter Lynch",
         "title": "彼得·林奇",
-        "prompt": "You are Peter Lynch. Analyze this portfolio from your perspective: focus on growth potential, PEG ratios, whether these are businesses you can understand, and identify any 'ten-baggers'. Use your characteristic enthusiastic but grounded style. Reply in Traditional Chinese (繁體中文)."
+        "prompt": "You are Peter Lynch. Analyze this portfolio: focus on growth potential, PEG ratios, whether these are businesses you can understand, and identify any 'ten-baggers'. Be enthusiastic but grounded. Reply in Traditional Chinese (繁體中文)."
     },
     "graham": {
         "name": "Benjamin Graham",
         "title": "葛雷厄姆",
-        "prompt": "You are Benjamin Graham. Analyze this portfolio from your perspective: focus on margin of safety, intrinsic value vs market price, balance sheet strength, and whether these qualify as defensive or enterprising investments. Be methodical and conservative. Reply in Traditional Chinese (繁體中文)."
+        "prompt": "You are Benjamin Graham. Analyze this portfolio: focus on margin of safety, intrinsic value vs market price, balance sheet strength, and whether these qualify as defensive or enterprising investments. Be methodical and conservative. Reply in Traditional Chinese (繁體中文)."
     },
     "dalio": {
         "name": "Ray Dalio",
@@ -32,21 +32,19 @@ MASTERS = {
 def build_portfolio_summary(portfolio_data: dict) -> str:
     positions = portfolio_data["positions"]
     metrics = portfolio_data["metrics"]
-
     lines = [
         f"Portfolio Total: NT${portfolio_data['total_twd']:,.0f} (≈ US${portfolio_data['total_usd']:,.0f})",
         f"Sharpe Ratio: {metrics['sharpe']} | VaR 95%: {metrics['var_95']}% | Max Drawdown: {metrics['max_drawdown']}%",
-        f"Annual Return (1Y): {metrics['annual_return']}% | Annual Volatility: {metrics['annual_vol']}%",
+        f"Annual Return (1Y): {metrics['annual_return']}% | Volatility: {metrics['annual_vol']}%",
         "",
         "Current Holdings:"
     ]
     for p in positions:
         ticker = p["ticker"].replace(".TW", "").replace(".TWO", "")
-        lines.append(f"  {ticker} ({p['name']}): NT${p['value_twd']:,.0f} ({p['weight']}% of portfolio)")
-
+        lines.append(f"  {ticker} ({p['name']}): NT${p['value_twd']:,.0f} ({p['weight']}%)")
     lines += [
         "",
-        "Target Allocation (transition plan):",
+        "Target Allocation:",
         "  VWRA 30% | 0050 15% | 00881 10% | 00864B 10% | Gold 10% | GRID 12.5% | XLU 12.5%"
     ]
     return "\n".join(lines)
@@ -55,18 +53,16 @@ def build_portfolio_summary(portfolio_data: dict) -> str:
 def get_master_analysis(master_key: str, portfolio_data: dict) -> str:
     master = MASTERS[master_key]
     summary = build_portfolio_summary(portfolio_data)
-
-    client = anthropic.Anthropic()
-    message = client.messages.create(
-        model="claude-haiku-4-5-20251001",
+    client = Groq(api_key=os.environ["GROQ_API_KEY"])
+    response = client.chat.completions.create(
+        model="llama-3.3-70b-versatile",
         max_tokens=800,
-        system=master["prompt"],
-        messages=[{
-            "role": "user",
-            "content": f"Please analyze my current portfolio and comment on the transition plan:\n\n{summary}"
-        }]
+        messages=[
+            {"role": "system", "content": master["prompt"]},
+            {"role": "user", "content": f"Analyze my portfolio and comment on the transition plan:\n\n{summary}"}
+        ]
     )
-    return message.content[0].text
+    return response.choices[0].message.content
 
 
 def get_all_analyses(portfolio_data: dict, force_refresh: bool = False) -> dict:

@@ -132795,3 +132795,13 @@ Response Code: 0 | Event Code: 1 | Info: Session connect timeout | Event: Sessio
 [data] top30 完成，第1名: 2409 友達 445,852張
 127.0.0.1 - - [26/Apr/2026 17:08:30] "GET /api/stocks HTTP/1.1" 200 -
 127.0.0.1 - - [26/Apr/2026 17:08:55] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [27/Apr/2026 09:35:10] "GET /api/dates?stock=2303 HTTP/1.1" 200 -
+[sj] 取消訂閱 2317[09:35:12.984971] [62424070423] [/Users/ec666/builds/glrtr-IB/0/ec666/pysolace/src/core/sol.cpp:504:SendRequest] [E] [thread 6826512] Not ready
+
+[feed] 切換訂閱股票 → 2303
+[sj] 訂閱 2303 tick 成功
+127.0.0.1 - - [27/Apr/2026 09:35:13] "POST /api/subscribe HTTP/1.1" 200 -
+Response Code: 0 | Event Code: 4 | Info: No Router Response or Subscription Error Information Missing in Router Response | Event: Subscription problem on session
+Response Code: 0 | Event Code: 4 | Info: TIC/v1/STK/*/TSE/2303 | Event: Subscription problem on session
+[sj] stock kbar 2303 2026-04-27 失敗: Topic: api/v1/data/kbars, Corr: c10, Client: PYAPI/N124711691/0424/035019/941912/220.141.12.193, payload: {'token': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYmYiOjE3NzcwMDI2MjAsImV4cCI6MTc3NzA4OTAyMCwic2ltdWxhdGlvbiI6ZmFsc2UsInBlcnNvbl9pZCI6Ik4xMjQ3MTE2OTEiLCJ2ZXJzaW9uIjoiMS4zLjMiLCJwMnAiOiIjUDJQL3Y6YmNzb2xhY2UwMS9Pcnlma3FxbS9QWUFQSS9OMTI0NzExNjkxLzA0MjQvMDM1MDE5Lzk0MTkxMi8yMjAuMTQxLjEyLjE5My8jIiwiaXAiOiIyMjAuMTQxLjEyLjE5MyIsInBlcm1pc3Npb25zIjpbIkRhdGEiXSwibGV2ZWwiOjAsImNhX3JlcXVpcmVkIjp0cnVlfQ.K1WhxxbH-IEUbP65hKz-DEFqLzl8J7PktHHyXhJLDCA', 'contract': {'security_type': 'STK', 'exchange': 'TSE', 'code': '2303', 'symbol': 'TSE2303', 'name': '聯電', 'category': '24', 'currency': 'TWD', 'delivery_month': '', 'delivery_date': '', 'strike_price': 0, 'option_right': '', 'underlying_kind': '', 'underlying_code': '', 'unit': 1000, 'multiplier': 0, 'limit_up': 80.9, 'limit_down': 66.3, 'reference': 73.6, 'update_date': '2026/04/24', 'margin_trading_balance': 9284, 'short_selling_balance': 1111, 'day_trade': 'Yes', 'target_code': ''}, 'start': '2026-04-27', 'end': '2026-04-27'}
+127.0.0.1 - - [27/Apr/2026 09:35:43] "GET /api/kbars?stock=2303&date=2026-04-27 HTTP/1.1" 200 -
