@@ -84,6 +84,8 @@
     .svc-status-text.up      { color: var(--green); }
     .svc-status-text.down    { color: var(--red); }
     .svc-status-text.timeout { color: var(--yellow); }
+    .open-icon { font-size: 13px; color: var(--muted); opacity: 0; transition: opacity .2s; margin-left: auto; }
+    .svc-card:hover .open-icon { opacity: 1; color: var(--accent); }
 
     /* ── 背景程序 ── */
     .bg-grid {
@@ -198,7 +200,10 @@
           <a class="svc-card ${s.status}" href="${s.url}" target="_blank" rel="noopener">
             <div class="svc-top">
               <span class="svc-name">${s.name}</span>
-              <span class="dot ${s.status}"></span>
+              <span style="display:flex;align-items:center;gap:8px;">
+                <span class="open-icon">↗</span>
+                <span class="dot ${s.status}"></span>
+              </span>
             </div>
             <div class="svc-port">:${s.port}</div>
             <div class="svc-status-text ${s.status}">${statusText}</div>

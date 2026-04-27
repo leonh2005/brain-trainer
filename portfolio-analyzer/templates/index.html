@@ -97,6 +97,7 @@
     <div class="tabs">
       <button class="tab active" onclick="switchTab('portfolio', this)">投資組合</button>
       <button class="tab" onclick="switchTab('ai', this)">AI 大師分析</button>
+      <button class="tab" onclick="switchTab('dcf', this)">DCF 估值</button>
     </div>
     <div id="tab-portfolio" class="tab-content active">
       <div id="app"><div class="loading">資料載入中，請稍候...</div></div>
@@ -108,6 +109,14 @@
         <span class="ai-note">每次分析約需 30 秒，結果快取 1 小時</span>
       </div>
       <div id="ai-content"><div class="ai-loading">點擊「執行分析」讓四位大師評論你的投資組合</div></div>
+    </div>
+    <div id="tab-dcf" class="tab-content">
+      <div class="ai-actions">
+        <button onclick="loadDCF(false)">▶ 執行估值</button>
+        <button onclick="loadDCF(true)" style="background:#6e3b9c">↻ 重新抓取</button>
+        <span class="ai-note">自動抓取財報資料，ETF/債券不計算 DCF｜折現率 10%，永續成長 3%</span>
+      </div>
+      <div id="dcf-content"><div class="ai-loading">點擊「執行估值」開始 DCF 分析</div></div>
     </div>
   </div>
 
@@ -123,6 +132,70 @@
 
     const MASTER_COLORS = { buffett: '#f0a500', lynch: '#3fb950', graham: '#58a6ff', dalio: '#e57c5b' };
     const MASTER_INITIALS = { buffett: 'WB', lynch: 'PL', graham: 'BG', dalio: 'RD' };
+
+    async function loadDCF(refresh = false) {
+      document.getElementById('dcf-content').innerHTML = '<div class="ai-loading">抓取財報資料中...</div>';
+      try {
+        const url = refresh ? '/api/dcf?refresh=1' : '/api/dcf';
+        const r = await fetch(url);
+        const j = await r.json();
+        if (!j.ok) throw new Error(j.error);
+        renderDCF(j.data);
+      } catch(e) {
+        document.getElementById('dcf-content').innerHTML = `<div class="err">估值失敗：${e.message}</div>`;
+      }
+    }
+
+    function renderDCF(items) {
+      const rows = items.map(item => {
+        if (item.type === 'ETF/債券') {
+          return `<tr>
+            <td class="ticker">${item.ticker.replace('.TW','').replace('.TWO','')}</td>
+            <td>${item.name}</td>
+            <td style="color:#8b949e">ETF/債券</td>
+            <td>—</td><td>—</td><td>—</td><td>—</td><td>—</td>
+            <td><span style="color:#8b949e">—</span></td>
+          </tr>`;
+        }
+        if (item.error) {
+          return `<tr>
+            <td class="ticker">${item.ticker.replace('.TW','')}</td>
+            <td>${item.name}</td><td>股票</td>
+            <td colspan="5" style="color:#f85149;font-size:12px">${item.error}</td>
+            <td>—</td>
+          </tr>`;
+        }
+        const upsideColor = item.upside > 20 ? '#3fb950' : item.upside < -20 ? '#f85149' : '#e1e4e8';
+        const verdictColor = item.verdict.includes('低估') ? '#3fb950' : item.verdict.includes('高估') ? '#f85149' : '#ffa657';
+        return `<tr>
+          <td class="ticker">${item.ticker.replace('.TW','').replace('.TWO','')}</td>
+          <td>${item.name}</td>
+          <td style="color:#8b949e">股票</td>
+          <td>${item.price ?? '—'}</td>
+          <td style="color:#58a6ff;font-weight:600">${item.dcf ?? '—'}</td>
+          <td style="color:${upsideColor}">${item.upside != null ? (item.upside > 0 ? '+' : '') + item.upside + '%' : '—'}</td>
+          <td>${item.eps ?? '—'}</td>
+          <td>${item.growth != null ? item.growth + '%' : '—'}</td>
+          <td><span style="color:${verdictColor};font-weight:600">${item.verdict}</span></td>
+        </tr>`;
+      }).join('');
+
+      document.getElementById('dcf-content').innerHTML = `
+        <div class="section">
+          <div class="section-title">DCF 內在價值估算（兩段式，折現率 10%）</div>
+          <table>
+            <thead>
+              <tr>
+                <th>代號</th><th>名稱</th><th>類型</th>
+                <th>現價</th><th>DCF 價值</th><th>上漲空間</th>
+                <th>EPS</th><th>預估成長</th><th>判斷</th>
+              </tr>
+            </thead>
+            <tbody>${rows}</tbody>
+          </table>
+          <div class="rate-note" style="margin-top:12px">⚠️ DCF 僅供參考，成長率來自 Yahoo Finance 分析師預估，實際結果可能偏差</div>
+        </div>`;
+    }
 
     async function loadAI(refresh = false) {
       document.getElementById('ai-content').innerHTML = '<div class="ai-loading">分析中，請稍候約 30 秒...</div>';

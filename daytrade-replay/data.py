@@ -11,6 +11,7 @@ import re
 import time
 from collections import defaultdict
 from datetime import date, datetime, timedelta
+from concurrent.futures import ThreadPoolExecutor, TimeoutError as FutureTimeoutError
 
 import threading
 from datetime import time as _time
@@ -49,6 +50,16 @@ class RealTimeFeed:
         tick 為 TickSTKv1 instance，有 code, datetime, close, volume 等欄位。
         """
         try:
+            # 每隻股票只 log 第一筆 tick，確認 callback 有在運作
+            with self._lock:
+                if not hasattr(self, '_first_tick_logged'):
+                    self._first_tick_logged = set()
+            code = getattr(tick, 'code', '?')
+            with self._lock:
+                if code not in self._first_tick_logged:
+                    print(f'[feed] ✓ 收到第一筆 tick {code} @ {getattr(tick, "datetime", "?")} close={getattr(tick, "close", "?")}')
+                    self._first_tick_logged.add(code)
+
             tick_dt = tick.datetime
             t = tick_dt.time()
             # 只處理盤中 09:00~13:30
@@ -104,6 +115,93 @@ def _make_bar(ts: str, price: float, volume: int) -> dict:
 
 # 全域單例
 _realtime_feed = RealTimeFeed()
+
+_LAST_STOCK_FILE = '/tmp/daytrade_last_stock.txt'
+
+
+def _save_last_stock(stock_id: str) -> None:
+    try:
+        with open(_LAST_STOCK_FILE, 'w') as f:
+            f.write(stock_id)
+    except Exception:
+        pass
+
+
+def _load_last_stock() -> str | None:
+    try:
+        if os.path.exists(_LAST_STOCK_FILE):
+            s = open(_LAST_STOCK_FILE).read().strip()
+            return s if s else None
+    except Exception:
+        pass
+    return None
+
+
+def _is_trading_time() -> bool:
+    """是否在台股盤中（週一~五 09:00~13:30）。"""
+    now = datetime.now()
+    if now.weekday() >= 5:
+        return False
+    t = now.time()
+    return _time(9, 0) <= t <= _time(13, 30)
+
+
+def _auto_subscribe_worker() -> None:
+    """背景執行緒：每天 09:00 自動訂閱上次股票。"""
+    import shioaji as sj  # noqa: F401 (確認 import 可用)
+    print('[auto-sub] 背景排程執行緒啟動')
+    last_subscribed_day: date | None = None
+    last_stock: str | None = None
+
+    while True:
+        try:
+            now = datetime.now()
+            today = now.date()
+
+            if now.weekday() < 5:  # 週一～五
+                t = now.time()
+                # 在 09:00~09:05 之間，且今天還沒訂閱過
+                if _time(9, 0) <= t <= _time(9, 5) and last_subscribed_day != today:
+                    stock_id = _realtime_feed.current_stock() or _load_last_stock()
+                    if stock_id:
+                        try:
+                            subscribe_realtime(stock_id)
+                            last_subscribed_day = today
+                            last_stock = stock_id
+                            print(f'[auto-sub] 09:00 自動訂閱 {stock_id}')
+                        except Exception as e:
+                            print(f'[auto-sub] 訂閱失敗: {e}')
+
+                # 若目前是盤中且訂閱的股票跟 feed 不同步（切換後沒觸發），補訂
+                current = _realtime_feed.current_stock()
+                if (current and current != last_stock and
+                        _time(9, 0) <= t <= _time(13, 30)):
+                    last_stock = current
+
+        except Exception as e:
+            print(f'[auto-sub] worker error: {e}')
+
+        time.sleep(30)  # 每 30 秒檢查一次
+
+
+def _start_auto_subscribe() -> None:
+    """啟動自動訂閱背景執行緒（只啟動一次）。
+    同時若服務啟動時已在盤中，立即訂閱上次股票。"""
+    t = threading.Thread(target=_auto_subscribe_worker, daemon=True, name='auto-sub')
+    t.start()
+
+    # 服務啟動時若在盤中，立即訂閱
+    if _is_trading_time():
+        stock_id = _load_last_stock()
+        if stock_id:
+            def _delayed():
+                time.sleep(8)  # 等 SJ 登入完成
+                try:
+                    subscribe_realtime(stock_id)
+                    print(f'[auto-sub] 服務啟動盤中，自動訂閱 {stock_id}')
+                except Exception as e:
+                    print(f'[auto-sub] 啟動訂閱失敗: {e}')
+            threading.Thread(target=_delayed, daemon=True, name='auto-sub-init').start()
 
 
 CACHE_FILE = '/tmp/daytrade_top30_cache.json'
@@ -206,6 +304,35 @@ def _yf_ticker(stock_id: str) -> str:
     return stock_id + '.TW'
 
 
+def _yf_today_1min(stock_id: str) -> list:
+    """yfinance 取今日盤中 1分K（延遲約 1~2 分鐘，不快取）。"""
+    import yfinance as yf
+    try:
+        df = yf.download(_yf_ticker(stock_id), interval='1m', period='1d',
+                         progress=False, auto_adjust=True)
+    except Exception as e:
+        print(f'[yf-today] {stock_id} 失敗: {e}')
+        return []
+    if df.empty:
+        return []
+    if isinstance(df.columns, pd.MultiIndex):
+        df.columns = df.columns.droplevel(1)
+    df.index = df.index.tz_convert('Asia/Taipei')
+    df = df.between_time('09:01', '13:30')
+    if df.empty:
+        return []
+    df = df.reset_index()
+    df.rename(columns={'Datetime': 'ts', 'Open': 'open', 'High': 'high',
+                       'Low': 'low', 'Close': 'close', 'Volume': 'volume'}, inplace=True)
+    df['ts'] = df['ts'].dt.strftime('%Y-%m-%d %H:%M')
+    for col in ('open', 'high', 'low', 'close'):
+        df[col] = df[col].round(2)
+    df['volume'] = (df['volume'].fillna(0) / 1000).astype(int)
+    result = df[['ts', 'open', 'high', 'low', 'close', 'volume']].to_dict('records')
+    print(f'[yf-today] {stock_id} 取得 {len(result)} 根')
+    return result
+
+
 def _sj_stock_1min(stock_id: str, date_str: str) -> list:
     """Shioaji 取個股 1分K。今日不快取（盤中資料持續更新）。"""
     today_str = str(date.today())
@@ -218,7 +345,12 @@ def _sj_stock_1min(stock_id: str, date_str: str) -> list:
         contract = api.Contracts.Stocks[stock_id]
         if contract is None:
             return []
-        kb = api.kbars(contract, start=date_str, end=date_str)
+        with ThreadPoolExecutor(max_workers=1) as ex:
+            try:
+                kb = ex.submit(api.kbars, contract, start=date_str, end=date_str).result(timeout=8)
+            except FutureTimeoutError:
+                print(f'[sj] kbars timeout {stock_id} {date_str}，跳過')
+                return []
         df = pd.DataFrame({**kb})
         if df.empty:
             return []
@@ -247,21 +379,24 @@ def _sj_stock_1min(stock_id: str, date_str: str) -> list:
 def get_1min_kbars(stock_id: str, date_str: str) -> list:
     """
     取指定股票指定日的1分K。
-    今日：歷史 kbars() + 即時 tick bars 合併回傳（tick-built 優先）。
-    非今日：Shioaji kbars() 優先，失敗 fallback yfinance。
-    只保留 09:00~13:30，volume 單位：股（Shioaji）。
+    今日：yfinance 1分K + 即時 tick bars 合併回傳（tick-built 優先）。
+    非今日：Shioaji kbars() 優先（cache），失敗 fallback yfinance（最近30天）。
+    只保留 09:00~13:30，volume 單位：張（÷1000）。
     今日資料不快取（持續更新）。
     """
     today_str = str(date.today())
 
     if date_str == today_str:
-        # ── 今日：歷史 + 即時合併 ──────────────────────────────────────────
-        hist_bars = _sj_stock_1min(stock_id, date_str)   # up to ~20min ago
-        # 收盤後 include_forming=True 讓最後一根 13:30 bar 也出現
+        # ── 今日：Shioaji kbars 回傳空，改用 yfinance + 即時 tick 合併 ──────
+        hist_bars = _sj_stock_1min(stock_id, date_str)
+
+        # Shioaji kbars 對今日回傳空，fallback yfinance（約延遲 1~2 分鐘）
+        if not hist_bars:
+            hist_bars = _yf_today_1min(stock_id)
+
         from datetime import datetime as _dt
-        _now_t = _dt.now().time()
         from datetime import time as _t
-        after_close = _now_t >= _t(13, 30)
+        after_close = _dt.now().time() >= _t(13, 30)
         live_bars = _realtime_feed.get_bars(date_str, include_forming=after_close)
 
         if not hist_bars and not live_bars:
@@ -272,7 +407,7 @@ def get_1min_kbars(stock_id: str, date_str: str) -> list:
         for b in hist_bars:
             merged[b['ts']] = b
         for b in live_bars:
-            merged[b['ts']] = b   # tick-built 覆蓋同 ts 的歷史 bar
+            merged[b['ts']] = b
 
         return sorted(merged.values(), key=lambda b: b['ts'])
 
@@ -281,7 +416,7 @@ def get_1min_kbars(stock_id: str, date_str: str) -> list:
     if bars:
         return bars
 
-    # Fallback: yfinance（最近7天）
+    # Fallback: yfinance（最近30天支援1分K）
     cache_path = f'/tmp/kbar_{stock_id}_{date_str}.json'
     if os.path.exists(cache_path):
         with open(cache_path) as f:
@@ -289,8 +424,9 @@ def get_1min_kbars(stock_id: str, date_str: str) -> list:
 
     import yfinance as yf
     ticker = _yf_ticker(stock_id)
+    end_date = (date.fromisoformat(date_str) + timedelta(days=1)).strftime('%Y-%m-%d')
     try:
-        df = yf.download(ticker, interval='1m', period='7d', progress=False, auto_adjust=True)
+        df = yf.download(ticker, interval='1m', start=date_str, end=end_date, progress=False, auto_adjust=True)
     except Exception as e:
         print(f'[yf] kbar {stock_id} 失敗: {e}')
         return []
@@ -300,7 +436,6 @@ def get_1min_kbars(stock_id: str, date_str: str) -> list:
     if isinstance(df.columns, pd.MultiIndex):
         df.columns = df.columns.droplevel(1)
     df.index = df.index.tz_convert('Asia/Taipei')
-    df = df[df.index.date == date.fromisoformat(date_str)]
     df = df.between_time('09:01', '13:30')
     if df.empty:
         return []
@@ -372,22 +507,27 @@ def get_avg5_and_yday(stock_id: str, date_str: str) -> tuple:
 # ── Shioaji singleton（指數用）───────────────────────────────────────────────
 
 _sj_api = None
+_sj_login_time: float = 0   # 上次登入時間戳（time.time()）
 _sj_last_check: float = 0   # 上次 heartbeat 時間戳（time.time()）
 _SJ_CHECK_INTERVAL = 300    # 每 5 分鐘才做一次 heartbeat，避免 FD 洩漏
+_SJ_TOKEN_TTL = 22 * 3600   # JWT 24h 過期，提前 2h 主動重登（22h）
 
 def _get_sj():
-    global _sj_api, _sj_last_check
+    global _sj_api, _sj_login_time, _sj_last_check
     import shioaji as sj
     from dotenv import load_dotenv
 
     def _login():
-        global _sj_last_check
+        global _sj_login_time, _sj_last_check
         load_dotenv(os.path.join(os.path.dirname(__file__), '../finmind/.env'))
         api = sj.Shioaji(simulation=False)
         api.login(
             api_key=os.environ['SHIOAJI_API_KEY'],
             secret_key=os.environ['SHIOAJI_SECRET_KEY'],
         )
+        now = time.time()
+        _sj_login_time = now
+        _sj_last_check = now
         print('[sj] 永豐 API 登入成功')
 
         # 登記 tick callback（per-api-instance，重連後必須重新登記）
@@ -396,15 +536,24 @@ def _get_sj():
             _realtime_feed.on_tick(tick)
 
         print('[sj] tick callback 已登記')
-        _sj_last_check = time.time()
         return api
+
+    now = time.time()
+
+    # JWT token 快到期（22h）→ 主動重登
+    if _sj_api is not None and (now - _sj_login_time) >= _SJ_TOKEN_TTL:
+        print('[sj] token 即將過期，主動重新登入...')
+        try:
+            _sj_api.logout()
+        except Exception:
+            pass
+        _sj_api = None
 
     if _sj_api is None:
         _sj_api = _login()
         return _sj_api
 
     # 每 5 分鐘才做一次 heartbeat，避免每次呼叫都開 FD
-    now = time.time()
     if now - _sj_last_check >= _SJ_CHECK_INTERVAL:
         try:
             _sj_api.list_accounts()
@@ -506,6 +655,7 @@ def subscribe_realtime(stock_id: str) -> None:
         version=sj.constant.QuoteVersion.v1,
     )
     print(f'[sj] 訂閱 {stock_id} tick 成功')
+    _save_last_stock(stock_id)
 
 
 # 產業別 → TSE 指數代碼
@@ -569,7 +719,12 @@ def _sj_index_1min(tse_code: str, date_str: str) -> list:
     try:
         api = _get_sj()
         contract = api.Contracts.Indexs.TSE[tse_code]
-        kb = api.kbars(contract, start=date_str, end=date_str)
+        with ThreadPoolExecutor(max_workers=1) as ex:
+            try:
+                kb = ex.submit(api.kbars, contract, start=date_str, end=date_str).result(timeout=8)
+            except FutureTimeoutError:
+                print(f'[sj] index kbars timeout {tse_code} {date_str}，跳過')
+                return []
         df = pd.DataFrame({**kb})
         if df.empty:
             return []

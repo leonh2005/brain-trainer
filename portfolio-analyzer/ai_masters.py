@@ -1,6 +1,6 @@
 import os
 import time
-from groq import Groq
+from openai import OpenAI
 
 _cache = {"data": None, "time": 0}
 CACHE_TTL = 3600
@@ -53,9 +53,9 @@ def build_portfolio_summary(portfolio_data: dict) -> str:
 def get_master_analysis(master_key: str, portfolio_data: dict) -> str:
     master = MASTERS[master_key]
     summary = build_portfolio_summary(portfolio_data)
-    client = Groq(api_key=os.environ["GROQ_API_KEY"])
+    client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
     response = client.chat.completions.create(
-        model="llama-3.3-70b-versatile",
+        model="gpt-4o-mini",
         max_tokens=800,
         messages=[
             {"role": "system", "content": master["prompt"]},

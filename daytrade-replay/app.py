@@ -7,6 +7,9 @@ import signals as sig_mod
 
 app = Flask(__name__)
 
+# 啟動自動訂閱背景執行緒（每天 09:00 自動重訂閱上次股票）
+data._start_auto_subscribe()
+
 
 @app.route('/')
 def index():
@@ -94,6 +97,11 @@ def api_search():
         return jsonify({'error': str(e)}), 500
 
 
+@app.route('/api/health')
+def api_health():
+    return jsonify({'status': 'ok'})
+
+
 @app.route('/api/subscribe', methods=['POST'])
 def api_subscribe():
     body = request.get_json() or {}
@@ -105,6 +113,21 @@ def api_subscribe():
         return jsonify({'ok': True, 'stock': stock_id})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/debug/feed')
+def api_debug_feed():
+    from datetime import date as _date
+    today = str(_date.today())
+    feed = data._realtime_feed
+    bars = feed.get_bars(today, include_forming=True)
+    return jsonify({
+        'stock': feed.current_stock(),
+        'completed': len(feed._completed),
+        'forming': feed._forming,
+        'today_bars': len(bars),
+        'last_bar': bars[-1] if bars else None,
+    })
 
 
 if __name__ == '__main__':

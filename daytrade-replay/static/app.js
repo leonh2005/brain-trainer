@@ -388,7 +388,13 @@ async function loadStocks() {
 async function loadDates(stockId) {
   if (!stockId) return;
   setStatus('載入日期...');
-  const { dates } = await fetch('/api/dates?stock=' + stockId).then(r => r.json());
+  let dates;
+  try {
+    ({ dates } = await fetch('/api/dates?stock=' + stockId).then(r => r.json()));
+  } catch(e) {
+    setStatus('載入日期失敗，請重試');
+    return;
+  }
   const sel = document.getElementById('date-select');
   sel.innerHTML = '<option value="">選日期...</option>';
   for (const d of [...dates].reverse()) {
@@ -469,7 +475,17 @@ async function loadKbars(stockId, dateStr) {
       body: JSON.stringify({ stock: stockId }),
     }).catch(() => {});
   }
-  const data = await fetch(`/api/kbars?stock=${stockId}&date=${dateStr}`).then(r => r.json());
+  let data;
+  try {
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 15000);
+    data = await fetch(`/api/kbars?stock=${stockId}&date=${dateStr}`, { signal: ctrl.signal }).then(r => r.json());
+    clearTimeout(timer);
+  } catch(e) {
+    setStatus('載入逾時，請重試');
+    showLoading(false);
+    return;
+  }
   if (data.error) { setStatus('錯誤: ' + data.error); showLoading(false); return; }
 
   allBars    = data.bars;
@@ -479,7 +495,22 @@ async function loadKbars(stockId, dateStr) {
   yadayLow   = data.yday_low   || 0;
   yadayClose = data.yday_close || 0;
 
-  if (!allBars.length) { setStatus('該日無資料'); showLoading(false); return; }
+  if (!allBars.length) {
+    // 今日盤中：tick 剛訂閱可能還沒資料，5 秒後自動重試一次
+    if (isToday(dateStr) && isMarketOpen()) {
+      setStatus('等待即時資料... (5秒後重試)');
+      showLoading(false);
+      setTimeout(() => loadKbars(stockId, dateStr), 5000);
+    } else {
+      setStatus('該日無資料');
+      // 確保按鈕正確 disabled（避免從前一筆資料繼承 enabled 狀態）
+      ['play-btn','reset-btn','rewind-btn','buy-btn','sell-btn'].forEach(id => {
+        document.getElementById(id).disabled = true;
+      });
+      showLoading(false);
+    }
+    return;
+  }
 
   // 副圖時間錨點先設（value: 0，price scale 隱藏，不干擾 Y 軸）
   // 必須在主圖 anchor 之前，否則 subscribeVisibleTimeRangeChange 觸發時副圖尚無資料

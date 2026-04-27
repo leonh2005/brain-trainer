@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 load_dotenv()
 from analysis import get_portfolio_data
 from ai_masters import get_all_analyses
+from dcf import get_dcf_data
 
 app = Flask(__name__)
 
@@ -34,6 +35,17 @@ def api_ai():
         force = request.args.get("refresh") == "1"
         portfolio_data = get_portfolio_data()
         results = get_all_analyses(portfolio_data, force_refresh=force)
+        return jsonify({"ok": True, "data": results})
+    except Exception as e:
+        return jsonify({"ok": False, "error": str(e)}), 500
+
+
+@app.route("/api/dcf")
+def api_dcf():
+    try:
+        force = request.args.get("refresh") == "1"
+        portfolio_data = get_portfolio_data()
+        results = get_dcf_data(portfolio_data["positions"], force_refresh=force)
         return jsonify({"ok": True, "data": results})
     except Exception as e:
         return jsonify({"ok": False, "error": str(e)}), 500
