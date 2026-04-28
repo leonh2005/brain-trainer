@@ -387,11 +387,23 @@ def get_1min_kbars(stock_id: str, date_str: str) -> list:
     today_str = str(date.today())
 
     if date_str == today_str:
-        # 今日只用 Shioaji 即時 tick bars（不 fallback yfinance）
         from datetime import datetime as _dt
         from datetime import time as _t
         after_close = _dt.now().time() >= _t(13, 30)
-        return _realtime_feed.get_bars(date_str, include_forming=after_close)
+
+        if not after_close:
+            # 盤中：先用 Shioaji kbars 取已完成棒（任意標的均適用）
+            bars = _sj_stock_1min(stock_id, date_str)
+            if bars:
+                return bars
+            # kbars 無資料（剛開盤第一分鐘 / 非今日交易標的）→ 用 feed
+            return _realtime_feed.get_bars(date_str, include_forming=False)
+
+        # 盤後：Shioaji kbars 取今日完整資料，不用 yfinance
+        bars = _sj_stock_1min(stock_id, date_str)
+        if bars:
+            return bars
+        return _realtime_feed.get_bars(date_str, include_forming=False)
 
     # ── 非今日：Shioaji kbars() 優先，失敗 fallback yfinance ──────────────
     bars = _sj_stock_1min(stock_id, date_str)
@@ -405,15 +417,19 @@ def get_1min_kbars(stock_id: str, date_str: str) -> list:
             return json.load(f)
 
     import yfinance as yf
-    ticker = _yf_ticker(stock_id)
     end_date = (date.fromisoformat(date_str) + timedelta(days=1)).strftime('%Y-%m-%d')
-    try:
-        df = yf.download(ticker, interval='1m', start=date_str, end=end_date, progress=False, auto_adjust=True)
-    except Exception as e:
-        print(f'[yf] kbar {stock_id} 失敗: {e}')
-        return []
-
+    df = pd.DataFrame()
+    for suffix in ['.TW', '.TWO']:
+        ticker = stock_id + suffix
+        try:
+            df = yf.download(ticker, interval='1m', start=date_str, end=end_date,
+                             progress=False, auto_adjust=True)
+        except Exception:
+            continue
+        if not df.empty:
+            break
     if df.empty:
+        print(f'[yf] kbar {stock_id} 無資料（.TW/.TWO 均失敗）')
         return []
     if isinstance(df.columns, pd.MultiIndex):
         df.columns = df.columns.droplevel(1)

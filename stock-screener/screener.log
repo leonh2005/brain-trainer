@@ -13582,3 +13582,9 @@ SDK NOTICE Wed Mar 25 04:15:08.310 2026 solClient.c:11196                    (17
 127.0.0.1 - - [27/Apr/2026 21:02:58] "[33mGET /api/health HTTP/1.1[0m" 404 -
 127.0.0.1 - - [27/Apr/2026 21:03:39] "[33mGET /api/health HTTP/1.1[0m" 404 -
 127.0.0.1 - - [27/Apr/2026 21:04:23] "[33mGET /api/health HTTP/1.1[0m" 404 -
+2026-04-28 16:06:53.761 | WARNING  | importlib._bootstrap:_call_with_frames_removed:491 - Optional: pip install shioaji[speed] or uv add shioaji --extra speed for better performance.
+ * Serving Flask app 'app'
+ * Debug mode: on
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5001
+[33mPress CTRL+C to quit[0m
