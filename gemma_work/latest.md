@@ -1,38 +1,56 @@
-# Claude Handoff 20260429_0240
+# Claude Handoff 20260429_0740
 
 ## Git 狀態（未提交）
 ```
-m banini-tracker
+M ai-compare/app.py
+ m banini-tracker
  M claude_cycle_monitor.log
  m daily-stock-analysis
- M logs/nightly_check.log
+ M dashboard/dashboard.log
+ M daytrade-replay/server.log
+ M daytrade-replay/static/app.js
+ M kelly-fibonacci/server.log
+ M logs/market-dashboard.log
  M logs/shopee_stock.log
+ M logs/thread_summarizer.log
+ M logs/thread_summarizer_error.log
+ M market-dashboard/fg_history.json
+ M market-dashboard/index.html
+ M market-dashboard/sp_state.json
  M rabbit-care/rabbit-care.log
  M rabbit-care/rabbit.db
- D rabbit-care/static/action_screenshots/20260421_220209_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260421_223402_eating.jpg
- D rabbit-care/static/action_screenshots/20260421_231050_eating.jpg
- D rabbit-care/static/action_screenshots/20260421_233331_eating.jpg
- D rabbit-care/static/action_screenshots/20260422_003057_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260422_005226_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260422_013544_eating.jpg
- D rabbit-care/static/action_screenshots/20260422_014605_sleeping.jpg
- M rabbit-care/tunnel-fixed.log
+ D rabbit-care/static/action_screenshots/20260422_020144_sleeping.jpg
+ D rabbit-care/static/action_screenshots/20260422_021705_eating.jpg
+ D rabbit-care/static/action_screenshots/20260422_022810_sleeping.jpg
+ D rabbit-care/static/action_screenshots/20260422_025002_sleeping.jpg
+ D rabbit-care/static/action_screenshots/20260422_035020_sleeping.jpg
+ D rabbit-care/static/action_screenshots/20260422_035634_sleeping.jpg
+ D rabbit-care/static/action_screenshots/20260422_042202_sleeping.jpg
+ D rabbit-care/static/action_screenshots/20260422_043333_sleeping.jpg
+ D rabbit-care/static/action_screenshots/20260422_045909_sleeping.jpg
+ D rabbit-care/static/action_screenshots/20260422_050508_sleeping.jpg
+ D rabbit-care/static/action_screenshots/20260422_052429_sleeping.jpg
+ D rabbit-care/static/action_screenshots/20260422_052929_sleeping.jpg
+ D rabbit-care/static/action_screenshots/20260422_053543_sleeping.jpg
+ D rabbit-care/static/action_screenshots/20260422_054137_sleeping.jpg
+ D rabbit-care/static/action_screenshots/20260422_060950_sleeping.jpg
+ D rabbit-care/static/action_screenshots/20260422_061828_sleeping.jpg
+ D rabbit-care/static/action_screenshots/20260422_062445_sleeping.jpg
+ D rabbit-care/static/action_screenshots/20260422_064544_sleeping.jpg
+ D rabbit-care/static/action_screenshots/20260422_072759_sleeping.jpg
  m stock-screener-ai
-?? rabbit-care/static/action_screenshots/20260428_215623_eating.jpg
-?? rabbit-care/static/action_screenshots/20260428_231449_eating.jpg
-?? rabbit-care/static/action_screenshots/20260428_233043_sleeping.jpg
-?? rabbit-care/static/action_screenshots/20260428_235309_eating.jpg
-?? rabbit-care/static/action_screenshots/20260429_000844_eating.jpg
-?? rabbit-care/static/action_screenshots/20260429_001352_eating.jpg
-?? rabbit-care/static/action_screenshots/20260429_002518_sleeping.jpg
-?? rabbit-care/static/action_screenshots/20260429_004222_sleeping.jpg
-?? rabbit-care/static/action_screenshots/20260429_013733_eating.jpg
-?? rabbit-care/static/action_screenshots/20260429_015228_sleeping.jpg
+ M stock-screener/app.py
+ M stock-screener/screener.log
+ M stock_analyzer/app.py
+?? rabbit-care/static/action_screenshots/20260429_025738_sleeping.jpg
+?? rabbit-care/static/action_screenshots/20260429_032708_sleeping.jpg
+?? rabbit-care/static/action_screenshots/20260429_072333_sleeping.jpg
+?? rabbit-care/static/action_screenshots/20260429_072837_sleeping.jpg
 ```
 
 ## 近期 Commits
 ```
+4d15a44 chore: 自動同步 2026-04-29 02:40
 113c691 chore: 自動同步 2026-04-28 21:40
 3372e13 feat: 盤中任意標的支援 Shioaji kbars 即時追蹤
 d3c38d6 chore: 自動同步 2026-04-28 16:40
@@ -40,11 +58,20 @@ d3c38d6 chore: 自動同步 2026-04-28 16:40
 1bb8f30 chore: 自動同步 2026-04-28 06:40
 34db1a8 chore: 自動同步 2026-04-28 01:40
 7eaef0e chore: 自動同步 2026-04-27 15:55
-57fb65c chore: 自動同步 2026-04-27 20:40
 ```
 
 ## 未提交的變更
 ```diff
+diff --git a/ai-compare/app.py b/ai-compare/app.py
+index da4a227..cfe615a 100644
+--- a/ai-compare/app.py
++++ b/ai-compare/app.py
+@@ -75,4 +75,4 @@ if __name__ == '__main__':
+     print("  ⚡ AI Arena 已啟動 → http://localhost:5050")
+     print("  📋 請在彈出的瀏覽器中登入各 AI 服務，然後回到網頁開始使用")
+     print()
+-    app.run(debug=False, port=5050, threaded=True)
++    app.run(host='0.0.0.0', debug=False, port=5050, threaded=True)
 diff --git a/banini-tracker b/banini-tracker
 --- a/banini-tracker
 +++ b/banini-tracker
@@ -52,78 +79,45 @@ diff --git a/banini-tracker b/banini-tracker
 -Subproject commit 811be48e6702a2b8519e5297ed00c8a24d7cfe29
 +Subproject commit 811be48e6702a2b8519e5297ed00c8a24d7cfe29-dirty
 diff --git a/claude_cycle_monitor.log b/claude_cycle_monitor.log
-index 5f22184..2b44f29 100644
+index 1be9112..c2d3df9 100644
 --- a/claude_cycle_monitor.log
 +++ b/claude_cycle_monitor.log
-@@ -1313,3 +1313,6 @@ google.genai.errors.ServerError: 503 UNAVAILABLE. {'error': {'code': 503, 'messa
- [16:40] 自動同步完成
- [16:41] 下一事件：midpoint @ 19:30（169 分鐘後）
- [19:31] 下一事件：end_warn @ 21:40（129 分鐘後）
-+[21:40] 自動同步完成
-+[21:41] 下一事件：midpoint @ 00:30（169 分鐘後）
-+[00:31] 下一事件：end_warn @ 02:40（129 分鐘後）
+@@ -1361,3 +1361,6 @@ google.genai.errors.ServerError: 503 UNAVAILABLE. {'error': {'code': 503, 'messa
+     raise ServerError(status_code, response_json, response)
+ google.genai.errors.ServerError: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.', 'status': 'UNAVAILABLE'}}
+ 
++[02:40] 自動同步完成
++[02:41] 下一事件：midpoint @ 05:30（169 分鐘後）
++[05:31] 下一事件：end_warn @ 07:40（129 分鐘後）
 diff --git a/daily-stock-analysis b/daily-stock-analysis
 --- a/daily-stock-analysis
 +++ b/daily-stock-analysis
 @@ -1 +1 @@
 -Subproject commit dbdf30d170decf562896d5af8e3376918dc66806
 +Subproject commit dbdf30d170decf562896d5af8e3376918dc66806-dirty
-diff --git a/logs/nightly_check.log b/logs/nightly_check.log
-index 0e34ea3..ff64bdc 100644
---- a/logs/nightly_check.log
-+++ b/logs/nightly_check.log
-@@ -849,3 +849,37 @@ VM 的 journalctl 最近 5 條 error 均為 SSH kex_exchange_identification（
- 
- [修復動作]
- - VM stock-screener 嘗試重啟
-+【半夜巡邏報告】2026-04-29 02:00
-+
-+[Mac 服務]
-+✅ rabbit-care (port 5200)
-+✅ stock-screener (port 5001)
-+✅ youtube-monitor
-+📄 今日摘要：1 支
-+
-+[Oracle VM]
-+✅ 連線正常
-+💾 磁碟：16% 使用
-+🧠 記憶體：可用 369Mi
-+✅ tele-bot
-+❌ stock-screener (VM)
-+
-+[修復動作]
-+- VM stock-screener 嘗試重啟
-+【半夜巡邏報告】2026-04-29 02:00
-+
-+[Mac 服務]
-+✅ rabbit-care (port 5200)
-+✅ stock-screener (port 5001)
-+✅ youtube-monitor
-+📄 今日摘要：1 支
-+
-+[Oracle VM]
-+✅ 連線正常
-+💾 磁碟：16% 使用
-+🧠 記憶體：可用 369Mi
-+✅ tele-bot
-+❌ stock-screener (VM)
-+
-+[修復動作]
-+- VM stock-screener 嘗試重啟
-diff --git a/logs/shopee_stock.log b/logs/shopee_stock.log
-index 687f368..1315fd1 100644
---- a/logs/shopee_stock.log
-+++ b/logs/shopee_stock.log
-@@ -3166,3 +3166,114 @@ Traceback (most recent call last):
-     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
- urllib3.exceptions.MaxRetryError: HTTPConnectionPool(host='localhost', port=63449): Max retries exceeded with url: /session/f3f55ce3-26a6-4b93-aafb-35c7ba68c22c/element/10fbd072-214b-4ba3-bd91-da09175eb2a0/text (Caused by ReadTimeoutError("HTTPConnectionPool(host='localhost', port=63449): Read timed out. (read timeout=120)"))
- [2026-04-28 20:26:54] ERROR
-+ERROR: HTTPConnectionPool(host='localhost', port=50120): Max retries exceeded with url: /session/286ccc82-c062-4958-a991-9a48f2063eec/element/ad392193-fefc-4f12-9671-2523d9f55a37/text (Caused by ReadTimeoutError("HTTPConnectionPool(host='localhost', port=50120): Read timed out. (read timeout=120)"))
-+Traceback (most recent call last):
-+  File "/Users/steven/CCProject/daytrade-replay/venv/lib/python3.14/site-packages/urllib3/connectionpool.py", line 534, in _make_request
-+    response = conn.getresponse()
-+  File "/Users/steven/CCProject/daytrade-replay/venv/lib/python3.14/site-packages/urllib3/connection.py", line 571, in getresponse
-+    httplib_response = super().getresponse
+diff --git a/dashboard/dashboard.log b/dashboard/dashboard.log
+index 5c14daa..1d915cb 100644
+--- a/dashboard/dashboard.log
++++ b/dashboard/dashboard.log
+@@ -20882,3 +20882,91 @@ Port 5600 is in use by another program. Either identify and stop that program, o
+  * Running on http://127.0.0.1:5600
+  * Running on http://192.168.68.123:5600
+ [33mPress CTRL+C to quit[0m
++192.168.68.123 - - [29/Apr/2026 06:18:22] "GET / HTTP/1.1" 200 -
++192.168.68.123 - - [29/Apr/2026 06:18:22] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
++192.168.68.123 - - [29/Apr/2026 06:18:36] "GET /api/status HTTP/1.1" 200 -
++192.168.68.123 - - [29/Apr/2026 06:19:20] "GET /api/status HTTP/1.1" 200 -
++192.168.68.123 - - [29/Apr/2026 06:20:03] "GET /api/status HTTP/1.1" 200 -
++192.168.68.123 - - [29/Apr/2026 06:20:47] "GET /api/status HTTP/1.1" 200 -
++192.168.68.123 - - [29/Apr/2026 06:21:30] "GET /api/status HTTP/1.1" 200 -
++192.168.68.123 - - [29/Apr/2026 06:22:14] "GET /api/status HTTP/1.1" 200 -
++192.168.68.123 - - [29/Apr/2026 06:22:53] "GET / HTTP/1.1" 200 -
++192.168.68.123 - - [29/Apr/2026 06:22:58] "GET /api/status HTTP/1.1" 200 -
++192.168.68.123 - - [29/Apr/2026 06:23:44] "GET /api/status HTTP/1.1" 200 -
++192.168.68.123 - - [29/Apr/2026 06:24:28] "GET /api/status HTTP/1.1" 200 -
++192.168.68.123 - - [29/Apr/2026 06:25:12] "GET /api/status HTTP/1.1" 200 -
++192.168.68.123 - - [29/Apr/2026 06:25:55] "GET /api/status HTTP/1.1" 200 -
++192.168.68.123 - - [29/Apr/2026 06:26:42] "G
 ```
 
 ---

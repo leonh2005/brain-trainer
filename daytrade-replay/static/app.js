@@ -5,7 +5,8 @@ const DAY_TRADE_TAX = 0.0015;    // 當沖證交稅 0.15%
 const SIGNAL_DEFS = [
   'VWAP突破', 'OBV領先創高', 'KD鈍化≥80', 'MACD0軸上金叉',
   'RSI5穿RSI10', '預估量爆增', '外盤比≥65%', '委買委賣差',
-  '昨量單K', '單K倍量', '超越開盤量', '量爆top30', 'MACD背離'
+  '昨量單K', '單K倍量', '超越開盤量', '量爆top30', 'MACD背離',
+  '爆量長紅×3', '回測量縮不破低',
 ];
 
 // ── 圖表物件 ─────────────────────────────────────────────────────────────────
@@ -43,6 +44,9 @@ const K12 = 2 / 11, K26 = 2 / 24, K9 = 2 / 9, RSI_K = 1 / 14;
 let ema12St = null, ema26St = null, signalSt = null;
 let rsiGain = null, rsiLoss = null, rsiPrevC = null;
 let obvVal = 0, obvPrevC = null;
+
+// ── 主力偵測狀態 ────────────────────────────────────────────────────────────
+let _lastAttackBar = null; // { barIdx, low, close }
 
 // ── 圖表初始化 ───────────────────────────────────────────────────────────────
 function initChart() {
@@ -759,6 +763,48 @@ function updateOBVNext(ts, bar) {
   obvSeries.update({ time: ts, value: obvVal });
 }
 
+// ── 主力偵測 ─────────────────────────────────────────────────────────────────
+function detectAttackBar(bar) {
+  // 需要至少 21 根（含當根）計算前20根均量
+  if (shownBars.length < 21) return false;
+  const prev20 = shownBars.slice(-21, -1);
+  const avgVol = prev20.reduce((s, b) => s + b.volume, 0) / 20;
+  return bar.close > bar.open && bar.volume >= avgVol * 3;
+}
+
+function detectPullbackHold(bar) {
+  if (!_lastAttackBar || shownBars.length < 2) return false;
+  const prev = shownBars[shownBars.length - 2];
+  return (
+    bar.close < _lastAttackBar.close &&  // 回測中（低於攻擊棒收盤）
+    bar.volume < prev.volume &&           // 量縮
+    bar.low >= _lastAttackBar.low         // 不破攻擊棒低點
+  );
+}
+
+function updateLocalSignals(bar, ts) {
+  const isAttack = detectAttackBar(bar);
+  if (isAttack) {
+    _lastAttackBar = { barIdx: playIndex - 1, low: bar.low, close: bar.close };
+    addMarker(ts, 'belowBar', '#f0883e', 'arrowUp', '爆');
+  }
+
+  const isPullback = detectPullbackHold(bar);
+  if (isPullback) {
+    addMarker(ts, 'aboveBar', '#3fb950', 'circle', '穩');
+  }
+
+  const aDot = document.getElementById('sig-dot-爆量長紅×3');
+  const aRow = document.getElementById('sig-row-爆量長紅×3');
+  if (aDot) { aDot.className = 'signal-dot' + (isAttack ? ' on' : ''); }
+  if (aRow) { aRow.className = 'signal-row' + (isAttack ? ' triggered' : ''); }
+
+  const pDot = document.getElementById('sig-dot-回測量縮不破低');
+  const pRow = document.getElementById('sig-row-回測量縮不破低');
+  if (pDot) { pDot.className = 'signal-dot' + (isPullback ? ' on' : ''); }
+  if (pRow) { pRow.className = 'signal-row' + (isPullback ? ' triggered' : ''); }
+}
+
 // ── 三關價 & CDP ─────────────────────────────────────────────────────────────
 function drawPivotLines() {
   if (!yadayHigh || !yadayLow || !yadayClose) return;
@@ -882,6 +928,7 @@ async function advanceBar() {
   document.getElementById('current-time').textContent = bar.ts.substring(11, 16);
   updateCapitalDisplay(bar.close);
   if (position) updatePnl(bar.close);
+  updateLocalSignals(bar, ts);
   if (shownBars.length >= 5) fetchSignals();
   updateStockDisplay(bar);
   updateTaiexDisplay(bar.ts.substring(11, 16));
@@ -934,6 +981,7 @@ function resetReplay() {
   ema12St = ema26St = signalSt = null;
   rsiGain = rsiLoss = rsiPrevC = null;
   obvVal = 0; obvPrevC = null;
+  _lastAttackBar = null;
 
   // 重置持倉 / UI
   _markers = [];
@@ -979,6 +1027,7 @@ function rebuildBars(count) {
   ema12St = ema26St = signalSt = null;
   rsiGain = rsiLoss = rsiPrevC = null;
   obvVal = 0; obvPrevC = null;
+  _lastAttackBar = null;
   shownBars = [];
 
   candleSeries.setData([]);
@@ -999,6 +1048,24 @@ function rebuildBars(count) {
     updateMACDNext(ts, bar);
     updateRSINext(ts, bar);
     updateOBVNext(ts, bar);
+    // 重建攻擊棒狀態（不加 marker，marker 由 _markers 保留）
+    if (detectAttackBar(bar)) {
+      _lastAttackBar = { barIdx: i, low: bar.low, close: bar.close };
+    }
+  }
+  // 更新最後一根的主力訊號燈
+  if (count > 0) {
+    const lastBar = allBars[count - 1];
+    const isA = detectAttackBar(lastBar);
+    const isP = detectPullbackHold(lastBar);
+    const aDot = document.getElementById('sig-dot-爆量長紅×3');
+    const aRow = document.getElementById('sig-row-爆量長紅×3');
+    if (aDot) { aDot.className = 'signal-dot' + (isA ? ' on' : ''); }
+    if (aRow) { aRow.className = 'signal-row' + (isA ? ' triggered' : ''); }
+    const pDot = document.getElementById('sig-dot-回測量縮不破低');
+    const pRow = document.getElementById('sig-row-回測量縮不破低');
+    if (pDot) { pDot.className = 'signal-dot' + (isP ? ' on' : ''); }
+    if (pRow) { pRow.className = 'signal-row' + (isP ? ' triggered' : ''); }
   }
   candleSeries.setMarkers(_markers);
   syncPriceScales();
