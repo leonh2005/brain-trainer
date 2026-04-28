@@ -10793,3 +10793,10 @@ Port 5700 is in use by another program. Either identify and stop that program, o
 127.0.0.1 - - [27/Apr/2026 21:02:58] "[33mGET /api/health HTTP/1.1[0m" 404 -
 127.0.0.1 - - [27/Apr/2026 21:03:39] "[33mGET /api/health HTTP/1.1[0m" 404 -
 127.0.0.1 - - [27/Apr/2026 21:04:23] "[33mGET /api/health HTTP/1.1[0m" 404 -
+ * Serving Flask app 'app'
+ * Debug mode: off
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5700
+ * Running on http://192.168.68.123:5700
+[33mPress CTRL+C to quit[0m
