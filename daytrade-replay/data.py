@@ -387,29 +387,11 @@ def get_1min_kbars(stock_id: str, date_str: str) -> list:
     today_str = str(date.today())
 
     if date_str == today_str:
-        # ── 今日：Shioaji kbars 回傳空，改用 yfinance + 即時 tick 合併 ──────
-        hist_bars = _sj_stock_1min(stock_id, date_str)
-
-        # Shioaji kbars 對今日回傳空，fallback yfinance（約延遲 1~2 分鐘）
-        if not hist_bars:
-            hist_bars = _yf_today_1min(stock_id)
-
+        # 今日只用 Shioaji 即時 tick bars（不 fallback yfinance）
         from datetime import datetime as _dt
         from datetime import time as _t
         after_close = _dt.now().time() >= _t(13, 30)
-        live_bars = _realtime_feed.get_bars(date_str, include_forming=after_close)
-
-        if not hist_bars and not live_bars:
-            return []
-
-        # 以 ts 為 key 合併，tick-built bars 優先（live 覆蓋 hist 相同 ts）
-        merged: dict = {}
-        for b in hist_bars:
-            merged[b['ts']] = b
-        for b in live_bars:
-            merged[b['ts']] = b
-
-        return sorted(merged.values(), key=lambda b: b['ts'])
+        return _realtime_feed.get_bars(date_str, include_forming=after_close)
 
     # ── 非今日：Shioaji kbars() 優先，失敗 fallback yfinance ──────────────
     bars = _sj_stock_1min(stock_id, date_str)

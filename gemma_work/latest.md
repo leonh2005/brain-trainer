@@ -1,42 +1,47 @@
-# Claude Handoff 20260428_0640
+# Claude Handoff 20260428_1140
 
 ## Git 狀態（未提交）
 ```
 m banini-tracker
  M claude_cycle_monitor.log
  m daily-stock-analysis
- M logs/nightly_check.log
+ M daytrade-replay/data.py
+ M daytrade-replay/server.log
+ M daytrade-replay/static/app.js
+ M logs/daytrade.log
+ M logs/market-dashboard.log
+ M logs/shopee_keepalive.log
  M logs/shopee_stock.log
+ M logs/thread_summarizer.log
+ M logs/thread_summarizer_error.log
+ M logs/voice_ideas_report.log
+ M market-dashboard/fg_history.json
+ M market-dashboard/index.html
+ M market-dashboard/sp_state.json
  M rabbit-care/rabbit.db
- D rabbit-care/static/action_screenshots/20260421_021912_eating.jpg
- D rabbit-care/static/action_screenshots/20260421_025505_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260421_031518_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260421_035404_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260421_040145_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260421_041208_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260421_041951_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260421_042515_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260421_051442_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260421_052014_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260421_052743_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260421_053318_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260421_055005_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260421_060335_eating.jpg
- M rabbit-care/tunnel-fixed.log
- M rabbit-care/tunnel.log
+ D rabbit-care/static/action_screenshots/20260421_062757_sleeping.jpg
+ D rabbit-care/static/action_screenshots/20260421_070844_sleeping.jpg
+ D rabbit-care/static/action_screenshots/20260421_085802_eating.jpg
+ D rabbit-care/static/action_screenshots/20260421_090843_eating.jpg
+ D rabbit-care/static/action_screenshots/20260421_091535_eating.jpg
  m stock-screener-ai
-?? rabbit-care/static/action_screenshots/20260428_021955_sleeping.jpg
-?? rabbit-care/static/action_screenshots/20260428_023205_sleeping.jpg
-?? rabbit-care/static/action_screenshots/20260428_031629_sleeping.jpg
-?? rabbit-care/static/action_screenshots/20260428_035051_sleeping.jpg
-?? rabbit-care/static/action_screenshots/20260428_051033_sleeping.jpg
-?? rabbit-care/static/action_screenshots/20260428_054337_sleeping.jpg
-?? rabbit-care/static/action_screenshots/20260428_060025_sleeping.jpg
-?? rabbit-care/static/action_screenshots/20260428_062455_sleeping.jpg
+ M threads-daily/cron.log
+?? rabbit-care/static/action_screenshots/20260428_064917_sleeping.jpg
+?? rabbit-care/static/action_screenshots/20260428_065621_sleeping.jpg
+?? rabbit-care/static/action_screenshots/20260428_070329_sleeping.jpg
+?? rabbit-care/static/action_screenshots/20260428_070938_sleeping.jpg
+?? rabbit-care/static/action_screenshots/20260428_075131_sleeping.jpg
+?? rabbit-care/static/action_screenshots/20260428_075633_sleeping.jpg
+?? rabbit-care/static/action_screenshots/20260428_080149_sleeping.jpg
+?? rabbit-care/static/action_screenshots/20260428_082011_sleeping.jpg
+?? rabbit-care/static/action_screenshots/20260428_084816_eating.jpg
+?? rabbit-care/static/action_screenshots/20260428_090420_sleeping.jpg
+?? rabbit-care/static/action_screenshots/20260428_091837_sleeping.jpg
 ```
 
 ## 近期 Commits
 ```
+1bb8f30 chore: 自動同步 2026-04-28 06:40
 34db1a8 chore: 自動同步 2026-04-28 01:40
 7eaef0e chore: 自動同步 2026-04-27 15:55
 57fb65c chore: 自動同步 2026-04-27 20:40
@@ -44,7 +49,6 @@ eb78487 chore: 自動同步 2026-04-27 15:40
 f21cf19 chore: 自動同步 2026-04-27 10:40
 f2ef379 chore: 自動同步 2026-04-27 05:40
 7db94bd chore: 自動同步 2026-04-27 00:40
-ef3a40e chore: 自動同步 2026-04-26 19:40
 ```
 
 ## 未提交的變更
@@ -56,76 +60,70 @@ diff --git a/banini-tracker b/banini-tracker
 -Subproject commit 811be48e6702a2b8519e5297ed00c8a24d7cfe29
 +Subproject commit 811be48e6702a2b8519e5297ed00c8a24d7cfe29-dirty
 diff --git a/claude_cycle_monitor.log b/claude_cycle_monitor.log
-index edbd6a3..3fe0c92 100644
+index 3fe0c92..a308520 100644
 --- a/claude_cycle_monitor.log
 +++ b/claude_cycle_monitor.log
-@@ -1301,3 +1301,6 @@ google.genai.errors.ServerError: 503 UNAVAILABLE. {'error': {'code': 503, 'messa
-     raise ServerError(status_code, response_json, response)
- google.genai.errors.ServerError: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.', 'status': 'UNAVAILABLE'}}
- 
-+[01:40] 自動同步完成
-+[01:41] 下一事件：midpoint @ 04:30（169 分鐘後）
-+[04:31] 下一事件：end_warn @ 06:40（129 分鐘後）
+@@ -1304,3 +1304,6 @@ google.genai.errors.ServerError: 503 UNAVAILABLE. {'error': {'code': 503, 'messa
+ [01:40] 自動同步完成
+ [01:41] 下一事件：midpoint @ 04:30（169 分鐘後）
+ [04:31] 下一事件：end_warn @ 06:40（129 分鐘後）
++[06:40] 自動同步完成
++[06:41] 下一事件：midpoint @ 09:30（169 分鐘後）
++[09:31] 下一事件：end_warn @ 11:40（129 分鐘後）
 diff --git a/daily-stock-analysis b/daily-stock-analysis
 --- a/daily-stock-analysis
 +++ b/daily-stock-analysis
 @@ -1 +1 @@
 -Subproject commit dbdf30d170decf562896d5af8e3376918dc66806
 +Subproject commit dbdf30d170decf562896d5af8e3376918dc66806-dirty
-diff --git a/logs/nightly_check.log b/logs/nightly_check.log
-index d6acd94..0e34ea3 100644
---- a/logs/nightly_check.log
-+++ b/logs/nightly_check.log
-@@ -815,3 +815,37 @@ VM 的 journalctl 最近 5 條 error 均為 SSH kex_exchange_identification（
+diff --git a/daytrade-replay/data.py b/daytrade-replay/data.py
+index a6398cd..797f565 100644
+--- a/daytrade-replay/data.py
++++ b/daytrade-replay/data.py
+@@ -387,29 +387,11 @@ def get_1min_kbars(stock_id: str, date_str: str) -> list:
+     today_str = str(date.today())
  
- [修復動作]
- - VM stock-screener 嘗試重啟
-+【半夜巡邏報告】2026-04-28 02:00
-+
-+[Mac 服務]
-+✅ rabbit-care (port 5200)
-+✅ stock-screener (port 5001)
-+✅ youtube-monitor
-+📄 今日摘要：1 支
-+
-+[Oracle VM]
-+✅ 連線正常
-+💾 磁碟：16% 使用
-+🧠 記憶體：可用 366Mi
-+✅ tele-bot
-+❌ stock-screener (VM)
-+
-+[修復動作]
-+- VM stock-screener 嘗試重啟
-+【半夜巡邏報告】2026-04-28 02:00
-+
-+[Mac 服務]
-+✅ rabbit-care (port 5200)
-+✅ stock-screener (port 5001)
-+✅ youtube-monitor
-+📄 今日摘要：1 支
-+
-+[Oracle VM]
-+✅ 連線正常
-+💾 磁碟：16% 使用
-+🧠 記憶體：可用 366Mi
-+✅ tele-bot
-+❌ stock-screener (VM)
-+
-+[修復動作]
-+- VM stock-screener 嘗試重啟
-diff --git a/logs/shopee_stock.log b/logs/shopee_stock.log
-index 6d54ee9..8b12286 100644
---- a/logs/shopee_stock.log
-+++ b/logs/shopee_stock.log
-@@ -2611,3 +2611,114 @@ Traceback (most recent call last):
-     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
- urllib3.exceptions.MaxRetryError: HTTPConnectionPool(host='localhost', port=61667): Max retries exceeded with url: /session/53d8c9e6-67a0-4e15-b36b-4f51dcf64ddd/element/16a48fd2-e717-4087-9553-bef1856e93e9/text (Caused by ReadTimeoutError("HTTPConnectionPool(host='localhost', port=61667): Read timed out. (read timeout=120)"))
- [2026-04-28 00:23:31] ERROR
-+ERROR: HTTPConnectionPool(host='localhost', port=51192): Max retries exceeded with url: /session/05bb3eb7-6d6a-420d-997d-f457bc928b88/element/a48a4b58-acab-4a59-a88c-6d72d6aeceb8/text (Caused by ReadTimeoutError("HTTPConnectionPool(host='localhost', port=51192): Read timed out. (read timeout=120)"))
-+Traceback (most recent call last):
-+  File "/Users/steven/CCProject/daytrade-replay/venv/lib/python3.14/site-packages/urllib3/connectionpool.py", line 534, in _make_request
-+    response 
+     if date_str == today_str:
+-        # ── 今日：Shioaji kbars 回傳空，改用 yfinance + 即時 tick 合併 ──────
+-        hist_bars = _sj_stock_1min(stock_id, date_str)
+-
+-        # Shioaji kbars 對今日回傳空，fallback yfinance（約延遲 1~2 分鐘）
+-        if not hist_bars:
+-            hist_bars = _yf_today_1min(stock_id)
+-
++        # 今日只用 Shioaji 即時 tick bars（不 fallback yfinance）
+         from datetime import datetime as _dt
+         from datetime import time as _t
+         after_close = _dt.now().time() >= _t(13, 30)
+-        live_bars = _realtime_feed.get_bars(date_str, include_forming=after_close)
+-
+-        if not hist_bars and not live_bars:
+-            return []
+-
+-        # 以 ts 為 key 合併，tick-built bars 優先（live 覆蓋 hist 相同 ts）
+-        merged: dict = {}
+-        for b in hist_bars:
+-            merged[b['ts']] = b
+-        for b in live_bars:
+-            merged[b['ts']] = b
+-
+-        return sorted(merged.values(), key=lambda b: b['ts'])
++        return _realtime_feed.get_bars(date_str, include_forming=after_close)
+ 
+     # ── 非今日：Shioaji kbars() 優先，失敗 fallback yfinance ──────────────
+     bars = _sj_stock_1min(stock_id, date_str)
+diff --git a/daytrade-replay/server.log b/daytrade-replay/server.log
+index d05d72a..7a24d50 100644
+--- a/daytrade-replay/server.log
++++ b/daytrade-replay/server.log
+@@ -135406,3 +135406,170 @@ Response Code: 200 | Event Code: 16 | Info: APISUB/V1/SYS/CONTRACT | Event: Subs
+ 127.0.0.1 - - [27/Apr/2026 21:02:58] "GET /api/health HTTP/1.1" 200 -
+ 127.0.0.1 - - [27/Apr/2026 21:03:39] "GET /api/health HTTP/1.1" 200 -
+ 127.0.0.1 - - [27/Apr/2026 21:04:23] "GET /api/health HTTP/1.1" 200 -
++[daytrade-replay] 啟動 http://localhost:5400
++ * Serving Flask app 'app'
++ * Debug mode: off
++[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a
 ```
 
 ---

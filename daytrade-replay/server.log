@@ -135406,3 +135406,170 @@ Response Code: 200 | Event Code: 16 | Info: APISUB/V1/SYS/CONTRACT | Event: Subs
 127.0.0.1 - - [27/Apr/2026 21:02:58] "GET /api/health HTTP/1.1" 200 -
 127.0.0.1 - - [27/Apr/2026 21:03:39] "GET /api/health HTTP/1.1" 200 -
 127.0.0.1 - - [27/Apr/2026 21:04:23] "GET /api/health HTTP/1.1" 200 -
+[daytrade-replay] 啟動 http://localhost:5400
+ * Serving Flask app 'app'
+ * Debug mode: off
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5400
+ * Running on http://192.168.68.123:5400
+[33mPress CTRL+C to quit[0m
+2026-04-28 10:26:12.523 | WARNING  | importlib._bootstrap:_call_with_frames_removed:491 - Optional: pip install shioaji[speed] or uv add shioaji --extra speed for better performance.
+[auto-sub] 背景排程執行緒啟動
+[daytrade-replay] 啟動 http://localhost:5400
+ * Serving Flask app 'app'
+ * Debug mode: off
+Address already in use
+Port 5400 is in use by another program. Either identify and stop that program, or start the server with a different port.
+127.0.0.1 - - [28/Apr/2026 10:26:19] "GET /api/health HTTP/1.1" 200 -
+Response Code: 0 | Event Code: 0 | Info: host '210.59.255.161:80', hostname '210.59.255.161:80' IP 210.59.255.161:80 (host 1 of 1) (host connection attempt 1 of 1) (total connection attempt 1 of 1) | Event: Session up
+[sj] 永豐 API 登入成功
+[sj] tick callback 已登記
+[feed] 切換訂閱股票 → 2303
+[sj] 訂閱 2303 tick 成功
+[auto-sub] 服務啟動盤中，自動訂閱 2303
+Response Code: 200 | Event Code: 16 | Info: APISUB/V1/SYS/CONTRACT | Event: Subscribe or Unsubscribe ok
+Response Code: 200 | Event Code: 16 | Info: TIC/v1/STK/*/TSE/2303 | Event: Subscribe or Unsubscribe ok
+[feed] ✓ 收到第一筆 tick 2303 @ 2026-04-28 10:26:21.446544 close=75.6
+127.0.0.1 - - [28/Apr/2026 10:26:26] "GET /api/kbars?stock=2344&date=2026-04-28 HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 10:26:27] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 10:27:11] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 10:27:54] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 10:28:38] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 10:29:21] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 10:30:05] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 10:30:25] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 10:30:25] "GET /static/lightweight-charts.js HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 10:30:25] "GET /static/app.js HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 10:30:25] "GET /api/stocks HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 10:30:25] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+127.0.0.1 - - [28/Apr/2026 10:30:29] "GET /api/dates?stock=2317 HTTP/1.1" 200 -
+[sj] 取消訂閱 2303
+[feed] 切換訂閱股票 → 2317
+[sj] 訂閱 2317 tick 成功
+Response Code: 200 | Event Code: 16 | Info: TIC/v1/STK/*/TSE/2303 | Event: Subscribe or Unsubscribe ok127.0.0.1 - - [28/Apr/2026 10:30:34] "POST /api/subscribe HTTP/1.1" 200 -
+
+Response Code: 200 | Event Code: 16 | Info: TIC/v1/STK/*/TSE/2317 | Event: Subscribe or Unsubscribe ok
+127.0.0.1 - - [28/Apr/2026 10:30:34] "GET /api/kbars?stock=2317&date=2026-04-28 HTTP/1.1" 200 -
+[feed] ✓ 收到第一筆 tick 2317 @ 2026-04-28 10:30:34.323542 close=227
+[sj] 訂閱 2317 tick 成功
+127.0.0.1 - - [28/Apr/2026 10:30:39] "POST /api/subscribe HTTP/1.1" 200 -
+Response Code: 200 | Event Code: 16 | Info: Subscription Already Exists - Topic 'TIC/v1/STK/*/TSE/2317' Subscribe: Response code: '400'; Flags: 'c';  | Event: Subscribe or Unsubscribe ok
+127.0.0.1 - - [28/Apr/2026 10:30:39] "GET /api/kbars?stock=2317&date=2026-04-28 HTTP/1.1" 200 -
+[sj] 訂閱 2317 tick 成功
+127.0.0.1 - - [28/Apr/2026 10:30:44] "POST /api/subscribe HTTP/1.1" 200 -
+Response Code: 200 | Event Code: 16 | Info: Subscription Already Exists - Topic 'TIC/v1/STK/*/TSE/2317' Subscribe: Response code: '400'; Flags: 'c';  | Event: Subscribe or Unsubscribe ok
+127.0.0.1 - - [28/Apr/2026 10:30:44] "GET /api/kbars?stock=2317&date=2026-04-28 HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 10:30:48] "GET /api/health HTTP/1.1" 200 -
+[sj] 訂閱 2317 tick 成功
+127.0.0.1 - - [28/Apr/2026 10:30:49] "POST /api/subscribe HTTP/1.1" 200 -
+Response Code: 200 | Event Code: 16 | Info: Subscription Already Exists - Topic 'TIC/v1/STK/*/TSE/2317' Subscribe: Response code: '400'; Flags: 'c';  | Event: Subscribe or Unsubscribe ok
+127.0.0.1 - - [28/Apr/2026 10:30:49] "GET /api/kbars?stock=2317&date=2026-04-28 HTTP/1.1" 200 -
+[sj] 訂閱 2317 tick 成功
+127.0.0.1 - - [28/Apr/2026 10:30:55] "POST /api/subscribe HTTP/1.1" 200 -
+Response Code: 200 | Event Code: 16 | Info: Subscription Already Exists - Topic 'TIC/v1/STK/*/TSE/2317' Subscribe: Response code: '400'; Flags: 'c';  | Event: Subscribe or Unsubscribe ok
+127.0.0.1 - - [28/Apr/2026 10:30:55] "GET /api/kbars?stock=2317&date=2026-04-28 HTTP/1.1" 200 -
+[sj] 訂閱 2317 tick 成功
+127.0.0.1 - - [28/Apr/2026 10:31:01] "POST /api/subscribe HTTP/1.1" 200 -
+Response Code: 200 | Event Code: 16 | Info: Subscription Already Exists - Topic 'TIC/v1/STK/*/TSE/2317' Subscribe: Response code: '400'; Flags: 'c';  | Event: Subscribe or Unsubscribe ok
+127.0.0.1 - - [28/Apr/2026 10:31:01] "GET /api/kbars?stock=2317&date=2026-04-28 HTTP/1.1" 200 -
+[sj] 訂閱 2317 tick 成功
+127.0.0.1 - - [28/Apr/2026 10:31:06] "POST /api/subscribe HTTP/1.1" 200 -
+Response Code: 200 | Event Code: 16 | Info: Subscription Already Exists - Topic 'TIC/v1/STK/*/TSE/2317' Subscribe: Response code: '400'; Flags: 'c';  | Event: Subscribe or Unsubscribe ok
+127.0.0.1 - - [28/Apr/2026 10:31:06] "GET /api/kbars?stock=2317&date=2026-04-28 HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 10:31:06] "GET /api/index_data?stock=2317&date=2026-04-28 HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 10:31:32] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 10:32:15] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 10:32:59] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 10:33:42] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 10:34:26] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 10:35:09] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 10:35:52] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 10:36:36] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 10:37:19] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 10:38:03] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 10:38:46] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 10:39:30] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 10:40:13] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 10:40:56] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 10:41:40] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 10:42:23] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 10:43:07] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 10:43:50] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 10:44:34] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 10:45:17] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 10:46:01] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 10:46:44] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 10:47:28] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 10:48:11] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 10:48:54] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 10:49:38] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 10:50:21] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 10:51:05] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 10:51:48] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 10:52:32] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 10:53:16] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 10:54:00] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 10:54:43] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 10:55:27] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 10:56:10] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 10:56:54] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 10:57:37] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 10:58:20] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 10:59:04] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 10:59:47] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 11:00:31] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 11:01:14] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 11:01:58] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 11:02:41] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 11:03:24] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 11:04:08] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 11:04:52] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 11:05:35] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 11:06:19] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 11:07:02] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 11:07:46] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 11:08:29] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 11:09:13] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 11:09:56] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 11:10:41] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 11:11:24] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 11:12:08] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 11:12:51] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 11:13:35] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 11:14:19] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 11:15:02] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 11:15:46] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 11:16:29] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 11:17:13] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 11:17:56] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 11:18:40] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 11:19:23] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 11:20:06] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 11:20:50] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 11:21:33] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 11:22:17] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 11:23:00] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 11:23:44] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 11:24:28] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 11:25:12] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 11:25:55] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 11:26:39] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 11:27:22] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 11:28:05] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 11:28:49] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 11:29:32] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 11:30:16] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 11:30:59] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 11:31:43] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 11:32:26] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 11:33:10] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 11:33:54] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 11:34:37] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 11:35:21] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 11:36:04] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 11:36:49] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 11:37:32] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 11:38:16] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 11:38:59] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2026 11:39:43] "GET /api/health HTTP/1.1" 200 -
