@@ -186,7 +186,51 @@ def fetch_fear_greed():
         return {"score": None, "rating": "N/A", "history": hist}
 
 
-def generate_html(vix_data, sp_data, ma_data, sp_hist_high, fg_data, tw_data, tw_ma_data, tw_hist_high, generated_at):
+def fetch_buffett_indicator():
+    """巴菲特指標 = 美股總市值 / US GDP × 100%
+    市值代理：yfinance ^W5000，用 World Bank 最近年度市值校準換算為十億美元
+    GDP：World Bank 年度資料（十億美元），前向填充至日頻
+    """
+    try:
+        df = yf.download('^W5000', period='20y', progress=False, auto_adjust=True)
+        close = df[('Close', '^W5000')].dropna()
+
+        r_cap = requests.get(
+            'https://api.worldbank.org/v2/country/US/indicator/CM.MKT.LCAP.CD?format=json&mrv=30',
+            timeout=15
+        )
+        r_gdp = requests.get(
+            'https://api.worldbank.org/v2/country/US/indicator/NY.GDP.MKTP.CD?format=json&mrv=30',
+            timeout=15
+        )
+        cap_data = {int(item['date']): item['value'] / 1e9
+                    for item in r_cap.json()[1] if item['value']}
+        gdp_data = {int(item['date']): item['value'] / 1e9
+                    for item in r_gdp.json()[1] if item['value']}
+
+        # 用最近有效年度的 World Bank 市值 / 年末 W5000 計算校準係數
+        calib_year = max(set(cap_data.keys()) & set(gdp_data.keys()))
+        calib_end = close[close.index.year == calib_year]
+        w5000_year_end = float(calib_end.iloc[-1]) if len(calib_end) else None
+        calib_factor = cap_data[calib_year] / w5000_year_end if w5000_year_end else 1.0
+
+        # GDP 前向填充至日頻
+        gdp_series = pd.Series(
+            {pd.Timestamp(f'{yr}-12-31'): val for yr, val in sorted(gdp_data.items())}
+        ).sort_index()
+        gdp_daily = gdp_series.reindex(close.index, method='ffill')
+
+        ratio = (close * calib_factor / gdp_daily * 100).dropna()
+        hist = [{'x': d.strftime('%Y-%m-%d'), 'y': trunc2(float(v))} for d, v in ratio.items()]
+        current = trunc2(float(ratio.iloc[-1])) if len(ratio) else None
+        print(f'[buffett] 校準年：{calib_year}，係數：{calib_factor:.4f}，當前值：{current}%')
+        return {'current': current, 'history': hist}
+    except Exception as e:
+        print(f'巴菲特指標抓取失敗: {e}')
+        return {'current': None, 'history': []}
+
+
+def generate_html(vix_data, sp_data, ma_data, sp_hist_high, fg_data, tw_data, tw_ma_data, tw_hist_high, buffett_data, generated_at):
     vix_current = vix_data[-1]["y"] if vix_data else 0
     sp_current = sp_data[-1]["y"] if sp_data else 0
     ma_current = ma_data[-1]["y"] if ma_data else 0
@@ -194,6 +238,20 @@ def generate_html(vix_data, sp_data, ma_data, sp_hist_high, fg_data, tw_data, tw
     sp_vs_high = trunc2((sp_current / sp_hist_high - 1) * 100) if sp_hist_high else 0
     fg_score = fg_data["score"]
     fg_rating = fg_data["rating"]
+    buffett_current = buffett_data.get("current")
+    buffett_color = (
+        "#ff4757" if buffett_current and buffett_current > 150 else
+        "#ffaa00" if buffett_current and buffett_current > 100 else
+        "#00b8ff" if buffett_current and buffett_current > 80 else
+        "#00d68f"
+    )
+    buffett_label = (
+        "極度高估 >150%" if buffett_current and buffett_current > 150 else
+        "高估 100–150%" if buffett_current and buffett_current > 100 else
+        "合理 80–100%" if buffett_current and buffett_current > 80 else
+        "低估 <80%"
+    )
+    buffett_display = f"{buffett_current:.1f}" if buffett_current is not None else "N/A"
     tw_current = tw_data[-1]["y"] if tw_data else 0
     tw_ma_current = tw_ma_data[-1]["y"] if tw_ma_data else 0
     tw_vs_ma = trunc2((tw_current / tw_ma_current - 1) * 100) if tw_ma_current else 0
@@ -516,6 +574,15 @@ def generate_html(vix_data, sp_data, ma_data, sp_hist_high, fg_data, tw_data, tw
       <br><span style="font-size:0.7rem;opacity:0.6">歷史高點：{tw_hist_high:,.0f}&nbsp;&nbsp;<b style="opacity:1">{tw_vs_high:.1f}%</b></span>
     </div>
   </div>
+
+  <div class="card" style="--accent: {buffett_color}; grid-column: span 2">
+    <div class="card-label"><span class="pulse"></span>巴菲特指標（Wilshire 5000 / US GDP）</div>
+    <div class="card-value">{buffett_display}<span style="font-size:1.8rem">%</span></div>
+    <div class="card-sub">
+      <b>{buffett_label}</b>
+      &nbsp;·&nbsp; 低估 &lt;80% ／ 合理 80–100% ／ 高估 100–150% ／ 極高估 &gt;150%
+    </div>
+  </div>
 </div>
 
 <div class="controls">
@@ -564,6 +631,18 @@ def generate_html(vix_data, sp_data, ma_data, sp_hist_high, fg_data, tw_data, tw
 
   <div class="chart-section">
     <div class="chart-header">
+      <div class="chart-title"><b>巴菲特指標</b> Wilshire 5000 市值 / US GDP</div>
+      <div class="chart-legend">
+        <div class="legend-item" style="color:#ff4757"><div class="legend-dot" style="background:#ff4757"></div>&gt;150% 極高估</div>
+        <div class="legend-item" style="color:#ffaa00"><div class="legend-dot" style="background:#ffaa00"></div>&gt;100% 高估</div>
+        <div class="legend-item" style="color:#00d68f"><div class="legend-dot" style="background:#00d68f"></div>&lt;80% 低估</div>
+      </div>
+    </div>
+    <div class="chart-wrap"><canvas id="buffettChart"></canvas></div>
+  </div>
+
+  <div class="chart-section">
+    <div class="chart-header">
       <div class="chart-title"><b>台股加權指數</b> 收盤價 vs 200日均線 vs 歷史高點</div>
       <div class="chart-legend">
         <div class="legend-item"><div class="legend-dot" style="background:#ff4757"></div>加權指數</div>
@@ -589,6 +668,7 @@ const FG_DATA  = {json.dumps(fg_data["history"])};
 const TW_DATA  = {json.dumps(tw_data)};
 const TW_MA_DATA = {json.dumps(tw_ma_data)};
 const TW_HIST_HIGH = {tw_hist_high};
+const BUFFETT_DATA = {json.dumps(buffett_data["history"])};
 
 const CHART_DEFAULTS = {{
   responsive: true,
@@ -816,6 +896,57 @@ Chart.register(twHighPlugin);
 twChart.config.plugins = [twHighPlugin];
 twChart.update();
 
+// Buffett Indicator chart
+const buffettPlugin = {{
+  id: 'buffettBands',
+  beforeDraw(chart) {{
+    const {{ ctx, chartArea, scales }} = chart;
+    if (!chartArea) return;
+    ctx.save();
+    const bands = [
+      [0,   80,  'rgba(0,214,143,0.06)'],
+      [100, 150, 'rgba(255,170,0,0.06)'],
+      [150, 999, 'rgba(255,71,87,0.06)'],
+    ];
+    bands.forEach(([lo, hi, color]) => {{
+      const y1 = scales.y.getPixelForValue(Math.min(hi, scales.y.max));
+      const y2 = scales.y.getPixelForValue(Math.max(lo, scales.y.min));
+      if (y1 >= y2) return;
+      ctx.fillStyle = color;
+      ctx.fillRect(chartArea.left, y1, chartArea.right - chartArea.left, y2 - y1);
+    }});
+    [[80, 'rgba(0,214,143,0.4)'], [100, 'rgba(255,170,0,0.5)'], [150, 'rgba(255,71,87,0.5)']].forEach(([v, c]) => {{
+      const y = scales.y.getPixelForValue(v);
+      if (y < chartArea.top || y > chartArea.bottom) return;
+      ctx.strokeStyle = c;
+      ctx.lineWidth = 1;
+      ctx.setLineDash([4, 4]);
+      ctx.beginPath(); ctx.moveTo(chartArea.left, y); ctx.lineTo(chartArea.right, y); ctx.stroke();
+      ctx.fillStyle = c;
+      ctx.font = "9px 'Share Tech Mono'";
+      ctx.fillText(v + '%', chartArea.right - 30, y - 3);
+    }});
+    ctx.restore();
+  }}
+}};
+
+const buffettChart = makeChart('buffettChart', [{{
+  data: BUFFETT_DATA,
+  borderWidth: 1.5,
+  pointRadius: 0,
+  fill: false,
+  parsing: {{ xAxisKey: 'x', yAxisKey: 'y' }},
+  tension: 0.3,
+  segment: {{
+    borderColor: ctx => ctx.p1.parsed.y > 150 ? '#ff4757' :
+                        ctx.p1.parsed.y > 100 ? '#ffaa00' :
+                        ctx.p1.parsed.y > 80  ? '#00b8ff' : '#00d68f',
+  }},
+}}], 0, null);
+Chart.register(buffettPlugin);
+buffettChart.config.plugins = [buffettPlugin];
+buffettChart.update();
+
 // Range selector
 function setRange(days) {{
   document.querySelectorAll('.btn').forEach(b => b.classList.remove('active'));
@@ -842,6 +973,9 @@ function setRange(days) {{
   twChart.data.datasets[0].data = filter(TW_DATA);
   twChart.data.datasets[1].data = filter(TW_MA_DATA);
   twChart.update('none');
+
+  buffettChart.data.datasets[0].data = filter(BUFFETT_DATA);
+  buffettChart.update('none');
 }}
 </script>
 </body>
@@ -862,10 +996,13 @@ def main():
     print(f"[{datetime.now().strftime('%H:%M:%S')}] 抓取台股加權指數資料...")
     tw_data, tw_ma_data, tw_hist_high = fetch_taiex_with_ma("20y")
 
+    print(f"[{datetime.now().strftime('%H:%M:%S')}] 抓取巴菲特指標...")
+    buffett_data = fetch_buffett_indicator()
+
     generated_at = datetime.now().strftime("%Y-%m-%d %H:%M")
     print(f"[{datetime.now().strftime('%H:%M:%S')}] 生成 HTML...")
 
-    html = generate_html(vix_data, sp_data, ma_data, sp_hist_high, fg_data, tw_data, tw_ma_data, tw_hist_high, generated_at)
+    html = generate_html(vix_data, sp_data, ma_data, sp_hist_high, fg_data, tw_data, tw_ma_data, tw_hist_high, buffett_data, generated_at)
     OUTPUT.write_text(html, encoding="utf-8")
 
     vix_current = vix_data[-1]["y"] if vix_data else "N/A"
@@ -884,12 +1021,15 @@ def main():
     print(f"  VIX: {vix_current}  |  S&P: {sp_current}  |  200MA: {ma_current}  |  {above_below} 200MA ({sp_vs_ma_str})  |  F&G: {fg_score} ({fg_rating})")
     print(f"  加權指數: {tw_current}  |  200MA: {tw_ma_current}  |  vs 200MA: {tw_vs_ma_str}  |  距高點: {tw_vs_high_str}  |  ATH: {tw_hist_high}")
 
+    buffett_current = buffett_data.get("current")
+    buffett_str = f"{buffett_current:.1f}%" if buffett_current is not None else "N/A"
     send_telegram(
         f"📊 市場儀表板已更新 {generated_at}\n"
         f"VIX：{vix_current}\n"
         f"Fear & Greed：{fg_score} ({fg_rating})\n"
         f"S&P 500：{sp_current:,.2f}\n"
-        f"台股加權：{tw_current:,.0f}　vs 200MA {tw_vs_ma_str}　距高點 {tw_vs_high_str}"
+        f"台股加權：{tw_current:,.0f}　vs 200MA {tw_vs_ma_str}　距高點 {tw_vs_high_str}\n"
+        f"巴菲特指標：{buffett_str}"
     )
 
     # S&P 500 vs 200MA 狀態變化通知（只在跌破 / 收復時各通知一次）
