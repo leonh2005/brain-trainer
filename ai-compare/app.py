@@ -75,4 +75,4 @@ if __name__ == '__main__':
     print("  ⚡ AI Arena 已啟動 → http://localhost:5050")
     print("  📋 請在彈出的瀏覽器中登入各 AI 服務，然後回到網頁開始使用")
     print()
-    app.run(debug=False, port=5050, threaded=True)
+    app.run(host='0.0.0.0', debug=False, port=5050, threaded=True)
