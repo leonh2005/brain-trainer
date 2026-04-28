@@ -478,7 +478,7 @@ async function loadKbars(stockId, dateStr) {
   let data;
   try {
     const ctrl = new AbortController();
-    const timer = setTimeout(() => ctrl.abort(), 15000);
+    const timer = setTimeout(() => ctrl.abort(), 45000);
     data = await fetch(`/api/kbars?stock=${stockId}&date=${dateStr}`, { signal: ctrl.signal }).then(r => r.json());
     clearTimeout(timer);
   } catch(e) {
