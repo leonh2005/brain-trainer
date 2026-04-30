@@ -404,3 +404,17 @@ Traceback (most recent call last):
     return io.open(self, mode, buffering, encoding, errors, newline)
            ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 FileNotFoundError: [Errno 2] No such file or directory: '/Users/steven/Library/CloudStorage/GoogleDrive-leonh2005@gmail.com/我的雲端硬碟/Obsidian Vault/thread/.last_summarized'
+Traceback (most recent call last):
+  File "/Users/steven/CCProject/thread_summarizer.py", line 94, in <module>
+    main()
+    ~~~~^^
+  File "/Users/steven/CCProject/thread_summarizer.py", line 75, in main
+    MARKER_FILE.write_text(date.today().isoformat())
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/pathlib/__init__.py", line 809, in write_text
+    with self.open(mode='w', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/pathlib/__init__.py", line 771, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/steven/Library/CloudStorage/GoogleDrive-leonh2005@gmail.com/我的雲端硬碟/Obsidian Vault/thread/.last_summarized'
