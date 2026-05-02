@@ -1,0 +1,9 @@
+shioaji
+python-dotenv
+groq
+openai
+google-genai
+python-telegram-bot>=20.0
+aiohttp
+pandas
+requests
