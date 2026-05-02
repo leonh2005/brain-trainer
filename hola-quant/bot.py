@@ -135,6 +135,7 @@ class HolaQuantBot:
 
         try:
             new_shares = max(1, int(text))
+            logger.info(f"[bot] 自訂股數：{new_shares} 股（{ctx['symbol']}）")
         except ValueError:
             await update.message.reply_text("⚠️ 請輸入正整數，例如：15")
             _awaiting_input[chat_id] = ctx  # 繼續等待
