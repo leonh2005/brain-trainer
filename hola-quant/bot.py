@@ -10,7 +10,7 @@ from dataclasses import dataclass, replace
 from typing import Callable, Awaitable
 
 from telegram import ForceReply, InlineKeyboardButton, InlineKeyboardMarkup, Update
-from telegram.ext import Application, CallbackQueryHandler, ContextTypes, MessageHandler, filters
+from telegram.ext import Application, CallbackQueryHandler, CommandHandler, ContextTypes, MessageHandler, filters
 
 logger = logging.getLogger(__name__)
 
@@ -95,9 +95,14 @@ class HolaQuantBot:
     def __init__(self):
         token = os.environ["TG_BOT_TOKEN"]
         self.chat_id = int(os.environ["TG_CHAT_ID"])
+        self._status_getter: Callable[[], dict] | None = None
         self.app = Application.builder().token(token).build()
+        self.app.add_handler(CommandHandler("status", self._on_status))
         self.app.add_handler(CallbackQueryHandler(self._on_callback))
         self.app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, self._on_text))
+
+    def set_status_getter(self, getter: Callable[[], dict]):
+        self._status_getter = getter
 
     async def start(self):
         await self.app.initialize()
@@ -109,6 +114,28 @@ class HolaQuantBot:
         await self.app.updater.stop()
         await self.app.stop()
         await self.app.shutdown()
+
+    async def _on_status(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
+        if update.effective_chat.id != self.chat_id:
+            return
+        s = self._status_getter() if self._status_getter else {}
+        watchlist = s.get("watchlist", [])
+        symbols = " ".join(w["symbol"] for w in watchlist) if watchlist else "未載入"
+        last_scan = s.get("last_scan")
+        last_scan_str = last_scan.strftime("%H:%M:%S") if last_scan else "尚未掃描"
+        news = s.get("news_stats", {})
+        bullish = news.get("bullish_pct", "-")
+        bearish = news.get("bearish_pct", "-")
+        total = news.get("total", "-")
+        pending_count = len(_pending)
+        msg = (
+            f"✅ *Hola-Quant 系統正常*\n\n"
+            f"🎯 監控 {len(watchlist)} 檔：`{symbols}`\n"
+            f"🕐 上次掃描：{last_scan_str}\n"
+            f"📰 情緒：多 {bullish}%　空 {bearish}%　共 {total} 篇\n"
+            f"⏳ 待確認訊號：{pending_count} 個"
+        )
+        await update.message.reply_text(msg, parse_mode="Markdown")
 
     async def send_signal(
         self,
