@@ -785,12 +785,14 @@ function detectPullbackHold(bar) {
 function updateLocalSignals(bar, ts) {
   const isAttack = detectAttackBar(bar);
   if (isAttack) {
+    console.log(`[爆] bar=${bar.ts} vol=${bar.volume} shownBars=${shownBars.length}`);
     _lastAttackBar = { barIdx: playIndex - 1, low: bar.low, close: bar.close };
     addMarker(ts, 'belowBar', '#f0883e', 'arrowUp', '爆');
   }
 
   const isPullback = detectPullbackHold(bar);
   if (isPullback) {
+    console.log(`[穩] bar=${bar.ts}`);
     addMarker(ts, 'aboveBar', '#3fb950', 'circle', '穩');
   }
 
@@ -1093,9 +1095,12 @@ function rewindOneBar() {
   // 移除這根 bar 之後的 marker
   if (playIndex > 0) {
     const cutoff = toTs(allBars[playIndex - 1].ts);
+    console.log(`[rewind] playIndex=${playIndex} cutoff=${cutoff} markers_before=${_markers.length}`);
     _markers = _markers.filter(m => m.time <= cutoff);
+    console.log(`[rewind] markers_after=${_markers.length}`);
   } else {
     _markers = [];
+    console.log(`[rewind] playIndex=0 cleared all markers`);
   }
 
   rebuildBars(playIndex);

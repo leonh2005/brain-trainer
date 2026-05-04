@@ -333,6 +333,18 @@ def _yf_today_1min(stock_id: str) -> list:
     return result
 
 
+def _merge_today_bars(yf_bars: list, feed_bars: list) -> list:
+    """合併 yfinance 日內棒與 realtime feed 棒，feed 覆蓋同時間的 yfinance 棒。"""
+    if not yf_bars:
+        return feed_bars
+    if not feed_bars:
+        return yf_bars
+    feed_ts = {b['ts'] for b in feed_bars}
+    merged = [b for b in yf_bars if b['ts'] not in feed_ts] + feed_bars
+    merged.sort(key=lambda b: b['ts'])
+    return merged
+
+
 def _sj_stock_1min(stock_id: str, date_str: str) -> list:
     """Shioaji 取個股 1分K。今日不快取（盤中資料持續更新）。"""
     today_str = str(date.today())
@@ -396,14 +408,18 @@ def get_1min_kbars(stock_id: str, date_str: str) -> list:
             bars = _sj_stock_1min(stock_id, date_str)
             if bars:
                 return bars
-            # kbars 無資料（剛開盤第一分鐘 / 非今日交易標的）→ 用 feed
-            return _realtime_feed.get_bars(date_str, include_forming=False)
+            # Shioaji 無資料 → 用 yfinance 補全 + realtime feed 取最新
+            yf_bars  = _yf_today_1min(stock_id)
+            feed_bars = _realtime_feed.get_bars(date_str, include_forming=False)
+            return _merge_today_bars(yf_bars, feed_bars)
 
         # 盤後：Shioaji kbars 取今日完整資料，不用 yfinance
         bars = _sj_stock_1min(stock_id, date_str)
         if bars:
             return bars
-        return _realtime_feed.get_bars(date_str, include_forming=False)
+        yf_bars  = _yf_today_1min(stock_id)
+        feed_bars = _realtime_feed.get_bars(date_str, include_forming=False)
+        return _merge_today_bars(yf_bars, feed_bars)
 
     # ── 非今日：Shioaji kbars() 優先，失敗 fallback yfinance ──────────────
     bars = _sj_stock_1min(stock_id, date_str)
@@ -451,20 +467,30 @@ def get_1min_kbars(stock_id: str, date_str: str) -> list:
     return result
 
 
+_TW_HOLIDAYS = {
+    # 2026 台灣國定假日（市場休市）
+    '2026-01-01', '2026-01-26', '2026-01-27', '2026-01-28',
+    '2026-01-29', '2026-01-30', '2026-02-28', '2026-04-03',
+    '2026-04-04', '2026-04-05', '2026-05-01', '2026-06-19',
+    '2026-09-04', '2026-10-09', '2026-10-10',
+}
+
+
 def get_available_dates(stock_id: str) -> list:
     """
-    列出最近 10 個交易日（週一到週五）直接回傳，不預先驗資料。
+    列出最近 10 個交易日（週一到週五，排除台灣公假日）。
     今日（若是交易日）必然列在最前面。
     K 棒實際有無由 get_1min_kbars() 處理。
     """
     today = date.today()
     dates = []
-    for i in range(0, 30):
+    for i in range(0, 45):
         if len(dates) >= 10:
             break
         d = today - timedelta(days=i)
-        if d.weekday() < 5:          # 只列交易日（週一到週五）
-            dates.append(str(d))
+        d_str = str(d)
+        if d.weekday() < 5 and d_str not in _TW_HOLIDAYS:
+            dates.append(d_str)
     return dates
 
 
