@@ -214,6 +214,8 @@ async def _monitor_loop(bot: HolaQuantBot):
     logger.info(f"[main] 監控標的：{[s['symbol'] for s in watchlist]}")
 
     morning_report_sent_date: date | None = None
+    _state: dict = {"watchlist": watchlist, "last_scan": None, "news_stats": {}}
+    bot.set_status_getter(lambda: _state)
 
     async with aiohttp.ClientSession() as session:
         while True:
@@ -224,6 +226,7 @@ async def _monitor_loop(bot: HolaQuantBot):
             if _is_monday() and now.hour == 8 and now.minute < SCAN_INTERVAL_MIN:
                 logger.info("[main] 週一更新監控標的")
                 watchlist = fetch_weekly_top20()
+                _state["watchlist"] = watchlist
 
             # 晨報：每個交易日 08:50 發一次
             if (
@@ -239,6 +242,8 @@ async def _monitor_loop(bot: HolaQuantBot):
             # 盤中掃描
             if _in_market_hours():
                 stats = await _fetch_news_stats(session)
+                _state["last_scan"] = datetime.now()
+                _state["news_stats"] = stats
                 logger.info(
                     f"[news] 多 {stats.get('bullish_pct', 0)}%  "
                     f"空 {stats.get('bearish_pct', 0)}%  "
