@@ -189,21 +189,8 @@ async def _run_analysis_cycle(watchlist: list[dict], news_stats: dict, bot: Hola
             risks=result.risks,
             price_info=result.price_info,
         )
-
-        confirmed_event = asyncio.Event()
-        confirmed_result = {"value": False}
-
-        async def on_confirm(confirmed: bool, ev=confirmed_event, res=confirmed_result):
-            res["value"] = confirmed
-            ev.set()
-
-        await bot.send_signal(sig, on_confirm)
-        await confirmed_event.wait()
-
-        if confirmed_result["value"]:
-            logger.info(f"[main] 使用者確認 {result.symbol}，等待執行層（Phase 4）")
-        else:
-            logger.info(f"[main] 使用者拒絕 {result.symbol}")
+        await bot.send_signal(sig)
+        logger.info(f"[main] 訊號已推播 {result.symbol} {result.direction} 信心{result.confidence}")
 
     # 分析完畢，commit 記錄
     await _git_commit_analysis(high_conf, news_stats)
