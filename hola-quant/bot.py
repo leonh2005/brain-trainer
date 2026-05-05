@@ -106,6 +106,7 @@ class HolaQuantBot:
 
     async def start(self):
         await self.app.initialize()
+        await self.app.bot.delete_webhook(drop_pending_updates=True)
         await self.app.start()
         await self.app.updater.start_polling(drop_pending_updates=True)
         logger.info("[bot] Telegram bot 已啟動")
