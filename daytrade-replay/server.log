@@ -185310,3 +185310,1013 @@ Response Code: 200 | Event Code: 16 | Info: TIC/v1/STK/*/TSE/2337 | Event: Subsc
 127.0.0.1 - - [05/May/2026 08:38:12] "GET /api/health HTTP/1.1" 200 -
 127.0.0.1 - - [05/May/2026 08:38:56] "GET /api/health HTTP/1.1" 200 -
 127.0.0.1 - - [05/May/2026 08:39:40] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 08:40:24] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 08:41:07] "GET /api/health HTTP/1.1" 200 -
+SDK NOTICE Tue May 05 08:41:28.739 2026 solClient.c:11266                    (16dfbb000) Session '(c0,s1)_sinopac' keep-alive on tcp_TxRx detected session down, client name 'PYAPI/N124711691/0504/040856/943598/220.141.40.134', VPN name 'sinopac', peer host '210.59.255.161:80' address 'IP 210.59.255.161', connection 'tcp_TxRx' local address 'IP 192.168.68.123:61253'
+Response Code: 0 | Event Code: 12 | Info: Session '(c0,s1)_sinopac' keep-alive on tcp_TxRx detected session down, client name 'PYAPI/N124711691/0504/040856/943598/220.141.40.134', VPN name 'sinopac', peer host '210.59.255.161:80' address 'IP 210.59.255.161', connection 'tcp_TxRx' local address 'I | Event: Session reconnecting
+SDK NOTICE Tue May 05 08:41:31.822 2026 solClient.c:11196                    (16dfbb000) Connect attempt for host '210.59.255.161:80' for session '(c0,s1)_sinopac(client name 'PYAPI/N124711691/0504/040856/943598/220.141.40.134', VPN name 'sinopac', peer host '210.59.255.161:80' address 'IP 210.59.255.161', connection 'tcp_TxRx' local address 'IP 192.168.68.123:63266')' timed out
+Response Code: 0 | Event Code: 13 | Info: host '210.59.255.161:80', hostname '210.59.255.161:80' IP 210.59.255.161:80 (host 1 of 1) (host connection attempt 1 of 1) (total reconnection attempt 2 of 10) | Event: Session reconnected
+127.0.0.1 - - [05/May/2026 08:41:51] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 08:42:34] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 08:43:18] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 08:44:01] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 08:44:46] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 08:45:29] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 08:46:13] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 08:46:56] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 08:47:40] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 08:48:23] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 08:49:08] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 08:49:52] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 08:50:36] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 08:51:19] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 08:52:03] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 08:52:46] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 08:53:30] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 08:54:13] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 08:54:57] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 08:55:40] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 08:56:24] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 08:57:07] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 08:57:51] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 08:58:34] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 08:59:18] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 09:00:01] "GET /api/health HTTP/1.1" 200 -
+[sj] 訂閱 2337 tick 成功
+[auto-sub] 09:00 自動訂閱 2337
+Response Code: 200 | Event Code: 16 | Info: Subscription Already Exists - Topic 'TIC/v1/STK/*/TSE/2337' Subscribe: Response code: '400'; Flags: 'c';  | Event: Subscribe or Unsubscribe ok
+127.0.0.1 - - [05/May/2026 09:00:45] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 09:01:28] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 09:02:12] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 09:02:55] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 09:03:39] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 09:04:22] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 09:05:06] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 09:05:49] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 09:06:33] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 09:07:16] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 09:08:00] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 09:08:43] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 09:09:27] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 09:10:11] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 09:10:55] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 09:11:54] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 09:12:39] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 09:13:23] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 09:14:06] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 09:14:50] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 09:15:33] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 09:16:17] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 09:17:00] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 09:17:44] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 09:18:27] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 09:19:11] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 09:19:54] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 09:20:37] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 09:21:21] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 09:22:04] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 09:22:48] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 09:23:33] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 09:24:16] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 09:25:00] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 09:25:43] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 09:26:27] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 09:27:10] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 09:27:54] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 09:28:37] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 09:29:23] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 09:30:06] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 09:30:50] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 09:31:33] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 09:32:17] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 09:33:00] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 09:33:44] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 09:34:27] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 09:35:11] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 09:35:54] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 09:36:38] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 09:37:21] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 09:38:05] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 09:38:48] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 09:39:31] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 09:40:16] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 09:40:59] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 09:41:43] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 09:42:27] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 09:43:10] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 09:43:54] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 09:44:37] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 09:45:21] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 09:46:05] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 09:46:48] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 09:47:32] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 09:48:15] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 09:48:59] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 09:49:42] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 09:50:26] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 09:51:09] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 09:51:53] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 09:52:36] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 09:53:20] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 09:54:03] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 09:54:47] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 09:55:31] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 09:56:14] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 09:56:58] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 09:57:41] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 09:58:25] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 09:59:08] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 09:59:52] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 10:00:35] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 10:01:19] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 10:02:02] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 10:02:47] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 10:03:30] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 10:04:14] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 10:04:58] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 10:05:42] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 10:06:25] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 10:07:09] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 10:07:52] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 10:08:36] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 10:09:20] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 10:10:03] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 10:10:47] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 10:11:31] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 10:12:14] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 10:12:58] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 10:13:41] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 10:14:25] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 10:15:08] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 10:15:52] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 10:16:35] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 10:17:19] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 10:18:03] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 10:18:47] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 10:19:31] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 10:20:15] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 10:20:58] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 10:21:42] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 10:22:25] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 10:23:09] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 10:23:53] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 10:24:36] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 10:25:20] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 10:26:03] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 10:26:47] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 10:27:31] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 10:28:14] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 10:28:58] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 10:29:41] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 10:30:25] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 10:31:09] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 10:31:52] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 10:32:36] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 10:33:20] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 10:34:03] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 10:34:47] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 10:35:30] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 10:36:14] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 10:36:57] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 10:37:41] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 10:38:25] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 10:39:08] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 10:39:52] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 10:40:35] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 10:41:19] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 10:42:03] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 10:42:46] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 10:43:30] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 10:44:13] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 10:44:57] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 10:45:41] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 10:46:24] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 10:47:08] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 10:47:51] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 10:48:35] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 10:49:20] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 10:50:03] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 10:50:47] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 10:51:31] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 10:52:14] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 10:52:58] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 10:53:41] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 10:54:25] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 10:55:09] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 10:55:52] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 10:56:37] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 10:57:20] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 10:58:04] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 10:58:48] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 10:59:31] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 11:00:15] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 11:00:58] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 11:01:42] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 11:02:25] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 11:03:09] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 11:03:53] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 11:04:37] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 11:05:21] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 11:06:04] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 11:06:48] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 11:07:31] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 11:08:15] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 11:08:59] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 11:09:42] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 11:10:26] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 11:11:10] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 11:11:53] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 11:12:37] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 11:13:20] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 11:14:04] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 11:14:48] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 11:15:31] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 11:16:15] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 11:16:58] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 11:17:42] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 11:18:25] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 11:19:09] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 11:19:53] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 11:20:36] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 11:21:20] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 11:22:03] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 11:22:47] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 11:23:30] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 11:24:14] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 11:24:57] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 11:25:41] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 11:26:25] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 11:27:08] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 11:27:52] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 11:28:36] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 11:29:19] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 11:30:03] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 11:30:46] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 11:31:30] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 11:32:13] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 11:32:57] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 11:33:41] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 11:34:24] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 11:35:08] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 11:35:51] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 11:36:35] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 11:37:19] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 11:38:02] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 11:38:46] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 11:39:30] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 11:40:13] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 11:40:57] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 11:41:40] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 11:42:24] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 11:43:07] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 11:43:51] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 11:44:35] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 11:45:18] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 11:46:02] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 11:46:45] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 11:47:29] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 11:48:13] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 11:48:56] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 11:49:40] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 11:50:23] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 11:51:07] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 11:51:51] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 11:52:32] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 11:53:16] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 11:54:00] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 11:54:43] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 11:55:27] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 11:56:10] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 11:56:54] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 11:57:37] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 11:58:21] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 11:59:05] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 11:59:48] "GET /api/health HTTP/1.1" 200 -
+SDK NOTICE Tue May 05 12:00:29.508 2026 solClient.c:11266                    (16dfbb000) Session '(c0,s1)_sinopac' keep-alive on tcp_TxRx detected session down, client name 'PYAPI/N124711691/0504/040856/943598/220.141.40.134', VPN name 'sinopac', peer host '210.59.255.161:80' address 'IP 210.59.255.161', connection 'tcp_TxRx' local address 'IP 192.168.68.123:63274'
+Response Code: 0 | Event Code: 12 | Info: Session '(c0,s1)_sinopac' keep-alive on tcp_TxRx detected session down, client name 'PYAPI/N124711691/0504/040856/943598/220.141.40.134', VPN name 'sinopac', peer host '210.59.255.161:80' address 'IP 210.59.255.161', connection 'tcp_TxRx' local address 'I | Event: Session reconnecting
+127.0.0.1 - - [05/May/2026 12:00:32] "GET /api/health HTTP/1.1" 200 -
+SDK NOTICE Tue May 05 12:00:32.565 2026 solClient.c:11196                    (16dfbb000) Connect attempt for host '210.59.255.161:80' for session '(c0,s1)_sinopac(client name 'PYAPI/N124711691/0504/040856/943598/220.141.40.134', VPN name 'sinopac', peer host '210.59.255.161:80' address 'IP 210.59.255.161', connection 'tcp_TxRx' local address 'IP 192.168.68.123:55227')' timed out
+Response Code: 0 | Event Code: 13 | Info: host '210.59.255.161:80', hostname '210.59.255.161:80' IP 210.59.255.161:80 (host 1 of 1) (host connection attempt 1 of 1) (total reconnection attempt 2 of 10) | Event: Session reconnected
+127.0.0.1 - - [05/May/2026 12:01:16] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 12:01:59] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 12:02:43] "GET /api/health HTTP/1.1" 200 -
+SDK NOTICE Tue May 05 12:03:02.280 2026 solClient.c:11266                    (16dfbb000) Session '(c0,s1)_sinopac' keep-alive on tcp_TxRx detected session down, client name 'PYAPI/N124711691/0504/040856/943598/220.141.40.134', VPN name 'sinopac', peer host '210.59.255.161:80' address 'IP 210.59.255.161', connection 'tcp_TxRx' local address 'IP 192.168.68.123:55252'
+Response Code: 0 | Event Code: 12 | Info: Session '(c0,s1)_sinopac' keep-alive on tcp_TxRx detected session down, client name 'PYAPI/N124711691/0504/040856/943598/220.141.40.134', VPN name 'sinopac', peer host '210.59.255.161:80' address 'IP 210.59.255.161', connection 'tcp_TxRx' local address 'I | Event: Session reconnecting
+SDK NOTICE Tue May 05 12:03:05.321 2026 solClient.c:11196                    (16dfbb000) Connect attempt for host '210.59.255.161:80' for session '(c0,s1)_sinopac(client name 'PYAPI/N124711691/0504/040856/943598/220.141.40.134', VPN name 'sinopac', peer host '210.59.255.161:80' address 'IP 210.59.255.161', connection 'tcp_TxRx' local address 'IP 192.168.68.123:55378')' timed out
+Response Code: 0 | Event Code: 13 | Info: host '210.59.255.161:80', hostname '210.59.255.161:80' IP 210.59.255.161:80 (host 1 of 1) (host connection attempt 1 of 1) (total reconnection attempt 2 of 10) | Event: Session reconnected
+127.0.0.1 - - [05/May/2026 12:03:26] "GET /api/health HTTP/1.1" 200 -
+SDK NOTICE Tue May 05 12:03:42.180 2026 solClient.c:11266                    (16dfbb000) Session '(c0,s1)_sinopac' keep-alive on tcp_TxRx detected session down, client name 'PYAPI/N124711691/0504/040856/943598/220.141.40.134', VPN name 'sinopac', peer host '210.59.255.161:80' address 'IP 210.59.255.161', connection 'tcp_TxRx' local address 'IP 192.168.68.123:55385'
+Response Code: 0 | Event Code: 12 | Info: Session '(c0,s1)_sinopac' keep-alive on tcp_TxRx detected session down, client name 'PYAPI/N124711691/0504/040856/943598/220.141.40.134', VPN name 'sinopac', peer host '210.59.255.161:80' address 'IP 210.59.255.161', connection 'tcp_TxRx' local address 'I | Event: Session reconnecting
+Response Code: 0 | Event Code: 13 | Info: host '210.59.255.161:80', hostname '210.59.255.161:80' IP 210.59.255.161:80 (host 1 of 1) (host connection attempt 1 of 1) (total reconnection attempt 1 of 10) | Event: Session reconnected
+127.0.0.1 - - [05/May/2026 12:04:08] "GET /api/health HTTP/1.1" 200 -
+SDK NOTICE Tue May 05 12:04:37.134 2026 solClient.c:11266                    (16dfbb000) Session '(c0,s1)_sinopac' keep-alive on tcp_TxRx detected session down, client name 'PYAPI/N124711691/0504/040856/943598/220.141.40.134', VPN name 'sinopac', peer host '210.59.255.161:80' address 'IP 210.59.255.161', connection 'tcp_TxRx' local address 'IP 192.168.68.123:55418'
+Response Code: 0 | Event Code: 12 | Info: Session '(c0,s1)_sinopac' keep-alive on tcp_TxRx detected session down, client name 'PYAPI/N124711691/0504/040856/943598/220.141.40.134', VPN name 'sinopac', peer host '210.59.255.161:80' address 'IP 210.59.255.161', connection 'tcp_TxRx' local address 'I | Event: Session reconnecting
+Response Code: 0 | Event Code: 13 | Info: host '210.59.255.161:80', hostname '210.59.255.161:80' IP 210.59.255.161:80 (host 1 of 1) (host connection attempt 1 of 1) (total reconnection attempt 1 of 10) | Event: Session reconnected
+127.0.0.1 - - [05/May/2026 12:04:51] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 12:05:35] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 12:06:18] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 12:07:02] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 12:07:46] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 12:08:29] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 12:09:13] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 12:09:56] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 12:10:40] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 12:11:24] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 12:12:09] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 12:12:53] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 12:13:36] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 12:14:20] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 12:15:03] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 12:15:49] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 12:16:36] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 12:17:22] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 12:18:07] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 12:18:50] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 12:19:34] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 12:20:17] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 12:21:01] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 12:21:44] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 12:22:29] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 12:23:12] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 12:23:55] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 12:24:41] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 12:25:25] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 12:26:09] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 12:26:52] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 12:27:36] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 12:28:20] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 12:29:03] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 12:29:47] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 12:30:30] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 12:31:14] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 12:31:58] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 12:32:41] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 12:33:25] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 12:34:08] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 12:34:52] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 12:35:35] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 12:36:19] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 12:37:02] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 12:37:46] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 12:38:30] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 12:39:14] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 12:40:00] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 12:40:44] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 12:41:27] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 12:42:11] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 12:42:54] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 12:43:38] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 12:44:21] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 12:45:05] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 12:45:49] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 12:46:33] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 12:47:16] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 12:47:59] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 12:48:44] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 12:49:27] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 12:50:11] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 12:50:55] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 12:51:38] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 12:52:22] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 12:53:05] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 12:53:49] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 12:54:32] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 12:55:16] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 12:56:00] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 12:56:43] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 12:57:27] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 12:58:10] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 12:58:54] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 12:59:38] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:00:21] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:01:05] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:01:49] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:02:34] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:03:18] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:04:02] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:04:45] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:05:28] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:06:12] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:06:55] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:07:40] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:08:24] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:09:08] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:09:52] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:10:35] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:11:19] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:12:02] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:12:46] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:13:29] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:14:13] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:14:56] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:15:40] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:16:23] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:16:33] "GET /api/dates?stock=2408 HTTP/1.1" 200 -
+[sj] token 即將過期，主動重新登入...
+[sj] token 即將過期，主動重新登入...
+[daytrade-replay] 啟動 http://localhost:5400
+ * Serving Flask app 'app'
+ * Debug mode: off
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5400
+ * Running on http://192.168.68.123:5400
+[33mPress CTRL+C to quit[0m
+2026-05-05 13:16:37.446 | WARNING  | importlib._bootstrap:_call_with_frames_removed:491 - Optional: pip install shioaji[speed] or uv add shioaji --extra speed for better performance.
+[auto-sub] 背景排程執行緒啟動
+127.0.0.1 - - [05/May/2026 13:16:42] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:16:42] "[36mGET /static/lightweight-charts.js HTTP/1.1[0m" 304 -
+127.0.0.1 - - [05/May/2026 13:16:42] "[36mGET /static/app.js?v=2 HTTP/1.1[0m" 304 -
+[data] 取最近15交易日 TWSE top20...
+Response Code: 0 | Event Code: 0 | Info: host '210.59.255.161:80', hostname '210.59.255.161:80' IP 210.59.255.161:80 (host 1 of 1) (host connection attempt 1 of 1) (total connection attempt 1 of 1) | Event: Session up
+[sj] 永豐 API 登入成功
+[sj] tick callback 已登記
+[feed] 切換訂閱股票 → 2337
+Response Code: 200 | Event Code: 16 | Info: APISUB/V1/SYS/CONTRACT | Event: Subscribe or Unsubscribe ok
+[sj] 訂閱 2337 tick 成功
+[auto-sub] 服務啟動盤中，自動訂閱 2337
+Response Code: 200 | Event Code: 16 | Info: TIC/v1/STK/*/TSE/2337 | Event: Subscribe or Unsubscribe ok
+[feed] ✓ 收到第一筆 tick 2337 @ 2026-05-05 13:16:47.899963 close=160.5
+127.0.0.1 - - [05/May/2026 13:16:48] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:16:48] "[36mGET /static/lightweight-charts.js HTTP/1.1[0m" 304 -
+127.0.0.1 - - [05/May/2026 13:16:48] "[36mGET /static/app.js?v=2 HTTP/1.1[0m" 304 -
+[data] 取最近15交易日 TWSE top20...
+[data] top30 完成，第1名: 2409 友達 300,022張
+127.0.0.1 - - [05/May/2026 13:16:51] "GET /api/stocks HTTP/1.1" 200 -
+[data] top30 完成，第1名: 2409 友達 331,661張
+127.0.0.1 - - [05/May/2026 13:16:54] "GET /api/stocks HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:07] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:08] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:23] "GET /api/stocks HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:41] "GET /api/dates?stock=2408 HTTP/1.1" 200 -
+[sj] 取消訂閱 2337
+[feed] 切換訂閱股票 → 2408
+[sj] 訂閱 2408 tick 成功
+127.0.0.1 - - [05/May/2026 13:17:43] "POST /api/subscribe HTTP/1.1" 200 -
+Response Code: 200 | Event Code: 16 | Info: TIC/v1/STK/*/TSE/2337 | Event: Subscribe or Unsubscribe ok
+Response Code: 200 | Event Code: 16 | Info: TIC/v1/STK/*/TSE/2408 | Event: Subscribe or Unsubscribe ok
+[feed] ✓ 收到第一筆 tick 2408 @ 2026-05-05 13:17:44.425348 close=257
+[yf-today] 2408 取得 237 根
+127.0.0.1 - - [05/May/2026 13:17:44] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:45] "GET /api/index_data?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:46] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:46] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:46] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:46] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:46] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:46] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:46] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:46] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:46] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:46] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:46] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:46] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:46] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:46] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:46] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:46] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:46] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:46] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:47] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:47] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:47] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:47] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:47] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:47] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:47] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:47] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:47] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:47] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:47] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:47] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:47] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:47] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:47] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:47] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:47] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:48] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:48] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:48] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:48] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:48] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:48] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:48] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:48] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:48] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:48] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:48] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:48] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:48] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:48] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:48] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:48] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:48] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:49] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:49] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:49] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:49] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:49] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:49] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:49] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:49] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:49] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:49] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:49] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:49] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:49] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:49] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:49] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:49] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:49] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:49] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:49] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:50] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:50] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:50] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:50] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:50] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:50] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:50] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:50] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:50] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:50] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:50] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:50] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:50] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:50] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:50] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:50] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:50] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:50] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:50] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:50] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:51] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:51] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:51] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:51] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:51] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:51] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:51] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:51] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:51] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:51] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:51] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:51] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:51] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:51] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:51] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:51] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:51] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:51] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:51] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:52] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:52] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:52] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:52] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:52] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:52] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:52] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:52] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:52] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:52] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:52] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:52] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:52] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:52] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:52] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:52] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:52] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:52] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:52] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:53] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:53] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:53] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:53] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:53] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:53] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:53] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:53] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:53] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:53] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:53] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:53] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:53] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:53] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:53] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:53] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:53] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:54] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:54] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:54] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:54] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:54] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:54] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:54] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:54] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:54] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:54] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:54] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:54] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:54] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:54] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:54] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:54] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:54] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:54] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:55] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:55] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:55] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:55] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:55] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:55] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:55] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:55] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:55] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:55] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:55] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:55] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:55] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:55] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:55] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:55] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:55] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:56] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:56] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:56] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:56] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:56] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:56] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:56] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:56] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:56] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:56] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:56] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:56] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:56] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:56] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:56] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:56] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:56] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:56] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:56] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:57] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:57] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:57] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:57] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:57] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:57] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:57] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:57] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:57] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:57] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:57] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:57] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:57] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:57] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:57] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:57] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:58] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:58] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:58] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:58] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:17:58] "POST /api/signals HTTP/1.1" 200 -
+[yf-today] 2408 取得 238 根
+127.0.0.1 - - [05/May/2026 13:18:03] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:18:04] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:18:05] "POST /api/signals HTTP/1.1" 200 -
+[yf-today] 2408 取得 238 根
+127.0.0.1 - - [05/May/2026 13:18:10] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 238 根
+127.0.0.1 - - [05/May/2026 13:18:15] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 238 根
+127.0.0.1 - - [05/May/2026 13:18:20] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 238 根
+127.0.0.1 - - [05/May/2026 13:18:25] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 238 根
+127.0.0.1 - - [05/May/2026 13:18:30] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:18:34] "GET /api/health HTTP/1.1" 200 -
+[yf-today] 2408 取得 238 根
+127.0.0.1 - - [05/May/2026 13:18:35] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 238 根
+127.0.0.1 - - [05/May/2026 13:18:40] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 238 根
+127.0.0.1 - - [05/May/2026 13:18:46] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 238 根
+127.0.0.1 - - [05/May/2026 13:18:51] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 238 根
+127.0.0.1 - - [05/May/2026 13:18:56] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 238 根
+127.0.0.1 - - [05/May/2026 13:19:01] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:19:03] "POST /api/signals HTTP/1.1" 200 -
+[yf-today] 2408 取得 239 根
+127.0.0.1 - - [05/May/2026 13:19:08] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 239 根
+127.0.0.1 - - [05/May/2026 13:19:13] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:19:18] "GET /api/health HTTP/1.1" 200 -
+[yf-today] 2408 取得 239 根
+127.0.0.1 - - [05/May/2026 13:19:18] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 239 根
+127.0.0.1 - - [05/May/2026 13:19:23] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 239 根
+127.0.0.1 - - [05/May/2026 13:19:28] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 239 根
+127.0.0.1 - - [05/May/2026 13:19:34] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 239 根
+127.0.0.1 - - [05/May/2026 13:19:39] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 239 根
+127.0.0.1 - - [05/May/2026 13:19:44] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 239 根
+127.0.0.1 - - [05/May/2026 13:19:49] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 239 根
+127.0.0.1 - - [05/May/2026 13:19:54] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 239 根
+127.0.0.1 - - [05/May/2026 13:19:59] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:20:02] "GET /api/health HTTP/1.1" 200 -
+[yf-today] 2408 取得 240 根
+127.0.0.1 - - [05/May/2026 13:20:04] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:20:06] "POST /api/signals HTTP/1.1" 200 -
+[yf-today] 2408 取得 240 根
+127.0.0.1 - - [05/May/2026 13:20:11] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 240 根
+127.0.0.1 - - [05/May/2026 13:20:16] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 240 根
+127.0.0.1 - - [05/May/2026 13:20:21] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 240 根
+127.0.0.1 - - [05/May/2026 13:20:26] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 240 根
+127.0.0.1 - - [05/May/2026 13:20:31] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 240 根
+127.0.0.1 - - [05/May/2026 13:20:36] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 240 根
+127.0.0.1 - - [05/May/2026 13:20:41] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:20:46] "GET /api/health HTTP/1.1" 200 -
+[yf-today] 2408 取得 240 根
+127.0.0.1 - - [05/May/2026 13:20:46] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 240 根
+127.0.0.1 - - [05/May/2026 13:20:52] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 240 根
+127.0.0.1 - - [05/May/2026 13:20:57] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 241 根
+127.0.0.1 - - [05/May/2026 13:21:02] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:21:03] "POST /api/signals HTTP/1.1" 200 -
+[yf-today] 2408 取得 241 根
+127.0.0.1 - - [05/May/2026 13:21:09] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 241 根
+127.0.0.1 - - [05/May/2026 13:21:14] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 241 根
+127.0.0.1 - - [05/May/2026 13:21:19] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 241 根
+127.0.0.1 - - [05/May/2026 13:21:24] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 241 根
+127.0.0.1 - - [05/May/2026 13:21:29] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:21:29] "GET /api/health HTTP/1.1" 200 -
+[yf-today] 2408 取得 241 根
+127.0.0.1 - - [05/May/2026 13:21:34] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 241 根
+127.0.0.1 - - [05/May/2026 13:21:39] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 241 根
+127.0.0.1 - - [05/May/2026 13:21:44] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 241 根
+127.0.0.1 - - [05/May/2026 13:21:49] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 241 根
+127.0.0.1 - - [05/May/2026 13:21:54] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 241 根
+127.0.0.1 - - [05/May/2026 13:21:59] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 242 根
+127.0.0.1 - - [05/May/2026 13:22:04] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:22:06] "POST /api/signals HTTP/1.1" 200 -
+[yf-today] 2408 取得 242 根
+127.0.0.1 - - [05/May/2026 13:22:12] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:22:13] "GET /api/health HTTP/1.1" 200 -
+[yf-today] 2408 取得 242 根
+127.0.0.1 - - [05/May/2026 13:22:17] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 242 根
+127.0.0.1 - - [05/May/2026 13:22:22] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 242 根
+127.0.0.1 - - [05/May/2026 13:22:27] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 242 根
+127.0.0.1 - - [05/May/2026 13:22:32] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 242 根
+127.0.0.1 - - [05/May/2026 13:22:37] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 242 根
+127.0.0.1 - - [05/May/2026 13:22:42] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 242 根
+127.0.0.1 - - [05/May/2026 13:22:47] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 242 根
+127.0.0.1 - - [05/May/2026 13:22:52] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:22:56] "GET /api/health HTTP/1.1" 200 -
+[yf-today] 2408 取得 242 根
+127.0.0.1 - - [05/May/2026 13:22:57] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 243 根
+127.0.0.1 - - [05/May/2026 13:23:02] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:23:04] "POST /api/signals HTTP/1.1" 200 -
+[yf-today] 2408 取得 243 根
+127.0.0.1 - - [05/May/2026 13:23:09] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 243 根
+127.0.0.1 - - [05/May/2026 13:23:14] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 243 根
+127.0.0.1 - - [05/May/2026 13:23:19] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 243 根
+127.0.0.1 - - [05/May/2026 13:23:24] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 243 根
+127.0.0.1 - - [05/May/2026 13:23:29] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 243 根
+127.0.0.1 - - [05/May/2026 13:23:34] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 243 根
+127.0.0.1 - - [05/May/2026 13:23:39] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:23:40] "GET /api/health HTTP/1.1" 200 -
+[yf-today] 2408 取得 243 根
+127.0.0.1 - - [05/May/2026 13:23:44] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 243 根
+127.0.0.1 - - [05/May/2026 13:23:49] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 243 根
+127.0.0.1 - - [05/May/2026 13:23:54] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 243 根
+127.0.0.1 - - [05/May/2026 13:24:00] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:24:01] "POST /api/signals HTTP/1.1" 200 -
+[yf-today] 2408 取得 244 根
+127.0.0.1 - - [05/May/2026 13:24:07] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 244 根
+127.0.0.1 - - [05/May/2026 13:24:12] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 244 根
+127.0.0.1 - - [05/May/2026 13:24:17] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 244 根
+127.0.0.1 - - [05/May/2026 13:24:22] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:24:23] "GET /api/health HTTP/1.1" 200 -
+[yf-today] 2408 取得 244 根
+127.0.0.1 - - [05/May/2026 13:24:27] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 244 根
+127.0.0.1 - - [05/May/2026 13:24:32] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 244 根
+127.0.0.1 - - [05/May/2026 13:24:37] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 244 根
+127.0.0.1 - - [05/May/2026 13:24:42] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 244 根
+127.0.0.1 - - [05/May/2026 13:24:47] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 244 根
+127.0.0.1 - - [05/May/2026 13:24:52] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 244 根
+127.0.0.1 - - [05/May/2026 13:24:58] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 244 根
+127.0.0.1 - - [05/May/2026 13:25:03] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:25:05] "POST /api/signals HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:25:07] "GET /api/health HTTP/1.1" 200 -
+[yf-today] 2408 取得 245 根
+127.0.0.1 - - [05/May/2026 13:25:10] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 245 根
+127.0.0.1 - - [05/May/2026 13:25:15] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 245 根
+127.0.0.1 - - [05/May/2026 13:25:20] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 245 根
+127.0.0.1 - - [05/May/2026 13:25:25] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 245 根
+127.0.0.1 - - [05/May/2026 13:25:30] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 245 根
+127.0.0.1 - - [05/May/2026 13:25:35] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 245 根
+127.0.0.1 - - [05/May/2026 13:25:40] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 245 根
+127.0.0.1 - - [05/May/2026 13:25:46] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:25:50] "GET /api/health HTTP/1.1" 200 -
+[yf-today] 2408 取得 245 根
+127.0.0.1 - - [05/May/2026 13:25:51] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 245 根
+127.0.0.1 - - [05/May/2026 13:25:56] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 245 根
+127.0.0.1 - - [05/May/2026 13:26:01] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:26:02] "POST /api/signals HTTP/1.1" 200 -
+[yf-today] 2408 取得 246 根
+127.0.0.1 - - [05/May/2026 13:26:08] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 246 根
+127.0.0.1 - - [05/May/2026 13:26:13] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 246 根
+127.0.0.1 - - [05/May/2026 13:26:18] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 246 根
+127.0.0.1 - - [05/May/2026 13:26:23] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 246 根
+127.0.0.1 - - [05/May/2026 13:26:28] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 246 根
+127.0.0.1 - - [05/May/2026 13:26:33] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:26:34] "GET /api/health HTTP/1.1" 200 -
+[yf-today] 2408 取得 246 根
+127.0.0.1 - - [05/May/2026 13:26:38] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 246 根
+127.0.0.1 - - [05/May/2026 13:26:43] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 246 根
+127.0.0.1 - - [05/May/2026 13:26:48] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 246 根
+127.0.0.1 - - [05/May/2026 13:26:53] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 246 根
+127.0.0.1 - - [05/May/2026 13:26:59] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 246 根
+127.0.0.1 - - [05/May/2026 13:27:04] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:27:05] "POST /api/signals HTTP/1.1" 200 -
+[yf-today] 2408 取得 247 根
+127.0.0.1 - - [05/May/2026 13:27:11] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 247 根
+127.0.0.1 - - [05/May/2026 13:27:16] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:27:18] "GET /api/health HTTP/1.1" 200 -
+[yf-today] 2408 取得 247 根
+127.0.0.1 - - [05/May/2026 13:27:21] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 247 根
+127.0.0.1 - - [05/May/2026 13:27:26] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 247 根
+127.0.0.1 - - [05/May/2026 13:27:31] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 247 根
+127.0.0.1 - - [05/May/2026 13:27:36] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 247 根
+127.0.0.1 - - [05/May/2026 13:27:41] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 247 根
+127.0.0.1 - - [05/May/2026 13:27:49] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 247 根
+127.0.0.1 - - [05/May/2026 13:27:51] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 247 根
+127.0.0.1 - - [05/May/2026 13:27:56] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:28:01] "GET /api/health HTTP/1.1" 200 -
+[yf-today] 2408 取得 247 根
+127.0.0.1 - - [05/May/2026 13:28:01] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:28:03] "POST /api/signals HTTP/1.1" 200 -
+[yf-today] 2408 取得 248 根
+127.0.0.1 - - [05/May/2026 13:28:09] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 248 根
+127.0.0.1 - - [05/May/2026 13:28:14] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 248 根
+127.0.0.1 - - [05/May/2026 13:28:19] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 248 根
+127.0.0.1 - - [05/May/2026 13:28:24] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 248 根
+127.0.0.1 - - [05/May/2026 13:28:29] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 248 根
+127.0.0.1 - - [05/May/2026 13:28:34] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 248 根
+127.0.0.1 - - [05/May/2026 13:28:39] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 248 根
+127.0.0.1 - - [05/May/2026 13:28:44] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:28:45] "GET /api/health HTTP/1.1" 200 -
+[yf-today] 2408 取得 248 根
+127.0.0.1 - - [05/May/2026 13:28:49] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 248 根
+127.0.0.1 - - [05/May/2026 13:28:54] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 248 根
+127.0.0.1 - - [05/May/2026 13:28:59] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 249 根
+127.0.0.1 - - [05/May/2026 13:29:04] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:29:06] "POST /api/signals HTTP/1.1" 200 -
+[yf-today] 2408 取得 249 根
+127.0.0.1 - - [05/May/2026 13:29:12] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 249 根
+127.0.0.1 - - [05/May/2026 13:29:17] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 249 根
+127.0.0.1 - - [05/May/2026 13:29:22] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 249 根
+127.0.0.1 - - [05/May/2026 13:29:27] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:29:28] "GET /api/health HTTP/1.1" 200 -
+[yf-today] 2408 取得 249 根
+127.0.0.1 - - [05/May/2026 13:29:32] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 249 根
+127.0.0.1 - - [05/May/2026 13:29:37] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 249 根
+127.0.0.1 - - [05/May/2026 13:29:42] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 249 根
+127.0.0.1 - - [05/May/2026 13:29:47] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 249 根
+127.0.0.1 - - [05/May/2026 13:29:52] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 249 根
+127.0.0.1 - - [05/May/2026 13:29:57] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 249 根
+127.0.0.1 - - [05/May/2026 13:30:03] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:30:04] "POST /api/signals HTTP/1.1" 200 -
+[yf-today] 2408 取得 249 根
+127.0.0.1 - - [05/May/2026 13:30:10] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:30:12] "GET /api/health HTTP/1.1" 200 -
+[yf-today] 2408 取得 249 根
+127.0.0.1 - - [05/May/2026 13:30:15] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 249 根
+127.0.0.1 - - [05/May/2026 13:30:20] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 249 根
+127.0.0.1 - - [05/May/2026 13:30:25] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 249 根
+127.0.0.1 - - [05/May/2026 13:30:30] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 249 根
+127.0.0.1 - - [05/May/2026 13:30:35] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 249 根
+127.0.0.1 - - [05/May/2026 13:30:40] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 249 根
+127.0.0.1 - - [05/May/2026 13:30:45] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 249 根
+127.0.0.1 - - [05/May/2026 13:30:50] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+[yf-today] 2408 取得 249 根
+127.0.0.1 - - [05/May/2026 13:30:55] "GET /api/kbars?stock=2408&date=2026-05-05 HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:30:55] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:31:39] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:32:24] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:33:07] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:33:50] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:34:34] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:35:17] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:36:01] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:36:44] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:37:28] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:38:12] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:38:55] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [05/May/2026 13:39:39] "GET /api/health HTTP/1.1" 200 -
