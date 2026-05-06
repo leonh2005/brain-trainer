@@ -1,4 +1,4 @@
-# Claude Handoff 20260506_1440
+# Claude Handoff 20260506_1940
 
 ## Git 狀態（未提交）
 ```
@@ -8,28 +8,35 @@ m banini-tracker
  M dashboard/dashboard.log
  M daytrade-replay/server.log
  M kelly-fibonacci/server.log
- M logs/screener.log
  M logs/shopee_stock.log
  M rabbit-care/rabbit-care.log
  M rabbit-care/rabbit.db
- D rabbit-care/static/action_screenshots/20260429_094802_eating.jpg
- D rabbit-care/static/action_screenshots/20260429_104434_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260429_111418_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260429_111925_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260429_113450_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260429_114248_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260429_114750_sleeping.jpg
+ D rabbit-care/static/action_screenshots/20260429_121424_sleeping.jpg
+ D rabbit-care/static/action_screenshots/20260429_121955_sleeping.jpg
+ D rabbit-care/static/action_screenshots/20260429_123839_sleeping.jpg
+ D rabbit-care/static/action_screenshots/20260429_135658_sleeping.jpg
+ D rabbit-care/static/action_screenshots/20260429_140318_sleeping.jpg
+ D rabbit-care/static/action_screenshots/20260429_182559_sleeping.jpg
+ D rabbit-care/static/action_screenshots/20260429_183153_sleeping.jpg
  M rabbit-care/tunnel-fixed.log
+ M rabbit-care/tunnel.log
  m stock-screener-ai
  M stock-screener/screener.log
-?? rabbit-care/static/action_screenshots/20260506_094519_eating.jpg
-?? rabbit-care/static/action_screenshots/20260506_095027_eating.jpg
-?? rabbit-care/static/action_screenshots/20260506_095534_eating.jpg
-?? rabbit-care/static/action_screenshots/20260506_115805_sleeping.jpg
+?? rabbit-care/static/action_screenshots/20260506_155256_eating.jpg
+?? rabbit-care/static/action_screenshots/20260506_155801_eating.jpg
+?? rabbit-care/static/action_screenshots/20260506_160810_sleeping.jpg
+?? rabbit-care/static/action_screenshots/20260506_161421_sleeping.jpg
+?? rabbit-care/static/action_screenshots/20260506_164517_sleeping.jpg
+?? rabbit-care/static/action_screenshots/20260506_165022_eating.jpg
+?? rabbit-care/static/action_screenshots/20260506_165529_eating.jpg
+?? rabbit-care/static/action_screenshots/20260506_170034_sleeping.jpg
+?? rabbit-care/static/action_screenshots/20260506_170627_sleeping.jpg
+?? rabbit-care/static/action_screenshots/20260506_184511_eating.jpg
 ```
 
 ## 近期 Commits
 ```
+dd48924 chore: 自動同步 2026-05-06 14:40
 7beb408 chore: 自動同步 2026-05-06 09:40
 b2e57e1 chore: 自動同步 2026-05-06 04:40
 0f41e2d chore: 自動同步 2026-05-05 23:40
@@ -37,7 +44,6 @@ b2e57e1 chore: 自動同步 2026-05-06 04:40
 2f5e078 chore: 自動同步 2026-05-05 13:40
 4d21510 chore: 自動同步 2026-05-05 08:40
 f75dfba chore: 自動同步 2026-05-05 03:40
-f6553ff chore: 自動同步 2026-05-04 22:40
 ```
 
 ## 未提交的變更
@@ -49,16 +55,16 @@ diff --git a/banini-tracker b/banini-tracker
 -Subproject commit 811be48e6702a2b8519e5297ed00c8a24d7cfe29
 +Subproject commit 811be48e6702a2b8519e5297ed00c8a24d7cfe29-dirty
 diff --git a/claude_cycle_monitor.log b/claude_cycle_monitor.log
-index 53eb39a..9400edd 100644
+index 9400edd..681dcb2 100644
 --- a/claude_cycle_monitor.log
 +++ b/claude_cycle_monitor.log
-@@ -1692,3 +1692,6 @@ google.genai.errors.ServerError: 503 UNAVAILABLE. {'error': {'code': 503, 'messa
- [04:40] 自動同步完成
- [04:41] 下一事件：midpoint @ 07:30（169 分鐘後）
- [07:31] 下一事件：end_warn @ 09:40（129 分鐘後）
-+[09:39] 自動同步完成
-+[09:41] 下一事件：midpoint @ 12:30（169 分鐘後）
-+[12:31] 下一事件：end_warn @ 14:40（129 分鐘後）
+@@ -1695,3 +1695,6 @@ google.genai.errors.ServerError: 503 UNAVAILABLE. {'error': {'code': 503, 'messa
+ [09:39] 自動同步完成
+ [09:41] 下一事件：midpoint @ 12:30（169 分鐘後）
+ [12:31] 下一事件：end_warn @ 14:40（129 分鐘後）
++[14:40] 自動同步完成
++[14:41] 下一事件：midpoint @ 17:30（169 分鐘後）
++[17:31] 下一事件：end_warn @ 19:40（129 分鐘後）
 diff --git a/daily-stock-analysis b/daily-stock-analysis
 --- a/daily-stock-analysis
 +++ b/daily-stock-analysis
@@ -66,36 +72,36 @@ diff --git a/daily-stock-analysis b/daily-stock-analysis
 -Subproject commit dbdf30d170decf562896d5af8e3376918dc66806
 +Subproject commit dbdf30d170decf562896d5af8e3376918dc66806-dirty
 diff --git a/dashboard/dashboard.log b/dashboard/dashboard.log
-index a67a4f6..0f527c5 100644
+index 0f527c5..5f5e421 100644
 --- a/dashboard/dashboard.log
 +++ b/dashboard/dashboard.log
-@@ -35015,3 +35015,415 @@ Port 5600 is in use by another program. Either identify and stop that program, o
- 127.0.0.1 - - [06/May/2026 09:38:16] "GET /api/status HTTP/1.1" 200 -
- 127.0.0.1 - - [06/May/2026 09:39:00] "GET /api/status HTTP/1.1" 200 -
- 127.0.0.1 - - [06/May/2026 09:39:43] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [06/May/2026 09:40:26] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [06/May/2026 09:41:10] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [06/May/2026 09:41:54] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [06/May/2026 09:42:37] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [06/May/2026 09:43:21] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [06/May/2026 09:44:04] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [06/May/2026 09:44:49] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [06/May/2026 09:45:32] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [06/May/2026 09:46:16] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [06/May/2026 09:46:59] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [06/May/2026 09:47:44] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [06/May/2026 09:48:27] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [06/May/2026 09:49:11] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [06/May/2026 09:49:54] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [06/May/2026 09:50:39] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [06/May/2026 09:51:22] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [06/May/2026 09:52:06] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [06/May/2026 09:52:49] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [06/May/2026 09:53:33] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [06/May/2026 09:54:16] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [06/May/2026 09:55:00] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [06/May/2026 09:55:43] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [06/May/2026 09:56:27] "
+@@ -35427,3 +35427,414 @@ Port 5600 is in use by another program. Either identify and stop that program, o
+ 127.0.0.1 - - [06/May/2026 14:38:20] "GET /api/status HTTP/1.1" 200 -
+ 127.0.0.1 - - [06/May/2026 14:39:03] "GET /api/status HTTP/1.1" 200 -
+ 127.0.0.1 - - [06/May/2026 14:39:47] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [06/May/2026 14:40:31] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [06/May/2026 14:41:14] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [06/May/2026 14:41:58] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [06/May/2026 14:42:41] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [06/May/2026 14:43:25] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [06/May/2026 14:44:09] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [06/May/2026 14:44:52] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [06/May/2026 14:45:36] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [06/May/2026 14:46:20] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [06/May/2026 14:47:03] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [06/May/2026 14:47:47] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [06/May/2026 14:48:31] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [06/May/2026 14:49:14] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [06/May/2026 14:49:58] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [06/May/2026 14:50:41] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [06/May/2026 14:51:25] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [06/May/2026 14:52:09] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [06/May/2026 14:52:52] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [06/May/2026 14:53:36] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [06/May/2026 14:54:19] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [06/May/2026 14:55:03] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [06/May/2026 14:55:47] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [06/May/2026 14:56:30] "
 ```
 
 ---
