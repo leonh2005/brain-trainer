@@ -403,3 +403,13 @@ RR failed to accept incoming stream requests error="failed to accept QUIC stream
 [Wed May  6 00:32:27 CST 2026] 2026-05-05T16:32:27Z INF Retrying connection in up to 32s connIndex=0 event=0 ip=198.41.200.73
 [Wed May  6 00:32:49 CST 2026] 2026-05-05T16:32:49Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveP256] connIndex=0 event=0 ip=198.41.200.73
 [Wed May  6 00:32:49 CST 2026] 2026-05-05T16:32:49Z INF Registered tunnel connection connIndex=0 connection=f79351d8-112f-41a6-9618-4cf5d93bbe67 event=0 ip=198.41.200.73 location=tpe01 protocol=quic
+[Wed May  6 06:00:23 CST 2026] 2026-05-05T22:00:23Z ERR failed to accept incoming stream requests error="failed to accept QUIC stream: Application error 0x0 (remote)" connIndex=0 event=0 ip=198.41.200.73
+[Wed May  6 06:00:23 CST 2026] 2026-05-05T22:00:23Z ERR failed to run the datagram handler error="Application error 0x0 (remote)" connIndex=0 event=0 ip=198.41.200.73
+[Wed May  6 06:00:23 CST 2026] 2026-05-05T22:00:23Z ERR failed to serve tunnel connection error="accept stream listener encountered a failure while serving" connIndex=0 event=0 ip=198.41.200.73
+[Wed May  6 06:00:23 CST 2026] 2026-05-05T22:00:23Z ERR Serve tunnel error error="accept stream listener encountered a failure while serving" connIndex=0 event=0 ip=198.41.200.73
+[Wed May  6 06:00:23 CST 2026] 2026-05-05T22:00:23Z INF Retrying connection in up to 1s connIndex=0 event=0 ip=198.41.200.73
+[Wed May  6 06:00:24 CST 2026] 2026-05-05T22:00:24Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveP256] connIndex=0 event=0 ip=198.41.200.73
+[Wed May  6 06:00:29 CST 2026] 2026-05-05T22:00:29Z ERR Failed to dial a quic connection error="failed to dial to edge with quic: timeout: no recent network activity" connIndex=0 event=0 ip=198.41.200.73
+[Wed May  6 06:00:29 CST 2026] 2026-05-05T22:00:29Z INF Retrying connection in up to 4s connIndex=0 event=0 ip=198.41.200.73
+[Wed May  6 06:00:33 CST 2026] 2026-05-05T22:00:33Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveP256] connIndex=0 event=0 ip=198.41.192.7
+[Wed May  6 06:00:33 CST 2026] 2026-05-05T22:00:33Z INF Registered tunnel connection connIndex=0 connection=ea0fce88-0bd5-4567-adb6-4216d2c30ea1 event=0 ip=198.41.192.7 location=khh01 protocol=quic
