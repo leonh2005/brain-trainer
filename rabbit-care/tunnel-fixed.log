@@ -420,3 +420,6 @@ setsockopt TCP_NODELAY: Invalid argument
 setsockopt TCP_NODELAY: Invalid argument
 setsockopt TCP_NODELAY: Invalid argument
 setsockopt TCP_NODELAY: Invalid argument
+Connection to 161.33.6.190 closed by remote host.
+Read from remote host 161.33.6.190: Connection reset by peer
+client_loop: send disconnect: Broken pipe
