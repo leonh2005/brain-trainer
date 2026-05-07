@@ -27,13 +27,15 @@ opts.profile = PROFILE
 
 driver = webdriver.Firefox(options=opts)
 driver.set_window_size(1440, 900)
+driver.set_page_load_timeout(40)
+driver.set_script_timeout(30)
 wait = WebDriverWait(driver, 15)
 
 try:
     # 確認 session
     driver.get('https://shopee.tw')
     time.sleep(5)
-    if 'stevenhung' not in driver.find_element(By.TAG_NAME, 'body').text:
+    if 'stevenhung' not in driver.execute_script("return document.body.innerText || ''"):
         tg('⚠️ 蝦皮 session 已過期，庫存監控暫停。請重新登入 Firefox 蝦皮後繼續。')
         print('SESSION_EXPIRED')
         driver.quit()
@@ -118,7 +120,7 @@ try:
         sys.exit(0)
 
     # 結帳頁：確認貨到付款已選取
-    page_text = driver.find_element(By.TAG_NAME, 'body').text
+    page_text = driver.execute_script("return document.body.innerText || ''")
     if '貨到付款' not in page_text:
         tg(f'🐰 軟纖提摩西有貨，已加入購物車！\n⚠️ 結帳頁找不到貨到付款，請手動完成\nhttps://shopee.tw/cart')
         print('NO_COD_OPTION')
@@ -146,7 +148,7 @@ try:
 
     # 判斷是否成功
     final_url = driver.current_url
-    final_text = driver.find_element(By.TAG_NAME, 'body').text
+    final_text = driver.execute_script("return document.body.innerText || ''")
 
     if 'verify' in final_url or 'captcha' in final_url:
         tg(f'🐰 軟纖提摩西有貨，已加入購物車！\n⚠️ 提交訂單時遇到驗證，請手動完成\nhttps://shopee.tw/cart')
