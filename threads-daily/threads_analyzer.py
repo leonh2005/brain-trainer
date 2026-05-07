@@ -10,7 +10,7 @@ Threads 珍藏每日分析
 import os, json, sqlite3, shutil, hashlib, re
 from datetime import datetime, timedelta
 from pathlib import Path
-from groq import Groq
+from openai import OpenAI
 import requests
 
 # ── 設定 ────────────────────────────────────────────────────────────────────
@@ -19,7 +19,7 @@ STATE_FILE     = BASE_DIR / "state.json"
 TELEGRAM_TOKEN = "8666778924:AAFMAFKfsfx3opS2CfCBrDYMIx6vcJKACTk"
 TELEGRAM_CHAT  = "7556217543"
 FF_PROFILE     = Path.home() / "Library/Application Support/Firefox/Profiles/ro7nczf2.default-release"
-GROQ_KEY       = "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"
+OPENAI_KEY     = "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"
 
 # ── 工具函數 ─────────────────────────────────────────────────────────────────
 def send_telegram(msg: str):
@@ -92,7 +92,7 @@ def fetch_saved_posts(cookies: dict) -> list[str]:
 
 # ── Claude Haiku 分析 ────────────────────────────────────────────────────────
 def analyze_with_llm(posts: list[str]) -> str:
-    client = Groq(api_key=GROQ_KEY)
+    client = OpenAI(api_key=OPENAI_KEY)
 
     posts_text = "\n\n---\n\n".join(f"[{i+1}] {p}" for i, p in enumerate(posts))
 
@@ -113,7 +113,7 @@ Steven 的背景：台灣，非開發者但熟悉終端機，正在用 Claude Co
 {posts_text}"""
 
     msg = client.chat.completions.create(
-        model="llama-3.3-70b-versatile",
+        model="gpt-4o-mini",
         max_tokens=4000,
         messages=[{"role": "user", "content": prompt}]
     )
