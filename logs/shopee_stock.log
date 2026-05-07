@@ -8192,3 +8192,5 @@ Traceback (most recent call last):
 urllib3.exceptions.MaxRetryError: HTTPConnectionPool(host='localhost', port=59221): Max retries exceeded with url: /session/716e9dd6-6a80-4c3e-9c85-4dd8ad51854d/element/f13c0603-c8c8-429c-91cd-59c85caed6b4/text (Caused by ReadTimeoutError("HTTPConnectionPool(host='localhost', port=59221): Read timed out. (read timeout=120)"))
 [2026-05-07 16:21:06] ERROR
 [2026-05-07 18:12:08] SOLD_OUT
+[2026-05-07 19:12:09] SOLD_OUT
+[2026-05-07 20:12:02] SOLD_OUT
