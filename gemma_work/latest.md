@@ -1,4 +1,4 @@
-# Claude Handoff 20260507_0540
+# Claude Handoff 20260507_1040
 
 ## Git 狀態（未提交）
 ```
@@ -8,23 +8,39 @@ m banini-tracker
  M dashboard/dashboard.log
  M daytrade-replay/server.log
  M kelly-fibonacci/server.log
- M logs/nightly_check.log
+ M logs/daytrade.log
+ M logs/market-dashboard.log
+ M logs/shopee_keepalive.log
  M logs/shopee_stock.log
+ M logs/thread_summarizer.log
+ M logs/thread_summarizer_error.log
+ M logs/voice_ideas_report.log
+ M market-dashboard/fg_history.json
+ M market-dashboard/index.html
+ M market-dashboard/sp_state.json
  M rabbit-care/rabbit-care.log
  M rabbit-care/rabbit.db
- D rabbit-care/static/action_screenshots/20260429_234047_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260429_234552_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260430_023608_sleeping.jpg
+ D rabbit-care/static/action_screenshots/20260430_101852_eating.jpg
+ D rabbit-care/static/action_screenshots/20260430_103024_eating.jpg
  M rabbit-care/tunnel-fixed.log
  m stock-screener-ai
  M stock-screener/screener.log
-?? rabbit-care/static/action_screenshots/20260507_030344_sleeping.jpg
-?? rabbit-care/static/action_screenshots/20260507_043649_sleeping.jpg
-?? rabbit-care/static/action_screenshots/20260507_044157_sleeping.jpg
+ M threads-daily/cron.log
+?? rabbit-care/static/action_screenshots/20260507_063333_sleeping.jpg
+?? rabbit-care/static/action_screenshots/20260507_065053_sleeping.jpg
+?? rabbit-care/static/action_screenshots/20260507_065554_sleeping.jpg
+?? rabbit-care/static/action_screenshots/20260507_070329_sleeping.jpg
+?? rabbit-care/static/action_screenshots/20260507_070843_sleeping.jpg
+?? rabbit-care/static/action_screenshots/20260507_094523_sleeping.jpg
+?? rabbit-care/static/action_screenshots/20260507_095630_eating.jpg
+?? rabbit-care/static/action_screenshots/20260507_101848_sleeping.jpg
+?? rabbit-care/static/action_screenshots/20260507_102459_sleeping.jpg
+?? rabbit-care/static/action_screenshots/20260507_103124_sleeping.jpg
 ```
 
 ## 近期 Commits
 ```
+39116b1 chore: 自動同步 2026-05-07 05:40
 f392437 chore: 自動同步 2026-05-07 00:40
 5d544cf chore: 自動同步 2026-05-06 19:40
 dd48924 chore: 自動同步 2026-05-06 14:40
@@ -32,7 +48,6 @@ dd48924 chore: 自動同步 2026-05-06 14:40
 b2e57e1 chore: 自動同步 2026-05-06 04:40
 0f41e2d chore: 自動同步 2026-05-05 23:40
 6f93b6d chore: 自動同步 2026-05-05 18:40
-2f5e078 chore: 自動同步 2026-05-05 13:40
 ```
 
 ## 未提交的變更
@@ -44,16 +59,16 @@ diff --git a/banini-tracker b/banini-tracker
 -Subproject commit 811be48e6702a2b8519e5297ed00c8a24d7cfe29
 +Subproject commit 811be48e6702a2b8519e5297ed00c8a24d7cfe29-dirty
 diff --git a/claude_cycle_monitor.log b/claude_cycle_monitor.log
-index f606430..221ae15 100644
+index bbb0604..9319648 100644
 --- a/claude_cycle_monitor.log
 +++ b/claude_cycle_monitor.log
-@@ -1701,3 +1701,6 @@ google.genai.errors.ServerError: 503 UNAVAILABLE. {'error': {'code': 503, 'messa
- [19:40] 自動同步完成
- [19:41] 下一事件：midpoint @ 22:30（169 分鐘後）
- [22:31] 下一事件：end_warn @ 00:40（129 分鐘後）
-+[00:39] 自動同步完成
-+[00:41] 下一事件：midpoint @ 03:30（169 分鐘後）
-+[03:31] 下一事件：end_warn @ 05:40（129 分鐘後）
+@@ -1749,3 +1749,6 @@ google.genai.errors.ServerError: 503 UNAVAILABLE. {'error': {'code': 503, 'messa
+     raise ServerError(status_code, response_json, response)
+ google.genai.errors.ServerError: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.', 'status': 'UNAVAILABLE'}}
+ 
++[05:40] 自動同步完成
++[05:41] 下一事件：midpoint @ 08:30（169 分鐘後）
++[08:31] 下一事件：end_warn @ 10:40（129 分鐘後）
 diff --git a/daily-stock-analysis b/daily-stock-analysis
 --- a/daily-stock-analysis
 +++ b/daily-stock-analysis
@@ -61,36 +76,33 @@ diff --git a/daily-stock-analysis b/daily-stock-analysis
 -Subproject commit dbdf30d170decf562896d5af8e3376918dc66806
 +Subproject commit dbdf30d170decf562896d5af8e3376918dc66806-dirty
 diff --git a/dashboard/dashboard.log b/dashboard/dashboard.log
-index fc6eb00..1ed6adc 100644
+index 1ed6adc..212c050 100644
 --- a/dashboard/dashboard.log
 +++ b/dashboard/dashboard.log
-@@ -36251,3 +36251,416 @@ Port 5600 is in use by another program. Either identify and stop that program, o
- 127.0.0.1 - - [07/May/2026 00:38:18] "GET /api/status HTTP/1.1" 200 -
- 127.0.0.1 - - [07/May/2026 00:39:02] "GET /api/status HTTP/1.1" 200 -
- 127.0.0.1 - - [07/May/2026 00:39:45] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [07/May/2026 00:40:29] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [07/May/2026 00:41:13] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [07/May/2026 00:41:56] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [07/May/2026 00:42:39] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [07/May/2026 00:43:23] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [07/May/2026 00:44:06] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [07/May/2026 00:44:50] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [07/May/2026 00:45:33] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [07/May/2026 00:46:17] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [07/May/2026 00:47:00] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [07/May/2026 00:47:44] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [07/May/2026 00:48:28] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [07/May/2026 00:49:11] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [07/May/2026 00:49:55] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [07/May/2026 00:50:38] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [07/May/2026 00:51:22] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [07/May/2026 00:52:06] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [07/May/2026 00:52:49] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [07/May/2026 00:53:33] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [07/May/2026 00:54:16] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [07/May/2026 00:55:00] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [07/May/2026 00:55:43] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [07/May/2026 00:56:27] "
+@@ -36664,3 +36664,415 @@ Port 5600 is in use by another program. Either identify and stop that program, o
+ 127.0.0.1 - - [07/May/2026 05:38:23] "GET /api/status HTTP/1.1" 200 -
+ 127.0.0.1 - - [07/May/2026 05:39:06] "GET /api/status HTTP/1.1" 200 -
+ 127.0.0.1 - - [07/May/2026 05:39:50] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [07/May/2026 05:40:34] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [07/May/2026 05:41:17] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [07/May/2026 05:42:01] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [07/May/2026 05:42:44] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [07/May/2026 05:43:28] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [07/May/2026 05:44:12] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [07/May/2026 05:44:55] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [07/May/2026 05:45:39] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [07/May/2026 05:46:23] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [07/May/2026 05:47:06] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [07/May/2026 05:47:50] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [07/May/2026 05:48:34] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [07/May/2026 05:49:17] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [07/May/2026 05:50:01] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [07/May/2026 05:50:45] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [07/May/2026 05:51:28] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [07/May/2026 05:52:12] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [07/May/2026 05:52:55] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [07/May/2026 05:53:39] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [07/May/2026 05:54:23] "GET /api/status H
 ```
 
 ---
