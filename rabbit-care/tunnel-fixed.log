@@ -659,3 +659,5 @@ setsockopt TCP_NODELAY: Invalid argument
 setsockopt TCP_NODELAY: Invalid argument
 setsockopt TCP_NODELAY: Invalid argument
 setsockopt TCP_NODELAY: Invalid argument
+setsockopt TCP_NODELAY: Invalid argument
+setsockopt TCP_NODELAY: Invalid argument
