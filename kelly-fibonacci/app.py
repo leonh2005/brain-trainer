@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, jsonify, send_file
 import io
+import yfinance as yf
 from kelly import raw_kelly, adjusted_kelly, position_sizes
 from fibonacci import get_fib_params
 from cycles import resonance_score
@@ -95,6 +96,160 @@ def download():
         as_attachment=True,
         download_name='kelly_fibonacci_model.xlsx',
     )
+
+
+@app.route('/stock-info', methods=['POST'])
+def stock_info():
+    data = request.get_json()
+    symbol = (data.get('symbol') or '').strip()
+    if not symbol:
+        return jsonify({'error': 'symbol required'}), 400
+
+    ticker_sym = symbol + '.TW' if symbol.isdigit() else symbol
+    try:
+        ticker = yf.Ticker(ticker_sym)
+        hist = ticker.history(period='3mo')
+        if hist.empty:
+            return jsonify({'error': f'找不到 {ticker_sym}'}), 404
+        return jsonify({
+            'symbol': ticker_sym,
+            'current': round(float(hist['Close'].iloc[-1]), 2),
+            'high': round(float(hist['High'].max()), 2),
+            'low': round(float(hist['Low'].min()), 2),
+        })
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+FIB_LEVELS = [23.6, 38.2, 50.0, 61.8, 78.6]
+SWING_WINDOW = 10      # 左右各 10 根判斷波段頂底
+MAX_LOOKFORWARD = 60   # 最多往後看 60 根判斷勝負
+
+
+def _detect_swings(prices: list[float], window: int) -> tuple[list[int], list[int]]:
+    highs, lows = [], []
+    for i in range(window, len(prices) - window):
+        chunk = prices[i - window: i + window + 1]
+        if prices[i] == max(chunk):
+            highs.append(i)
+        if prices[i] == min(chunk):
+            lows.append(i)
+    return highs, lows
+
+
+def _backtest_symbol(ticker_sym: str) -> dict:
+    df = yf.download(ticker_sym, period='2y', progress=False, auto_adjust=True)
+    if df.empty:
+        raise ValueError(f'找不到 {ticker_sym}')
+
+    close = df[('Close', ticker_sym)].dropna()
+    prices = close.tolist()
+
+    swing_highs, swing_lows = _detect_swings(prices, SWING_WINDOW)
+
+    stats: dict[str, dict] = {str(lvl): {'wins': 0, 'losses': 0, 'reward': [], 'risk': []} for lvl in FIB_LEVELS}
+
+    for hi in swing_highs:
+        prior_lows = [l for l in swing_lows if l < hi]
+        if not prior_lows:
+            continue
+        lo = max(prior_lows)
+        swing_h = prices[hi]
+        swing_l = prices[lo]
+
+        if (swing_h - swing_l) / swing_l < 0.05:   # 漲幅 < 5% 的波段忽略
+            continue
+
+        stop = swing_l * 0.99
+
+        for fib in FIB_LEVELS:
+            key = str(fib)
+            entry = swing_h - (swing_h - swing_l) * fib / 100
+            if entry <= stop:
+                continue
+
+            target = swing_h
+            reward_pct = (target - entry) / entry * 100
+            risk_pct = (entry - stop) / entry * 100
+
+            triggered = False
+            outcome = None
+            for j in range(hi + 1, min(hi + 1 + MAX_LOOKFORWARD * 2, len(prices))):
+                p = prices[j]
+                if not triggered:
+                    if p <= entry:
+                        triggered = True
+                else:
+                    if p >= target:
+                        outcome = 'win'
+                        break
+                    if p <= stop:
+                        outcome = 'loss'
+                        break
+
+            if outcome == 'win':
+                stats[key]['wins'] += 1
+                stats[key]['reward'].append(reward_pct)
+                stats[key]['risk'].append(risk_pct)
+            elif outcome == 'loss':
+                stats[key]['losses'] += 1
+                stats[key]['reward'].append(reward_pct)
+                stats[key]['risk'].append(risk_pct)
+
+    levels = {}
+    best_fib, best_ev = None, -999
+    for key, s in stats.items():
+        total = s['wins'] + s['losses']
+        if total < 3:
+            levels[key] = {'win_rate': None, 'wins': s['wins'], 'losses': s['losses'],
+                           'total': total, 'odds': None, 'ev': None}
+            continue
+        wr = s['wins'] / total
+        avg_reward = sum(s['reward']) / len(s['reward'])
+        avg_risk = sum(s['risk']) / len(s['risk'])
+        odds = round(avg_reward / avg_risk, 2) if avg_risk else 0
+        ev = round(wr * odds - (1 - wr), 3)
+        levels[key] = {
+            'win_rate': round(wr * 100, 1),
+            'wins': s['wins'], 'losses': s['losses'], 'total': total,
+            'odds': odds, 'ev': ev,
+        }
+        if ev > best_ev:
+            best_ev = ev
+            best_fib = key
+
+    return {'levels': levels, 'best_fib': best_fib, 'symbol': ticker_sym,
+            'total_swings': len(swing_highs)}
+
+
+@app.route('/backtest', methods=['POST'])
+def backtest():
+    data = request.get_json()
+    symbol = (data.get('symbol') or '').strip()
+    if not symbol:
+        return jsonify({'error': 'symbol required'}), 400
+    ticker_sym = symbol + '.TW' if symbol.isdigit() else symbol
+    try:
+        result = _backtest_symbol(ticker_sym)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+    return jsonify(result)
+
+
+@app.route('/market-preset', methods=['GET'])
+def market_preset():
+    return jsonify({
+        'kitchin': 1.0,
+        'juglar': 1.5,
+        'kuznets': -0.5,
+        'kondratiev': 1.5,
+        'reasoning': {
+            'kitchin': '2026 Q2：全球 PMI 回升，企業補庫存循環啟動，AI 硬體需求旺盛 → +1.0',
+            'juglar': 'AI 資本支出潮（Nvidia/超大規模資料中心）帶動固定資產投資高峰 → +1.5',
+            'kuznets': '台灣/日本/中國人口老化壓力持續，美國住宅市場偏緊但動能受限 → −0.5',
+            'kondratiev': 'AI 技術革命早期擴散期（2020s），類比 1990s 網路浪潮初期 → +1.5',
+        },
+    })
 
 
 if __name__ == '__main__':
