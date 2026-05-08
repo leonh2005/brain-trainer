@@ -69710,3 +69710,6 @@ OSError: [Errno 24] Too many open files
 127.0.0.1 - - [08/May/2026 21:05:56] "POST /api/log-action HTTP/1.1" 200 -
 127.0.0.1 - - [08/May/2026 21:06:26] "GET /login HTTP/1.0" 200 -
 127.0.0.1 - - [08/May/2026 21:08:34] "GET /login?from=/ HTTP/1.0" 200 -
+127.0.0.1 - - [08/May/2026 21:40:11] "[33mGET /.bash_history HTTP/1.0[0m" 404 -
+127.0.0.1 - - [08/May/2026 21:40:11] "[33mGET /.claude/history.jsonl HTTP/1.0[0m" 404 -
+127.0.0.1 - - [08/May/2026 21:40:11] "[33mGET /.env HTTP/1.0[0m" 404 -
