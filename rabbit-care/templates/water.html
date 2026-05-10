@@ -42,12 +42,13 @@
   <table>
     <tr><th>時間</th><th>cc 數</th><th>備注</th><th></th></tr>
     {% for r in today_records %}
-    <tr id="row-{{ r.id }}">
-      <td>{{ r.log_time }}</td>
+    <tr id="row-{{ r.id }}" data-log-date="{{ r.log_date }}" data-log-time="{{ r.log_time }}">
+      <td class="cell-time">{{ r.log_time }}</td>
       <td><strong>{{ r.amount_cc }} cc</strong></td>
       <td style="color:#888;">{{ r.note or '' }}</td>
       <td>
         {% if session.get('logged_in') %}
+        <button class="btn btn-sm btn-edit" onclick="editRecord({{ r.id }})">✏️</button>
         <button class="btn btn-danger btn-sm" onclick="deleteRecord({{ r.id }})">✕</button>
         {% endif %}
       </td>
@@ -124,6 +125,8 @@ new Chart(document.getElementById('waterChart'), {
   transition: all .15s;
 }
 .quick-btn:hover { background: #1976d2; color: #fff; }
+.btn-edit { background: #f5f5f5; border: 1px solid #ddd; }
+.btn-edit:hover { background: #fff3e0; border-color: #ffa000; }
 </style>
 
 <script>
@@ -186,6 +189,48 @@ function addWater() {
 document.getElementById('custom-cc').addEventListener('keydown', e => {
   if (e.key === 'Enter') addWater();
 });
+
+function editRecord(id) {
+  const row = document.getElementById('row-' + id);
+  const logDate = row.dataset.logDate;
+  const logTime = row.dataset.logTime;
+  const timeCell = row.querySelector('.cell-time');
+
+  // 已在編輯中則取消
+  if (timeCell.querySelector('input')) return;
+
+  timeCell.innerHTML = `
+    <input type="date" id="edit-date-${id}" value="${logDate}" style="width:120px; font-size:13px; padding:2px 4px;">
+    <input type="time" id="edit-time-${id}" value="${logTime}" style="width:80px; font-size:13px; padding:2px 4px; margin-left:4px;">
+    <button class="btn btn-primary btn-sm" style="margin-left:4px;" onclick="saveEdit(${id})">✓</button>
+    <button class="btn btn-sm" style="margin-left:2px; background:#eee;" onclick="cancelEdit(${id}, '${logDate}', '${logTime}')">✕</button>
+  `;
+}
+
+function cancelEdit(id, logDate, logTime) {
+  const row = document.getElementById('row-' + id);
+  row.querySelector('.cell-time').textContent = logTime;
+}
+
+function saveEdit(id) {
+  const newDate = document.getElementById('edit-date-' + id).value;
+  const newTime = document.getElementById('edit-time-' + id).value;
+  if (!newDate || !newTime) { alert('請填寫日期和時間'); return; }
+
+  fetch('/api/water/' + id, {
+    method: 'PUT',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({log_date: newDate, log_time: newTime})
+  })
+  .then(r => r.json())
+  .then(data => {
+    if (!data.ok) { alert(data.error || '更新失敗'); return; }
+    const row = document.getElementById('row-' + id);
+    row.dataset.logDate = newDate;
+    row.dataset.logTime = newTime;
+    row.querySelector('.cell-time').textContent = newTime;
+  });
+}
 
 function deleteRecord(id) {
   if (!confirm('確定刪除這筆紀錄？')) return;
