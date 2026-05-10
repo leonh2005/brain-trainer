@@ -884,6 +884,22 @@ def api_add_water():
                     'record': {'log_time': now.strftime('%H:%M'), 'amount_cc': amount, 'note': note}})
 
 
+@app.route('/api/water/<int:record_id>', methods=['PUT'])
+@login_required
+def api_update_water(record_id):
+    data = request.get_json()
+    log_date = data.get('log_date', '').strip()
+    log_time = data.get('log_time', '').strip()
+    if not log_date or not log_time:
+        return jsonify({'error': '請提供日期和時間'}), 400
+    with get_db() as conn:
+        conn.execute(
+            'UPDATE water_log SET log_date=?, log_time=? WHERE id=?',
+            (log_date, log_time, record_id)
+        )
+    return jsonify({'ok': True, 'log_date': log_date, 'log_time': log_time})
+
+
 @app.route('/api/water/<int:record_id>', methods=['DELETE'])
 @login_required
 def api_delete_water(record_id):
