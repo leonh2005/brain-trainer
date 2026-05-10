@@ -1,4 +1,4 @@
-# Claude Handoff 20260510_0840
+# Claude Handoff 20260510_1340
 
 ## Git 狀態（未提交）
 ```
@@ -7,36 +7,27 @@ m banini-tracker
  m daily-stock-analysis
  M dashboard/dashboard.log
  M daytrade-replay/server.log
+ M gemma_work/latest.md
  M kelly-fibonacci/server.log
- M logs/market-dashboard.log
- M logs/market_dashboard.log
- M logs/shopee_keepalive.log
+ M logs/daily_log_check.log
  M logs/shopee_stock.log
- M logs/thread_summarizer.log
- M logs/thread_summarizer_error.log
- M logs/voice_ideas_report.log
- M market-dashboard/fg_history.json
- M market-dashboard/index.html
- M market-dashboard/sp_state.json
  M rabbit-care/rabbit-care.log
  M rabbit-care/rabbit.db
+ M rabbit-care/tunnel-fixed.log
  m stock-screener-ai
  M stock-screener/screener.log
- M threads-daily/cron.log
-?? rabbit-care/static/action_screenshots/20260510_060425_sleeping.jpg
-?? rabbit-care/static/action_screenshots/20260510_070700_eating.jpg
 ```
 
 ## 近期 Commits
 ```
+11d0430 chore: 自動同步 2026-05-10
+9ffc75d chore: 自動同步 2026-05-10 08:40
 1d486a0 chore: 自動同步 2026-05-10 03:40
 41260bc chore: 自動同步 2026-05-09 22:40
 bab4e26 Update files
 8e292aa chore: 自動同步 2026-05-09 17:40
 efca019 chore: 自動同步 2026-05-09 12:40
 00f0bcb chore: 自動同步 2026-05-09 07:40
-7db701e Auto commit on 2026-05-09 07:40
-20e68a9 chore: 自動同步 2026-05-09 02:40
 ```
 
 ## 未提交的變更
@@ -48,16 +39,16 @@ diff --git a/banini-tracker b/banini-tracker
 -Subproject commit 811be48e6702a2b8519e5297ed00c8a24d7cfe29
 +Subproject commit 811be48e6702a2b8519e5297ed00c8a24d7cfe29-dirty
 diff --git a/claude_cycle_monitor.log b/claude_cycle_monitor.log
-index edc6b0c..e67e3d7 100644
+index e67e3d7..4f764d9 100644
 --- a/claude_cycle_monitor.log
 +++ b/claude_cycle_monitor.log
-@@ -1791,3 +1791,6 @@ google.genai.errors.ServerError: 503 UNAVAILABLE. {'error': {'code': 503, 'messa
- [22:40] 自動同步完成
- [22:41] 下一事件：midpoint @ 01:30（168 分鐘後）
- [01:31] 下一事件：end_warn @ 03:40（129 分鐘後）
-+[03:40] 自動同步完成
-+[03:41] 下一事件：midpoint @ 06:30（168 分鐘後）
-+[06:31] 下一事件：end_warn @ 08:40（129 分鐘後）
+@@ -1794,3 +1794,6 @@ google.genai.errors.ServerError: 503 UNAVAILABLE. {'error': {'code': 503, 'messa
+ [03:40] 自動同步完成
+ [03:41] 下一事件：midpoint @ 06:30（168 分鐘後）
+ [06:31] 下一事件：end_warn @ 08:40（129 分鐘後）
++[08:40] 自動同步完成
++[08:41] 下一事件：midpoint @ 11:30（168 分鐘後）
++[11:31] 下一事件：end_warn @ 13:40（129 分鐘後）
 diff --git a/daily-stock-analysis b/daily-stock-analysis
 --- a/daily-stock-analysis
 +++ b/daily-stock-analysis
@@ -65,36 +56,36 @@ diff --git a/daily-stock-analysis b/daily-stock-analysis
 -Subproject commit dbdf30d170decf562896d5af8e3376918dc66806
 +Subproject commit dbdf30d170decf562896d5af8e3376918dc66806-dirty
 diff --git a/dashboard/dashboard.log b/dashboard/dashboard.log
-index b2b42b0..df105ff 100644
+index df105ff..763ed91 100644
 --- a/dashboard/dashboard.log
 +++ b/dashboard/dashboard.log
-@@ -41808,3 +41808,415 @@ Port 5600 is in use by another program. Either identify and stop that program, o
- 127.0.0.1 - - [10/May/2026 03:38:14] "GET /api/status HTTP/1.1" 200 -
- 127.0.0.1 - - [10/May/2026 03:38:57] "GET /api/status HTTP/1.1" 200 -
- 127.0.0.1 - - [10/May/2026 03:39:41] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [10/May/2026 03:40:25] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [10/May/2026 03:41:08] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [10/May/2026 03:41:52] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [10/May/2026 03:42:36] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [10/May/2026 03:43:19] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [10/May/2026 03:44:03] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [10/May/2026 03:44:47] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [10/May/2026 03:45:31] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [10/May/2026 03:46:14] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [10/May/2026 03:46:58] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [10/May/2026 03:47:42] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [10/May/2026 03:48:26] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [10/May/2026 03:49:09] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [10/May/2026 03:49:53] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [10/May/2026 03:50:37] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [10/May/2026 03:51:21] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [10/May/2026 03:52:04] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [10/May/2026 03:52:48] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [10/May/2026 03:53:32] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [10/May/2026 03:54:15] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [10/May/2026 03:54:59] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [10/May/2026 03:55:43] "GET /api/status HTTP/1.1" 200 -
-+127.0.0.1 - - [10/May/2026 03:56:27] "
+@@ -42220,3 +42220,415 @@ Port 5600 is in use by another program. Either identify and stop that program, o
+ 127.0.0.1 - - [10/May/2026 08:38:29] "GET /api/status HTTP/1.1" 200 -
+ 127.0.0.1 - - [10/May/2026 08:39:13] "GET /api/status HTTP/1.1" 200 -
+ 127.0.0.1 - - [10/May/2026 08:39:56] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [10/May/2026 08:40:40] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [10/May/2026 08:41:23] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [10/May/2026 08:42:07] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [10/May/2026 08:42:51] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [10/May/2026 08:43:34] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [10/May/2026 08:44:18] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [10/May/2026 08:45:01] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [10/May/2026 08:45:45] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [10/May/2026 08:46:28] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [10/May/2026 08:47:12] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [10/May/2026 08:47:56] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [10/May/2026 08:48:39] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [10/May/2026 08:49:23] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [10/May/2026 08:50:08] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [10/May/2026 08:50:52] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [10/May/2026 08:51:35] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [10/May/2026 08:52:19] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [10/May/2026 08:53:03] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [10/May/2026 08:53:46] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [10/May/2026 08:54:30] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [10/May/2026 08:55:14] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [10/May/2026 08:55:58] "GET /api/status HTTP/1.1" 200 -
++127.0.0.1 - - [10/May/2026 08:56:41] "
 ```
 
 ---
