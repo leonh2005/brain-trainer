@@ -73495,3 +73495,16 @@ Run time of job "send_daily_summary (trigger: cron[hour='8', minute='0'], next r
 127.0.0.1 - - [11/May/2026 03:51:20] "GET /login HTTP/1.0" 200 -
 127.0.0.1 - - [11/May/2026 03:56:54] "HEAD / HTTP/1.1" 200 -
 127.0.0.1 - - [11/May/2026 04:33:41] "[33mGET /boaform/admin/formLogin?username=ec8&psd=ec8 HTTP/1.0[0m" 404 -
+127.0.0.1 - - [11/May/2026 05:15:26] "GET / HTTP/1.0" 200 -
+127.0.0.1 - - [11/May/2026 06:13:32] "[33mGET /.env HTTP/1.0[0m" 404 -
+127.0.0.1 - - [11/May/2026 06:13:32] "[33mGET /.git/config HTTP/1.0[0m" 404 -
+127.0.0.1 - - [11/May/2026 07:16:56] "GET / HTTP/1.0" 200 -
+127.0.0.1 - - [11/May/2026 07:59:23] "GET / HTTP/1.0" 200 -
+127.0.0.1 - - [11/May/2026 08:04:36] "GET / HTTP/1.0" 200 -
+127.0.0.1 - - [11/May/2026 08:06:31] "[33mGET /aaa9 HTTP/1.0[0m" 404 -
+127.0.0.1 - - [11/May/2026 08:06:32] "[33mGET /aab8 HTTP/1.0[0m" 404 -
+127.0.0.1 - - [11/May/2026 08:24:24] "GET /water HTTP/1.1" 200 -
+127.0.0.1 - - [11/May/2026 08:24:25] "POST /api/water HTTP/1.1" 200 -
+127.0.0.1 - - [11/May/2026 08:34:44] "GET /?XDEBUG_SESSION_START=phpstorm HTTP/1.0" 200 -
+127.0.0.1 - - [11/May/2026 09:07:30] "[33mGET /actuator/gateway/routes HTTP/1.0[0m" 404 -
+127.0.0.1 - - [11/May/2026 09:16:16] "GET / HTTP/1.0" 200 -
