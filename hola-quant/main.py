@@ -127,18 +127,14 @@ async def _send_morning_report(
 
     symbols = " ".join(s["symbol"] for s in watchlist)
     msg = (
-        f"🌅 *Hola-Quant 晨報* {datetime.now().strftime('%m/%d')}\n\n"
+        f"🌅 Hola-Quant 晨報 {datetime.now().strftime('%m/%d')}\n\n"
         f"📰 新聞情緒：{sentiment}（共 {total} 篇）\n"
-        f"🎯 監控 {len(watchlist)} 檔：`{symbols}`\n\n"
+        f"🎯 監控 {len(watchlist)} 檔：{symbols}\n\n"
         f"📋 近期分析記錄：\n{history}\n\n"
         f"{'⚡ 今日情緒已觸發，開盤將自動掃描' if _sentiment_triggered(stats) else '😴 情緒尚未觸發，繼續觀察'}"
     )
 
-    await bot.app.bot.send_message(
-        chat_id=bot.chat_id,
-        text=msg,
-        parse_mode="Markdown",
-    )
+    await bot.send_morning_report(msg)
     logger.info("[main] 晨報已推播")
 
 
