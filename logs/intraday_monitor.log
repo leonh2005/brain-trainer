@@ -6999,4 +6999,409 @@ Response Code: 200 | Event Code: 16 | Info: APISUB/V1/SYS/CONTRACT | Event: Subs
   檢查 2317 鴻海 ... 冷卻中，跳過
   檢查 0056 元大高股息 ... 訊號 1: ['MACD底背離']  第12項:False  top30:False
   檢查 2312 金寶 ... 冷卻中，跳過
-  檢查 3714 富采 ...
+  檢查 3714 富采 ... 訊號 4: ['KD鈍化≥80', '預估量2.1x均量', '外盤比73%', 'MACD頂背離']  第12項:False  top30:True
+  檢查 2324 仁寶 ... 訊號 3: ['KD鈍化≥80', '預估量2.1x均量', '掛單委買>1.0x委賣']  第12項:False  top30:True
+  檢查 3231 緯創 ... 訊號 0: []  第12項:False  top30:True
+  檢查 8112 至上 ... 訊號 2: ['預估量4.4x均量', '掛單委買>12.0x委賣']  第12項:False  top30:True
+完成
+[10:27:47] intraday_monitor 開始執行
+[top24] 3481(787K) 2409(410K) 2344(164K) 2303(133K) 6116(116K) 2408(106K) 6770(95K) 1802(90K) ...
+[vol_rank] 快取 28 分鐘前更新，top50
+  檢查 3481 群創 ... 冷卻中，跳過
+  檢查 2409 友達 ... 冷卻中，跳過
+  檢查 2344 華邦電 ... 冷卻中，跳過
+  檢查 2303 聯電 ... 訊號 1: ['掛單委買>2.0x委賣']  第12項:False  top30:True
+  檢查 6116 彩晶 ... 訊號 6: ['KD鈍化≥80', '預估量6.3x均量', '外盤比75%', '掛單委買大幅領先', '昨量1.4%單K', 'MACD頂背離']  第12項:False  top30:True
+  檢查 2408 南亞科 ... 訊號 3: ['KD鈍化≥80', '預估量2.1x均量', '昨量1.6%單K']  第12項:False  top30:True
+  檢查 6770 力積電 ... 訊號 0: []  第12項:False  top30:True
+  檢查 1802 台玻 ... 冷卻中，跳過
+  檢查 2337 旺宏 ... 訊號 0: []  第12項:False  top30:True
+  檢查 6282 康舒 ... 訊號 1: ['預估量4.3x均量']  第12項:False  top30:True
+  檢查 2301 光寶科 ... 冷卻中，跳過
+  檢查 2313 華通 ... 冷卻中，跳過
+  檢查 0050 元大台灣50 ... 訊號 1: ['MACD頂背離']  第12項:False  top30:False
+  檢查 2377 微星 ... 訊號 1: ['預估量8.3x均量']  第12項:False  top30:True
+  檢查 2327 國巨* ... 冷卻中，跳過
+  檢查 2492 華新科 ... 訊號 4: ['預估量4.1x均量', '外盤比68%', '掛單委買大幅領先', 'MACD頂背離']  第12項:False  top30:True
+  檢查 2481 強茂 ... 冷卻中，跳過
+  檢查 2317 鴻海 ... 冷卻中，跳過
+  檢查 0056 元大高股息 ... 訊號 1: ['MACD底背離']  第12項:False  top30:False
+  檢查 2312 金寶 ... 冷卻中，跳過
+  檢查 3714 富采 ... 訊號 6: ['KD鈍化≥80', '預估量2.1x均量', '外盤比73%', '掛單委買>1.0x委賣', '昨量1.6%單K', 'MACD頂背離']  第12項:False  top30:True
+  檢查 2324 仁寶 ... 訊號 2: ['KD鈍化≥80', '預估量2.1x均量']  第12項:False  top30:True
+  檢查 3231 緯創 ... 訊號 1: ['掛單委買>1.0x委賣']  第12項:False  top30:True
+  檢查 8112 至上 ... 訊號 2: ['預估量4.4x均量', 'MACD底背離']  第12項:False  top30:True
+完成
+[10:28:54] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[10:29:54] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[10:30:54] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[10:31:54] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[10:32:55] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[10:33:55] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[10:34:55] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[10:35:55] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[10:36:55] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[10:37:56] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[10:39:01] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[10:40:02] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[10:41:02] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[10:42:02] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[10:43:02] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[10:44:03] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[10:45:03] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[10:46:03] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[10:47:03] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[10:48:04] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[10:49:05] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[10:50:06] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[10:51:06] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[10:52:06] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[10:53:06] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[10:54:09] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[10:55:09] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[10:56:09] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[10:57:09] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[10:58:10] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[10:59:10] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[11:00:10] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[11:01:10] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[11:02:11] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[11:03:11] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[11:04:11] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[11:05:11] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[11:06:12] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[11:07:13] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[11:08:14] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[11:09:18] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[11:10:18] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[11:11:18] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[11:12:18] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[11:13:20] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[11:14:23] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[11:15:23] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[11:16:23] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[11:17:23] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[11:18:24] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[11:19:25] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[11:20:25] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[11:21:25] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[11:22:26] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[11:23:26] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[11:24:28] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[11:25:28] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[11:26:28] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[11:27:29] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[11:28:29] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[11:29:29] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[11:30:30] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[11:31:30] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[11:32:30] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[11:33:31] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[11:34:31] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[11:35:31] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[11:36:32] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[11:37:32] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[11:38:32] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[11:39:33] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[11:40:33] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[11:41:33] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[11:42:34] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[11:43:34] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[11:44:34] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[11:45:34] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[11:46:34] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[11:47:35] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[11:48:35] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[11:49:35] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[11:50:35] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[11:51:35] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[11:52:36] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[11:53:36] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[11:54:36] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[11:55:36] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[11:56:37] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[11:57:37] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[11:58:37] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[11:59:37] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[12:00:38] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[12:01:38] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[12:02:38] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[12:03:41] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[12:04:42] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[12:05:42] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[12:06:42] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[12:07:43] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[12:08:43] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[12:09:43] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[12:10:43] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[12:11:44] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[12:12:44] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[12:13:46] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[12:14:46] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[12:15:46] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[12:16:47] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[12:17:47] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[12:18:47] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[12:19:47] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[12:20:48] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[12:21:48] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[12:22:48] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[12:23:49] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[12:24:49] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[12:25:49] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[12:26:49] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[12:27:50] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[12:28:50] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[12:29:50] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[12:30:50] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[12:31:50] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[12:32:51] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[12:33:51] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[12:34:54] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[12:35:54] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[12:36:55] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[12:37:55] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[12:38:57] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[12:39:57] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[12:40:57] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[12:41:58] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[12:42:58] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[12:44:03] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[12:45:03] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[12:46:03] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[12:47:08] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[12:48:08] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[12:49:09] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[12:50:09] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[12:51:09] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[12:52:09] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[12:53:10] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[12:54:10] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[12:55:10] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[12:56:10] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[12:57:11] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[12:58:11] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[12:59:11] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[13:00:11] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[13:01:12] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[13:02:16] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[13:03:16] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[13:04:17] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[13:05:17] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[13:06:24] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[13:07:24] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[13:08:25] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[13:09:25] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[13:10:25] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[13:11:26] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[13:12:26] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[13:13:26] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[13:14:27] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[13:15:27] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[13:16:27] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[13:17:28] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[13:18:28] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[13:19:28] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[13:20:29] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[13:21:29] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[13:22:29] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[13:23:29] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[13:24:30] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[13:25:30] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[13:26:30] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[13:27:31] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[13:28:31] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[13:29:32] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[13:30:32] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[13:31:32] intraday_monitor 開始執行
+非交易時段，略過
+[13:32:32] intraday_monitor 開始執行
+非交易時段，略過
+[13:33:32] intraday_monitor 開始執行
+非交易時段，略過
+[13:34:32] intraday_monitor 開始執行
+非交易時段，略過
+[13:35:32] intraday_monitor 開始執行
+非交易時段，略過
+[13:36:32] 盤後，監控結束
