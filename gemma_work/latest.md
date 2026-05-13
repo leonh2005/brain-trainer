@@ -1,155 +1,42 @@
-# Claude Handoff 20260513_1140
+# Claude Handoff 20260513_1640
 
 ## Git 狀態（未提交）
 ```
 m banini-tracker
  M claude_cycle_monitor.log
  m daily-stock-analysis
- M gemma_work/latest.md
- M logs/94i_signin.log
- M logs/daily_log_check.log
- M logs/daytrade.log
  M logs/intraday_monitor.log
- M logs/market-dashboard.log
- M logs/market_dashboard.log
- M logs/pressplay_signin.log
- M logs/shopee_keepalive.log
+ M logs/screener.log
  M logs/shopee_stock.log
- M logs/thread_summarizer.log
- M logs/thread_summarizer_error.log
- M logs/voice_ideas_report.log
  M logs/vol_rank_updater.log
- M market-dashboard/fg_history.json
- M market-dashboard/index.html
- M market-dashboard/sp_state.json
  M rabbit-care/motion-watcher.log
  M rabbit-care/rabbit-care.log
  M rabbit-care/rabbit.db
- D rabbit-care/static/action_screenshots/20260503_083353_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260503_091304_eating.jpg
- D rabbit-care/static/action_screenshots/20260503_091805_eating.jpg
- D rabbit-care/static/action_screenshots/20260503_093256_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260503_094130_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260503_094629_eating.jpg
- D rabbit-care/static/action_screenshots/20260503_100251_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260503_100839_eating.jpg
- D rabbit-care/static/action_screenshots/20260503_105221_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260503_111435_eating.jpg
- D rabbit-care/static/action_screenshots/20260503_112833_eating.jpg
- D rabbit-care/static/action_screenshots/20260503_121202_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260503_131913_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260503_132552_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260503_134934_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260503_140959_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260503_144046_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260503_144631_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260503_145140_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260503_150016_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260503_150747_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260503_151252_eating.jpg
- D rabbit-care/static/action_screenshots/20260503_162808_eating.jpg
- D rabbit-care/static/action_screenshots/20260503_182300_eating.jpg
- D rabbit-care/static/action_screenshots/20260503_184004_drinking.jpg
- D rabbit-care/static/action_screenshots/20260503_184513_eating.jpg
- D rabbit-care/static/action_screenshots/20260503_185520_eating.jpg
- D rabbit-care/static/action_screenshots/20260503_190536_eating.jpg
- D rabbit-care/static/action_screenshots/20260503_192600_eating.jpg
- D rabbit-care/static/action_screenshots/20260503_201637_eating.jpg
- D rabbit-care/static/action_screenshots/20260503_212419_eating.jpg
- D rabbit-care/static/action_screenshots/20260504_002032_eating.jpg
- D rabbit-care/static/action_screenshots/20260504_020817_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260504_022406_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260504_052932_eating.jpg
- D rabbit-care/static/action_screenshots/20260504_061525_eating.jpg
- D rabbit-care/static/action_screenshots/20260504_062356_eating.jpg
- D rabbit-care/static/action_screenshots/20260504_064139_eating.jpg
- D rabbit-care/static/action_screenshots/20260504_071910_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260504_090543_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260504_091042_eating.jpg
- D rabbit-care/static/action_screenshots/20260504_093205_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260504_102401_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260504_103543_eating.jpg
- D rabbit-care/static/action_screenshots/20260504_104054_eating.jpg
- D rabbit-care/static/action_screenshots/20260504_130458_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260504_134514_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260504_140115_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260504_140859_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260504_141359_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260504_142120_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260504_144241_eating.jpg
- D rabbit-care/static/action_screenshots/20260504_150038_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260504_150547_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260504_151115_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260504_154638_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260504_162346_eating.jpg
- D rabbit-care/static/action_screenshots/20260504_202142_eating.jpg
- D rabbit-care/static/action_screenshots/20260504_204251_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260504_214245_eating.jpg
- D rabbit-care/static/action_screenshots/20260504_232533_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260505_011850_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260505_013045_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260505_015127_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260505_015721_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260505_023437_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260505_024334_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260505_030355_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260505_050359_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260505_050959_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260505_074641_eating.jpg
- D rabbit-care/static/action_screenshots/20260505_080820_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260505_081824_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260505_082400_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260505_083446_eating.jpg
- D rabbit-care/static/action_screenshots/20260505_085348_eating.jpg
- D rabbit-care/static/action_screenshots/20260505_090343_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260505_090914_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260505_091440_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260505_092112_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260505_092642_eating.jpg
- D rabbit-care/static/action_screenshots/20260505_093139_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260505_093650_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260505_094201_eating.jpg
- D rabbit-care/static/action_screenshots/20260505_095219_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260505_095956_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260505_104637_eating.jpg
- D rabbit-care/static/action_screenshots/20260505_105716_eating.jpg
- D rabbit-care/static/action_screenshots/20260505_113114_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260505_114809_eating.jpg
- D rabbit-care/static/action_screenshots/20260505_115414_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260505_120148_eating.jpg
- D rabbit-care/static/action_screenshots/20260505_141910_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260505_142948_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260505_155141_eating.jpg
- D rabbit-care/static/action_screenshots/20260505_195124_eating.jpg
- D rabbit-care/static/action_screenshots/20260505_210953_eating.jpg
- D rabbit-care/static/action_screenshots/20260505_214201_eating.jpg
- D rabbit-care/static/action_screenshots/20260505_214710_eating.jpg
- D rabbit-care/static/action_screenshots/20260505_221245_eating.jpg
- D rabbit-care/static/action_screenshots/20260505_225211_eating.jpg
- D rabbit-care/static/action_screenshots/20260505_225713_eating.jpg
- D rabbit-care/static/action_screenshots/20260506_001941_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260506_042147_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260506_073954_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260506_074510_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260506_091326_eating.jpg
- D rabbit-care/static/action_screenshots/20260506_092409_eating.jpg
- D rabbit-care/static/action_screenshots/20260506_092927_eating.jpg
- D rabbit-care/static/action_screenshots/20260506_094519_eating.jpg
- D rabbit-care/static/action_screenshots/20260506_095027_eating.jpg
- D rabbit-care/static/action_screenshots/20260506_095534_eating.jpg
- M shopee_keepalive.sh
+ D rabbit-care/static/action_screenshots/20260506_115805_sleeping.jpg
+ D rabbit-care/static/action_screenshots/20260506_155256_eating.jpg
+ D rabbit-care/static/action_screenshots/20260506_155801_eating.jpg
+ D rabbit-care/static/action_screenshots/20260506_160810_sleeping.jpg
+ D rabbit-care/static/action_screenshots/20260506_161421_sleeping.jpg
  m stock-screener-ai
- M threads-daily/cron.log
-?? rabbit-care/static/action_screenshots/20260513_085113_sleeping.jpg
-?? rabbit-care/static/action_screenshots/20260513_085617_sleeping.jpg
-?? rabbit-care/static/action_screenshots/20260513_092145_sleeping.jpg
-?? rabbit-care/static/action_screenshots/20260513_094657_sleeping.jpg
-?? rabbit-care/static/action_screenshots/20260513_100231_eating.jpg
-?? rabbit-care/static/action_screenshots/20260513_112918_sleeping.jpg
+?? rabbit-care/static/action_screenshots/20260513_120250_sleeping.jpg
+?? rabbit-care/static/action_screenshots/20260513_131354_sleeping.jpg
+?? rabbit-care/static/action_screenshots/20260513_131928_sleeping.jpg
+?? rabbit-care/static/action_screenshots/20260513_132448_sleeping.jpg
+?? rabbit-care/static/action_screenshots/20260513_150152_sleeping.jpg
+?? rabbit-care/static/action_screenshots/20260513_150718_sleeping.jpg
+?? rabbit-care/static/action_screenshots/20260513_151353_sleeping.jpg
+?? rabbit-care/static/action_screenshots/20260513_151857_sleeping.jpg
+?? rabbit-care/static/action_screenshots/20260513_152441_sleeping.jpg
+?? rabbit-care/static/action_screenshots/20260513_153015_sleeping.jpg
+?? rabbit-care/static/action_screenshots/20260513_153530_sleeping.jpg
+?? rabbit-care/static/action_screenshots/20260513_162259_sleeping.jpg
+?? rabbit-care/static/action_screenshots/20260513_162844_sleeping.jpg
+?? rabbit-care/static/action_screenshots/20260513_163445_sleeping.jpg
 ```
 
 ## 近期 Commits
 ```
+fd59bfc chore: 自動同步 2026-05-13 11:40
 9488cc4 chore: 自動同步 2026-05-13 06:40
 ccff253 chore: 自動同步 2026-05-13 01:40
 8a6a5c2 chore: 自動同步 2026-05-12 20:40
@@ -157,7 +44,6 @@ ccff253 chore: 自動同步 2026-05-13 01:40
 5be2040 chore: 自動同步 2026-05-12 10:40
 dc8710d fix: hola-quant 晨報改用 LINE API，移除 Telegram bot.app 殘留呼叫
 ac45cb5 chore: 自動同步 2026-05-12 05:40
-fc00959 chore: 自動同步 2026-05-12 00:40
 ```
 
 ## 未提交的變更
@@ -169,88 +55,91 @@ diff --git a/banini-tracker b/banini-tracker
 -Subproject commit 811be48e6702a2b8519e5297ed00c8a24d7cfe29
 +Subproject commit 811be48e6702a2b8519e5297ed00c8a24d7cfe29-dirty
 diff --git a/claude_cycle_monitor.log b/claude_cycle_monitor.log
-index 9daeda1..981d945 100644
+index 981d945..2aad5ce 100644
 --- a/claude_cycle_monitor.log
 +++ b/claude_cycle_monitor.log
-@@ -1838,3 +1838,6 @@ google.genai.errors.ServerError: 503 UNAVAILABLE. {'error': {'code': 503, 'messa
- [01:40] 自動同步完成
- [01:41] 下一事件：midpoint @ 04:30（168 分鐘後）
- [04:31] 下一事件：end_warn @ 06:40（129 分鐘後）
-+[06:40] 自動同步完成
-+[06:41] 下一事件：midpoint @ 09:30（169 分鐘後）
-+[09:31] 下一事件：end_warn @ 11:40（129 分鐘後）
+@@ -1841,3 +1841,6 @@ google.genai.errors.ServerError: 503 UNAVAILABLE. {'error': {'code': 503, 'messa
+ [06:40] 自動同步完成
+ [06:41] 下一事件：midpoint @ 09:30（169 分鐘後）
+ [09:31] 下一事件：end_warn @ 11:40（129 分鐘後）
++[11:40] 自動同步完成
++[11:41] 下一事件：midpoint @ 14:30（168 分鐘後）
++[14:31] 下一事件：end_warn @ 16:40（129 分鐘後）
 diff --git a/daily-stock-analysis b/daily-stock-analysis
 --- a/daily-stock-analysis
 +++ b/daily-stock-analysis
 @@ -1 +1 @@
 -Subproject commit dbdf30d170decf562896d5af8e3376918dc66806
 +Subproject commit dbdf30d170decf562896d5af8e3376918dc66806-dirty
-diff --git a/gemma_work/latest.md b/gemma_work/latest.md
-index 7f51ecf..dd5a392 100644
---- a/gemma_work/latest.md
-+++ b/gemma_work/latest.md
-@@ -1,132 +1,28 @@
--# Claude Handoff 20260513_0640
-+# Claude Handoff 20260513_0849
-+> 自動生成於 2026-05-13 08:49
- 
--## Git 狀態（未提交）
-+## 未提交的檔案異動
- ```
- m banini-tracker
-- M claude_cycle_monitor.log
-  m daily-stock-analysis
-- M logs/nightly_check.log
-- M logs/shopee_stock.log
-- M rabbit-care/motion-watcher.log
-- M rabbit-care/rabbit-care.log
-+ M market-dashboard/fg_history.json
-+ M market-dashboard/index.html
-+ M market-dashboard/sp_state.json
-+ M rabbit-care/rabbit.db
-+ M shopee_keepalive.sh
-  m stock-screener-ai
- ```
- 
- ## 近期 Commits
- ```
-+9488cc4 chore: 自動同步 2026-05-13 06:40
- ccff253 chore: 自動同步 2026-05-13 01:40
- 8a6a5c2 chore: 自動同步 2026-05-12 20:40
- 2ec16f4 chore: 自動同步 2026-05-12 15:40
- 5be2040 chore: 自動同步 2026-05-12 10:40
--dc8710d fix: hola-quant 晨報改用 LINE API，移除 Telegram bot.app 殘留呼叫
--ac45cb5 chore: 自動同步 2026-05-12 05:40
--fc00959 chore: 自動同步 2026-05-12 00:40
--b07cb6e chore: 自動同步 2026-05-11 19:40
- ```
- 
--## 未提交的變更
--```diff
--diff --git a/banini-tracker b/banini-tracker
----- a/banini-tracker
--+++ b/banini-tracker
--@@ -1 +1 @@
---Subproject commit 811be48e6702a2b8519e5297ed00c8a24d7cfe29
--+Subproject commit 811be48e6702a2b8519e5297ed00c8a24d7cfe29-dirty
--diff --git a/claude_cycle_monitor.log b/claude_cycle_monitor.log
--index e0a5d97..9daeda1 100644
----- a/claude_cycle_monitor.log
--+++ b/claude_cycle_monitor.log
--@@ -1835,3 +1835,6 @@ google.genai.errors.ServerError: 503 UNAVAILABLE. {'error': {'code': 503, 'messa
-- [20:39] 自動同步完成
-- [20:41] 下一事件：midpoint @ 23:30（168 分鐘後）
-- [23:31] 下一事件：end_warn @ 01:40（129 分鐘後）
--+[01:40] 自動同步完成
--+[01:41] 下一事件：midpoint @ 04:30（168 分鐘後）
--+[04:31] 下一事件：end_warn @ 06:40（129 分鐘後）
--diff --git a/daily-stock-analysis b/daily-stock-analysis
----- a/daily-stock-analysis
--+++ b/daily-stock-analysis
--@@ -1 +1 @@
---Subproject commit dbdf30d170decf562896d5af8e3376918dc66806
--+Subproject commit dbdf30d170decf562896d5af8e3376918dc66806-dirty
--diff --git a/logs/nightly_check.log b/logs/night
+diff --git a/logs/intraday_monitor.log b/logs/intraday_monitor.log
+index d91af25..5df844e 100644
+--- a/logs/intraday_monitor.log
++++ b/logs/intraday_monitor.log
+@@ -9390,4 +9390,405 @@ Response Code: 200 | Event Code: 16 | Info: APISUB/V1/SYS/CONTRACT | Event: Subs
+   檢查 6443 元晶 ... 訊號 1: ['預估量64.1x均量']  第12項:False  top30:True
+   檢查 6770 力積電 ... 訊號 2: ['掛單委買>14.0x委賣', 'MACD底背離']  第12項:False  top30:True
+   檢查 2408 南亞科 ... 冷卻中，跳過
+-  檢查 2313 華通 ... 訊號 2: ['預估量2.2x均量', '掛單委買>1.0x委賣']  第12項:False  top30:True
+\ No newline at end of file
++  檢查 2313 華通 ... 訊號 2: ['預估量2.2x均量', '掛單委買>1.0x委賣']  第12項:False  top30:True
++  檢查 2324 仁寶 ... 訊號 1: ['預估量2.9x均量']  第12項:False  top30:True
++  檢查 4958 臻鼎-KY ... 訊號 1: ['預估量3.3x均量']  第12項:False  top30:True
++  檢查 2492 華新科 ... 無 K 棒資料
++  檢查 6282 康舒 ... 冷卻中，跳過
++  檢查 2317 鴻海 ... 冷卻中，跳過
++  檢查 2301 光寶科 ... 無 K 棒資料
++  檢查 2887 台新新光金 ... 冷卻中，跳過
++  檢查 2327 國巨* ... 無 K 棒資料
++  檢查 0056 元大高股息 ... 無 K 棒資料
++  檢查 2481 強茂 ... 冷卻中，跳過
++  檢查 1303 南亞 ... 無 K 棒資料
++完成
++[10:21:13] intraday_monitor 開始執行
++無法取得成交量排行，略過
++[10:22:13] intraday_monitor 開始執行
++無法取得成交量排行，略過
++[10:23:13] intraday_monitor 開始執行
++無法取得成交量排行，略過
++[10:24:14] intraday_monitor 開始執行
++無法取得成交量排行，略過
++[10:25:14] intraday_monitor 開始執行
++無法取得成交量排行，略過
++[10:26:14] intraday_monitor 開始執行
++無法取得成交量排行，略過
++[10:27:15] intraday_monitor 開始執行
++無法取得成交量排行，略過
++[10:28:15] intraday_monitor 開始執行
++無法取得成交量排行，略過
++[10:29:15] intraday_monitor 開始執行
++無法取得成交量排行，略過
++[10:30:15] intraday_monitor 開始執行
++無法取得成交量排行，略過
++[10:31:16] intraday_monitor 開始執行
++無法取得成交量排行，略過
++[10:32:16] intraday_monitor 開始執行
++無法取得成交量排行，略過
++[10:33:16] intraday_monitor 開始執行
++無法取得成交量排行，略過
++[10:34:16] intraday_monitor 開始執行
++無法取得成交量排行，略過
++[10:35:17] intraday_monitor 開始執行
++無法取得成交量排行，略過
++[10:36:17] intraday_monitor 開始執行
++無法取得成交量排行，略過
++[10:37:17] intraday_monitor 開始執行
++無法取得成交量排行，略過
++[10:38:17] intraday_monitor 開始執行
++無法取得成交量排行，略過
++[10:39:18] intraday_monitor 開始執行
++無法取得成交量排行，略過
++[10:40:18] intraday_monitor 開始執行
++無法取得成交量排行，略過
++[10:41:18] intraday_monitor 開始執行
++無法取得成交量排行，略過
++[10:42:19] intraday_monitor 開始執行
++無法取得成交量排行，略過
++[10:43:19] intraday_monitor 開始執行
+
 ```
 
 ---
