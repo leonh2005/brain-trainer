@@ -447524,3 +447524,6 @@ OpenCV: Couldn't read video stream from file "rtsp://stevenhung:FREDjuik12@192.1
 2026-05-13 21:39:53,775 INFO 移動持續 15 秒，強制觸發分析
 2026-05-13 21:39:53,775 INFO 分析條件: motion_frames=6 cooldown剩餘=0s
 2026-05-13 21:40:03,162 INFO 偵測到移動，開始收集影格
+2026-05-13 21:40:18,287 INFO 移動持續 15 秒，強制觸發分析
+2026-05-13 21:40:18,287 INFO 分析條件: motion_frames=53 cooldown剩餘=0s
+2026-05-13 21:40:18,335 INFO AFC is enabled with max remote calls: 10.
