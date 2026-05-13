@@ -10,7 +10,7 @@ python3 - << 'EOF'
 import os, time
 from selenium import webdriver
 from selenium.webdriver.firefox.options import Options
-from selenium.webdriver.by import By
+from selenium.webdriver.common.by import By
 
 PROFILE = os.path.expanduser('~/Library/Application Support/Firefox/Profiles/ro7nczf2.default-release')
 opts = Options()
