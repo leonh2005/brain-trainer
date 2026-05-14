@@ -1,33 +1,32 @@
-# Claude Handoff 20260514_2239
+# Claude Handoff 20260515_0340
 
 ## Git 狀態（未提交）
 ```
 m banini-tracker
  M claude_cycle_monitor.log
- M claude_cycle_monitor.py
  m daily-stock-analysis
  M gemma_work/latest.md
+ M logs/nightly_check.log
  M logs/shopee_stock.log
  M rabbit-care/motion-watcher.log
  M rabbit-care/rabbit-care.log
  M rabbit-care/rabbit.db
- D rabbit-care/static/action_screenshots/20260507_170142_eating.jpg
- D rabbit-care/static/action_screenshots/20260507_173921_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260507_174943_eating.jpg
- D rabbit-care/static/action_screenshots/20260507_175451_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260507_182750_eating.jpg
- D rabbit-care/static/action_screenshots/20260507_195327_eating.jpg
- D rabbit-care/static/action_screenshots/20260507_195835_eating.jpg
- D rabbit-care/static/action_screenshots/20260507_202529_eating.jpg
- D rabbit-care/static/action_screenshots/20260507_210423_eating.jpg
+ D rabbit-care/static/action_screenshots/20260508_003510_eating.jpg
+ D rabbit-care/static/action_screenshots/20260508_015627_sleeping.jpg
+ M rabbit-care/tunnel-fixed.log
+ M rabbit-care/tunnel.log
  m stock-screener-ai
-?? rabbit-care/static/action_screenshots/20260514_200149_eating.jpg
-?? rabbit-care/static/action_screenshots/20260514_221723_eating.jpg
-?? rabbit-care/static/action_screenshots/20260514_223854_eating.jpg
+?? rabbit-care/static/action_screenshots/20260514_225726_sleeping.jpg
+?? rabbit-care/static/action_screenshots/20260514_231258_eating.jpg
+?? rabbit-care/static/action_screenshots/20260514_231806_eating.jpg
+?? rabbit-care/static/action_screenshots/20260515_021050_sleeping.jpg
+?? rabbit-care/static/action_screenshots/20260515_022413_sleeping.jpg
+?? rabbit-care/static/action_screenshots/20260515_031924_sleeping.jpg
 ```
 
 ## 近期 Commits
 ```
+607652a chore: 自動同步 2026-05-14 22:40
 1259774 chore: 自動同步 2026-05-14 17:40
 ad42b7f chore: 自動同步 2026-05-14 12:40
 6a586fb chore: 自動同步 2026-05-14 07:40
@@ -35,7 +34,6 @@ ad42b7f chore: 自動同步 2026-05-14 12:40
 4c97a52 chore: 自動同步 2026-05-13 21:40
 b11a479 整理 Git 狀態
 744ab33 chore: 自動同步 2026-05-13 16:40
-fd59bfc chore: 自動同步 2026-05-13 11:40
 ```
 
 ## 未提交的變更
@@ -47,77 +45,81 @@ diff --git a/banini-tracker b/banini-tracker
 -Subproject commit 811be48e6702a2b8519e5297ed00c8a24d7cfe29
 +Subproject commit 811be48e6702a2b8519e5297ed00c8a24d7cfe29-dirty
 diff --git a/claude_cycle_monitor.log b/claude_cycle_monitor.log
-index 412ccbc..d15b85a 100644
+index d15b85a..38cae01 100644
 --- a/claude_cycle_monitor.log
 +++ b/claude_cycle_monitor.log
-@@ -1859,3 +1859,6 @@ google.genai.errors.ServerError: 503 UNAVAILABLE. {'error': {'code': 503, 'messa
- [12:40] 自動同步完成
- [12:41] 下一事件：midpoint @ 15:30（169 分鐘後）
- [15:31] 下一事件：end_warn @ 17:40（129 分鐘後）
-+[17:40] 自動同步完成
-+[17:41] 下一事件：midpoint @ 20:30（169 分鐘後）
-+[20:31] 下一事件：end_warn @ 22:40（129 分鐘後）
-diff --git a/claude_cycle_monitor.py b/claude_cycle_monitor.py
-index ba73fbb..65484cc 100644
---- a/claude_cycle_monitor.py
-+++ b/claude_cycle_monitor.py
-@@ -119,90 +119,8 @@ def rsync_vm() -> str:
+@@ -1862,3 +1862,6 @@ google.genai.errors.ServerError: 503 UNAVAILABLE. {'error': {'code': 503, 'messa
+ [17:40] 自動同步完成
+ [17:41] 下一事件：midpoint @ 20:30（169 分鐘後）
+ [20:31] 下一事件：end_warn @ 22:40（129 分鐘後）
++[22:39] 自動同步完成
++[22:41] 下一事件：midpoint @ 01:30（169 分鐘後）
++[01:31] 下一事件：end_warn @ 03:40（129 分鐘後）
+diff --git a/daily-stock-analysis b/daily-stock-analysis
+--- a/daily-stock-analysis
++++ b/daily-stock-analysis
+@@ -1 +1 @@
+-Subproject commit dbdf30d170decf562896d5af8e3376918dc66806
++Subproject commit dbdf30d170decf562896d5af8e3376918dc66806-dirty
+diff --git a/gemma_work/latest.md b/gemma_work/latest.md
+index 043e13a..b59dc78 100644
+--- a/gemma_work/latest.md
++++ b/gemma_work/latest.md
+@@ -1,130 +1,27 @@
+-# Claude Handoff 20260514_2239
++# Claude Handoff 20260514_2332
++> 自動生成於 2026-05-14 23:32
  
+-## Git 狀態（未提交）
++## 未提交的檔案異動
+ ```
+ m banini-tracker
+- M claude_cycle_monitor.log
+- M claude_cycle_monitor.py
+  m daily-stock-analysis
+- M gemma_work/latest.md
+- M logs/shopee_stock.log
+- M rabbit-care/motion-watcher.log
+- M rabbit-care/rabbit-care.log
+  M rabbit-care/rabbit.db
+- D rabbit-care/static/action_screenshots/20260507_170142_eating.jpg
+- D rabbit-care/static/action_screenshots/20260507_173921_sleeping.jpg
+- D rabbit-care/static/action_screenshots/20260507_174943_eating.jpg
+- D rabbit-care/static/action_screenshots/20260507_175451_sleeping.jpg
+- D rabbit-care/static/action_screenshots/20260507_182750_eating.jpg
+- D rabbit-care/static/action_screenshots/20260507_195327_eating.jpg
+- D rabbit-care/static/action_screenshots/20260507_195835_eating.jpg
+- D rabbit-care/static/action_screenshots/20260507_202529_eating.jpg
+- D rabbit-care/static/action_screenshots/20260507_210423_eating.jpg
+  m stock-screener-ai
+-?? rabbit-care/static/action_screenshots/20260514_200149_eating.jpg
+-?? rabbit-care/static/action_screenshots/20260514_221723_eating.jpg
+-?? rabbit-care/static/action_screenshots/20260514_223854_eating.jpg
++?? rabbit-care/static/action_screenshots/20260514_225726_sleeping.jpg
++?? rabbit-care/static/action_screenshots/20260514_231258_eating.jpg
++?? rabbit-care/static/action_screenshots/20260514_231806_eating.jpg
+ ```
  
- def handoff_to_gemma() -> str:
--    """把當前工作 context 寫入 handoff 檔，用 Hermes 建立 session 繼續"""
--    context_parts = []
+ ## 近期 Commits
+ ```
++607652a chore: 自動同步 2026-05-14 22:40
+ 1259774 chore: 自動同步 2026-05-14 17:40
+ ad42b7f chore: 自動同步 2026-05-14 12:40
+ 6a586fb chore: 自動同步 2026-05-14 07:40
+ 84d034c chore: 自動同步 2026-05-14 02:40
+-4c97a52 chore: 自動同步 2026-05-13 21:40
+-b11a479 整理 Git 狀態
+-744ab33 chore: 自動同步 2026-05-13 16:40
+-fd59bfc chore: 自動同步 2026-05-13 11:40
+ ```
+ 
+-## 未提交的變更
+-```diff
+-diff --git a/banini-tracker b/banini-tracker
+---- a/banini-tracker
+-+++ b/banini-tracker
+-@@ -1 +1 @@
 -
--    # 1. 讀取任務描述檔
--    handoff_file = os.path.expanduser('~/CCProject/.handoff_context.md')
--    if os.path.exists(handoff_file):
--        task_desc = open(handoff_file).read().strip()
--        if task_desc and '目前沒有進行中的任務' not in task_desc:
--            context_parts.append(f"## 當前任務\n{task_desc}")
--
--    # 2. Git 狀態
--    repo = os.path.expanduser('~/CCProject')
--    r = subprocess.run(['git', 'status', '--short'], cwd=repo, capture_output=True, text=True)
--    if r.stdout.strip():
--        context_parts.append(f"## Git 狀態（未提交）\n```\n{r.stdout.strip()}\n```")
--
--    # 3. 近期 commits
--    r = subprocess.run(['git', 'log', '--oneline', '-8'], cwd=repo, capture_output=True, text=True)
--    if r.stdout.strip():
--        context_parts.append(f"## 近期 Commits\n```\n{r.stdout.strip()}\n```")
--
--    # 4. Git diff
--    r = subprocess.run(['git', 'diff', 'HEAD'], cwd=repo, capture_output=True, text=True)
--    if r.stdout.strip():
--        diff_preview = r.stdout.strip()[:3000]
--        context_parts.append(f"## 未提交的變更\n```diff\n{diff_preview}\n```")
--
--    if not context_parts:
--        return "ℹ️ 無工作 context，跳過 Gemma handoff"
--
--    # 寫入 handoff 檔
--    work_dir = os.path.expanduser('~/CCProject/gemma_work')
--    os.makedirs(work_dir, exist_ok=True)
--    ts = datetime.now(TZ).strftime('%Y%m%d_%H%M')
--    context_file = os.path.join(work_dir, f'handoff_{ts}.md')
--    with open(context_file, 'w') as f:
--        f.write(f"# Claude Handoff {ts}\n\n")
--        f.write('\n\n'.join(context_parts))
--        f.write("\n\n---\n\n## Hermes 工作記錄\n\n（Hermes 將在此記錄進度）\n")
--
--    # 同時更新 latest 捷徑（Hermes 會在此附加進度，Claude 重啟後讀這個）
--    latest = os.path.join(work_dir, 'latest.md')
--    import shutil
--    shutil.copy(context_file, latest)
--    # 加上提示讓 Hermes 知道要附加在哪
--    with open(latest, 'a') as f:
--        f.write("\n\n<!-- Hermes：請在此處附加你的進度更新 -->\n")
--
--    # 用 Hermes 建立 session（-Q 安靜模式，不等互動）
--    query = (
--        f"請閱讀並分析這份工作移交文件：{context_file}\n\n"
--        "分析完後：\n"
--        "1. 用繁體中文說明目前做到哪裡\n
 ```
 
 ---
