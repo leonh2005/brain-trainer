@@ -9792,3 +9792,2174 @@ Response Code: 200 | Event Code: 16 | Info: APISUB/V1/SYS/CONTRACT | Event: Subs
 [13:35:06] intraday_monitor 開始執行
 非交易時段，略過
 [13:36:06] 盤後，監控結束
+2026-05-14 09:00:03.065 | WARNING  | importlib._bootstrap:_call_with_frames_removed:488 - Optional: pip install shioaji[speed] or uv add shioaji --extra speed for better performance.
+[startup] intraday_monitor 啟動，初始化 Shioaji...
+Response Code: 0 | Event Code: 0 | Info: host '210.59.255.161:80', hostname '210.59.255.161:80' IP 210.59.255.161:80 (host 1 of 1) (host connection attempt 1 of 1) (total connection attempt 1 of 1) | Event: Session up
+Response Code: 200 | Event Code: 16 | Info: APISUB/V1/SYS/CONTRACT | Event: Subscribe or Unsubscribe ok
+[startup] Shioaji 暖機完成（1s），開始監控迴圈
+[09:00:11] intraday_monitor 開始執行
+[top24] 2887(117K) 0050(113K) 0056(67K) 2891(56K) 2002(41K) 2027(40K) 2882(34K) 8105(34K) ...
+[vol_rank] 快取 0 分鐘前更新，top50
+  檢查 2887 台新新光金 ... 訊號 0: []  第12項:False  top30:True
+  檢查 0050 元大台灣50 ... 無 K 棒資料
+  檢查 0056 元大高股息 ... 無 K 棒資料
+  檢查 2891 中信金 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2002 中鋼 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2027 大成鋼 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2882 國泰金 ... 訊號 0: []  第12項:False  top30:True
+  檢查 8105 凌巨 ... 訊號 0: []  第12項:False  top30:True
+  檢查 0052 富邦科技 ... 無 K 棒資料
+  檢查 2542 興富發 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2312 金寶 ... 訊號 0: []  第12項:False  top30:True
+  檢查 4960 誠美材 ... 訊號 0: []  第12項:False  top30:True
+  檢查 3673 TPK-KY ... 訊號 0: []  第12項:False  top30:True
+  檢查 3481 群創 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2316 楠梓電 ... 訊號 0: []  第12項:False  top30:True
+  檢查 1727 中華化 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2618 長榮航 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2489 瑞軒 ... 訊號 0: []  第12項:False  top30:True
+  檢查 1314 中石化 ... 訊號 0: []  第12項:False  top30:True
+  檢查 1711 永光 ... 訊號 0: []  第12項:False  top30:True
+  檢查 6278 台表科 ... 訊號 0: []  第12項:False  top30:True
+  檢查 3702 大聯大 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2363 矽統 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2609 陽明 ... 訊號 0: []  第12項:False  top30:True
+完成
+[09:01:48] intraday_monitor 開始執行
+[top24] 0050(113K) 0056(67K) 3481(58K) 0052(31K) 2409(22K) 2337(19K) 6116(19K) 2344(18K) ...
+[vol_rank] 快取 2 分鐘前更新，top50
+  檢查 0050 元大台灣50 ... 無 K 棒資料
+  檢查 0056 元大高股息 ... 無 K 棒資料
+  檢查 3481 群創 ... 訊號 0: []  第12項:False  top30:True
+  檢查 0052 富邦科技 ... 無 K 棒資料
+  檢查 2409 友達 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2337 旺宏 ... 訊號 0: []  第12項:False  top30:False
+  檢查 6116 彩晶 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2344 華邦電 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2302 麗正 ... 無 K 棒資料
+  檢查 2303 聯電 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2377 微星 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2408 南亞科 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2356 英業達 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2484 希華 ... 無 K 棒資料
+  檢查 1528 恩德 ... 無 K 棒資料
+  檢查 9136 巨騰-DR ... 無 K 棒資料
+  檢查 2481 強茂 ... 訊號 0: []  第12項:False  top30:False
+  檢查 4958 臻鼎-KY ... 訊號 0: []  第12項:False  top30:False
+  檢查 2327 國巨* ... 訊號 0: []  第12項:False  top30:False
+  檢查 6770 力積電 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2317 鴻海 ... 訊號 0: []  第12項:False  top30:False
+  檢查 3645 達邁 ... 訊號 0: []  第12項:False  top30:False
+  檢查 1802 台玻 ... 訊號 0: []  第12項:False  top30:False
+  檢查 1605 華新 ... 訊號 0: []  第12項:False  top30:False
+完成
+[09:02:55] intraday_monitor 開始執行
+[top24] 3481(74K) 2337(26K) 2344(26K) 2409(24K) 6116(19K) 2303(16K) 2377(15K) 2408(13K) ...
+[vol_rank] 快取 3 分鐘前更新，top50
+  檢查 3481 群創 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2337 旺宏 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2344 華邦電 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2409 友達 ... 訊號 0: []  第12項:False  top30:False
+  檢查 6116 彩晶 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2303 聯電 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2377 微星 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2408 南亞科 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2356 英業達 ... 訊號 0: []  第12項:False  top30:False
+  檢查 6770 力積電 ... 訊號 0: []  第12項:False  top30:False
+  檢查 4958 臻鼎-KY ... 訊號 0: []  第12項:False  top30:False
+  檢查 2327 國巨* ... 訊號 0: []  第12項:False  top30:False
+  檢查 2481 強茂 ... 訊號 0: []  第12項:False  top30:False
+  檢查 9136 巨騰-DR ... 無 K 棒資料
+  檢查 1802 台玻 ... 訊號 0: []  第12項:False  top30:False
+  檢查 3673 TPK-KY ... 訊號 0: []  第12項:False  top30:True
+  檢查 2317 鴻海 ... 訊號 0: []  第12項:False  top30:False
+  檢查 1605 華新 ... 訊號 0: []  第12項:False  top30:False
+  檢查 3006 晶豪科 ... 訊號 0: []  第12項:False  top30:False
+  檢查 3645 達邁 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2324 仁寶 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2883 凱基金 ... 訊號 0: []  第12項:False  top30:False
+  檢查 8926 台汽電 ... 訊號 0: []  第12項:False  top30:False
+  檢查 8105 凌巨 ... 訊號 0: []  第12項:False  top30:True
+完成
+[09:03:58] intraday_monitor 開始執行
+[top24] 3481(74K) 2337(31K) 2344(30K) 2409(24K) 6116(22K) 2377(18K) 2303(17K) 2408(15K) ...
+[vol_rank] 快取 4 分鐘前更新，top50
+  檢查 3481 群創 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2337 旺宏 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2344 華邦電 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2409 友達 ... 訊號 0: []  第12項:False  top30:False
+  檢查 6116 彩晶 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2377 微星 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2303 聯電 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2408 南亞科 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2481 強茂 ... 訊號 0: []  第12項:False  top30:False
+  檢查 6770 力積電 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2356 英業達 ... 訊號 0: []  第12項:False  top30:False
+  檢查 4958 臻鼎-KY ... 訊號 0: []  第12項:False  top30:False
+  檢查 1802 台玻 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2327 國巨* ... 訊號 0: []  第12項:False  top30:False
+  檢查 3673 TPK-KY ... 訊號 0: []  第12項:False  top30:True
+  檢查 1605 華新 ... 訊號 0: []  第12項:False  top30:False
+  檢查 9136 巨騰-DR ... 無 K 棒資料
+  檢查 2317 鴻海 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2883 凱基金 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2324 仁寶 ... 訊號 0: []  第12項:False  top30:False
+  檢查 3006 晶豪科 ... 訊號 0: []  第12項:False  top30:False
+  檢查 8926 台汽電 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2887 台新新光金 ... 訊號 0: []  第12項:False  top30:True
+  檢查 3645 達邁 ... 訊號 0: []  第12項:False  top30:False
+完成
+[09:05:02] intraday_monitor 開始執行
+[top24] 3481(98K) 2337(35K) 2409(34K) 2344(34K) 6116(25K) 2303(19K) 2377(19K) 2408(16K) ...
+[vol_rank] 快取 5 分鐘前更新，top50
+  檢查 3481 群創 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2337 旺宏 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2409 友達 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2344 華邦電 ... 訊號 0: []  第12項:False  top30:False
+  檢查 6116 彩晶 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2303 聯電 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2377 微星 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2408 南亞科 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2481 強茂 ... 訊號 0: []  第12項:False  top30:False
+  檢查 6770 力積電 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2356 英業達 ... 訊號 0: []  第12項:False  top30:False
+  檢查 4958 臻鼎-KY ... 訊號 0: []  第12項:False  top30:False
+  檢查 1802 台玻 ... 訊號 0: []  第12項:False  top30:False
+  檢查 1605 華新 ... 訊號 0: []  第12項:False  top30:False
+  檢查 3673 TPK-KY ... 訊號 0: []  第12項:False  top30:True
+  檢查 2327 國巨* ... 訊號 0: []  第12項:False  top30:False
+  檢查 2317 鴻海 ... 訊號 0: []  第12項:False  top30:False
+  檢查 9136 巨騰-DR ... 無 K 棒資料
+  檢查 2618 長榮航 ... 訊號 0: []  第12項:False  top30:True
+  檢查 8926 台汽電 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2883 凱基金 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2324 仁寶 ... 訊號 0: []  第12項:False  top30:False
+  檢查 3006 晶豪科 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2887 台新新光金 ... 訊號 0: []  第12項:False  top30:True
+完成
+[09:06:08] intraday_monitor 開始執行
+[top24] 3481(113K) 2344(48K) 2337(40K) 2409(38K) 6116(29K) 2303(21K) 2377(20K) 2408(18K) ...
+[vol_rank] 快取 6 分鐘前更新，top50
+  檢查 3481 群創 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2344 華邦電 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2337 旺宏 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2409 友達 ... 訊號 0: []  第12項:False  top30:False
+  檢查 6116 彩晶 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2303 聯電 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2377 微星 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2408 南亞科 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2481 強茂 ... 訊號 0: []  第12項:False  top30:False
+  檢查 6770 力積電 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2356 英業達 ... 訊號 0: []  第12項:False  top30:False
+  檢查 4958 臻鼎-KY ... 訊號 0: []  第12項:False  top30:False
+  檢查 1802 台玻 ... 訊號 0: []  第12項:False  top30:False
+  檢查 3673 TPK-KY ... 訊號 0: []  第12項:False  top30:True
+  檢查 1605 華新 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2618 長榮航 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2327 國巨* ... 訊號 0: []  第12項:False  top30:False
+  檢查 8926 台汽電 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2317 鴻海 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2883 凱基金 ... 訊號 0: []  第12項:False  top30:False
+  檢查 9136 巨騰-DR ... 無 K 棒資料
+  檢查 2324 仁寶 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2301 光寶科 ... 訊號 0: []  第12項:False  top30:False
+  檢查 1717 長興 ... 訊號 0: []  第12項:False  top30:False
+完成
+[09:07:12] intraday_monitor 開始執行
+[top24] 3481(129K) 2344(52K) 2409(46K) 2337(45K) 6116(31K) 2303(22K) 2377(21K) 2408(20K) ...
+[vol_rank] 快取 7 分鐘前更新，top50
+  檢查 3481 群創 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2344 華邦電 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2409 友達 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2337 旺宏 ... 訊號 0: []  第12項:False  top30:False
+  檢查 6116 彩晶 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2303 聯電 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2377 微星 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2408 南亞科 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2481 強茂 ... 訊號 0: []  第12項:False  top30:False
+  檢查 6770 力積電 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2356 英業達 ... 訊號 0: []  第12項:False  top30:False
+  檢查 4958 臻鼎-KY ... 訊號 0: []  第12項:False  top30:False
+  檢查 3673 TPK-KY ... 訊號 0: []  第12項:False  top30:True
+  檢查 1605 華新 ... 訊號 0: []  第12項:False  top30:False
+  檢查 1802 台玻 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2618 長榮航 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2327 國巨* ... 訊號 0: []  第12項:False  top30:False
+  檢查 1717 長興 ... 訊號 0: []  第12項:False  top30:False
+  檢查 8926 台汽電 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2313 華通 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2317 鴻海 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2883 凱基金 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2301 光寶科 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2324 仁寶 ... 訊號 0: []  第12項:False  top30:False
+完成
+[09:08:17] intraday_monitor 開始執行
+[top24] 3481(147K) 2344(56K) 2337(54K) 2409(50K) 6116(33K) 2303(24K) 2377(23K) 2408(22K) ...
+[vol_rank] 快取 8 分鐘前更新，top50
+  檢查 3481 群創 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2344 華邦電 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2337 旺宏 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2409 友達 ... 訊號 0: []  第12項:False  top30:False
+  檢查 6116 彩晶 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2303 聯電 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2377 微星 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2408 南亞科 ... 訊號 0: []  第12項:False  top30:False
+  檢查 6770 力積電 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2481 強茂 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2356 英業達 ... 訊號 0: []  第12項:False  top30:False
+  檢查 4958 臻鼎-KY ... 訊號 0: []  第12項:False  top30:False
+  檢查 3673 TPK-KY ... 訊號 0: []  第12項:False  top30:True
+  檢查 1605 華新 ... 訊號 0: []  第12項:False  top30:False
+  檢查 1802 台玻 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2618 長榮航 ... 訊號 0: []  第12項:False  top30:True
+  檢查 6278 台表科 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2883 凱基金 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2313 華通 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2327 國巨* ... 訊號 0: []  第12項:False  top30:False
+  檢查 8926 台汽電 ... 訊號 0: []  第12項:False  top30:False
+  檢查 1717 長興 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2324 仁寶 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2317 鴻海 ... 訊號 0: []  第12項:False  top30:False
+完成
+[09:09:22] intraday_monitor 開始執行
+[top24] 3481(158K) 2344(61K) 2337(59K) 2409(55K) 6116(37K) 2303(28K) 2377(24K) 6770(23K) ...
+[vol_rank] 快取 9 分鐘前更新，top50
+  檢查 3481 群創 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2344 華邦電 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2337 旺宏 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2409 友達 ... 訊號 0: []  第12項:False  top30:False
+  檢查 6116 彩晶 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2303 聯電 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2377 微星 ... 訊號 0: []  第12項:False  top30:False
+  檢查 6770 力積電 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2408 南亞科 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2481 強茂 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2356 英業達 ... 訊號 0: []  第12項:False  top30:False
+  檢查 4958 臻鼎-KY ... 訊號 0: []  第12項:False  top30:False
+  檢查 1605 華新 ... 訊號 0: []  第12項:False  top30:False
+  檢查 3673 TPK-KY ... 訊號 0: []  第12項:False  top30:True
+  檢查 1802 台玻 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2883 凱基金 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2618 長榮航 ... 訊號 0: []  第12項:False  top30:True
+  檢查 6278 台表科 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2317 鴻海 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2313 華通 ... 訊號 0: []  第12項:False  top30:False
+  檢查 1717 長興 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2324 仁寶 ... 訊號 0: []  第12項:False  top30:False
+  檢查 8926 台汽電 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2327 國巨* ... 訊號 0: []  第12項:False  top30:False
+完成
+[09:10:27] intraday_monitor 開始執行
+[top24] 3481(168K) 2344(64K) 2337(63K) 2409(59K) 6116(38K) 2303(30K) 2377(26K) 6770(25K) ...
+[vol_rank] 快取 10 分鐘前更新，top50
+  檢查 3481 群創 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2344 華邦電 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2337 旺宏 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2409 友達 ... 訊號 0: []  第12項:False  top30:False
+  檢查 6116 彩晶 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2303 聯電 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2377 微星 ... 訊號 0: []  第12項:False  top30:False
+  檢查 6770 力積電 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2408 南亞科 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2481 強茂 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2356 英業達 ... 訊號 0: []  第12項:False  top30:False
+  檢查 4958 臻鼎-KY ... 訊號 0: []  第12項:False  top30:False
+  檢查 3673 TPK-KY ... 訊號 0: []  第12項:False  top30:True
+  檢查 1605 華新 ... 訊號 0: []  第12項:False  top30:False
+  檢查 1802 台玻 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2313 華通 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2883 凱基金 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2618 長榮航 ... 訊號 0: []  第12項:False  top30:True
+  檢查 6278 台表科 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2317 鴻海 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2027 大成鋼 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2324 仁寶 ... 訊號 0: []  第12項:False  top30:False
+  檢查 1717 長興 ... 訊號 0: []  第12項:False  top30:False
+  檢查 8926 台汽電 ... 訊號 0: []  第12項:False  top30:False
+完成
+[09:11:34] intraday_monitor 開始執行
+[top24] 3481(184K) 2337(67K) 2344(67K) 2409(61K) 6116(40K) 2303(33K) 2377(28K) 2408(27K) ...
+[vol_rank] 快取 11 分鐘前更新，top50
+  檢查 3481 群創 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2337 旺宏 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2344 華邦電 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2409 友達 ... 訊號 0: []  第12項:False  top30:False
+  檢查 6116 彩晶 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2303 聯電 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2377 微星 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2408 南亞科 ... 訊號 0: []  第12項:False  top30:False
+  檢查 6770 力積電 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2481 強茂 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2356 英業達 ... 訊號 0: []  第12項:False  top30:False
+  檢查 4958 臻鼎-KY ... 訊號 0: []  第12項:False  top30:False
+  檢查 3673 TPK-KY ... 訊號 0: []  第12項:False  top30:True
+  檢查 1802 台玻 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2313 華通 ... 訊號 0: []  第12項:False  top30:False
+  檢查 1605 華新 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2883 凱基金 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2618 長榮航 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2317 鴻海 ... 訊號 0: []  第12項:False  top30:False
+  檢查 6278 台表科 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2027 大成鋼 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2324 仁寶 ... 訊號 0: []  第12項:False  top30:False
+  檢查 8926 台汽電 ... 訊號 0: []  第12項:False  top30:False
+  檢查 1717 長興 ... 訊號 0: []  第12項:False  top30:False
+完成
+[09:12:42] intraday_monitor 開始執行
+[top24] 3481(198K) 2344(81K) 2337(75K) 2409(64K) 6116(42K) 2408(39K) 2303(34K) 6770(31K) ...
+[vol_rank] 快取 13 分鐘前更新，top50
+  檢查 3481 群創 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2344 華邦電 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2337 旺宏 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2409 友達 ... 訊號 0: []  第12項:False  top30:False
+  檢查 6116 彩晶 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2408 南亞科 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2303 聯電 ... 訊號 0: []  第12項:False  top30:False
+  檢查 6770 力積電 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2377 微星 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2481 強茂 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2356 英業達 ... 訊號 0: []  第12項:False  top30:False
+  檢查 4958 臻鼎-KY ... 訊號 0: []  第12項:False  top30:False
+  檢查 3673 TPK-KY ... 訊號 0: []  第12項:False  top30:True
+  檢查 2313 華通 ... 訊號 0: []  第12項:False  top30:False
+  檢查 1802 台玻 ... 訊號 0: []  第12項:False  top30:False
+  檢查 1605 華新 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2883 凱基金 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2027 大成鋼 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2618 長榮航 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2317 鴻海 ... 訊號 0: []  第12項:False  top30:False
+  檢查 6278 台表科 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2324 仁寶 ... 訊號 0: []  第12項:False  top30:False
+  檢查 8926 台汽電 ... 訊號 0: []  第12項:False  top30:False
+  檢查 1717 長興 ... 訊號 0: []  第12項:False  top30:False
+完成
+[09:13:48] intraday_monitor 開始執行
+[top24] 3481(216K) 2344(87K) 2337(86K) 2409(66K) 6116(44K) 2408(40K) 2303(36K) 6770(34K) ...
+[vol_rank] 快取 14 分鐘前更新，top50
+  檢查 3481 群創 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2344 華邦電 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2337 旺宏 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2409 友達 ... 訊號 0: []  第12項:False  top30:False
+  檢查 6116 彩晶 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2408 南亞科 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2303 聯電 ... 訊號 0: []  第12項:False  top30:False
+  檢查 6770 力積電 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2377 微星 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2481 強茂 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2356 英業達 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2313 華通 ... 訊號 0: []  第12項:False  top30:False
+  檢查 4958 臻鼎-KY ... 訊號 0: []  第12項:False  top30:False
+  檢查 3673 TPK-KY ... 訊號 0: []  第12項:False  top30:True
+  檢查 1802 台玻 ... 訊號 0: []  第12項:False  top30:False
+  檢查 1605 華新 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2027 大成鋼 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2883 凱基金 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2618 長榮航 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2317 鴻海 ... 訊號 0: []  第12項:False  top30:False
+  檢查 6278 台表科 ... 訊號 0: []  第12項:False  top30:True
+  檢查 8028 昇陽半導體 ... 訊號 0: []  第12項:False  top30:False
+  檢查 8926 台汽電 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2324 仁寶 ... 訊號 0: []  第12項:False  top30:False
+完成
+[09:14:55] intraday_monitor 開始執行
+[top24] 3481(224K) 2337(94K) 2344(91K) 2409(69K) 6116(46K) 2408(41K) 2303(37K) 6770(35K) ...
+[vol_rank] 快取 15 分鐘前更新，top50
+  檢查 3481 群創 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2337 旺宏 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2344 華邦電 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2409 友達 ... 訊號 0: []  第12項:False  top30:False
+  檢查 6116 彩晶 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2408 南亞科 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2303 聯電 ... 訊號 0: []  第12項:False  top30:False
+  檢查 6770 力積電 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2377 微星 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2481 強茂 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2313 華通 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2356 英業達 ... 訊號 0: []  第12項:False  top30:False
+  檢查 4958 臻鼎-KY ... 訊號 0: []  第12項:False  top30:False
+  檢查 3673 TPK-KY ... 訊號 0: []  第12項:False  top30:True
+  檢查 1802 台玻 ... 訊號 0: []  第12項:False  top30:False
+  檢查 1605 華新 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2027 大成鋼 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2883 凱基金 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2618 長榮航 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2367 燿華 ... 訊號 0: []  第12項:False  top30:False
+  檢查 8028 昇陽半導體 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2317 鴻海 ... 訊號 0: []  第12項:False  top30:False
+  檢查 6278 台表科 ... 訊號 0: []  第12項:False  top30:True
+  檢查 8926 台汽電 ... 訊號 0: []  第12項:False  top30:False
+完成
+[09:16:02] intraday_monitor 開始執行
+[top24] 3481(231K) 2337(97K) 2344(96K) 2409(72K) 6116(47K) 2408(42K) 2303(39K) 6770(37K) ...
+[vol_rank] 快取 16 分鐘前更新，top50
+  檢查 3481 群創 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2337 旺宏 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2344 華邦電 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2409 友達 ... 訊號 0: []  第12項:False  top30:False
+  檢查 6116 彩晶 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2408 南亞科 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2303 聯電 ... 訊號 0: []  第12項:False  top30:False
+  檢查 6770 力積電 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2377 微星 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2481 強茂 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2356 英業達 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2313 華通 ... 訊號 0: []  第12項:False  top30:False
+  檢查 4958 臻鼎-KY ... 訊號 0: []  第12項:False  top30:False
+  檢查 3673 TPK-KY ... 訊號 0: []  第12項:False  top30:True
+  檢查 1605 華新 ... 訊號 0: []  第12項:False  top30:False
+  檢查 1802 台玻 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2027 大成鋼 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2367 燿華 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2883 凱基金 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2317 鴻海 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2618 長榮航 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2324 仁寶 ... 訊號 0: []  第12項:False  top30:False
+  檢查 8028 昇陽半導體 ... 訊號 0: []  第12項:False  top30:False
+  檢查 8926 台汽電 ... 訊號 0: []  第12項:False  top30:False
+完成
+[09:17:10] intraday_monitor 開始執行
+[top24] 3481(236K) 2337(101K) 2344(100K) 2409(76K) 6116(48K) 2408(42K) 2303(40K) 6770(38K) ...
+[vol_rank] 快取 17 分鐘前更新，top50
+  檢查 3481 群創 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2337 旺宏 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2344 華邦電 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2409 友達 ... 訊號 0: []  第12項:False  top30:False
+  檢查 6116 彩晶 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2408 南亞科 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2303 聯電 ... 訊號 0: []  第12項:False  top30:False
+  檢查 6770 力積電 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2377 微星 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2481 強茂 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2356 英業達 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2313 華通 ... 訊號 0: []  第12項:False  top30:False
+  檢查 4958 臻鼎-KY ... 訊號 0: []  第12項:False  top30:False
+  檢查 1802 台玻 ... 訊號 0: []  第12項:False  top30:False
+  檢查 3673 TPK-KY ... 訊號 0: []  第12項:False  top30:True
+  檢查 1605 華新 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2367 燿華 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2027 大成鋼 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2317 鴻海 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2883 凱基金 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2324 仁寶 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2618 長榮航 ... 訊號 0: []  第12項:False  top30:True
+  檢查 8028 昇陽半導體 ... 訊號 0: []  第12項:False  top30:False
+  檢查 8926 台汽電 ... 訊號 0: []  第12項:False  top30:False
+完成
+[09:18:18] intraday_monitor 開始執行
+[top24] 3481(247K) 2337(105K) 2344(105K) 2409(77K) 2408(50K) 6116(49K) 2303(42K) 6770(40K) ...
+[vol_rank] 快取 18 分鐘前更新，top50
+  檢查 3481 群創 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2337 旺宏 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2344 華邦電 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2409 友達 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2408 南亞科 ... 訊號 0: []  第12項:False  top30:False
+  檢查 6116 彩晶 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2303 聯電 ... 訊號 0: []  第12項:False  top30:False
+  檢查 6770 力積電 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2377 微星 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2481 強茂 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2356 英業達 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2313 華通 ... 訊號 0: []  第12項:False  top30:False
+  檢查 4958 臻鼎-KY ... 訊號 0: []  第12項:False  top30:False
+  檢查 2367 燿華 ... 訊號 0: []  第12項:False  top30:False
+  檢查 1802 台玻 ... 訊號 0: []  第12項:False  top30:False
+  檢查 1605 華新 ... 訊號 0: []  第12項:False  top30:False
+  檢查 3673 TPK-KY ... 訊號 0: []  第12項:False  top30:True
+  檢查 2883 凱基金 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2317 鴻海 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2027 大成鋼 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2324 仁寶 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2618 長榮航 ... 訊號 0: []  第12項:False  top30:True
+  檢查 8028 昇陽半導體 ... 訊號 0: []  第12項:False  top30:False
+  檢查 1717 長興 ... 訊號 0: []  第12項:False  top30:False
+完成
+[09:19:26] intraday_monitor 開始執行
+[top24] 3481(252K) 2337(110K) 2344(108K) 2409(80K) 2408(52K) 6116(50K) 2303(44K) 6770(41K) ...
+[vol_rank] 快取 19 分鐘前更新，top50
+  檢查 3481 群創 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2337 旺宏 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2344 華邦電 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2409 友達 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2408 南亞科 ... 訊號 0: []  第12項:False  top30:False
+  檢查 6116 彩晶 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2303 聯電 ... 訊號 0: []  第12項:False  top30:False
+  檢查 6770 力積電 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2377 微星 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2481 強茂 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2356 英業達 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2313 華通 ... 訊號 0: []  第12項:False  top30:False
+  檢查 4958 臻鼎-KY ... 訊號 0: []  第12項:False  top30:False
+  檢查 2367 燿華 ... 訊號 0: []  第12項:False  top30:False
+  檢查 1802 台玻 ... 訊號 0: []  第12項:False  top30:False
+  檢查 1605 華新 ... 訊號 0: []  第12項:False  top30:False
+  檢查 3673 TPK-KY ... 訊號 0: []  第12項:False  top30:True
+  檢查 2027 大成鋼 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2883 凱基金 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2317 鴻海 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2324 仁寶 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2618 長榮航 ... 訊號 0: []  第12項:False  top30:True
+  檢查 8028 昇陽半導體 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2301 光寶科 ... 訊號 0: []  第12項:False  top30:False
+完成
+[09:20:35] intraday_monitor 開始執行
+[top24] 3481(258K) 2337(115K) 2344(109K) 2409(82K) 6116(54K) 2408(54K) 2303(45K) 6770(42K) ...
+[vol_rank] 快取 20 分鐘前更新，top50
+  檢查 3481 群創 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2337 旺宏 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2344 華邦電 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2409 友達 ... 訊號 0: []  第12項:False  top30:False
+  檢查 6116 彩晶 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2408 南亞科 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2303 聯電 ... 訊號 0: []  第12項:False  top30:False
+  檢查 6770 力積電 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2377 微星 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2481 強茂 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2356 英業達 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2313 華通 ... 訊號 0: []  第12項:False  top30:False
+  檢查 4958 臻鼎-KY ... 訊號 0: []  第12項:False  top30:False
+  檢查 2367 燿華 ... 訊號 0: []  第12項:False  top30:False
+  檢查 1802 台玻 ... 訊號 0: []  第12項:False  top30:False
+  檢查 1605 華新 ... 訊號 0: []  第12項:False  top30:False
+  檢查 3673 TPK-KY ... 訊號 0: []  第12項:False  top30:True
+  檢查 2027 大成鋼 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2883 凱基金 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2317 鴻海 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2324 仁寶 ... 訊號 0: []  第12項:False  top30:False
+  檢查 8028 昇陽半導體 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2618 長榮航 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2301 光寶科 ... 訊號 0: []  第12項:False  top30:False
+完成
+[09:21:43] intraday_monitor 開始執行
+[top24] 3481(264K) 2337(119K) 2344(114K) 2409(83K) 2408(58K) 6116(55K) 2303(47K) 6770(44K) ...
+[vol_rank] 快取 22 分鐘前更新，top50
+  檢查 3481 群創 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2337 旺宏 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2344 華邦電 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2409 友達 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2408 南亞科 ... 訊號 0: []  第12項:False  top30:False
+  檢查 6116 彩晶 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2303 聯電 ... 訊號 0: []  第12項:False  top30:False
+  檢查 6770 力積電 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2377 微星 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2481 強茂 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2356 英業達 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2313 華通 ... 訊號 0: []  第12項:False  top30:False
+  檢查 4958 臻鼎-KY ... 訊號 0: []  第12項:False  top30:False
+  檢查 2367 燿華 ... 訊號 0: []  第12項:False  top30:False
+  檢查 1802 台玻 ... 訊號 0: []  第12項:False  top30:False
+  檢查 1605 華新 ... 訊號 0: []  第12項:False  top30:False
+  檢查 3673 TPK-KY ... 訊號 0: []  第12項:False  top30:True
+  檢查 2027 大成鋼 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2317 鴻海 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2883 凱基金 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2324 仁寶 ... 訊號 0: []  第12項:False  top30:False
+  檢查 8028 昇陽半導體 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2485 兆赫 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2301 光寶科 ... 訊號 0: []  第12項:False  top30:False
+完成
+[09:22:52] intraday_monitor 開始執行
+[top24] 3481(269K) 2337(121K) 2344(119K) 2409(84K) 2408(59K) 6116(56K) 2303(50K) 6770(45K) ...
+[vol_rank] 快取 23 分鐘前更新，top50
+  檢查 3481 群創 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2337 旺宏 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2344 華邦電 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2409 友達 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2408 南亞科 ... 訊號 0: []  第12項:False  top30:False
+  檢查 6116 彩晶 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2303 聯電 ... 訊號 0: []  第12項:False  top30:False
+  檢查 6770 力積電 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2377 微星 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2481 強茂 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2356 英業達 ... 訊號 0: []  第12項:False  top30:False
+  檢查 4958 臻鼎-KY ... 訊號 0: []  第12項:False  top30:False
+  檢查 2313 華通 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2367 燿華 ... 訊號 0: []  第12項:False  top30:False
+  檢查 1802 台玻 ... 訊號 0: []  第12項:False  top30:False
+  檢查 1605 華新 ... 訊號 0: []  第12項:False  top30:False
+  檢查 3673 TPK-KY ... 訊號 0: []  第12項:False  top30:True
+  檢查 2027 大成鋼 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2317 鴻海 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2883 凱基金 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2324 仁寶 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2485 兆赫 ... 訊號 0: []  第12項:False  top30:False
+  檢查 8028 昇陽半導體 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2618 長榮航 ... 訊號 0: []  第12項:False  top30:True
+完成
+[09:24:01] intraday_monitor 開始執行
+[top24] 3481(273K) 2344(125K) 2337(124K) 2409(85K) 2408(64K) 6116(57K) 2303(55K) 6770(47K) ...
+[vol_rank] 快取 24 分鐘前更新，top50
+  檢查 3481 群創 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2344 華邦電 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2337 旺宏 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2409 友達 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2408 南亞科 ... 訊號 0: []  第12項:False  top30:False
+  檢查 6116 彩晶 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2303 聯電 ... 訊號 0: []  第12項:False  top30:False
+  檢查 6770 力積電 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2377 微星 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2481 強茂 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2356 英業達 ... 訊號 0: []  第12項:False  top30:False
+  檢查 4958 臻鼎-KY ... 訊號 0: []  第12項:False  top30:False
+  檢查 2313 華通 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2367 燿華 ... 訊號 0: []  第12項:False  top30:False
+  檢查 1802 台玻 ... 訊號 0: []  第12項:False  top30:False
+  檢查 1605 華新 ... 訊號 0: []  第12項:False  top30:False
+  檢查 3673 TPK-KY ... 訊號 0: []  第12項:False  top30:True
+  檢查 2027 大成鋼 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2317 鴻海 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2883 凱基金 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2324 仁寶 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2485 兆赫 ... 訊號 0: []  第12項:False  top30:False
+  檢查 8028 昇陽半導體 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2301 光寶科 ... 訊號 0: []  第12項:False  top30:False
+完成
+[09:25:10] intraday_monitor 開始執行
+[top24] 3481(275K) 2344(127K) 2337(125K) 2409(85K) 2408(65K) 2303(63K) 6116(57K) 6770(47K) ...
+[vol_rank] 快取 25 分鐘前更新，top50
+  檢查 3481 群創 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2344 華邦電 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2337 旺宏 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2409 友達 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2408 南亞科 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2303 聯電 ... 訊號 0: []  第12項:False  top30:False
+  檢查 6116 彩晶 ... 訊號 0: []  第12項:False  top30:False
+  檢查 6770 力積電 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2377 微星 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2481 強茂 ... 訊號 0: []  第12項:False  top30:False
+  檢查 4958 臻鼎-KY ... 訊號 0: []  第12項:False  top30:False
+  檢查 2356 英業達 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2313 華通 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2367 燿華 ... 訊號 0: []  第12項:False  top30:False
+  檢查 1802 台玻 ... 訊號 0: []  第12項:False  top30:False
+  檢查 1605 華新 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2485 兆赫 ... 訊號 0: []  第12項:False  top30:False
+  檢查 3673 TPK-KY ... 訊號 0: []  第12項:False  top30:True
+  檢查 2027 大成鋼 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2317 鴻海 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2883 凱基金 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2324 仁寶 ... 訊號 0: []  第12項:False  top30:False
+  檢查 8028 昇陽半導體 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2301 光寶科 ... 訊號 0: []  第12項:False  top30:False
+完成
+[09:26:19] intraday_monitor 開始執行
+[top24] 3481(278K) 2344(133K) 2337(126K) 2409(86K) 2303(69K) 2408(69K) 6116(59K) 6770(49K) ...
+[vol_rank] 快取 26 分鐘前更新，top50
+  檢查 3481 群創 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2344 華邦電 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2337 旺宏 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2409 友達 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2303 聯電 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2408 南亞科 ... 訊號 0: []  第12項:False  top30:False
+  檢查 6116 彩晶 ... 訊號 0: []  第12項:False  top30:False
+  檢查 6770 力積電 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2377 微星 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2481 強茂 ... 訊號 0: []  第12項:False  top30:False
+  檢查 4958 臻鼎-KY ... 訊號 0: []  第12項:False  top30:False
+  檢查 2356 英業達 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2313 華通 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2367 燿華 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2485 兆赫 ... 訊號 0: []  第12項:False  top30:False
+  檢查 1802 台玻 ... 訊號 0: []  第12項:False  top30:False
+  檢查 1605 華新 ... 訊號 0: []  第12項:False  top30:False
+  檢查 3673 TPK-KY ... 訊號 0: []  第12項:False  top30:True
+  檢查 2027 大成鋼 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2317 鴻海 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2883 凱基金 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2324 仁寶 ... 訊號 0: []  第12項:False  top30:False
+  檢查 8028 昇陽半導體 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2301 光寶科 ... 訊號 0: []  第12項:False  top30:False
+完成
+[09:27:28] intraday_monitor 開始執行
+[top24] 3481(282K) 2344(134K) 2337(128K) 2409(88K) 2303(75K) 2408(70K) 6116(61K) 6770(50K) ...
+[vol_rank] 快取 27 分鐘前更新，top50
+  檢查 3481 群創 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2344 華邦電 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2337 旺宏 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2409 友達 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2303 聯電 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2408 南亞科 ... 訊號 0: []  第12項:False  top30:False
+  檢查 6116 彩晶 ... 訊號 0: []  第12項:False  top30:False
+  檢查 6770 力積電 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2377 微星 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2481 強茂 ... 訊號 0: []  第12項:False  top30:False
+  檢查 4958 臻鼎-KY ... 訊號 0: []  第12項:False  top30:False
+  檢查 2356 英業達 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2313 華通 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2367 燿華 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2485 兆赫 ... 訊號 0: []  第12項:False  top30:False
+  檢查 1802 台玻 ... 訊號 0: []  第12項:False  top30:False
+  檢查 1605 華新 ... 訊號 0: []  第12項:False  top30:False
+  檢查 3673 TPK-KY ... 訊號 0: []  第12項:False  top30:True
+  檢查 2027 大成鋼 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2317 鴻海 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2883 凱基金 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2324 仁寶 ... 訊號 0: []  第12項:False  top30:False
+  檢查 8028 昇陽半導體 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2301 光寶科 ... 訊號 0: []  第12項:False  top30:False
+完成
+[09:28:38] intraday_monitor 開始執行
+[top24] 3481(283K) 2344(136K) 2337(129K) 2409(88K) 2303(79K) 2408(70K) 6116(62K) 6770(51K) ...
+[vol_rank] 快取 28 分鐘前更新，top50
+  檢查 3481 群創 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2344 華邦電 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2337 旺宏 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2409 友達 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2303 聯電 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2408 南亞科 ... 訊號 0: []  第12項:False  top30:False
+  檢查 6116 彩晶 ... 訊號 0: []  第12項:False  top30:False
+  檢查 6770 力積電 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2377 微星 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2481 強茂 ... 訊號 0: []  第12項:False  top30:False
+  檢查 4958 臻鼎-KY ... 訊號 0: []  第12項:False  top30:False
+  檢查 2356 英業達 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2313 華通 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2367 燿華 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2027 大成鋼 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2485 兆赫 ... 訊號 0: []  第12項:False  top30:False
+  檢查 1802 台玻 ... 訊號 0: []  第12項:False  top30:False
+  檢查 1605 華新 ... 訊號 0: []  第12項:False  top30:False
+  檢查 3673 TPK-KY ... 訊號 0: []  第12項:False  top30:True
+  檢查 2317 鴻海 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2883 凱基金 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2324 仁寶 ... 訊號 0: []  第12項:False  top30:False
+  檢查 8028 昇陽半導體 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2301 光寶科 ... 訊號 0: []  第12項:False  top30:False
+完成
+[09:29:47] intraday_monitor 開始執行
+[top24] 3481(289K) 2344(138K) 2337(130K) 2409(92K) 2303(84K) 2408(70K) 6116(64K) 6770(52K) ...
+[vol_rank] 快取 30 分鐘前更新，top50
+  檢查 3481 群創 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2344 華邦電 ... 訊號 2: ['預估量5.6x均量', '昨量1.1%單K']  第12項:False  top30:False
+  檢查 2337 旺宏 ... 訊號 1: ['預估量6.4x均量']  第12項:False  top30:False
+  檢查 2409 友達 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2303 聯電 ... 訊號 3: ['KD鈍化≥80', '預估量2.6x均量', '昨量1.2%單K']  第12項:False  top30:False
+  檢查 2408 南亞科 ... 訊號 5: ['KD鈍化≥80', '預估量4.3x均量', '外盤比81%', '掛單委買大幅領先', 'MACD頂背離']  第12項:False  top30:False
+  檢查 6116 彩晶 ... 訊號 0: []  第12項:False  top30:False
+  檢查 6770 力積電 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2377 微星 ... 訊號 3: ['VWAP突破↑', '預估量8.9x均量', '掛單委買>2.0x委賣']  第12項:False  top30:False
+  檢查 2481 強茂 ... 訊號 3: ['預估量7.3x均量', '外盤比73%', 'MACD底背離']  第12項:False  top30:False
+  檢查 4958 臻鼎-KY ... 訊號 1: ['預估量5.6x均量']  第12項:False  top30:False
+  檢查 2356 英業達 ... 訊號 1: ['預估量4.6x均量']  第12項:False  top30:False
+  檢查 2313 華通 ... 訊號 1: ['預估量2.8x均量']  第12項:False  top30:False
+  檢查 2367 燿華 ... 訊號 2: ['預估量5.3x均量', '外盤比66%']  第12項:False  top30:False
+  檢查 2485 兆赫 ... 訊號 4: ['預估量6.9x均量', '外盤比72%', '昨量6.7%單K', '超越開盤量(2096/948張)']  第12項:False  top30:False
+  檢查 2027 大成鋼 ... 訊號 6: ['MACD0軸上金叉', '預估量6.6x均量', '外盤比75%', '昨量2.6%單K', '超越開盤量(1044/930張)', 'MACD頂背離']  第12項:False  top30:True
+  檢查 1802 台玻 ... 訊號 0: []  第12項:False  top30:False
+  檢查 1605 華新 ... 訊號 1: ['預估量2.3x均量']  第12項:False  top30:False
+  檢查 3673 TPK-KY ... 訊號 0: []  第12項:False  top30:True
+  檢查 2317 鴻海 ... 訊號 0: []  第12項:False  top30:False
+  檢查 2883 凱基金 ... 訊號 1: ['預估量2.8x均量']  第12項:False  top30:False
+  檢查 2324 仁寶 ... 訊號 2: ['預估量2.2x均量', 'MACD底背離']  第12項:False  top30:False
+  檢查 1303 南亞 ... 訊號 5: ['預估量2.4x均量', '昨量5.1%單K', '單K6.4x前5均', '超越開盤量(2885/1691張)', '量爆6.4x前5均']  第12項:False  top30:False
+  檢查 8028 昇陽半導體 ... 訊號 0: []  第12項:False  top30:False
+完成
+[09:30:58] intraday_monitor 開始執行
+[top24] 3481(292K) 2344(139K) 2337(131K) 2409(94K) 2303(89K) 2408(71K) 6116(66K) 6770(52K) ...
+[vol_rank] 快取 1 分鐘前更新，top50
+  檢查 3481 群創 ... 訊號 1: ['預估量3.1x均量']  第12項:False  top30:True
+  檢查 2344 華邦電 ... 訊號 1: ['預估量5.5x均量']  第12項:False  top30:True
+  檢查 2337 旺宏 ... 訊號 1: ['預估量6.0x均量']  第12項:False  top30:True
+  檢查 2409 友達 ... 訊號 2: ['KD鈍化≥80', '預估量2.0x均量']  第12項:False  top30:True
+  檢查 2303 聯電 ... 訊號 2: ['KD鈍化≥80', '預估量2.6x均量']  第12項:False  top30:True
+  檢查 2408 南亞科 ... 訊號 5: ['KD鈍化≥80', '預估量4.0x均量', '外盤比81%', '掛單委買大幅領先', 'MACD頂背離']  第12項:False  top30:True
+  檢查 6116 彩晶 ... 訊號 1: ['預估量3.4x均量']  第12項:False  top30:True
+  檢查 6770 力積電 ... 訊號 1: ['RSI5穿RSI10↑']  第12項:False  top30:True
+  檢查 2377 微星 ... 訊號 2: ['預估量8.5x均量', '掛單委買>16.0x委賣']  第12項:False  top30:True
+  檢查 2481 強茂 ... 訊號 2: ['預估量6.9x均量', '外盤比72%']  第12項:False  top30:True
+  檢查 4958 臻鼎-KY ... 訊號 1: ['預估量5.5x均量']  第12項:False  top30:True
+  檢查 2313 華通 ... 訊號 2: ['預估量3.0x均量', 'MACD頂背離']  第12項:False  top30:True
+  檢查 2356 英業達 ... 訊號 1: ['預估量4.4x均量']  第12項:False  top30:True
+  檢查 2367 燿華 ... 訊號 3: ['預估量5.3x均量', '外盤比68%', 'MACD頂背離']  第12項:False  top30:True
+  檢查 2485 兆赫 ... 訊號 4: ['KD鈍化≥80', '預估量6.8x均量', '外盤比72%', '掛單委買>1.0x委賣']  第12項:False  top30:True
+  檢查 2027 大成鋼 ... 訊號 3: ['KD鈍化≥80', '預估量6.4x均量', '外盤比73%']  第12項:False  top30:True
+  檢查 1802 台玻 ... 訊號 0: []  第12項:False  top30:True
+  檢查 3673 TPK-KY ... 訊號 2: ['預估量13.5x均量', '掛單委買>3.0x委賣']  第12項:False  top30:True
+  檢查 1605 華新 ... 訊號 1: ['預估量2.2x均量']  第12項:False  top30:True
+  檢查 2317 鴻海 ... 訊號 2: ['KD鈍化≥80', '掛單委買>1.0x委賣']  第12項:False  top30:True
+  檢查 2883 凱基金 ... 訊號 1: ['預估量2.7x均量']  第12項:False  top30:True
+  檢查 1303 南亞 ... 訊號 1: ['預估量2.5x均量']  第12項:False  top30:True
+  檢查 2324 仁寶 ... 訊號 1: ['預估量2.1x均量']  第12項:False  top30:True
+  檢查 8028 昇陽半導體 ... 訊號 2: ['預估量11.6x均量', '外盤比76%']  第12項:False  top30:True
+完成
+[09:32:08] intraday_monitor 開始執行
+[top24] 3481(296K) 2344(143K) 2337(131K) 2303(98K) 2409(95K) 2408(71K) 6116(68K) 6770(53K) ...
+[vol_rank] 快取 2 分鐘前更新，top50
+  檢查 3481 群創 ... 訊號 2: ['預估量2.9x均量', '掛單委買>1.0x委賣']  第12項:False  top30:True
+  檢查 2344 華邦電 ... 訊號 1: ['預估量5.3x均量']  第12項:False  top30:True
+  檢查 2337 旺宏 ... 訊號 1: ['預估量5.9x均量']  第12項:False  top30:True
+  檢查 2303 聯電 ... 訊號 4: ['KD鈍化≥80', '預估量2.8x均量', '外盤比65%', '掛單委買>2.0x委賣']  第12項:False  top30:True
+  檢查 2409 友達 ... 訊號 1: ['掛單委買>2.0x委賣']  第12項:False  top30:True
+  檢查 2408 南亞科 ... 訊號 5: ['KD鈍化≥80', '預估量3.9x均量', '外盤比81%', '掛單委買大幅領先', 'MACD頂背離']  第12項:False  top30:True
+  檢查 6116 彩晶 ... 訊號 2: ['預估量3.3x均量', '掛單委買>3.0x委賣']  第12項:False  top30:True
+  檢查 6770 力積電 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2377 微星 ... 訊號 1: ['預估量8.3x均量']  第12項:False  top30:True
+  檢查 4958 臻鼎-KY ... 訊號 1: ['預估量5.5x均量']  第12項:False  top30:True
+  檢查 2481 強茂 ... 訊號 3: ['預估量6.8x均量', '外盤比72%', '掛單委買>3.0x委賣']  第12項:False  top30:True
+  檢查 2313 華通 ... 訊號 2: ['預估量3.0x均量', 'MACD頂背離']  第12項:False  top30:True
+  檢查 2356 英業達 ... 訊號 1: ['預估量4.3x均量']  第12項:False  top30:True
+  檢查 2367 燿華 ... 訊號 2: ['預估量5.2x均量', '外盤比68%']  第12項:False  top30:True
+  檢查 2485 兆赫 ... 訊號 4: ['KD鈍化≥80', '預估量6.8x均量', '外盤比71%', 'MACD頂背離']  第12項:False  top30:True
+  檢查 2027 大成鋼 ... 訊號 2: ['預估量6.3x均量', '外盤比73%']  第12項:False  top30:True
+  檢查 1802 台玻 ... 訊號 0: []  第12項:False  top30:True
+  檢查 1605 華新 ... 訊號 1: ['預估量2.2x均量']  第12項:False  top30:True
+  檢查 3673 TPK-KY ... 訊號 2: ['RSI5穿RSI10↑', '預估量13.3x均量']  第12項:False  top30:True
+  檢查 2317 鴻海 ... 訊號 2: ['KD鈍化≥80', '掛單委買>4.0x委賣']  第12項:False  top30:True
+  檢查 2883 凱基金 ... 訊號 2: ['預估量2.7x均量', '掛單委買>2.0x委賣']  第12項:False  top30:True
+  檢查 1303 南亞 ... 訊號 1: ['預估量2.5x均量']  第12項:False  top30:True
+  檢查 2324 仁寶 ... 訊號 3: ['預估量2.1x均量', '掛單委買>7.0x委賣', 'MACD底背離']  第12項:False  top30:True
+  檢查 2301 光寶科 ... 訊號 3: ['KD鈍化≥80', '預估量2.0x均量', '掛單委買>8.0x委賣']  第12項:False  top30:True
+完成
+[09:33:19] intraday_monitor 開始執行
+[top24] 3481(298K) 2344(146K) 2337(134K) 2303(102K) 2409(96K) 2408(71K) 6116(70K) 6770(54K) ...
+[vol_rank] 快取 3 分鐘前更新，top50
+  檢查 3481 群創 ... 訊號 1: ['預估量2.9x均量']  第12項:False  top30:True
+  檢查 2344 華邦電 ... 訊號 1: ['預估量5.2x均量']  第12項:False  top30:True
+  檢查 2337 旺宏 ... 訊號 2: ['RSI5穿RSI10↑', '預估量5.8x均量']  第12項:False  top30:True
+  檢查 2303 聯電 ... 訊號 5: ['KD鈍化≥80', '預估量2.8x均量', '外盤比66%', '掛單委買>1.0x委賣', '昨量1.0%單K']  第12項:False  top30:True
+  檢查 2409 友達 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2408 南亞科 ... 訊號 5: ['KD鈍化≥80', '預估量3.8x均量', '外盤比81%', '掛單委買大幅領先', 'MACD頂背離']  第12項:False  top30:True
+  檢查 6116 彩晶 ... 訊號 2: ['KD鈍化≥80', '預估量3.3x均量']  第12項:False  top30:True
+  檢查 6770 力積電 ... 訊號 1: ['RSI5穿RSI10↑']  第12項:False  top30:True
+  檢查 2377 微星 ... 訊號 1: ['預估量8.1x均量']  第12項:False  top30:True
+  檢查 4958 臻鼎-KY ... 訊號 1: ['預估量5.5x均量']  第12項:False  top30:True
+  檢查 2481 強茂 ... 訊號 2: ['預估量6.8x均量', '外盤比70%']  第12項:False  top30:True
+  檢查 2313 華通 ... 訊號 2: ['預估量3.0x均量', 'MACD頂背離']  第12項:False  top30:True
+  檢查 2356 英業達 ... 訊號 2: ['預估量4.2x均量', '掛單委買>2.0x委賣']  第12項:False  top30:True
+  檢查 2367 燿華 ... 訊號 2: ['預估量5.1x均量', '外盤比68%']  第12項:False  top30:True
+  檢查 2485 兆赫 ... 訊號 5: ['KD鈍化≥80', '預估量7.0x均量', '外盤比72%', '昨量4.2%單K', '超越開盤量(1322/948張)']  第12項:False  top30:True
+  檢查 2027 大成鋼 ... 訊號 2: ['預估量6.2x均量', '外盤比72%']  第12項:False  top30:True
+  檢查 1802 台玻 ... 訊號 0: []  第12項:False  top30:True
+  檢查 1605 華新 ... 訊號 2: ['預估量2.1x均量', '掛單委買>74.0x委賣']  第12項:False  top30:True
+  檢查 3673 TPK-KY ... 訊號 2: ['預估量13.1x均量', '昨量1.0%單K']  第12項:False  top30:True
+  檢查 2317 鴻海 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2883 凱基金 ... 訊號 2: ['預估量2.7x均量', '掛單委買>6.0x委賣']  第12項:False  top30:True
+  檢查 1303 南亞 ... 訊號 2: ['預估量2.5x均量', '掛單委買>3.0x委賣']  第12項:False  top30:True
+  檢查 2324 仁寶 ... 訊號 3: ['預估量2.1x均量', '掛單委買>1.0x委賣', 'MACD底背離']  第12項:False  top30:True
+  檢查 2301 光寶科 ... 訊號 2: ['KD鈍化≥80', '掛單委買>1.0x委賣']  第12項:False  top30:True
+完成
+[09:34:30] intraday_monitor 開始執行
+[top24] 3481(300K) 2344(147K) 2337(136K) 2303(112K) 2409(98K) 2408(71K) 6116(70K) 6770(55K) ...
+[vol_rank] 快取 4 分鐘前更新，top50
+  檢查 3481 群創 ... 訊號 1: ['預估量2.8x均量']  第12項:False  top30:True
+  檢查 2344 華邦電 ... 訊號 1: ['預估量5.1x均量']  第12項:False  top30:True
+  檢查 2337 旺宏 ... 訊號 2: ['預估量5.7x均量', '掛單委買>11.0x委賣']  第12項:False  top30:True
+  檢查 2303 聯電 ... 訊號 4: ['KD鈍化≥80', '預估量3.0x均量', '外盤比67%', '昨量1.4%單K']  第12項:False  top30:True
+  檢查 2409 友達 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2408 南亞科 ... 訊號 5: ['KD鈍化≥80', '預估量3.7x均量', '外盤比81%', '掛單委買大幅領先', 'MACD頂背離']  第12項:False  top30:True
+  檢查 6116 彩晶 ... 訊號 2: ['KD鈍化≥80', '預估量3.2x均量']  第12項:False  top30:True
+  檢查 6770 力積電 ... 訊號 1: ['掛單委買>4.0x委賣']  第12項:False  top30:True
+  檢查 2377 微星 ... 訊號 2: ['預估量8.0x均量', '掛單委買>28.0x委賣']  第12項:False  top30:True
+  檢查 2481 強茂 ... 訊號 3: ['預估量6.8x均量', '外盤比69%', '掛單委買>2.0x委賣']  第12項:False  top30:True
+  檢查 4958 臻鼎-KY ... 訊號 1: ['預估量5.4x均量']  第12項:False  top30:True
+  檢查 2313 華通 ... 訊號 1: ['預估量2.9x均量']  第12項:False  top30:True
+  檢查 2485 兆赫 ... 訊號 5: ['KD鈍化≥80', '預估量7.2x均量', '外盤比72%', '掛單委買>97.0x委賣', '昨量2.0%單K']  第12項:False  top30:True
+  檢查 2356 英業達 ... 訊號 2: ['預估量4.1x均量', '掛單委買>4.0x委賣']  第12項:False  top30:True
+  檢查 2367 燿華 ... 訊號 3: ['預估量5.0x均量', '外盤比68%', '昨量1.6%單K']  第12項:False  top30:True
+  檢查 2027 大成鋼 ... 訊號 2: ['預估量6.0x均量', '外盤比72%']  第12項:False  top30:True
+  檢查 1802 台玻 ... 訊號 1: ['掛單委買>3.0x委賣']  第12項:False  top30:True
+  檢查 3673 TPK-KY ... 訊號 1: ['預估量12.9x均量']  第12項:False  top30:True
+  檢查 1605 華新 ... 訊號 2: ['預估量2.1x均量', '掛單委買>8.0x委賣']  第12項:False  top30:True
+  檢查 2317 鴻海 ... 訊號 1: ['KD鈍化≥80']  第12項:False  top30:True
+  檢查 2883 凱基金 ... 訊號 2: ['預估量2.7x均量', '昨量2.4%單K']  第12項:False  top30:True
+  檢查 1303 南亞 ... 訊號 2: ['預估量2.4x均量', '掛單委買>1.0x委賣']  第12項:False  top30:True
+  檢查 2324 仁寶 ... 訊號 2: ['預估量2.0x均量', '掛單委買>1.0x委賣']  第12項:False  top30:True
+  檢查 2301 光寶科 ... 訊號 1: ['KD鈍化≥80']  第12項:False  top30:True
+完成
+[09:35:43] intraday_monitor 開始執行
+[top24] 3481(302K) 2344(148K) 2337(138K) 2303(115K) 2409(99K) 6116(73K) 2408(71K) 6770(56K) ...
+[vol_rank] 快取 6 分鐘前更新，top50
+  檢查 3481 群創 ... 訊號 2: ['預估量2.7x均量', '掛單委買>13.0x委賣']  第12項:False  top30:True
+  檢查 2344 華邦電 ... 訊號 2: ['RSI5穿RSI10↑', '預估量5.0x均量']  第12項:False  top30:True
+  檢查 2337 旺宏 ... 訊號 2: ['預估量5.7x均量', '掛單委買>1.0x委賣']  第12項:False  top30:True
+  檢查 2303 聯電 ... 訊號 3: ['預估量3.0x均量', '外盤比66%', '掛單委買>1.0x委賣']  第12項:False  top30:True
+  檢查 2409 友達 ... 訊號 1: ['掛單委買>2.0x委賣']  第12項:False  top30:True
+  檢查 6116 彩晶 ... 訊號 2: ['預估量3.3x均量', '掛單委買>101.0x委賣']  第12項:False  top30:True
+  檢查 2408 南亞科 ... 訊號 4: ['預估量3.6x均量', '外盤比81%', '掛單委買大幅領先', 'MACD頂背離']  第12項:False  top30:True
+  檢查 6770 力積電 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2377 微星 ... 訊號 1: ['預估量7.8x均量']  第12項:False  top30:True
+  檢查 2481 強茂 ... 訊號 3: ['預估量6.7x均量', '外盤比69%', '掛單委買>22.0x委賣']  第12項:False  top30:True
+  檢查 4958 臻鼎-KY ... 訊號 1: ['預估量5.3x均量']  第12項:False  top30:True
+  檢查 2313 華通 ... 訊號 2: ['RSI5穿RSI10↑', '預估量2.9x均量']  第12項:False  top30:True
+  檢查 2485 兆赫 ... 訊號 5: ['KD鈍化≥80', '預估量8.5x均量', '外盤比75%', '昨量18.0%單K', '超越開盤量(5660/948張)']  第12項:False  top30:True
+  檢查 2356 英業達 ... 訊號 2: ['預估量4.0x均量', '掛單委買>2.0x委賣']  第12項:False  top30:True
+  檢查 2367 燿華 ... 訊號 2: ['預估量4.9x均量', '外盤比67%']  第12項:False  top30:True
+  檢查 2027 大成鋼 ... 訊號 4: ['預估量6.1x均量', '外盤比72%', '掛單委買>2.0x委賣', '昨量1.7%單K']  第12項:False  top30:True
+  檢查 1802 台玻 ... 訊號 1: ['掛單委買>2.0x委賣']  第12項:False  top30:True
+  檢查 3673 TPK-KY ... 訊號 1: ['預估量12.7x均量']  第12項:False  top30:True
+  檢查 2317 鴻海 ... 訊號 3: ['KD鈍化≥80', '掛單委買>29.0x委賣', '昨量1.2%單K']  第12項:False  top30:True
+  檢查 1605 華新 ... 訊號 2: ['預估量2.0x均量', '掛單委買>4.0x委賣']  第12項:False  top30:True
+  檢查 2883 凱基金 ... 訊號 1: ['預估量2.7x均量']  第12項:False  top30:True
+  檢查 1303 南亞 ... 訊號 1: ['預估量2.4x均量']  第12項:False  top30:True
+  檢查 2324 仁寶 ... 訊號 2: ['預估量2.0x均量', '掛單委買>9.0x委賣']  第12項:False  top30:True
+  檢查 2301 光寶科 ... 訊號 1: ['KD鈍化≥80']  第12項:False  top30:True
+完成
+[09:36:54] intraday_monitor 開始執行
+[top24] 3481(305K) 2344(152K) 2337(139K) 2303(118K) 2409(99K) 6116(74K) 2408(71K) 6770(58K) ...
+[vol_rank] 快取 7 分鐘前更新，top50
+  檢查 3481 群創 ... 訊號 1: ['預估量2.7x均量']  第12項:False  top30:True
+  檢查 2344 華邦電 ... 訊號 3: ['預估量5.0x均量', '昨量1.2%單K', 'MACD頂背離']  第12項:False  top30:True
+  檢查 2337 旺宏 ... 訊號 1: ['預估量5.5x均量']  第12項:False  top30:True
+  檢查 2303 聯電 ... 訊號 2: ['預估量3.0x均量', '外盤比66%']  第12項:False  top30:True
+  檢查 2409 友達 ... 訊號 0: []  第12項:False  top30:True
+  檢查 6116 彩晶 ... 訊號 2: ['KD鈍化≥80', '預估量3.2x均量']  第12項:False  top30:True
+  檢查 2408 南亞科 ... 訊號 4: ['預估量3.5x均量', '外盤比81%', '掛單委買大幅領先', 'MACD頂背離']  第12項:False  top30:True
+  檢查 6770 力積電 ... 訊號 3: ['掛單委買>3.0x委賣', '昨量1.1%單K', 'MACD頂背離']  第12項:False  top30:True
+  檢查 2377 微星 ... 訊號 1: ['預估量7.5x均量']  第12項:False  top30:True
+  檢查 2485 兆赫 ... 訊號 3: ['KD鈍化≥80', '預估量8.4x均量', '外盤比75%']  第12項:False  top30:True
+  檢查 2481 強茂 ... 訊號 3: ['預估量6.5x均量', '外盤比69%', '掛單委買>2.0x委賣']  第12項:False  top30:True
+  檢查 4958 臻鼎-KY ... 訊號 2: ['預估量5.1x均量', '掛單委買>6.0x委賣']  第12項:False  top30:True
+  檢查 2313 華通 ... 訊號 2: ['預估量2.8x均量', '掛單委買>3.0x委賣']  第12項:False  top30:True
+  檢查 2367 燿華 ... 訊號 3: ['預估量4.8x均量', '外盤比68%', 'MACD頂背離']  第12項:False  top30:True
+  檢查 2356 英業達 ... 訊號 2: ['預估量3.8x均量', '掛單委買>19.0x委賣']  第12項:False  top30:True
+  檢查 2027 大成鋼 ... 訊號 2: ['預估量5.9x均量', '外盤比72%']  第12項:False  top30:True
+  檢查 1802 台玻 ... 訊號 1: ['掛單委買>2.0x委賣']  第12項:False  top30:True
+  檢查 3673 TPK-KY ... 訊號 2: ['預估量12.2x均量', '掛單委買>4.0x委賣']  第12項:False  top30:True
+  檢查 2317 鴻海 ... 訊號 0: []  第12項:False  top30:True
+  檢查 1605 華新 ... 訊號 1: ['掛單委買>114.0x委賣']  第12項:False  top30:True
+  檢查 2883 凱基金 ... 訊號 2: ['RSI5穿RSI10↑', '預估量2.6x均量']  第12項:False  top30:True
+  檢查 1303 南亞 ... 訊號 1: ['預估量2.3x均量']  第12項:False  top30:True
+  檢查 2324 仁寶 ... 訊號 1: ['掛單委買>7.0x委賣']  第12項:False  top30:True
+  檢查 2301 光寶科 ... 訊號 1: ['KD鈍化≥80']  第12項:False  top30:True
+完成
+[09:38:05] intraday_monitor 開始執行
+[top24] 3481(308K) 2344(153K) 2337(139K) 2303(120K) 2409(100K) 6116(75K) 2408(72K) 6770(59K) ...
+[vol_rank] 快取 8 分鐘前更新，top50
+  檢查 3481 群創 ... 訊號 1: ['預估量2.6x均量']  第12項:False  top30:True
+  檢查 2344 華邦電 ... 訊號 1: ['預估量4.8x均量']  第12項:False  top30:True
+  檢查 2337 旺宏 ... 訊號 1: ['預估量5.3x均量']  第12項:False  top30:True
+  檢查 2303 聯電 ... 訊號 2: ['預估量2.9x均量', '外盤比65%']  第12項:False  top30:True
+  檢查 2409 友達 ... 訊號 0: []  第12項:False  top30:True
+  檢查 6116 彩晶 ... 訊號 2: ['預估量3.1x均量', '掛單委買>93.0x委賣']  第12項:False  top30:True
+  檢查 2408 南亞科 ... 訊號 4: ['預估量3.3x均量', '外盤比81%', '掛單委買大幅領先', 'MACD頂背離']  第12項:False  top30:True
+  檢查 6770 力積電 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2377 微星 ... 訊號 2: ['預估量7.5x均量', '掛單委買>2.0x委賣']  第12項:False  top30:True
+  檢查 2485 兆赫 ... 訊號 2: ['預估量8.4x均量', '外盤比74%']  第12項:False  top30:True
+  檢查 2481 強茂 ... 訊號 3: ['預估量6.2x均量', '外盤比69%', '掛單委買>2.0x委賣']  第12項:False  top30:True
+  檢查 4958 臻鼎-KY ... 訊號 2: ['預估量5.0x均量', '掛單委買>7.0x委賣']  第12項:False  top30:True
+  檢查 2313 華通 ... 訊號 1: ['預估量2.7x均量']  第12項:False  top30:True
+  檢查 2367 燿華 ... 訊號 4: ['預估量4.7x均量', '外盤比68%', '掛單委買>2.0x委賣', 'MACD頂背離']  第12項:False  top30:True
+  檢查 2356 英業達 ... 訊號 2: ['預估量3.7x均量', '掛單委買>9.0x委賣']  第12項:False  top30:True
+  檢查 2027 大成鋼 ... 訊號 2: ['預估量5.7x均量', '外盤比72%']  第12項:False  top30:True
+  檢查 1802 台玻 ... 訊號 0: []  第12項:False  top30:True
+  檢查 3673 TPK-KY ... 訊號 1: ['預估量12.4x均量']  第12項:False  top30:True
+  檢查 2317 鴻海 ... 訊號 0: []  第12項:False  top30:True
+  檢查 1605 華新 ... 訊號 1: ['掛單委買>28.0x委賣']  第12項:False  top30:True
+  檢查 2883 凱基金 ... 訊號 1: ['預估量2.5x均量']  第12項:False  top30:True
+  檢查 1303 南亞 ... 訊號 1: ['預估量2.3x均量']  第12項:False  top30:True
+  檢查 2324 仁寶 ... 訊號 0: []  第12項:False  top30:True
+  檢查 3048 益登 ... 訊號 4: ['KD鈍化≥80', '預估量8.8x均量', '外盤比71%', '掛單委買大幅領先']  第12項:False  top30:True
+完成
+[09:39:16] intraday_monitor 開始執行
+[top24] 3481(316K) 2344(155K) 2337(140K) 2303(122K) 2409(107K) 6116(78K) 2408(72K) 6770(59K) ...
+[vol_rank] 快取 9 分鐘前更新，top50
+  檢查 3481 群創 ... 訊號 1: ['預估量2.6x均量']  第12項:False  top30:True
+  檢查 2344 華邦電 ... 訊號 1: ['預估量4.7x均量']  第12項:False  top30:True
+  檢查 2337 旺宏 ... 訊號 2: ['預估量5.2x均量', '掛單委買>1.0x委賣']  第12項:False  top30:True
+  檢查 2303 聯電 ... 訊號 1: ['預估量2.9x均量']  第12項:False  top30:True
+  檢查 2409 友達 ... 訊號 0: []  第12項:False  top30:True
+  檢查 6116 彩晶 ... 訊號 1: ['預估量3.1x均量']  第12項:False  top30:True
+  檢查 2408 南亞科 ... 訊號 4: ['預估量3.3x均量', '外盤比81%', '掛單委買大幅領先', 'MACD頂背離']  第12項:False  top30:True
+  檢查 6770 力積電 ... 訊號 1: ['掛單委買>1.0x委賣']  第12項:False  top30:True
+  檢查 2377 微星 ... 訊號 1: ['預估量7.3x均量']  第12項:False  top30:True
+  檢查 2485 兆赫 ... 訊號 2: ['預估量8.4x均量', '外盤比73%']  第12項:False  top30:True
+  檢查 2481 強茂 ... 訊號 3: ['預估量6.2x均量', '外盤比69%', '掛單委買>2.0x委賣']  第12項:False  top30:True
+  檢查 4958 臻鼎-KY ... 訊號 2: ['預估量5.0x均量', '掛單委買>2.0x委賣']  第12項:False  top30:True
+  檢查 2313 華通 ... 訊號 1: ['預估量2.7x均量']  第12項:False  top30:True
+  檢查 2367 燿華 ... 訊號 3: ['預估量4.8x均量', '外盤比68%', 'MACD頂背離']  第12項:False  top30:True
+  檢查 2356 英業達 ... 訊號 3: ['預估量3.6x均量', '掛單委買>5.0x委賣', 'MACD底背離']  第12項:False  top30:True
+  檢查 2027 大成鋼 ... 訊號 4: ['預估量6.0x均量', '外盤比73%', '昨量1.2%單K', 'MACD頂背離']  第12項:False  top30:True
+  檢查 1802 台玻 ... 訊號 0: []  第12項:False  top30:True
+  檢查 3673 TPK-KY ... 訊號 1: ['預估量12.5x均量']  第12項:False  top30:True
+  檢查 1605 華新 ... 訊號 1: ['掛單委買>2.0x委賣']  第12項:False  top30:True
+  檢查 2317 鴻海 ... 訊號 1: ['掛單委買>2.0x委賣']  第12項:False  top30:True
+  檢查 2883 凱基金 ... 訊號 1: ['預估量2.5x均量']  第12項:False  top30:True
+  檢查 1303 南亞 ... 訊號 1: ['預估量2.2x均量']  第12項:False  top30:True
+  檢查 2324 仁寶 ... 訊號 0: []  第12項:False  top30:True
+  檢查 3048 益登 ... 訊號 4: ['KD鈍化≥80', '預估量8.7x均量', '外盤比71%', '掛單委買大幅領先']  第12項:False  top30:True
+完成
+[09:40:28] intraday_monitor 開始執行
+[top24] 3481(320K) 2344(157K) 2337(140K) 2303(123K) 2409(112K) 6116(79K) 2408(72K) 6770(59K) ...
+[vol_rank] 快取 10 分鐘前更新，top50
+  檢查 3481 群創 ... 訊號 2: ['預估量2.5x均量', '掛單委買>31.0x委賣']  第12項:False  top30:True
+  檢查 2344 華邦電 ... 訊號 1: ['預估量4.6x均量']  第12項:False  top30:True
+  檢查 2337 旺宏 ... 訊號 2: ['RSI5穿RSI10↑', '預估量5.1x均量']  第12項:False  top30:True
+  檢查 2303 聯電 ... 訊號 1: ['預估量2.8x均量']  第12項:False  top30:True
+  檢查 2409 友達 ... 訊號 0: []  第12項:False  top30:True
+  檢查 6116 彩晶 ... 訊號 1: ['預估量3.1x均量']  第12項:False  top30:True
+  檢查 2408 南亞科 ... 訊號 4: ['預估量3.2x均量', '外盤比81%', '掛單委買大幅領先', 'MACD頂背離']  第12項:False  top30:True
+  檢查 6770 力積電 ... 訊號 1: ['掛單委買>2.0x委賣']  第12項:False  top30:True
+  檢查 2377 微星 ... 訊號 1: ['預估量7.2x均量']  第12項:False  top30:True
+  檢查 2485 兆赫 ... 訊號 2: ['預估量8.3x均量', '外盤比73%']  第12項:False  top30:True
+  檢查 2481 強茂 ... 訊號 2: ['預估量6.1x均量', '外盤比68%']  第12項:False  top30:True
+  檢查 4958 臻鼎-KY ... 訊號 2: ['預估量4.9x均量', '掛單委買>7.0x委賣']  第12項:False  top30:True
+  檢查 2313 華通 ... 訊號 1: ['預估量2.6x均量']  第12項:False  top30:True
+  檢查 2367 燿華 ... 訊號 2: ['預估量4.7x均量', '外盤比68%']  第12項:False  top30:True
+  檢查 2356 英業達 ... 訊號 1: ['預估量3.6x均量']  第12項:False  top30:True
+  檢查 2027 大成鋼 ... 訊號 2: ['預估量5.9x均量', '外盤比73%']  第12項:False  top30:True
+  檢查 1802 台玻 ... 訊號 1: ['掛單委買>2.0x委賣']  第12項:False  top30:True
+  檢查 3673 TPK-KY ... 訊號 1: ['預估量12.3x均量']  第12項:False  top30:True
+  檢查 1605 華新 ... 訊號 1: ['掛單委買>5.0x委賣']  第12項:False  top30:True
+  檢查 2317 鴻海 ... 訊號 2: ['RSI5穿RSI10↑', '掛單委買>1.0x委賣']  第12項:False  top30:True
+  檢查 2883 凱基金 ... 訊號 1: ['預估量2.4x均量']  第12項:False  top30:True
+  檢查 1303 南亞 ... 訊號 1: ['預估量2.2x均量']  第12項:False  top30:True
+  檢查 2324 仁寶 ... 訊號 0: []  第12項:False  top30:True
+  檢查 3048 益登 ... 訊號 4: ['KD鈍化≥80', '預估量8.5x均量', '外盤比71%', '掛單委買大幅領先']  第12項:False  top30:True
+完成
+[09:41:39] intraday_monitor 開始執行
+[top24] 3481(328K) 2344(160K) 2337(145K) 2303(124K) 2409(116K) 6116(80K) 2408(76K) 6770(62K) ...
+[vol_rank] 快取 12 分鐘前更新，top50
+  檢查 3481 群創 ... 訊號 2: ['預估量2.5x均量', '掛單委買>4.0x委賣']  第12項:False  top30:True
+  檢查 2344 華邦電 ... 訊號 2: ['預估量4.6x均量', '昨量1.5%單K']  第12項:False  top30:True
+  檢查 2337 旺宏 ... 訊號 2: ['預估量5.1x均量', '昨量1.0%單K']  第12項:False  top30:True
+  檢查 2303 聯電 ... 訊號 2: ['預估量2.8x均量', '掛單委買>1.0x委賣']  第12項:False  top30:True
+  檢查 2409 友達 ... 訊號 0: []  第12項:False  top30:True
+  檢查 6116 彩晶 ... 訊號 1: ['預估量3.1x均量']  第12項:False  top30:True
+  檢查 2408 南亞科 ... 訊號 3: ['預估量3.3x均量', '外盤比81%', '掛單委買>6.0x委賣']  第12項:False  top30:True
+  檢查 6770 力積電 ... 訊號 1: ['昨量1.8%單K']  第12項:False  top30:True
+  檢查 2377 微星 ... 訊號 1: ['預估量7.1x均量']  第12項:False  top30:True
+  檢查 2485 兆赫 ... 訊號 2: ['預估量8.1x均量', '外盤比73%']  第12項:False  top30:True
+  檢查 2481 強茂 ... 訊號 3: ['預估量6.0x均量', '外盤比68%', '掛單委買>1.0x委賣']  第12項:False  top30:True
+  檢查 4958 臻鼎-KY ... 訊號 1: ['預估量4.8x均量']  第12項:False  top30:True
+  檢查 2313 華通 ... 訊號 1: ['預估量2.6x均量']  第12項:False  top30:True
+  檢查 2367 燿華 ... 訊號 2: ['預估量4.6x均量', '外盤比68%']  第12項:False  top30:True
+  檢查 2356 英業達 ... 訊號 2: ['預估量3.5x均量', '掛單委買>1.0x委賣']  第12項:False  top30:True
+  檢查 2027 大成鋼 ... 訊號 4: ['預估量5.9x均量', '外盤比72%', '掛單委買>2.0x委賣', '昨量1.5%單K']  第12項:False  top30:True
+  檢查 1802 台玻 ... 訊號 1: ['掛單委買>6.0x委賣']  第12項:False  top30:True
+  檢查 3673 TPK-KY ... 訊號 2: ['預估量12.1x均量', '掛單委買>1.0x委賣']  第12項:False  top30:True
+  檢查 1605 華新 ... 訊號 1: ['掛單委買>2.0x委賣']  第12項:False  top30:True
+  檢查 2317 鴻海 ... 訊號 1: ['掛單委買>1.0x委賣']  第12項:False  top30:True
+  檢查 2883 凱基金 ... 訊號 2: ['預估量2.4x均量', 'MACD底背離']  第12項:False  top30:True
+  檢查 1303 南亞 ... 訊號 1: ['預估量2.2x均量']  第12項:False  top30:True
+  檢查 2324 仁寶 ... 訊號 1: ['掛單委買>7.0x委賣']  第12項:False  top30:True
+  檢查 3048 益登 ... 訊號 6: ['KD鈍化≥80', '預估量8.4x均量', '外盤比72%', '掛單委買大幅領先', '昨量1.4%單K', 'MACD頂背離']  第12項:False  top30:True
+完成
+[09:42:51] intraday_monitor 開始執行
+[top24] 3481(336K) 2344(162K) 2337(146K) 2303(127K) 2409(119K) 6116(83K) 2408(78K) 6770(63K) ...
+[vol_rank] 快取 13 分鐘前更新，top50
+  檢查 3481 群創 ... 訊號 2: ['預估量2.5x均量', '掛單委買>2.0x委賣']  第12項:False  top30:True
+  檢查 2344 華邦電 ... 訊號 2: ['預估量4.6x均量', '掛單委買>1.0x委賣']  第12項:False  top30:True
+  檢查 2337 旺宏 ... 訊號 1: ['預估量5.0x均量']  第12項:False  top30:True
+  檢查 2303 聯電 ... 訊號 1: ['預估量2.8x均量']  第12項:False  top30:True
+  檢查 2409 友達 ... 訊號 0: []  第12項:False  top30:True
+  檢查 6116 彩晶 ... 訊號 2: ['預估量3.1x均量', '掛單委買>2.0x委賣']  第12項:False  top30:True
+  檢查 2408 南亞科 ... 訊號 3: ['預估量3.3x均量', '外盤比80%', '昨量1.6%單K']  第12項:False  top30:True
+  檢查 6770 力積電 ... 訊號 1: ['掛單委買>5.0x委賣']  第12項:False  top30:True
+  檢查 2377 微星 ... 訊號 2: ['預估量6.9x均量', '掛單委買>17.0x委賣']  第12項:False  top30:True
+  檢查 2485 兆赫 ... 訊號 4: ['預估量8.1x均量', '外盤比72%', '掛單委買>1.0x委賣', '昨量2.1%單K']  第12項:False  top30:True
+  檢查 2481 強茂 ... 訊號 3: ['預估量5.9x均量', '外盤比68%', '掛單委買>6.0x委賣']  第12項:False  top30:True
+  檢查 4958 臻鼎-KY ... 訊號 1: ['預估量4.7x均量']  第12項:False  top30:True
+  檢查 2313 華通 ... 訊號 1: ['預估量2.5x均量']  第12項:False  top30:True
+  檢查 2367 燿華 ... 訊號 3: ['預估量4.5x均量', '外盤比67%', '掛單委買>4.0x委賣']  第12項:False  top30:True
+  檢查 2356 英業達 ... 訊號 1: ['預估量3.5x均量']  第12項:False  top30:True
+  檢查 2027 大成鋼 ... 訊號 2: ['預估量5.8x均量', '外盤比72%']  第12項:False  top30:True
+  檢查 1802 台玻 ... 訊號 1: ['掛單委買>3.0x委賣']  第12項:False  top30:True
+  檢查 3673 TPK-KY ... 訊號 3: ['預估量12.0x均量', '掛單委買>8.0x委賣', '昨量1.4%單K']  第12項:False  top30:True
+  檢查 1605 華新 ... 訊號 1: ['掛單委買>4.0x委賣']  第12項:False  top30:True
+  檢查 2317 鴻海 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2883 凱基金 ... 訊號 2: ['RSI5穿RSI10↑', '預估量2.3x均量']  第12項:False  top30:True
+  檢查 1303 南亞 ... 訊號 2: ['預估量2.1x均量', '掛單委買>2.0x委賣']  第12項:False  top30:True
+  檢查 2324 仁寶 ... 訊號 1: ['掛單委買>85.0x委賣']  第12項:False  top30:True
+  檢查 3048 益登 ... 訊號 5: ['KD鈍化≥80', '預估量8.0x均量', '外盤比72%', '掛單委買大幅領先', 'MACD頂背離']  第12項:False  top30:True
+完成
+[09:44:03] intraday_monitor 開始執行
+[top24] 3481(340K) 2344(164K) 2337(150K) 2303(127K) 2409(121K) 6116(85K) 2408(80K) 6770(64K) ...
+[vol_rank] 快取 14 分鐘前更新，top50
+  檢查 3481 群創 ... 訊號 2: ['預估量2.5x均量', '掛單委買>131.0x委賣']  第12項:False  top30:True
+  檢查 2344 華邦電 ... 訊號 1: ['預估量4.4x均量']  第12項:False  top30:True
+  檢查 2337 旺宏 ... 訊號 1: ['預估量4.9x均量']  第12項:False  top30:True
+  檢查 2303 聯電 ... 訊號 1: ['預估量2.7x均量']  第12項:False  top30:True
+  檢查 2409 友達 ... 訊號 1: ['掛單委買>1.0x委賣']  第12項:False  top30:True
+  檢查 6116 彩晶 ... 訊號 2: ['預估量3.0x均量', '掛單委買>4.0x委賣']  第12項:False  top30:True
+  檢查 2408 南亞科 ... 訊號 3: ['預估量3.2x均量', '外盤比79%', '掛單委買>1.0x委賣']  第12項:False  top30:True
+  檢查 6770 力積電 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2377 微星 ... 訊號 2: ['預估量6.6x均量', '掛單委買>12.0x委賣']  第12項:False  top30:True
+  檢查 2485 兆赫 ... 訊號 2: ['預估量7.8x均量', '外盤比71%']  第12項:False  top30:True
+  檢查 2481 強茂 ... 訊號 3: ['預估量5.6x均量', '外盤比68%', '掛單委買>8.0x委賣']  第12項:False  top30:True
+  檢查 4958 臻鼎-KY ... 訊號 2: ['預估量4.6x均量', '掛單委買>1.0x委賣']  第12項:False  top30:True
+  檢查 2313 華通 ... 訊號 2: ['預估量2.5x均量', '掛單委買>4.0x委賣']  第12項:False  top30:True
+  檢查 2367 燿華 ... 訊號 2: ['預估量4.4x均量', '外盤比67%']  第12項:False  top30:True
+  檢查 2356 英業達 ... 訊號 1: ['預估量3.4x均量']  第12項:False  top30:True
+  檢查 2027 大成鋼 ... 訊號 3: ['預估量5.8x均量', '外盤比72%', '掛單委買>1.0x委賣']  第12項:False  top30:True
+  檢查 1802 台玻 ... 訊號 1: ['MACD底背離']  第12項:False  top30:True
+  檢查 3673 TPK-KY ... 訊號 1: ['預估量11.7x均量']  第12項:False  top30:True
+  檢查 1605 華新 ... 訊號 1: ['掛單委買>13.0x委賣']  第12項:False  top30:True
+  檢查 2317 鴻海 ... 訊號 1: ['MACD頂背離']  第12項:False  top30:True
+  檢查 2883 凱基金 ... 訊號 2: ['預估量2.2x均量', 'MACD底背離']  第12項:False  top30:True
+  檢查 1303 南亞 ... 訊號 1: ['預估量2.1x均量']  第12項:False  top30:True
+  檢查 2324 仁寶 ... 訊號 1: ['掛單委買>8.0x委賣']  第12項:False  top30:True
+  檢查 3048 益登 ... 訊號 5: ['KD鈍化≥80', '預估量7.9x均量', '外盤比72%', '掛單委買大幅領先', 'MACD頂背離']  第12項:False  top30:True
+完成
+[09:45:15] intraday_monitor 開始執行
+[top24] 3481(347K) 2344(166K) 2337(152K) 2303(128K) 2409(123K) 6116(86K) 2408(81K) 6770(66K) ...
+[vol_rank] 快取 15 分鐘前更新，top50
+  檢查 3481 群創 ... 訊號 3: ['預估量2.4x均量', '掛單委買>13.0x委賣', 'MACD底背離']  第12項:False  top30:True
+  檢查 2344 華邦電 ... 訊號 2: ['預估量4.4x均量', '掛單委買>6.0x委賣']  第12項:False  top30:True
+  檢查 2337 旺宏 ... 訊號 2: ['預估量4.9x均量', '掛單委買>6.0x委賣']  第12項:False  top30:True
+  檢查 2303 聯電 ... 訊號 1: ['預估量2.6x均量']  第12項:False  top30:True
+  檢查 2409 友達 ... 訊號 1: ['掛單委買>3.0x委賣']  第12項:False  top30:True
+  檢查 6116 彩晶 ... 訊號 1: ['預估量3.0x均量']  第12項:False  top30:True
+  檢查 2408 南亞科 ... 訊號 3: ['預估量3.2x均量', '外盤比78%', '昨量1.0%單K']  第12項:False  top30:True
+  檢查 6770 力積電 ... 訊號 1: ['掛單委買>5.0x委賣']  第12項:False  top30:True
+  檢查 2377 微星 ... 訊號 2: ['預估量6.5x均量', '掛單委買>2.0x委賣']  第12項:False  top30:True
+  檢查 2485 兆赫 ... 訊號 2: ['預估量7.8x均量', '外盤比71%']  第12項:False  top30:True
+  檢查 2481 強茂 ... 訊號 3: ['預估量5.6x均量', '外盤比67%', 'MACD底背離']  第12項:False  top30:True
+  檢查 4958 臻鼎-KY ... 訊號 1: ['預估量4.5x均量']  第12項:False  top30:True
+  檢查 2313 華通 ... 冷卻中，跳過
+  檢查 2367 燿華 ... 訊號 3: ['預估量4.3x均量', '外盤比66%', '掛單委買>3.0x委賣']  第12項:False  top30:True
+  檢查 2356 英業達 ... 訊號 1: ['預估量3.4x均量']  第12項:False  top30:True
+  檢查 2027 大成鋼 ... 訊號 3: ['預估量5.8x均量', '外盤比72%', 'MACD頂背離']  第12項:False  top30:True
+  檢查 1802 台玻 ... 訊號 1: ['掛單委買>2.0x委賣']  第12項:False  top30:True
+  檢查 3673 TPK-KY ... 訊號 2: ['預估量11.7x均量', '掛單委買>5.0x委賣']  第12項:False  top30:True
+  檢查 1605 華新 ... 訊號 2: ['掛單委買>14.0x委賣', 'MACD底背離']  第12項:False  top30:True
+  檢查 2883 凱基金 ... 訊號 4: ['預估量2.3x均量', '昨量3.5%單K', '單K19.9x前5均', '量爆19.9x前5均']  第12項:True  top30:True
+  → 推播已送出（信心 35%）
+  檢查 2317 鴻海 ... 訊號 1: ['MACD底背離']  第12項:False  top30:True
+  檢查 1303 南亞 ... 訊號 1: ['預估量2.1x均量']  第12項:False  top30:True
+  檢查 2324 仁寶 ... 訊號 0: []  第12項:False  top30:True
+  檢查 3048 益登 ... 訊號 5: ['KD鈍化≥80', '預估量7.8x均量', '外盤比72%', '掛單委買大幅領先', 'MACD頂背離']  第12項:False  top30:True
+完成
+[09:46:28] intraday_monitor 開始執行
+[top24] 3481(358K) 2344(171K) 2337(158K) 2303(131K) 2409(125K) 6116(88K) 2408(85K) 6770(69K) ...
+[vol_rank] 快取 16 分鐘前更新，top50
+  檢查 3481 群創 ... 訊號 2: ['預估量2.5x均量', 'MACD底背離']  第12項:False  top30:True
+  檢查 2344 華邦電 ... 訊號 2: ['預估量4.4x均量', '昨量1.2%單K']  第12項:False  top30:True
+  檢查 2337 旺宏 ... 訊號 3: ['預估量5.0x均量', '掛單委買>1.0x委賣', '昨量1.1%單K']  第12項:False  top30:True
+  檢查 2303 聯電 ... 訊號 2: ['預估量2.6x均量', 'MACD底背離']  第12項:False  top30:True
+  檢查 2409 友達 ... 訊號 2: ['掛單委買>5.0x委賣', 'MACD底背離']  第12項:False  top30:True
+  檢查 6116 彩晶 ... 訊號 2: ['預估量3.0x均量', 'MACD底背離']  第12項:False  top30:True
+  檢查 2408 南亞科 ... 訊號 4: ['預估量3.3x均量', '外盤比76%', '掛單委買>2.0x委賣', '昨量1.2%單K']  第12項:False  top30:True
+  檢查 6770 力積電 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2377 微星 ... 訊號 3: ['預估量6.5x均量', '掛單委買>75.0x委賣', 'MACD底背離']  第12項:False  top30:True
+  檢查 2485 兆赫 ... 訊號 3: ['預估量7.8x均量', '外盤比70%', '昨量1.8%單K']  第12項:False  top30:True
+  檢查 2481 強茂 ... 訊號 3: ['預估量5.6x均量', '外盤比66%', 'MACD底背離']  第12項:False  top30:True
+  檢查 4958 臻鼎-KY ... 訊號 1: ['預估量4.5x均量']  第12項:False  top30:True
+  檢查 2313 華通 ... 冷卻中，跳過
+  檢查 2367 燿華 ... 訊號 4: ['預估量4.3x均量', '外盤比66%', '掛單委買>1.0x委賣', '昨量1.3%單K']  第12項:False  top30:True
+  檢查 2356 英業達 ... 訊號 1: ['預估量3.4x均量']  第12項:False  top30:True
+  檢查 2027 大成鋼 ... 訊號 3: ['預估量5.8x均量', '外盤比71%', '掛單委買>5.0x委賣']  第12項:False  top30:True
+  檢查 1802 台玻 ... 訊號 2: ['掛單委買>2.0x委賣', '昨量1.4%單K']  第12項:False  top30:True
+  檢查 3673 TPK-KY ... 訊號 2: ['預估量11.7x均量', '掛單委買>48.0x委賣']  第12項:False  top30:True
+  檢查 1605 華新 ... 訊號 2: ['掛單委買>2.0x委賣', 'MACD底背離']  第12項:False  top30:True
+  檢查 2317 鴻海 ... 訊號 1: ['MACD底背離']  第12項:False  top30:True
+  檢查 2883 凱基金 ... 冷卻中，跳過
+  檢查 1303 南亞 ... 訊號 2: ['預估量2.1x均量', '掛單委買>7.0x委賣']  第12項:False  top30:True
+  檢查 2324 仁寶 ... 訊號 2: ['掛單委買>39.0x委賣', 'MACD底背離']  第12項:False  top30:True
+  檢查 3048 益登 ... 訊號 7: ['預估量8.2x均量', '外盤比73%', '掛單委買大幅領先', '昨量11.8%單K', '單K12.5x前5均', '超越開盤量(1339/1245張)', '量爆12.5x前5均']  第12項:True  top30:True
+  → 推播已送出（信心 62%）
+完成
+[09:47:41] intraday_monitor 開始執行
+[top24] 3481(361K) 2344(173K) 2337(161K) 2303(133K) 2409(126K) 6116(88K) 2408(86K) 6770(70K) ...
+[vol_rank] 快取 18 分鐘前更新，top50
+  檢查 3481 群創 ... 訊號 2: ['預估量2.4x均量', 'MACD底背離']  第12項:False  top30:True
+  檢查 2344 華邦電 ... 訊號 2: ['預估量4.4x均量', '掛單委買>2.0x委賣']  第12項:False  top30:True
+  檢查 2337 旺宏 ... 訊號 2: ['預估量5.0x均量', '掛單委買>1.0x委賣']  第12項:False  top30:True
+  檢查 2303 聯電 ... 訊號 1: ['預估量2.6x均量']  第12項:False  top30:True
+  檢查 2409 友達 ... 訊號 1: ['掛單委買>14.0x委賣']  第12項:False  top30:True
+  檢查 6116 彩晶 ... 訊號 2: ['預估量2.9x均量', 'MACD底背離']  第12項:False  top30:True
+  檢查 2408 南亞科 ... 訊號 3: ['預估量3.3x均量', '外盤比76%', '掛單委買>4.0x委賣']  第12項:False  top30:True
+  檢查 6770 力積電 ... 訊號 1: ['掛單委買>1.0x委賣']  第12項:False  top30:True
+  檢查 2377 微星 ... 訊號 1: ['預估量6.4x均量']  第12項:False  top30:True
+  檢查 2485 兆赫 ... 訊號 4: ['預估量7.7x均量', '外盤比69%', '掛單委買>2.0x委賣', '昨量1.2%單K']  第12項:False  top30:True
+  檢查 2481 強茂 ... 訊號 3: ['預估量5.5x均量', '外盤比65%', '掛單委買>1.0x委賣']  第12項:False  top30:True
+  檢查 4958 臻鼎-KY ... 訊號 1: ['預估量4.5x均量']  第12項:False  top30:True
+  檢查 2313 華通 ... 冷卻中，跳過
+  檢查 2367 燿華 ... 訊號 2: ['預估量4.3x均量', '外盤比65%']  第12項:False  top30:True
+  檢查 2356 英業達 ... 訊號 2: ['預估量3.3x均量', '掛單委買>5.0x委賣']  第12項:False  top30:True
+  檢查 2027 大成鋼 ... 訊號 3: ['預估量5.7x均量', '外盤比71%', '昨量1.0%單K']  第12項:False  top30:True
+  檢查 1802 台玻 ... 訊號 1: ['掛單委買>3.0x委賣']  第12項:False  top30:True
+  檢查 1605 華新 ... 訊號 1: ['MACD底背離']  第12項:False  top30:True
+  檢查 3673 TPK-KY ... 訊號 2: ['預估量11.5x均量', '掛單委買>4.0x委賣']  第12項:False  top30:True
+  檢查 2317 鴻海 ... 訊號 1: ['MACD底背離']  第12項:False  top30:True
+  檢查 2883 凱基金 ... 冷卻中，跳過
+  檢查 1303 南亞 ... 訊號 1: ['預估量2.0x均量']  第12項:False  top30:True
+  檢查 3048 益登 ... 冷卻中，跳過
+  檢查 2324 仁寶 ... 訊號 2: ['掛單委買>3.0x委賣', 'MACD底背離']  第12項:False  top30:True
+完成
+[09:48:53] intraday_monitor 開始執行
+[top24] 3481(363K) 2344(177K) 2337(166K) 2303(135K) 2409(126K) 6116(89K) 2408(88K) 6770(71K) ...
+[vol_rank] 快取 19 分鐘前更新，top50
+  檢查 3481 群創 ... 訊號 1: ['預估量2.4x均量']  第12項:False  top30:True
+  檢查 2344 華邦電 ... 訊號 4: ['VWAP突破↑', 'RSI5穿RSI10↑', '預估量4.4x均量', '昨量2.6%單K']  第12項:False  top30:True
+  檢查 2337 旺宏 ... 訊號 2: ['RSI5穿RSI10↑', '預估量5.0x均量']  第12項:False  top30:True
+  檢查 2303 聯電 ... 訊號 1: ['預估量2.6x均量']  第12項:False  top30:True
+  檢查 2409 友達 ... 訊號 1: ['掛單委買>3.0x委賣']  第12項:False  top30:True
+  檢查 6116 彩晶 ... 訊號 1: ['預估量2.9x均量']  第12項:False  top30:True
+  檢查 2408 南亞科 ... 訊號 4: ['RSI5穿RSI10↑', '預估量3.3x均量', '外盤比75%', '昨量1.2%單K']  第12項:False  top30:True
+  檢查 6770 力積電 ... 訊號 1: ['RSI5穿RSI10↑']  第12項:False  top30:True
+  檢查 2377 微星 ... 訊號 4: ['VWAP突破↑', 'RSI5穿RSI10↑', '預估量6.3x均量', '掛單委買>1.0x委賣']  第12項:False  top30:True
+  檢查 2485 兆赫 ... 訊號 3: ['預估量7.6x均量', '外盤比69%', '昨量1.3%單K']  第12項:False  top30:True
+  檢查 2481 強茂 ... 訊號 3: ['預估量5.4x均量', '外盤比65%', '掛單委買>2.0x委賣']  第12項:False  top30:True
+  檢查 4958 臻鼎-KY ... 訊號 2: ['預估量4.3x均量', '掛單委買>2.0x委賣']  第12項:False  top30:True
+  檢查 2313 華通 ... 冷卻中，跳過
+  檢查 2367 燿華 ... 訊號 2: ['預估量4.2x均量', '外盤比65%']  第12項:False  top30:True
+  檢查 2356 英業達 ... 訊號 3: ['VWAP突破↑', 'RSI5穿RSI10↑', '預估量3.3x均量']  第12項:False  top30:True
+  檢查 2027 大成鋼 ... 訊號 2: ['預估量5.6x均量', '外盤比71%']  第12項:False  top30:True
+  檢查 1802 台玻 ... 訊號 0: []  第12項:False  top30:True
+  檢查 1605 華新 ... 訊號 1: ['掛單委買>50.0x委賣']  第12項:False  top30:True
+  檢查 3673 TPK-KY ... 訊號 2: ['預估量11.1x均量', '掛單委買>3.0x委賣']  第12項:False  top30:True
+  檢查 2317 鴻海 ... 訊號 1: ['MACD底背離']  第12項:False  top30:True
+  檢查 2883 凱基金 ... 冷卻中，跳過
+  檢查 1303 南亞 ... 訊號 0: []  第12項:False  top30:True
+  檢查 3048 益登 ... 冷卻中，跳過
+  檢查 2324 仁寶 ... 訊號 0: []  第12項:False  top30:True
+完成
+[09:50:04] intraday_monitor 開始執行
+[top24] 3481(365K) 2344(180K) 2337(169K) 2303(137K) 2409(127K) 2408(90K) 6116(89K) 6770(72K) ...
+[vol_rank] 快取 20 分鐘前更新，top50
+  檢查 3481 群創 ... 訊號 1: ['預估量2.3x均量']  第12項:False  top30:True
+  檢查 2344 華邦電 ... 訊號 2: ['OBV領先創高', '預估量4.3x均量']  第12項:False  top30:True
+  檢查 2337 旺宏 ... 訊號 1: ['預估量4.9x均量']  第12項:False  top30:True
+  檢查 2303 聯電 ... 訊號 3: ['RSI5穿RSI10↑', '預估量2.5x均量', '掛單委買>9.0x委賣']  第12項:False  top30:True
+  檢查 2409 友達 ... 訊號 1: ['掛單委買>4.0x委賣']  第12項:False  top30:True
+  檢查 2408 南亞科 ... 訊號 2: ['預估量3.2x均量', '外盤比75%']  第12項:False  top30:True
+  檢查 6116 彩晶 ... 訊號 1: ['預估量2.8x均量']  第12項:False  top30:True
+  檢查 6770 力積電 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2377 微星 ... 訊號 3: ['預估量6.2x均量', '掛單委買>1.0x委賣', 'MACD頂背離']  第12項:False  top30:True
+  檢查 2485 兆赫 ... 訊號 3: ['預估量7.4x均量', '外盤比69%', '掛單委買>3.0x委賣']  第12項:False  top30:True
+  檢查 4958 臻鼎-KY ... 訊號 1: ['預估量4.3x均量']  第12項:False  top30:True
+  檢查 2481 強茂 ... 訊號 3: ['預估量5.3x均量', '外盤比65%', 'MACD底背離']  第12項:False  top30:True
+  檢查 2313 華通 ... 冷卻中，跳過
+  檢查 2367 燿華 ... 訊號 2: ['預估量4.1x均量', '外盤比65%']  第12項:False  top30:True
+  檢查 2356 英業達 ... 訊號 2: ['預估量3.2x均量', '掛單委買>1.0x委賣']  第12項:False  top30:True
+  檢查 2027 大成鋼 ... 訊號 2: ['預估量5.5x均量', '外盤比71%']  第12項:False  top30:True
+  檢查 1802 台玻 ... 訊號 1: ['掛單委買>4.0x委賣']  第12項:False  top30:True
+  檢查 3673 TPK-KY ... 訊號 2: ['VWAP突破↑', '預估量11.0x均量']  第12項:False  top30:True
+  檢查 1605 華新 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2883 凱基金 ... 冷卻中，跳過
+  檢查 2317 鴻海 ... 訊號 1: ['MACD底背離']  第12項:False  top30:True
+  檢查 1303 南亞 ... 訊號 0: []  第12項:False  top30:True
+  檢查 3048 益登 ... 冷卻中，跳過
+  檢查 2324 仁寶 ... 訊號 0: []  第12項:False  top30:True
+完成
+[09:51:17] intraday_monitor 開始執行
+[top24] 3481(367K) 2344(182K) 2337(172K) 2303(138K) 2409(127K) 2408(91K) 6116(90K) 6770(73K) ...
+[vol_rank] 快取 21 分鐘前更新，top50
+  檢查 3481 群創 ... 訊號 2: ['預估量2.3x均量', '掛單委買>7.0x委賣']  第12項:False  top30:True
+  檢查 2344 華邦電 ... 訊號 4: ['OBV領先創高', 'MACD0軸上金叉', '預估量4.3x均量', '掛單委買>1.0x委賣']  第12項:False  top30:True
+  檢查 2337 旺宏 ... 訊號 2: ['預估量4.9x均量', '掛單委買>11.0x委賣']  第12項:False  top30:True
+  檢查 2303 聯電 ... 訊號 1: ['預估量2.5x均量']  第12項:False  top30:True
+  檢查 2409 友達 ... 訊號 1: ['掛單委買>2.0x委賣']  第12項:False  top30:True
+  檢查 2408 南亞科 ... 訊號 3: ['預估量3.2x均量', '外盤比75%', '掛單委買>2.0x委賣']  第12項:False  top30:True
+  檢查 6116 彩晶 ... 訊號 1: ['預估量2.8x均量']  第12項:False  top30:True
+  檢查 6770 力積電 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2377 微星 ... 訊號 1: ['預估量6.3x均量']  第12項:False  top30:True
+  檢查 2485 兆赫 ... 訊號 2: ['預估量7.3x均量', '外盤比69%']  第12項:False  top30:True
+  檢查 2481 強茂 ... 訊號 3: ['預估量5.2x均量', '外盤比65%', '掛單委買>1.0x委賣']  第12項:False  top30:True
+  檢查 4958 臻鼎-KY ... 訊號 2: ['預估量4.2x均量', '掛單委買>3.0x委賣']  第12項:False  top30:True
+  檢查 2313 華通 ... 冷卻中，跳過
+  檢查 2367 燿華 ... 訊號 2: ['預估量4.1x均量', '外盤比65%']  第12項:False  top30:True
+  檢查 2356 英業達 ... 訊號 1: ['預估量3.2x均量']  第12項:False  top30:True
+  檢查 2027 大成鋼 ... 訊號 4: ['預估量5.5x均量', '外盤比70%', '掛單委買>55.0x委賣', 'MACD頂背離']  第12項:False  top30:True
+  檢查 1802 台玻 ... 訊號 1: ['掛單委買>8.0x委賣']  第12項:False  top30:True
+  檢查 3673 TPK-KY ... 訊號 1: ['預估量10.8x均量']  第12項:False  top30:True
+  檢查 1605 華新 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2317 鴻海 ... 訊號 1: ['MACD頂背離']  第12項:False  top30:True
+  檢查 2883 凱基金 ... 冷卻中，跳過
+  檢查 1303 南亞 ... 訊號 0: []  第12項:False  top30:True
+  檢查 3048 益登 ... 冷卻中，跳過
+  檢查 2324 仁寶 ... 訊號 0: []  第12項:False  top30:True
+完成
+[09:52:29] intraday_monitor 開始執行
+[top24] 3481(374K) 2344(183K) 2337(173K) 2303(139K) 2409(129K) 2408(93K) 6116(91K) 6770(73K) ...
+[vol_rank] 快取 22 分鐘前更新，top50
+  檢查 3481 群創 ... 訊號 2: ['預估量2.3x均量', '掛單委買>91.0x委賣']  第12項:False  top30:True
+  檢查 2344 華邦電 ... 訊號 1: ['預估量4.2x均量']  第12項:False  top30:True
+  檢查 2337 旺宏 ... 訊號 2: ['預估量4.8x均量', '掛單委買>4.0x委賣']  第12項:False  top30:True
+  檢查 2303 聯電 ... 訊號 1: ['預估量2.5x均量']  第12項:False  top30:True
+  檢查 2409 友達 ... 訊號 2: ['掛單委買>17.0x委賣', 'MACD底背離']  第12項:False  top30:True
+  檢查 2408 南亞科 ... 訊號 2: ['預估量3.2x均量', '外盤比74%']  第12項:False  top30:True
+  檢查 6116 彩晶 ... 訊號 1: ['預估量2.7x均量']  第12項:False  top30:True
+  檢查 6770 力積電 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2377 微星 ... 訊號 1: ['預估量6.2x均量']  第12項:False  top30:True
+  檢查 2485 兆赫 ... 訊號 3: ['預估量7.2x均量', '外盤比69%', '掛單委買>2.0x委賣']  第12項:False  top30:True
+  檢查 2481 強茂 ... 訊號 3: ['預估量5.2x均量', '掛單委買>543.0x委賣', 'MACD底背離']  第12項:False  top30:True
+  檢查 4958 臻鼎-KY ... 訊號 2: ['預估量4.2x均量', '掛單委買>5.0x委賣']  第12項:False  top30:True
+  檢查 2313 華通 ... 冷卻中，跳過
+  檢查 2356 英業達 ... 訊號 2: ['預估量3.2x均量', '掛單委買>6.0x委賣']  第12項:False  top30:True
+  檢查 2367 燿華 ... 訊號 2: ['預估量4.0x均量', '外盤比65%']  第12項:False  top30:True
+  檢查 2027 大成鋼 ... 訊號 3: ['預估量5.4x均量', '外盤比70%', '掛單委買>3.0x委賣']  第12項:False  top30:True
+  檢查 1802 台玻 ... 訊號 1: ['掛單委買>2.0x委賣']  第12項:False  top30:True
+  檢查 3673 TPK-KY ... 訊號 2: ['預估量10.7x均量', '掛單委買>15.0x委賣']  第12項:False  top30:True
+  檢查 1605 華新 ... 訊號 1: ['掛單委買>3.0x委賣']  第12項:False  top30:True
+  檢查 2317 鴻海 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2883 凱基金 ... 冷卻中，跳過
+  檢查 1303 南亞 ... 訊號 0: []  第12項:False  top30:True
+  檢查 3048 益登 ... 冷卻中，跳過
+  檢查 2324 仁寶 ... 訊號 0: []  第12項:False  top30:True
+完成
+[09:53:41] intraday_monitor 開始執行
+[top24] 3481(377K) 2344(184K) 2337(174K) 2303(140K) 2409(130K) 2408(94K) 6116(91K) 6770(74K) ...
+[vol_rank] 快取 24 分鐘前更新，top50
+  檢查 3481 群創 ... 訊號 2: ['預估量2.3x均量', '掛單委買>10.0x委賣']  第12項:False  top30:True
+  檢查 2344 華邦電 ... 訊號 2: ['預估量4.1x均量', '掛單委買>3.0x委賣']  第12項:False  top30:True
+  檢查 2337 旺宏 ... 冷卻中，跳過
+  檢查 2303 聯電 ... 訊號 1: ['預估量2.4x均量']  第12項:False  top30:True
+  檢查 2409 友達 ... 訊號 1: ['掛單委買>507.0x委賣']  第12項:False  top30:True
+  檢查 2408 南亞科 ... 冷卻中，跳過
+  檢查 6116 彩晶 ... 冷卻中，跳過
+  檢查 6770 力積電 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2377 微星 ... 訊號 1: ['預估量6.1x均量']  第12項:False  top30:True
+  檢查 2485 兆赫 ... 訊號 2: ['預估量7.1x均量', '外盤比69%']  第12項:False  top30:True
+  檢查 2481 強茂 ... 訊號 3: ['RSI5穿RSI10↑', '預估量5.1x均量', '掛單委買>1.0x委賣']  第12項:False  top30:True
+  檢查 4958 臻鼎-KY ... 訊號 2: ['預估量4.1x均量', '掛單委買>4.0x委賣']  第12項:False  top30:True
+  檢查 2313 華通 ... 冷卻中，跳過
+  檢查 2356 英業達 ... 訊號 1: ['預估量3.2x均量']  第12項:False  top30:True
+  檢查 2367 燿華 ... 訊號 2: ['預估量4.0x均量', '外盤比65%']  第12項:False  top30:True
+  檢查 2027 大成鋼 ... 訊號 2: ['預估量5.3x均量', '外盤比70%']  第12項:False  top30:True
+  檢查 1802 台玻 ... 訊號 0: []  第12項:False  top30:True
+  檢查 3673 TPK-KY ... 訊號 2: ['預估量10.5x均量', '掛單委買>3.0x委賣']  第12項:False  top30:True
+  檢查 1605 華新 ... 訊號 1: ['掛單委買>3.0x委賣']  第12項:False  top30:True
+  檢查 2883 凱基金 ... 冷卻中，跳過
+  檢查 2317 鴻海 ... 訊號 0: []  第12項:False  top30:True
+  檢查 3048 益登 ... 冷卻中，跳過
+  檢查 1303 南亞 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2324 仁寶 ... 訊號 0: []  第12項:False  top30:True
+完成
+[09:54:51] intraday_monitor 開始執行
+[top24] 3481(389K) 2344(186K) 2337(175K) 2303(144K) 2409(131K) 2408(96K) 6116(91K) 6770(75K) ...
+[vol_rank] 快取 25 分鐘前更新，top50
+  檢查 3481 群創 ... 訊號 2: ['預估量2.3x均量', '掛單委買>31.0x委賣']  第12項:False  top30:True
+  檢查 2344 華邦電 ... 訊號 2: ['預估量4.1x均量', '昨量1.6%單K']  第12項:False  top30:True
+  檢查 2337 旺宏 ... 冷卻中，跳過
+  檢查 2303 聯電 ... 訊號 2: ['預估量2.5x均量', '昨量1.1%單K']  第12項:False  top30:True
+  檢查 2409 友達 ... 訊號 1: ['掛單委買>66.0x委賣']  第12項:False  top30:True
+  檢查 2408 南亞科 ... 冷卻中，跳過
+  檢查 6116 彩晶 ... 冷卻中，跳過
+  檢查 6770 力積電 ... 訊號 1: ['掛單委買>5.0x委賣']  第12項:False  top30:True
+  檢查 2377 微星 ... 訊號 1: ['預估量6.0x均量']  第12項:False  top30:True
+  檢查 2485 兆赫 ... 訊號 3: ['預估量7.0x均量', '外盤比69%', '掛單委買>17.0x委賣']  第12項:False  top30:True
+  檢查 2481 強茂 ... 訊號 2: ['預估量5.0x均量', '掛單委買>7.0x委賣']  第12項:False  top30:True
+  檢查 4958 臻鼎-KY ... 訊號 1: ['預估量4.0x均量']  第12項:False  top30:True
+  檢查 2313 華通 ... 冷卻中，跳過
+  檢查 2367 燿華 ... 訊號 3: ['預估量3.9x均量', '外盤比65%', '掛單委買>1.0x委賣']  第12項:False  top30:True
+  檢查 2356 英業達 ... 訊號 2: ['預估量3.1x均量', '掛單委買>1.0x委賣']  第12項:False  top30:True
+  檢查 2027 大成鋼 ... 訊號 2: ['預估量5.3x均量', '外盤比70%']  第12項:False  top30:True
+  檢查 1802 台玻 ... 訊號 0: []  第12項:False  top30:True
+  檢查 3673 TPK-KY ... 訊號 2: ['預估量10.3x均量', '掛單委買>1.0x委賣']  第12項:False  top30:True
+  檢查 1605 華新 ... 訊號 1: ['掛單委買>2.0x委賣']  第12項:False  top30:True
+  檢查 2883 凱基金 ... 冷卻中，跳過
+  檢查 2317 鴻海 ... 訊號 0: []  第12項:False  top30:True
+  檢查 3048 益登 ... 冷卻中，跳過
+  檢查 1303 南亞 ... 訊號 1: ['掛單委買>2.0x委賣']  第12項:False  top30:True
+  檢查 2324 仁寶 ... 訊號 1: ['掛單委買>1.0x委賣']  第12項:False  top30:True
+完成
+[09:56:01] intraday_monitor 開始執行
+[top24] 3481(395K) 2344(187K) 2337(175K) 2303(147K) 2409(131K) 2408(96K) 6116(92K) 6770(75K) ...
+[vol_rank] 快取 26 分鐘前更新，top50
+  檢查 3481 群創 ... 訊號 2: ['預估量2.2x均量', '掛單委買>29.0x委賣']  第12項:False  top30:True
+  檢查 2344 華邦電 ... 訊號 1: ['預估量4.0x均量']  第12項:False  top30:True
+  檢查 2337 旺宏 ... 冷卻中，跳過
+  檢查 2303 聯電 ... 訊號 3: ['KD鈍化≥80', '預估量2.4x均量', 'MACD頂背離']  第12項:False  top30:True
+  檢查 2409 友達 ... 訊號 1: ['掛單委買>395.0x委賣']  第12項:False  top30:True
+  檢查 2408 南亞科 ... 冷卻中，跳過
+  檢查 6116 彩晶 ... 冷卻中，跳過
+  檢查 6770 力積電 ... 訊號 1: ['掛單委買>3.0x委賣']  第12項:False  top30:True
+  檢查 2377 微星 ... 訊號 1: ['預估量5.8x均量']  第12項:False  top30:True
+  檢查 2485 兆赫 ... 訊號 3: ['預估量6.7x均量', '外盤比69%', '掛單委買>94.0x委賣']  第12項:False  top30:True
+  檢查 2481 強茂 ... 訊號 3: ['RSI5穿RSI10↑', '預估量4.9x均量', '掛單委買>26.0x委賣']  第12項:False  top30:True
+  檢查 4958 臻鼎-KY ... 訊號 2: ['預估量3.9x均量', '掛單委買>13.0x委賣']  第12項:False  top30:True
+  檢查 2313 華通 ... 冷卻中，跳過
+  檢查 2367 燿華 ... 訊號 2: ['預估量3.8x均量', '外盤比65%']  第12項:False  top30:True
+  檢查 2356 英業達 ... 訊號 2: ['預估量3.0x均量', 'MACD頂背離']  第12項:False  top30:True
+  檢查 2027 大成鋼 ... 訊號 2: ['預估量5.1x均量', '外盤比70%']  第12項:False  top30:True
+  檢查 1802 台玻 ... 訊號 1: ['掛單委買>3.0x委賣']  第12項:False  top30:True
+  檢查 3673 TPK-KY ... 訊號 2: ['預估量10.0x均量', '掛單委買>2.0x委賣']  第12項:False  top30:True
+  檢查 1605 華新 ... 訊號 1: ['掛單委買>1.0x委賣']  第12項:False  top30:True
+  檢查 2883 凱基金 ... 冷卻中，跳過
+  檢查 2317 鴻海 ... 訊號 0: []  第12項:False  top30:True
+  檢查 3048 益登 ... 冷卻中，跳過
+  檢查 1303 南亞 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2324 仁寶 ... 訊號 1: ['掛單委買>1.0x委賣']  第12項:False  top30:True
+完成
+[09:57:11] intraday_monitor 開始執行
+[top24] 3481(397K) 2344(187K) 2337(177K) 2303(152K) 2409(131K) 2408(97K) 6116(92K) 6770(75K) ...
+[vol_rank] 快取 27 分鐘前更新，top50
+  檢查 3481 群創 ... 訊號 2: ['預估量2.2x均量', '掛單委買>95.0x委賣']  第12項:False  top30:True
+  檢查 2344 華邦電 ... 訊號 2: ['預估量3.9x均量', '掛單委買>1.0x委賣']  第12項:False  top30:True
+  檢查 2337 旺宏 ... 冷卻中，跳過
+  檢查 2303 聯電 ... 冷卻中，跳過
+  檢查 2409 友達 ... 訊號 1: ['掛單委買>28.0x委賣']  第12項:False  top30:True
+  檢查 2408 南亞科 ... 冷卻中，跳過
+  檢查 6116 彩晶 ... 冷卻中，跳過
+  檢查 6770 力積電 ... 訊號 1: ['掛單委買>5.0x委賣']  第12項:False  top30:True
+  檢查 2377 微星 ... 訊號 1: ['預估量5.8x均量']  第12項:False  top30:True
+  檢查 2485 兆赫 ... 訊號 3: ['預估量6.7x均量', '外盤比68%', '掛單委買>7.0x委賣']  第12項:False  top30:True
+  檢查 2481 強茂 ... 訊號 2: ['預估量4.8x均量', '掛單委買>1.0x委賣']  第12項:False  top30:True
+  檢查 4958 臻鼎-KY ... 訊號 2: ['預估量3.9x均量', '掛單委買>5.0x委賣']  第12項:False  top30:True
+  檢查 2313 華通 ... 冷卻中，跳過
+  檢查 2367 燿華 ... 訊號 2: ['預估量3.8x均量', '外盤比65%']  第12項:False  top30:True
+  檢查 2356 英業達 ... 冷卻中，跳過
+  檢查 2027 大成鋼 ... 訊號 3: ['預估量5.0x均量', '外盤比70%', '掛單委買>4.0x委賣']  第12項:False  top30:True
+  檢查 1802 台玻 ... 訊號 1: ['掛單委買>3.0x委賣']  第12項:False  top30:True
+  檢查 3673 TPK-KY ... 訊號 2: ['預估量9.8x均量', '掛單委買>22.0x委賣']  第12項:False  top30:True
+  檢查 1605 華新 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2883 凱基金 ... 冷卻中，跳過
+  檢查 2317 鴻海 ... 訊號 0: []  第12項:False  top30:True
+  檢查 3048 益登 ... 冷卻中，跳過
+  檢查 1303 南亞 ... 訊號 1: ['掛單委買>16.0x委賣']  第12項:False  top30:True
+  檢查 2324 仁寶 ... 訊號 1: ['掛單委買>3.0x委賣']  第12項:False  top30:True
+完成
+[09:58:19] intraday_monitor 開始執行
+[top24] 3481(409K) 2344(192K) 2337(181K) 2303(154K) 2409(133K) 2408(101K) 6116(93K) 6770(76K) ...
+[vol_rank] 快取 28 分鐘前更新，top50
+  檢查 3481 群創 ... 訊號 2: ['預估量2.2x均量', '掛單委買>15.0x委賣']  第12項:False  top30:True
+  檢查 2344 華邦電 ... 訊號 2: ['預估量4.0x均量', '掛單委買>4.0x委賣']  第12項:False  top30:True
+  檢查 2337 旺宏 ... 冷卻中，跳過
+  檢查 2303 聯電 ... 冷卻中，跳過
+  檢查 2409 友達 ... 訊號 1: ['掛單委買>8.0x委賣']  第12項:False  top30:True
+  檢查 2408 南亞科 ... 冷卻中，跳過
+  檢查 6116 彩晶 ... 冷卻中，跳過
+  檢查 6770 力積電 ... 訊號 2: ['掛單委買>1.0x委賣', 'MACD底背離']  第12項:False  top30:True
+  檢查 2377 微星 ... 訊號 3: ['預估量5.7x均量', '掛單委買>12.0x委賣', 'MACD底背離']  第12項:False  top30:True
+  檢查 2485 兆赫 ... 訊號 3: ['預估量6.6x均量', '外盤比68%', '掛單委買>3.0x委賣']  第12項:False  top30:True
+  檢查 4958 臻鼎-KY ... 訊號 2: ['預估量3.9x均量', '掛單委買>11.0x委賣']  第12項:False  top30:True
+  檢查 2481 強茂 ... 訊號 1: ['預估量4.7x均量']  第12項:False  top30:True
+  檢查 2313 華通 ... 冷卻中，跳過
+  檢查 2367 燿華 ... 訊號 2: ['預估量3.7x均量', '外盤比65%']  第12項:False  top30:True
+  檢查 2356 英業達 ... 冷卻中，跳過
+  檢查 2027 大成鋼 ... 訊號 3: ['預估量5.0x均量', '外盤比69%', '掛單委買>4.0x委賣']  第12項:False  top30:True
+  檢查 1802 台玻 ... 訊號 1: ['掛單委買>6.0x委賣']  第12項:False  top30:True
+  檢查 3673 TPK-KY ... 訊號 2: ['預估量9.7x均量', '掛單委買>28.0x委賣']  第12項:False  top30:True
+  檢查 1605 華新 ... 訊號 1: ['MACD底背離']  第12項:False  top30:True
+  檢查 2883 凱基金 ... 冷卻中，跳過
+  檢查 2317 鴻海 ... 冷卻中，跳過
+  檢查 3048 益登 ... 冷卻中，跳過
+  檢查 1303 南亞 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2324 仁寶 ... 訊號 1: ['掛單委買>2.0x委賣']  第12項:False  top30:True
+完成
+[09:59:28] intraday_monitor 開始執行
+[top24] 3481(413K) 2344(194K) 2337(184K) 2303(155K) 2409(134K) 2408(102K) 6116(93K) 6770(77K) ...
+[vol_rank] 快取 29 分鐘前更新，top50
+  檢查 3481 群創 ... 冷卻中，跳過
+  檢查 2344 華邦電 ... 訊號 1: ['預估量3.9x均量']  第12項:False  top30:True
+  檢查 2337 旺宏 ... 冷卻中，跳過
+  檢查 2303 聯電 ... 冷卻中，跳過
+  檢查 2409 友達 ... 訊號 1: ['掛單委買>5.0x委賣']  第12項:False  top30:True
+  檢查 2408 南亞科 ... 冷卻中，跳過
+  檢查 6116 彩晶 ... 冷卻中，跳過
+  檢查 6770 力積電 ... 訊號 1: ['MACD底背離']  第12項:False  top30:True
+  檢查 2377 微星 ... 訊號 2: ['預估量5.7x均量', 'MACD底背離']  第12項:False  top30:True
+  檢查 2485 兆赫 ... 訊號 4: ['VWAP突破↑', 'RSI5穿RSI10↑', '預估量6.6x均量', '外盤比68%']  第12項:False  top30:True
+  檢查 4958 臻鼎-KY ... 訊號 2: ['VWAP突破↑', '預估量3.8x均量']  第12項:False  top30:True
+  檢查 2481 強茂 ... 訊號 2: ['預估量4.7x均量', '掛單委買>1.0x委賣']  第12項:False  top30:True
+  檢查 2313 華通 ... 冷卻中，跳過
+  檢查 2367 燿華 ... 訊號 1: ['預估量3.7x均量']  第12項:False  top30:True
+  檢查 2356 英業達 ... 冷卻中，跳過
+  檢查 2027 大成鋼 ... 訊號 2: ['預估量4.9x均量', '外盤比69%']  第12項:False  top30:True
+  檢查 1802 台玻 ... 訊號 1: ['掛單委買>3.0x委賣']  第12項:False  top30:True
+  檢查 1605 華新 ... 訊號 2: ['掛單委買>6.0x委賣', 'MACD底背離']  第12項:False  top30:True
+  檢查 3673 TPK-KY ... 訊號 1: ['預估量9.6x均量']  第12項:False  top30:True
+  檢查 2317 鴻海 ... 冷卻中，跳過
+  檢查 2883 凱基金 ... 冷卻中，跳過
+  檢查 3048 益登 ... 冷卻中，跳過
+  檢查 1303 南亞 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2324 仁寶 ... 訊號 0: []  第12項:False  top30:True
+完成
+[10:00:34] intraday_monitor 開始執行
+[top24] 3481(420K) 2344(195K) 2337(186K) 2303(158K) 2409(134K) 2408(103K) 6116(93K) 6770(77K) ...
+[vol_rank] 快取 1 分鐘前更新，top50
+  檢查 3481 群創 ... 冷卻中，跳過
+  檢查 2344 華邦電 ... 訊號 1: ['預估量3.9x均量']  第12項:False  top30:True
+  檢查 2337 旺宏 ... 冷卻中，跳過
+  檢查 2303 聯電 ... 冷卻中，跳過
+  檢查 2409 友達 ... 訊號 1: ['掛單委買>3.0x委賣']  第12項:False  top30:True
+  檢查 2408 南亞科 ... 冷卻中，跳過
+  檢查 6116 彩晶 ... 冷卻中，跳過
+  檢查 6770 力積電 ... 訊號 2: ['掛單委買>5.0x委賣', 'MACD底背離']  第12項:False  top30:True
+  檢查 2377 微星 ... 訊號 2: ['預估量5.6x均量', 'MACD底背離']  第12項:False  top30:True
+  檢查 2485 兆赫 ... 訊號 3: ['預估量6.5x均量', '外盤比68%', '掛單委買>2.0x委賣']  第12項:False  top30:True
+  檢查 4958 臻鼎-KY ... 訊號 1: ['預估量3.8x均量']  第12項:False  top30:True
+  檢查 2481 強茂 ... 訊號 3: ['預估量4.6x均量', '掛單委買>2.0x委賣', 'MACD底背離']  第12項:False  top30:True
+  檢查 2313 華通 ... 冷卻中，跳過
+  檢查 2367 燿華 ... 訊號 2: ['預估量3.6x均量', '掛單委買>1.0x委賣']  第12項:False  top30:True
+  檢查 2356 英業達 ... 冷卻中，跳過
+  檢查 2027 大成鋼 ... 訊號 2: ['預估量4.9x均量', '外盤比69%']  第12項:False  top30:True
+  檢查 1802 台玻 ... 訊號 1: ['掛單委買>7.0x委賣']  第12項:False  top30:True
+  檢查 1605 華新 ... 訊號 1: ['MACD底背離']  第12項:False  top30:True
+  檢查 3673 TPK-KY ... 訊號 1: ['預估量9.5x均量']  第12項:False  top30:True
+  檢查 2317 鴻海 ... 冷卻中，跳過
+  檢查 2883 凱基金 ... 冷卻中，跳過
+  檢查 3048 益登 ... 冷卻中，跳過
+  檢查 1303 南亞 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2324 仁寶 ... 訊號 2: ['掛單委買>5.0x委賣', 'MACD底背離']  第12項:False  top30:True
+完成
+[10:01:42] intraday_monitor 開始執行
+[top24] 3481(428K) 2344(196K) 2337(187K) 2303(159K) 2409(136K) 2408(106K) 6116(95K) 6770(78K) ...
+[vol_rank] 快取 2 分鐘前更新，top50
+  檢查 3481 群創 ... 冷卻中，跳過
+  檢查 2344 華邦電 ... 訊號 1: ['預估量3.8x均量']  第12項:False  top30:True
+  檢查 2337 旺宏 ... 冷卻中，跳過
+  檢查 2303 聯電 ... 冷卻中，跳過
+  檢查 2409 友達 ... 訊號 1: ['掛單委買>3.0x委賣']  第12項:False  top30:True
+  檢查 2408 南亞科 ... 冷卻中，跳過
+  檢查 6116 彩晶 ... 冷卻中，跳過
+  檢查 6770 力積電 ... 訊號 1: ['掛單委買>2.0x委賣']  第12項:False  top30:True
+  檢查 2377 微星 ... 訊號 2: ['VWAP突破↑', '預估量5.5x均量']  第12項:False  top30:True
+  檢查 2485 兆赫 ... 訊號 4: ['VWAP突破↑', 'RSI5穿RSI10↑', '預估量6.4x均量', '外盤比68%']  第12項:False  top30:True
+  檢查 4958 臻鼎-KY ... 訊號 3: ['VWAP突破↑', 'RSI5穿RSI10↑', '預估量3.8x均量']  第12項:False  top30:True
+  檢查 2481 強茂 ... 訊號 2: ['預估量4.6x均量', 'MACD底背離']  第12項:False  top30:True
+  檢查 2313 華通 ... 冷卻中，跳過
+  檢查 2367 燿華 ... 訊號 1: ['預估量3.6x均量']  第12項:False  top30:True
+  檢查 2356 英業達 ... 冷卻中，跳過
+  檢查 2027 大成鋼 ... 訊號 3: ['RSI5穿RSI10↑', '預估量4.8x均量', '外盤比69%']  第12項:False  top30:True
+  檢查 1802 台玻 ... 訊號 2: ['掛單委買>4.0x委賣', 'MACD底背離']  第12項:False  top30:True
+  檢查 1605 華新 ... 訊號 1: ['MACD底背離']  第12項:False  top30:True
+  檢查 3673 TPK-KY ... 訊號 2: ['RSI5穿RSI10↑', '預估量9.3x均量']  第12項:False  top30:True
+  檢查 2317 鴻海 ... 冷卻中，跳過
+  檢查 2883 凱基金 ... 冷卻中，跳過
+  檢查 3048 益登 ... 冷卻中，跳過
+  檢查 1303 南亞 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2324 仁寶 ... 訊號 2: ['掛單委買>3.0x委賣', 'MACD底背離']  第12項:False  top30:True
+完成
+[10:02:48] intraday_monitor 開始執行
+[top24] 3481(430K) 2344(198K) 2337(189K) 2303(165K) 2409(137K) 2408(109K) 6116(95K) 6770(79K) ...
+[vol_rank] 快取 3 分鐘前更新，top50
+  檢查 3481 群創 ... 冷卻中，跳過
+  檢查 2344 華邦電 ... 冷卻中，跳過
+  檢查 2337 旺宏 ... 冷卻中，跳過
+  檢查 2303 聯電 ... 冷卻中，跳過
+  檢查 2409 友達 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2408 南亞科 ... 冷卻中，跳過
+  檢查 6116 彩晶 ... 冷卻中，跳過
+  檢查 6770 力積電 ... 訊號 1: ['掛單委買>3.0x委賣']  第12項:False  top30:True
+  檢查 2377 微星 ... 訊號 2: ['預估量5.4x均量', '掛單委買>14.0x委賣']  第12項:False  top30:True
+  檢查 2485 兆赫 ... 訊號 2: ['預估量6.3x均量', '外盤比68%']  第12項:False  top30:True
+  檢查 4958 臻鼎-KY ... 訊號 2: ['預估量3.7x均量', '掛單委買>7.0x委賣']  第12項:False  top30:True
+  檢查 2481 強茂 ... 訊號 2: ['RSI5穿RSI10↑', '預估量4.5x均量']  第12項:False  top30:True
+  檢查 2313 華通 ... 冷卻中，跳過
+  檢查 2367 燿華 ... 訊號 4: ['OBV領先創高', '預估量3.6x均量', '外盤比65%', 'MACD頂背離']  第12項:False  top30:True
+  檢查 2356 英業達 ... 冷卻中，跳過
+  檢查 2027 大成鋼 ... 訊號 2: ['預估量4.9x均量', '外盤比69%']  第12項:False  top30:True
+  檢查 1802 台玻 ... 訊號 1: ['RSI5穿RSI10↑']  第12項:False  top30:True
+  檢查 1605 華新 ... 訊號 1: ['RSI5穿RSI10↑']  第12項:False  top30:True
+  檢查 3673 TPK-KY ... 訊號 1: ['預估量9.2x均量']  第12項:False  top30:True
+  檢查 2317 鴻海 ... 冷卻中，跳過
+  檢查 2883 凱基金 ... 冷卻中，跳過
+  檢查 3048 益登 ... 冷卻中，跳過
+  檢查 1303 南亞 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2324 仁寶 ... 訊號 1: ['MACD底背離']  第12項:False  top30:True
+完成
+[10:03:54] intraday_monitor 開始執行
+[top24] 3481(433K) 2344(198K) 2337(190K) 2303(166K) 2409(138K) 2408(109K) 6116(96K) 6770(80K) ...
+[vol_rank] 快取 4 分鐘前更新，top50
+  檢查 3481 群創 ... 冷卻中，跳過
+  檢查 2344 華邦電 ... 冷卻中，跳過
+  檢查 2337 旺宏 ... 冷卻中，跳過
+  檢查 2303 聯電 ... 冷卻中，跳過
+  檢查 2409 友達 ... 訊號 2: ['RSI5穿RSI10↑', '掛單委買>51.0x委賣']  第12項:False  top30:True
+  檢查 2408 南亞科 ... 冷卻中，跳過
+  檢查 6116 彩晶 ... 冷卻中，跳過
+  檢查 6770 力積電 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2377 微星 ... 訊號 2: ['預估量5.4x均量', '掛單委買>6.0x委賣']  第12項:False  top30:True
+  檢查 2485 兆赫 ... 訊號 3: ['預估量6.2x均量', '外盤比68%', '掛單委買>7.0x委賣']  第12項:False  top30:True
+  檢查 4958 臻鼎-KY ... 訊號 1: ['預估量3.7x均量']  第12項:False  top30:True
+  檢查 2481 強茂 ... 訊號 2: ['預估量4.5x均量', '掛單委買>2.0x委賣']  第12項:False  top30:True
+  檢查 2313 華通 ... 冷卻中，跳過
+  檢查 2367 燿華 ... 訊號 4: ['MACD0軸上金叉', '預估量3.5x均量', '外盤比65%', 'MACD頂背離']  第12項:False  top30:True
+  檢查 2356 英業達 ... 冷卻中，跳過
+  檢查 2027 大成鋼 ... 訊號 3: ['預估量4.8x均量', '外盤比69%', '掛單委買>1.0x委賣']  第12項:False  top30:True
+  檢查 1802 台玻 ... 訊號 2: ['掛單委買>13.0x委賣', 'MACD頂背離']  第12項:False  top30:True
+  檢查 1605 華新 ... 訊號 0: []  第12項:False  top30:True
+  檢查 3673 TPK-KY ... 訊號 6: ['VWAP突破↑', '預估量9.2x均量', '昨量1.4%單K', '單K5.9x前5均', '量爆5.9x前5均', 'MACD頂背離']  第12項:True  top30:True
+  → 推播已送出（信心 50%）
+  檢查 2317 鴻海 ... 冷卻中，跳過
+  檢查 2883 凱基金 ... 冷卻中，跳過
+  檢查 3048 益登 ... 冷卻中，跳過
+  檢查 1303 南亞 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2324 仁寶 ... 訊號 2: ['掛單委買>56.0x委賣', 'MACD底背離']  第12項:False  top30:True
+完成
+[10:05:00] intraday_monitor 開始執行
+[top24] 3481(435K) 2344(199K) 2337(191K) 2303(168K) 2409(138K) 2408(110K) 6116(97K) 6770(80K) ...
+[vol_rank] 快取 5 分鐘前更新，top50
+  檢查 3481 群創 ... 冷卻中，跳過
+  檢查 2344 華邦電 ... 冷卻中，跳過
+  檢查 2337 旺宏 ... 冷卻中，跳過
+  檢查 2303 聯電 ... 冷卻中，跳過
+  檢查 2409 友達 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2408 南亞科 ... 冷卻中，跳過
+  檢查 6116 彩晶 ... 冷卻中，跳過
+  檢查 6770 力積電 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2377 微星 ... 訊號 1: ['預估量5.3x均量']  第12項:False  top30:True
+  檢查 2485 兆赫 ... 訊號 3: ['MACD0軸上金叉', '預估量6.0x均量', '外盤比68%']  第12項:False  top30:True
+  檢查 4958 臻鼎-KY ... 訊號 1: ['預估量3.6x均量']  第12項:False  top30:True
+  檢查 2481 強茂 ... 訊號 1: ['預估量4.4x均量']  第12項:False  top30:True
+  檢查 2313 華通 ... 冷卻中，跳過
+  檢查 2367 燿華 ... 訊號 3: ['預估量3.5x均量', '外盤比65%', 'MACD頂背離']  第12項:False  top30:True
+  檢查 2356 英業達 ... 冷卻中，跳過
+  檢查 2027 大成鋼 ... 訊號 2: ['預估量4.7x均量', '外盤比69%']  第12項:False  top30:True
+  檢查 1802 台玻 ... 訊號 0: []  第12項:False  top30:True
+  檢查 3673 TPK-KY ... 冷卻中，跳過
+  檢查 1605 華新 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2317 鴻海 ... 冷卻中，跳過
+  檢查 2883 凱基金 ... 冷卻中，跳過
+  檢查 3048 益登 ... 冷卻中，跳過
+  檢查 1303 南亞 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2324 仁寶 ... 訊號 2: ['掛單委買>2.0x委賣', 'MACD底背離']  第12項:False  top30:True
+完成
+[10:06:06] intraday_monitor 開始執行
+[top24] 3481(438K) 2344(200K) 2337(192K) 2303(169K) 2409(138K) 2408(111K) 6116(97K) 6770(80K) ...
+[vol_rank] 快取 6 分鐘前更新，top50
+  檢查 3481 群創 ... 冷卻中，跳過
+  檢查 2344 華邦電 ... 冷卻中，跳過
+  檢查 2337 旺宏 ... 冷卻中，跳過
+  檢查 2303 聯電 ... 冷卻中，跳過
+  檢查 2409 友達 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2408 南亞科 ... 冷卻中，跳過
+  檢查 6116 彩晶 ... 冷卻中，跳過
+  檢查 6770 力積電 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2377 微星 ... 訊號 2: ['預估量5.2x均量', '掛單委買>21.0x委賣']  第12項:False  top30:True
+  檢查 2485 兆赫 ... 訊號 3: ['預估量6.0x均量', '外盤比68%', '掛單委買>4.0x委賣']  第12項:False  top30:True
+  檢查 4958 臻鼎-KY ... 訊號 2: ['預估量3.5x均量', '掛單委買>1.0x委賣']  第12項:False  top30:True
+  檢查 2481 強茂 ... 冷卻中，跳過
+  檢查 2313 華通 ... 冷卻中，跳過
+  檢查 2367 燿華 ... 訊號 4: ['OBV領先創高', '預估量3.4x均量', '外盤比65%', 'MACD頂背離']  第12項:False  top30:True
+  檢查 2356 英業達 ... 冷卻中，跳過
+  檢查 2027 大成鋼 ... 訊號 2: ['預估量4.6x均量', '外盤比69%']  第12項:False  top30:True
+  檢查 1802 台玻 ... 訊號 1: ['掛單委買>19.0x委賣']  第12項:False  top30:True
+  檢查 3673 TPK-KY ... 冷卻中，跳過
+  檢查 1605 華新 ... 訊號 1: ['掛單委買>1.0x委賣']  第12項:False  top30:True
+  檢查 2317 鴻海 ... 冷卻中，跳過
+  檢查 2883 凱基金 ... 冷卻中，跳過
+  檢查 3048 益登 ... 冷卻中，跳過
+  檢查 1303 南亞 ... 訊號 2: ['掛單委買>1.0x委賣', 'MACD底背離']  第12項:False  top30:True
+  檢查 2324 仁寶 ... 訊號 0: []  第12項:False  top30:True
+完成
+[10:07:11] intraday_monitor 開始執行
+[top24] 3481(439K) 2344(200K) 2337(192K) 2303(170K) 2409(139K) 2408(111K) 6116(97K) 6770(80K) ...
+[vol_rank] 快取 7 分鐘前更新，top50
+  檢查 3481 群創 ... 冷卻中，跳過
+  檢查 2344 華邦電 ... 冷卻中，跳過
+  檢查 2337 旺宏 ... 冷卻中，跳過
+  檢查 2303 聯電 ... 冷卻中，跳過
+  檢查 2409 友達 ... 訊號 1: ['掛單委買>5.0x委賣']  第12項:False  top30:True
+  檢查 2408 南亞科 ... 冷卻中，跳過
+  檢查 6116 彩晶 ... 冷卻中，跳過
+  檢查 6770 力積電 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2377 微星 ... 訊號 2: ['預估量5.3x均量', '掛單委買>1.0x委賣']  第12項:False  top30:True
+  檢查 2485 兆赫 ... 訊號 3: ['MACD0軸上金叉', '預估量5.9x均量', '外盤比68%']  第12項:False  top30:True
+  檢查 4958 臻鼎-KY ... 訊號 2: ['預估量3.5x均量', '掛單委買>2.0x委賣']  第12項:False  top30:True
+  檢查 2481 強茂 ... 冷卻中，跳過
+  檢查 2313 華通 ... 冷卻中，跳過
+  檢查 2367 燿華 ... 訊號 2: ['預估量3.4x均量', '外盤比65%']  第12項:False  top30:True
+  檢查 2356 英業達 ... 冷卻中，跳過
+  檢查 2027 大成鋼 ... 訊號 2: ['預估量4.6x均量', '外盤比69%']  第12項:False  top30:True
+  檢查 1802 台玻 ... 訊號 1: ['掛單委買>2.0x委賣']  第12項:False  top30:True
+  檢查 3673 TPK-KY ... 冷卻中，跳過
+  檢查 1605 華新 ... 訊號 1: ['掛單委買>7.0x委賣']  第12項:False  top30:True
+  檢查 2317 鴻海 ... 冷卻中，跳過
+  檢查 2883 凱基金 ... 冷卻中，跳過
+  檢查 3048 益登 ... 冷卻中，跳過
+  檢查 1303 南亞 ... 訊號 1: ['MACD底背離']  第12項:False  top30:True
+  檢查 2324 仁寶 ... 訊號 0: []  第12項:False  top30:True
+完成
+[10:08:16] intraday_monitor 開始執行
+[top24] 3481(452K) 2344(201K) 2337(193K) 2303(172K) 2409(140K) 2408(112K) 6116(98K) 6770(80K) ...
+[vol_rank] 快取 8 分鐘前更新，top50
+  檢查 3481 群創 ... 冷卻中，跳過
+  檢查 2344 華邦電 ... 冷卻中，跳過
+  檢查 2337 旺宏 ... 冷卻中，跳過
+  檢查 2303 聯電 ... 冷卻中，跳過
+  檢查 2409 友達 ... 訊號 1: ['掛單委買>24.0x委賣']  第12項:False  top30:True
+  檢查 2408 南亞科 ... 冷卻中，跳過
+  檢查 6116 彩晶 ... 冷卻中，跳過
+  檢查 6770 力積電 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2377 微星 ... 訊號 2: ['預估量5.2x均量', '掛單委買>18.0x委賣']  第12項:False  top30:True
+  檢查 2485 兆赫 ... 訊號 2: ['預估量5.8x均量', '外盤比68%']  第12項:False  top30:True
+  檢查 4958 臻鼎-KY ... 訊號 1: ['預估量3.5x均量']  第12項:False  top30:True
+  檢查 2481 強茂 ... 冷卻中，跳過
+  檢查 2313 華通 ... 冷卻中，跳過
+  檢查 2367 燿華 ... 訊號 1: ['預估量3.3x均量']  第12項:False  top30:True
+  檢查 2356 英業達 ... 冷卻中，跳過
+  檢查 2027 大成鋼 ... 訊號 2: ['預估量4.5x均量', '外盤比69%']  第12項:False  top30:True
+  檢查 1802 台玻 ... 訊號 1: ['掛單委買>2.0x委賣']  第12項:False  top30:True
+  檢查 3673 TPK-KY ... 冷卻中，跳過
+  檢查 1605 華新 ... 訊號 1: ['MACD底背離']  第12項:False  top30:True
+  檢查 2317 鴻海 ... 冷卻中，跳過
+  檢查 2883 凱基金 ... 冷卻中，跳過
+  檢查 3048 益登 ... 冷卻中，跳過
+  檢查 1303 南亞 ... 訊號 1: ['MACD底背離']  第12項:False  top30:True
+  檢查 2324 仁寶 ... 訊號 2: ['掛單委買>4.0x委賣', 'MACD底背離']  第12項:False  top30:True
+完成
+[10:09:21] intraday_monitor 開始執行
+[top24] 3481(457K) 2344(202K) 2337(194K) 2303(172K) 2409(143K) 2408(113K) 6116(98K) 6770(81K) ...
+[vol_rank] 快取 9 分鐘前更新，top50
+  檢查 3481 群創 ... 冷卻中，跳過
+  檢查 2344 華邦電 ... 冷卻中，跳過
+  檢查 2337 旺宏 ... 冷卻中，跳過
+  檢查 2303 聯電 ... 冷卻中，跳過
+  檢查 2409 友達 ... 訊號 1: ['掛單委買>2.0x委賣']  第12項:False  top30:True
+  檢查 2408 南亞科 ... 冷卻中，跳過
+  檢查 6116 彩晶 ... 冷卻中，跳過
+  檢查 6770 力積電 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2377 微星 ... 訊號 2: ['預估量5.2x均量', '掛單委買>2.0x委賣']  第12項:False  top30:True
+  檢查 2485 兆赫 ... 訊號 2: ['預估量5.8x均量', '外盤比68%']  第12項:False  top30:True
+  檢查 4958 臻鼎-KY ... 訊號 3: ['預估量3.4x均量', '掛單委買>3.0x委賣', 'MACD底背離']  第12項:False  top30:True
+  檢查 2481 強茂 ... 冷卻中，跳過
+  檢查 2313 華通 ... 冷卻中，跳過
+  檢查 2367 燿華 ... 訊號 2: ['預估量3.3x均量', 'MACD頂背離']  第12項:False  top30:True
+  檢查 2356 英業達 ... 冷卻中，跳過
+  檢查 2027 大成鋼 ... 訊號 3: ['預估量4.4x均量', '外盤比69%', '掛單委買>1.0x委賣']  第12項:False  top30:True
+  檢查 1802 台玻 ... 訊號 1: ['掛單委買>1.0x委賣']  第12項:False  top30:True
+  檢查 3673 TPK-KY ... 冷卻中，跳過
+  檢查 1605 華新 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2317 鴻海 ... 冷卻中，跳過
+  檢查 2883 凱基金 ... 冷卻中，跳過
+  檢查 3048 益登 ... 冷卻中，跳過
+  檢查 1303 南亞 ... 訊號 1: ['MACD底背離']  第12項:False  top30:True
+  檢查 2324 仁寶 ... 訊號 1: ['掛單委買>37.0x委賣']  第12項:False  top30:True
+完成
+[10:10:26] intraday_monitor 開始執行
+[top24] 3481(462K) 2344(202K) 2337(194K) 2303(174K) 2409(146K) 2408(113K) 6116(98K) 6770(81K) ...
+[vol_rank] 快取 10 分鐘前更新，top50
+  檢查 3481 群創 ... 冷卻中，跳過
+  檢查 2344 華邦電 ... 冷卻中，跳過
+  檢查 2337 旺宏 ... 冷卻中，跳過
+  檢查 2303 聯電 ... 冷卻中，跳過
+  檢查 2409 友達 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2408 南亞科 ... 冷卻中，跳過
+  檢查 6116 彩晶 ... 冷卻中，跳過
+  檢查 6770 力積電 ... 訊號 1: ['KD鈍化≥80']  第12項:False  top30:True
+  檢查 2377 微星 ... 訊號 2: ['預估量5.1x均量', '掛單委買>3.0x委賣']  第12項:False  top30:True
+  檢查 2485 兆赫 ... 訊號 2: ['預估量5.8x均量', '外盤比68%']  第12項:False  top30:True
+  檢查 4958 臻鼎-KY ... 訊號 1: ['預估量3.4x均量']  第12項:False  top30:True
+  檢查 2481 強茂 ... 冷卻中，跳過
+  檢查 2313 華通 ... 冷卻中，跳過
+  檢查 2367 燿華 ... 訊號 2: ['預估量3.3x均量', '外盤比65%']  第12項:False  top30:True
+  檢查 2356 英業達 ... 冷卻中，跳過
+  檢查 2027 大成鋼 ... 訊號 2: ['預估量4.4x均量', '外盤比69%']  第12項:False  top30:True
+  檢查 1802 台玻 ... 訊號 1: ['VWAP突破↑']  第12項:False  top30:True
+  檢查 3673 TPK-KY ... 冷卻中，跳過
+  檢查 1605 華新 ... 訊號 1: ['掛單委買>30.0x委賣']  第12項:False  top30:True
+  檢查 3048 益登 ... 冷卻中，跳過
+  檢查 2317 鴻海 ... 冷卻中，跳過
+  檢查 2883 凱基金 ... 冷卻中，跳過
+  檢查 1303 南亞 ... 訊號 1: ['MACD底背離']  第12項:False  top30:True
+  檢查 2324 仁寶 ... 訊號 1: ['掛單委買>89.0x委賣']  第12項:False  top30:True
+完成
+[10:11:31] intraday_monitor 開始執行
+[top24] 3481(471K) 2344(203K) 2337(195K) 2303(174K) 2409(146K) 2408(114K) 6116(99K) 6770(81K) ...
+[vol_rank] 快取 11 分鐘前更新，top50
+  檢查 3481 群創 ... 冷卻中，跳過
+  檢查 2344 華邦電 ... 冷卻中，跳過
+  檢查 2337 旺宏 ... 冷卻中，跳過
+  檢查 2303 聯電 ... 冷卻中，跳過
+  檢查 2409 友達 ... 冷卻中，跳過
+  檢查 2408 南亞科 ... 冷卻中，跳過
+  檢查 6116 彩晶 ... 冷卻中，跳過
+  檢查 6770 力積電 ... 訊號 1: ['KD鈍化≥80']  第12項:False  top30:True
+  檢查 2377 微星 ... 訊號 2: ['預估量5.0x均量', '掛單委買>3.0x委賣']  第12項:False  top30:True
+  檢查 2485 兆赫 ... 訊號 4: ['KD鈍化≥80', '預估量5.7x均量', '外盤比68%', 'MACD頂背離']  第12項:False  top30:True
+  檢查 4958 臻鼎-KY ... 訊號 1: ['預估量3.4x均量']  第12項:False  top30:True
+  檢查 2481 強茂 ... 冷卻中，跳過
+  檢查 2313 華通 ... 冷卻中，跳過
+  檢查 2367 燿華 ... 訊號 2: ['預估量3.3x均量', '外盤比66%']  第12項:False  top30:True
+  檢查 2356 英業達 ... 冷卻中，跳過
+  檢查 2027 大成鋼 ... 訊號 2: ['預估量4.4x均量', '外盤比69%']  第12項:False  top30:True
+  檢查 1802 台玻 ... 訊號 0: []  第12項:False  top30:True
+  檢查 3673 TPK-KY ... 冷卻中，跳過
+  檢查 1605 華新 ... 訊號 2: ['掛單委買>2.0x委賣', 'MACD底背離']  第12項:False  top30:True
+  檢查 3048 益登 ... 冷卻中，跳過
+  檢查 2883 凱基金 ... 冷卻中，跳過
+  檢查 2317 鴻海 ... 冷卻中，跳過
+  檢查 1303 南亞 ... 訊號 1: ['VWAP突破↑']  第12項:False  top30:True
+  檢查 2324 仁寶 ... 訊號 1: ['掛單委買>37.0x委賣']  第12項:False  top30:True
+完成
+[10:12:36] intraday_monitor 開始執行
+[top24] 3481(476K) 2344(204K) 2337(196K) 2303(175K) 2409(147K) 2408(115K) 6116(99K) 6770(81K) ...
+[vol_rank] 快取 13 分鐘前更新，top50
+  檢查 3481 群創 ... 冷卻中，跳過
+  檢查 2344 華邦電 ... 冷卻中，跳過
+  檢查 2337 旺宏 ... 冷卻中，跳過
+  檢查 2303 聯電 ... 冷卻中，跳過
+  檢查 2409 友達 ... 冷卻中，跳過
+  檢查 2408 南亞科 ... 冷卻中，跳過
+  檢查 6116 彩晶 ... 冷卻中，跳過
+  檢查 6770 力積電 ... 訊號 1: ['KD鈍化≥80']  第12項:False  top30:True
+  檢查 2377 微星 ... 訊號 2: ['預估量5.0x均量', '掛單委買>12.0x委賣']  第12項:False  top30:True
+  檢查 2485 兆赫 ... 訊號 2: ['預估量5.7x均量', '外盤比68%']  第12項:False  top30:True
+  檢查 4958 臻鼎-KY ... 訊號 1: ['預估量3.3x均量']  第12項:False  top30:True
+  檢查 2481 強茂 ... 冷卻中，跳過
+  檢查 2313 華通 ... 冷卻中，跳過
+  檢查 2367 燿華 ... 訊號 2: ['預估量3.3x均量', '外盤比66%']  第12項:False  top30:True
+  檢查 2356 英業達 ... 冷卻中，跳過
+  檢查 2027 大成鋼 ... 訊號 3: ['預估量4.3x均量', '外盤比68%', '掛單委買>3.0x委賣']  第12項:False  top30:True
+  檢查 1802 台玻 ... 訊號 1: ['掛單委買>2.0x委賣']  第12項:False  top30:True
+  檢查 3673 TPK-KY ... 冷卻中，跳過
+  檢查 1605 華新 ... 訊號 2: ['掛單委買>4.0x委賣', 'MACD底背離']  第12項:False  top30:True
+  檢查 3048 益登 ... 冷卻中，跳過
+  檢查 2883 凱基金 ... 冷卻中，跳過
+  檢查 2317 鴻海 ... 冷卻中，跳過
+  檢查 1303 南亞 ... 訊號 1: ['MACD底背離']  第12項:False  top30:True
+  檢查 2324 仁寶 ... 訊號 1: ['掛單委買>4.0x委賣']  第12項:False  top30:True
+完成
+[10:13:40] intraday_monitor 開始執行
+[top24] 3481(483K) 2344(205K) 2337(197K) 2303(176K) 2409(148K) 2408(116K) 6116(99K) 6770(82K) ...
+[vol_rank] 快取 14 分鐘前更新，top50
+  檢查 3481 群創 ... 冷卻中，跳過
+  檢查 2344 華邦電 ... 冷卻中，跳過
+  檢查 2337 旺宏 ... 冷卻中，跳過
+  檢查 2303 聯電 ... 冷卻中，跳過
+  檢查 2409 友達 ... 冷卻中，跳過
+  檢查 2408 南亞科 ... 冷卻中，跳過
+  檢查 6116 彩晶 ... 冷卻中，跳過
+  檢查 6770 力積電 ... 訊號 1: ['掛單委買>2.0x委賣']  第12項:False  top30:True
+  檢查 2377 微星 ... 訊號 2: ['預估量4.9x均量', '掛單委買>4.0x委賣']  第12項:False  top30:True
+  檢查 2485 兆赫 ... 訊號 3: ['預估量5.6x均量', '外盤比68%', 'MACD頂背離']  第12項:False  top30:True
+  檢查 4958 臻鼎-KY ... 訊號 2: ['預估量3.3x均量', '掛單委買>3.0x委賣']  第12項:False  top30:True
+  檢查 2481 強茂 ... 冷卻中，跳過
+  檢查 2313 華通 ... 冷卻中，跳過
+  檢查 2367 燿華 ... 訊號 2: ['預估量3.3x均量', '外盤比66%']  第12項:False  top30:True
+  檢查 2356 英業達 ... 冷卻中，跳過
+  檢查 2027 大成鋼 ... 訊號 3: ['預估量4.3x均量', '外盤比68%', '掛單委買>4.0x委賣']  第12項:False  top30:True
+  檢查 1802 台玻 ... 訊號 0: []  第12項:False  top30:True
+  檢查 1605 華新 ... 訊號 5: ['掛單委買>3.0x委賣', '昨量1.2%單K', '單K5.1x前5均', '量爆5.1x前5均', 'MACD底背離']  第12項:True  top30:True
+  → 推播已送出（信心 35%）
+  檢查 3673 TPK-KY ... 冷卻中，跳過
+  檢查 3048 益登 ... 冷卻中，跳過
+  檢查 2883 凱基金 ... 冷卻中，跳過
+  檢查 2317 鴻海 ... 冷卻中，跳過
+  檢查 2324 仁寶 ... 訊號 1: ['掛單委買>19.0x委賣']  第12項:False  top30:True
+  檢查 1303 南亞 ... 訊號 1: ['MACD底背離']  第12項:False  top30:True
+完成
+[10:14:47] intraday_monitor 開始執行
+[top24] 3481(499K) 2344(205K) 2337(197K) 2303(177K) 2409(150K) 2408(116K) 6116(103K) 6770(82K) ...
+[vol_rank] 快取 15 分鐘前更新，top50
+  檢查 3481 群創 ... 冷卻中，跳過
+  檢查 2344 華邦電 ... 冷卻中，跳過
+  檢查 2337 旺宏 ... 冷卻中，跳過
+  檢查 2303 聯電 ... 冷卻中，跳過
+  檢查 2409 友達 ... 冷卻中，跳過
+  檢查 2408 南亞科 ... 冷卻中，跳過
+  檢查 6116 彩晶 ... 冷卻中，跳過
+  檢查 6770 力積電 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2377 微星 ... 訊號 1: ['預估量5.0x均量']  第12項:False  top30:True
+  檢查 2485 兆赫 ... 訊號 3: ['預估量5.5x均量', '外盤比68%', '掛單委買>1.0x委賣']  第12項:False  top30:True
+  檢查 4958 臻鼎-KY ... 訊號 1: ['預估量3.3x均量']  第12項:False  top30:True
+  檢查 2481 強茂 ... 冷卻中，跳過
+  檢查 2313 華通 ... 冷卻中，跳過
+  檢查 2367 燿華 ... 訊號 2: ['預估量3.2x均量', '外盤比66%']  第12項:False  top30:True
+  檢查 2356 英業達 ... 冷卻中，跳過
+  檢查 2027 大成鋼 ... 訊號 3: ['預估量4.3x均量', '外盤比68%', '掛單委買>2.0x委賣']  第12項:False  top30:True
+  檢查 1802 台玻 ... 訊號 0: []  第12項:False  top30:True
+  檢查 1605 華新 ... 冷卻中，跳過
+  檢查 3048 益登 ... 冷卻中，跳過
+  檢查 3673 TPK-KY ... 冷卻中，跳過
+  檢查 2883 凱基金 ... 冷卻中，跳過
+  檢查 2317 鴻海 ... 冷卻中，跳過
+  檢查 2324 仁寶 ... 訊號 2: ['掛單委買>4.0x委賣', 'MACD底背離']  第12項:False  top30:True
+  檢查 1303 南亞 ... 訊號 1: ['MACD底背離']  第12項:False  top30:True
+完成
+[10:15:51] intraday_monitor 開始執行
+[top24] 3481(511K) 2344(206K) 2337(198K) 2303(177K) 2409(159K) 2408(117K) 6116(106K) 6770(82K) ...
+[vol_rank] 快取 16 分鐘前更新，top50
+  檢查 3481 群創 ... 冷卻中，跳過
+  檢查 2344 華邦電 ... 冷卻中，跳過
+  檢查 2337 旺宏 ... 冷卻中，跳過
+  檢查 2303 聯電 ... 冷卻中，跳過
+  檢查 2409 友達 ... 冷卻中，跳過
+  檢查 2408 南亞科 ... 冷卻中，跳過
+  檢查 6116 彩晶 ... 冷卻中，跳過
+  檢查 6770 力積電 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2377 微星 ... 訊號 3: ['RSI5穿RSI10↑', '預估量5.0x均量', '掛單委買>6.0x委賣']  第12項:False  top30:True
+  檢查 2485 兆赫 ... 訊號 4: ['RSI5穿RSI10↑', '預估量5.5x均量', '外盤比68%', '昨量1.2%單K']  第12項:False  top30:True
+  檢查 4958 臻鼎-KY ... 訊號 2: ['預估量3.2x均量', 'MACD底背離']  第12項:False  top30:True
+  檢查 2481 強茂 ... 冷卻中，跳過
+  檢查 2313 華通 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2367 燿華 ... 訊號 2: ['預估量3.2x均量', '外盤比66%']  第12項:False  top30:True
+  檢查 2027 大成鋼 ... 訊號 2: ['預估量4.2x均量', '外盤比68%']  第12項:False  top30:True
+  檢查 2356 英業達 ... 冷卻中，跳過
+  檢查 1802 台玻 ... 訊號 0: []  第12項:False  top30:True
+  檢查 1605 華新 ... 冷卻中，跳過
+  檢查 3048 益登 ... 冷卻中，跳過
+  檢查 3673 TPK-KY ... 冷卻中，跳過
+  檢查 2883 凱基金 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2317 鴻海 ... 冷卻中，跳過
+  檢查 2324 仁寶 ... 訊號 3: ['掛單委買>23.0x委賣', '單K8.3x前5均', '量爆8.3x前5均']  第12項:True  top30:True
+  → 推播已送出（信心 15%）
+  檢查 1303 南亞 ... 訊號 5: ['VWAP突破↑', 'RSI5穿RSI10↑', '單K6.1x前5均', '量爆6.1x前5均', 'MACD頂背離']  第12項:True  top30:True
+  → 推播已送出（信心 35%）
+完成
+[10:16:58] intraday_monitor 開始執行
+[top24] 3481(520K) 2344(206K) 2337(199K) 2303(177K) 2409(164K) 2408(117K) 6116(107K) 6770(82K) ...
+[vol_rank] 快取 17 分鐘前更新，top50
+  檢查 3481 群創 ... 冷卻中，跳過
+  檢查 2344 華邦電 ... 冷卻中，跳過
+  檢查 2337 旺宏 ... 冷卻中，跳過
+  檢查 2303 聯電 ... 冷卻中，跳過
+  檢查 2409 友達 ... 冷卻中，跳過
+  檢查 2408 南亞科 ... 冷卻中，跳過
+  檢查 6116 彩晶 ... 冷卻中，跳過
+  檢查 6770 力積電 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2377 微星 ... 訊號 1: ['預估量5.0x均量']  第12項:False  top30:True
+  檢查 2485 兆赫 ... 訊號 6: ['預估量5.5x均量', '外盤比68%', '昨量3.4%單K', '單K6.3x前5均', '超越開盤量(1054/948張)', '量爆6.3x前5均']  第12項:True  top30:True
+  → 推播已送出（信心 58%）
+  檢查 4958 臻鼎-KY ... 訊號 1: ['預估量3.2x均量']  第12項:False  top30:True
+  檢查 2481 強茂 ... 冷卻中，跳過
+  檢查 2313 華通 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2367 燿華 ... 訊號 2: ['預估量3.1x均量', '外盤比66%']  第12項:False  top30:True
+  檢查 2356 英業達 ... 冷卻中，跳過
+  檢查 2027 大成鋼 ... 訊號 3: ['預估量4.1x均量', '外盤比68%', '掛單委買>13.0x委賣']  第12項:False  top30:True
+  檢查 1802 台玻 ... 訊號 0: []  第12項:False  top30:True
+  檢查 1605 華新 ... 冷卻中，跳過
+  檢查 3048 益登 ... 訊號 5: ['KD鈍化≥80', '預估量6.9x均量', '外盤比77%', '掛單委買大幅領先', 'MACD頂背離']  第12項:False  top30:True
+  檢查 3673 TPK-KY ... 冷卻中，跳過
+  檢查 2883 凱基金 ... 訊號 1: ['MACD底背離']  第12項:False  top30:True
+  檢查 2317 鴻海 ... 冷卻中，跳過
+  檢查 2324 仁寶 ... 冷卻中，跳過
+  檢查 1303 南亞 ... 冷卻中，跳過
+完成
+[10:18:05] intraday_monitor 開始執行
+[top24] 3481(524K) 2344(206K) 2337(200K) 2303(178K) 2409(166K) 2408(118K) 6116(108K) 6770(83K) ...
+[vol_rank] 快取 18 分鐘前更新，top50
+  檢查 3481 群創 ... 冷卻中，跳過
+  檢查 2344 華邦電 ... 冷卻中，跳過
+  檢查 2337 旺宏 ... 冷卻中，跳過
+  檢查 2303 聯電 ... 冷卻中，跳過
+  檢查 2409 友達 ... 冷卻中，跳過
+  檢查 2408 南亞科 ... 冷卻中，跳過
+  檢查 6116 彩晶 ... 冷卻中，跳過
+  檢查 6770 力積電 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2377 微星 ... 訊號 1: ['預估量4.9x均量']  第12項:False  top30:True
+  檢查 2485 兆赫 ... 冷卻中，跳過
+  檢查 4958 臻鼎-KY ... 訊號 2: ['預估量3.1x均量', '掛單委買>1.0x委賣']  第12項:False  top30:True
+  檢查 2481 強茂 ... 冷卻中，跳過
+  檢查 2313 華通 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2367 燿華 ... 訊號 3: ['預估量3.1x均量', '外盤比65%', '掛單委買>1.0x委賣']  第12項:False  top30:True
+  檢查 2356 英業達 ... 冷卻中，跳過
+  檢查 2027 大成鋼 ... 訊號 3: ['預估量4.1x均量', '外盤比68%', '掛單委買>1.0x委賣']  第12項:False  top30:True
+  檢查 1802 台玻 ... 訊號 1: ['MACD底背離']  第12項:False  top30:True
+  檢查 1605 華新 ... 冷卻中，跳過
+  檢查 3048 益登 ... 訊號 4: ['預估量6.8x均量', '外盤比77%', '掛單委買大幅領先', 'MACD頂背離']  第12項:False  top30:True
+  檢查 3673 TPK-KY ... 冷卻中，跳過
+  檢查 2883 凱基金 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2317 鴻海 ... 冷卻中，跳過
+  檢查 2324 仁寶 ... 冷卻中，跳過
+  檢查 1303 南亞 ... 冷卻中，跳過
+完成
+[10:19:10] intraday_monitor 開始執行
+[top24] 3481(530K) 2344(207K) 2337(201K) 2303(178K) 2409(168K) 2408(118K) 6116(109K) 6770(83K) ...
+[vol_rank] 快取 19 分鐘前更新，top50
+  檢查 3481 群創 ... 冷卻中，跳過
+  檢查 2344 華邦電 ... 冷卻中，跳過
+  檢查 2337 旺宏 ... 冷卻中，跳過
+  檢查 2303 聯電 ... 冷卻中，跳過
+  檢查 2409 友達 ... 冷卻中，跳過
+  檢查 2408 南亞科 ... 冷卻中，跳過
+  檢查 6116 彩晶 ... 冷卻中，跳過
+  檢查 6770 力積電 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2377 微星 ... 訊號 1: ['預估量4.8x均量']  第12項:False  top30:True
+  檢查 2485 兆赫 ... 冷卻中，跳過
+  檢查 4958 臻鼎-KY ... 訊號 2: ['預估量3.1x均量', '掛單委買>6.0x委賣']  第12項:False  top30:True
+  檢查 2481 強茂 ... 冷卻中，跳過
+  檢查 2313 華通 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2356 英業達 ... 冷卻中，跳過
+  檢查 2367 燿華 ... 訊號 3: ['OBV領先創高', '預估量3.1x均量', '外盤比65%']  第12項:False  top30:True
+  檢查 2027 大成鋼 ... 訊號 3: ['預估量4.1x均量', '外盤比68%', '掛單委買>2.0x委賣']  第12項:False  top30:True
+  檢查 1802 台玻 ... 訊號 1: ['MACD底背離']  第12項:False  top30:True
+  檢查 1605 華新 ... 冷卻中，跳過
+  檢查 3048 益登 ... 訊號 3: ['預估量6.8x均量', '外盤比77%', 'MACD頂背離']  第12項:False  top30:True
+  檢查 3673 TPK-KY ... 冷卻中，跳過
+  檢查 2883 凱基金 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2317 鴻海 ... 冷卻中，跳過
+  檢查 2324 仁寶 ... 冷卻中，跳過
+  檢查 1303 南亞 ... 冷卻中，跳過
+完成
+[10:20:14] intraday_monitor 開始執行
+[top24] 3481(536K) 2344(208K) 2337(202K) 2303(179K) 2409(170K) 2408(118K) 6116(109K) 6770(83K) ...
+[vol_rank] 快取 20 分鐘前更新，top50
+  檢查 3481 群創 ... 冷卻中，跳過
+  檢查 2344 華邦電 ... 冷卻中，跳過
+  檢查 2337 旺宏 ... 冷卻中，跳過
+  檢查 2303 聯電 ... 冷卻中，跳過
+  檢查 2409 友達 ... 冷卻中，跳過
+  檢查 2408 南亞科 ... 冷卻中，跳過
+  檢查 6116 彩晶 ... 冷卻中，跳過
+  檢查 6770 力積電 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2377 微星 ... 訊號 2: ['RSI5穿RSI10↑', '預估量4.8x均量']  第12項:False  top30:True
+  檢查 2485 兆赫 ... 冷卻中，跳過
+  檢查 4958 臻鼎-KY ... 訊號 2: ['預估量3.1x均量', 'MACD底背離']  第12項:False  top30:True
+  檢查 2481 強茂 ... 冷卻中，跳過
+  檢查 2313 華通 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2356 英業達 ... 冷卻中，跳過
+  檢查 2367 燿華 ... 訊號 3: ['預估量3.0x均量', '外盤比65%', '掛單委買>5.0x委賣']  第12項:False  top30:True
+  檢查 2027 大成鋼 ... 訊號 2: ['預估量4.0x均量', '外盤比68%']  第12項:False  top30:True
+  檢查 1802 台玻 ... 訊號 1: ['MACD底背離']  第12項:False  top30:True
+  檢查 1605 華新 ... 冷卻中，跳過
+  檢查 3048 益登 ... 訊號 3: ['預估量6.7x均量', '外盤比77%', 'MACD頂背離']  第12項:False  top30:True
+  檢查 3673 TPK-KY ... 冷卻中，跳過
+  檢查 2883 凱基金 ... 訊號 1: ['MACD底背離']  第12項:False  top30:True
+  檢查 2317 鴻海 ... 冷卻中，跳過
+  檢查 2324 仁寶 ... 冷卻中，跳過
+  檢查 1303 南亞 ... 冷卻中，跳過
+完成
+[10:21:19] intraday_monitor 開始執行
+[top24] 3481(539K) 2344(210K) 2337(203K) 2303(180K) 2409(171K) 2408(118K) 6116(109K) 6770(83K) ...
+[vol_rank] 快取 21 分鐘前更新，top50
+  檢查 3481 群創 ... 冷卻中，跳過
+  檢查 2344 華邦電 ... 冷卻中，跳過
+  檢查 2337 旺宏 ... 冷卻中，跳過
+  檢查 2303 聯電 ... 冷卻中，跳過
+  檢查 2409 友達 ... 冷卻中，跳過
+  檢查 2408 南亞科 ... 冷卻中，跳過
+  檢查 6116 彩晶 ... 冷卻中，跳過
+  檢查 6770 力積電 ... 訊號 1: ['掛單委買>2.0x委賣']  第12項:False  top30:True
+  檢查 2377 微星 ... 訊號 2: ['預估量4.7x均量', '掛單委買>2.0x委賣']  第12項:False  top30:True
+  檢查 2485 兆赫 ... 冷卻中，跳過
+  檢查 4958 臻鼎-KY ... 訊號 2: ['預估量3.1x均量', '掛單委買>2.0x委賣']  第12項:False  top30:True
+  檢查 2356 英業達 ... 冷卻中，跳過
+  檢查 2481 強茂 ... 冷卻中，跳過
+  檢查 2313 華通 ... 訊號 1: ['掛單委買>4.0x委賣']  第12項:False  top30:True
+  檢查 2367 燿華 ... 訊號 3: ['OBV領先創高', '預估量3.0x均量', '外盤比65%']  第12項:False  top30:True
+  檢查 2027 大成鋼 ... 訊號 4: ['預估量4.0x均量', '外盤比67%', '掛單委買>10.0x委賣', 'MACD底背離']  第12項:False  top30:True
+  檢查 1802 台玻 ... 訊號 1: ['RSI5穿RSI10↑']  第12項:False  top30:True
+  檢查 1605 華新 ... 冷卻中，跳過
+  檢查 3048 益登 ... 訊號 3: ['預估量6.7x均量', '外盤比77%', 'MACD頂背離']  第12項:False  top30:True
+  檢查 3673 TPK-KY ... 冷卻中，跳過
+  檢查 2883 凱基金 ... 訊號 0: []  第12項:False  top30:True
+  檢查 2317 鴻海 ... 冷卻中，跳過
+  檢查 2324 仁寶 ... 冷卻中，跳過
+  檢查 1303 南亞 ... 冷卻中，跳過
+完成
+[10:22:24] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[10:23:24] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[10:24:24] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[10:25:26] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[10:26:27] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[10:27:27] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[10:28:27] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[10:29:28] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[10:30:28] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[10:31:28] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[10:32:28] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[10:33:29] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[10:34:29] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[10:35:29] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[10:36:29] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[10:37:30] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[10:38:30] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[10:39:30] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[10:40:30] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[10:41:31] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[10:42:31] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[10:43:31] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[10:44:31] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[10:45:32] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[10:46:32] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[10:47:32] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[10:48:32] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[10:49:33] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[10:50:33] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[10:51:33] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[10:52:34] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[10:53:34] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[10:54:34] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[10:55:35] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[10:56:35] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[10:57:35] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[10:58:35] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[10:59:36] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[11:00:36] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[11:01:36] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[11:02:36] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[11:03:37] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[11:04:37] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[11:05:37] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[11:06:37] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[11:07:38] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[11:08:38] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[11:09:38] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[11:10:38] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[11:11:39] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[11:12:39] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[11:13:39] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[11:14:39] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[11:15:39] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[11:16:40] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[11:17:40] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[11:18:40] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[11:19:40] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[11:20:41] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[11:21:41] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[11:22:41] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[11:23:41] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[11:24:42] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[11:25:42] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[11:26:42] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[11:27:42] intraday_monitor 開始執行
+無法取得成交量排行，略過
+[11:28:43] intraday_monitor 開始執行
+無法取得成交量排行，略過2026-05-14 12:34:30.908 | WARNING  | importlib._bootstrap:_call_with_frames_removed:488 - Optional: pip install shioaji[speed] or uv add shioaji --extra speed for better performance.
+[startup] intraday_monitor 啟動，初始化 Shioaji...
+Response Code: 0 | Event Code: 0 | Info: host '210.59.255.161:80', hostname '210.59.255.161:80' IP 210.59.255.161:80 (host 1 of 1) (host connection attempt 1 of 1) (total connection attempt 1 of 1) | Event: Session up
+Response Code: 200 | Event Code: 16 | Info: APISUB/V1/SYS/CONTRACT | Event: Subscribe or Unsubscribe ok
+[startup] Shioaji 暖機逾時（60s），結束
+2026-05-14 12:36:08.123 | WARNING  | importlib._bootstrap:_call_with_frames_removed:488 - Optional: pip install shioaji[speed] or uv add shioaji --extra speed for better performance.
+[startup] intraday_monitor 啟動，初始化 Shioaji...
+Response Code: 0 | Event Code: 0 | Info: host '210.59.255.161:80', hostname '210.59.255.161:80' IP 210.59.255.161:80 (host 1 of 1) (host connection attempt 1 of 1) (total connection attempt 1 of 1) | Event: Session up
+Response Code: 200 | Event Code: 16 | Info: APISUB/V1/SYS/CONTRACT | Event: Subscribe or Unsubscribe ok
+[startup] Shioaji 暖機逾時（60s），結束
