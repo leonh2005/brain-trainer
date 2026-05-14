@@ -1,24 +1,23 @@
 #!/usr/bin/env python3
 """
-盤中多方主力發動偵測器 — 每 5 分鐘執行（09:05–13:30 交易時段）
-偵測 12 項指標，推播規則：
-  - 第 12 項（MACD背離+千張K）觸發即推播
-  - 推播內容附上同時觸發的其他指標
+盤中主力發動偵測器（雙向）— 每 60 秒執行（09:05–13:30 交易時段）
+偵測 13 項指標，多方/空方均觸發推播：
+  - 需同時滿足：訊號數 ≥ SIGNAL_THRESHOLD 且含至少 1 個量能訊號
 
 指標：
-  1.  VWAP 突破（股價上穿均價線）
-  2.  OBV 領先創高（底背離）
-  3.  KD 鈍化（K值≥80 持續3根）
-  4.  MACD 0軸上金叉
-  5.  RSI5 陡峭上穿 RSI10
-  6.  預估量爆增（>近5日均量×2）
-  7.  外盤比≥65%
-  8.  委買委賣差（掛單委買>委賣×1.5）
-  9.  昨量單K（最新1分K≥昨日總量1%）【必要條件之一】
-  10. 單K倍量（最新1分K≥前5根均量×5）【必要條件之一】
-  11. 超越開盤量（最新1分K≥9:01首根量×0.9）【必要條件之一】
-  12. 最新1分K≥前5根均量×5 且 全市場成交量前30（排除ETF）【單獨觸發即推播】
-  13. MACD底背離或頂背離
+  1.  VWAP 突破↑ / 跌破↓
+  2.  OBV 領先創高 / 創低
+  3.  KD 鈍化（K≥80 / K≤20 持續3根）
+  4.  MACD 0軸上金叉 / 0軸下死叉
+  5.  RSI5 陡峭上穿 / 下穿 RSI10
+  6.  預估量爆增（>近5日均量×2）【中性，多空共用】
+  7.  外盤比≥65% / 內盤比≥65%
+  8.  委買委賣差（掛單失衡）
+  9.  昨量單K【量能，多空共用】
+  10. 單K倍量（≥前5根均量×5）【量能，多空共用】
+  11. 超越開盤量【量能，多空共用】
+  12. 量爆（≥前5根均量×5）【量能，多空共用】
+  13. MACD 底背離 / 頂背離
 """
 
 import json
@@ -37,19 +36,29 @@ warnings.filterwarnings('ignore')
 # ── 設定 ─────────────────────────────────────────────────────────────────────
 BOT_TOKEN        = "8666778924:AAFMAFKfsfx3opS2CfCBrDYMIx6vcJKACTk"
 CHAT_ID          = "7556217543"
-TOP_N            = 24                   # 監控量前 N 名
 SIGNAL_THRESHOLD = 4                    # 觸發推播的最低訊號數
-# 必要條件：9(昨量單K)、10(單K倍量)、11(超越開盤量) 其中至少 1 個須觸發
-VOL_SIGNAL_KEYS  = ['昨量', '單K', '超越開盤量']
-COOLDOWN_MINUTES = 30                   # 同一股票冷卻時間（分鐘）
+VOL_SIGNAL_KEYS  = ['昨量', '單K', '超越開盤量']  # 必要量能訊號（至少 1 個）
+COOLDOWN_MINUTES = 30
 COOLDOWN_FILE    = '/tmp/intraday_cooldown.json'
-AVG5_CACHE_FILE  = '/tmp/intraday_avg5_cache.json'  # 每日均量快取
-VOL_RANK_CACHE   = '/tmp/intraday_vol_rank_cache.json'  # 30分鐘成交量排名快取（由 vol_rank_updater.py 更新）
+AVG5_CACHE_FILE  = '/tmp/intraday_avg5_cache.json'
+
+# 固定監控清單
+WATCHLIST = {
+    '2408': '南亞科',
+    '2344': '華邦電',
+    '2317': '鴻海',
+    '2303': '聯電',
+    '6175': '立敦',
+    '1785': '光洋科',
+    '3374': '精材',
+}
 
 # 族群定義（觀察用，不計入訊號）
 SECTOR_PEERS = {
-    '2344': ['2337', '2408'],
-    '3006': ['2344', '2337'],
+    '2408': ['2344'],
+    '2344': ['2408'],
+    '2317': ['2303'],
+    '2303': ['2317'],
 }
 
 # ── Shioaji 連線 ─────────────────────────────────────────────────────────────
@@ -92,10 +101,8 @@ def get_1min_kbars(code: str) -> pd.DataFrame:
             return df
         df['ts'] = pd.to_datetime(df['ts'], unit='ns')
         df = df.set_index('ts').sort_index()
-        # resample 成 1 分鐘 OHLCV
         ohlcv = df['close'].resample('1min').ohlc()
         ohlcv['volume'] = df['volume'].resample('1min').sum()
-        # 外盤/內盤量（tick_type==1 外盤, ==2 內盤）
         ohlcv['ask_vol'] = df[df['tick_type']==1]['volume'].resample('1min').sum()
         ohlcv['bid_vol'] = df[df['tick_type']==2]['volume'].resample('1min').sum()
         ohlcv = ohlcv.dropna(subset=['open']).reset_index()
@@ -113,7 +120,7 @@ def _parse_snaps(snaps, contract_map: dict = None) -> dict:
         if contract_map and s.code in contract_map:
             name = getattr(contract_map[s.code], 'name', '')
         result[s.code] = {
-            'name':        name or s.code,
+            'name':        name or WATCHLIST.get(s.code, s.code),
             'close':       s.close,
             'chg_pct':     round(float(s.change_rate), 2),
             'total_vol':   int(s.total_volume),
@@ -138,37 +145,6 @@ def get_snapshot(codes: list) -> dict:
         return {}
 
 
-def get_top_volume_stocks(n: int = TOP_N) -> list:
-    """取即時成交量前 n 名的股票代碼（僅 TSE 上市，4碼純數字）"""
-    try:
-        api = _get_sj()
-        # 取所有 TSE 合約，分批 200 筆送 snapshots
-        all_contracts = [
-            c for c in api.Contracts.Stocks.TSE
-            if hasattr(c, 'code') and c.code.isdigit() and len(c.code) == 4
-        ]
-        cmap = {c.code: c for c in all_contracts}
-        all_snaps = {}
-        batch = 200
-        for i in range(0, len(all_contracts), batch):
-            chunk = all_contracts[i:i+batch]
-            try:
-                snaps = api.snapshots(chunk)
-                all_snaps.update(_parse_snaps(snaps, cmap))
-            except Exception:
-                pass
-        if not all_snaps:
-            return [], {}
-        # 依總量排序取前 n
-        sorted_codes = sorted(all_snaps, key=lambda c: all_snaps[c]['total_vol'], reverse=True)
-        top = sorted_codes[:n]
-        print(f'[top{n}] ' + ' '.join(f"{c}({all_snaps[c]["total_vol"]//1000}K)" for c in top[:8]) + ' ...')
-        return top, all_snaps   # 順便回傳快照節省重複呼叫
-    except Exception as e:
-        print(f'[top_vol] 失敗: {e}')
-        return [], {}
-
-
 def _load_avg5_cache() -> dict:
     try:
         if os.path.exists(AVG5_CACHE_FILE):
@@ -184,7 +160,6 @@ def _save_avg5_cache(stocks: dict):
         json.dump({'date': str(date.today()), 'stocks': stocks}, f)
 
 def get_avg5_vol(code: str, cache: dict) -> int:
-    """近 5 日均量（張），優先從快取取，快取沒有才呼叫 API"""
     if code in cache:
         return cache[code]
     try:
@@ -202,7 +177,7 @@ def get_avg5_vol(code: str, cache: dict) -> int:
         df['_d'] = df['ts'].dt.date
         daily = df.groupby('_d')['Volume'].sum().reset_index()
         result = int(round(daily['Volume'].tail(5).mean(), 0)) if len(daily) >= 5 else 0
-        cache[code] = result  # 存入快取
+        cache[code] = result
         return result
     except Exception as e:
         print(f'[avg5] {code} 失敗: {e}')
@@ -254,13 +229,14 @@ def calc_rsi(series: pd.Series, period: int) -> pd.Series:
     return 100 - (100 / (1 + rs))
 
 
-# ── 訊號偵測 ─────────────────────────────────────────────────────────────────
+# ── 訊號偵測（雙向）─────────────────────────────────────────────────────────
 
-def detect_signals(df: pd.DataFrame, snap: dict, avg5: int, yday_vol: int = 0) -> list:
-    """回傳觸發訊號名稱清單"""
-    signals = []
+def detect_signals(df: pd.DataFrame, snap: dict, avg5: int, yday_vol: int = 0) -> tuple:
+    """回傳 (多方訊號清單, 空方訊號清單)"""
+    long_sigs  = []
+    short_sigs = []
     if len(df) < 30:
-        return signals
+        return long_sigs, short_sigs
 
     vwap = calc_vwap(df)
     obv  = calc_obv(df)
@@ -270,99 +246,122 @@ def detect_signals(df: pd.DataFrame, snap: dict, avg5: int, yday_vol: int = 0) -
     rsi10 = calc_rsi(df['close'], 10)
 
     close = df['close']
-    last  = -1  # 最新一根
-    prev  = -2  # 前一根
+    last  = -1
+    prev  = -2
 
-    # 1. VWAP 突破：前一根在 VWAP 下，現在在上方
+    # 1. VWAP 突破↑ / 跌破↓
     if close.iloc[prev] < vwap.iloc[prev] and close.iloc[last] > vwap.iloc[last]:
-        signals.append('VWAP突破↑')
+        long_sigs.append('VWAP突破↑')
+    elif close.iloc[prev] > vwap.iloc[prev] and close.iloc[last] < vwap.iloc[last]:
+        short_sigs.append('VWAP跌破↓')
 
-    # 2. OBV 領先創高：OBV 創盤中新高，但股價仍未突破近30根高點
+    # 2. OBV 領先
     price_high30 = close.iloc[-30:].max()
-    obv_is_high  = obv.iloc[last] >= obv.iloc[-30:].max() * 0.99
-    price_lag    = close.iloc[last] < price_high30 * 0.995
-    if obv_is_high and price_lag:
-        signals.append('OBV領先創高')
+    price_low30  = close.iloc[-30:].min()
+    obv_slice    = obv.iloc[-30:]
+    if obv.iloc[last] >= obv_slice.max() * 0.99 and close.iloc[last] < price_high30 * 0.995:
+        long_sigs.append('OBV領先創高')
+    if obv.iloc[last] <= obv_slice.min() * 1.01 and close.iloc[last] > price_low30 * 1.005:
+        short_sigs.append('OBV領先創低')
 
-    # 3. KD 鈍化：最近 3 根 K 值均 ≥ 80
+    # 3. KD 鈍化
     if all(K.iloc[i] >= 80 for i in [-3, -2, -1]):
-        signals.append('KD鈍化≥80')
+        long_sigs.append('KD鈍化≥80')
+    if all(K.iloc[i] <= 20 for i in [-3, -2, -1]):
+        short_sigs.append('KD鈍化≤20')
 
-    # 4. MACD 0軸上金叉：DIF 上穿 MACD，且兩者均 > 0
-    macd_cross = dif.iloc[prev] < macd_sig.iloc[prev] and dif.iloc[last] > macd_sig.iloc[last]
-    if macd_cross and dif.iloc[last] > 0 and macd_sig.iloc[last] > 0:
-        signals.append('MACD0軸上金叉')
+    # 4. MACD 0軸金叉 / 死叉
+    cross_up   = dif.iloc[prev] < macd_sig.iloc[prev] and dif.iloc[last] > macd_sig.iloc[last]
+    cross_down = dif.iloc[prev] > macd_sig.iloc[prev] and dif.iloc[last] < macd_sig.iloc[last]
+    if cross_up and dif.iloc[last] > 0 and macd_sig.iloc[last] > 0:
+        long_sigs.append('MACD0軸上金叉')
+    if cross_down and dif.iloc[last] < 0 and macd_sig.iloc[last] < 0:
+        short_sigs.append('MACD0軸下死叉')
 
-    # 5. RSI5 陡峭上穿 RSI10：前一根差距<-2，現在差距>+2
+    # 5. RSI5 穿越 RSI10
     rsi_diff_prev = rsi5.iloc[prev] - rsi10.iloc[prev]
     rsi_diff_now  = rsi5.iloc[last] - rsi10.iloc[last]
     if rsi_diff_prev < -2 and rsi_diff_now > 2:
-        signals.append('RSI5穿RSI10↑')
+        long_sigs.append('RSI5穿RSI10↑')
+    if rsi_diff_prev > 2 and rsi_diff_now < -2:
+        short_sigs.append('RSI5穿RSI10↓')
 
-    # 6. 預估量爆增：從 1 分 K 累計量估算全日量 > 均量 × 2
+    # 6. 預估量爆增（中性，多空共用）
     if avg5 > 0 and len(df) >= 1:
-        today_vol = df['volume'].sum()          # 今日 1 分 K 累計量
-        elapsed_bars = max(len(df), 1)
-        est_daily_vol = today_vol / elapsed_bars * 270  # 估算全日（270根1分K）
+        today_vol = df['volume'].sum()
+        est_daily_vol = today_vol / max(len(df), 1) * 270
         if est_daily_vol > avg5 * 2:
-            signals.append(f'預估量{est_daily_vol/avg5:.1f}x均量')
+            sig = f'預估量{est_daily_vol/avg5:.1f}x均量'
+            long_sigs.append(sig)
+            short_sigs.append(sig)
 
-    # 7. 外盤比例 > 65%（主力主動買，tick_type==1 外盤）
+    # 7. 外盤比 / 內盤比
     if 'ask_vol' in df.columns and 'bid_vol' in df.columns:
         total_tick_vol = df['ask_vol'].fillna(0).sum() + df['bid_vol'].fillna(0).sum()
-        ask_ratio = df['ask_vol'].fillna(0).sum() / total_tick_vol if total_tick_vol > 0 else 0.5
-        if ask_ratio >= 0.65:
-            signals.append(f'外盤比{ask_ratio*100:.0f}%')
+        if total_tick_vol > 0:
+            ask_ratio = df['ask_vol'].fillna(0).sum() / total_tick_vol
+            if ask_ratio >= 0.65:
+                long_sigs.append(f'外盤比{ask_ratio*100:.0f}%')
+            elif ask_ratio <= 0.35:
+                short_sigs.append(f'內盤比{(1-ask_ratio)*100:.0f}%')
 
-    # 8. 委買委賣差（快照掛單，非 1 分 K 成交量，僅作輔助參考）
+    # 8. 委買 / 委賣失衡
     bv = snap.get('buy_volume', 0)
     sv = snap.get('sell_volume', 0)
     if sv > 0 and bv > sv * 1.5:
-        signals.append(f'掛單委買>{bv//sv}x委賣')
+        long_sigs.append(f'掛單委買>{bv//sv}x委賣')
     elif bv > 0 and sv == 0:
-        signals.append('掛單委買大幅領先')
+        long_sigs.append('掛單委買大幅領先')
+    if bv > 0 and sv > bv * 1.5:
+        short_sigs.append(f'掛單委賣>{sv//bv}x委買')
+    elif sv > 0 and bv == 0:
+        short_sigs.append('掛單委賣大幅領先')
 
-    cur_bar_vol = df['volume'].iloc[last]  # 最新一根 1 分 K 量
+    cur_bar_vol = df['volume'].iloc[last]
 
-    # 9. 昨量對比法：最新 1 分 K >= 昨日總量 1%
+    # 9. 昨量單K（量能，多空共用）
     if yday_vol > 0 and cur_bar_vol >= yday_vol * 0.01:
-        signals.append(f'昨量{cur_bar_vol/yday_vol*100:.1f}%單K')
+        sig = f'昨量{cur_bar_vol/yday_vol*100:.1f}%單K'
+        long_sigs.append(sig)
+        short_sigs.append(sig)
 
-    # 10. 均量倍數法：最新 1 分 K >= 前 5 根平均量 × 5
+    # 10. 均量倍數（量能，多空共用）
     prev5_avg = 0
     if len(df) >= 6:
         prev5_avg = df['volume'].iloc[-6:-1].mean()
         if prev5_avg > 0 and cur_bar_vol >= prev5_avg * 5:
-            signals.append(f'單K{cur_bar_vol/prev5_avg:.1f}x前5均')
+            sig = f'單K{cur_bar_vol/prev5_avg:.1f}x前5均'
+            long_sigs.append(sig)
+            short_sigs.append(sig)
 
-    # 11. 開盤量對比法：最新 1 分 K 接近或超越 9:01 開盤首根量
+    # 11. 超越開盤量（量能，多空共用）
     open_bar = df[df['ts'].dt.hour == 9]
     if not open_bar.empty:
         open_vol = open_bar['volume'].iloc[0]
         if open_vol > 0 and cur_bar_vol >= open_vol * 0.9:
-            signals.append(f'超越開盤量({cur_bar_vol}/{open_vol}張)')
+            sig = f'超越開盤量({cur_bar_vol}/{open_vol}張)'
+            long_sigs.append(sig)
+            short_sigs.append(sig)
 
-    # 12. 量爆+top30：最新1分K≥前5根均量×5 且 全市場成交量前30（排除ETF）
-    #     ─ top30 條件由主迴圈補判，此處只記錄量爆部分
+    # 12. 量爆（量能，多空共用）
     if prev5_avg > 0 and cur_bar_vol >= prev5_avg * 5:
-        signals.append(f'量爆{cur_bar_vol/prev5_avg:.1f}x前5均')
+        sig = f'量爆{cur_bar_vol/prev5_avg:.1f}x前5均'
+        long_sigs.append(sig)
+        short_sigs.append(sig)
 
-    # 13. MACD背離（底或頂）
-    # 底背離：股價創近20根新低，但 DIF 未創新低（主力逢低接手）
-    # 頂背離：股價創近20根新高，但 DIF 未創新高（動能衰竭警示）
+    # 13. MACD 底背離 / 頂背離
     lk = min(20, len(close) - 1)
     if lk >= 5:
         p_min = close.iloc[-lk-1:-1].min()
         p_max = close.iloc[-lk-1:-1].max()
         d_min = dif.iloc[-lk-1:-1].min()
         d_max = dif.iloc[-lk-1:-1].max()
-        bull_div = close.iloc[last] <= p_min * 1.002 and dif.iloc[last] > d_min
-        bear_div = close.iloc[last] >= p_max * 0.998 and dif.iloc[last] < d_max
-        if bull_div or bear_div:
-            div_type = '底背離' if bull_div else '頂背離'
-            signals.append(f'MACD{div_type}')
+        if close.iloc[last] <= p_min * 1.002 and dif.iloc[last] > d_min:
+            long_sigs.append('MACD底背離')
+        if close.iloc[last] >= p_max * 0.998 and dif.iloc[last] < d_max:
+            short_sigs.append('MACD頂背離')
 
-    return signals
+    return long_sigs, short_sigs
 
 
 # ── 族群連動 ─────────────────────────────────────────────────────────────────
@@ -375,8 +374,9 @@ def get_sector_status(code: str, all_snaps: dict) -> str:
     for p in peers:
         if p in all_snaps:
             chg = all_snaps[p]['chg_pct']
+            name = WATCHLIST.get(p, p)
             emoji = '🟢' if chg > 1 else ('🔴' if chg < -1 else '⬜')
-            parts.append(f"{emoji}{p} {chg:+.1f}%")
+            parts.append(f"{emoji}{p} {name} {chg:+.1f}%")
     return '  '.join(parts)
 
 
@@ -406,27 +406,23 @@ def is_in_cooldown(code: str, cd: dict) -> bool:
 
 # ── 信心分數 ─────────────────────────────────────────────────────────────────
 
-# 各訊號權重（動能/籌碼類 1.0，量能類 1.5，因量能是最直接的主力行為）
 _SIGNAL_WEIGHTS = {
-    # 動能類（來自 1 分 K 價格）
-    'VWAP突破':    1.0,
-    'OBV領先':     1.0,
-    'KD鈍化':      1.0,
-    'MACD':        1.0,
-    'RSI5':        1.0,
-    # 量能類（來自 1 分 K 成交量）
-    '預估量':      1.5,
-    '外盤比':      1.5,
-    '昨量':        1.5,
-    '單K':         1.5,
-    '超越開盤量':  1.5,
-    # 掛單類（來自快照 order book，輔助）
-    '掛單委買':    0.5,
+    'VWAP':       1.0,
+    'OBV':        1.0,
+    'KD':         1.0,
+    'MACD':       1.0,
+    'RSI5':       1.0,
+    '預估量':     1.5,
+    '外盤比':     1.5,
+    '內盤比':     1.5,
+    '昨量':       1.5,
+    '單K':        1.5,
+    '超越開盤量': 1.5,
+    '掛單委':     0.5,
 }
-_MAX_SCORE = sum(_SIGNAL_WEIGHTS.values())  # 14.0
+_MAX_SCORE = sum(_SIGNAL_WEIGHTS.values())
 
 def calc_confidence(signals: list) -> int:
-    """根據觸發的訊號計算上漲信心百分比（0~100）"""
     score = 0.0
     for sig in signals:
         for key, w in _SIGNAL_WEIGHTS.items():
@@ -436,35 +432,8 @@ def calc_confidence(signals: list) -> int:
     return min(100, round(score / _MAX_SCORE * 100))
 
 
-def load_vol_rank_top30() -> set:
-    """讀取 vol_rank_updater 的快取，回傳 top30 非 ETF 代碼集合。
-    快取超過 60 分鐘則警告，快取不存在則回傳空集合（不阻擋推播）。"""
-    try:
-        if not os.path.exists(VOL_RANK_CACHE):
-            print('[vol_rank] 快取不存在，top30 條件略過')
-            return set()
-        with open(VOL_RANK_CACHE) as f:
-            data = json.load(f)
-        updated_at = datetime.fromisoformat(data['updated_at'])
-        age_min = (datetime.now() - updated_at).total_seconds() / 60
-        top_codes = set(data.get('top_codes', []))
-        if age_min > 60:
-            print(f'[vol_rank] 快取已 {age_min:.0f} 分鐘未更新，仍沿用')
-        else:
-            print(f'[vol_rank] 快取 {age_min:.0f} 分鐘前更新，top{len(top_codes)}')
-        return top_codes
-    except Exception as e:
-        print(f'[vol_rank] 讀取失敗: {e}，top30 條件略過')
-        return set()
-
-
 def has_vol_signal(signals: list) -> bool:
     return any(any(k in s for k in VOL_SIGNAL_KEYS) for s in signals)
-
-
-def has_signal_12(signals: list) -> bool:
-    """第12項：量爆（前5根均量×5）觸發，top30 由主迴圈確認"""
-    return any('量爆' in s for s in signals)
 
 
 # ── 推播 ─────────────────────────────────────────────────────────────────────
@@ -477,25 +446,31 @@ def send_telegram(text: str):
     )
 
 
-def build_message(code: str, signals: list, snap: dict, avg5: int, sector_txt: str) -> str:
+def build_message(code: str, signals: list, snap: dict, avg5: int, sector_txt: str, direction: str) -> str:
     now_str    = datetime.now().strftime('%H:%M')
-    name       = snap.get('name', code)
+    name       = snap.get('name') or WATCHLIST.get(code, code)
     close      = snap.get('close', 0)
     chg_pct    = snap.get('chg_pct', 0)
     vol_k      = snap.get('total_vol', 0)
     confidence = calc_confidence(signals)
 
-    # 信心條
     filled = round(confidence / 10)
-    bar = '█' * filled + '░' * (10 - filled)
+    bar    = '█' * filled + '░' * (10 - filled)
+
+    if direction == 'long':
+        header    = f"🚀 <b>主力多方發動</b>｜{code} {name}｜{now_str}"
+        conf_line = f"📈 多方信心：{bar} {confidence}%"
+    else:
+        header    = f"🔻 <b>主力空方發動</b>｜{code} {name}｜{now_str}"
+        conf_line = f"📉 空方信心：{bar} {confidence}%"
 
     sig_lines   = '\n'.join(f"  ✅ {s}" for s in signals)
     sector_line = f"\n🔗 族群：{sector_txt}" if sector_txt else ''
 
     return (
-        f"🚨 <b>主力發動訊號</b>｜{code} {name}｜{now_str}\n"
+        f"{header}\n"
         f"💰 {close:.1f}（{chg_pct:+.1f}%）  量 {vol_k:,}張  均量 {avg5:,}張\n"
-        f"📈 上漲信心：{bar} {confidence}%\n"
+        f"{conf_line}\n"
         f"\n觸發 {len(signals)} 項訊號：\n{sig_lines}"
         f"{sector_line}\n"
         f"\n⚠️ 數據參考，非投資建議"
@@ -508,33 +483,25 @@ def main():
     now = datetime.now()
     print(f"[{now.strftime('%H:%M:%S')}] intraday_monitor 開始執行")
 
-    # 非交易時段略過（09:00–13:30）
     if not (now.hour == 13 and now.minute <= 30) and not (9 <= now.hour <= 12):
         print('非交易時段，略過')
         return
 
-    # 取量前 24 名 + 全市場快照（一次完成）
-    codes, all_snaps = get_top_volume_stocks(TOP_N)
-    if not codes:
-        print('無法取得成交量排行，略過')
+    codes     = list(WATCHLIST.keys())
+    all_snaps = get_snapshot(codes)
+    if not all_snaps:
+        print('無法取得快照，略過')
         return
-    # 補抓族群股快照（若不在 top24 內）
-    peer_codes = [p for c in codes for p in SECTOR_PEERS.get(c, []) if p not in all_snaps]
-    if peer_codes:
-        all_snaps.update(get_snapshot(peer_codes))
-
-    # 從快取讀取全市場成交量 top30（由 vol_rank_updater.py 每 30 分鐘更新）
-    top30_non_etf = load_vol_rank_top30()
 
     cooldown   = load_cooldown()
     avg5_cache = _load_avg5_cache()
 
     for code in codes:
-        name = all_snaps.get(code, {}).get('name', '')
+        name = WATCHLIST.get(code, code)
         print(f"  檢查 {code} {name} ...", end=' ')
 
         if is_in_cooldown(code, cooldown):
-            print(f'冷卻中，跳過')
+            print('冷卻中，跳過')
             continue
 
         snap = all_snaps.get(code)
@@ -544,22 +511,33 @@ def main():
 
         avg5     = get_avg5_vol(code, avg5_cache)
         yday_vol = snap.get('yday_vol', 0)
-        df = get_1min_kbars(code)
+        df       = get_1min_kbars(code)
 
         if df.empty:
             print('無 K 棒資料')
             continue
 
-        signals = detect_signals(df, snap, avg5, yday_vol)
-        sig12   = has_signal_12(signals) and code in top30_non_etf
-        print(f'訊號 {len(signals)}: {signals}  第12項:{sig12}  top30:{code in top30_non_etf}')
+        long_sigs, short_sigs = detect_signals(df, snap, avg5, yday_vol)
+        print(f'多方:{len(long_sigs)} 空方:{len(short_sigs)}')
 
-        if sig12:
-            sector_txt = get_sector_status(code, all_snaps)
-            msg = build_message(code, signals, snap, avg5, sector_txt)
-            send_telegram(msg)
-            cooldown[code] = datetime.now().isoformat()
-            print(f'  → 推播已送出（信心 {calc_confidence(signals)}%）')
+        # 優先推強方，同分推多方
+        candidates = []
+        if len(long_sigs) >= SIGNAL_THRESHOLD and has_vol_signal(long_sigs):
+            candidates.append(('long', long_sigs))
+        if len(short_sigs) >= SIGNAL_THRESHOLD and has_vol_signal(short_sigs):
+            candidates.append(('short', short_sigs))
+
+        if not candidates:
+            continue
+
+        # 取信心分數較高的方向
+        direction, signals = max(candidates, key=lambda x: calc_confidence(x[1]))
+        sector_txt = get_sector_status(code, all_snaps)
+        msg = build_message(code, signals, snap, avg5, sector_txt, direction)
+        send_telegram(msg)
+        cooldown[code] = datetime.now().isoformat()
+        dir_label = '多方' if direction == 'long' else '空方'
+        print(f'  → {dir_label}推播已送出（信心 {calc_confidence(signals)}%）')
 
     save_cooldown(cooldown)
     _save_avg5_cache(avg5_cache)
@@ -571,20 +549,16 @@ if __name__ == '__main__':
 
     print('[startup] intraday_monitor 啟動，初始化 Shioaji...')
     _api = _get_sj()
-    _probe_contracts = [
-        c for c in _api.Contracts.Stocks.TSE
-        if hasattr(c, 'code') and c.code.isdigit() and len(c.code) == 4
-    ]
+    _probe_contracts = [_api.Contracts.Stocks[c] for c in WATCHLIST if _api.Contracts.Stocks.get(c)]
     for _wait in range(1, 61):
         _time.sleep(1)
-        if _api.snapshots(_probe_contracts[:10]):
+        if _api.snapshots(_probe_contracts):
             print(f'[startup] Shioaji 暖機完成（{_wait}s），開始監控迴圈')
             break
     else:
         print('[startup] Shioaji 暖機逾時（60s），結束')
         exit(1)
 
-    # 持久迴圈：每 60 秒執行一次，13:35 後自動結束
     while True:
         _now = datetime.now()
         if _now.hour > 13 or (_now.hour == 13 and _now.minute > 35):
