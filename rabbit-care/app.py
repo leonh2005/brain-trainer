@@ -10,6 +10,7 @@ import csv
 import json
 import sqlite3
 import requests
+from contextlib import contextmanager
 from datetime import datetime, date
 from functools import wraps
 from flask import Flask, render_template, request, jsonify, redirect, url_for, session, Response, send_from_directory
@@ -66,10 +67,18 @@ def send_telegram(text: str):
 
 # ── 資料庫初始化 ──────────────────────────────────────────────
 
+@contextmanager
 def get_db():
     conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row
-    return conn
+    try:
+        yield conn
+        conn.commit()
+    except Exception:
+        conn.rollback()
+        raise
+    finally:
+        conn.close()
 
 
 def init_db():
