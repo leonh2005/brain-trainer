@@ -76790,3 +76790,16 @@ OSError: [Errno 24] Too many open files: '/opt/homebrew/lib/python3.14/site-pack
 127.0.0.1 - - [15/May/2026 22:46:56] "POST /api/log-action HTTP/1.1" 200 -
 127.0.0.1 - - [15/May/2026 22:52:02] "POST /api/log-action HTTP/1.1" 200 -
 127.0.0.1 - - [15/May/2026 22:57:18] "GET /login HTTP/1.0" 200 -
+127.0.0.1 - - [15/May/2026 23:54:33] "GET / HTTP/1.0" 200 -
+127.0.0.1 - - [15/May/2026 23:54:33] "[33mGET /favicon.ico HTTP/1.0[0m" 404 -
+127.0.0.1 - - [15/May/2026 23:54:37] "[33mGET /robots.txt HTTP/1.0[0m" 404 -
+127.0.0.1 - - [16/May/2026 00:12:13] "[33mGET /json/ HTTP/1.0[0m" 404 -
+127.0.0.1 - - [16/May/2026 00:12:42] "[33mGET /SDK/webLanguage HTTP/1.0[0m" 404 -
+127.0.0.1 - - [16/May/2026 01:00:06] "POST /api/log-action HTTP/1.1" 200 -
+127.0.0.1 - - [16/May/2026 01:07:08] "[33mGET /boaform/admin/formLogin?username=ec8&psd=ec8 HTTP/1.0[0m" 404 -
+127.0.0.1 - - [16/May/2026 01:44:10] "GET / HTTP/1.0" 200 -
+127.0.0.1 - - [16/May/2026 01:58:31] "GET /login HTTP/1.0" 200 -
+127.0.0.1 - - [16/May/2026 02:23:33] "[33mGET /hudson HTTP/1.0[0m" 404 -
+127.0.0.1 - - [16/May/2026 03:27:33] "GET /login HTTP/1.0" 200 -
+127.0.0.1 - - [16/May/2026 03:32:34] "GET / HTTP/1.0" 200 -
+127.0.0.1 - - [16/May/2026 03:43:10] "GET /login HTTP/1.0" 200 -
