@@ -76,3 +76,354 @@
 [2026-05-17 00:40:01] DOWN ai-compare (port 5050) — 非必要服務，不自動重啟
 [2026-05-17 00:40:01] DOWN stock_analyzer (port 5100) — 非必要服務，不自動重啟
 [2026-05-17 00:40:01] DOWN portfolio-analyzer (port 5800) — 非必要服務，不自動重啟
+[2026-05-17 00:45:01] DOWN ai-compare (port 5050) — 非必要服務，不自動重啟
+[2026-05-17 00:45:01] DOWN stock_analyzer (port 5100) — 非必要服務，不自動重啟
+[2026-05-17 00:45:01] DOWN portfolio-analyzer (port 5800) — 非必要服務，不自動重啟
+[2026-05-17 00:50:00] DOWN ai-compare (port 5050) — 非必要服務，不自動重啟
+[2026-05-17 00:50:00] DOWN stock_analyzer (port 5100) — 非必要服務，不自動重啟
+[2026-05-17 00:50:00] DOWN portfolio-analyzer (port 5800) — 非必要服務，不自動重啟
+[2026-05-17 00:55:01] DOWN ai-compare (port 5050) — 非必要服務，不自動重啟
+[2026-05-17 00:55:01] DOWN stock_analyzer (port 5100) — 非必要服務，不自動重啟
+[2026-05-17 00:55:01] DOWN portfolio-analyzer (port 5800) — 非必要服務，不自動重啟
+[2026-05-17 01:00:01] RESTART stock-screener (port 5001)
+[2026-05-17 01:00:06] FAIL stock-screener 重啟失敗
+[2026-05-17 01:00:07] RESTART rabbit-care (port 5200)
+[2026-05-17 01:00:12] FAIL rabbit-care 重啟失敗
+[2026-05-17 01:00:13] RESTART news-analyzer (port 5300)
+[2026-05-17 01:00:18] FAIL news-analyzer 重啟失敗
+[2026-05-17 01:00:19] RESTART daytrade-replay (port 5400)
+[2026-05-17 01:00:24] FAIL daytrade-replay 重啟失敗
+[2026-05-17 01:00:25] RESTART stock-screener-ai (port 5500)
+[2026-05-17 01:00:30] FAIL stock-screener-ai 重啟失敗
+[2026-05-17 01:00:31] RESTART timesfm (port 5550)
+[2026-05-17 01:00:37] FAIL timesfm 重啟失敗
+[2026-05-17 01:00:38] RESTART dashboard (port 5600)
+[2026-05-17 01:00:43] FAIL dashboard 重啟失敗
+[2026-05-17 01:00:44] RESTART dsa-webui (port 5650)
+[2026-05-17 01:00:49] FAIL dsa-webui 重啟失敗
+[2026-05-17 01:00:50] RESTART kelly-fibonacci (port 5700)
+[2026-05-17 01:00:55] FAIL kelly-fibonacci 重啟失敗
+[2026-05-17 01:00:56] RESTART dsa-backend (port 8000)
+[2026-05-17 01:01:01] FAIL dsa-backend 重啟失敗
+[2026-05-17 01:01:02] RESTART dsa-vite (port 5173)
+[2026-05-17 01:01:07] FAIL dsa-vite 重啟失敗
+[2026-05-17 01:01:08] DOWN ai-compare (port 5050) — 非必要服務，不自動重啟
+[2026-05-17 01:01:08] DOWN stock_analyzer (port 5100) — 非必要服務，不自動重啟
+[2026-05-17 01:01:08] DOWN portfolio-analyzer (port 5800) — 非必要服務，不自動重啟
+[2026-05-17 01:05:00] RESTART banini-tracker (port 3099)
+[2026-05-17 01:05:05] FAIL banini-tracker 重啟失敗
+[2026-05-17 01:05:06] DOWN ai-compare (port 5050) — 非必要服務，不自動重啟
+[2026-05-17 01:05:06] DOWN stock_analyzer (port 5100) — 非必要服務，不自動重啟
+[2026-05-17 01:05:06] DOWN portfolio-analyzer (port 5800) — 非必要服務，不自動重啟
+[2026-05-17 01:10:00] DOWN ai-compare (port 5050) — 非必要服務，不自動重啟
+[2026-05-17 01:10:00] DOWN stock_analyzer (port 5100) — 非必要服務，不自動重啟
+[2026-05-17 01:10:00] DOWN portfolio-analyzer (port 5800) — 非必要服務，不自動重啟
+[2026-05-17 01:15:00] DOWN ai-compare (port 5050) — 非必要服務，不自動重啟
+[2026-05-17 01:15:00] DOWN stock_analyzer (port 5100) — 非必要服務，不自動重啟
+[2026-05-17 01:15:00] DOWN portfolio-analyzer (port 5800) — 非必要服務，不自動重啟
+[2026-05-17 01:20:01] DOWN ai-compare (port 5050) — 非必要服務，不自動重啟
+[2026-05-17 01:20:01] DOWN stock_analyzer (port 5100) — 非必要服務，不自動重啟
+[2026-05-17 01:20:01] DOWN portfolio-analyzer (port 5800) — 非必要服務，不自動重啟
+[2026-05-17 01:25:01] DOWN ai-compare (port 5050) — 非必要服務，不自動重啟
+[2026-05-17 01:25:01] DOWN stock_analyzer (port 5100) — 非必要服務，不自動重啟
+[2026-05-17 01:25:01] DOWN portfolio-analyzer (port 5800) — 非必要服務，不自動重啟
+[2026-05-17 01:30:00] DOWN ai-compare (port 5050) — 非必要服務，不自動重啟
+[2026-05-17 01:30:00] DOWN stock_analyzer (port 5100) — 非必要服務，不自動重啟
+[2026-05-17 01:30:00] DOWN portfolio-analyzer (port 5800) — 非必要服務，不自動重啟
+[2026-05-17 01:35:01] RESTART stock-screener (port 5001)
+[2026-05-17 01:35:06] FAIL stock-screener 重啟失敗
+[2026-05-17 01:35:07] RESTART rabbit-care (port 5200)
+[2026-05-17 01:35:12] FAIL rabbit-care 重啟失敗
+[2026-05-17 01:35:13] RESTART news-analyzer (port 5300)
+[2026-05-17 01:35:18] FAIL news-analyzer 重啟失敗
+[2026-05-17 01:35:19] RESTART daytrade-replay (port 5400)
+[2026-05-17 01:35:24] FAIL daytrade-replay 重啟失敗
+[2026-05-17 01:35:26] RESTART stock-screener-ai (port 5500)
+[2026-05-17 01:35:31] FAIL stock-screener-ai 重啟失敗
+[2026-05-17 01:35:32] RESTART timesfm (port 5550)
+[2026-05-17 01:35:37] FAIL timesfm 重啟失敗
+[2026-05-17 01:35:38] RESTART dashboard (port 5600)
+[2026-05-17 01:35:44] FAIL dashboard 重啟失敗
+[2026-05-17 01:35:45] RESTART dsa-webui (port 5650)
+[2026-05-17 01:35:50] FAIL dsa-webui 重啟失敗
+[2026-05-17 01:35:51] RESTART kelly-fibonacci (port 5700)
+[2026-05-17 01:35:56] FAIL kelly-fibonacci 重啟失敗
+[2026-05-17 01:35:58] RESTART dsa-backend (port 8000)
+[2026-05-17 01:36:03] FAIL dsa-backend 重啟失敗
+[2026-05-17 01:36:04] RESTART dsa-vite (port 5173)
+[2026-05-17 01:36:09] FAIL dsa-vite 重啟失敗
+[2026-05-17 01:36:10] RESTART banini-tracker (port 3099)
+[2026-05-17 01:36:15] FAIL banini-tracker 重啟失敗
+[2026-05-17 01:36:16] DOWN ai-compare (port 5050) — 非必要服務，不自動重啟
+[2026-05-17 01:36:16] DOWN stock_analyzer (port 5100) — 非必要服務，不自動重啟
+[2026-05-17 01:36:16] DOWN portfolio-analyzer (port 5800) — 非必要服務，不自動重啟
+[2026-05-17 01:40:00] DOWN ai-compare (port 5050) — 非必要服務，不自動重啟
+[2026-05-17 01:40:00] DOWN stock_analyzer (port 5100) — 非必要服務，不自動重啟
+[2026-05-17 01:40:00] DOWN portfolio-analyzer (port 5800) — 非必要服務，不自動重啟
+[2026-05-17 01:45:00] DOWN ai-compare (port 5050) — 非必要服務，不自動重啟
+[2026-05-17 01:45:00] DOWN stock_analyzer (port 5100) — 非必要服務，不自動重啟
+[2026-05-17 01:45:00] DOWN portfolio-analyzer (port 5800) — 非必要服務，不自動重啟
+[2026-05-17 01:50:00] DOWN ai-compare (port 5050) — 非必要服務，不自動重啟
+[2026-05-17 01:50:00] DOWN stock_analyzer (port 5100) — 非必要服務，不自動重啟
+[2026-05-17 01:50:00] DOWN portfolio-analyzer (port 5800) — 非必要服務，不自動重啟
+[2026-05-17 01:55:01] DOWN ai-compare (port 5050) — 非必要服務，不自動重啟
+[2026-05-17 01:55:01] DOWN stock_analyzer (port 5100) — 非必要服務，不自動重啟
+[2026-05-17 01:55:01] DOWN portfolio-analyzer (port 5800) — 非必要服務，不自動重啟
+[2026-05-17 02:00:01] DOWN ai-compare (port 5050) — 非必要服務，不自動重啟
+[2026-05-17 02:00:01] DOWN stock_analyzer (port 5100) — 非必要服務，不自動重啟
+[2026-05-17 02:00:01] DOWN portfolio-analyzer (port 5800) — 非必要服務，不自動重啟
+[2026-05-17 02:05:01] DOWN ai-compare (port 5050) — 非必要服務，不自動重啟
+[2026-05-17 02:05:01] DOWN stock_analyzer (port 5100) — 非必要服務，不自動重啟
+[2026-05-17 02:05:01] DOWN portfolio-analyzer (port 5800) — 非必要服務，不自動重啟
+[2026-05-17 02:10:00] RESTART stock-screener (port 5001)
+[2026-05-17 02:10:05] FAIL stock-screener 重啟失敗
+[2026-05-17 02:10:06] RESTART rabbit-care (port 5200)
+[2026-05-17 02:10:11] FAIL rabbit-care 重啟失敗
+[2026-05-17 02:10:13] RESTART news-analyzer (port 5300)
+[2026-05-17 02:10:18] FAIL news-analyzer 重啟失敗
+[2026-05-17 02:10:19] RESTART daytrade-replay (port 5400)
+[2026-05-17 02:10:24] FAIL daytrade-replay 重啟失敗
+[2026-05-17 02:10:25] RESTART stock-screener-ai (port 5500)
+[2026-05-17 02:10:30] FAIL stock-screener-ai 重啟失敗
+[2026-05-17 02:10:31] RESTART timesfm (port 5550)
+[2026-05-17 02:10:36] FAIL timesfm 重啟失敗
+[2026-05-17 02:10:38] RESTART dashboard (port 5600)
+[2026-05-17 02:10:43] FAIL dashboard 重啟失敗
+[2026-05-17 02:10:44] RESTART dsa-webui (port 5650)
+[2026-05-17 02:10:49] FAIL dsa-webui 重啟失敗
+[2026-05-17 02:10:50] RESTART kelly-fibonacci (port 5700)
+[2026-05-17 02:10:55] FAIL kelly-fibonacci 重啟失敗
+[2026-05-17 02:10:56] RESTART dsa-backend (port 8000)
+[2026-05-17 02:11:02] FAIL dsa-backend 重啟失敗
+[2026-05-17 02:11:03] RESTART dsa-vite (port 5173)
+[2026-05-17 02:11:08] FAIL dsa-vite 重啟失敗
+[2026-05-17 02:11:09] RESTART banini-tracker (port 3099)
+[2026-05-17 02:11:14] FAIL banini-tracker 重啟失敗
+[2026-05-17 02:11:15] DOWN ai-compare (port 5050) — 非必要服務，不自動重啟
+[2026-05-17 02:11:15] DOWN stock_analyzer (port 5100) — 非必要服務，不自動重啟
+[2026-05-17 02:11:15] DOWN portfolio-analyzer (port 5800) — 非必要服務，不自動重啟
+[2026-05-17 02:15:00] DOWN ai-compare (port 5050) — 非必要服務，不自動重啟
+[2026-05-17 02:15:00] DOWN stock_analyzer (port 5100) — 非必要服務，不自動重啟
+[2026-05-17 02:15:00] DOWN portfolio-analyzer (port 5800) — 非必要服務，不自動重啟
+[2026-05-17 02:20:01] DOWN ai-compare (port 5050) — 非必要服務，不自動重啟
+[2026-05-17 02:20:01] DOWN stock_analyzer (port 5100) — 非必要服務，不自動重啟
+[2026-05-17 02:20:01] DOWN portfolio-analyzer (port 5800) — 非必要服務，不自動重啟
+[2026-05-17 02:25:00] DOWN ai-compare (port 5050) — 非必要服務，不自動重啟
+[2026-05-17 02:25:00] DOWN stock_analyzer (port 5100) — 非必要服務，不自動重啟
+[2026-05-17 02:25:01] DOWN portfolio-analyzer (port 5800) — 非必要服務，不自動重啟
+[2026-05-17 02:30:00] DOWN ai-compare (port 5050) — 非必要服務，不自動重啟
+[2026-05-17 02:30:00] DOWN stock_analyzer (port 5100) — 非必要服務，不自動重啟
+[2026-05-17 02:30:00] DOWN portfolio-analyzer (port 5800) — 非必要服務，不自動重啟
+[2026-05-17 02:35:00] DOWN ai-compare (port 5050) — 非必要服務，不自動重啟
+[2026-05-17 02:35:00] DOWN stock_analyzer (port 5100) — 非必要服務，不自動重啟
+[2026-05-17 02:35:00] DOWN portfolio-analyzer (port 5800) — 非必要服務，不自動重啟
+[2026-05-17 02:40:00] RESTART stock-screener (port 5001)
+[2026-05-17 02:40:05] FAIL stock-screener 重啟失敗
+[2026-05-17 02:40:06] RESTART rabbit-care (port 5200)
+[2026-05-17 02:40:11] FAIL rabbit-care 重啟失敗
+[2026-05-17 02:40:12] DOWN ai-compare (port 5050) — 非必要服務，不自動重啟
+[2026-05-17 02:40:12] DOWN stock_analyzer (port 5100) — 非必要服務，不自動重啟
+[2026-05-17 02:40:12] DOWN portfolio-analyzer (port 5800) — 非必要服務，不自動重啟
+[2026-05-17 02:45:00] RESTART news-analyzer (port 5300)
+[2026-05-17 02:45:05] FAIL news-analyzer 重啟失敗
+[2026-05-17 02:45:06] RESTART daytrade-replay (port 5400)
+[2026-05-17 02:45:11] FAIL daytrade-replay 重啟失敗
+[2026-05-17 02:45:13] RESTART stock-screener-ai (port 5500)
+[2026-05-17 02:45:18] FAIL stock-screener-ai 重啟失敗
+[2026-05-17 02:45:19] RESTART timesfm (port 5550)
+[2026-05-17 02:45:24] FAIL timesfm 重啟失敗
+[2026-05-17 02:45:25] RESTART dashboard (port 5600)
+[2026-05-17 02:45:30] FAIL dashboard 重啟失敗
+[2026-05-17 02:45:31] RESTART dsa-webui (port 5650)
+[2026-05-17 02:45:36] FAIL dsa-webui 重啟失敗
+[2026-05-17 02:45:37] RESTART kelly-fibonacci (port 5700)
+[2026-05-17 02:45:43] FAIL kelly-fibonacci 重啟失敗
+[2026-05-17 02:45:44] RESTART dsa-backend (port 8000)
+[2026-05-17 02:45:49] FAIL dsa-backend 重啟失敗
+[2026-05-17 02:45:50] RESTART dsa-vite (port 5173)
+[2026-05-17 02:45:55] FAIL dsa-vite 重啟失敗
+[2026-05-17 02:45:56] RESTART banini-tracker (port 3099)
+[2026-05-17 02:46:01] FAIL banini-tracker 重啟失敗
+[2026-05-17 02:46:02] DOWN ai-compare (port 5050) — 非必要服務，不自動重啟
+[2026-05-17 02:46:02] DOWN stock_analyzer (port 5100) — 非必要服務，不自動重啟
+[2026-05-17 02:46:02] DOWN portfolio-analyzer (port 5800) — 非必要服務，不自動重啟
+[2026-05-17 02:50:00] DOWN ai-compare (port 5050) — 非必要服務，不自動重啟
+[2026-05-17 02:50:00] DOWN stock_analyzer (port 5100) — 非必要服務，不自動重啟
+[2026-05-17 02:50:00] DOWN portfolio-analyzer (port 5800) — 非必要服務，不自動重啟
+[2026-05-17 02:55:01] DOWN ai-compare (port 5050) — 非必要服務，不自動重啟
+[2026-05-17 02:55:01] DOWN stock_analyzer (port 5100) — 非必要服務，不自動重啟
+[2026-05-17 02:55:01] DOWN portfolio-analyzer (port 5800) — 非必要服務，不自動重啟
+[2026-05-17 03:00:01] DOWN ai-compare (port 5050) — 非必要服務，不自動重啟
+[2026-05-17 03:00:01] DOWN stock_analyzer (port 5100) — 非必要服務，不自動重啟
+[2026-05-17 03:00:01] DOWN portfolio-analyzer (port 5800) — 非必要服務，不自動重啟
+[2026-05-17 03:05:00] DOWN ai-compare (port 5050) — 非必要服務，不自動重啟
+[2026-05-17 03:05:01] DOWN stock_analyzer (port 5100) — 非必要服務，不自動重啟
+[2026-05-17 03:05:01] DOWN portfolio-analyzer (port 5800) — 非必要服務，不自動重啟
+[2026-05-17 03:10:00] RESTART stock-screener (port 5001)
+[2026-05-17 03:10:05] FAIL stock-screener 重啟失敗
+[2026-05-17 03:10:06] RESTART rabbit-care (port 5200)
+[2026-05-17 03:10:11] FAIL rabbit-care 重啟失敗
+[2026-05-17 03:10:13] DOWN ai-compare (port 5050) — 非必要服務，不自動重啟
+[2026-05-17 03:10:13] DOWN stock_analyzer (port 5100) — 非必要服務，不自動重啟
+[2026-05-17 03:10:13] DOWN portfolio-analyzer (port 5800) — 非必要服務，不自動重啟
+[2026-05-17 03:15:00] RESTART news-analyzer (port 5300)
+[2026-05-17 03:15:05] FAIL news-analyzer 重啟失敗
+[2026-05-17 03:15:07] RESTART daytrade-replay (port 5400)
+[2026-05-17 03:15:12] FAIL daytrade-replay 重啟失敗
+[2026-05-17 03:15:13] RESTART stock-screener-ai (port 5500)
+[2026-05-17 03:15:18] FAIL stock-screener-ai 重啟失敗
+[2026-05-17 03:15:19] RESTART timesfm (port 5550)
+[2026-05-17 03:15:24] FAIL timesfm 重啟失敗
+[2026-05-17 03:15:25] RESTART dashboard (port 5600)
+[2026-05-17 03:15:30] FAIL dashboard 重啟失敗
+[2026-05-17 03:15:31] RESTART dsa-webui (port 5650)
+[2026-05-17 03:15:36] FAIL dsa-webui 重啟失敗
+[2026-05-17 03:15:37] RESTART kelly-fibonacci (port 5700)
+[2026-05-17 03:15:42] FAIL kelly-fibonacci 重啟失敗
+[2026-05-17 03:15:43] DOWN ai-compare (port 5050) — 非必要服務，不自動重啟
+[2026-05-17 03:15:44] DOWN stock_analyzer (port 5100) — 非必要服務，不自動重啟
+[2026-05-17 03:15:44] DOWN portfolio-analyzer (port 5800) — 非必要服務，不自動重啟
+[2026-05-17 03:20:00] RESTART dsa-backend (port 8000)
+[2026-05-17 03:20:05] FAIL dsa-backend 重啟失敗
+[2026-05-17 03:20:06] RESTART dsa-vite (port 5173)
+[2026-05-17 03:20:12] FAIL dsa-vite 重啟失敗
+[2026-05-17 03:20:13] RESTART banini-tracker (port 3099)
+[2026-05-17 03:20:18] FAIL banini-tracker 重啟失敗
+[2026-05-17 03:20:19] DOWN ai-compare (port 5050) — 非必要服務，不自動重啟
+[2026-05-17 03:20:19] DOWN stock_analyzer (port 5100) — 非必要服務，不自動重啟
+[2026-05-17 03:20:19] DOWN portfolio-analyzer (port 5800) — 非必要服務，不自動重啟
+[2026-05-17 03:25:01] DOWN ai-compare (port 5050) — 非必要服務，不自動重啟
+[2026-05-17 03:25:01] DOWN stock_analyzer (port 5100) — 非必要服務，不自動重啟
+[2026-05-17 03:25:01] DOWN portfolio-analyzer (port 5800) — 非必要服務，不自動重啟
+[2026-05-17 03:30:00] DOWN ai-compare (port 5050) — 非必要服務，不自動重啟
+[2026-05-17 03:30:00] DOWN stock_analyzer (port 5100) — 非必要服務，不自動重啟
+[2026-05-17 03:30:00] DOWN portfolio-analyzer (port 5800) — 非必要服務，不自動重啟
+[2026-05-17 03:35:01] DOWN ai-compare (port 5050) — 非必要服務，不自動重啟
+[2026-05-17 03:35:01] DOWN stock_analyzer (port 5100) — 非必要服務，不自動重啟
+[2026-05-17 03:35:01] DOWN portfolio-analyzer (port 5800) — 非必要服務，不自動重啟
+[2026-05-17 03:40:01] RESTART stock-screener (port 5001)
+[2026-05-17 03:40:06] FAIL stock-screener 重啟失敗
+[2026-05-17 03:40:07] RESTART rabbit-care (port 5200)
+[2026-05-17 03:40:12] FAIL rabbit-care 重啟失敗
+[2026-05-17 03:40:13] DOWN ai-compare (port 5050) — 非必要服務，不自動重啟
+[2026-05-17 03:40:13] DOWN stock_analyzer (port 5100) — 非必要服務，不自動重啟
+[2026-05-17 03:40:13] DOWN portfolio-analyzer (port 5800) — 非必要服務，不自動重啟
+[2026-05-17 03:45:00] RESTART news-analyzer (port 5300)
+[2026-05-17 03:45:05] FAIL news-analyzer 重啟失敗
+[2026-05-17 03:45:06] DOWN ai-compare (port 5050) — 非必要服務，不自動重啟
+[2026-05-17 03:45:06] DOWN stock_analyzer (port 5100) — 非必要服務，不自動重啟
+[2026-05-17 03:45:06] DOWN portfolio-analyzer (port 5800) — 非必要服務，不自動重啟
+[2026-05-17 03:50:00] RESTART daytrade-replay (port 5400)
+[2026-05-17 03:50:06] FAIL daytrade-replay 重啟失敗
+[2026-05-17 03:50:07] RESTART stock-screener-ai (port 5500)
+[2026-05-17 03:50:12] FAIL stock-screener-ai 重啟失敗
+[2026-05-17 03:50:13] RESTART timesfm (port 5550)
+[2026-05-17 03:50:18] FAIL timesfm 重啟失敗
+[2026-05-17 03:50:19] RESTART dashboard (port 5600)
+[2026-05-17 03:50:24] FAIL dashboard 重啟失敗
+[2026-05-17 03:50:26] RESTART dsa-webui (port 5650)
+[2026-05-17 03:50:31] FAIL dsa-webui 重啟失敗
+[2026-05-17 03:50:32] RESTART kelly-fibonacci (port 5700)
+[2026-05-17 03:50:37] FAIL kelly-fibonacci 重啟失敗
+[2026-05-17 03:50:38] RESTART dsa-backend (port 8000)
+[2026-05-17 03:50:43] FAIL dsa-backend 重啟失敗
+[2026-05-17 03:50:44] RESTART dsa-vite (port 5173)
+[2026-05-17 03:50:50] FAIL dsa-vite 重啟失敗
+[2026-05-17 03:50:51] RESTART banini-tracker (port 3099)
+[2026-05-17 03:50:56] FAIL banini-tracker 重啟失敗
+[2026-05-17 03:50:57] DOWN ai-compare (port 5050) — 非必要服務，不自動重啟
+[2026-05-17 03:50:57] DOWN stock_analyzer (port 5100) — 非必要服務，不自動重啟
+[2026-05-17 03:50:57] DOWN portfolio-analyzer (port 5800) — 非必要服務，不自動重啟
+[2026-05-17 03:55:01] DOWN ai-compare (port 5050) — 非必要服務，不自動重啟
+[2026-05-17 03:55:01] DOWN stock_analyzer (port 5100) — 非必要服務，不自動重啟
+[2026-05-17 03:55:01] DOWN portfolio-analyzer (port 5800) — 非必要服務，不自動重啟
+[2026-05-17 04:00:01] DOWN ai-compare (port 5050) — 非必要服務，不自動重啟
+[2026-05-17 04:00:01] DOWN stock_analyzer (port 5100) — 非必要服務，不自動重啟
+[2026-05-17 04:00:01] DOWN portfolio-analyzer (port 5800) — 非必要服務，不自動重啟
+[2026-05-17 04:05:00] DOWN ai-compare (port 5050) — 非必要服務，不自動重啟
+[2026-05-17 04:05:00] DOWN stock_analyzer (port 5100) — 非必要服務，不自動重啟
+[2026-05-17 04:05:00] DOWN portfolio-analyzer (port 5800) — 非必要服務，不自動重啟
+[2026-05-17 04:10:00] DOWN ai-compare (port 5050) — 非必要服務，不自動重啟
+[2026-05-17 04:10:00] DOWN stock_analyzer (port 5100) — 非必要服務，不自動重啟
+[2026-05-17 04:10:00] DOWN portfolio-analyzer (port 5800) — 非必要服務，不自動重啟
+[2026-05-17 04:15:00] RESTART stock-screener (port 5001)
+[2026-05-17 04:15:05] FAIL stock-screener 重啟失敗
+[2026-05-17 04:15:07] RESTART rabbit-care (port 5200)
+[2026-05-17 04:15:12] FAIL rabbit-care 重啟失敗
+[2026-05-17 04:15:13] RESTART news-analyzer (port 5300)
+[2026-05-17 04:15:18] FAIL news-analyzer 重啟失敗
+[2026-05-17 04:15:19] DOWN ai-compare (port 5050) — 非必要服務，不自動重啟
+[2026-05-17 04:15:19] DOWN stock_analyzer (port 5100) — 非必要服務，不自動重啟
+[2026-05-17 04:15:19] DOWN portfolio-analyzer (port 5800) — 非必要服務，不自動重啟
+[2026-05-17 04:20:01] RESTART daytrade-replay (port 5400)
+[2026-05-17 04:20:06] FAIL daytrade-replay 重啟失敗
+[2026-05-17 04:20:07] RESTART stock-screener-ai (port 5500)
+[2026-05-17 04:20:12] FAIL stock-screener-ai 重啟失敗
+[2026-05-17 04:20:13] RESTART timesfm (port 5550)
+[2026-05-17 04:20:18] FAIL timesfm 重啟失敗
+[2026-05-17 04:20:19] RESTART dashboard (port 5600)
+[2026-05-17 04:20:25] FAIL dashboard 重啟失敗
+[2026-05-17 04:20:26] RESTART dsa-webui (port 5650)
+[2026-05-17 04:20:31] FAIL dsa-webui 重啟失敗
+[2026-05-17 04:20:32] RESTART kelly-fibonacci (port 5700)
+[2026-05-17 04:20:37] FAIL kelly-fibonacci 重啟失敗
+[2026-05-17 04:20:38] RESTART dsa-backend (port 8000)
+[2026-05-17 04:20:43] FAIL dsa-backend 重啟失敗
+[2026-05-17 04:20:44] RESTART dsa-vite (port 5173)
+[2026-05-17 04:20:49] FAIL dsa-vite 重啟失敗
+[2026-05-17 04:20:51] RESTART banini-tracker (port 3099)
+[2026-05-17 04:20:56] FAIL banini-tracker 重啟失敗
+[2026-05-17 04:20:57] DOWN ai-compare (port 5050) — 非必要服務，不自動重啟
+[2026-05-17 04:20:57] DOWN stock_analyzer (port 5100) — 非必要服務，不自動重啟
+[2026-05-17 04:20:57] DOWN portfolio-analyzer (port 5800) — 非必要服務，不自動重啟
+[2026-05-17 04:25:00] DOWN ai-compare (port 5050) — 非必要服務，不自動重啟
+[2026-05-17 04:25:00] DOWN stock_analyzer (port 5100) — 非必要服務，不自動重啟
+[2026-05-17 04:25:00] DOWN portfolio-analyzer (port 5800) — 非必要服務，不自動重啟
+[2026-05-17 04:30:00] DOWN ai-compare (port 5050) — 非必要服務，不自動重啟
+[2026-05-17 04:30:00] DOWN stock_analyzer (port 5100) — 非必要服務，不自動重啟
+[2026-05-17 04:30:00] DOWN portfolio-analyzer (port 5800) — 非必要服務，不自動重啟
+[2026-05-17 04:33:59] DOWN ai-compare (port 5050) — 非必要服務，不自動重啟
+[2026-05-17 04:33:59] DOWN stock_analyzer (port 5100) — 非必要服務，不自動重啟
+[2026-05-17 04:33:59] DOWN portfolio-analyzer (port 5800) — 非必要服務，不自動重啟
+[2026-05-17 04:35:00] DOWN ai-compare (port 5050) — 非必要服務，不自動重啟
+[2026-05-17 04:35:00] DOWN stock_analyzer (port 5100) — 非必要服務，不自動重啟
+[2026-05-17 04:35:00] DOWN portfolio-analyzer (port 5800) — 非必要服務，不自動重啟
+[2026-05-17 04:40:01] DOWN ai-compare (port 5050) — 非必要服務，不自動重啟
+[2026-05-17 04:40:01] DOWN stock_analyzer (port 5100) — 非必要服務，不自動重啟
+[2026-05-17 04:40:01] DOWN portfolio-analyzer (port 5800) — 非必要服務，不自動重啟
+[2026-05-17 04:45:01] DOWN ai-compare (port 5050) — 非必要服務，不自動重啟
+[2026-05-17 04:45:01] DOWN stock_analyzer (port 5100) — 非必要服務，不自動重啟
+[2026-05-17 04:45:01] DOWN portfolio-analyzer (port 5800) — 非必要服務，不自動重啟
+[2026-05-17 04:50:00] DOWN ai-compare (port 5050) — 非必要服務，不自動重啟
+[2026-05-17 04:50:00] DOWN stock_analyzer (port 5100) — 非必要服務，不自動重啟
+[2026-05-17 04:50:00] DOWN portfolio-analyzer (port 5800) — 非必要服務，不自動重啟
+[2026-05-17 04:55:00] DOWN ai-compare (port 5050) — 非必要服務，不自動重啟
+[2026-05-17 04:55:00] DOWN stock_analyzer (port 5100) — 非必要服務，不自動重啟
+[2026-05-17 04:55:00] DOWN portfolio-analyzer (port 5800) — 非必要服務，不自動重啟
+[2026-05-17 05:00:00] DOWN ai-compare (port 5050) — 非必要服務，不自動重啟
+[2026-05-17 05:00:00] DOWN stock_analyzer (port 5100) — 非必要服務，不自動重啟
+[2026-05-17 05:00:00] DOWN portfolio-analyzer (port 5800) — 非必要服務，不自動重啟
+[2026-05-17 05:05:00] DOWN ai-compare (port 5050) — 非必要服務，不自動重啟
+[2026-05-17 05:05:00] DOWN stock_analyzer (port 5100) — 非必要服務，不自動重啟
+[2026-05-17 05:05:00] DOWN portfolio-analyzer (port 5800) — 非必要服務，不自動重啟
+[2026-05-17 05:10:01] DOWN ai-compare (port 5050) — 非必要服務，不自動重啟
+[2026-05-17 05:10:01] DOWN stock_analyzer (port 5100) — 非必要服務，不自動重啟
+[2026-05-17 05:10:01] DOWN portfolio-analyzer (port 5800) — 非必要服務，不自動重啟
+[2026-05-17 05:15:01] DOWN ai-compare (port 5050) — 非必要服務，不自動重啟
+[2026-05-17 05:15:01] DOWN stock_analyzer (port 5100) — 非必要服務，不自動重啟
+[2026-05-17 05:15:01] DOWN portfolio-analyzer (port 5800) — 非必要服務，不自動重啟
+[2026-05-17 05:20:00] DOWN ai-compare (port 5050) — 非必要服務，不自動重啟
+[2026-05-17 05:20:00] DOWN stock_analyzer (port 5100) — 非必要服務，不自動重啟
+[2026-05-17 05:20:00] DOWN portfolio-analyzer (port 5800) — 非必要服務，不自動重啟
+[2026-05-17 05:25:01] DOWN ai-compare (port 5050) — 非必要服務，不自動重啟
+[2026-05-17 05:25:01] DOWN stock_analyzer (port 5100) — 非必要服務，不自動重啟
+[2026-05-17 05:25:01] DOWN portfolio-analyzer (port 5800) — 非必要服務，不自動重啟
+[2026-05-17 05:30:01] DOWN ai-compare (port 5050) — 非必要服務，不自動重啟
+[2026-05-17 05:30:01] DOWN stock_analyzer (port 5100) — 非必要服務，不自動重啟
+[2026-05-17 05:30:01] DOWN portfolio-analyzer (port 5800) — 非必要服務，不自動重啟
+[2026-05-17 05:35:00] DOWN ai-compare (port 5050) — 非必要服務，不自動重啟
+[2026-05-17 05:35:00] DOWN stock_analyzer (port 5100) — 非必要服務，不自動重啟
+[2026-05-17 05:35:00] DOWN portfolio-analyzer (port 5800) — 非必要服務，不自動重啟
+[2026-05-17 05:40:00] DOWN ai-compare (port 5050) — 非必要服務，不自動重啟
+[2026-05-17 05:40:00] DOWN stock_analyzer (port 5100) — 非必要服務，不自動重啟
+[2026-05-17 05:40:00] DOWN portfolio-analyzer (port 5800) — 非必要服務，不自動重啟
