@@ -19,7 +19,7 @@ log() {
 }
 
 is_port_up() {
-  lsof -i ":$1" 2>/dev/null | grep -q LISTEN
+  nc -z localhost "$1" 2>/dev/null
 }
 
 check_and_restart() {
