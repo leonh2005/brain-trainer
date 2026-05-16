@@ -601,3 +601,4 @@ RR failed to accept incoming stream requests error="failed to accept QUIC stream
 [Fri May 15 08:12:49 CST 2026] 2026-05-15T00:12:49Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveP256] connIndex=0 event=0 ip=198.41.200.13
 [Fri May 15 08:12:50 CST 2026] 2026-05-15T00:12:50Z INF Registered tunnel connection connIndex=0 connection=799dd75f-8ed5-4d02-a52b-7decaf634229 event=0 ip=198.41.200.13 location=tpe01 protocol=quic
 [Fri May 15 15:59:50 CST 2026] 2026-05-15T07:59:50Z WRN Your version 2026.3.0 is outdated. We recommend upgrading it to 2026.5.0
+[Sat May 16 15:59:50 CST 2026] 2026-05-16T07:59:50Z WRN Your version 2026.3.0 is outdated. We recommend upgrading it to 2026.5.0

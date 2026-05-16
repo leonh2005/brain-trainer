@@ -9120,3 +9120,58 @@ dom.find/</<@chrome://remote/content/shared/DOM.sys.mjs:136:16
 [2026-05-16 12:11:52] SESSION_EXPIRED
 [2026-05-16 13:11:51] SESSION_EXPIRED
 [2026-05-16 14:11:50] SESSION_EXPIRED
+[2026-05-16 15:11:54] SESSION_EXPIRED
+[2026-05-16 16:11:53] SESSION_EXPIRED
+[2026-05-16 17:11:54] SESSION_EXPIRED
+ERROR: Message: Unable to locate element: //button[.//span[contains(text(),"提摩西二切(軟纖)908g")]]; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#nosuchelementexception
+Stacktrace:
+RemoteError@chrome://remote/content/shared/RemoteError.sys.mjs:8:8
+WebDriverError@chrome://remote/content/shared/webdriver/Errors.sys.mjs:202:5
+NoSuchElementError@chrome://remote/content/shared/webdriver/Errors.sys.mjs:555:5
+dom.find/</<@chrome://remote/content/shared/DOM.sys.mjs:136:16
+
+Traceback (most recent call last):
+  File "/Users/steven/CCProject/shopee_stock_check.py", line 49, in <module>
+    btn = driver.find_element(By.XPATH, f'//button[.//span[contains(text(),"{TARGET}")]]')
+  File "/Users/steven/CCProject/daytrade-replay/venv/lib/python3.14/site-packages/selenium/webdriver/remote/webdriver.py", line 823, in find_element
+    return self.execute(Command.FIND_ELEMENT, {"using": by, "value": value})["value"]
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/steven/CCProject/daytrade-replay/venv/lib/python3.14/site-packages/selenium/webdriver/remote/webdriver.py", line 450, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "/Users/steven/CCProject/daytrade-replay/venv/lib/python3.14/site-packages/selenium/webdriver/remote/errorhandler.py", line 232, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: Unable to locate element: //button[.//span[contains(text(),"提摩西二切(軟纖)908g")]]; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#nosuchelementexception
+Stacktrace:
+RemoteError@chrome://remote/content/shared/RemoteError.sys.mjs:8:8
+WebDriverError@chrome://remote/content/shared/webdriver/Errors.sys.mjs:202:5
+NoSuchElementError@chrome://remote/content/shared/webdriver/Errors.sys.mjs:555:5
+dom.find/</<@chrome://remote/content/shared/DOM.sys.mjs:136:16
+
+[2026-05-16 18:12:05] ERROR
+ERROR: Message: Unable to locate element: //button[.//span[contains(text(),"提摩西二切(軟纖)908g")]]; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#nosuchelementexception
+Stacktrace:
+RemoteError@chrome://remote/content/shared/RemoteError.sys.mjs:8:8
+WebDriverError@chrome://remote/content/shared/webdriver/Errors.sys.mjs:202:5
+NoSuchElementError@chrome://remote/content/shared/webdriver/Errors.sys.mjs:555:5
+dom.find/</<@chrome://remote/content/shared/DOM.sys.mjs:136:16
+
+Traceback (most recent call last):
+  File "/Users/steven/CCProject/shopee_stock_check.py", line 49, in <module>
+    btn = driver.find_element(By.XPATH, f'//button[.//span[contains(text(),"{TARGET}")]]')
+  File "/Users/steven/CCProject/daytrade-replay/venv/lib/python3.14/site-packages/selenium/webdriver/remote/webdriver.py", line 823, in find_element
+    return self.execute(Command.FIND_ELEMENT, {"using": by, "value": value})["value"]
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/steven/CCProject/daytrade-replay/venv/lib/python3.14/site-packages/selenium/webdriver/remote/webdriver.py", line 450, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "/Users/steven/CCProject/daytrade-replay/venv/lib/python3.14/site-packages/selenium/webdriver/remote/errorhandler.py", line 232, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: Unable to locate element: //button[.//span[contains(text(),"提摩西二切(軟纖)908g")]]; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#nosuchelementexception
+Stacktrace:
+RemoteError@chrome://remote/content/shared/RemoteError.sys.mjs:8:8
+WebDriverError@chrome://remote/content/shared/webdriver/Errors.sys.mjs:202:5
+NoSuchElementError@chrome://remote/content/shared/webdriver/Errors.sys.mjs:555:5
+dom.find/</<@chrome://remote/content/shared/DOM.sys.mjs:136:16
+
+[2026-05-16 19:12:05] ERROR
