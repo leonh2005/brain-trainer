@@ -1,0 +1,20 @@
+Traceback (most recent call last):
+  File "/Users/steven/CCProject/daily-stock-analysis/main.py", line 52, in <module>
+    from data_provider.base import canonical_stock_code
+  File "/Users/steven/CCProject/daily-stock-analysis/data_provider/__init__.py", line 34, in <module>
+    from .efinance_fetcher import EfinanceFetcher
+  File "/Users/steven/CCProject/daily-stock-analysis/data_provider/efinance_fetcher.py", line 54, in <module>
+    from patch.eastmoney_patch import eastmoney_patch
+  File "/Users/steven/CCProject/daily-stock-analysis/patch/eastmoney_patch.py", line 10, in <module>
+    from fake_useragent import UserAgent
+ModuleNotFoundError: No module named 'fake_useragent'
+Traceback (most recent call last):
+  File "/Users/steven/CCProject/daily-stock-analysis/main.py", line 52, in <module>
+    from data_provider.base import canonical_stock_code
+  File "/Users/steven/CCProject/daily-stock-analysis/data_provider/__init__.py", line 34, in <module>
+    from .efinance_fetcher import EfinanceFetcher
+  File "/Users/steven/CCProject/daily-stock-analysis/data_provider/efinance_fetcher.py", line 54, in <module>
+    from patch.eastmoney_patch import eastmoney_patch
+  File "/Users/steven/CCProject/daily-stock-analysis/patch/eastmoney_patch.py", line 10, in <module>
+    from fake_useragent import UserAgent
+ModuleNotFoundError: No module named 'fake_useragent'

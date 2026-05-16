@@ -1,37 +1,34 @@
-# Claude Handoff 20260515_1754
-> 自動生成於 2026-05-15 17:54
+# Claude Handoff 20260516_2351
+> 自動生成於 2026-05-16 23:51
 
 ## 未提交的檔案異動
 ```
 m banini-tracker
  m daily-stock-analysis
+ M daily_status_check.sh
+ M dashboard/app.py
  M gemma_work/latest.md
  M rabbit-care/rabbit.db
- D rabbit-care/static/action_screenshots/20260508_151113_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260508_151642_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260508_153224_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260508_153744_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260508_155308_sleeping.jpg
+ D rabbit-care/static/action_screenshots/20260509_205407_eating.jpg
+ D rabbit-care/static/action_screenshots/20260509_215121_eating.jpg
+ D rabbit-care/static/action_screenshots/20260509_223750_sleeping.jpg
  m stock-screener-ai
-?? rabbit-care/static/action_screenshots/20260515_134041_sleeping.jpg
-?? rabbit-care/static/action_screenshots/20260515_135216_sleeping.jpg
-?? rabbit-care/static/action_screenshots/20260515_142634_sleeping.jpg
-?? rabbit-care/static/action_screenshots/20260515_143643_sleeping.jpg
-?? rabbit-care/static/action_screenshots/20260515_144150_sleeping.jpg
-?? rabbit-care/static/action_screenshots/20260515_150600_sleeping.jpg
-?? rabbit-care/static/action_screenshots/20260515_151451_sleeping.jpg
-?? rabbit-care/static/action_screenshots/20260515_153133_sleeping.jpg
-?? rabbit-care/static/action_screenshots/20260515_154014_sleeping.jpg
-?? rabbit-care/static/action_screenshots/20260515_154842_sleeping.jpg
+?? rabbit-care/static/action_screenshots/20260516_212755_eating.jpg
+?? rabbit-care/static/action_screenshots/20260516_213255_eating.jpg
+?? rabbit-care/static/action_screenshots/20260516_231749_eating.jpg
+?? rabbit-care/static/action_screenshots/20260516_232257_eating.jpg
+?? rabbit-care/static/action_screenshots/20260516_232806_eating.jpg
+?? rabbit-care/static/action_screenshots/20260516_233310_eating.jpg
+?? scripts/service_watchdog.sh
 ```
 
 ## 近期 Commits
 ```
-6ddd89c chore: 自動同步 2026-05-15 17:54
-db25b45 chore: 自動同步 2026-05-15 13:40
-dfe359b chore: 自動同步 2026-05-15 08:40
-d3b19f1 chore: 自動同步 2026-05-15 03:40
-607652a chore: 自動同步 2026-05-14 22:40
+104a46a chore: 自動同步 2026-05-16 19:40
+9497353 chore: 自動同步 2026-05-16 14:40
+467742b chore: 自動同步 2026-05-16 09:40
+dece8a2 chore: 自動同步 2026-05-16 04:40
+b2562ae chore: 自動同步 2026-05-15 23:40
 ```
 
 ## 給 Hermes 的備註
