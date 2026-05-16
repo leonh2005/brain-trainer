@@ -1,0 +1,64 @@
+=== 巴逆逆排程已啟動 ===
+  早晨：每天 08:00（3 篇）
+  盤中：週一~五 09:07/09:37/10:07/.../13:07（1 篇）
+  追蹤更新：週一~五 15:00（預測追蹤判定）
+  盤後：每天 22:20（3 篇）
+  按 Ctrl+C 停止
+
+node:events:486
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: listen EADDRINUSE: address already in use :::3099
+    at Server.setupListenHandle [as _listen2] (node:net:2008:16)
+    at listenInCluster (node:net:2065:12)
+    at Server.listen (node:net:2170:7)
+    at serve (file:///Users/steven/CCProject/banini-tracker/node_modules/@hono/node-server/dist/index.mjs:629:10)
+    at startWebServer (file:///Users/steven/CCProject/banini-tracker/dist/web.js:184:5)
+    at file:///Users/steven/CCProject/banini-tracker/dist/index.js:290:5
+    at ModuleJob.run (node:internal/modules/esm/module_job:430:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:639:26)
+    at async Command.<anonymous> (file:///Users/steven/CCProject/banini-tracker/dist/cli.js:183:5)
+Emitted 'error' event on Server instance at:
+    at emitErrorNT (node:net:2044:8)
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+  code: 'EADDRINUSE',
+  errno: -48,
+  syscall: 'listen',
+  address: '::',
+  port: 3099
+}
+
+Node.js v25.8.1
+=== 巴逆逆排程已啟動 ===
+  早晨：每天 08:00（3 篇）
+  盤中：週一~五 09:07/09:37/10:07/.../13:07（1 篇）
+  追蹤更新：週一~五 15:00（預測追蹤判定）
+  盤後：每天 22:20（3 篇）
+  按 Ctrl+C 停止
+
+node:events:486
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: listen EADDRINUSE: address already in use :::3099
+    at Server.setupListenHandle [as _listen2] (node:net:2008:16)
+    at listenInCluster (node:net:2065:12)
+    at Server.listen (node:net:2170:7)
+    at serve (file:///Users/steven/CCProject/banini-tracker/node_modules/@hono/node-server/dist/index.mjs:629:10)
+    at startWebServer (file:///Users/steven/CCProject/banini-tracker/dist/web.js:184:5)
+    at file:///Users/steven/CCProject/banini-tracker/dist/index.js:290:5
+    at ModuleJob.run (node:internal/modules/esm/module_job:430:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:639:26)
+    at async Command.<anonymous> (file:///Users/steven/CCProject/banini-tracker/dist/cli.js:183:5)
+Emitted 'error' event on Server instance at:
+    at emitErrorNT (node:net:2044:8)
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+  code: 'EADDRINUSE',
+  errno: -48,
+  syscall: 'listen',
+  address: '::',
+  port: 3099
+}
+
+Node.js v25.8.1

@@ -14,17 +14,23 @@ app = Flask(__name__)
 VM_IP = "161.33.6.190"
 VM_SSH_KEY = os.path.expanduser("~/.ssh/oracle_line_bot")
 
-# ── 本地 Flask 服務 ──────────────────────────────────────────
+# ── 本地 Web 服務 ────────────────────────────────────────────
 LOCAL_SERVICES = [
-    {"name": "rabbit-care",       "port": 5200, "url": "http://localhost:5200", "launch_agent": True},
-    {"name": "news-analyzer",     "port": 5300, "url": "http://localhost:5300", "launch_agent": True},
-    {"name": "daytrade-replay",   "port": 5400, "url": "http://localhost:5400", "launch_agent": True},
-    {"name": "stock-screener-ai", "port": 5500, "url": "http://localhost:5500", "launch_agent": True},
-    {"name": "stock-screener",    "port": 5001, "url": "http://localhost:5001", "launch_agent": False},
-    {"name": "banini-tracker",      "port": 3099, "url": "http://localhost:3099", "launch_agent": True},
-    {"name": "kelly-fibonacci",     "port": 5700, "url": "http://localhost:5700", "launch_agent": True},
-    {"name": "daily-stock-analysis","port": 5650, "url": "http://localhost:5650", "launch_agent": True},
-    {"name": "portfolio-analyzer",  "port": 5800, "url": "http://localhost:5800", "launch_agent": False},
+    {"name": "banini-tracker",      "port": 3099, "url": "http://localhost:3099", "watchdog": True},
+    {"name": "stock-screener",      "port": 5001, "url": "http://localhost:5001", "watchdog": True},
+    {"name": "ai-compare",          "port": 5050, "url": "http://localhost:5050", "watchdog": False},
+    {"name": "stock_analyzer",      "port": 5100, "url": "http://localhost:5100", "watchdog": False},
+    {"name": "dsa-vite",            "port": 5173, "url": "http://localhost:5173", "watchdog": True},
+    {"name": "rabbit-care",         "port": 5200, "url": "http://localhost:5200", "watchdog": True},
+    {"name": "news-analyzer",       "port": 5300, "url": "http://localhost:5300", "watchdog": True},
+    {"name": "daytrade-replay",     "port": 5400, "url": "http://localhost:5400", "watchdog": True},
+    {"name": "stock-screener-ai",   "port": 5500, "url": "http://localhost:5500", "watchdog": True},
+    {"name": "timesfm",             "port": 5550, "url": "http://localhost:5550", "watchdog": True},
+    {"name": "dashboard",           "port": 5600, "url": "http://localhost:5600", "watchdog": True},
+    {"name": "dsa-webui",           "port": 5650, "url": "http://localhost:5650", "watchdog": True},
+    {"name": "kelly-fibonacci",     "port": 5700, "url": "http://localhost:5700", "watchdog": True},
+    {"name": "portfolio-analyzer",  "port": 5800, "url": "http://localhost:5800", "watchdog": False},
+    {"name": "dsa-backend",         "port": 8000, "url": "http://localhost:8000", "watchdog": True},
 ]
 
 # ── VM Flask 服務 ─────────────────────────────────────────────
@@ -97,10 +103,11 @@ LOCAL_CRONS = [
 
 # ── VM 排程任務（SSH grep journald）──────────────────────────
 VM_CRONS = [
-    {"name": "lotto",   "label": "大樂透監測",   "schedule": "週二、五 21:00", "keyword": "樂透"},
-    {"name": "steam",   "label": "Steam 免費遊戲", "schedule": "每小時",        "keyword": "steam"},
-    {"name": "food",    "label": "食物效期提醒",  "schedule": "每日12:00",      "keyword": "效期"},
-    {"name": "vm-health","label": "VM 健康檢查",  "schedule": "每日13:00",      "keyword": "健康檢查"},
+    {"name": "lotto",       "label": "大樂透監測",   "schedule": "週二、五 21:00", "keyword": "大樂透"},
+    {"name": "super-lotto", "label": "威力彩監測",   "schedule": "週一、四 21:00", "keyword": "威力彩"},
+    {"name": "steam",       "label": "Steam 免費遊戲", "schedule": "每小時",        "keyword": "steam"},
+    {"name": "food",        "label": "食物效期提醒",  "schedule": "每日12:00",      "keyword": "效期"},
+    {"name": "vm-health",   "label": "VM 健康檢查",  "schedule": "每日13:00",      "keyword": "健康檢查"},
 ]
 
 

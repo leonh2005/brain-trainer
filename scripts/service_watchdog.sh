@@ -1,0 +1,132 @@
+#!/bin/bash
+# 服務看門狗 — 每 5 分鐘由 cron 執行
+# 偵測到服務掛掉時自動重啟，並發 Telegram 通知
+
+TELEGRAM_TOKEN="8666778924:AAFMAFKfsfx3opS2CfCBrDYMIx6vcJKACTk"
+TELEGRAM_CHAT_ID="7556217543"
+LOG="/Users/steven/CCProject/logs/service_watchdog.log"
+LOCK_DIR="/tmp/watchdog_locks"
+mkdir -p "$LOCK_DIR"
+
+send_telegram() {
+  curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage" \
+    -d "chat_id=${TELEGRAM_CHAT_ID}" \
+    -d "text=$1" > /dev/null 2>&1
+}
+
+log() {
+  echo "[$(date '+%Y-%m-%d %H:%M:%S')] $1" >> "$LOG"
+}
+
+is_port_up() {
+  lsof -i ":$1" 2>/dev/null | grep -q LISTEN
+}
+
+check_and_restart() {
+  local name="$1"
+  local port="$2"
+  local cmd="$3"
+  local cwd="$4"
+  local svc_log="$5"
+  local lock_file="$LOCK_DIR/${name}.lock"
+
+  if is_port_up "$port"; then
+    # 若之前有 lock（重啟成功），清除它
+    [ -f "$lock_file" ] && rm -f "$lock_file"
+    return
+  fi
+
+  # 30 分鐘內已嘗試過 → 跳過，避免重啟風暴
+  if [ -f "$lock_file" ]; then
+    local age=$(( $(date +%s) - $(stat -f %m "$lock_file" 2>/dev/null || echo 0) ))
+    if [ "$age" -lt 1800 ]; then
+      return
+    fi
+  fi
+
+  log "RESTART $name (port $port)"
+  touch "$lock_file"
+
+  (cd "$cwd" && eval "nohup $cmd >> \"$svc_log\" 2>&1 &")
+  sleep 5
+
+  if is_port_up "$port"; then
+    log "OK $name 重啟成功"
+    send_telegram "✅ [Watchdog] $name (port $port) 已自動重啟"
+    rm -f "$lock_file"
+  else
+    log "FAIL $name 重啟失敗"
+    send_telegram "❌ [Watchdog] $name (port $port) 重啟失敗，請手動檢查"
+  fi
+}
+
+# ── 服務清單 ─────────────────────────────────────────────────────
+
+check_and_restart "stock-screener"    5001 \
+  "/opt/homebrew/bin/python3.14 app.py" \
+  "/Users/steven/CCProject/stock-screener" \
+  "/Users/steven/CCProject/logs/stock-screener.log"
+
+check_and_restart "rabbit-care"       5200 \
+  "venv/bin/python app.py" \
+  "/Users/steven/CCProject/rabbit-care" \
+  "/Users/steven/CCProject/logs/rabbit-care-web.log"
+
+check_and_restart "news-analyzer"     5300 \
+  "venv/bin/python app.py" \
+  "/Users/steven/CCProject/news-analyzer" \
+  "/Users/steven/CCProject/news-analyzer/app.log"
+
+check_and_restart "daytrade-replay"   5400 \
+  "venv/bin/python app.py" \
+  "/Users/steven/CCProject/daytrade-replay" \
+  "/Users/steven/CCProject/logs/daytrade-replay.log"
+
+check_and_restart "stock-screener-ai" 5500 \
+  "venv/bin/python app.py" \
+  "/Users/steven/CCProject/stock-screener-ai" \
+  "/Users/steven/CCProject/logs/stock-screener-ai.log"
+
+check_and_restart "timesfm"           5550 \
+  ".venv/bin/python app.py" \
+  "/Users/steven/CCProject/timesfm" \
+  "/Users/steven/CCProject/logs/timesfm.log"
+
+check_and_restart "dashboard"         5600 \
+  "/opt/homebrew/bin/python3.14 app.py" \
+  "/Users/steven/CCProject/dashboard" \
+  "/Users/steven/CCProject/dashboard/dashboard.log"
+
+check_and_restart "dsa-webui"         5650 \
+  "/opt/homebrew/bin/python3.14 main.py --webui-only --port 5650" \
+  "/Users/steven/CCProject/daily-stock-analysis" \
+  "/Users/steven/CCProject/logs/dsa-webui.log"
+
+check_and_restart "kelly-fibonacci"   5700 \
+  "venv/bin/python app.py" \
+  "/Users/steven/CCProject/kelly-fibonacci" \
+  "/Users/steven/CCProject/logs/kelly-fibonacci.log"
+
+check_and_restart "dsa-backend"       8000 \
+  "/opt/homebrew/bin/python3.14 main.py --serve" \
+  "/Users/steven/CCProject/daily-stock-analysis" \
+  "/Users/steven/CCProject/logs/dsa-backend.log"
+
+check_and_restart "dsa-vite"          5173 \
+  "npm run dev" \
+  "/Users/steven/CCProject/daily-stock-analysis/apps/dsa-web" \
+  "/Users/steven/CCProject/logs/dsa_vite.log"
+
+check_and_restart "banini-tracker"    3099 \
+  "/opt/homebrew/bin/node dist/cli.js serve --port 3099" \
+  "/Users/steven/CCProject/banini-tracker" \
+  "/Users/steven/CCProject/logs/banini-tracker.log"
+
+# ── 可選服務（目前非必要，掛了不自動重啟，只記 log）──────────────
+for name_port in "ai-compare:5050" "stock_analyzer:5100" "portfolio-analyzer:5800"; do
+  n="${name_port%%:*}"
+  p="${name_port##*:}"
+  if ! is_port_up "$p"; then
+    log "DOWN $n (port $p) — 非必要服務，不自動重啟"
+  fi
+done

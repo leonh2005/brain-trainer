@@ -8,12 +8,44 @@ touch "$FLAG"
 PASS="✅" FAIL="❌" WARN="⚠️"
 OUT=""
 
-# 1. rabbit-care (port 5200)
-if lsof -i :5200 2>/dev/null | grep -q LISTEN; then
-  OUT+="$PASS rabbit-care (port 5200)\n"
-else
-  OUT+="$FAIL rabbit-care (port 5200) — 未啟動\n"
-fi
+# 1. 本地 Web 服務
+declare -A SERVICES=(
+  [3099]="banini-tracker"
+  [5001]="stock-screener"
+  [5173]="dsa-vite"
+  [5200]="rabbit-care"
+  [5300]="news-analyzer"
+  [5400]="daytrade-replay"
+  [5500]="stock-screener-ai"
+  [5550]="timesfm"
+  [5600]="dashboard"
+  [5650]="dsa-webui"
+  [5700]="kelly-fibonacci"
+  [8000]="dsa-backend"
+)
+declare -A OPTIONAL_SERVICES=(
+  [5050]="ai-compare"
+  [5100]="stock_analyzer"
+  [5800]="portfolio-analyzer"
+)
+
+for port in $(echo "${!SERVICES[@]}" | tr ' ' '\n' | sort -n); do
+  name="${SERVICES[$port]}"
+  if lsof -i :$port 2>/dev/null | grep -q LISTEN; then
+    OUT+="$PASS $name (port $port)\n"
+  else
+    OUT+="$FAIL $name (port $port) — 未啟動\n"
+  fi
+done
+
+for port in $(echo "${!OPTIONAL_SERVICES[@]}" | tr ' ' '\n' | sort -n); do
+  name="${OPTIONAL_SERVICES[$port]}"
+  if lsof -i :$port 2>/dev/null | grep -q LISTEN; then
+    OUT+="$PASS $name (port $port)\n"
+  else
+    OUT+="$WARN $name (port $port) — 停止中\n"
+  fi
+done
 
 # 2. VM 服務
 VM_STATUS=$(ssh -i ~/.ssh/oracle_line_bot -o ConnectTimeout=6 -o BatchMode=yes ubuntu@161.33.6.190 \

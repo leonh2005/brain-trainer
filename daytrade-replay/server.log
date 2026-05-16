@@ -195797,3 +195797,18 @@ Response Code: 200 | Event Code: 16 | Info: TIC/v1/STK/*/TSE/2408 | Event: Subsc
 [33mPress CTRL+C to quit[0m
 2026-05-10 15:58:50.365 | WARNING  | importlib._bootstrap:_call_with_frames_removed:491 - Optional: pip install shioaji[speed] or uv add shioaji --extra speed for better performance.
 [auto-sub] 背景排程執行緒啟動
+127.0.0.1 - - [16/May/2026 23:41:16] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [16/May/2026 23:41:59] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [16/May/2026 23:42:43] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [16/May/2026 23:43:26] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [16/May/2026 23:44:10] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [16/May/2026 23:44:54] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [16/May/2026 23:45:37] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [16/May/2026 23:46:20] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [16/May/2026 23:47:04] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [16/May/2026 23:47:48] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [16/May/2026 23:48:31] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [16/May/2026 23:49:14] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [16/May/2026 23:49:58] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [16/May/2026 23:50:41] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [16/May/2026 23:51:25] "GET /api/health HTTP/1.1" 200 -

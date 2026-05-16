@@ -42798,3 +42798,39 @@ Port 5600 is in use by another program. Either identify and stop that program, o
  * Running on http://127.0.0.1:5600
  * Running on http://192.168.68.123:5600
 [33mPress CTRL+C to quit[0m
+127.0.0.1 - - [16/May/2026 23:41:15] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [16/May/2026 23:41:16] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+127.0.0.1 - - [16/May/2026 23:41:29] "GET /api/status HTTP/1.1" 200 -
+127.0.0.1 - - [16/May/2026 23:42:13] "GET /api/status HTTP/1.1" 200 -
+127.0.0.1 - - [16/May/2026 23:42:56] "GET /api/status HTTP/1.1" 200 -
+127.0.0.1 - - [16/May/2026 23:43:40] "GET /api/status HTTP/1.1" 200 -
+127.0.0.1 - - [16/May/2026 23:44:23] "GET /api/status HTTP/1.1" 200 -
+127.0.0.1 - - [16/May/2026 23:45:07] "GET /api/status HTTP/1.1" 200 -
+127.0.0.1 - - [16/May/2026 23:45:50] "GET /api/status HTTP/1.1" 200 -
+127.0.0.1 - - [16/May/2026 23:46:34] "GET /api/status HTTP/1.1" 200 -
+127.0.0.1 - - [16/May/2026 23:47:17] "GET /api/status HTTP/1.1" 200 -
+127.0.0.1 - - [16/May/2026 23:48:01] "GET /api/status HTTP/1.1" 200 -
+127.0.0.1 - - [16/May/2026 23:48:44] "GET /api/status HTTP/1.1" 200 -
+127.0.0.1 - - [16/May/2026 23:49:28] "GET /api/status HTTP/1.1" 200 -
+127.0.0.1 - - [16/May/2026 23:50:11] "GET /api/status HTTP/1.1" 200 -
+127.0.0.1 - - [16/May/2026 23:50:55] "GET /api/status HTTP/1.1" 200 -
+ * Serving Flask app 'app'
+ * Debug mode: off
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5600
+ * Running on http://192.168.68.123:5600
+[33mPress CTRL+C to quit[0m
+ * Serving Flask app 'app'
+ * Debug mode: off
+Address already in use
+Port 5600 is in use by another program. Either identify and stop that program, or start the server with a different port.
+127.0.0.1 - - [16/May/2026 23:51:41] "GET /api/health HTTP/1.1" 200 -
+ * Serving Flask app 'app'
+ * Debug mode: off
+Address already in use
+Port 5600 is in use by another program. Either identify and stop that program, or start the server with a different port.
+ * Serving Flask app 'app'
+ * Debug mode: off
+Address already in use
+Port 5600 is in use by another program. Either identify and stop that program, or start the server with a different port.
