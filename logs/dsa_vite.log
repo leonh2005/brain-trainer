@@ -7,12 +7,8 @@
 
   ➜  Local:   http://localhost:5173/
   ➜  Network: http://192.168.68.123:5173/
-nohup: npm: No such file or directory
-nohup: npm: No such file or directory
-nohup: npm: No such file or directory
-nohup: npm: No such file or directory
-nohup: npm: No such file or directory
-nohup: npm: No such file or directory
-nohup: npm: No such file or directory
+
+A PostCSS plugin did not pass the `from` option to `postcss.parse`. This may cause imported assets to be incorrectly transformed. If you've recently added a PostCSS plugin that raised this warning, please contact the package author to fix the issue.
+e or directory
 nohup: npm: No such file or directory
 nohup: npm: No such file or directory
