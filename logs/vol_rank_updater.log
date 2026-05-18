@@ -64,3 +64,7 @@
 2026-05-18 10:30:00.864 | WARNING  | importlib._bootstrap:_call_with_frames_removed:488 - Optional: pip install shioaji[speed] or uv add shioaji --extra speed for better performance.
 2026-05-18 11:00:01.585 | WARNING  | importlib._bootstrap:_call_with_frames_removed:488 - Optional: pip install shioaji[speed] or uv add shioaji --extra speed for better performance.
 2026-05-18 11:30:00.788 | WARNING  | importlib._bootstrap:_call_with_frames_removed:488 - Optional: pip install shioaji[speed] or uv add shioaji --extra speed for better performance.
+2026-05-18 12:00:00.945 | WARNING  | importlib._bootstrap:_call_with_frames_removed:488 - Optional: pip install shioaji[speed] or uv add shioaji --extra speed for better performance.
+2026-05-18 12:30:01.483 | WARNING  | importlib._bootstrap:_call_with_frames_removed:488 - Optional: pip install shioaji[speed] or uv add shioaji --extra speed for better performance.
+2026-05-18 13:00:01.451 | WARNING  | importlib._bootstrap:_call_with_frames_removed:488 - Optional: pip install shioaji[speed] or uv add shioaji --extra speed for better performance.
+2026-05-18 13:30:01.798 | WARNING  | importlib._bootstrap:_call_with_frames_removed:488 - Optional: pip install shioaji[speed] or uv add shioaji --extra speed for better performance.
