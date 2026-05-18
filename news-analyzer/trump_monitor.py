@@ -9,7 +9,7 @@ import json
 import logging
 import os
 import re
-from datetime import datetime, time
+from datetime import datetime, time, timedelta, timezone
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
@@ -117,10 +117,17 @@ def article_id(title: str, url: str) -> str:
 
 def fetch_articles() -> list[dict]:
     articles = []
+    cutoff = datetime.now(timezone.utc) - timedelta(hours=3)
     for url in RSS_FEEDS:
         try:
             feed = feedparser.parse(url)
             for e in feed.entries:
+                pub = e.get("published_parsed") or e.get("updated_parsed")
+                if pub:
+                    pub_dt = datetime(*pub[:6], tzinfo=timezone.utc)
+                    if pub_dt < cutoff:
+                        logger.debug(f"跳過舊文章：{e.title[:50]}")
+                        continue
                 articles.append({
                     "id": article_id(e.title, e.get("link", "")),
                     "title": e.title,
