@@ -21,6 +21,8 @@ load_dotenv(os.path.join(os.path.dirname(os.path.abspath(__file__)), '.env'))
 
 app = Flask(__name__)
 app.secret_key = os.getenv('SECRET_KEY', 'rabbit-care-secret-2026')
+app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
+app.config['SESSION_COOKIE_SECURE'] = False
 DB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'rabbit.db')
 UPLOAD_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'uploads')
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
