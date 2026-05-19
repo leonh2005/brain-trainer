@@ -37,6 +37,7 @@ TW_HOLDINGS = [
     {
         "code": "2327",
         "name": "國巨",
+        "individual": True,
         "queries": [
             "國巨 MLCC",
             "Yageo passive components",
@@ -45,6 +46,7 @@ TW_HOLDINGS = [
     {
         "code": "2408",
         "name": "南亞科",
+        "individual": True,
         "queries": [
             "南亞科 DRAM",
             "Nanya Technology memory",
@@ -54,6 +56,7 @@ TW_HOLDINGS = [
     {
         "code": "1785",
         "name": "光洋科",
+        "individual": True,
         "queries": [
             "光洋科",
             "Koway precious metal recycling",
@@ -62,6 +65,7 @@ TW_HOLDINGS = [
     {
         "code": "2317",
         "name": "鴻海",
+        "individual": True,
         "queries": [
             "鴻海 AI伺服器",
             "Foxconn Hon Hai server",
@@ -191,7 +195,96 @@ def deduplicate(articles: list[dict]) -> list[dict]:
     return kept
 
 
-def analyze(holding: dict, articles: list[dict]) -> dict:
+def _parse_lots(v: str) -> int:
+    """TWSE 股數字串轉張數（÷1000），支援負數。"""
+    v = v.replace(",", "").strip()
+    if not v or v in ("-", "--"):
+        return 0
+    try:
+        return int(v) // 1000
+    except ValueError:
+        return 0
+
+
+def fetch_institutional_data(stock_code: str) -> dict | None:
+    """TWSE T86：三大法人買賣超（張數），往前找最近三個交易日。"""
+    for days_back in range(3):
+        date = (datetime.now() - timedelta(days=days_back)).strftime("%Y%m%d")
+        url = (
+            "https://www.twse.com.tw/rwd/zh/fund/T86"
+            f"?response=json&date={date}&selectType=ALLBUT0999"
+        )
+        try:
+            r = requests.get(url, timeout=10)
+            payload = r.json()
+            if payload.get("stat") != "OK" or not payload.get("data"):
+                continue
+            for row in payload["data"]:
+                if row[0].strip() == stock_code:
+                    return {
+                        "date":         payload.get("date", date),
+                        "foreign_lots": _parse_lots(row[4]),
+                        "trust_lots":   _parse_lots(row[10]),
+                        "total_lots":   _parse_lots(row[18]),
+                    }
+        except Exception as e:
+            logger.warning("T86 失敗 %s day=%s：%s", stock_code, date, e)
+    return None
+
+
+def fetch_big_holder_ratio(stock_code: str) -> float | None:
+    """集保股權分散表：大戶（400張=400,000股以上，級距 12-15）持股比率 (%)。"""
+    today = datetime.now()
+    days_back = (today.weekday() - 4) % 7   # 0 若今天是週五
+    last_friday = (today - timedelta(days=days_back)).strftime("%Y%m%d")
+
+    try:
+        r = requests.post(
+            "https://www.tdcc.com.tw/smWeb/QryStockAjax.do",
+            data={"scaDt": last_friday, "stkNo": stock_code, "qryType": "1"},
+            headers={
+                "Content-Type": "application/x-www-form-urlencoded",
+                "Referer": "https://www.tdcc.com.tw/portal/zh/smWeb/qryStock",
+                "User-Agent": "Mozilla/5.0",
+            },
+            timeout=10,
+        )
+        # 嘗試 JSON
+        try:
+            data = r.json()
+            rows = data.get("aaData") or data.get("rows") or []
+            big_pct = sum(
+                float(str(row[3]).replace(",", ""))
+                for row in rows
+                if isinstance(row, list) and len(row) >= 4
+                and 12 <= int(str(row[0]).strip()) <= 15
+            )
+            return round(big_pct, 2) if big_pct > 0 else None
+        except (ValueError, KeyError):
+            pass
+
+        # fallback：HTML 解析
+        import re as _re
+        big_pct = 0.0
+        for m in _re.finditer(
+            r'<td[^>]*>(\d+)</td>(?:.*?<td[^>]*>){2}.*?<td[^>]*>([\d,]+\.\d+)</td>',
+            r.text, _re.DOTALL
+        ):
+            try:
+                if 12 <= int(m.group(1)) <= 15:
+                    big_pct += float(m.group(2).replace(",", ""))
+            except ValueError:
+                continue
+        return round(big_pct, 2) if big_pct > 0 else None
+
+    except Exception as e:
+        logger.warning("集保大戶資料失敗 %s：%s", stock_code, e)
+    return None
+
+
+def analyze(holding: dict, articles: list[dict],
+            institutional: dict | None = None,
+            big_holder: float | None = None) -> dict:
     """用 DeepSeek V3 分析一個持倉的多空情緒。"""
     if not articles:
         return {
@@ -203,11 +296,29 @@ def analyze(holding: dict, articles: list[dict]) -> dict:
 
     news_list = "\n".join(f"- {a['title']}" for a in articles)
 
+    # 法人買賣超補充段落
+    inst_section = ""
+    if institutional:
+        def fmt_lots(n: int) -> str:
+            sign = "+" if n >= 0 else ""
+            return f"{sign}{n:,}張"
+        inst_section = (
+            f"\n\n【法人買賣超（{institutional['date']}）】\n"
+            f"外資：{fmt_lots(institutional['foreign_lots'])}　"
+            f"投信：{fmt_lots(institutional['trust_lots'])}　"
+            f"合計：{fmt_lots(institutional['total_lots'])}"
+        )
+
+    # 大戶持股率補充段落
+    bh_section = ""
+    if big_holder is not None:
+        bh_section = f"\n\n【集保大戶（400張以上）持股比率】{big_holder:.2f}%"
+
     prompt = f"""你是專業台灣投資組合分析師。以下是「{holding['name']}（{holding['code']}）」過去 24 小時的相關新聞標題（共 {len(articles)} 則）：
 
-{news_list}
+{news_list}{inst_section}{bh_section}
 
-請根據這些新聞對此標的的影響做出多空判斷。
+請根據上述資訊（新聞＋法人動向＋大戶持股）對此標的做出多空判斷。
 
 回傳純 JSON，格式：
 {{
@@ -267,10 +378,16 @@ def send_telegram(text: str):
 
 # ── 推播邏輯 ───────────────────────────────────────────────────────────────────
 
+def _is_monday() -> bool:
+    from zoneinfo import ZoneInfo
+    return datetime.now(ZoneInfo("Asia/Taipei")).weekday() == 0
+
+
 def run_session(holdings: list[dict], session_label: str):
     """執行一個時段（台股 or 美股）的分析與推播。"""
     logger.info("開始分析 %s 時段，共 %d 個標的", session_label, len(holdings))
 
+    monday = _is_monday()
     results = []
     lines = []
 
@@ -279,7 +396,18 @@ def run_session(holdings: list[dict], session_label: str):
         deduped  = deduplicate(articles)
         logger.info("%s：抓到 %d 則，去重後 %d 則", h["name"], len(articles), len(deduped))
 
-        result = analyze(h, deduped)
+        institutional = None
+        big_holder    = None
+        if h.get("individual"):
+            institutional = fetch_institutional_data(h["code"])
+            if institutional:
+                logger.info("%s 法人買賣超：%+d 張", h["name"], institutional["total_lots"])
+            if monday:
+                big_holder = fetch_big_holder_ratio(h["code"])
+                if big_holder is not None:
+                    logger.info("%s 大戶持股率：%.2f%%", h["name"], big_holder)
+
+        result = analyze(h, deduped, institutional, big_holder)
         results.append(result)
 
         emoji = direction_emoji(result["direction"])

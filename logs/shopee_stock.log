@@ -9897,3 +9897,8 @@ Traceback (most recent call last):
 selenium.common.exceptions.WebDriverException: Message: Process unexpectedly closed with status 1
 
 [2026-05-19 22:11:43] 
+[2026-05-19 23:12:03] SOLD_OUT
+[2026-05-20 00:11:59] SOLD_OUT
+[2026-05-20 01:11:55] SOLD_OUT
+[2026-05-20 02:11:55] SOLD_OUT
+[2026-05-20 03:11:57] SOLD_OUT
