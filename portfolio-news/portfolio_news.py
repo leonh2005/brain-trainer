@@ -282,6 +282,28 @@ def fetch_big_holder_ratio(stock_code: str) -> float | None:
     return None
 
 
+def fetch_foreign_holding(stock_code: str) -> float | None:
+    """TWSE MI_QFIIS：外資及陸資持股比率 (%)，最新一日，best-effort。"""
+    try:
+        r = requests.get(
+            "https://www.twse.com.tw/rwd/zh/fund/MI_QFIIS"
+            "?response=json&selectType=MS",
+            timeout=8,
+        )
+        payload = r.json()
+        if payload.get("stat") != "OK" or not payload.get("data"):
+            return None
+        for row in payload["data"]:
+            if str(row[0]).strip() == stock_code:
+                try:
+                    return float(str(row[7]).replace("%", "").replace(",", "").strip())
+                except ValueError:
+                    return None
+    except Exception as e:
+        logger.debug("MI_QFIIS 失敗 %s：%s", stock_code, e)
+    return None
+
+
 def analyze(holding: dict, articles: list[dict],
             institutional: dict | None = None,
             big_holder: float | None = None) -> dict:
@@ -308,6 +330,8 @@ def analyze(holding: dict, articles: list[dict],
             f"投信：{fmt_lots(institutional['trust_lots'])}　"
             f"合計：{fmt_lots(institutional['total_lots'])}"
         )
+        if institutional.get("foreign_pct") is not None:
+            inst_section += f"\n外資持股比率：{institutional['foreign_pct']:.2f}%"
 
     # 大戶持股率補充段落
     bh_section = ""
@@ -402,6 +426,12 @@ def run_session(holdings: list[dict], session_label: str):
             institutional = fetch_institutional_data(h["code"])
             if institutional:
                 logger.info("%s 法人買賣超：%+d 張", h["name"], institutional["total_lots"])
+            foreign_pct = fetch_foreign_holding(h["code"])
+            if foreign_pct is not None:
+                logger.info("%s 外資持股：%.2f%%", h["name"], foreign_pct)
+                if institutional is None:
+                    institutional = {}
+                institutional["foreign_pct"] = foreign_pct
             if monday:
                 big_holder = fetch_big_holder_ratio(h["code"])
                 if big_holder is not None:
