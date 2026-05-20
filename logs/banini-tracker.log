@@ -298,3 +298,73 @@ Node.js v25.8.1
 === 巴逆逆反指標追蹤器 [早晨] 2026/5/20 上午8:00:00 ===
 
 沒有新貼文，結束
+
+=== 巴逆逆反指標追蹤器 [盤中] 2026/5/20 上午9:07:00 ===
+
+沒有新貼文，結束
+
+=== 巴逆逆反指標追蹤器 [盤中] 2026/5/20 上午9:37:00 ===
+
+沒有新貼文，結束
+[2026-05-20T02:07:01.975Z] [PID: 45275] [32m[NODE-CRON][32m [33m[WARN][0m missed execution at Wed May 20 2026 10:07:00 GMT+0800 (Taiwan Standard Time)! Possible blocking IO or high CPU user at the same process used by node-cron.
+
+=== 巴逆逆反指標追蹤器 [盤中] 2026/5/20 上午10:37:00 ===
+
+[DB] 已存入 1 篇貼文
+發現 1 篇新貼文（FB: 1, 今日: 1）
+
+--- [FB] [今天] 2026/5/20 上午9:43:36 [photo] ---
+現在每天一早起來資產就少一隻超霸(⊙ω⊙)
+我981是不是真的該賣， 然後轉去中華電
+重點是我的個股今天還是崩啊啊啊啊！昨天跌停今天繼續崩啊啊啊(/;´༎ຶД༎ຶ`)/～
+
+現在停損也是一隻Aqua terra沒了啊啊
+媒體: https://scontent-dfw5-1.xx.fbcdn.net/v/t39.30808-6/702065370_1551803639637559_8666036189649092399_n.jpg?stp=cp6_dst-jpg_p180x540_tt6&_nc_cat=110&ccb=1-7&_nc_sid=833d8c&_nc_ohc=VkWpTQP-p4IQ7kNvwEEwLkz&_nc_oc=Ado2lpBFonwb7ys8cTjYDWzj4-PWTdOhXTki-L5Yb9e2zfqUVEepVCEO06VB6b26uGA&_nc_zt=23&_nc_ht=scontent-dfw5-1.xx&_nc_gid=N3NfkVaawrVYrCXJv0oUSA&_nc_ss=72289&oh=00_Af64PAcyYTt5MpfTvZMqrEiERqcBM_PXTgZOhCZG077ZOQ&oe=6A13031A
+讚: 867 | 回覆: 186 | https://www.facebook.com/DieWithoutBang/posts/pfbid02Zn2RpuU4CTWBRtQeLtDCoN2y8DVEM9UNbRbSWLbvFpCrvkMJyYvRNZLKZ2VrfozLl
+
+[AI] 開始反指標分析...
+[LLM] 第 1 次失敗: 401 Invalid API Key，5s 後重試...
+[AI] 開始反指標分析...
+[LLM] 第 2 次失敗: 401 Invalid API Key，10s 後重試...
+[AI] 開始反指標分析...
+[LLM] 第 3 次失敗: 401 Invalid API Key，已達重試上限
+[LLM] 分析失敗，將推送純貼文摘要: 401 Invalid API Key
+========================================
+  巴逆逆反指標分析報告
+========================================
+
+摘要: （LLM 分析失敗，以下為原始貼文）
+（本批貼文與投資無關）
+
+--- 僅供娛樂參考，不構成投資建議 ---
+
+[Telegram] 通知已發送
+結果已存檔: /Users/steven/CCProject/banini-tracker/data/report-2026-05-20T023728.json
+=== 巴逆逆排程已啟動 ===
+  早晨：每天 08:00（3 篇）
+  盤中：週一~五 09:07/09:37/10:07/.../13:07（1 篇）
+  追蹤更新：週一~五 15:00（預測追蹤判定）
+  盤後：每天 22:20（3 篇）
+  按 Ctrl+C 停止
+
+[Web] 設定頁面已啟動: http://localhost:3099
+
+=== 巴逆逆反指標追蹤器 [盤中] 2026/5/20 上午11:07:00 ===
+
+沒有新貼文，結束
+
+=== 巴逆逆反指標追蹤器 [盤中] 2026/5/20 上午11:37:00 ===
+
+沒有新貼文，結束
+
+=== 巴逆逆反指標追蹤器 [盤中] 2026/5/20 下午12:07:00 ===
+
+沒有新貼文，結束
+
+=== 巴逆逆反指標追蹤器 [盤中] 2026/5/20 下午12:37:00 ===
+
+沒有新貼文，結束
+
+=== 巴逆逆反指標追蹤器 [盤中] 2026/5/20 下午1:07:00 ===
+
+沒有新貼文，結束
