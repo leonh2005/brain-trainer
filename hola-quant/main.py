@@ -106,12 +106,14 @@ async def _send_morning_report(
     total   = stats.get("total", 0)
 
     # 情緒判斷
+    spread = round(bullish - bearish, 1)
+    spread_str = f"{'▲' if spread >= 0 else '▼'}{abs(spread)}%"
     if bullish >= NEWS_BULLISH_THRESHOLD:
-        sentiment = f"📈 偏多（{bullish}%）"
+        sentiment = f"📈 偏多（多{bullish}% 空{bearish}% 差{spread_str}）"
     elif bearish >= NEWS_BEARISH_THRESHOLD:
-        sentiment = f"📉 偏空（{bearish}%）"
+        sentiment = f"📉 偏空（多{bullish}% 空{bearish}% 差{spread_str}）"
     else:
-        sentiment = f"😐 中性（多{bullish}% 空{bearish}%）"
+        sentiment = f"😐 中性（多{bullish}% 空{bearish}% 差{spread_str}）"
 
     # 最近 git log（最近 3 次分析記錄）
     try:

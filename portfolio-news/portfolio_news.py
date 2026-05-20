@@ -391,11 +391,21 @@ def overall_direction(results: list[dict]) -> str:
 
 def send_telegram(text: str):
     try:
-        requests.post(
+        r = requests.post(
             f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage",
             data={"chat_id": CHAT_ID, "text": text, "parse_mode": "HTML"},
             timeout=10,
         )
+        if not r.ok:
+            logger.error("Telegram 推播失敗 %s：%s", r.status_code, r.text[:200])
+            # HTML parse 失敗時，改用純文字重試
+            r2 = requests.post(
+                f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage",
+                data={"chat_id": CHAT_ID, "text": text, "parse_mode": ""},
+                timeout=10,
+            )
+            if not r2.ok:
+                logger.error("純文字重試也失敗 %s：%s", r2.status_code, r2.text[:200])
     except Exception as e:
         logger.error("Telegram 推播失敗：%s", e)
 
