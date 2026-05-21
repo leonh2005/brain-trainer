@@ -316,7 +316,15 @@ def analyze(holding: dict, articles: list[dict],
             "push": False,
         }
 
-    news_list = "\n".join(f"- {a['title']}" for a in articles)
+    now_utc = datetime.now(timezone.utc)
+    def _age_str(a: dict) -> str:
+        if not a.get("pub"):
+            return ""
+        delta = now_utc - a["pub"]
+        h = int(delta.total_seconds() // 3600)
+        return f"（{h}小時前）" if h < 24 else f"（{delta.days}天前）"
+
+    news_list = "\n".join(f"- {a['title']}{_age_str(a)}" for a in articles)
 
     # 法人買賣超補充段落
     inst_section = ""
@@ -455,7 +463,14 @@ def run_session(holdings: list[dict], session_label: str):
         summary = result["summary"]
         key = result.get("key_factor", "")
 
-        line = f"{emoji} <b>{h['name']}（{h['code']}）</b> {score}/10\n"
+        # 最新一篇文章的發布時間
+        news_age = ""
+        if deduped and deduped[0].get("pub"):
+            delta = datetime.now(timezone.utc) - deduped[0]["pub"]
+            hrs = int(delta.total_seconds() // 3600)
+            news_age = f" <i>（最新：{hrs}小時前）</i>" if hrs < 24 else f" <i>（最新：{delta.days}天前）</i>"
+
+        line = f"{emoji} <b>{h['name']}（{h['code']}）</b> {score}/10{news_age}\n"
         line += f"   {summary}"
         if key:
             line += f"\n   └ {key}"
