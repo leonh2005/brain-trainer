@@ -590,3 +590,47 @@ Node.js v25.8.1
 
 沒有新貼文，結束
 [tracker] 沒有追蹤中的預測
+
+=== 巴逆逆反指標追蹤器 [盤後] 2026/5/21 下午10:20:00 ===
+
+[DB] 已存入 2 篇貼文
+發現 2 篇新貼文（FB: 2, 今日: 2）
+
+--- [FB] [今天] 2026/5/21 下午5:04:26 [text] ---
+對不起大家
+我不行了
+負面的情緒揮不掉：）
+今天賠錢只是其中一件事
+一堆不好的事情一直在發生
+這個世界很美好，錯的是我
+
+生命很美好喔！
+說這句請meta不要亂判
+讚: 13140 | 回覆: 1158 | https://www.facebook.com/DieWithoutBang/posts/pfbid0d95PrZbuNs9rdPcG9nDtNQkyDM5ptSkGaRvpcHMiEmFSe3o3RKzYfWZMXZth1izal
+
+--- [FB] [今天] 2026/5/21 下午1:45:10 [text] ---
+收盤了
+跌停了
+在谷底了⋯
+不，還會再往下吧
+爛泥一般
+讚: 7234 | 回覆: 800 | https://www.facebook.com/DieWithoutBang/posts/pfbid0zfTUhFyfZwKrKsB2xhnVwB7CmEv7FxbYu23s8WTHJxRtrkqAYj5MAymSmk5NS5jsl
+
+[AI] 開始反指標分析...
+[LLM] 第 1 次失敗: 401 Invalid API Key，5s 後重試...
+[AI] 開始反指標分析...
+[LLM] 第 2 次失敗: 401 Invalid API Key，10s 後重試...
+[AI] 開始反指標分析...
+[LLM] 第 3 次失敗: 401 Invalid API Key，已達重試上限
+[LLM] 分析失敗，將推送純貼文摘要: 401 Invalid API Key
+========================================
+  巴逆逆反指標分析報告
+========================================
+
+摘要: （LLM 分析失敗，以下為原始貼文）
+（本批貼文與投資無關）
+
+--- 僅供娛樂參考，不構成投資建議 ---
+
+[Telegram] 通知已發送
+結果已存檔: /Users/steven/CCProject/banini-tracker/data/report-2026-05-21T142029.json
