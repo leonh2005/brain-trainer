@@ -155,10 +155,11 @@ def fetch_news(queries: list[str], hours: int = 24) -> list[dict]:
             feed = feedparser.parse(url)
             for e in feed.entries:
                 pub = e.get("published_parsed") or e.get("updated_parsed")
-                if pub:
-                    pub_dt = datetime(*pub[:6], tzinfo=timezone.utc)
-                    if pub_dt < cutoff:
-                        continue
+                if not pub:
+                    continue  # 無日期的文章跳過，無法確認是否為近期
+                pub_dt = datetime(*pub[:6], tzinfo=timezone.utc)
+                if pub_dt < cutoff:
+                    continue
                 aid = hashlib.md5(e.title.encode()).hexdigest()
                 if aid in seen_ids:
                     continue
@@ -166,7 +167,7 @@ def fetch_news(queries: list[str], hours: int = 24) -> list[dict]:
                 articles.append({
                     "title": e.title,
                     "url": e.get("link", ""),
-                    "pub": pub_dt if pub else None,
+                    "pub": pub_dt,
                 })
                 if len(articles) >= MAX_FETCH:
                     break
@@ -174,7 +175,7 @@ def fetch_news(queries: list[str], hours: int = 24) -> list[dict]:
             logger.warning("RSS 抓取失敗：%s — %s", query, ex)
 
     # 按時間排序（最新優先）
-    articles.sort(key=lambda a: a["pub"] or datetime.min.replace(tzinfo=timezone.utc), reverse=True)
+    articles.sort(key=lambda a: a["pub"], reverse=True)
     return articles
 
 

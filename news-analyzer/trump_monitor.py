@@ -16,7 +16,7 @@ from zoneinfo import ZoneInfo
 import feedparser
 import requests
 from dotenv import load_dotenv
-from groq import Groq
+from google import genai
 
 load_dotenv(Path(__file__).parent / ".env")
 
@@ -138,15 +138,21 @@ def fetch_articles() -> list[dict]:
     return articles
 
 
-def groq_call(messages: list, max_tokens=200) -> dict:
-    client = Groq(api_key=os.getenv("GROQ_API_KEY"))
-    resp = client.chat.completions.create(
-        model="llama-3.3-70b-versatile",
-        messages=messages,
-        temperature=0.1,
-        max_tokens=max_tokens,
+def gemini_call(messages: list, max_tokens=1000) -> dict:
+    client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
+    prompt = "\n\n".join(
+        m["content"] for m in messages if m.get("role") in ("system", "user")
     )
-    text = re.sub(r"```[a-z]*\n?", "", resp.choices[0].message.content.strip()).strip("`").strip()
+    resp = client.models.generate_content(
+        model="gemini-2.5-flash",
+        contents=prompt,
+        config=genai.types.GenerateContentConfig(
+            temperature=0.1,
+            max_output_tokens=max_tokens,
+            thinking_config=genai.types.ThinkingConfig(thinking_budget=0),
+        ),
+    )
+    text = re.sub(r"```(?:json)?\n?", "", resp.text.strip()).strip("`").strip()
     return json.loads(text)
 
 
@@ -172,9 +178,9 @@ def send_weekly_summary(new_articles: list[dict]):
 
     news_list = "\n".join(f"- {a['title']}" for a in new_articles[:60])
     try:
-        result = groq_call(
+        result = gemini_call(
             [{"role": "user", "content": WEEKLY_PROMPT.format(news_list=news_list)}],
-            max_tokens=600,
+            max_tokens=2000,
         )
         overall_emoji = {"偏多": "📈", "偏空": "📉", "中性": "➡️"}.get(result["overall"], "❓")
         key_lines = "\n".join(
@@ -239,7 +245,7 @@ def run():
     for a in new_articles:
         seen.add(a["id"])
         try:
-            result = groq_call([
+            result = gemini_call([
                 {"role": "system", "content": SINGLE_PROMPT},
                 {"role": "user", "content": f"新聞標題：{a['title']}"},
             ])
