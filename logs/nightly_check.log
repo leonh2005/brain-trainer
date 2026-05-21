@@ -1631,3 +1631,37 @@ VM 的 journalctl 最近 5 條 error 均為 SSH kex_exchange_identification（�
 
 [修復動作]
 - VM stock-screener 嘗試重啟
+【半夜巡邏報告】2026-05-22 02:00
+
+[Mac 服務]
+✅ rabbit-care (port 5200)
+✅ stock-screener (port 5001)
+✅ youtube-monitor
+📄 今日摘要：0 支
+
+[Oracle VM]
+✅ 連線正常
+💾 磁碟：15% 使用
+🧠 記憶體：可用 376Mi
+✅ tele-bot
+❌ stock-screener (VM)
+
+[修復動作]
+- VM stock-screener 嘗試重啟
+【半夜巡邏報告】2026-05-22 02:00
+
+[Mac 服務]
+✅ rabbit-care (port 5200)
+✅ stock-screener (port 5001)
+✅ youtube-monitor
+📄 今日摘要：0 支
+
+[Oracle VM]
+✅ 連線正常
+💾 磁碟：15% 使用
+🧠 記憶體：可用 376Mi
+✅ tele-bot
+❌ stock-screener (VM)
+
+[修復動作]
+- VM stock-screener 嘗試重啟
