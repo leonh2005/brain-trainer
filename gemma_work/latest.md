@@ -1,34 +1,37 @@
-# Claude Handoff 20260520_2311
-> 自動生成於 2026-05-20 23:11
+# Claude Handoff 20260521_0851
+> 自動生成於 2026-05-21 08:51
 
 ## 未提交的檔案異動
 ```
 m banini-tracker
  m daily-stock-analysis
- M gemma_work/latest.md
+ M market-dashboard/cape_cache.json
+ M market-dashboard/fg_history.json
+ M market-dashboard/index.html
+ M market-dashboard/sp_state.json
+ M news-analyzer/trump_seen.json
+ M portfolio-news/portfolio_news.py
  M rabbit-care/rabbit.db
- D rabbit-care/static/action_screenshots/20260513_180339_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260513_180900_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260513_181415_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260513_181910_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260513_194519_eating.jpg
+ D rabbit-care/static/action_screenshots/20260514_052312_sleeping.jpg
+ D rabbit-care/static/action_screenshots/20260514_055916_sleeping.jpg
+ D rabbit-care/static/action_screenshots/20260514_071730_eating.jpg
+ D rabbit-care/static/action_screenshots/20260514_073706_eating.jpg
+ D rabbit-care/static/action_screenshots/20260514_074714_eating.jpg
+ D rabbit-care/static/action_screenshots/20260514_075233_sleeping.jpg
+ D rabbit-care/static/action_screenshots/20260514_075736_sleeping.jpg
+ D rabbit-care/static/action_screenshots/20260514_080239_sleeping.jpg
+ D rabbit-care/static/action_screenshots/20260514_080815_sleeping.jpg
+ D rabbit-care/static/action_screenshots/20260514_081942_sleeping.jpg
  m stock-screener-ai
-?? rabbit-care/static/action_screenshots/20260520_184605_drinking.jpg
-?? rabbit-care/static/action_screenshots/20260520_191408_sleeping.jpg
-?? rabbit-care/static/action_screenshots/20260520_194309_drinking.jpg
-?? rabbit-care/static/action_screenshots/20260520_222559_eating.jpg
-?? rabbit-care/static/action_screenshots/20260520_225138_sleeping.jpg
-?? rabbit-care/static/action_screenshots/20260520_225649_sleeping.jpg
-?? rabbit-care/static/action_screenshots/20260520_230152_eating.jpg
 ```
 
 ## 近期 Commits
 ```
+41b5d14 chore: 自動同步 2026-05-21 04:40
+549a40c chore: 自動同步 2026-05-20 23:40
 55d0c08 chore: 自動同步 2026-05-20 18:40
 5364fef chore: 自動同步 2026-05-20 13:40
 d667564 chore: 自動同步 2026-05-20 08:40
-b1c6239 chore: 自動同步 2026-05-20 03:40
-5f48a2b chore: 自動同步 2026-05-19 登出
 ```
 
 ## 給 Hermes 的備註
