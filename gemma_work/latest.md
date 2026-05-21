@@ -1,37 +1,32 @@
-# Claude Handoff 20260521_0851
-> 自動生成於 2026-05-21 08:51
+# Claude Handoff 20260521_1123
+> 自動生成於 2026-05-21 11:23
 
 ## 未提交的檔案異動
 ```
 m banini-tracker
  m daily-stock-analysis
- M market-dashboard/cape_cache.json
- M market-dashboard/fg_history.json
+ M gemma_work/latest.md
+ M market-dashboard/generate.py
  M market-dashboard/index.html
  M market-dashboard/sp_state.json
+ M news-analyzer/trump_monitor.py
  M news-analyzer/trump_seen.json
  M portfolio-news/portfolio_news.py
  M rabbit-care/rabbit.db
- D rabbit-care/static/action_screenshots/20260514_052312_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260514_055916_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260514_071730_eating.jpg
- D rabbit-care/static/action_screenshots/20260514_073706_eating.jpg
- D rabbit-care/static/action_screenshots/20260514_074714_eating.jpg
- D rabbit-care/static/action_screenshots/20260514_075233_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260514_075736_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260514_080239_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260514_080815_sleeping.jpg
- D rabbit-care/static/action_screenshots/20260514_081942_sleeping.jpg
+ D rabbit-care/static/action_screenshots/20260514_093438_eating.jpg
  m stock-screener-ai
+?? rabbit-care/static/action_screenshots/20260521_094946_eating.jpg
+?? rabbit-care/static/action_screenshots/20260521_095957_sleeping.jpg
+?? rabbit-care/static/action_screenshots/20260521_103751_drinking.jpg
 ```
 
 ## 近期 Commits
 ```
+e386154 chore: 自動同步 2026-05-21 09:40
 41b5d14 chore: 自動同步 2026-05-21 04:40
 549a40c chore: 自動同步 2026-05-20 23:40
 55d0c08 chore: 自動同步 2026-05-20 18:40
 5364fef chore: 自動同步 2026-05-20 13:40
-d667564 chore: 自動同步 2026-05-20 08:40
 ```
 
 ## 給 Hermes 的備註

@@ -348,18 +348,23 @@ def fetch_fear_greed():
 
 def generate_html(vix_data, sp_data, ma_data, sp_hist_high, fg_data, tw_data, tw_ma_data, tw_hist_high, cape_data, recession, generated_at):
     vix_current = vix_data[-1]["y"] if vix_data else 0
-    sp_current = sp_data[-1]["y"] if sp_data else 0
-    ma_current = ma_data[-1]["y"] if ma_data else 0
-    sp_vs_ma = trunc2((sp_current / ma_current - 1) * 100) if ma_current else 0
-    sp_vs_high = trunc2((sp_current / sp_hist_high - 1) * 100) if sp_hist_high else 0
-    fg_score = fg_data["score"]
-    fg_rating = fg_data["rating"]
-    tw_current = tw_data[-1]["y"] if tw_data else 0
+    vix_date    = vix_data[-1]["x"] if vix_data else "N/A"
+    sp_current  = sp_data[-1]["y"] if sp_data else 0
+    sp_date     = sp_data[-1]["x"] if sp_data else "N/A"
+    ma_current  = ma_data[-1]["y"] if ma_data else 0
+    sp_vs_ma    = trunc2((sp_current / ma_current - 1) * 100) if ma_current else 0
+    sp_vs_high  = trunc2((sp_current / sp_hist_high - 1) * 100) if sp_hist_high else 0
+    fg_score    = fg_data["score"]
+    fg_rating   = fg_data["rating"]
+    fg_date     = fg_data["history"][-1]["x"] if fg_data.get("history") else "N/A"
+    tw_current  = tw_data[-1]["y"] if tw_data else 0
+    tw_date     = tw_data[-1]["x"] if tw_data else "N/A"
     tw_ma_current = tw_ma_data[-1]["y"] if tw_ma_data else 0
-    tw_vs_ma = trunc2((tw_current / tw_ma_current - 1) * 100) if tw_ma_current else 0
-    tw_vs_high = trunc2((tw_current / tw_hist_high - 1) * 100) if tw_hist_high else 0
+    tw_vs_ma    = trunc2((tw_current / tw_ma_current - 1) * 100) if tw_ma_current else 0
+    tw_vs_high  = trunc2((tw_current / tw_hist_high - 1) * 100) if tw_hist_high else 0
 
-    cape_current  = cape_data[-1]["y"] if cape_data else 0
+    cape_current = cape_data[-1]["y"] if cape_data else 0
+    cape_date    = cape_data[-1]["x"] if cape_data else "N/A"
 
     # 衰退指標
     r_unemp = recession["unrate"]
@@ -383,6 +388,10 @@ def generate_html(vix_data, sp_data, ma_data, sp_hist_high, fg_data, tw_data, tw
     cpi_val    = f"{r_cpi['current']:.2f}%" if r_cpi["current"] else "N/A"
     ism_val    = f"{r_ism['current']:.1f}" if r_ism["current"] else "N/A"
     yc_val     = f"{r_yc['current']:+.2f}%" if r_yc["current"] is not None else "N/A"
+    unemp_date = r_unemp["data"][-1]["x"] if r_unemp.get("data") else "N/A"
+    cpi_date   = r_cpi["data"][-1]["x"] if r_cpi.get("data") else "N/A"
+    ism_date   = r_ism["data"][-1]["x"] if r_ism.get("data") else "N/A"
+    yc_date    = r_yc["data"][-1]["x"] if r_yc.get("data") else "N/A"
     cape_hist_avg = 17.0  # 長期歷史均值
     cape_vs_avg = trunc2((cape_current / cape_hist_avg - 1) * 100) if cape_hist_avg else 0
 
@@ -677,6 +686,7 @@ def generate_html(vix_data, sp_data, ma_data, sp_hist_high, fg_data, tw_data, tw
     <div class="card-sub">
       {'<b>極度恐慌 &gt;30</b>' if vix_current > 30 else ('<b>警戒 20–30</b>' if vix_current > 20 else '<b>低波動 &lt;20</b>')}
       &nbsp;·&nbsp; 標普 500 30日隱含波動率
+      <br><span style="opacity:0.5">{vix_date}</span>
     </div>
   </div>
 
@@ -686,6 +696,7 @@ def generate_html(vix_data, sp_data, ma_data, sp_hist_high, fg_data, tw_data, tw
     <div class="card-sub">
       <b>{fg_label}</b>
       &nbsp;·&nbsp; 0=極恐 / 100=極貪
+      <br><span style="opacity:0.5">{fg_date}</span>
     </div>
   </div>
 
@@ -696,6 +707,7 @@ def generate_html(vix_data, sp_data, ma_data, sp_hist_high, fg_data, tw_data, tw
       歷史均值：{cape_hist_avg}
       &nbsp;·&nbsp; <b>{'▲' if cape_vs_avg > 0 else '▼'} {abs(cape_vs_avg):.0f}%</b>
       &nbsp;·&nbsp; {'<b>高估警戒 &gt;35</b>' if cape_current > 35 else ('<b>偏高 25–35</b>' if cape_current > 25 else '<b>合理 &lt;25</b>')}
+      <br><span style="opacity:0.5">{cape_date}</span>
     </div>
   </div>
 
@@ -705,7 +717,7 @@ def generate_html(vix_data, sp_data, ma_data, sp_hist_high, fg_data, tw_data, tw
     <div class="card-sub">
       200MA：{ma_current:,.2f}
       &nbsp;·&nbsp; <b>{'▲' if sp_vs_ma > 0 else '▼'} {abs(sp_vs_ma)}%</b>
-      <br><span style="font-size:0.7rem;opacity:0.6">歷史高點：{sp_hist_high:,.2f}&nbsp;&nbsp;<b style="opacity:1">{sp_vs_high:.1f}%</b></span>
+      <br><span style="font-size:0.7rem;opacity:0.6">歷史高點：{sp_hist_high:,.2f}&nbsp;&nbsp;<b style="opacity:1">{sp_vs_high:.1f}%</b>&nbsp;&nbsp;{sp_date}</span>
     </div>
   </div>
 
@@ -715,7 +727,7 @@ def generate_html(vix_data, sp_data, ma_data, sp_hist_high, fg_data, tw_data, tw
     <div class="card-sub">
       200MA：{tw_ma_current:,.0f}
       &nbsp;·&nbsp; <b style="color:{'#ff4757' if tw_vs_ma > 0 else '#00d68f'}">{'▲' if tw_vs_ma > 0 else '▼'} {abs(tw_vs_ma)}%</b>
-      <br><span style="font-size:0.7rem;opacity:0.6">歷史高點：{tw_hist_high:,.0f}&nbsp;&nbsp;<b style="opacity:1">{tw_vs_high:.1f}%</b></span>
+      <br><span style="font-size:0.7rem;opacity:0.6">歷史高點：{tw_hist_high:,.0f}&nbsp;&nbsp;<b style="opacity:1">{tw_vs_high:.1f}%</b>&nbsp;&nbsp;{tw_date}</span>
     </div>
   </div>
 
@@ -731,6 +743,7 @@ def generate_html(vix_data, sp_data, ma_data, sp_hist_high, fg_data, tw_data, tw
     <div class="card-sub">
       連升：<b>{r_unemp['consec_months']} 個月</b>
       &nbsp;·&nbsp; {'<b>警示 ≥3個月</b>' if r_unemp["signal"] else '正常'}
+      <br><span style="opacity:0.5">{unemp_date}</span>
     </div>
   </div>
   <div class="card" style="--accent: {cpi_color}">
@@ -739,6 +752,7 @@ def generate_html(vix_data, sp_data, ma_data, sp_hist_high, fg_data, tw_data, tw
     <div class="card-sub">
       {'<b>🔺 重新加速</b>' if r_cpi["signal"] else '趨勢未加速'}
       &nbsp;·&nbsp; CPILFESL
+      <br><span style="opacity:0.5">{cpi_date}</span>
     </div>
   </div>
   <div class="card" style="--accent: {ism_color}">
@@ -747,6 +761,7 @@ def generate_html(vix_data, sp_data, ma_data, sp_hist_high, fg_data, tw_data, tw
     <div class="card-sub">
       低於50：<b>{r_ism['below50_months']} 個月</b>
       &nbsp;·&nbsp; {'<b>收縮警示</b>' if r_ism["signal"] else '擴張'}
+      <br><span style="opacity:0.5">{ism_date if ism_date != "N/A" else "暫無資料"}</span>
     </div>
   </div>
   <div class="card" style="--accent: {yc_color}">
@@ -755,6 +770,7 @@ def generate_html(vix_data, sp_data, ma_data, sp_hist_high, fg_data, tw_data, tw
     <div class="card-sub">
       {'<b>倒掛／接近零</b>' if r_yc["signal"] else '正斜率'}
       &nbsp;·&nbsp; ^TNX − ^IRX
+      <br><span style="opacity:0.5">{yc_date}</span>
     </div>
   </div>
 </div>
