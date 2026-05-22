@@ -16,3 +16,18 @@ telebot/
 # Added by code-review-graph
 .code-review-graph/
 timesfm/model/*.safetensors
+
+# 截圖與圖片
+*.png
+*.jpg
+*.jpeg
+*.gif
+
+# Log 檔案
+*.log
+
+# 壓縮檔
+*.zip
+
+# Superpowers brainstorm logs
+.superpowers/
