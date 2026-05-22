@@ -1,37 +1,37 @@
-# Claude Handoff 20260521_2239
-> 自動生成於 2026-05-21 22:39
+# Claude Handoff 20260522_2228
+> 自動生成於 2026-05-22 22:28
 
 ## 未提交的檔案異動
 ```
-D __pycache__/claude_cycle_monitor.cpython-314.pyc
- D ai-compare/__pycache__/browser.cpython-314.pyc
- m banini-tracker
- m daily-stock-analysis
- D finmind/__pycache__/daytrade_alert.cpython-314.pyc
- D finmind/__pycache__/swing_alert.cpython-314.pyc
- D rabbit-care/__pycache__/app.cpython-314.pyc
- D rabbit-care/__pycache__/motion_watcher.cpython-314.pyc
- M rabbit-care/rabbit.db
- D rabbit-care/static/action_screenshots/20260514_200149_eating.jpg
- D rabbit-care/tests/__pycache__/test_action_api.cpython-314-pytest-9.0.2.pyc
- D rabbit-care/tests/__pycache__/test_analyzer.cpython-314-pytest-9.0.2.pyc
- m stock-screener-ai
- D stock-screener/__pycache__/fugle_client.cpython-314.pyc
- D stock-screener/__pycache__/indicators.cpython-314.pyc
- D stock-screener/__pycache__/shioaji_client.cpython-314.pyc
-?? rabbit-care/static/action_screenshots/20260521_194334_sleeping.jpg
-?? rabbit-care/static/action_screenshots/20260521_194905_sleeping.jpg
-?? rabbit-care/static/action_screenshots/20260521_195427_sleeping.jpg
-?? rabbit-care/static/action_screenshots/20260521_200434_sleeping.jpg
+M .gitignore
+ D TradingAgents-main/.env.example
+ D TradingAgents-main/.gitignore
+ D TradingAgents-main/LICENSE
+ D TradingAgents-main/README.md
+ D TradingAgents-main/cli/__init__.py
+ D TradingAgents-main/cli/announcements.py
+ D TradingAgents-main/cli/config.py
+ D TradingAgents-main/cli/main.py
+ D TradingAgents-main/cli/models.py
+ D TradingAgents-main/cli/static/welcome.txt
+ D TradingAgents-main/cli/stats_handler.py
+ D TradingAgents-main/cli/utils.py
+ D TradingAgents-main/eval_results/3006.TW/TradingAgentsStrategy_logs/full_states_log_2026-04-17.json
+ D TradingAgents-main/eval_results/DXYZ/TradingAgentsStrategy_logs/full_states_log_2026-04-21.json
+ D TradingAgents-main/main.py
+ D TradingAgents-main/pyproject.toml
+ D TradingAgents-main/requirements.txt
+ D TradingAgents-main/results/0050/2026-03-24/reports/fundamentals_report.md
+ D TradingAgents-main/results/0050/2026-03-24/reports/investment_plan.md
 ```
 
 ## 近期 Commits
 ```
-42c6352 chore: 自動同步 2026-05-21 19:40
-6ce6b1f chore: 自動同步 2026-05-21 14:40
-e386154 chore: 自動同步 2026-05-21 09:40
-41b5d14 chore: 自動同步 2026-05-21 04:40
-549a40c chore: 自動同步 2026-05-20 23:40
+f4d15a0 chore: 清理 git 追蹤的垃圾檔案
+90b0021 chore: trigger GitHub Pages rebuild
+b0394bd chore: 自動同步 2026-05-22 20:40
+d2a3d18 chore: 自動同步 2026-05-22 15:40
+94b33f8 chore: 自動同步 2026-05-22 10:40
 ```
 
 ## 給 Hermes 的備註
