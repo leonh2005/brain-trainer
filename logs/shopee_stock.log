@@ -10018,3 +10018,8 @@ selenium.common.exceptions.WebDriverException: Message: Process unexpectedly clo
 
 [2026-05-22 04:11:41] 
 [2026-05-22 05:11:59] SOLD_OUT
+[2026-05-22 06:11:59] SOLD_OUT
+[2026-05-22 07:12:01] SOLD_OUT
+[2026-05-22 08:11:58] SOLD_OUT
+[2026-05-22 09:12:01] SOLD_OUT
+[2026-05-22 10:12:04] SOLD_OUT

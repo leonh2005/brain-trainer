@@ -52,3 +52,19 @@
 2026-05-21 08:30:26,969 INFO 國泰永續高股息：抓到 8 則，去重後 7 則
 2026-05-21 08:30:27,179 INFO HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
 2026-05-21 08:30:28,966 INFO 台股開盤前 時段推播完成
+2026-05-22 08:30:02,322 INFO 開始分析 台股開盤前 時段，共 6 個標的
+2026-05-22 08:30:03,169 INFO 國巨：抓到 5 則，去重後 5 則
+2026-05-22 08:30:07,191 INFO 國巨 法人買賣超：-1567 張
+2026-05-22 08:30:08,377 INFO HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-05-22 08:30:10,725 INFO 南亞科：抓到 35 則，去重後 20 則
+2026-05-22 08:30:12,916 INFO 南亞科 法人買賣超：-7168 張
+2026-05-22 08:30:13,466 INFO HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-05-22 08:30:15,204 INFO 光洋科：抓到 1 則，去重後 1 則
+2026-05-22 08:30:23,497 INFO HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-05-22 08:30:25,733 INFO 鴻海：抓到 4 則，去重後 4 則
+2026-05-22 08:30:27,888 INFO 鴻海 法人買賣超：+24872 張
+2026-05-22 08:30:28,668 INFO HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-05-22 08:30:30,426 INFO 富邦台50：抓到 0 則，去重後 0 則
+2026-05-22 08:30:31,410 INFO 國泰永續高股息：抓到 10 則，去重後 10 則
+2026-05-22 08:30:31,601 INFO HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-05-22 08:30:33,624 INFO 台股開盤前 時段推播完成
