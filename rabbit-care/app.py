@@ -712,6 +712,7 @@ def send_daily_summary():
         for r in reminders:
             lines.append(f"  {r['icon']} {r['text']}")
 
+    lines.append('\n🔗 <a href="http://161.33.6.190:8080">兔子照護系統</a>')
     send_telegram('\n'.join(lines))
 
 
