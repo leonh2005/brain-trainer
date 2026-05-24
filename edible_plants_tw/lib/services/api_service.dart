@@ -3,8 +3,8 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import '../models/plant.dart';
 
-// 改成你的 Mac 本機 IP（手機和 Mac 要在同一個 Wi-Fi）
-const String kBaseUrl = 'http://192.168.68.123:5600';
+// 手機和 Mac 需在同一個 Wi-Fi
+const String kBaseUrl = 'http://192.168.68.123:5800';
 
 class ApiService {
   static final _client = http.Client();

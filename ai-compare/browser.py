@@ -5,6 +5,7 @@ No API keys needed; copies session from user's real Firefox profile.
 import threading
 import time
 import os
+import subprocess
 
 # Persistent profile dir — login sessions are saved here permanently
 SESSION_DIR = os.path.expanduser("~/.ai-arena-ff-session")
@@ -106,16 +107,24 @@ class BrowserManager:
     def start(self):
         if self._started:
             return
+        # 清掉殘留 lock，避免「Firefox is already open」錯誤
+        for lock in [os.path.join(SESSION_DIR, f) for f in ('lock', '.parentlock')]:
+            try:
+                os.remove(lock)
+            except FileNotFoundError:
+                pass
         from playwright.sync_api import sync_playwright
         self._pw = sync_playwright().start()
 
         self._context = self._pw.firefox.launch_persistent_context(
             SESSION_DIR,
             headless=False,
-            executable_path="/Applications/Firefox.app/Contents/MacOS/firefox",
             firefox_user_prefs={
                 "browser.startup.page": 0,
                 "browser.startup.homepage": "about:blank",
+                "layers.acceleration.disabled": True,
+                "gfx.webrender.all": False,
+                "media.hardware-video-decoding.enabled": False,
             },
         )
         self._started = True
@@ -182,6 +191,10 @@ class BrowserManager:
         # Navigate to home (login page) if we haven't loaded anything yet
         if page.url in ("", "about:blank"):
             page.goto(SERVICES[sid]["home_url"])
+        # 把 Firefox 視窗帶到最前面（macOS）
+        subprocess.Popen(['osascript', '-e',
+            'tell application "Nightly" to activate'],
+            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
     # ── Send message ───────────────────────────────────────────────────────
 
