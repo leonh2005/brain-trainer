@@ -87,6 +87,19 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('新增植物')),
+      // 儲存按鈕固定在底部，不隨鍵盤消失
+      bottomNavigationBar: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+          child: FilledButton(
+            onPressed: _loading ? null : _submit,
+            style: FilledButton.styleFrom(minimumSize: const Size.fromHeight(48)),
+            child: _loading
+                ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
+                : const Text('儲存'),
+          ),
+        ),
+      ),
       body: Form(
         key: _formKey,
         child: ListView(
@@ -95,6 +108,7 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
             TextFormField(
               controller: _nameCtrl,
               decoration: const InputDecoration(labelText: '植物名稱 *'),
+              textInputAction: TextInputAction.done,
               validator: (v) => (v == null || v.trim().isEmpty) ? '請輸入名稱' : null,
             ),
             const SizedBox(height: 12),
@@ -152,13 +166,7 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
                 ),
               ),
             ],
-            const SizedBox(height: 24),
-            FilledButton(
-              onPressed: _loading ? null : _submit,
-              child: _loading
-                  ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
-                  : const Text('儲存'),
-            ),
+            const SizedBox(height: 8),
           ],
         ),
       ),
