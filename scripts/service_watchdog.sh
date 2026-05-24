@@ -87,10 +87,6 @@ check_and_restart "stock-screener-ai" 5500 \
   "/Users/steven/CCProject/stock-screener-ai" \
   "/Users/steven/CCProject/logs/stock-screener-ai.log"
 
-check_and_restart "timesfm"           5550 \
-  ".venv/bin/python app.py" \
-  "/Users/steven/CCProject/timesfm" \
-  "/Users/steven/CCProject/logs/timesfm.log"
 
 check_and_restart "dashboard"         5600 \
   "/opt/homebrew/bin/python3.14 app.py" \
@@ -108,19 +104,15 @@ check_and_restart "kelly-fibonacci"   5700 \
   "/Users/steven/CCProject/logs/kelly-fibonacci.log"
 
 check_and_restart "dsa-backend"       8000 \
-  "/opt/homebrew/bin/python3.14 main.py --serve" \
+  "venv/bin/python main.py --serve" \
   "/Users/steven/CCProject/daily-stock-analysis" \
   "/Users/steven/CCProject/logs/dsa-backend.log"
 
 check_and_restart "dsa-vite"          5173 \
-  "npm run dev" \
+  "/opt/homebrew/bin/npm run dev" \
   "/Users/steven/CCProject/daily-stock-analysis/apps/dsa-web" \
   "/Users/steven/CCProject/logs/dsa_vite.log"
 
-check_and_restart "banini-tracker"    3099 \
-  "/opt/homebrew/bin/node dist/cli.js serve --port 3099" \
-  "/Users/steven/CCProject/banini-tracker" \
-  "/Users/steven/CCProject/logs/banini-tracker.log"
 
 # ── 可選服務（目前非必要，掛了不自動重啟，只記 log）──────────────
 for name_port in "ai-compare:5050" "stock_analyzer:5100" "portfolio-analyzer:5800"; do
