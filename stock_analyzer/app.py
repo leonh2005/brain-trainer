@@ -4,8 +4,13 @@ from flask import Flask, render_template, jsonify, request
 import yfinance as yf
 import pandas as pd
 import requests
+from openai import OpenAI
 
 app = Flask(__name__)
+
+DEEPSEEK_API_KEY = "sk-49f9f0a651514aff96412fa7ad11ae85"
+DISCOUNT_RATE = 0.10
+TERMINAL_GROWTH = 0.03
 _stock_map = {}  # 名稱 -> 代碼
 
 def load_stock_map():
@@ -136,6 +141,61 @@ def analyze(symbol: str) -> dict:
     }
 
 
+def fetch_fundamentals(code: str) -> dict:
+    ticker = code + ".TW"
+    tk = yf.Ticker(ticker)
+    info = tk.info
+    if not info.get("currentPrice"):
+        ticker = code + ".TWO"
+        tk = yf.Ticker(ticker)
+        info = tk.info
+
+    eps = info.get("trailingEps") or info.get("epsTrailingTwelveMonths") or 0
+    growth = info.get("earningsGrowth") or info.get("revenueGrowth") or 0.05
+    growth = max(min(float(growth), 0.30), -0.05)
+    price = info.get("currentPrice") or info.get("regularMarketPrice") or 0
+    pe = info.get("trailingPE") or info.get("forwardPE") or 0
+    roe = info.get("returnOnEquity") or 0
+    name = info.get("longName") or info.get("shortName") or code
+    sector = info.get("sector") or "—"
+    market_cap = info.get("marketCap") or 0
+
+    dcf = 0.0
+    if eps > 0:
+        current_eps = float(eps)
+        pv = 0.0
+        high_g = growth
+        low_g = (growth + TERMINAL_GROWTH) / 2
+        for i in range(1, 11):
+            g = high_g if i <= 5 else low_g
+            current_eps *= (1 + g)
+            pv += current_eps / (1 + DISCOUNT_RATE) ** i
+        terminal_eps = current_eps * (1 + TERMINAL_GROWTH)
+        terminal_value = terminal_eps / (DISCOUNT_RATE - TERMINAL_GROWTH)
+        pv += terminal_value / (1 + DISCOUNT_RATE) ** 10
+        dcf = round(pv, 2)
+
+    upside = None
+    verdict = "資料不足"
+    if dcf > 0 and price > 0:
+        upside = round((dcf - price) / price * 100, 1)
+        verdict = "低估 ▲" if upside > 20 else ("高估 ▼" if upside < -20 else "合理區間")
+
+    return {
+        "name": name,
+        "sector": sector,
+        "market_cap": market_cap,
+        "eps": round(float(eps), 2),
+        "growth": round(growth * 100, 1),
+        "pe": round(float(pe), 1) if pe else None,
+        "roe": round(float(roe) * 100, 1) if roe else None,
+        "price": round(float(price), 2),
+        "dcf": dcf,
+        "upside": upside,
+        "verdict": verdict,
+    }
+
+
 @app.route("/")
 def index():
     return render_template("index.html")
@@ -148,6 +208,58 @@ def api_analyze():
         return jsonify({"error": "請輸入股票代碼"}), 400
     try:
         result = analyze(symbol)
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route("/api/ai-analysis")
+def api_ai_analysis():
+    symbol = request.args.get("symbol", "").strip()
+    if not symbol:
+        return jsonify({"error": "請輸入股票代碼"}), 400
+    try:
+        code = resolve_symbol(symbol)
+        tech = analyze(code)
+        fund = fetch_fundamentals(code)
+
+        prompt = f"""你是台股專業分析師，請針對以下個股給出簡潔的買賣建議（繁體中文，200字以內）：
+
+股票：{fund['name']}（{code}）
+產業：{fund['sector']}
+
+【技術面】
+- 收盤：{tech['price']} | 漲跌：{tech['change_pct']}%
+- 量價型態：{tech['pattern']}（{tech['pattern_desc']}）
+- 均線：{tech['ma_status']}
+- 技術評分：{tech['pattern_score']}/100
+
+【基本面】
+- EPS：{fund['eps']} | 預估成長率：{fund['growth']}%
+- 本益比：{fund['pe']} | ROE：{fund['roe']}%
+- DCF 估值：{fund['dcf']} | 現價：{fund['price']} → {fund['verdict']}（溢/折價 {fund['upside']}%）
+
+請給出：1) 整體評估（買入/觀察/避開）2) 主要理由（技術+基本面各一點）3) 注意風險"""
+
+        client = OpenAI(api_key=DEEPSEEK_API_KEY, base_url="https://api.deepseek.com")
+        resp = client.chat.completions.create(
+            model="deepseek-chat",
+            max_tokens=400,
+            messages=[{"role": "user", "content": prompt}]
+        )
+        return jsonify({"analysis": resp.choices[0].message.content})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route("/api/fundamentals")
+def api_fundamentals():
+    symbol = request.args.get("symbol", "").strip()
+    if not symbol:
+        return jsonify({"error": "請輸入股票代碼"}), 400
+    try:
+        code = resolve_symbol(symbol)
+        result = fetch_fundamentals(code)
         return jsonify(result)
     except Exception as e:
         return jsonify({"error": str(e)}), 500
