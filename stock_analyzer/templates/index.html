@@ -3,143 +3,227 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>台股量價分析</title>
+<title>台股個股評估</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: -apple-system, BlinkMacSystemFont, "Noto Sans TC", sans-serif; background: #0f1117; color: #e0e0e0; min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 40px 20px; }
   h1 { font-size: 1.6rem; margin-bottom: 30px; color: #fff; letter-spacing: 2px; }
-  .search-box { display: flex; gap: 10px; margin-bottom: 40px; }
+  .search-box { display: flex; gap: 10px; margin-bottom: 30px; }
   input { background: #1e2130; border: 1px solid #333; border-radius: 8px; color: #fff; font-size: 1.2rem; padding: 12px 20px; width: 200px; outline: none; text-align: center; letter-spacing: 3px; }
   input:focus { border-color: #4a9eff; }
-  button { background: #4a9eff; border: none; border-radius: 8px; color: #fff; cursor: pointer; font-size: 1rem; padding: 12px 24px; transition: background 0.2s; }
-  button:hover { background: #2d7dd2; }
-  .card { background: #1e2130; border-radius: 16px; padding: 30px; width: 100%; max-width: 500px; display: none; }
-  .symbol-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-  .symbol { font-size: 1.8rem; font-weight: bold; color: #fff; }
+  button.search-btn { background: #4a9eff; border: none; border-radius: 8px; color: #fff; cursor: pointer; font-size: 1rem; padding: 12px 24px; transition: background 0.2s; }
+  button.search-btn:hover { background: #2d7dd2; }
+  .container { width: 100%; max-width: 560px; display: none; }
+  .stock-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 8px; }
+  .stock-name { font-size: 1rem; color: #888; }
+  .stock-symbol { font-size: 1.6rem; font-weight: bold; color: #fff; }
+  .price-row { display: flex; align-items: baseline; gap: 12px; }
+  .price { font-size: 2.4rem; font-weight: bold; }
   .change-up { color: #ff4d4d; }
   .change-down { color: #4dff88; }
   .change-flat { color: #aaa; }
-  .price { font-size: 2.2rem; font-weight: bold; }
-  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 20px 0; }
+  .tabs { display: flex; border-bottom: 1px solid #333; margin-bottom: 20px; }
+  .tab { flex: 1; text-align: center; padding: 10px; cursor: pointer; color: #888; font-size: 0.95rem; border-bottom: 2px solid transparent; transition: all 0.2s; }
+  .tab.active { color: #4a9eff; border-bottom-color: #4a9eff; }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+  .card { background: #1e2130; border-radius: 16px; padding: 24px; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 16px 0; }
   .stat { background: #262a3d; border-radius: 10px; padding: 12px 16px; }
   .stat-label { color: #888; font-size: 0.8rem; margin-bottom: 4px; }
-  .stat-value { font-size: 1.1rem; font-weight: bold; }
-  .divider { border: none; border-top: 1px solid #333; margin: 20px 0; }
-  .pattern { font-size: 1.1rem; font-weight: bold; margin-bottom: 8px; }
-  .pattern-desc { color: #aaa; font-size: 0.9rem; margin-bottom: 16px; }
+  .stat-value { font-size: 1.05rem; font-weight: bold; }
+  .divider { border: none; border-top: 1px solid #333; margin: 16px 0; }
+  .pattern { font-size: 1.05rem; font-weight: bold; margin-bottom: 6px; }
+  .pattern-desc { color: #aaa; font-size: 0.88rem; margin-bottom: 14px; }
   .score-bar-bg { background: #262a3d; border-radius: 999px; height: 12px; overflow: hidden; }
   .score-bar { height: 100%; border-radius: 999px; transition: width 0.6s ease; }
-  .score-label { display: flex; justify-content: space-between; margin-top: 6px; font-size: 0.85rem; color: #aaa; }
-  .pressure { text-align: center; margin-top: 20px; }
-  .pressure-label { font-size: 0.85rem; color: #888; margin-bottom: 6px; }
-  .pressure-bar-bg { background: #262a3d; border-radius: 999px; height: 14px; overflow: hidden; display: flex; }
-  .pressure-buy { background: #ff4d4d; height: 100%; transition: width 0.6s; }
-  .pressure-sell { background: #4dff88; height: 100%; transition: width 0.6s; }
-  .pressure-nums { display: flex; justify-content: space-between; margin-top: 5px; font-size: 0.8rem; }
-  .error { color: #ff6b6b; text-align: center; padding: 20px; }
-  .loading { text-align: center; color: #888; padding: 20px; display: none; }
+  .score-label { display: flex; justify-content: space-between; margin-top: 6px; font-size: 0.82rem; color: #aaa; }
+  .verdict-badge { display: inline-block; padding: 4px 12px; border-radius: 999px; font-size: 0.9rem; font-weight: bold; }
+  .verdict-low { background: rgba(255,77,77,0.15); color: #ff4d4d; }
+  .verdict-high { background: rgba(77,255,136,0.15); color: #4dff88; }
+  .verdict-fair { background: rgba(240,192,64,0.15); color: #f0c040; }
+  .verdict-na { background: rgba(150,150,150,0.15); color: #aaa; }
+  .ai-box { white-space: pre-wrap; line-height: 1.7; font-size: 0.92rem; color: #ddd; }
+  .loading-inline { color: #888; font-size: 0.9rem; text-align: center; padding: 20px; }
+  .error-msg { color: #ff6b6b; font-size: 0.9rem; }
+  .loading-overlay { text-align: center; color: #888; padding: 30px; display: none; }
 </style>
 </head>
 <body>
-<h1>📊 台股量價分析</h1>
+<h1>📊 台股個股評估</h1>
 <div class="search-box">
   <input type="text" id="symbolInput" placeholder="2330" maxlength="6" />
-  <button onclick="analyze()">分析</button>
+  <button class="search-btn" onclick="runAll()">分析</button>
 </div>
-<div class="loading" id="loading">載入中...</div>
-<div class="card" id="card">
-  <div class="symbol-row">
-    <span class="symbol" id="symbol">—</span>
-    <span id="changeBadge" style="font-size:1.1rem;font-weight:bold;">—</span>
-  </div>
-  <div class="price" id="price">—</div>
-  <div class="grid">
-    <div class="stat"><div class="stat-label">開盤</div><div class="stat-value" id="open">—</div></div>
-    <div class="stat"><div class="stat-label">最高</div><div class="stat-value" id="high">—</div></div>
-    <div class="stat"><div class="stat-label">最低</div><div class="stat-value" id="low">—</div></div>
-    <div class="stat"><div class="stat-label">成交量 / 均量</div><div class="stat-value" id="volume">—</div></div>
-  </div>
-  <hr class="divider">
-  <div class="pattern" id="pattern">—</div>
-  <div class="pattern-desc" id="patternDesc">—</div>
-  <div class="score-bar-bg">
-    <div class="score-bar" id="scoreBar" style="width:0%"></div>
-  </div>
-  <div class="score-label">
-    <span>上漲機率</span>
-    <span id="scoreLabel">—</span>
-  </div>
-  <div class="pressure" id="pressureBlock">
-    <div class="pressure-label">買賣力道</div>
-    <div class="pressure-bar-bg">
-      <div class="pressure-buy" id="buyBar" style="width:50%"></div>
-      <div class="pressure-sell" id="sellBar" style="width:50%"></div>
+<div class="loading-overlay" id="loading">載入中...</div>
+<div class="container" id="container">
+  <div class="stock-header">
+    <div>
+      <div class="stock-name" id="stockName">—</div>
+      <div class="stock-symbol" id="stockSymbol">—</div>
     </div>
-    <div class="pressure-nums">
-      <span id="buyPct" style="color:#ff4d4d">買 —</span>
-      <span id="sellPct" style="color:#4dff88">賣 —</span>
+    <div class="price-row">
+      <span class="price" id="price">—</span>
+      <span id="changeBadge">—</span>
+    </div>
+  </div>
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab('tech')">📈 技術面</div>
+    <div class="tab" onclick="switchTab('fund')">📋 基本面</div>
+    <div class="tab" onclick="switchTab('ai')">🤖 AI 分析</div>
+  </div>
+
+  <!-- 技術面 -->
+  <div class="tab-content active" id="tab-tech">
+    <div class="card">
+      <div class="grid">
+        <div class="stat"><div class="stat-label">開盤</div><div class="stat-value" id="open">—</div></div>
+        <div class="stat"><div class="stat-label">最高</div><div class="stat-value" id="high">—</div></div>
+        <div class="stat"><div class="stat-label">最低</div><div class="stat-value" id="low">—</div></div>
+        <div class="stat"><div class="stat-label">成交量 / 5日均量</div><div class="stat-value" id="volume">—</div></div>
+        <div class="stat"><div class="stat-label">MA5</div><div class="stat-value" id="ma5">—</div></div>
+        <div class="stat"><div class="stat-label">MA20</div><div class="stat-value" id="ma20">—</div></div>
+      </div>
+      <hr class="divider">
+      <div class="pattern" id="pattern">—</div>
+      <div class="pattern-desc" id="patternDesc">—</div>
+      <div class="score-bar-bg">
+        <div class="score-bar" id="scoreBar" style="width:0%"></div>
+      </div>
+      <div class="score-label">
+        <span>技術評分</span>
+        <span id="scoreLabel">—</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 基本面 -->
+  <div class="tab-content" id="tab-fund">
+    <div class="card" id="fundCard">
+      <div class="loading-inline">載入基本面資料中...</div>
+    </div>
+  </div>
+
+  <!-- AI 分析 -->
+  <div class="tab-content" id="tab-ai">
+    <div class="card" id="aiCard">
+      <div class="loading-inline">等待 AI 分析中（約 5–10 秒）...</div>
     </div>
   </div>
 </div>
 
 <script>
 const input = document.getElementById("symbolInput");
-input.addEventListener("keydown", e => { if (e.key === "Enter") analyze(); });
+input.addEventListener("keydown", e => { if (e.key === "Enter") runAll(); });
 
-async function analyze() {
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach((t, i) => {
+    t.classList.toggle('active', ['tech','fund','ai'][i] === name);
+  });
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+}
+
+async function runAll() {
   const symbol = input.value.trim();
   if (!symbol) return;
+
   document.getElementById("loading").style.display = "block";
-  document.getElementById("card").style.display = "none";
+  document.getElementById("container").style.display = "none";
+  document.getElementById("fundCard").innerHTML = '<div class="loading-inline">載入基本面資料中...</div>';
+  document.getElementById("aiCard").innerHTML = '<div class="loading-inline">等待 AI 分析中（約 5–10 秒）...</div>';
 
   try {
-    const res = await fetch(`/api/analyze?symbol=${encodeURIComponent(symbol)}`);
-    const d = await res.json();
+    const techRes = await fetch(`/api/analyze?symbol=${encodeURIComponent(symbol)}`);
+    const tech = await techRes.json();
     document.getElementById("loading").style.display = "none";
 
-    if (d.error) {
-      document.getElementById("card").style.display = "block";
-      document.getElementById("card").innerHTML = `<div class="error">❌ ${d.error}</div>`;
+    if (tech.error) {
+      document.getElementById("container").style.display = "block";
+      document.getElementById("tab-tech").querySelector('.card').innerHTML = `<div class="error-msg">❌ ${tech.error}</div>`;
       return;
     }
 
-    document.getElementById("symbol").textContent = d.symbol;
-    document.getElementById("price").textContent = d.price.toFixed(2);
+    renderTech(tech);
+    document.getElementById("container").style.display = "block";
+    switchTab('tech');
 
-    const changeClass = d.change > 0 ? "change-up" : d.change < 0 ? "change-down" : "change-flat";
-    const changeSign = d.change > 0 ? "▲" : d.change < 0 ? "▼" : "—";
-    document.getElementById("changeBadge").className = changeClass;
-    document.getElementById("changeBadge").textContent = `${changeSign} ${Math.abs(d.change).toFixed(2)} (${d.change_pct}%)`;
-    document.getElementById("price").className = "price " + changeClass;
+    fetchFundamentals(symbol);
+    fetchAI(symbol);
 
-    document.getElementById("open").textContent = d.open.toFixed(2);
-    document.getElementById("high").textContent = d.high.toFixed(2);
-    document.getElementById("low").textContent = d.low.toFixed(2);
-    document.getElementById("volume").textContent = d.avg_volume
-      ? `${(d.volume/1000).toFixed(0)}張 / ${(d.avg_volume/1000).toFixed(0)}張`
-      : `${(d.volume/1000).toFixed(0)}張`;
-
-    document.getElementById("pattern").textContent = d.pattern;
-    document.getElementById("patternDesc").textContent = d.pattern_desc;
-
-    const score = d.pattern_score;
-    const barColor = score >= 70 ? "#ff4d4d" : score >= 50 ? "#f0c040" : "#4dff88";
-    document.getElementById("scoreBar").style.width = score + "%";
-    document.getElementById("scoreBar").style.background = barColor;
-    document.getElementById("scoreLabel").textContent = score + "%";
-
-    if (d.buy_pressure !== null) {
-      const bp = d.buy_pressure;
-      document.getElementById("buyBar").style.width = bp + "%";
-      document.getElementById("sellBar").style.width = (100 - bp) + "%";
-      document.getElementById("buyPct").textContent = `買 ${bp}%`;
-      document.getElementById("sellPct").textContent = `賣 ${(100 - bp).toFixed(1)}%`;
-    }
-
-    document.getElementById("card").style.display = "block";
-  } catch (e) {
+  } catch(e) {
     document.getElementById("loading").style.display = "none";
-    alert("發生錯誤：" + e.message);
+    alert("錯誤：" + e.message);
+  }
+}
+
+function renderTech(d) {
+  document.getElementById("stockSymbol").textContent = d.symbol;
+  document.getElementById("price").textContent = d.price.toFixed(2);
+  const cls = d.change > 0 ? "change-up" : d.change < 0 ? "change-down" : "change-flat";
+  const sign = d.change > 0 ? "▲" : d.change < 0 ? "▼" : "—";
+  const badge = document.getElementById("changeBadge");
+  badge.className = cls;
+  badge.textContent = `${sign} ${Math.abs(d.change).toFixed(2)} (${d.change_pct}%)`;
+  document.getElementById("price").className = "price " + cls;
+  document.getElementById("open").textContent = d.open.toFixed(2);
+  document.getElementById("high").textContent = d.high.toFixed(2);
+  document.getElementById("low").textContent = d.low.toFixed(2);
+  document.getElementById("volume").textContent = `${Math.round(d.volume/1000)}張 / ${Math.round(d.vol_5/1000)}張`;
+  document.getElementById("ma5").textContent = d.ma5;
+  document.getElementById("ma20").textContent = d.ma20;
+  document.getElementById("pattern").textContent = d.pattern;
+  document.getElementById("patternDesc").textContent = d.pattern_desc;
+  const score = d.pattern_score;
+  const barColor = score >= 70 ? "#ff4d4d" : score >= 50 ? "#f0c040" : "#4dff88";
+  document.getElementById("scoreBar").style.width = score + "%";
+  document.getElementById("scoreBar").style.background = barColor;
+  document.getElementById("scoreLabel").textContent = score + "/100";
+}
+
+async function fetchFundamentals(symbol) {
+  try {
+    const res = await fetch(`/api/fundamentals?symbol=${encodeURIComponent(symbol)}`);
+    const d = await res.json();
+    if (d.error) { document.getElementById("fundCard").innerHTML = `<div class="error-msg">❌ ${d.error}</div>`; return; }
+
+    document.getElementById("stockName").textContent = d.name;
+
+    const verdictClass = d.verdict.includes("低估") ? "verdict-low" : d.verdict.includes("高估") ? "verdict-high" : d.verdict === "合理區間" ? "verdict-fair" : "verdict-na";
+    const upsideText = d.upside !== null ? `${d.upside > 0 ? "+" : ""}${d.upside}%` : "—";
+    const mcap = d.market_cap ? (d.market_cap / 1e8).toFixed(0) + "億" : "—";
+
+    document.getElementById("fundCard").innerHTML = `
+      <div class="grid">
+        <div class="stat"><div class="stat-label">產業</div><div class="stat-value" style="font-size:0.9rem">${d.sector}</div></div>
+        <div class="stat"><div class="stat-label">本益比 (PE)</div><div class="stat-value">${d.pe ?? "—"}</div></div>
+        <div class="stat"><div class="stat-label">EPS (TTM)</div><div class="stat-value">${d.eps}</div></div>
+        <div class="stat"><div class="stat-label">ROE</div><div class="stat-value">${d.roe !== null ? d.roe + "%" : "—"}</div></div>
+        <div class="stat"><div class="stat-label">預估成長率</div><div class="stat-value">${d.growth}%</div></div>
+        <div class="stat"><div class="stat-label">市值</div><div class="stat-value">${mcap}</div></div>
+      </div>
+      <hr class="divider">
+      <div class="stat-label" style="margin-bottom:8px">DCF 估值（10年兩段式）</div>
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div>
+          <div style="font-size:1.6rem;font-weight:bold">${d.dcf > 0 ? d.dcf : "—"}</div>
+          <div style="color:#888;font-size:0.82rem">現價 ${d.price} | 差異 ${upsideText}</div>
+        </div>
+        <span class="verdict-badge ${verdictClass}">${d.verdict}</span>
+      </div>`;
+  } catch(e) {
+    document.getElementById("fundCard").innerHTML = `<div class="error-msg">❌ ${e.message}</div>`;
+  }
+}
+
+async function fetchAI(symbol) {
+  try {
+    const res = await fetch(`/api/ai-analysis?symbol=${encodeURIComponent(symbol)}`);
+    const d = await res.json();
+    if (d.error) { document.getElementById("aiCard").innerHTML = `<div class="error-msg">❌ ${d.error}</div>`; return; }
+    document.getElementById("aiCard").innerHTML = `<div class="ai-box">${d.analysis}</div>`;
+  } catch(e) {
+    document.getElementById("aiCard").innerHTML = `<div class="error-msg">❌ ${e.message}</div>`;
   }
 }
 </script>
