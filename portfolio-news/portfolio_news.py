@@ -126,6 +126,7 @@ US_HOLDINGS = [
         "name": "Destiny Tech100",
         "queries": [
             "Destiny Tech100 DXYZ SpaceX pre-IPO",
+            "SpaceX Starship launch valuation",
         ],
     },
     {

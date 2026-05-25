@@ -13,6 +13,9 @@
   input:focus { border-color: #4a9eff; }
   button.search-btn { background: #4a9eff; border: none; border-radius: 8px; color: #fff; cursor: pointer; font-size: 1rem; padding: 12px 24px; transition: background 0.2s; }
   button.search-btn:hover { background: #2d7dd2; }
+  .history { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-top: -16px; margin-bottom: 24px; min-height: 28px; }
+  .history-chip { background: #1e2130; border: 1px solid #333; border-radius: 999px; color: #aaa; cursor: pointer; font-size: 0.82rem; padding: 4px 12px; transition: all 0.15s; }
+  .history-chip:hover { border-color: #4a9eff; color: #4a9eff; }
   .container { width: 100%; max-width: 560px; display: none; }
   .stock-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 8px; }
   .stock-name { font-size: 1rem; color: #888; }
@@ -47,6 +50,18 @@
   .loading-inline { color: #888; font-size: 0.9rem; text-align: center; padding: 20px; }
   .error-msg { color: #ff6b6b; font-size: 0.9rem; }
   .loading-overlay { text-align: center; color: #888; padding: 30px; display: none; }
+  .sentiment-badge { display: inline-block; padding: 4px 14px; border-radius: 999px; font-size: 0.95rem; font-weight: bold; margin-bottom: 12px; }
+  .sentiment-bull { background: rgba(255,77,77,0.15); color: #ff4d4d; }
+  .sentiment-bear { background: rgba(77,255,136,0.15); color: #4dff88; }
+  .sentiment-neutral { background: rgba(150,150,150,0.15); color: #aaa; }
+  .news-summary { color: #ccc; font-size: 0.88rem; line-height: 1.6; margin-bottom: 16px; white-space: pre-wrap; }
+  .news-list { display: flex; flex-direction: column; gap: 8px; }
+  .news-item { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; padding: 10px 0; border-bottom: 1px solid #2a2e40; }
+  .news-item:last-child { border-bottom: none; }
+  .news-title { font-size: 0.88rem; color: #ddd; flex: 1; line-height: 1.4; }
+  .news-title a { color: #ddd; text-decoration: none; }
+  .news-title a:hover { color: #4a9eff; }
+  .news-meta { font-size: 0.75rem; color: #666; white-space: nowrap; text-align: right; }
 </style>
 </head>
 <body>
@@ -55,6 +70,7 @@
   <input type="text" id="symbolInput" placeholder="2330" maxlength="6" />
   <button class="search-btn" onclick="runAll()">分析</button>
 </div>
+<div class="history" id="history"></div>
 <div class="loading-overlay" id="loading">載入中...</div>
 <div class="container" id="container">
   <div class="stock-header">
@@ -71,6 +87,7 @@
     <div class="tab active" onclick="switchTab('tech')">📈 技術面</div>
     <div class="tab" onclick="switchTab('fund')">📋 基本面</div>
     <div class="tab" onclick="switchTab('ai')">🤖 AI 分析</div>
+    <div class="tab" onclick="switchTab('news')">📰 新聞面</div>
   </div>
 
   <!-- 技術面 -->
@@ -110,15 +127,52 @@
       <div class="loading-inline">等待 AI 分析中（約 5–10 秒）...</div>
     </div>
   </div>
+
+  <!-- 新聞面 -->
+  <div class="tab-content" id="tab-news">
+    <div class="card" id="newsCard">
+      <div class="loading-inline">抓取新聞中...</div>
+    </div>
+  </div>
 </div>
 
 <script>
 const input = document.getElementById("symbolInput");
 input.addEventListener("keydown", e => { if (e.key === "Enter") runAll(); });
 
+const HISTORY_KEY = "stock_history";
+const MAX_HISTORY = 10;
+
+function loadHistory() {
+  try { return JSON.parse(localStorage.getItem(HISTORY_KEY) || "[]"); } catch { return []; }
+}
+
+function saveHistory(symbol) {
+  let h = loadHistory().filter(s => s !== symbol);
+  h.unshift(symbol);
+  if (h.length > MAX_HISTORY) h = h.slice(0, MAX_HISTORY);
+  localStorage.setItem(HISTORY_KEY, JSON.stringify(h));
+  renderHistory();
+}
+
+function renderHistory() {
+  const h = loadHistory();
+  const el = document.getElementById("history");
+  el.innerHTML = h.map(s =>
+    `<span class="history-chip" onclick="quickSearch('${s}')">${s}</span>`
+  ).join("");
+}
+
+function quickSearch(symbol) {
+  input.value = symbol;
+  runAll();
+}
+
+renderHistory();
+
 function switchTab(name) {
   document.querySelectorAll('.tab').forEach((t, i) => {
-    t.classList.toggle('active', ['tech','fund','ai'][i] === name);
+    t.classList.toggle('active', ['tech','fund','ai','news'][i] === name);
   });
   document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
   document.getElementById('tab-' + name).classList.add('active');
@@ -132,6 +186,7 @@ async function runAll() {
   document.getElementById("container").style.display = "none";
   document.getElementById("fundCard").innerHTML = '<div class="loading-inline">載入基本面資料中...</div>';
   document.getElementById("aiCard").innerHTML = '<div class="loading-inline">等待 AI 分析中（約 5–10 秒）...</div>';
+  document.getElementById("newsCard").innerHTML = '<div class="loading-inline">抓取新聞中...</div>';
 
   try {
     const techRes = await fetch(`/api/analyze?symbol=${encodeURIComponent(symbol)}`);
@@ -145,11 +200,13 @@ async function runAll() {
     }
 
     renderTech(tech);
+    saveHistory(tech.symbol);
     document.getElementById("container").style.display = "block";
     switchTab('tech');
 
     fetchFundamentals(symbol);
     fetchAI(symbol);
+    fetchNews(symbol);
 
   } catch(e) {
     document.getElementById("loading").style.display = "none";
@@ -198,7 +255,7 @@ async function fetchFundamentals(symbol) {
         <div class="stat"><div class="stat-label">產業</div><div class="stat-value" style="font-size:0.9rem">${d.sector}</div></div>
         <div class="stat"><div class="stat-label">本益比 (PE)</div><div class="stat-value">${d.pe ?? "—"}</div></div>
         <div class="stat"><div class="stat-label">EPS (TTM)</div><div class="stat-value">${d.eps}</div></div>
-        <div class="stat"><div class="stat-label">ROE</div><div class="stat-value">${d.roe !== null ? d.roe + "%" : "—"}</div></div>
+        <div class="stat"><div class="stat-label">股價淨值比 (PBR)</div><div class="stat-value">${d.pbr ?? "—"}</div></div>
         <div class="stat"><div class="stat-label">預估成長率</div><div class="stat-value">${d.growth}%</div></div>
         <div class="stat"><div class="stat-label">市值</div><div class="stat-value">${mcap}</div></div>
       </div>
@@ -213,6 +270,34 @@ async function fetchFundamentals(symbol) {
       </div>`;
   } catch(e) {
     document.getElementById("fundCard").innerHTML = `<div class="error-msg">❌ ${e.message}</div>`;
+  }
+}
+
+async function fetchNews(symbol) {
+  try {
+    const res = await fetch(`/api/news?symbol=${encodeURIComponent(symbol)}`);
+    const d = await res.json();
+    if (d.error) { document.getElementById("newsCard").innerHTML = `<div class="error-msg">❌ ${d.error}</div>`; return; }
+
+    const sentClass = d.sentiment === "偏多" ? "sentiment-bull" : d.sentiment === "偏空" ? "sentiment-bear" : "sentiment-neutral";
+    const count = d.articles.length;
+    const newsItems = d.articles.map(a =>
+      `<div class="news-item">
+        <div class="news-title"><a href="${a.url}" target="_blank">${a.title}</a></div>
+        <div class="news-meta">${a.source}<br>${a.age}</div>
+      </div>`
+    ).join("");
+
+    document.getElementById("newsCard").innerHTML = `
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+        <span class="sentiment-badge ${sentClass}">${d.sentiment}</span>
+        <span style="color:#666;font-size:0.85rem">共 ${count} 則新聞（48h）</span>
+      </div>
+      <div class="news-summary">${d.summary}</div>
+      <hr class="divider">
+      <div class="news-list">${newsItems}</div>`;
+  } catch(e) {
+    document.getElementById("newsCard").innerHTML = `<div class="error-msg">❌ ${e.message}</div>`;
   }
 }
 
