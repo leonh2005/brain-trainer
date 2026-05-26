@@ -2,6 +2,8 @@
 # 服務看門狗 — 每 5 分鐘由 cron 執行
 # 偵測到服務掛掉時自動重啟，並發 Telegram 通知
 
+export PATH="/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/usr/bin:/bin:$PATH"
+
 TELEGRAM_TOKEN="8666778924:AAFMAFKfsfx3opS2CfCBrDYMIx6vcJKACTk"
 TELEGRAM_CHAT_ID="7556217543"
 LOG="/Users/steven/CCProject/logs/service_watchdog.log"
