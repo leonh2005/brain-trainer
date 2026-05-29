@@ -302,6 +302,82 @@ def fetch_recession_signals():
     }
 
 
+M1B_CACHE = Path(__file__).parent / "m1b_cache.json"
+
+
+def fetch_m1b_history() -> list:
+    """從 CBC DataAPI 抓取 M1B 月度期底金額（單位：億元），回傳 [{"x": "YYYY-MM", "y": float}]"""
+    try:
+        r = requests.get(
+            "https://cpx.cbc.gov.tw/api/DataAPI/Get",
+            params={"FileName": "EF01M01"},
+            headers={"User-Agent": "Mozilla/5.0"},
+            timeout=20,
+            verify=False,
+        )
+        data = r.json()
+        rows = data["data"]["dataSets"]
+        # structure: Table1=[準備貨幣,通貨淨額,M1A,M1B,M2] × Table2=[日平均,期底] × Table3=[金額,年增率]
+        # M1B 期底 金額 = col index 15 (1-based: period + 3×4 + 1×2 + 1 = 16th → index 15)
+        result = []
+        for row in rows:
+            period = row[0]           # "2026M03"
+            val_str = row[15] if len(row) > 15 else None
+            if not val_str or val_str in ("", "..."):
+                continue
+            try:
+                year, month = period.split("M")
+                iso_month = f"{year}-{int(month):02d}"
+                result.append({"x": iso_month, "y": trunc2(float(val_str))})
+            except (ValueError, IndexError):
+                continue
+        if result:
+            M1B_CACHE.write_text(json.dumps(result, ensure_ascii=False))
+            print(f"  M1B 抓取成功，{len(result)} 筆，最新：{result[-1]}")
+        return result
+    except Exception as e:
+        print(f"M1B 抓取失敗: {e}")
+        if M1B_CACHE.exists():
+            print("  使用本地快取")
+            return json.loads(M1B_CACHE.read_text())
+        return []
+
+
+def fetch_twse_daily_trade_value(months: int = 24) -> list:
+    """抓取 TWSE 每日成交金額（單位：億元），回傳 [{"x": "YYYY-MM-DD", "y": float}]"""
+    result = {}
+    today = datetime.now()
+    for i in range(months):
+        year = today.year
+        month = today.month - i
+        while month <= 0:
+            month += 12
+            year -= 1
+        date_str = f"{year}{month:02d}01"
+        try:
+            r = requests.get(
+                "https://www.twse.com.tw/exchangeReport/FMTQIK",
+                params={"response": "json", "date": date_str, "type": "MS"},
+                headers={"User-Agent": "Mozilla/5.0"},
+                timeout=15,
+                verify=False,
+            )
+            j = r.json()
+            if j.get("stat") != "OK":
+                continue
+            for row in j.get("data", []):
+                roc_date = row[0]
+                trade_val_str = row[2].replace(",", "")
+                parts = roc_date.split("/")
+                iso_date = f"{int(parts[0]) + 1911}-{parts[1]}-{parts[2]}"
+                # 成交金額單位為元，轉換為億元
+                val_yi = trunc2(float(trade_val_str) / 1e8)
+                result[iso_date] = val_yi
+        except Exception as e:
+            print(f"  TWSE 成交 {date_str} 失敗: {e}")
+    return [{"x": d, "y": v} for d, v in sorted(result.items())]
+
+
 def fetch_fear_greed():
     try:
         r = requests.get(
@@ -346,7 +422,7 @@ def fetch_fear_greed():
         return {"score": None, "rating": "N/A", "history": hist}
 
 
-def generate_html(vix_data, sp_data, ma_data, sp_hist_high, fg_data, tw_data, tw_ma_data, tw_hist_high, cape_data, recession, generated_at):
+def generate_html(vix_data, sp_data, ma_data, sp_hist_high, fg_data, tw_data, tw_ma_data, tw_hist_high, cape_data, recession, m1b_data, trade_data, generated_at):
     vix_current = vix_data[-1]["y"] if vix_data else 0
     vix_date    = vix_data[-1]["x"] if vix_data else "N/A"
     sp_current  = sp_data[-1]["y"] if sp_data else 0
@@ -365,6 +441,15 @@ def generate_html(vix_data, sp_data, ma_data, sp_hist_high, fg_data, tw_data, tw
 
     cape_current = cape_data[-1]["y"] if cape_data else 0
     cape_date    = cape_data[-1]["x"] if cape_data else "N/A"
+
+    # 成交量/M1B
+    m1b_current   = m1b_data[-1]["y"] if m1b_data else 0      # 億元
+    m1b_date      = m1b_data[-1]["x"] if m1b_data else "N/A"
+    trade_current = trade_data[-1]["y"] if trade_data else 0   # 億元
+    trade_date    = trade_data[-1]["x"] if trade_data else "N/A"
+    m1b_ratio     = trunc2(trade_current / m1b_current * 100) if m1b_current else 0
+    m1b_overheat  = m1b_ratio > 10
+    m1b_color     = "#ff4757" if m1b_ratio > 10 else ("#ffaa00" if m1b_ratio > 7 else "#00d68f")
 
     # 衰退指標
     r_unemp = recession["unrate"]
@@ -401,6 +486,23 @@ def generate_html(vix_data, sp_data, ma_data, sp_hist_high, fg_data, tw_data, tw
     sp_color = "#00d68f" if sp_vs_ma > 0 else "#ff4757"
     tw_color = "#ff4757" if tw_vs_ma > 0 else "#00d68f"  # 台股：紅漲綠跌
     cape_color = "#ff4757" if cape_current > 35 else ("#ffaa00" if cape_current > 25 else "#00d68f")
+
+    # 亮燈 class
+    def alert_class(color):
+        if color == "#ff4757": return "alert-danger"
+        if color == "#ffaa00": return "alert-warn"
+        return ""
+
+    vix_alert   = alert_class(vix_color)
+    fg_alert    = alert_class(fg_color)
+    cape_alert  = alert_class(cape_color)
+    sp_alert    = "alert-danger" if sp_vs_ma < 0 else ""
+    tw_alert    = ""  # 台股紅漲、不做警示
+    m1b_alert   = alert_class(m1b_color)
+    unemp_alert = alert_class(unemp_color)
+    cpi_alert   = alert_class(cpi_color)
+    ism_alert   = alert_class(ism_color)
+    yc_alert    = alert_class(yc_color)
 
     fg_score_display = f"{fg_score:.2f}" if fg_score is not None else "N/A"
     fg_label_map = {
@@ -545,6 +647,21 @@ def generate_html(vix_data, sp_data, ma_data, sp_hist_high, fg_data, tw_data, tw
     50% {{ opacity: 0.4; transform: scale(0.7); }}
   }}
 
+  .card.alert-danger {{
+    animation: glow-danger 1.8s ease-in-out infinite;
+  }}
+  .card.alert-warn {{
+    animation: glow-warn 2.5s ease-in-out infinite;
+  }}
+  @keyframes glow-danger {{
+    0%, 100% {{ box-shadow: inset 0 0 0 1px rgba(255,71,87,0.15), 0 0 18px rgba(255,71,87,0.12); background: var(--surface); }}
+    50% {{ box-shadow: inset 0 0 0 1px rgba(255,71,87,0.5), 0 0 32px rgba(255,71,87,0.28); background: rgba(255,71,87,0.06); }}
+  }}
+  @keyframes glow-warn {{
+    0%, 100% {{ box-shadow: inset 0 0 0 1px rgba(255,170,0,0.12), 0 0 14px rgba(255,170,0,0.08); background: var(--surface); }}
+    50% {{ box-shadow: inset 0 0 0 1px rgba(255,170,0,0.45), 0 0 26px rgba(255,170,0,0.22); background: rgba(255,170,0,0.05); }}
+  }}
+
   .controls {{
     display: flex;
     align-items: center;
@@ -680,7 +797,7 @@ def generate_html(vix_data, sp_data, ma_data, sp_hist_high, fg_data, tw_data, tw
 </header>
 
 <div class="cards">
-  <div class="card" style="--accent: {vix_color}">
+  <div class="card {vix_alert}" style="--accent: {vix_color}">
     <div class="card-label"><span class="pulse"></span>VIX 恐慌指數</div>
     <div class="card-value">{vix_current:.2f}</div>
     <div class="card-sub">
@@ -690,7 +807,7 @@ def generate_html(vix_data, sp_data, ma_data, sp_hist_high, fg_data, tw_data, tw
     </div>
   </div>
 
-  <div class="card" style="--accent: {fg_color}">
+  <div class="card {fg_alert}" style="--accent: {fg_color}">
     <div class="card-label"><span class="pulse"></span>CNN 恐懼貪婪指數</div>
     <div class="card-value">{fg_score_display}</div>
     <div class="card-sub">
@@ -700,7 +817,7 @@ def generate_html(vix_data, sp_data, ma_data, sp_hist_high, fg_data, tw_data, tw
     </div>
   </div>
 
-  <div class="card" style="--accent: {cape_color}">
+  <div class="card {cape_alert}" style="--accent: {cape_color}">
     <div class="card-label"><span class="pulse"></span>席勒本益比 CAPE Ratio</div>
     <div class="card-value">{cape_current:.1f}</div>
     <div class="card-sub">
@@ -711,23 +828,34 @@ def generate_html(vix_data, sp_data, ma_data, sp_hist_high, fg_data, tw_data, tw
     </div>
   </div>
 
-  <div class="card card-span2" style="--accent: {sp_color}; grid-column: span 2">
+  <div class="card {sp_alert}" style="--accent: {sp_color}">
     <div class="card-label"><span class="pulse"></span>S&P 500 vs 200MA</div>
-    <div class="card-value">{sp_current:,.2f}</div>
+    <div class="card-value" style="font-size:2.2rem">{sp_current:,.0f}</div>
     <div class="card-sub">
-      200MA：{ma_current:,.2f}
+      200MA：{ma_current:,.0f}
       &nbsp;·&nbsp; <b>{'▲' if sp_vs_ma > 0 else '▼'} {abs(sp_vs_ma)}%</b>
-      <br><span style="font-size:0.7rem;opacity:0.6">歷史高點：{sp_hist_high:,.2f}&nbsp;&nbsp;<b style="opacity:1">{sp_vs_high:.1f}%</b>&nbsp;&nbsp;{sp_date}</span>
+      <br><span style="font-size:0.7rem;opacity:0.6">距高點 <b style="opacity:1">{sp_vs_high:.1f}%</b>&nbsp;&nbsp;{sp_date}</span>
     </div>
   </div>
 
-  <div class="card card-span2" style="--accent: {tw_color}; grid-column: span 2">
+  <div class="card {tw_alert}" style="--accent: {tw_color}">
     <div class="card-label"><span class="pulse"></span>台股加權指數 vs 200MA</div>
-    <div class="card-value">{tw_current:,.0f}</div>
+    <div class="card-value" style="font-size:2.2rem">{tw_current:,.0f}</div>
     <div class="card-sub">
       200MA：{tw_ma_current:,.0f}
       &nbsp;·&nbsp; <b style="color:{'#ff4757' if tw_vs_ma > 0 else '#00d68f'}">{'▲' if tw_vs_ma > 0 else '▼'} {abs(tw_vs_ma)}%</b>
-      <br><span style="font-size:0.7rem;opacity:0.6">歷史高點：{tw_hist_high:,.0f}&nbsp;&nbsp;<b style="opacity:1">{tw_vs_high:.1f}%</b>&nbsp;&nbsp;{tw_date}</span>
+      <br><span style="font-size:0.7rem;opacity:0.6">距高點 <b style="opacity:1">{tw_vs_high:.1f}%</b>&nbsp;&nbsp;{tw_date}</span>
+    </div>
+  </div>
+
+  <div class="card {m1b_alert}" style="--accent: {m1b_color}">
+    <div class="card-label"><span class="pulse"></span>台股成交量 / M1B</div>
+    <div class="card-value">{m1b_ratio:.2f}<span style="font-size:1.2rem">%</span></div>
+    <div class="card-sub">
+      {'<b>🔥 市場過熱 &gt;10%</b>' if m1b_overheat else ('<b>⚠ 偏熱 7–10%</b>' if m1b_ratio > 7 else '<b>正常 &lt;7%</b>')}
+      <br>當日成交：<b>{trade_current:,.0f}</b> 億元
+      <br>M1B（{m1b_date}期底）：<b>{m1b_current:,.0f}</b> 億元
+      <br><span style="opacity:0.5">{trade_date}</span>
     </div>
   </div>
 
@@ -737,7 +865,7 @@ def generate_html(vix_data, sp_data, ma_data, sp_hist_high, fg_data, tw_data, tw
   ⚡ 衰退預警指標
 </div>
 <div class="cards" style="margin-top:0; grid-template-columns: repeat(4, 1fr)">
-  <div class="card" style="--accent: {unemp_color}">
+  <div class="card {unemp_alert}" style="--accent: {unemp_color}">
     <div class="card-label">{unemp_icon} 失業率</div>
     <div class="card-value" style="font-size:2rem">{unemp_val}</div>
     <div class="card-sub">
@@ -746,7 +874,7 @@ def generate_html(vix_data, sp_data, ma_data, sp_hist_high, fg_data, tw_data, tw
       <br><span style="opacity:0.5">{unemp_date}</span>
     </div>
   </div>
-  <div class="card" style="--accent: {cpi_color}">
+  <div class="card {cpi_alert}" style="--accent: {cpi_color}">
     <div class="card-label">{cpi_icon} 核心 CPI（YoY）</div>
     <div class="card-value" style="font-size:2rem">{cpi_val}</div>
     <div class="card-sub">
@@ -755,7 +883,7 @@ def generate_html(vix_data, sp_data, ma_data, sp_hist_high, fg_data, tw_data, tw
       <br><span style="opacity:0.5">{cpi_date}</span>
     </div>
   </div>
-  <div class="card" style="--accent: {ism_color}">
+  <div class="card {ism_alert}" style="--accent: {ism_color}">
     <div class="card-label">{ism_icon} ISM 新訂單</div>
     <div class="card-value" style="font-size:2rem">{ism_val}</div>
     <div class="card-sub">
@@ -764,7 +892,7 @@ def generate_html(vix_data, sp_data, ma_data, sp_hist_high, fg_data, tw_data, tw
       <br><span style="opacity:0.5">{ism_date if ism_date != "N/A" else "暫無資料"}</span>
     </div>
   </div>
-  <div class="card" style="--accent: {yc_color}">
+  <div class="card {yc_alert}" style="--accent: {yc_color}">
     <div class="card-label">{yc_icon} 10Y−3M 利差</div>
     <div class="card-value" style="font-size:2rem">{yc_val}</div>
     <div class="card-sub">
@@ -777,6 +905,8 @@ def generate_html(vix_data, sp_data, ma_data, sp_hist_high, fg_data, tw_data, tw
 
 <div class="controls">
   <span>區間</span>
+  <button class="btn" onclick="setRange(90)">3M</button>
+  <button class="btn" onclick="setRange(180)">6M</button>
   <button class="btn" onclick="setRange(365)">1Y</button>
   <button class="btn" onclick="setRange(365*3)">3Y</button>
   <button class="btn" onclick="setRange(365*5)">5Y</button>
@@ -829,6 +959,18 @@ def generate_html(vix_data, sp_data, ma_data, sp_hist_high, fg_data, tw_data, tw
       </div>
     </div>
     <div class="chart-wrap"><canvas id="capeChart"></canvas></div>
+  </div>
+
+  <div class="chart-section">
+    <div class="chart-header">
+      <div class="chart-title"><b>台股成交量 / M1B</b> 每日佔比 <span style="font-size:0.65rem;opacity:0.5">（成交金額億元 ÷ M1B期底億元 × 100%）</span></div>
+      <div class="chart-legend">
+        <div class="legend-item"><div class="legend-dot" style="background:#00b8ff"></div>成交/M1B %</div>
+        <div class="legend-item" style="color:#ff4757"><div class="legend-dot" style="background:#ff4757"></div>&gt;10% 過熱</div>
+        <div class="legend-item" style="color:#ffaa00"><div class="legend-dot" style="background:#ffaa00"></div>7–10% 偏熱</div>
+      </div>
+    </div>
+    <div class="chart-wrap"><canvas id="m1bChart"></canvas></div>
   </div>
 
   <div class="chart-section">
@@ -902,6 +1044,8 @@ const TW_MA_DATA = {json.dumps(tw_ma_data)};
 const TW_HIST_HIGH = {tw_hist_high};
 const CAPE_DATA    = {json.dumps(cape_data)};
 const CAPE_AVG     = {cape_hist_avg};
+const M1B_DATA     = {json.dumps(m1b_data)};
+const TRADE_DATA   = {json.dumps(trade_data)};
 const UNRATE_DATA  = {json.dumps(r_unemp["data"])};
 const CPI_YOY_DATA = {json.dumps(r_cpi["data"])};
 const ISM_DATA     = {json.dumps(r_ism["data"])};
@@ -1140,6 +1284,88 @@ const twChart = makeChart('twChart', [
 Chart.register(twHighPlugin);
 twChart.config.plugins = [twHighPlugin];
 twChart.update();
+
+// M1B ratio chart
+// 建立每日 ratio 序列：每日成交(億) ÷ 對應月份 M1B(億) × 100
+(function() {{
+  // 把 M1B 月度資料轉成 map: "YYYY-MM" -> value
+  const m1bMap = {{}};
+  M1B_DATA.forEach(d => {{ m1bMap[d.x] = d.y; }});
+
+  // 對每日成交計算比率，使用當月或上個月的 M1B
+  function getM1B(dateStr) {{
+    const ym = dateStr.slice(0, 7); // "YYYY-MM"
+    if (m1bMap[ym]) return m1bMap[ym];
+    // fallback: 上個月
+    const [y, m] = ym.split('-').map(Number);
+    const prevM = m === 1 ? 12 : m - 1;
+    const prevY = m === 1 ? y - 1 : y;
+    const prevYm = `${{prevY}}-${{String(prevM).padStart(2,'0')}}`;
+    return m1bMap[prevYm] || 0;
+  }}
+
+  const ratioData = TRADE_DATA
+    .map(d => {{
+      const m1b = getM1B(d.x);
+      return m1b > 0 ? {{ x: d.x, y: Math.round(d.y / m1b * 10000) / 100 }} : null;
+    }})
+    .filter(Boolean);
+
+  window.M1B_RATIO_DATA = ratioData;
+}})();
+
+const m1bPlugin = {{
+  id: 'm1bBands',
+  beforeDraw(chart) {{
+    const {{ ctx, chartArea, scales }} = chart;
+    if (!chartArea) return;
+    const y10 = scales.y.getPixelForValue(10);
+    const y7  = scales.y.getPixelForValue(7);
+    ctx.save();
+    // 紅：>10%
+    ctx.fillStyle = 'rgba(255,71,87,0.08)';
+    ctx.fillRect(chartArea.left, chartArea.top, chartArea.right - chartArea.left, Math.max(0, y10 - chartArea.top));
+    // 黃：7-10%
+    const y10c = Math.max(y10, chartArea.top);
+    const y7c  = Math.min(y7, chartArea.bottom);
+    if (y7c > y10c) {{
+      ctx.fillStyle = 'rgba(255,170,0,0.06)';
+      ctx.fillRect(chartArea.left, y10c, chartArea.right - chartArea.left, y7c - y10c);
+    }}
+    // 參考線
+    ctx.setLineDash([4,4]); ctx.lineWidth = 1;
+    if (y10 >= chartArea.top && y10 <= chartArea.bottom) {{
+      ctx.strokeStyle = 'rgba(255,71,87,0.5)';
+      ctx.beginPath(); ctx.moveTo(chartArea.left, y10); ctx.lineTo(chartArea.right, y10); ctx.stroke();
+      ctx.fillStyle = 'rgba(255,71,87,0.7)';
+      ctx.font = "10px 'Share Tech Mono'"; ctx.setLineDash([]);
+      ctx.fillText('10% 過熱', chartArea.left + 6, y10 - 4);
+      ctx.setLineDash([4,4]);
+    }}
+    if (y7 >= chartArea.top && y7 <= chartArea.bottom) {{
+      ctx.strokeStyle = 'rgba(255,170,0,0.4)';
+      ctx.beginPath(); ctx.moveTo(chartArea.left, y7); ctx.lineTo(chartArea.right, y7); ctx.stroke();
+    }}
+    ctx.restore();
+  }}
+}};
+
+const m1bChart = makeChart('m1bChart', [{{
+  data: window.M1B_RATIO_DATA,
+  borderColor: '#00b8ff',
+  borderWidth: 1.5,
+  pointRadius: 0,
+  fill: false,
+  parsing: {{ xAxisKey: 'x', yAxisKey: 'y' }},
+  tension: 0.2,
+  segment: {{
+    borderColor: ctx => ctx.p1.parsed.y > 10 ? '#ff4757' :
+                        ctx.p1.parsed.y > 7  ? '#ffaa00' : '#00b8ff',
+  }},
+}}], 0, null);
+Chart.register(m1bPlugin);
+m1bChart.config.plugins = [m1bPlugin];
+m1bChart.update();
 
 // CAPE chart with historical avg + danger band
 const capePlugin = {{
@@ -1380,6 +1606,9 @@ function setRange(days) {{
   twChart.data.datasets[1].data = filter(TW_MA_DATA);
   twChart.update('none');
 
+  m1bChart.data.datasets[0].data = filter(window.M1B_RATIO_DATA);
+  m1bChart.update('none');
+
   capeChart.data.datasets[0].data = filter(CAPE_DATA);
   capeChart.update('none');
 
@@ -1417,10 +1646,16 @@ def main():
     print(f"[{datetime.now().strftime('%H:%M:%S')}] 抓取衰退預警指標...")
     recession = fetch_recession_signals()
 
+    print(f"[{datetime.now().strftime('%H:%M:%S')}] 抓取 M1B 貨幣供給（CBC）...")
+    m1b_data = fetch_m1b_history()
+
+    print(f"[{datetime.now().strftime('%H:%M:%S')}] 抓取台股每日成交金額（近 24 個月）...")
+    trade_data = fetch_twse_daily_trade_value(months=24)
+
     generated_at = datetime.now().strftime("%Y-%m-%d %H:%M")
     print(f"[{datetime.now().strftime('%H:%M:%S')}] 生成 HTML...")
 
-    html = generate_html(vix_data, sp_data, ma_data, sp_hist_high, fg_data, tw_data, tw_ma_data, tw_hist_high, cape_data, recession, generated_at)
+    html = generate_html(vix_data, sp_data, ma_data, sp_hist_high, fg_data, tw_data, tw_ma_data, tw_hist_high, cape_data, recession, m1b_data, trade_data, generated_at)
     OUTPUT.write_text(html, encoding="utf-8")
 
     vix_current = vix_data[-1]["y"] if vix_data else "N/A"
