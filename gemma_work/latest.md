@@ -1,20 +1,21 @@
-# Claude Handoff 20260531_1832
-> 自動生成於 2026-05-31 18:32
+# Claude Handoff 20260601_1651
+> 自動生成於 2026-06-01 16:51
 
 ## 未提交的檔案異動
 ```
 m daily-stock-analysis
- M rabbit-care/rabbit.db
+ M gemma_work/latest.md
  m stock-screener-ai
+?? scripts/vm_monitor.sh
 ```
 
 ## 近期 Commits
 ```
+ce23de1 chore: 自動同步 2026-06-01 15:40
+308dbd3 chore: 自動同步 2026-06-01 10:40
+439e3ef chore: 自動同步 2026-06-01 00:40
+e7445d1 chore: 自動同步 2026-05-31 19:40
 28dcc9e chore: 自動同步 2026-05-31 14:40
-f2df8ed chore: 自動同步 2026-05-31 09:40
-14b4f49 chore: 自動同步 2026-05-31 04:40
-deb80b8 chore: 自動同步 2026-05-30 23:40
-722ce9b chore: 自動同步 2026-05-30 18:40
 ```
 
 ## 給 Hermes 的備註
