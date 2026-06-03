@@ -1,24 +1,25 @@
-# Claude Handoff 20260601_2255
-> 自動生成於 2026-06-01 22:55
+# Claude Handoff 20260603_2336
+> 自動生成於 2026-06-03 23:36
 
 ## 未提交的檔案異動
 ```
 m daily-stock-analysis
- M gemma_work/latest.md
  M market-dashboard/fg_history.json
+ M market-dashboard/generate.py
  M market-dashboard/index.html
  M market-dashboard/sp_state.json
  M rabbit-care/rabbit.db
  m stock-screener-ai
+?? market-dashboard/bb_cache.json
 ```
 
 ## 近期 Commits
 ```
-a487549 chore: 自動同步 2026-06-01 20:40
-ce23de1 chore: 自動同步 2026-06-01 15:40
-308dbd3 chore: 自動同步 2026-06-01 10:40
-439e3ef chore: 自動同步 2026-06-01 00:40
-e7445d1 chore: 自動同步 2026-05-31 19:40
+ebb590f chore: 自動同步 2026-06-03 22:40
+c74ecb4 chore: 自動同步 2026-06-03 17:40
+1163dee chore: 自動同步 2026-06-03 12:40
+b791822 chore: 自動同步 2026-06-03 07:40
+1aeeaeb chore: 自動同步 2026-06-03 02:40
 ```
 
 ## 給 Hermes 的備註
