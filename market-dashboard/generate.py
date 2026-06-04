@@ -147,24 +147,27 @@ def fetch_taiex_with_ma(period="20y"):
 
 def fetch_bofa_bull_bear() -> dict:
     """美銀牛熊指標（0=極空 / 10=極多）。
-    嘗試從 Bloomberg/FT/求財 等新聞頁面抓數值；失敗則用本地快取。
-    手動更新：直接寫 bb_cache.json  {"value": X.X, "date": "YYYY-MM-DD"}
+    cache 格式：{"history": [{"date":"YYYY-MM-DD","value":X.X}, ...]}
+    手動更新：執行 python3 update_bb.py <value>  或直接編輯 bb_cache.json
     """
     import re
-    cache = json.loads(BB_CACHE.read_text()) if BB_CACHE.exists() else {}
 
-    urls_patterns = [
-        # 嘗試 theglobaleconomy 或其他聚合站點
-        ("https://www.yardeni.com/pub/bullbear.pdf", None),
-        ("https://research.stlouisfed.org/", None),  # placeholder, will fail gracefully
-    ]
+    # ── 讀取 / 遷移舊格式 ──────────────────────────────────────────
+    raw = json.loads(BB_CACHE.read_text()) if BB_CACHE.exists() else {}
+    if isinstance(raw, dict) and "history" not in raw:
+        # 舊格式 {"value":X,"date":"..."}  → 遷移為新格式
+        history = []
+        if raw.get("value") is not None:
+            history.append({"date": raw["date"], "value": raw["value"]})
+        raw = {"history": history}
 
-    # 嘗試從 Google News RSS 抓最新提及的數值（需要出現在 bull/bear 上下文中）
+    history: list = raw.get("history", [])
+
+    # ── 嘗試從 Google News RSS 抓最新值 ─────────────────────────────
     try:
         rss_url = "https://news.google.com/rss/search?q=BofA+%22bull+%26+bear%22+indicator&hl=en-US&gl=US&ceid=US:en"
         r = requests.get(rss_url, headers={"User-Agent": "Mozilla/5.0"}, timeout=10)
         text = r.text[:8000].lower()
-        # 找 "bull" 上下文中的 X.X 數值，例如 "indicator at 7.5" / "fell to 6.2"
         context_matches = re.findall(
             r'(?:indicator|b&b|bull.{0,20}bear|bear.{0,20}bull).{0,60}?(\b[0-9]\.[0-9]\b)',
             text
@@ -173,21 +176,27 @@ def fetch_bofa_bull_bear() -> dict:
         if candidates:
             value = round(candidates[0], 1)
             today = datetime.now().strftime("%Y-%m-%d")
+            last = history[-1] if history else {}
             cache_age = 999
-            if cache.get("date"):
+            if last.get("date"):
                 try:
-                    from datetime import date as _date
-                    d0 = _date.fromisoformat(cache["date"])
-                    cache_age = (_date.today() - d0).days
+                    from datetime import date as _d
+                    cache_age = (_d.today() - _d.fromisoformat(last["date"])).days
                 except Exception:
                     pass
-            if cache.get("value") != value or cache_age >= 6:
-                cache = {"value": value, "date": today, "source": "google-news-rss"}
-                BB_CACHE.write_text(json.dumps(cache, ensure_ascii=False))
+            if last.get("value") != value or cache_age >= 6:
+                history.append({"date": today, "value": value})
+                raw = {"history": history}
+                BB_CACHE.write_text(json.dumps(raw, ensure_ascii=False, indent=2))
     except Exception:
         pass
 
-    return cache  # {"value": float|None, "date": str, "source": str}
+    latest = history[-1] if history else {}
+    return {
+        "value":   latest.get("value"),
+        "date":    latest.get("date", "N/A"),
+        "history": history,
+    }
 
 
 def fetch_cape():
@@ -562,8 +571,9 @@ def generate_html(vix_data, sp_data, ma_data, sp_hist_high, fg_data, tw_data, tw
     yc_alert    = alert_class(yc_color)
 
     # 美銀牛熊指標
-    bb_value = (bb_data or {}).get("value")
-    bb_date  = (bb_data or {}).get("date", "N/A")
+    bb_value   = (bb_data or {}).get("value")
+    bb_date    = (bb_data or {}).get("date", "N/A")
+    bb_history = (bb_data or {}).get("history", [])
     if bb_value is not None:
         if bb_value >= 8.0:
             bb_color = "#ff4757"; bb_label = "賣出訊號"
@@ -944,7 +954,7 @@ def generate_html(vix_data, sp_data, ma_data, sp_hist_high, fg_data, tw_data, tw
 <div class="cards" style="margin-top:0; grid-template-columns: repeat(3, 1fr)">
   <div class="card {bb_alert}" style="--accent: {bb_color}; grid-column: 1 / -1">
     <div class="card-label"><span class="pulse"></span>美銀牛熊指標（BofA Bull &amp; Bear）</div>
-    <div style="display:flex; align-items:center; gap:2rem; flex-wrap:wrap">
+    <div style="display:flex; align-items:center; gap:2rem; flex-wrap:wrap; margin-bottom:1.2rem">
       <div class="card-value" style="font-size:3rem; min-width:5rem">{bb_display}</div>
       <div style="flex:1; min-width:200px">
         <div style="display:flex; justify-content:space-between; font-size:0.7rem; opacity:0.5; margin-bottom:4px">
@@ -959,6 +969,9 @@ def generate_html(vix_data, sp_data, ma_data, sp_hist_high, fg_data, tw_data, tw
           <br><span style="opacity:0.5; font-size:0.7rem">{bb_date} · 每週更新，由 BofA Global Research 發布</span>
         </div>
       </div>
+    </div>
+    <div style="position:relative; height:180px">
+      <canvas id="bbChart"></canvas>
     </div>
   </div>
 </div>
@@ -1152,6 +1165,7 @@ const UNRATE_DATA  = {json.dumps(r_unemp["data"])};
 const CPI_YOY_DATA = {json.dumps(r_cpi["data"])};
 const ISM_DATA     = {json.dumps(r_ism["data"])};
 const T10Y2Y_DATA  = {json.dumps(r_yc["data"])};
+const BB_DATA      = {json.dumps([{"x": h["date"], "y": h["value"]} for h in bb_history])};
 
 const CHART_DEFAULTS = {{
   responsive: true,
@@ -1681,6 +1695,64 @@ Chart.register(ycPlugin);
 yieldCurveChart.config.plugins = [ycPlugin];
 yieldCurveChart.update();
 
+// BofA Bull & Bear chart
+const bbAnnotationPlugin = {{
+  id: 'bbAnnotation',
+  afterDraw(chart) {{
+    const {{ctx, chartArea: {{left, right, top, bottom}}, scales: {{y}}}} = chart;
+    if (!y) return;
+    ctx.save();
+    // 買入區（0-2）背景
+    const y2 = y.getPixelForValue(2), y0 = y.getPixelForValue(0);
+    ctx.fillStyle = 'rgba(0,214,143,0.08)';
+    ctx.fillRect(left, y2, right - left, y0 - y2);
+    // 賣出區（8-10）背景
+    const y10 = y.getPixelForValue(10), y8 = y.getPixelForValue(8);
+    ctx.fillStyle = 'rgba(255,71,87,0.08)';
+    ctx.fillRect(left, y10, right - left, y8 - y10);
+    // 參考線 2.0
+    ctx.strokeStyle = 'rgba(0,214,143,0.5)'; ctx.lineWidth = 1;
+    ctx.setLineDash([4, 3]);
+    ctx.beginPath(); ctx.moveTo(left, y2); ctx.lineTo(right, y2); ctx.stroke();
+    // 參考線 8.0
+    ctx.strokeStyle = 'rgba(255,71,87,0.5)';
+    const y8px = y.getPixelForValue(8);
+    ctx.beginPath(); ctx.moveTo(left, y8px); ctx.lineTo(right, y8px); ctx.stroke();
+    ctx.restore();
+  }}
+}};
+const bbChart = new Chart(document.getElementById('bbChart').getContext('2d'), {{
+  type: 'line',
+  data: {{
+    datasets: [{{
+      data: BB_DATA,
+      borderColor: '{bb_color}',
+      borderWidth: 2,
+      pointRadius: BB_DATA.length <= 20 ? 4 : 0,
+      pointBackgroundColor: '{bb_color}',
+      fill: false,
+      parsing: {{ xAxisKey: 'x', yAxisKey: 'y' }},
+      tension: 0.3,
+    }}]
+  }},
+  options: {{
+    ...CHART_DEFAULTS,
+    scales: {{
+      x: {{ ...CHART_DEFAULTS.scales.x }},
+      y: {{
+        ...CHART_DEFAULTS.scales.y,
+        min: 0, max: 10,
+        ticks: {{ color: '#5a6a7e', stepSize: 2 }},
+      }}
+    }},
+    plugins: {{
+      ...CHART_DEFAULTS.plugins,
+      legend: {{ display: false }},
+    }},
+  }},
+  plugins: [bbAnnotationPlugin],
+}});
+
 // Range selector
 function setRange(days) {{
   document.querySelectorAll('.btn').forEach(b => b.classList.remove('active'));
@@ -1722,6 +1794,8 @@ function setRange(days) {{
   ismChart.update('none');
   yieldCurveChart.data.datasets[0].data = filter(T10Y2Y_DATA);
   yieldCurveChart.update('none');
+  bbChart.data.datasets[0].data = filter(BB_DATA);
+  bbChart.update('none');
 }}
 </script>
 </body>
