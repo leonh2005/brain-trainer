@@ -507,11 +507,12 @@ def generate_html(vix_data, sp_data, ma_data, sp_hist_high, fg_data, tw_data, tw
     def sig_color(triggered): return "#ff4757" if triggered else "#00d68f"
 
     unemp_icon  = sig_icon(r_unemp["signal"])
-    cpi_icon    = sig_icon(r_cpi["signal"])
+    cpi_above4  = (r_cpi["current"] or 0) > 4.0
+    cpi_icon    = "🚨" if (r_cpi["signal"] or cpi_above4) else "✅"
     ism_icon    = sig_icon(r_ism["signal"])
     yc_icon     = sig_icon(r_yc["signal"])
     unemp_color = sig_color(r_unemp["signal"])
-    cpi_color   = sig_color(r_cpi["signal"])
+    cpi_color   = "#ff4757" if (r_cpi["signal"] or cpi_above4) else "#00d68f"
     ism_color   = sig_color(r_ism["signal"])
     yc_color    = sig_color(r_yc["signal"])
 
@@ -521,6 +522,16 @@ def generate_html(vix_data, sp_data, ma_data, sp_hist_high, fg_data, tw_data, tw
     yc_val     = f"{r_yc['current']:+.2f}%" if r_yc["current"] is not None else "N/A"
     unemp_date = r_unemp["data"][-1]["x"] if r_unemp.get("data") else "N/A"
     cpi_date   = r_cpi["data"][-1]["x"] if r_cpi.get("data") else "N/A"
+    # 下次 BLS CPI 發布：最新資料月份 + 2 個月的第 11 天（BLS 固定約在次次月中旬發布）
+    try:
+        from datetime import date as _d
+        _cpi_latest = _d.fromisoformat(cpi_date)
+        _next_m = _cpi_latest.month + 2
+        _next_y = _cpi_latest.year + (_next_m - 1) // 12
+        _next_m = (_next_m - 1) % 12 + 1
+        cpi_next_release = f"{_next_y}-{_next_m:02d}-11 前後"
+    except Exception:
+        cpi_next_release = "N/A"
     ism_date   = r_ism["data"][-1]["x"] if r_ism.get("data") else "N/A"
     yc_date    = r_yc["data"][-1]["x"] if r_yc.get("data") else "N/A"
     cape_hist_avg = 17.0  # 長期歷史均值
@@ -969,9 +980,9 @@ def generate_html(vix_data, sp_data, ma_data, sp_hist_high, fg_data, tw_data, tw
     <div class="card-label">{cpi_icon} 核心 CPI（YoY）</div>
     <div class="card-value" style="font-size:2rem">{cpi_val}</div>
     <div class="card-sub">
-      {'<b>🔺 重新加速</b>' if r_cpi["signal"] else '趨勢未加速'}
-      &nbsp;·&nbsp; CPILFESL
-      <br><span style="opacity:0.5">{cpi_date}</span>
+      {'<b>🚨 CPI &gt; 4%</b>' if cpi_above4 else ('<b>🔺 重新加速</b>' if r_cpi["signal"] else '趨勢未加速')}
+      &nbsp;·&nbsp; {'<b>警戒：核心通膨過熱</b>' if cpi_above4 else 'CPILFESL'}
+      <br><span style="opacity:0.5">{cpi_date} · 預計下次更新：{cpi_next_release}</span>
     </div>
   </div>
   <div class="card {ism_alert}" style="--accent: {ism_color}">
