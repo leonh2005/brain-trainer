@@ -5,32 +5,35 @@
 """
 
 import json
-from datetime import datetime, time
+from datetime import datetime, date, timedelta, time
 from pathlib import Path
 
 import requests
-import yfinance as yf
+import shioaji as sj
 
-TELEGRAM_TOKEN = "8666778924:AAFMAFKfsfx3opS2CfCBrDYMIx6vcJKACTk"
+TELEGRAM_TOKEN  = "8666778924:AAFMAFKfsfx3opS2CfCBrDYMIx6vcJKACTk"
 TELEGRAM_CHAT_ID = "7556217543"
+SHIOAJI_API_KEY    = "hj7FsrPYHW9nNiHrcDB2DLHu6LhH3uYvjpR2NdK23E9"
+SHIOAJI_SECRET_KEY = "A8CRXZEvWePQgvdZdmCUjzNWwP4xtLf7AdzYE8Cz3Vig"
 STATE_FILE = Path(__file__).parent / "ma_monitor_state.json"
 LOG_FILE   = Path(__file__).parent.parent / "logs" / "ma_monitor.log"
 
+# stock_id → (exchange, name)
 STOCKS = {
-    "國巨":  "2327.TW",
-    "正文":  "4906.TW",
-    "鴻海":  "2317.TW",
-    "華邦電": "2344.TW",
-    "光寶科": "2301.TW",
-    "光洋科": "1785.TWO",
+    "2327": ("TSE", "國巨"),
+    "4906": ("TSE", "正文"),
+    "2317": ("TSE", "鴻海"),
+    "2344": ("TSE", "華邦電"),
+    "2301": ("TSE", "光寶科"),
+    "1785": ("OTC", "光洋科"),
 }
 
-MA_PERIODS       = [5, 10, 20]
-ALERT_THRESHOLD  = 1.0   # 距均線 ≤1% 就通知
-CLEAR_THRESHOLD  = 2.0   # 距均線 >2% 才解除通知狀態
+MA_PERIODS      = [5, 10, 20]
+ALERT_THRESHOLD = 1.0   # 距均線 ≤1% 就通知
+CLEAR_THRESHOLD = 2.0   # 距均線 >2% 才解除通知狀態
 
 
-def log(msg):
+def log(msg: str) -> None:
     ts = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     line = f"[{ts}] {msg}"
     print(line)
@@ -39,7 +42,7 @@ def log(msg):
         f.write(line + "\n")
 
 
-def is_trading_hours():
+def is_trading_hours() -> bool:
     now = datetime.now()
     if now.weekday() >= 5:
         return False
@@ -47,7 +50,7 @@ def is_trading_hours():
     return time(9, 0) <= t <= time(13, 35)
 
 
-def send_telegram(msg):
+def send_telegram(msg: str) -> None:
     try:
         requests.post(
             f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage",
@@ -67,35 +70,70 @@ def load_state() -> dict:
     return {}
 
 
-def save_state(state: dict):
+def save_state(state: dict) -> None:
     STATE_FILE.write_text(json.dumps(state, ensure_ascii=False, indent=2))
 
 
-def analyze(name, ticker_str, state):
-    # 歷史日線（3個月，用於計算 MA）
-    hist = yf.download(ticker_str, period="3mo", interval="1d",
-                       progress=False, auto_adjust=True, multi_level_column=False)
-    if hist.empty or len(hist) < 20:
-        log(f"{name}: 歷史資料不足")
+def login_shioaji() -> sj.Shioaji:
+    api = sj.Shioaji(simulation=False)
+    api.login(api_key=SHIOAJI_API_KEY, secret_key=SHIOAJI_SECRET_KEY)
+    return api
+
+
+def get_contract(api: sj.Shioaji, sid: str, exchange: str):
+    store = api.Contracts.Stocks.TSE if exchange == "TSE" else api.Contracts.Stocks.OTC
+    return store.get(sid)
+
+
+def get_daily_closes(api: sj.Shioaji, contract, days: int = 30) -> list[float]:
+    """取最近 days 個交易日收盤價（最多抓 60 天日曆日確保足夠筆數）。"""
+    end   = date.today()
+    start = end - timedelta(days=max(days * 2, 60))
+    try:
+        kbars = api.kbars(
+            contract=contract,
+            start=start.strftime("%Y-%m-%d"),
+            end=end.strftime("%Y-%m-%d"),
+        )
+        closes = [float(c) for c in kbars.Close if c]
+        return closes
+    except Exception as e:
+        log(f"kbars 取得失敗 {contract.code}: {e}")
+        return []
+
+
+def get_current_price(api: sj.Shioaji, contract) -> float | None:
+    try:
+        snaps = api.snapshots([contract])
+        if snaps:
+            return float(snaps[0].close)
+    except Exception as e:
+        log(f"snapshot 取得失敗 {contract.code}: {e}")
+    return None
+
+
+def analyze(api: sj.Shioaji, sid: str, exchange: str, name: str, state: dict) -> None:
+    contract = get_contract(api, sid, exchange)
+    if contract is None:
+        log(f"{name}({sid}): 找不到合約")
         return
 
-    closes = hist["Close"].dropna()
+    closes = get_daily_closes(api, contract, days=25)
+    if len(closes) < 20:
+        log(f"{name}: 歷史資料不足（{len(closes)} 筆）")
+        return
 
-    # 盤中即時價（5分K最新一根）
-    intra = yf.download(ticker_str, period="1d", interval="5m",
-                        progress=False, auto_adjust=True, multi_level_column=False)
-    if not intra.empty:
-        current = float(intra["Close"].dropna().iloc[-1])
-    else:
-        current = float(closes.iloc[-1])
+    current = get_current_price(api, contract)
+    if current is None:
+        current = closes[-1]
 
     alerts = []
     for n in MA_PERIODS:
         if len(closes) < n:
             continue
-        ma_val = float(closes.iloc[-n:].mean())
-        key = f"{name}_{n}MA"
-        dist = (current - ma_val) / ma_val * 100  # 正=在線上，負=跌破
+        ma_val = sum(closes[-n:]) / n
+        key    = f"{sid}_{n}MA"
+        dist   = (current - ma_val) / ma_val * 100  # 正=在線上，負=跌破
 
         if dist > CLEAR_THRESHOLD:
             state.pop(key, None)
@@ -107,27 +145,42 @@ def analyze(name, ticker_str, state):
             else:
                 label = f"⚠️ 接近 {n}MA（剩 {dist:.2f}%）"
             alerts.append(f"  {label}  現價 {current:.1f} / MA {ma_val:.1f}")
-            state[key] = {"at": datetime.now().strftime("%H:%M"), "price": current, "ma": ma_val}
+            state[key] = {
+                "at": datetime.now().strftime("%H:%M"),
+                "price": current,
+                "ma": ma_val,
+            }
 
     if alerts:
         icon = "🔴" if any("🔴" in a for a in alerts) else "⚠️"
-        msg = f"{icon} {name}（{ticker_str.replace('.TW','')}）\n" + "\n".join(alerts)
+        msg  = f"{icon} {name}（{sid}）\n" + "\n".join(alerts)
         send_telegram(msg)
         log(f"通知送出：{name} {alerts}")
 
 
-def main():
+def main() -> None:
     if not is_trading_hours():
         log("非交易時間，略過")
         return
 
+    try:
+        api = login_shioaji()
+    except Exception as e:
+        log(f"Shioaji 登入失敗: {e}")
+        return
+
     state = load_state()
-    for name, ticker in STOCKS.items():
+    for sid, (exchange, name) in STOCKS.items():
         try:
-            analyze(name, ticker, state)
+            analyze(api, sid, exchange, name, state)
         except Exception as e:
-            log(f"{name} 發生錯誤: {e}")
+            log(f"{name}({sid}) 發生錯誤: {e}")
     save_state(state)
+
+    try:
+        api.logout()
+    except Exception:
+        pass
 
 
 if __name__ == "__main__":
