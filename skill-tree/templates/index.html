@@ -40,7 +40,28 @@
   <div class="footer">
     <span>SKILLS {{ character.skill_count }}</span>
     <span>TOTAL LEVEL {{ character.total_level }}</span>
+    <button class="btn" style="font-size:9px; padding:4px 12px;" onclick="document.getElementById('add-cat-form').style.display='block'; this.style.display='none'">+ 新增大類</button>
   </div>
+
+  <form id="add-cat-form" class="xp-form" method="POST" action="/category/add" style="display:none; max-width:500px; margin:12px auto;">
+    <h3>新增大類</h3>
+    <div class="form-row">
+      <label>名稱</label>
+      <input type="text" name="name" placeholder="大類名稱" required>
+    </div>
+    <div class="form-row">
+      <label>Emoji</label>
+      <input type="text" name="emoji" placeholder="🔹" style="max-width:80px;">
+    </div>
+    <div class="form-row">
+      <label>顏色</label>
+      <input type="color" name="color" value="#88aaff" style="max-width:80px; padding:2px;">
+    </div>
+    <div style="display:flex; gap:8px;">
+      <button class="btn" type="submit">ADD</button>
+      <button class="btn" type="button" style="border-color:var(--text-dim); color:var(--text-dim);" onclick="document.getElementById('add-cat-form').style.display='none'; document.querySelector('.btn[onclick*=add-cat-form]').style.display='inline-block'">CANCEL</button>
+    </div>
+  </form>
 
 </div>
 </body>

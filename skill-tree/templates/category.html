@@ -10,10 +10,36 @@
 
   <div class="page-header">
     <a class="back-link" href="/">← BACK TO REGISTRY</a>
-    <div class="page-title" style="color: {{ category.color }}; text-shadow: 0 0 12px {{ category.color }}66;">
-      {{ category.emoji }} {{ category.name }}
+    <div style="display:flex; align-items:baseline; gap:16px; margin-top:8px;">
+      <div class="page-title" style="color: {{ category.color }}; text-shadow: 0 0 12px {{ category.color }}66;">
+        {{ category.emoji }} {{ category.name }}
+      </div>
+      <button class="btn" style="font-size:9px; padding:4px 12px;" onclick="document.getElementById('cat-edit-form').style.display='block'; this.style.display='none'">EDIT</button>
+      <form method="POST" action="/category/{{ category.id }}/delete" style="display:inline;" onsubmit="return confirm('確定刪除「{{ category.name }}」及底下所有技能？')">
+        <button class="btn" type="submit" style="font-size:9px; padding:4px 12px; border-color:#ff4466; color:#ff4466;">DELETE</button>
+      </form>
     </div>
   </div>
+
+  <form id="cat-edit-form" class="xp-form" method="POST" action="/category/{{ category.id }}/edit" style="display:none; max-width:600px; margin:12px 32px;">
+    <h3>編輯大類</h3>
+    <div class="form-row">
+      <label>名稱</label>
+      <input type="text" name="name" value="{{ category.name }}" required>
+    </div>
+    <div class="form-row">
+      <label>Emoji</label>
+      <input type="text" name="emoji" value="{{ category.emoji }}" style="max-width:80px;">
+    </div>
+    <div class="form-row">
+      <label>顏色</label>
+      <input type="color" name="color" value="{{ category.color }}" style="max-width:80px; padding:2px;">
+    </div>
+    <div style="display:flex; gap:8px;">
+      <button class="btn" type="submit">SAVE</button>
+      <button class="btn" type="button" style="border-color:var(--text-dim); color:var(--text-dim);" onclick="document.getElementById('cat-edit-form').style.display='none'; document.querySelector('.btn[onclick*=cat-edit-form]').style.display='inline-block'">CANCEL</button>
+    </div>
+  </form>
 
   <div class="skills-list">
     {% for skill in skills %}
