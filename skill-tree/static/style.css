@@ -93,8 +93,8 @@ body::before {
 
 .char-full {
   display: block;
-  width: 180px;
-  height: auto;
+  height: 380px;
+  width: auto;
   filter: brightness(0.9) contrast(1.1);
 }
 
