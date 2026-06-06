@@ -133,6 +133,21 @@ def get_skill_detail(skill_id):
         "logs": [dict(l) for l in logs],
     }
 
+def update_skill(skill_id, name, description):
+    with get_db() as conn:
+        conn.execute(
+            "UPDATE skills SET name=?, description=? WHERE id=?",
+            (name, description, skill_id)
+        )
+
+def add_skill(category_id, parent_id, name, description):
+    with get_db() as conn:
+        cursor = conn.execute(
+            "INSERT INTO skills (category_id, parent_id, name, description) VALUES (?, ?, ?, ?)",
+            (category_id, parent_id, name, description)
+        )
+        return cursor.lastrowid
+
 def log_xp(skill_id, xp, note):
     with get_db() as conn:
         conn.execute(

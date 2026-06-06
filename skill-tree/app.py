@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, jsonify
-from db import init_db, get_all_categories, get_skills_by_category, get_skill_detail, log_xp, get_character
+from db import init_db, get_all_categories, get_skills_by_category, get_skill_detail, log_xp, get_character, update_skill, add_skill
 
 app = Flask(__name__)
 
@@ -40,6 +40,24 @@ def log_skill_xp(skill_id):
     if xp > 0:
         log_xp(skill_id, xp, note)
     return redirect(url_for("skill", skill_id=skill_id))
+
+@app.route("/skill/<int:skill_id>/edit", methods=["POST"])
+def edit_skill(skill_id):
+    name = request.form.get("name", "").strip()
+    description = request.form.get("description", "").strip()
+    if name:
+        update_skill(skill_id, name, description)
+    return redirect(url_for("skill", skill_id=skill_id))
+
+@app.route("/skill/<int:skill_id>/add_child", methods=["POST"])
+def add_child_skill(skill_id):
+    name = request.form.get("name", "").strip()
+    description = request.form.get("description", "").strip()
+    if not name:
+        return redirect(url_for("skill", skill_id=skill_id))
+    detail = get_skill_detail(skill_id)
+    new_id = add_skill(detail["category_id"], skill_id, name, description)
+    return redirect(url_for("skill", skill_id=new_id))
 
 @app.route("/api/character")
 def api_character():
