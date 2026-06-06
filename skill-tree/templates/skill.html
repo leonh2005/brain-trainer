@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ skill.name }} — SKILL REGISTRY</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<div class="screen">
+
+  <div class="page-header">
+    <a class="back-link" href="/category/{{ skill.category_id }}">← {{ skill.category_name }}</a>
+    <div class="page-title">{{ skill.name }}</div>
+  </div>
+
+  <div class="skill-detail">
+
+    <div class="skill-level-big"
+         style="color: {{ skill.category_color }}; text-shadow: 0 0 20px {{ skill.category_color }}66;">
+      LV {{ skill.level }}
+    </div>
+
+    <div class="skill-xp-bar-wrap">
+      <div class="skill-xp-label">
+        {% if skill.level < 20 %}
+          XP {{ skill.current_xp }} / {{ skill.xp_to_next }}  ·  TOTAL {{ skill.total_xp }}
+        {% else %}
+          MAX LEVEL  ·  TOTAL {{ skill.total_xp }} XP
+        {% endif %}
+      </div>
+      <div class="xp-bar-bg" style="height: 5px;">
+        <div class="xp-bar-fill"
+             style="width: {{ skill.progress_pct }}%; --bar-color: {{ skill.category_color }}; height: 100%;"></div>
+      </div>
+    </div>
+
+    {% if skill.level < 20 %}
+    <form class="xp-form" method="POST" action="/skill/{{ skill.id }}/log">
+      <h3>+ Record XP</h3>
+      <div class="form-row">
+        <label>Hours</label>
+        <input type="number" name="hours" placeholder="0.5" step="0.25" min="0">
+        <span style="font-size:10px; color:var(--text-dim); padding:0 8px;">OR</span>
+        <label>XP</label>
+        <input type="number" name="xp" placeholder="0" min="0">
+      </div>
+      <div class="form-row">
+        <label>Note</label>
+        <input type="text" name="note" placeholder="今天做了什麼...">
+      </div>
+      <button class="btn" type="submit">SUBMIT</button>
+    </form>
+    {% endif %}
+
+    <div class="log-list">
+      <h3>XP Log</h3>
+      {% for entry in skill.logs %}
+      <div class="log-entry">
+        <span class="log-xp">+{{ entry.xp }} XP</span>
+        <span class="log-note">{{ entry.note or '—' }}</span>
+        <span class="log-date">{{ entry.logged_at[:10] }}</span>
+      </div>
+      {% else %}
+      <div style="color: var(--text-dim); font-size: 11px;">NO RECORDS YET</div>
+      {% endfor %}
+    </div>
+
+  </div>
+
+</div>
+</body>
+</html>
