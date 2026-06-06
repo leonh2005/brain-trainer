@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ category.name }} — SKILL REGISTRY</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<div class="screen">
+
+  <div class="page-header">
+    <a class="back-link" href="/">← BACK TO REGISTRY</a>
+    <div class="page-title" style="color: {{ category.color }}; text-shadow: 0 0 12px {{ category.color }}66;">
+      {{ category.emoji }} {{ category.name }}
+    </div>
+  </div>
+
+  <div class="skills-list">
+    {% for skill in skills %}
+    <a class="skill-card {% if skill.parent_id %}child{% endif %}"
+       href="/skill/{{ skill.id }}"
+       style="--bar-color: {{ category.color }}">
+      <div class="skill-card-header">
+        <span class="skill-card-name">{{ skill.name }}</span>
+        <span class="skill-card-level" style="color: {{ category.color }}">LV {{ skill.level }}</span>
+      </div>
+      <div class="xp-bar-bg">
+        <div class="xp-bar-fill"
+             style="width: {{ skill.progress_pct }}%; --bar-color: {{ category.color }}"></div>
+      </div>
+    </a>
+    {% else %}
+    <div style="color: var(--text-dim); font-size: 11px; letter-spacing: 2px;">NO SKILLS YET</div>
+    {% endfor %}
+  </div>
+
+</div>
+</body>
+</html>
