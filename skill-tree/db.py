@@ -133,6 +133,32 @@ def get_skill_detail(skill_id):
         "logs": [dict(l) for l in logs],
     }
 
+def update_category(cat_id, name, emoji, color):
+    with get_db() as conn:
+        conn.execute(
+            "UPDATE categories SET name=?, emoji=?, color=? WHERE id=?",
+            (name, emoji, color, cat_id)
+        )
+
+def add_category(name, emoji, color):
+    with get_db() as conn:
+        cursor = conn.execute(
+            "INSERT INTO categories (name, emoji, color) VALUES (?, ?, ?)",
+            (name, emoji, color)
+        )
+        return cursor.lastrowid
+
+def delete_category(cat_id):
+    with get_db() as conn:
+        # 刪除底下的 xp_logs 和 skills，再刪 category
+        skill_ids = [r["id"] for r in conn.execute(
+            "SELECT id FROM skills WHERE category_id=?", (cat_id,)
+        ).fetchall()]
+        for sid in skill_ids:
+            conn.execute("DELETE FROM xp_logs WHERE skill_id=?", (sid,))
+        conn.execute("DELETE FROM skills WHERE category_id=?", (cat_id,))
+        conn.execute("DELETE FROM categories WHERE id=?", (cat_id,))
+
 def update_skill(skill_id, name, description):
     with get_db() as conn:
         conn.execute(

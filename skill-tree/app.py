@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, jsonify
-from db import init_db, get_all_categories, get_skills_by_category, get_skill_detail, log_xp, get_character, update_skill, add_skill
+from db import init_db, get_all_categories, get_skills_by_category, get_skill_detail, log_xp, get_character, update_skill, add_skill, update_category, add_category, delete_category
 
 app = Flask(__name__)
 
@@ -40,6 +40,29 @@ def log_skill_xp(skill_id):
     if xp > 0:
         log_xp(skill_id, xp, note)
     return redirect(url_for("skill", skill_id=skill_id))
+
+@app.route("/category/<int:cat_id>/edit", methods=["POST"])
+def edit_category(cat_id):
+    name = request.form.get("name", "").strip()
+    emoji = request.form.get("emoji", "").strip()
+    color = request.form.get("color", "").strip()
+    if name:
+        update_category(cat_id, name, emoji, color)
+    return redirect(url_for("category", cat_id=cat_id))
+
+@app.route("/category/<int:cat_id>/delete", methods=["POST"])
+def remove_category(cat_id):
+    delete_category(cat_id)
+    return redirect(url_for("index"))
+
+@app.route("/category/add", methods=["POST"])
+def create_category():
+    name = request.form.get("name", "").strip()
+    emoji = request.form.get("emoji", "🔹").strip()
+    color = request.form.get("color", "#88aaff").strip()
+    if name:
+        add_category(name, emoji, color)
+    return redirect(url_for("index"))
 
 @app.route("/skill/<int:skill_id>/edit", methods=["POST"])
 def edit_skill(skill_id):
