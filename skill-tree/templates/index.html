@@ -20,16 +20,19 @@
       <div class="character-name">{{ character.name }}</div>
       <div class="character-level">LEVEL {{ character.total_level }}</div>
       <div class="character-figure">
-        <img class="char-full" src="/static/img/character_upper.png" alt="character">
+        <img class="char-full" src="/static/img/character_transparent.png" alt="character">
       </div>
     </div>
 
     {% for cat in categories %}
     {% set angle = loop.index0 * (360 / categories|length) %}
+    {% set ball_num = loop.index %}
     <a class="orb" href="/category/{{ cat.id }}"
-       style="--angle: {{ angle }}deg; --color: {{ cat.color }}">
+       style="--angle: {{ angle }}deg;">
       <div class="orb-inner">
-        <div class="orb-emoji">{{ cat.emoji }}</div>
+        <div class="db-stars">
+          {% for i in range(ball_num) %}<span class="db-star">★</span>{% endfor %}
+        </div>
         <div class="orb-name">{{ cat.name }}</div>
         <div class="orb-level">LV {{ cat.avg_level | int }}</div>
       </div>
