@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <title>STEVEN — SKILL REGISTRY</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<div class="screen">
+
+  <div class="header">
+    <span class="title">◈ SKILL REGISTRY</span>
+    <span>{{ character.skill_count }} SKILLS TRACKED</span>
+  </div>
+
+  <div class="character-arena">
+    <div class="orbit-ring"></div>
+
+    <div class="character-container">
+      <div class="character-name">{{ character.name }}</div>
+      <div class="character-level">LEVEL {{ character.total_level }}</div>
+      <div class="character-figure">
+        <img class="char-upper" src="/static/img/character_upper.png" alt="character">
+        <svg class="char-lower" viewBox="0 0 120 130" xmlns="http://www.w3.org/2000/svg">
+          <rect x="22" y="0" width="76" height="10" rx="1" fill="#2a2a3e"/>
+          <rect x="24" y="8" width="30" height="88" rx="2" fill="#1c1c2e"/>
+          <rect x="66" y="8" width="30" height="88" rx="2" fill="#1c1c2e"/>
+          <rect x="52" y="10" width="4" height="85" fill="#15152a"/>
+          <ellipse cx="39" cy="102" rx="24" ry="8" fill="#0f0f18"/>
+          <ellipse cx="44" cy="100" rx="18" ry="5" fill="#191926"/>
+          <ellipse cx="81" cy="102" rx="24" ry="8" fill="#0f0f18"/>
+          <ellipse cx="86" cy="100" rx="18" ry="5" fill="#191926"/>
+        </svg>
+      </div>
+    </div>
+
+    {% for cat in categories %}
+    {% set angle = loop.index0 * (360 / categories|length) %}
+    <a class="orb" href="/category/{{ cat.id }}"
+       style="--angle: {{ angle }}deg; --color: {{ cat.color }}">
+      <div class="orb-inner">
+        <div class="orb-emoji">{{ cat.emoji }}</div>
+        <div class="orb-name">{{ cat.name }}</div>
+        <div class="orb-level">LV {{ cat.avg_level | int }}</div>
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+
+  <div class="footer">
+    <span>SKILLS {{ character.skill_count }}</span>
+    <span>TOTAL LEVEL {{ character.total_level }}</span>
+  </div>
+
+</div>
+</body>
+</html>
