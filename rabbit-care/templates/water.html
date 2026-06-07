@@ -74,6 +74,15 @@
   <h2>📈 近 7 天每日喝水</h2>
   <canvas id="waterChart" height="90"></canvas>
 </div>
+
+<!-- 長期趨勢 -->
+{% if long_count > 0 %}
+<div class="card">
+  <h2>📅 長期紀錄（共 {{ long_count }} 天）</h2>
+  <canvas id="longChart" height="100"></canvas>
+</div>
+{% endif %}
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
 new Chart(document.getElementById('waterChart'), {
@@ -96,20 +105,51 @@ new Chart(document.getElementById('waterChart'), {
   options: {
     plugins: {
       legend: { display: false },
-      tooltip: {
-        callbacks: { label: ctx => ' ' + ctx.parsed.y + ' cc' }
-      }
+      tooltip: { callbacks: { label: ctx => ' ' + ctx.parsed.y + ' cc' } }
     },
     scales: {
-      y: {
-        beginAtZero: true,
-        ticks: { callback: v => v + ' cc' },
-        grid: { color: 'rgba(0,0,0,0.05)' }
-      },
+      y: { beginAtZero: true, ticks: { callback: v => v + ' cc' }, grid: { color: 'rgba(0,0,0,0.05)' } },
       x: { grid: { display: false } }
     }
   }
 });
+
+{% if long_count > 0 %}
+const longLabels = {{ long_labels | safe }};
+const longValues = {{ long_values | safe }};
+// 超過 60 天就縮小點的半徑
+const manyPoints = longLabels.length > 60;
+new Chart(document.getElementById('longChart'), {
+  type: 'bar',
+  data: {
+    labels: longLabels,
+    datasets: [{
+      label: '喝水量 (cc)',
+      data: longValues,
+      backgroundColor: 'rgba(25,118,210,0.55)',
+      borderColor: '#1565c0',
+      borderWidth: 1,
+      borderRadius: 3,
+    }]
+  },
+  options: {
+    plugins: {
+      legend: { display: false },
+      tooltip: { callbacks: { label: ctx => ' ' + ctx.parsed.y + ' cc' } }
+    },
+    scales: {
+      y: { beginAtZero: true, ticks: { callback: v => v + ' cc' }, grid: { color: 'rgba(0,0,0,0.05)' } },
+      x: {
+        grid: { display: false },
+        ticks: {
+          maxTicksLimit: manyPoints ? 12 : 30,
+          maxRotation: 45,
+        }
+      }
+    }
+  }
+});
+{% endif %}
 </script>
 
 <style>
