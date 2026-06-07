@@ -859,11 +859,38 @@ def water_log():
             if cc:
                 hist_map[r['log_date']] = hist_map.get(r['log_date'], 0) + cc
 
+        # 長期紀錄：所有 water_log（最多一年）
+        long_history = conn.execute(
+            '''SELECT log_date, SUM(amount_cc) as total
+               FROM water_log
+               WHERE log_date >= date('now','localtime','-364 days')
+               GROUP BY log_date
+               ORDER BY log_date ASC''',
+        ).fetchall()
+        long_map = {r['log_date']: r['total'] for r in long_history}
+
+        # 疊加 daily_log 長期
+        dl_long = conn.execute(
+            '''SELECT log_date, water FROM daily_log
+               WHERE log_date >= date('now','localtime','-364 days')
+               AND water IS NOT NULL''',
+        ).fetchall()
+        for r in dl_long:
+            cc = _parse_cc(r['water'])
+            if cc:
+                long_map[r['log_date']] = long_map.get(r['log_date'], 0) + cc
+
     hist_labels, hist_values = [], []
     for i in range(6, -1, -1):
         d = (date.today() - timedelta(days=i)).isoformat()
         hist_labels.append(d[5:])   # MM-DD
         hist_values.append(hist_map.get(d, 0))
+
+    # 長期：只列有記錄的日期（避免大量 0），依時間排序
+    long_labels = sorted(long_map.keys())
+    long_values = [long_map[d] for d in long_labels]
+    long_labels_display = [d[5:] for d in long_labels]  # MM-DD
+
     return render_template('water.html',
         today=today,
         today_records=today_records,
@@ -871,6 +898,9 @@ def water_log():
         today_total=today_total,
         hist_labels=json.dumps(hist_labels),
         hist_values=json.dumps(hist_values),
+        long_labels=json.dumps(long_labels_display),
+        long_values=json.dumps(long_values),
+        long_count=len(long_labels),
     )
 
 
