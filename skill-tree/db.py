@@ -159,6 +159,22 @@ def delete_category(cat_id):
         conn.execute("DELETE FROM skills WHERE category_id=?", (cat_id,))
         conn.execute("DELETE FROM categories WHERE id=?", (cat_id,))
 
+def delete_skill(skill_id):
+    with get_db() as conn:
+        # 收集所有後代 ID（支援多層）
+        to_delete = []
+        queue = [skill_id]
+        while queue:
+            sid = queue.pop()
+            to_delete.append(sid)
+            children = [r["id"] for r in conn.execute(
+                "SELECT id FROM skills WHERE parent_id=?", (sid,)
+            ).fetchall()]
+            queue.extend(children)
+        for sid in to_delete:
+            conn.execute("DELETE FROM xp_logs WHERE skill_id=?", (sid,))
+            conn.execute("DELETE FROM skills WHERE id=?", (sid,))
+
 def update_skill(skill_id, name, description):
     with get_db() as conn:
         conn.execute(

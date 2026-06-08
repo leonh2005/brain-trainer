@@ -43,21 +43,49 @@
 
   <div class="skills-list">
     {% for skill in skills %}
-    <a class="skill-card {% if skill.parent_id %}child{% endif %}"
-       href="/skill/{{ skill.id }}"
-       style="--bar-color: {{ category.color }}">
-      <div class="skill-card-header">
-        <span class="skill-card-name">{{ skill.name }}</span>
-        <span class="skill-card-level" style="color: {{ category.color }}">LV {{ skill.level }}</span>
-      </div>
-      <div class="xp-bar-bg">
-        <div class="xp-bar-fill"
-             style="width: {{ skill.progress_pct }}%; --bar-color: {{ category.color }}"></div>
-      </div>
-    </a>
+    <div class="skill-card-wrap {% if skill.parent_id %}child{% endif %}">
+      <a class="skill-card"
+         href="/skill/{{ skill.id }}"
+         style="--bar-color: {{ category.color }}">
+        <div class="skill-card-header">
+          <span class="skill-card-name">{{ skill.name }}</span>
+          <span class="skill-card-level" style="color: {{ category.color }}">LV {{ skill.level }}</span>
+        </div>
+        <div class="xp-bar-bg">
+          <div class="xp-bar-fill"
+               style="width: {{ skill.progress_pct }}%; --bar-color: {{ category.color }}"></div>
+        </div>
+      </a>
+      <form method="POST" action="/skill/{{ skill.id }}/delete"
+            onsubmit="return confirm('確定刪除「{{ skill.name }}」及其所有子技能？')">
+        <button class="btn skill-del-btn" type="submit">✕</button>
+      </form>
+    </div>
     {% else %}
     <div style="color: var(--text-dim); font-size: 11px; letter-spacing: 2px;">NO SKILLS YET</div>
     {% endfor %}
+
+    <button class="btn" style="margin-top:16px; font-size:10px;"
+            onclick="document.getElementById('add-skill-form').style.display='block'; this.style.display='none'">
+      + 新增技能
+    </button>
+    <form id="add-skill-form" class="xp-form" method="POST" action="/category/{{ category.id }}/add_skill"
+          style="display:none; margin-top:12px; max-width:500px;">
+      <h3>新增技能</h3>
+      <div class="form-row">
+        <label>名稱</label>
+        <input type="text" name="name" placeholder="技能名稱" required>
+      </div>
+      <div class="form-row">
+        <label>說明</label>
+        <input type="text" name="description" placeholder="選填">
+      </div>
+      <div style="display:flex; gap:8px;">
+        <button class="btn" type="submit">ADD</button>
+        <button class="btn" type="button" style="border-color:var(--text-dim); color:var(--text-dim);"
+                onclick="document.getElementById('add-skill-form').style.display='none'; document.querySelector('.btn[onclick*=add-skill-form]').style.display='inline-block'">CANCEL</button>
+      </div>
+    </form>
   </div>
 
 </div>
