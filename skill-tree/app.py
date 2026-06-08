@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, jsonify
-from db import init_db, get_all_categories, get_skills_by_category, get_skill_detail, log_xp, get_character, update_skill, add_skill, update_category, add_category, delete_category
+from db import init_db, get_all_categories, get_skills_by_category, get_skill_detail, log_xp, get_character, update_skill, add_skill, delete_skill, update_category, add_category, delete_category
 
 app = Flask(__name__)
 
@@ -71,6 +71,23 @@ def edit_skill(skill_id):
     if name:
         update_skill(skill_id, name, description)
     return redirect(url_for("skill", skill_id=skill_id))
+
+@app.route("/category/<int:cat_id>/add_skill", methods=["POST"])
+def add_category_skill(cat_id):
+    name = request.form.get("name", "").strip()
+    description = request.form.get("description", "").strip()
+    if name:
+        add_skill(cat_id, None, name, description)
+    return redirect(url_for("category", cat_id=cat_id))
+
+@app.route("/skill/<int:skill_id>/delete", methods=["POST"])
+def remove_skill(skill_id):
+    detail = get_skill_detail(skill_id)
+    cat_id = detail["category_id"] if detail else None
+    delete_skill(skill_id)
+    if cat_id:
+        return redirect(url_for("category", cat_id=cat_id))
+    return redirect(url_for("index"))
 
 @app.route("/skill/<int:skill_id>/add_child", methods=["POST"])
 def add_child_skill(skill_id):

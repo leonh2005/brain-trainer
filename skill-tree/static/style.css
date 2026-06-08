@@ -236,6 +236,22 @@ body::before { display: none; }
   max-width: 700px;
 }
 
+.skill-card-wrap {
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+}
+.skill-card-wrap.child { margin-left: 24px; }
+.skill-card-wrap .skill-card { flex: 1; }
+.skill-del-btn {
+  border-color: #ff4466;
+  color: #ff4466;
+  padding: 4px 10px;
+  font-size: 12px;
+  align-self: stretch;
+}
+.skill-del-btn:hover { background: rgba(255,68,102,0.1); }
+
 .skill-card {
   background: var(--bg2);
   backdrop-filter: blur(6px);

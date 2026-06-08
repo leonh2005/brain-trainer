@@ -13,6 +13,10 @@
     <div style="display:flex; align-items:baseline; gap:16px; margin-top:8px;">
       <div class="page-title" id="skill-title">{{ skill.name }}</div>
       <button class="btn" style="font-size:9px; padding:4px 12px;" onclick="document.getElementById('edit-form').style.display='block'; this.style.display='none'">EDIT</button>
+      <form method="POST" action="/skill/{{ skill.id }}/delete" style="display:inline;"
+            onsubmit="return confirm('確定刪除「{{ skill.name }}」及所有子技能？')">
+        <button class="btn" type="submit" style="font-size:9px; padding:4px 12px; border-color:#ff4466; color:#ff4466;">DELETE</button>
+      </form>
     </div>
   </div>
 
