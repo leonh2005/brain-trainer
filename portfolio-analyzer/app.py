@@ -1,7 +1,9 @@
 from flask import Flask, render_template, jsonify, request
 from dotenv import load_dotenv
 load_dotenv()
-from analysis import get_portfolio_data
+import json
+from pathlib import Path
+from analysis import get_portfolio_data, PORTFOLIO_FILE
 from ai_masters import get_all_analyses
 from dcf import get_dcf_data
 
@@ -36,6 +38,22 @@ def api_ai():
         portfolio_data = get_portfolio_data()
         results = get_all_analyses(portfolio_data, force_refresh=force)
         return jsonify({"ok": True, "data": results})
+    except Exception as e:
+        return jsonify({"ok": False, "error": str(e)}), 500
+
+
+@app.route("/api/targets", methods=["POST"])
+def save_targets():
+    try:
+        targets = request.json
+        if not isinstance(targets, list):
+            return jsonify({"ok": False, "error": "格式錯誤"}), 400
+        with open(PORTFOLIO_FILE) as f:
+            portfolio = json.load(f)
+        portfolio["target"] = targets
+        with open(PORTFOLIO_FILE, "w") as f:
+            json.dump(portfolio, f, ensure_ascii=False, indent=2)
+        return jsonify({"ok": True})
     except Exception as e:
         return jsonify({"ok": False, "error": str(e)}), 500
 

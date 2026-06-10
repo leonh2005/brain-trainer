@@ -77,6 +77,18 @@
 
     .target-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #21262d; font-size: 13px; }
     .target-row:last-child { border-bottom: none; }
+    .target-edit-row { display: flex; gap: 6px; align-items: center; padding: 6px 0; border-bottom: 1px solid #21262d; }
+    .target-edit-row:last-of-type { border-bottom: none; }
+    .target-edit-row input { background: #0d1117; border: 1px solid #30363d; color: #e1e4e8; padding: 5px 8px; border-radius: 4px; font-size: 12px; font-family: inherit; }
+    .target-edit-row input:focus { outline: none; border-color: #58a6ff; }
+    .target-edit-row .inp-ticker { width: 90px; font-family: 'SF Mono', monospace; color: #58a6ff; }
+    .target-edit-row .inp-name { flex: 1; }
+    .target-edit-row .inp-pct { width: 64px; text-align: right; }
+    .del-btn { background: none; border: none; color: #f85149; cursor: pointer; padding: 4px 6px; font-size: 14px; border-radius: 4px; }
+    .del-btn:hover { background: rgba(248,81,73,0.15); }
+    .target-actions { display: flex; gap: 8px; margin-top: 12px; }
+    .target-actions button { font-size: 12px; padding: 5px 14px; }
+    .pct-total { font-size: 11px; color: #8b949e; margin-top: 8px; }
 
     .loading { text-align: center; padding: 60px; color: #8b949e; font-size: 14px; }
     .err { color: #f85149; text-align: center; padding: 40px; }
@@ -321,15 +333,21 @@
             <div class="section-title">現有配置</div>
             <div class="chart-wrap"><canvas id="pieChart"></canvas></div>
           </div>
-          <div class="section">
-            <div class="section-title">目標配置</div>
-            ${d.target.map(t => `
-              <div class="target-row">
-                <span class="ticker">${t.ticker.replace('.TW','').replace('.L','')}</span>
-                <span style="color:#8b949e;font-size:12px">${t.name}</span>
-                <span class="blue" style="font-weight:600">${(t.target_pct * 100).toFixed(0)}%</span>
-              </div>
-            `).join('')}
+          <div class="section" id="target-section">
+            <div class="section-title" style="display:flex;justify-content:space-between;align-items:center;">
+              目標配置
+              <button onclick="enterTargetEdit()" id="target-edit-btn" style="font-size:11px;padding:4px 12px;background:#21262d;color:#8b949e;border:1px solid #30363d;">編輯</button>
+            </div>
+            <div id="target-view">
+              ${d.target.map(t => `
+                <div class="target-row">
+                  <span class="ticker">${t.ticker.replace('.TW','').replace('.L','')}</span>
+                  <span style="color:#8b949e;font-size:12px">${t.name}</span>
+                  <span class="blue" style="font-weight:600">${(t.target_pct * 100).toFixed(0)}%</span>
+                </div>
+              `).join('')}
+            </div>
+            <div id="target-edit" style="display:none"></div>
           </div>
         </div>
 
@@ -368,6 +386,102 @@
       try { render(await load()); }
       catch(e) { document.getElementById('app').innerHTML = `<div class="err">載入失敗：${e.message}</div>`; }
     })();
+
+    let _currentTargets = [];
+
+    function enterTargetEdit() {
+      const rows = document.querySelectorAll('#target-view .target-row');
+      _currentTargets = Array.from(rows).map(r => {
+        const spans = r.querySelectorAll('span');
+        return {
+          ticker: spans[0].textContent.trim(),
+          name: spans[1].textContent.trim(),
+          pct: parseFloat(spans[2].textContent)
+        };
+      });
+      renderTargetEditRows();
+      document.getElementById('target-view').style.display = 'none';
+      document.getElementById('target-edit').style.display = 'block';
+      document.getElementById('target-edit-btn').style.display = 'none';
+    }
+
+    function renderTargetEditRows() {
+      const container = document.getElementById('target-edit');
+      const total = _currentTargets.reduce((s, t) => s + t.pct, 0);
+      container.innerHTML = `
+        ${_currentTargets.map((t, i) => `
+          <div class="target-edit-row" data-idx="${i}">
+            <input class="inp-ticker" value="${t.ticker}" placeholder="代號">
+            <input class="inp-name" value="${t.name}" placeholder="名稱">
+            <input class="inp-pct" type="number" value="${t.pct}" min="0" max="100" step="1" placeholder="%">
+            <span style="color:#8b949e;font-size:11px">%</span>
+            <button class="del-btn" onclick="removeTargetRow(${i})">✕</button>
+          </div>
+        `).join('')}
+        <div class="pct-total" id="pct-total">合計：<span style="color:${Math.abs(total-100)<0.1?'#3fb950':'#ffa657'}">${total.toFixed(0)}%</span></div>
+        <div class="target-actions">
+          <button onclick="addTargetRow()" style="background:#21262d;color:#8b949e;border:1px solid #30363d;">＋ 新增</button>
+          <button onclick="saveTargets()" style="background:#238636;">儲存</button>
+          <button onclick="cancelTargetEdit()" style="background:#21262d;color:#8b949e;border:1px solid #30363d;">取消</button>
+        </div>
+      `;
+      container.querySelectorAll('input').forEach(inp => inp.addEventListener('input', syncTargetEdit));
+    }
+
+    function syncTargetEdit() {
+      const rows = document.querySelectorAll('#target-edit .target-edit-row');
+      _currentTargets = Array.from(rows).map(r => ({
+        ticker: r.querySelector('.inp-ticker').value.trim(),
+        name: r.querySelector('.inp-name').value.trim(),
+        pct: parseFloat(r.querySelector('.inp-pct').value) || 0
+      }));
+      const total = _currentTargets.reduce((s, t) => s + t.pct, 0);
+      const el = document.getElementById('pct-total');
+      if (el) el.innerHTML = `合計：<span style="color:${Math.abs(total-100)<0.1?'#3fb950':'#ffa657'}">${total.toFixed(0)}%</span>`;
+    }
+
+    function addTargetRow() {
+      syncTargetEdit();
+      _currentTargets.push({ ticker: '', name: '', pct: 0 });
+      renderTargetEditRows();
+    }
+
+    function removeTargetRow(idx) {
+      syncTargetEdit();
+      _currentTargets.splice(idx, 1);
+      renderTargetEditRows();
+    }
+
+    function cancelTargetEdit() {
+      document.getElementById('target-view').style.display = 'block';
+      document.getElementById('target-edit').style.display = 'none';
+      document.getElementById('target-edit-btn').style.display = 'inline-block';
+    }
+
+    async function saveTargets() {
+      syncTargetEdit();
+      const payload = _currentTargets
+        .filter(t => t.ticker)
+        .map(t => ({
+          ticker: t.ticker.includes('.') ? t.ticker : t.ticker + '.TW',
+          name: t.name,
+          target_pct: t.pct / 100
+        }));
+      try {
+        const r = await fetch('/api/targets', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const j = await r.json();
+        if (!j.ok) throw new Error(j.error);
+        // 重新載入資料更新畫面
+        const data = await load(false);
+        render(data);
+      } catch(e) {
+        alert('儲存失敗：' + e.message);
+      }
+    }
   </script>
 </body>
 </html>
