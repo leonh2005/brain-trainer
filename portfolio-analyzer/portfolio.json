@@ -45,9 +45,9 @@
   ],
   "target": [
     {
-      "ticker": "VWRA.L",
+      "ticker": "VWRA.TW",
       "name": "VWRA",
-      "target_pct": 0.3
+      "target_pct": 0
     },
     {
       "ticker": "0050.TW",
@@ -65,19 +65,29 @@
       "target_pct": 0.1
     },
     {
-      "ticker": "GLD",
+      "ticker": "GLD.TW",
       "name": "黃金ETF",
       "target_pct": 0.1
     },
     {
-      "ticker": "GRID",
+      "ticker": "GRID.TW",
       "name": "First Trust智慧電網",
-      "target_pct": 0.125
+      "target_pct": 0.13
     },
     {
-      "ticker": "XLU",
+      "ticker": "XLU.TW",
       "name": "公用事業ETF",
-      "target_pct": 0.125
+      "target_pct": 0.13
+    },
+    {
+      "ticker": "2327.TW",
+      "name": "AI國巨",
+      "target_pct": 0.3
+    },
+    {
+      "ticker": "2317.TW",
+      "name": "鴻海",
+      "target_pct": 0.05
     }
   ]
 }
