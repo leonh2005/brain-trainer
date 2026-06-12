@@ -1,9 +1,17 @@
 #!/usr/bin/env python3
-import os, random
+import os, random, json
+from pathlib import Path
 from flask import Flask, jsonify, send_file, render_template_string
 
 app = Flask(__name__)
 PHOTOS_DIR = "/Users/steven/Downloads/edible_plants_photos"
+DESCRIPTIONS_FILE = Path(__file__).parent / "descriptions.json"
+
+def load_descriptions():
+    if DESCRIPTIONS_FILE.exists():
+        with open(DESCRIPTIONS_FILE, encoding="utf-8") as f:
+            return json.load(f)
+    return {}
 
 def get_pool():
     plants = [d for d in os.listdir(PHOTOS_DIR)
@@ -64,6 +72,24 @@ def quiz_name():
         })
     return jsonify(questions)
 
+@app.route('/api/memory')
+def memory_cards():
+    pool = get_pool()
+    descriptions = load_descriptions()
+    cards = []
+    for plant, photos in pool:
+        desc = descriptions.get(plant, {})
+        cards.append({
+            "name": plant,
+            "photo": f"/photo/{plant}/{random.choice(photos)}",
+            "features": desc.get("features", ""),
+            "edible": desc.get("edible", ""),
+            "habitat": desc.get("habitat", ""),
+            "tips": desc.get("tips", ""),
+        })
+    random.shuffle(cards)
+    return jsonify(cards)
+
 @app.route('/photo/<plant>/<filename>')
 def photo(plant, filename):
     path = os.path.join(PHOTOS_DIR, plant, filename)
@@ -91,6 +117,20 @@ h1 { font-size: 1.6rem; margin-bottom: 6px; color: #81c784; text-align: center; 
 .mode-btn:hover { border-color:#66bb6a; background:#2e5c2e; }
 .mode-btn .icon { font-size:2.5rem; display:block; margin-bottom:10px; }
 .mode-btn .desc { font-size:0.8rem; color:#a5d6a7; margin-top:6px; }
+
+.mem-card { background:#243824; border-radius:16px; max-width:600px; width:100%; box-shadow:0 8px 32px rgba(0,0,0,.4); overflow:hidden; }
+.mem-photo { width:100%; aspect-ratio:4/3; object-fit:cover; display:block; }
+.mem-body { padding:20px 24px; }
+.mem-name { font-size:1.8rem; font-weight:700; color:#c8e6c9; letter-spacing:3px; margin-bottom:16px; text-align:center; }
+.mem-section { margin-bottom:14px; }
+.mem-label { font-size:0.72rem; color:#66bb6a; letter-spacing:1.5px; text-transform:uppercase; margin-bottom:4px; font-weight:600; }
+.mem-text { font-size:0.95rem; line-height:1.7; color:#e8f5e9; }
+.mem-tips { background:#1a3a1a; border-left:3px solid #66bb6a; padding:10px 14px; border-radius:0 8px 8px 0; font-size:0.9rem; line-height:1.6; color:#a5d6a7; }
+.mem-nav { display:flex; gap:10px; align-items:center; justify-content:space-between; padding:16px 24px; border-top:1px solid #2e4d2e; }
+.mem-counter { color:#a5d6a7; font-size:0.85rem; }
+.mem-btn { padding:10px 22px; border-radius:10px; border:none; font-size:1rem; cursor:pointer; font-weight:600; }
+.mem-prev { background:#2e4d2e; color:#e8f5e9; }
+.mem-next { background:#66bb6a; color:#1a2e1a; }
 
 .card { background:#243824; border-radius:16px; padding:24px; max-width:600px; width:100%;
         box-shadow:0 8px 32px rgba(0,0,0,.4); }
@@ -159,8 +199,14 @@ function showMenu() {
   btnB.innerHTML = '<span class="icon">🔤</span>看名稱選照片<div class="desc">顯示植物名稱<br>從三張照片中選出正確的</div>';
   btnB.addEventListener('click', function(){ startMode('name'); });
 
+  var btnC = document.createElement('button');
+  btnC.className = 'mode-btn';
+  btnC.innerHTML = '<span class="icon">📖</span>記憶學習模式<div class="desc">照片＋特徵＋食用方式<br>翻卡片背誦每種植物</div>';
+  btnC.addEventListener('click', function(){ startMemory(); });
+
   wrap.appendChild(btnA);
   wrap.appendChild(btnB);
+  wrap.appendChild(btnC);
   root.appendChild(wrap);
 }
 
@@ -282,6 +328,54 @@ function showResult() {
   root.appendChild(card);
   document.getElementById('btnBack').addEventListener('click', function(){ showMenu(); });
   document.getElementById('btnAgain').addEventListener('click', function(){ startMode(mode); });
+}
+
+var memCards = [], memIdx = 0;
+
+function startMemory() {
+  document.getElementById('sub').textContent = '📖 記憶學習模式';
+  document.getElementById('prog').style.display = 'block';
+  document.getElementById('root').innerHTML = '<div style="text-align:center;padding:40px;color:#81c784;">載入植物資料中...</div>';
+  fetch('/api/memory')
+    .then(function(r){ return r.json(); })
+    .then(function(data){
+      memCards = data; memIdx = 0;
+      renderMemCard();
+    });
+}
+
+function renderMemCard() {
+  if (memCards.length === 0) return;
+  var c = memCards[memIdx];
+  document.getElementById('pbar').style.width = ((memIdx + 1) / memCards.length * 100) + '%';
+  var root = document.getElementById('root');
+  root.innerHTML = '';
+  var card = document.createElement('div');
+  card.className = 'mem-card';
+  card.innerHTML =
+    '<img class="mem-photo" src="' + c.photo + '" loading="lazy">' +
+    '<div class="mem-body">' +
+      '<div class="mem-name">' + c.name + '</div>' +
+      (c.features ? '<div class="mem-section"><div class="mem-label">外觀特徵</div><div class="mem-text">' + c.features + '</div></div>' : '') +
+      (c.edible   ? '<div class="mem-section"><div class="mem-label">食用方式</div><div class="mem-text">' + c.edible   + '</div></div>' : '') +
+      (c.habitat  ? '<div class="mem-section"><div class="mem-label">生長環境</div><div class="mem-text">' + c.habitat  + '</div></div>' : '') +
+      (c.tips     ? '<div class="mem-section"><div class="mem-label">記憶口訣</div><div class="mem-tips">' + c.tips + '</div></div>' : '') +
+    '</div>' +
+    '<div class="mem-nav">' +
+      '<button class="mem-btn mem-prev" id="memPrev">← 上一張</button>' +
+      '<span class="mem-counter">' + (memIdx + 1) + ' / ' + memCards.length + '</span>' +
+      '<button class="mem-btn mem-next" id="memNext">' + (memIdx < memCards.length - 1 ? '下一張 →' : '回主選單') + '</button>' +
+    '</div>';
+  root.appendChild(card);
+
+  document.getElementById('memPrev').addEventListener('click', function(){
+    if (memIdx > 0) { memIdx--; renderMemCard(); }
+    else showMenu();
+  });
+  document.getElementById('memNext').addEventListener('click', function(){
+    if (memIdx < memCards.length - 1) { memIdx++; renderMemCard(); }
+    else showMenu();
+  });
 }
 
 showMenu();
