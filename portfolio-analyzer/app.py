@@ -42,6 +42,33 @@ def api_ai():
         return jsonify({"ok": False, "error": str(e)}), 500
 
 
+@app.route("/api/positions", methods=["POST"])
+def save_positions():
+    try:
+        positions = request.json
+        if not isinstance(positions, list):
+            return jsonify({"ok": False, "error": "格式錯誤"}), 400
+        with open(PORTFOLIO_FILE) as f:
+            portfolio = json.load(f)
+        taiwan, us = [], []
+        for p in positions:
+            ticker = p.get("ticker", "").strip()
+            if not ticker:
+                continue
+            entry = {"ticker": ticker, "name": p.get("name", ""), "shares": int(p.get("shares", 0))}
+            if ticker.endswith(".TW") or ticker.endswith(".TWO"):
+                taiwan.append(entry)
+            else:
+                us.append(entry)
+        portfolio["taiwan"] = taiwan
+        portfolio["us"] = us
+        with open(PORTFOLIO_FILE, "w") as f:
+            json.dump(portfolio, f, ensure_ascii=False, indent=2)
+        return jsonify({"ok": True})
+    except Exception as e:
+        return jsonify({"ok": False, "error": str(e)}), 500
+
+
 @app.route("/api/targets", methods=["POST"])
 def save_targets():
     try:

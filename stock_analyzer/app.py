@@ -6,6 +6,7 @@ load_dotenv()
 from flask import Flask, render_template, jsonify, request
 import shioaji as sj
 import pandas as pd
+import yfinance as yf
 import requests
 from openai import OpenAI
 from datetime import date, timedelta, datetime, timezone
@@ -66,31 +67,24 @@ def resolve_symbol(query: str) -> str:
     return q
 
 
-# ── 技術面（Shioaji 日K）────────────────────────────────────────
+# ── 技術面（yfinance 日K）────────────────────────────────────────
 def analyze(symbol: str) -> dict:
     code = resolve_symbol(symbol)
-    api = _get_sj()
 
-    contract = api.Contracts.Stocks.get(code)
-    if contract is None:
+    # 上市用 .TW，上櫃用 .TWO
+    for suffix in [".TW", ".TWO"]:
+        df = yf.download(f"{code}{suffix}", period="3mo", progress=False, auto_adjust=True)
+        if not df.empty:
+            break
+    if df.empty:
         raise ValueError(f"找不到股票代碼 {code}")
 
-    start = str(date.today() - timedelta(days=90))
-    end = str(date.today())
-    kb = api.kbars(contract, start=start, end=end)
-    df = pd.DataFrame({**kb})
-    if df.empty:
-        raise ValueError(f"無法取得 {code} 的 K 棒資料")
-
-    df["ts"] = pd.to_datetime(df["ts"])
-    df["date"] = df["ts"].dt.date
-    daily = df.groupby("date").agg(
-        open=("Open", "first"),
-        high=("High", "max"),
-        low=("Low", "min"),
-        close=("Close", "last"),
-        volume=("Volume", "sum"),
-    ).reset_index().sort_values("date").reset_index(drop=True)
+    df.columns = [c[0].lower() for c in df.columns]  # 壓平多層 columns
+    df = df.reset_index().rename(columns={"date": "date"})
+    df.columns = [c.lower() for c in df.columns]
+    df = df.sort_values("date").reset_index(drop=True)
+    df["date"] = pd.to_datetime(df["date"]).dt.date
+    daily = df
     daily["volume"] = daily["volume"] / 1000  # 股 → 張
 
     latest = daily.iloc[-1]
@@ -392,4 +386,4 @@ def api_news():
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5100, debug=False)
+    app.run(host="0.0.0.0", port=5100, debug=True)
