@@ -260,6 +260,7 @@
     function render(d) {
       const m = d.metrics;
       const p = d.positions;
+      _rawPositions = p;
 
       document.getElementById('ts').textContent = '更新：' + d.updated_at;
 
@@ -300,7 +301,11 @@
         </div>
 
         <div class="section" style="margin-bottom:22px">
-          <div class="section-title">持倉明細</div>
+          <div class="section-title" style="display:flex;justify-content:space-between;align-items:center;">
+            持倉明細
+            <button onclick="enterPosEdit()" id="pos-edit-btn" style="font-size:11px;padding:4px 12px;background:#21262d;color:#8b949e;border:1px solid #30363d;">編輯</button>
+          </div>
+          <div id="pos-view">
           <table>
             <thead>
               <tr>
@@ -326,6 +331,8 @@
               `).join('')}
             </tbody>
           </table>
+          </div>
+          <div id="pos-edit" style="display:none"></div>
         </div>
 
         <div class="row">
@@ -386,6 +393,105 @@
       try { render(await load()); }
       catch(e) { document.getElementById('app').innerHTML = `<div class="err">載入失敗：${e.message}</div>`; }
     })();
+
+    let _currentPositions = [];
+    let _rawPositions = [];
+
+    function enterPosEdit() {
+      _currentPositions = _rawPositions.map(p => ({
+        ticker: p.ticker,
+        name: p.name,
+        shares: p.shares
+      }));
+      renderPosEditRows();
+      document.getElementById('pos-view').style.display = 'none';
+      document.getElementById('pos-edit').style.display = 'block';
+      document.getElementById('pos-edit-btn').style.display = 'none';
+    }
+
+    function renderPosEditRows() {
+      const container = document.getElementById('pos-edit');
+      container.innerHTML = `
+        <table style="margin-bottom:8px">
+          <thead>
+            <tr>
+              <th>代號（含 .TW / .TWO）</th><th>名稱</th><th>股數／單位</th><th></th>
+            </tr>
+          </thead>
+          <tbody>
+            ${_currentPositions.map((p, i) => `
+              <tr class="pos-edit-row" data-idx="${i}">
+                <td><input class="pe-ticker target-edit-row" style="width:140px;background:#0d1117;border:1px solid #30363d;color:#58a6ff;padding:5px 8px;border-radius:4px;font-family:'SF Mono',monospace;font-size:12px" value="${p.ticker}" placeholder="如 2317.TW"></td>
+                <td><input class="pe-name" style="width:150px;background:#0d1117;border:1px solid #30363d;color:#e1e4e8;padding:5px 8px;border-radius:4px;font-size:12px" value="${p.name}" placeholder="名稱"></td>
+                <td><input class="pe-shares" type="number" style="width:100px;background:#0d1117;border:1px solid #30363d;color:#e1e4e8;padding:5px 8px;border-radius:4px;font-size:12px;text-align:right" value="${p.shares}" min="0" placeholder="0"></td>
+                <td><button class="del-btn" onclick="removePosRow(${i})">✕</button></td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+        <div class="target-actions">
+          <button onclick="addPosRow()" style="background:#21262d;color:#8b949e;border:1px solid #30363d;">＋ 新增</button>
+          <button onclick="savePositions()" style="background:#238636;">儲存</button>
+          <button onclick="cancelPosEdit()" style="background:#21262d;color:#8b949e;border:1px solid #30363d;">取消</button>
+        </div>
+        <div style="font-size:11px;color:#6e7681;margin-top:6px">台股代號請加 .TW 或 .TWO，美股直接輸入代號（如 CEG）</div>
+      `;
+    }
+
+    function syncPosEdit() {
+      const rows = document.querySelectorAll('#pos-edit .pos-edit-row');
+      _currentPositions = Array.from(rows).map(r => ({
+        ticker: r.querySelector('.pe-ticker').value.trim(),
+        name: r.querySelector('.pe-name').value.trim(),
+        shares: r.querySelector('.pe-shares').value.trim()
+      }));
+    }
+
+    function addPosRow() {
+      syncPosEdit();
+      _currentPositions.push({ ticker: '', name: '', shares: 0 });
+      renderPosEditRows();
+    }
+
+    function removePosRow(idx) {
+      syncPosEdit();
+      _currentPositions.splice(idx, 1);
+      renderPosEditRows();
+    }
+
+    function cancelPosEdit() {
+      document.getElementById('pos-view').style.display = 'block';
+      document.getElementById('pos-edit').style.display = 'none';
+      document.getElementById('pos-edit-btn').style.display = 'inline-block';
+    }
+
+    async function savePositions() {
+      syncPosEdit();
+      const payload = _currentPositions.filter(p => p.ticker).map(p => ({
+        ticker: p.ticker,
+        name: p.name,
+        shares: parseInt(p.shares) || 0
+      }));
+      try {
+        const r = await fetch('/api/positions', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const j = await r.json();
+        if (!j.ok) throw new Error(j.error);
+      } catch(e) {
+        alert('儲存失敗：' + e.message);
+        return;
+      }
+      cancelPosEdit();
+      try {
+        render(await load(true));
+      } catch(e) {
+        alert('持倉已儲存，但重新整理行情失敗：' + e.message + '\n\nportfolio.json 已更新，請手動按「重新整理」。');
+        render(await load(false));
+      }
+    }
 
     let _currentTargets = [];
 

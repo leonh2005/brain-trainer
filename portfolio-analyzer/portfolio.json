@@ -1,24 +1,19 @@
 {
   "taiwan": [
     {
+      "ticker": "2327.TW",
+      "name": "國巨",
+      "shares": 5000
+    },
+    {
+      "ticker": "2344.TW",
+      "name": "華邦電",
+      "shares": 9000
+    },
+    {
       "ticker": "2301.TW",
       "name": "光寶科",
       "shares": 6000
-    },
-    {
-      "ticker": "2408.TW",
-      "name": "南亞科",
-      "shares": 4000
-    },
-    {
-      "ticker": "00687B.TWO",
-      "name": "國泰20年美債",
-      "shares": 70000
-    },
-    {
-      "ticker": "00937B.TWO",
-      "name": "群益ESG投等債20+",
-      "shares": 117000
     },
     {
       "ticker": "2317.TW",
@@ -28,21 +23,10 @@
     {
       "ticker": "2303.TW",
       "name": "聯電",
-      "shares": 9000
+      "shares": 3000
     }
   ],
-  "us": [
-    {
-      "ticker": "CEG",
-      "name": "Constellation Energy",
-      "shares": 10
-    },
-    {
-      "ticker": "GOLD",
-      "name": "Barrick Gold",
-      "shares": 10
-    }
-  ],
+  "us": [],
   "target": [
     {
       "ticker": "VWRA.TW",

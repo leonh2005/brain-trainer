@@ -29,6 +29,7 @@ FG_CACHE   = Path(__file__).parent / "fg_history.json"
 SP_STATE   = Path(__file__).parent / "sp_state.json"
 CAPE_CACHE = Path(__file__).parent / "cape_cache.json"
 BB_CACHE   = Path(__file__).parent / "bb_cache.json"
+MARGIN_CACHE = Path(__file__).parent / "margin_cache.json"
 BOT_TOKEN = "8666778924:AAFMAFKfsfx3opS2CfCBrDYMIx6vcJKACTk"
 CHAT_ID = "7556217543"
 
@@ -163,19 +164,49 @@ def fetch_bofa_bull_bear() -> dict:
 
     history: list = raw.get("history", [])
 
-    # ── 嘗試從 Google News RSS 抓最新值 ─────────────────────────────
+    # ── 嘗試從 Google News RSS + 文章標題抓最新值 ───────────────────
+    def _try_extract_bb(text: str) -> float | None:
+        # 優先：標題中直接含數字（如 "hits 8.5" / "rises to 8.8"）
+        m = re.search(r'bull\s*[&＆]\s*bear\s+indicator\s+(?:hits?|rises?\s+to|at|stands?\s+at|reaches?|climbs?\s+to|falls?\s+to|drops?\s+to)\s+(\d\.\d)', text, re.I)
+        if m:
+            return float(m.group(1))
+        # 次要：bull/bear 附近有數字
+        ctx = re.findall(r'(?:bull.{0,30}bear|b(?:&|and)b\s+indicator).{0,80}?(\b\d\.\d\b)', text, re.I)
+        candidates = [float(v) for v in ctx if 0.1 <= float(v) <= 10.0]
+        return candidates[0] if candidates else None
+
     try:
-        rss_url = "https://news.google.com/rss/search?q=BofA+%22bull+%26+bear%22+indicator&hl=en-US&gl=US&ceid=US:en"
-        r = requests.get(rss_url, headers={"User-Agent": "Mozilla/5.0"}, timeout=10)
-        text = r.text[:8000].lower()
-        context_matches = re.findall(
-            r'(?:indicator|b&b|bull.{0,20}bear|bear.{0,20}bull).{0,60}?(\b[0-9]\.[0-9]\b)',
-            text
-        )
-        candidates = [float(m) for m in context_matches if 0.0 <= float(m) <= 10.0]
-        if candidates:
-            value = round(candidates[0], 1)
-            today = datetime.now().strftime("%Y-%m-%d")
+        headers = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36"}
+        rss_url = "https://news.google.com/rss/search?q=BofA+bull+bear+indicator&hl=en-US&gl=US&ceid=US:en"
+        r = requests.get(rss_url, headers=headers, timeout=10)
+
+        import xml.etree.ElementTree as ET
+        root = ET.fromstring(r.text)
+        value = None
+        pub_date = None
+
+        for item in root.findall(".//item"):
+            title_el = item.find("title")
+            desc_el  = item.find("description")
+            pub_el   = item.find("pubDate")
+            combined = " ".join(filter(None, [
+                title_el.text  if title_el  is not None else "",
+                desc_el.text   if desc_el   is not None else "",
+            ]))
+            v = _try_extract_bb(combined)
+            if v is not None:
+                value = v
+                # 從 pubDate 取 YYYY-MM-DD
+                if pub_el is not None and pub_el.text:
+                    try:
+                        from email.utils import parsedate_to_datetime
+                        pub_date = parsedate_to_datetime(pub_el.text).strftime("%Y-%m-%d")
+                    except Exception:
+                        pub_date = None
+                break
+
+        if value is not None:
+            today = pub_date or datetime.now().strftime("%Y-%m-%d")
             last = history[-1] if history else {}
             cache_age = 999
             if last.get("date"):
@@ -233,6 +264,129 @@ def fetch_cape():
             print("  使用本地快取")
             return json.loads(CAPE_CACHE.read_text())
         return []
+
+
+def fetch_margin_mktcap(tw_data: list, months: int = 24) -> list:
+    """台股融資市值比月度資料
+    - 融資餘額: TWSE MI_MARGN selectType=ALL，取 tables[0].data[2][5]（今日餘額千元）
+    - 總市值: openapi 計算今日市值後以 TAIEX 縮放
+    回傳 [{"x": "YYYY-MM-DD", "y": ratio%, "margin": 億元, "mktcap": 億元}]
+    """
+    import re as _re
+
+    # 1. 計算今日市值
+    mktcap_today = 0.0
+    try:
+        r_info = requests.get(
+            "https://openapi.twse.com.tw/v1/opendata/t187ap03_L",
+            headers={"User-Agent": "Mozilla/5.0"}, timeout=20, verify=False,
+        )
+        shares_map = {}
+        for row in r_info.json():
+            code = row.get("公司代號", "")
+            s = row.get("已發行普通股數或TDR原股發行股數", "0").replace(",", "")
+            try:
+                shares_map[code] = int(s)
+            except ValueError:
+                pass
+
+        r_price = requests.get(
+            "https://openapi.twse.com.tw/v1/exchangeReport/STOCK_DAY_ALL",
+            headers={"User-Agent": "Mozilla/5.0"}, timeout=20, verify=False,
+        )
+        total = 0.0
+        for row in r_price.json():
+            code = row.get("Code", "")
+            price_s = row.get("ClosingPrice", "0").replace(",", "")
+            if code in shares_map:
+                try:
+                    total += float(price_s) * shares_map[code]
+                except ValueError:
+                    pass
+        mktcap_today = trunc2(total / 1e8)  # 元 → 億元
+        print(f"  今日市值：{mktcap_today:,.0f} 億元")
+    except Exception as e:
+        print(f"  市值計算失敗: {e}")
+
+    # 2. TAIEX map 用於歷史市值縮放
+    taiex_map = {d["x"]: d["y"] for d in tw_data}
+    taiex_today = tw_data[-1]["y"] if tw_data else 0
+
+    # 3. 月度融資餘額（查詢各月月初）
+    result = {}
+    today_dt = datetime.now()
+
+    for i in range(months):
+        year = today_dt.year
+        month = today_dt.month - i
+        while month <= 0:
+            month += 12
+            year -= 1
+        date_str = f"{year}{month:02d}01"
+        try:
+            # 月初可能為假日，嘗試 1–5 號
+            j = None
+            for day_try in range(1, 6):
+                ds = f"{year}{month:02d}{day_try:02d}"
+                r = requests.get(
+                    "https://www.twse.com.tw/exchangeReport/MI_MARGN",
+                    params={"response": "json", "date": ds, "selectType": "ALL"},
+                    headers={"User-Agent": "Mozilla/5.0"},
+                    timeout=15, verify=False,
+                )
+                jj = r.json()
+                if jj.get("stat") == "OK":
+                    j = jj
+                    break
+            if j is None:
+                continue
+            tables = j.get("tables", [])
+            if not tables:
+                continue
+            rows = tables[0].get("data", [])
+            if len(rows) < 3:
+                continue
+            # rows[2] = ['融資金額(仟元)', 買進, 賣出, 現金償還, 前日餘額, 今日餘額]
+            margin_k = float(rows[2][5].replace(",", ""))
+            margin_yi = trunc2(margin_k / 10000)  # 千元 → 億元
+
+            # 從 title 取得實際日期（如 "115年06月01日"）
+            title = tables[0].get("title", "")
+            m = _re.search(r"(\d+)年(\d+)月(\d+)日", title)
+            if m:
+                iso_date = f"{int(m.group(1)) + 1911}-{int(m.group(2)):02d}-{int(m.group(3)):02d}"
+            else:
+                iso_date = f"{year}-{month:02d}-01"
+
+            # 找當日或同月最近 TAIEX
+            taiex_on = taiex_map.get(iso_date)
+            if taiex_on is None:
+                candidates = [d for d in taiex_map if d[:7] == iso_date[:7]]
+                taiex_on = taiex_map[min(candidates)] if candidates else taiex_today
+
+            if mktcap_today and taiex_today and taiex_on:
+                mktcap_hist = trunc2(mktcap_today * (taiex_on / taiex_today))
+                ratio = trunc2(margin_yi / mktcap_hist * 100) if mktcap_hist > 0 else 0
+            else:
+                mktcap_hist = 0
+                ratio = 0
+            result[iso_date] = {"margin": margin_yi, "mktcap": mktcap_hist, "ratio": ratio}
+        except Exception as e:
+            print(f"  MI_MARGN {date_str} 失敗: {e}")
+
+    data = sorted(
+        [{"x": d, "y": r["ratio"], "margin": r["margin"], "mktcap": r["mktcap"]}
+         for d, r in result.items()],
+        key=lambda item: item["x"]
+    )
+
+    if data:
+        MARGIN_CACHE.write_text(json.dumps(data, ensure_ascii=False))
+    elif MARGIN_CACHE.exists():
+        print("  使用融資市值比快取")
+        data = json.loads(MARGIN_CACHE.read_text())
+
+    return data
 
 
 def fetch_bls(series_id: str, start_year: int, end_year: int) -> list:
@@ -477,7 +631,7 @@ def fetch_fear_greed():
         return {"score": None, "rating": "N/A", "history": hist}
 
 
-def generate_html(vix_data, sp_data, ma_data, sp_hist_high, fg_data, tw_data, tw_ma_data, tw_hist_high, cape_data, recession, m1b_data, trade_data, generated_at, bb_data=None):
+def generate_html(vix_data, sp_data, ma_data, sp_hist_high, fg_data, tw_data, tw_ma_data, tw_hist_high, cape_data, recession, m1b_data, trade_data, generated_at, bb_data=None, margin_data=None):
     vix_current = vix_data[-1]["y"] if vix_data else 0
     vix_date    = vix_data[-1]["x"] if vix_data else "N/A"
     sp_current  = sp_data[-1]["y"] if sp_data else 0
@@ -497,14 +651,21 @@ def generate_html(vix_data, sp_data, ma_data, sp_hist_high, fg_data, tw_data, tw
     cape_current = cape_data[-1]["y"] if cape_data else 0
     cape_date    = cape_data[-1]["x"] if cape_data else "N/A"
 
-    # 成交量/M1B
+    # 成交量/M1B（傳統指標：當月累計成交 / M1B 期底）
     m1b_current   = m1b_data[-1]["y"] if m1b_data else 0      # 億元
     m1b_date      = m1b_data[-1]["x"] if m1b_data else "N/A"
-    trade_current = trade_data[-1]["y"] if trade_data else 0   # 億元
     trade_date    = trade_data[-1]["x"] if trade_data else "N/A"
-    m1b_ratio     = trunc2(trade_current / m1b_current * 100) if m1b_current else 0
-    m1b_overheat  = m1b_ratio > 10
-    m1b_color     = "#ff4757" if m1b_ratio > 10 else ("#ffaa00" if m1b_ratio > 7 else "#00d68f")
+    # 累計當月成交金額
+    if trade_data:
+        cur_month = trade_data[-1]["x"][:7]          # "YYYY-MM"
+        trade_month_total = sum(d["y"] for d in trade_data if d["x"].startswith(cur_month))
+        trade_current = trade_data[-1]["y"]           # 最新單日（僅供顯示）
+    else:
+        trade_month_total = 0
+        trade_current = 0
+    m1b_ratio     = trunc2(trade_month_total / m1b_current * 100) if m1b_current else 0
+    m1b_overheat  = m1b_ratio > 100
+    m1b_color     = "#ff4757" if m1b_ratio > 100 else ("#ffaa00" if m1b_ratio > 70 else "#00d68f")
 
     # 衰退指標
     r_unemp = recession["unrate"]
@@ -590,6 +751,17 @@ def generate_html(vix_data, sp_data, ma_data, sp_hist_high, fg_data, tw_data, tw
     else:
         bb_color = "#5a6a7e"; bb_label = "暫無資料"; bb_pct = 0; bb_display = "N/A"
     bb_alert = alert_class(bb_color) if bb_value is not None and (bb_value >= 8.0 or bb_value < 2.0) else ""
+
+    # 融資市值比
+    margin_data = margin_data or []
+    mg_current = margin_data[-1] if margin_data else {}
+    mg_ratio   = mg_current.get("y", 0)
+    mg_margin  = mg_current.get("margin", 0)
+    mg_mktcap  = mg_current.get("mktcap", 0)
+    mg_date    = mg_current.get("x", "N/A")
+    mg_color   = "#ff4757" if mg_ratio > 4.5 else ("#ffaa00" if mg_ratio > 3.5 else "#00d68f")
+    mg_label   = "🔥 偏熱 >4.5%" if mg_ratio > 4.5 else ("⚠ 注意 3.5–4.5%" if mg_ratio > 3.5 else "正常 <3.5%")
+    mg_alert   = alert_class(mg_color)
 
     fg_score_display = f"{fg_score:.2f}" if fg_score is not None else "N/A"
     fg_label_map = {
@@ -939,10 +1111,22 @@ def generate_html(vix_data, sp_data, ma_data, sp_hist_high, fg_data, tw_data, tw
     <div class="card-label"><span class="pulse"></span>台股成交量 / M1B</div>
     <div class="card-value">{m1b_ratio:.2f}<span style="font-size:1.2rem">%</span></div>
     <div class="card-sub">
-      {'<b>🔥 市場過熱 &gt;10%</b>' if m1b_overheat else ('<b>⚠ 偏熱 7–10%</b>' if m1b_ratio > 7 else '<b>正常 &lt;7%</b>')}
+      {'<b>🔥 市場極熱 &gt;100%</b>' if m1b_overheat else ('<b>⚠ 偏熱 70–100%</b>' if m1b_ratio > 70 else '<b>正常 &lt;70%</b>')}
+      <br>月累計成交：<b>{trade_month_total:,.0f}</b> 億元
       <br>當日成交：<b>{trade_current:,.0f}</b> 億元
       <br>M1B（{m1b_date}期底）：<b>{m1b_current:,.0f}</b> 億元
       <br><span style="opacity:0.5">{trade_date}</span>
+    </div>
+  </div>
+
+  <div class="card {mg_alert}" style="--accent: {mg_color}">
+    <div class="card-label"><span class="pulse"></span>融資市值比</div>
+    <div class="card-value">{mg_ratio:.2f}<span style="font-size:1.2rem">%</span></div>
+    <div class="card-sub">
+      <b>{mg_label}</b>
+      <br>融資餘額：<b>{mg_margin:,.0f}</b> 億元
+      <br>總市值：<b>{mg_mktcap:,.0f}</b> 億元
+      <br><span style="opacity:0.5">{mg_date}</span>
     </div>
   </div>
 
@@ -1090,6 +1274,18 @@ def generate_html(vix_data, sp_data, ma_data, sp_hist_high, fg_data, tw_data, tw
 
   <div class="chart-section">
     <div class="chart-header">
+      <div class="chart-title"><b>融資市值比</b> 月度 <span style="font-size:0.65rem;opacity:0.5">（融資餘額 ÷ 總市值 × 100%，&gt;4.5% 偏熱）</span></div>
+      <div class="chart-legend">
+        <div class="legend-item"><div class="legend-dot" style="background:#c8a0ff"></div>融資市值比 %</div>
+        <div class="legend-item" style="color:#ff4757"><div class="legend-dot" style="background:#ff4757"></div>&gt;4.5% 偏熱</div>
+        <div class="legend-item" style="color:#ffaa00"><div class="legend-dot" style="background:#ffaa00"></div>3.5–4.5% 注意</div>
+      </div>
+    </div>
+    <div class="chart-wrap"><canvas id="marginChart"></canvas></div>
+  </div>
+
+  <div class="chart-section">
+    <div class="chart-header">
       <div class="chart-title"><b>台股加權指數</b> 收盤價 vs 200日均線 vs 歷史高點</div>
       <div class="chart-legend">
         <div class="legend-item"><div class="legend-dot" style="background:#ff4757"></div>加權指數</div>
@@ -1166,6 +1362,7 @@ const CPI_YOY_DATA = {json.dumps(r_cpi["data"])};
 const ISM_DATA     = {json.dumps(r_ism["data"])};
 const T10Y2Y_DATA  = {json.dumps(r_yc["data"])};
 const BB_DATA      = {json.dumps([{"x": h["date"], "y": h["value"]} for h in bb_history])};
+const MARGIN_DATA  = {json.dumps([{"x": d["x"], "y": d["y"]} for d in margin_data])};
 
 const CHART_DEFAULTS = {{
   responsive: true,
@@ -1483,6 +1680,65 @@ Chart.register(m1bPlugin);
 m1bChart.config.plugins = [m1bPlugin];
 m1bChart.update();
 
+// 融資市值比圖表
+const marginPlugin = {{
+  id: 'marginBands',
+  beforeDraw(chart) {{
+    const {{ ctx, chartArea, scales }} = chart;
+    if (!chartArea) return;
+    const y45 = scales.y.getPixelForValue(4.5);
+    const y35 = scales.y.getPixelForValue(3.5);
+    ctx.save();
+    // 紅：>4.5%
+    ctx.fillStyle = 'rgba(255,71,87,0.08)';
+    ctx.fillRect(chartArea.left, chartArea.top, chartArea.right - chartArea.left, Math.max(0, y45 - chartArea.top));
+    // 黃：3.5-4.5%
+    const y45c = Math.max(y45, chartArea.top);
+    const y35c = Math.min(y35, chartArea.bottom);
+    if (y35c > y45c) {{
+      ctx.fillStyle = 'rgba(255,170,0,0.06)';
+      ctx.fillRect(chartArea.left, y45c, chartArea.right - chartArea.left, y35c - y45c);
+    }}
+    ctx.setLineDash([4,4]); ctx.lineWidth = 1;
+    if (y45 >= chartArea.top && y45 <= chartArea.bottom) {{
+      ctx.strokeStyle = 'rgba(255,71,87,0.5)';
+      ctx.beginPath(); ctx.moveTo(chartArea.left, y45); ctx.lineTo(chartArea.right, y45); ctx.stroke();
+      ctx.fillStyle = 'rgba(255,71,87,0.7)';
+      ctx.font = "10px 'Share Tech Mono'"; ctx.setLineDash([]);
+      ctx.fillText('4.5% 偏熱', chartArea.left + 6, y45 - 4);
+      ctx.setLineDash([4,4]);
+    }}
+    if (y35 >= chartArea.top && y35 <= chartArea.bottom) {{
+      ctx.strokeStyle = 'rgba(255,170,0,0.4)';
+      ctx.beginPath(); ctx.moveTo(chartArea.left, y35); ctx.lineTo(chartArea.right, y35); ctx.stroke();
+      ctx.fillStyle = 'rgba(255,170,0,0.7)';
+      ctx.font = "10px 'Share Tech Mono'"; ctx.setLineDash([]);
+      ctx.fillText('3.5% 注意', chartArea.left + 6, y35 - 4);
+    }}
+    ctx.restore();
+  }}
+}};
+
+const marginChart = makeChart('marginChart', [{{
+  data: MARGIN_DATA,
+  borderColor: '#c8a0ff',
+  borderWidth: 2,
+  pointRadius: MARGIN_DATA.length <= 30 ? 3 : 0,
+  pointBackgroundColor: '#c8a0ff',
+  fill: false,
+  parsing: {{ xAxisKey: 'x', yAxisKey: 'y' }},
+  tension: 0.3,
+  segment: {{
+    borderColor: ctx => ctx.p1.parsed.y > 4.5 ? '#ff4757' :
+                        ctx.p1.parsed.y > 3.5 ? '#ffaa00' : '#c8a0ff',
+  }},
+}}], 0, null, {{
+  scales: {{ x: {{ time: {{ unit: 'month' }} }} }}
+}});
+Chart.register(marginPlugin);
+marginChart.config.plugins = [marginPlugin];
+marginChart.update();
+
 // CAPE chart with historical avg + danger band
 const capePlugin = {{
   id: 'capeBands',
@@ -1783,6 +2039,9 @@ function setRange(days) {{
   m1bChart.data.datasets[0].data = filter(window.M1B_RATIO_DATA);
   m1bChart.update('none');
 
+  marginChart.data.datasets[0].data = filter(MARGIN_DATA);
+  marginChart.update('none');
+
   capeChart.data.datasets[0].data = filter(CAPE_DATA);
   capeChart.update('none');
 
@@ -1833,10 +2092,15 @@ def main():
     bb_val_str = f"{bb_data['value']:.1f}" if bb_data.get("value") is not None else "N/A"
     print(f"  BofA B&B：{bb_val_str}（{bb_data.get('date','N/A')}）")
 
+    print(f"[{datetime.now().strftime('%H:%M:%S')}] 抓取融資市值比...")
+    margin_data = fetch_margin_mktcap(tw_data, months=24)
+    if margin_data:
+        print(f"  融資市值比：{margin_data[-1]['y']:.2f}%（{margin_data[-1]['x']}）")
+
     generated_at = datetime.now().strftime("%Y-%m-%d %H:%M")
     print(f"[{datetime.now().strftime('%H:%M:%S')}] 生成 HTML...")
 
-    html = generate_html(vix_data, sp_data, ma_data, sp_hist_high, fg_data, tw_data, tw_ma_data, tw_hist_high, cape_data, recession, m1b_data, trade_data, generated_at, bb_data)
+    html = generate_html(vix_data, sp_data, ma_data, sp_hist_high, fg_data, tw_data, tw_ma_data, tw_hist_high, cape_data, recession, m1b_data, trade_data, generated_at, bb_data, margin_data)
     OUTPUT.write_text(html, encoding="utf-8")
 
     vix_current = vix_data[-1]["y"] if vix_data else "N/A"
