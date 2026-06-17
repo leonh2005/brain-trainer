@@ -248,7 +248,7 @@
     const fmt  = n => Math.round(n).toLocaleString('zh-TW');
     const pct  = n => (n >= 0 ? '+' : '') + n.toFixed(2) + '%';
     const cls  = n => n >= 0 ? 'pos' : 'neg';
-    const COLORS = ['#1f6feb','#388bfd','#58a6ff','#79c0ff','#3fb950','#56d364','#ffa657','#f85149','#d29922','#8957e5'];
+    const COLORS = ['#4e79a7','#f28e2b','#e15759','#76b7b2','#59a14f','#edc948','#b07aa1','#ff9da7','#9c755f','#bab0ac'];
 
     async function load(refresh = false) {
       const r = await fetch(refresh ? '/api/refresh' : '/api/data');
@@ -366,7 +366,7 @@
       pie = new Chart(document.getElementById('pieChart'), {
         type: 'doughnut',
         data: {
-          labels: p.map(x => x.ticker.replace('.TW','').replace('.L','')),
+          labels: p.map(x => x.ticker.replace('.TW','').replace('.TWO','').replace('.L','') + ' ' + x.name),
           datasets: [{
             data: p.map(x => x.value_twd),
             backgroundColor: COLORS.slice(0, p.length),
