@@ -42,6 +42,19 @@ def api_ai():
         return jsonify({"ok": False, "error": str(e)}), 500
 
 
+def _normalize_ticker(ticker: str) -> str:
+    """自動補台股後綴：純數字或數字開頭（如 2317、00687B）補 .TW，英文開頭視為美股"""
+    import re
+    ticker = ticker.strip().upper()
+    if not ticker:
+        return ticker
+    if "." in ticker:
+        return ticker  # 已有後綴，不動
+    if re.match(r"^\d", ticker):
+        return ticker + ".TW"  # 台股
+    return ticker  # 美股（字母開頭）
+
+
 @app.route("/api/positions", methods=["POST"])
 def save_positions():
     try:
@@ -52,9 +65,10 @@ def save_positions():
             portfolio = json.load(f)
         taiwan, us = [], []
         for p in positions:
-            ticker = p.get("ticker", "").strip()
-            if not ticker:
+            raw = p.get("ticker", "").strip()
+            if not raw:
                 continue
+            ticker = _normalize_ticker(raw)
             entry = {"ticker": ticker, "name": p.get("name", ""), "shares": int(p.get("shares", 0))}
             if ticker.endswith(".TW") or ticker.endswith(".TWO"):
                 taiwan.append(entry)
