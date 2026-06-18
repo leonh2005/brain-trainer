@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ROAR Score — 風險報酬評分</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #0f1117;
+    color: #e2e8f0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 16px 60px;
+  }
+
+  h1 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    margin-bottom: 4px;
+    background: linear-gradient(135deg, #60a5fa, #a78bfa);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .subtitle {
+    font-size: 0.82rem;
+    color: #64748b;
+    margin-bottom: 32px;
+    text-align: center;
+  }
+
+  /* Search */
+  .search-wrap {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+    max-width: 480px;
+    margin-bottom: 36px;
+  }
+  #tickerInput {
+    flex: 1;
+    background: #1e2130;
+    border: 1px solid #334155;
+    color: #e2e8f0;
+    border-radius: 10px;
+    padding: 12px 16px;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color .2s;
+  }
+  #tickerInput:focus { border-color: #60a5fa; }
+  #tickerInput::placeholder { color: #475569; }
+  #analyzeBtn {
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 12px 24px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity .2s;
+    white-space: nowrap;
+  }
+  #analyzeBtn:hover { opacity: 0.85; }
+  #analyzeBtn:disabled { opacity: 0.45; cursor: default; }
+
+  /* Quick picks */
+  .quick-picks {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    margin-bottom: 36px;
+    max-width: 600px;
+  }
+  .chip {
+    background: #1e2130;
+    border: 1px solid #334155;
+    color: #94a3b8;
+    border-radius: 20px;
+    padding: 5px 14px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all .15s;
+  }
+  .chip:hover { background: #263044; color: #e2e8f0; border-color: #60a5fa; }
+
+  /* Error */
+  #errorMsg {
+    background: #2d1a1a;
+    border: 1px solid #7f1d1d;
+    color: #fca5a5;
+    border-radius: 10px;
+    padding: 12px 18px;
+    max-width: 480px;
+    width: 100%;
+    display: none;
+    margin-bottom: 24px;
+  }
+
+  /* Results */
+  #results { width: 100%; max-width: 720px; display: none; }
+
+  .ticker-header {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .ticker-name {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #f1f5f9;
+  }
+  .market-badge {
+    background: #1e2130;
+    border: 1px solid #334155;
+    color: #94a3b8;
+    font-size: 0.72rem;
+    border-radius: 6px;
+    padding: 2px 8px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+  }
+
+  /* Grid */
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+  @media (max-width: 520px) { .grid-2 { grid-template-columns: 1fr; } }
+
+  .card {
+    background: #1a1d2e;
+    border: 1px solid #263044;
+    border-radius: 14px;
+    padding: 20px;
+  }
+  .card-label {
+    font-size: 0.75rem;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 6px;
+  }
+
+  /* ROAR gauge card */
+  .roar-card {
+    background: #1a1d2e;
+    border: 1px solid #263044;
+    border-radius: 14px;
+    padding: 28px 20px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .roar-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--roar-color, #60a5fa);
+    border-radius: 14px 14px 0 0;
+  }
+
+  /* Half-circle gauge */
+  .gauge-wrap {
+    position: relative;
+    width: 180px;
+    height: 95px;
+    margin-bottom: 12px;
+  }
+  .gauge-svg { width: 100%; height: 100%; overflow: visible; }
+  .gauge-bg { fill: none; stroke: #263044; stroke-width: 18; stroke-linecap: round; }
+  .gauge-fill { fill: none; stroke-width: 18; stroke-linecap: round; transition: stroke-dashoffset .8s cubic-bezier(.4,0,.2,1), stroke .4s; }
+  .gauge-score {
+    position: absolute;
+    bottom: -4px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 2.4rem;
+    font-weight: 800;
+    line-height: 1;
+    color: var(--roar-color, #60a5fa);
+    text-shadow: 0 0 20px var(--roar-color, #60a5fa44);
+  }
+
+  .roar-label {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--roar-color, #60a5fa);
+    margin-bottom: 6px;
+  }
+  .roar-desc {
+    font-size: 0.78rem;
+    color: #94a3b8;
+    text-align: center;
+    line-height: 1.5;
+  }
+
+  /* Price card */
+  .price-big {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #f1f5f9;
+    line-height: 1.1;
+  }
+  .price-change {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-top: 4px;
+  }
+  .up { color: #22c55e; }
+  .down { color: #ef4444; }
+  .flat { color: #94a3b8; }
+
+  .ma-row {
+    display: flex;
+    gap: 12px;
+    margin-top: 14px;
+    flex-wrap: wrap;
+  }
+  .ma-item {
+    font-size: 0.78rem;
+    color: #64748b;
+  }
+  .ma-item span {
+    color: #94a3b8;
+    font-weight: 600;
+  }
+
+  /* Targets card */
+  .target-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #263044;
+  }
+  .target-row:last-child { border-bottom: none; padding-bottom: 0; }
+  .target-label { font-size: 0.82rem; color: #64748b; }
+  .target-price { font-size: 1rem; font-weight: 700; }
+
+  /* Chart card */
+  .chart-card {
+    background: #1a1d2e;
+    border: 1px solid #263044;
+    border-radius: 14px;
+    padding: 20px;
+    margin-bottom: 16px;
+  }
+  .chart-title {
+    font-size: 0.75rem;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 14px;
+  }
+
+  /* Sim info */
+  .sim-info {
+    font-size: 0.72rem;
+    color: #475569;
+    text-align: center;
+    margin-top: 16px;
+  }
+
+  /* Loading */
+  .spinner {
+    display: inline-block;
+    width: 18px; height: 18px;
+    border: 2px solid #334155;
+    border-top-color: #60a5fa;
+    border-radius: 50%;
+    animation: spin .7s linear infinite;
+    vertical-align: middle;
+    margin-right: 8px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+
+<h1>ROAR Score</h1>
+<p class="subtitle">Return Opportunity And Risk — 先漲 10% 的機率有多少？</p>
+
+<div class="search-wrap">
+  <input id="tickerInput" type="text" placeholder="輸入代號，例：SPY、2327、QQQ" autocomplete="off" autocapitalize="characters">
+  <button id="analyzeBtn" onclick="runAnalyze()">分析</button>
+</div>
+
+<div class="quick-picks">
+  <span class="chip" onclick="quickPick('SPY')">SPY</span>
+  <span class="chip" onclick="quickPick('QQQ')">QQQ</span>
+  <span class="chip" onclick="quickPick('VTI')">VTI</span>
+  <span class="chip" onclick="quickPick('NVDA')">NVDA</span>
+  <span class="chip" onclick="quickPick('AAPL')">AAPL</span>
+  <span class="chip" onclick="quickPick('2327')">2327 國巨</span>
+  <span class="chip" onclick="quickPick('2492')">2492 華新科</span>
+  <span class="chip" onclick="quickPick('2330')">2330 台積電</span>
+</div>
+
+<div id="errorMsg"></div>
+
+<div id="results">
+  <div class="ticker-header">
+    <span class="ticker-name" id="rTicker"></span>
+    <span class="market-badge" id="rMarket"></span>
+  </div>
+
+  <div class="grid-2">
+    <!-- ROAR Card -->
+    <div class="roar-card" id="roarCard">
+      <div class="card-label">ROAR Score</div>
+      <div class="gauge-wrap">
+        <svg class="gauge-svg" viewBox="0 0 180 95">
+          <!-- half circle: r=75, cx=90, cy=90, from 180° to 0° -->
+          <path class="gauge-bg"
+            d="M 15,90 A 75,75 0 0 1 165,90"
+          />
+          <path class="gauge-fill" id="gaugeFill"
+            d="M 15,90 A 75,75 0 0 1 165,90"
+            stroke="#60a5fa"
+            stroke-dasharray="235.6"
+            stroke-dashoffset="235.6"
+          />
+        </svg>
+        <div class="gauge-score" id="rScore">—</div>
+      </div>
+      <div class="roar-label" id="rLevel">—</div>
+      <div class="roar-desc" id="rDesc"></div>
+    </div>
+
+    <!-- Price Card -->
+    <div class="card">
+      <div class="card-label">最新收盤</div>
+      <div class="price-big" id="rPrice">—</div>
+      <div class="price-change" id="rChange"></div>
+      <div class="ma-row">
+        <div class="ma-item">MA20 <span id="rMA20">—</span></div>
+        <div class="ma-item">MA50 <span id="rMA50">—</span></div>
+        <div class="ma-item">MA200 <span id="rMA200">—</span></div>
+      </div>
+      <div class="ma-row">
+        <div class="ma-item">日波動率 <span id="rVol">—</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Targets -->
+  <div class="card" style="margin-bottom:16px">
+    <div class="card-label" style="margin-bottom:12px">目標價位</div>
+    <div class="target-row">
+      <span class="target-label">🎯 +10% 目標（先漲到此算贏）</span>
+      <span class="target-price up" id="rTargetUp">—</span>
+    </div>
+    <div class="target-row">
+      <span class="target-label">🛑 -10% 止損（先跌到此算輸）</span>
+      <span class="target-price down" id="rTargetDown">—</span>
+    </div>
+  </div>
+
+  <!-- Chart -->
+  <div class="chart-card">
+    <div class="chart-title">近 60 日收盤走勢</div>
+    <canvas id="priceChart" height="120"></canvas>
+  </div>
+
+  <div class="sim-info" id="rSimInfo"></div>
+</div>
+
+<script>
+let chartInstance = null;
+
+function quickPick(ticker) {
+  document.getElementById('tickerInput').value = ticker;
+  runAnalyze();
+}
+
+document.getElementById('tickerInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') runAnalyze();
+});
+
+async function runAnalyze() {
+  const ticker = document.getElementById('tickerInput').value.trim();
+  if (!ticker) return;
+
+  const btn = document.getElementById('analyzeBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span>分析中';
+
+  document.getElementById('errorMsg').style.display = 'none';
+  document.getElementById('results').style.display = 'none';
+
+  try {
+    const res = await fetch('/api/roar', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ticker })
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      showError(data.error || '發生錯誤');
+      return;
+    }
+    renderResults(data);
+  } catch (e) {
+    showError('連線失敗，請確認服務正常');
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '分析';
+  }
+}
+
+function showError(msg) {
+  const el = document.getElementById('errorMsg');
+  el.textContent = '⚠️ ' + msg;
+  el.style.display = 'block';
+}
+
+function renderResults(d) {
+  const intp = d.interpretation;
+  const color = intp.color;
+
+  // Header
+  document.getElementById('rTicker').textContent = d.ticker;
+  document.getElementById('rMarket').textContent = d.market === 'TW' ? '台股' : '美股';
+
+  // ROAR
+  document.getElementById('roarCard').style.setProperty('--roar-color', color);
+  document.getElementById('rScore').textContent = d.roar;
+  document.getElementById('rScore').style.color = color;
+  document.getElementById('rLevel').textContent = intp.label;
+  document.getElementById('rLevel').style.color = color;
+  document.getElementById('rDesc').textContent = intp.desc;
+
+  // Gauge fill: total arc length = 235.6 (π*75)
+  const arcLen = 235.6;
+  const offset = arcLen - (d.roar / 100) * arcLen;
+  const gf = document.getElementById('gaugeFill');
+  gf.style.stroke = color;
+  // trigger transition
+  requestAnimationFrame(() => {
+    gf.style.strokeDashoffset = offset;
+  });
+
+  // Price
+  const cp = d.current_price;
+  const chg = d.change;
+  const chgPct = d.change_pct;
+  document.getElementById('rPrice').textContent = cp.toLocaleString();
+  const chgEl = document.getElementById('rChange');
+  const sign = chg >= 0 ? '+' : '';
+  chgEl.textContent = `${sign}${chg} (${sign}${chgPct}%)`;
+  chgEl.className = 'price-change ' + (chg > 0 ? 'up' : chg < 0 ? 'down' : 'flat');
+
+  document.getElementById('rMA20').textContent = d.ma20.toLocaleString();
+  document.getElementById('rMA50').textContent = d.ma50.toLocaleString();
+  document.getElementById('rMA200').textContent = d.ma200.toLocaleString();
+  document.getElementById('rVol').textContent = d.daily_vol_pct + '%';
+
+  // Targets
+  document.getElementById('rTargetUp').textContent = d.target_up.toLocaleString();
+  document.getElementById('rTargetDown').textContent = d.target_down.toLocaleString();
+
+  // Chart
+  renderChart(d.chart_dates, d.chart_prices, color, cp);
+
+  // Sim info
+  document.getElementById('rSimInfo').textContent =
+    `基於 ${d.history_days} 天歷史資料，執行 ${d.n_simulations.toLocaleString()} 次蒙地卡羅模擬，` +
+    `${d.n_decided.toLocaleString()} 條路徑在 252 天內觸碰目標`;
+
+  document.getElementById('results').style.display = 'block';
+}
+
+function renderChart(dates, prices, accentColor, currentPrice) {
+  if (chartInstance) chartInstance.destroy();
+  const ctx = document.getElementById('priceChart').getContext('2d');
+
+  const upColor = '#22c55e';
+  const downColor = '#ef4444';
+
+  chartInstance = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: dates,
+      datasets: [{
+        data: prices,
+        borderColor: accentColor,
+        borderWidth: 2,
+        pointRadius: 0,
+        fill: true,
+        backgroundColor: (context) => {
+          const chart = context.chart;
+          const { ctx: c, chartArea } = chart;
+          if (!chartArea) return 'transparent';
+          const grad = c.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
+          grad.addColorStop(0, accentColor + '33');
+          grad.addColorStop(1, accentColor + '00');
+          return grad;
+        },
+        tension: 0.3,
+      }]
+    },
+    options: {
+      responsive: true,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#1e2130',
+          borderColor: '#334155',
+          borderWidth: 1,
+          titleColor: '#94a3b8',
+          bodyColor: '#f1f5f9',
+          callbacks: {
+            label: ctx => ' ' + ctx.parsed.y.toLocaleString()
+          }
+        }
+      },
+      scales: {
+        x: {
+          ticks: { color: '#475569', maxTicksLimit: 8, font: { size: 11 } },
+          grid: { color: '#1e2130' }
+        },
+        y: {
+          ticks: { color: '#475569', font: { size: 11 } },
+          grid: { color: '#263044' },
+          position: 'right'
+        }
+      }
+    }
+  });
+}
+</script>
+</body>
+</html>
