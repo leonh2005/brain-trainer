@@ -1,0 +1,6 @@
+flask>=3.0
+yfinance>=0.2.40
+pandas>=2.0
+numpy>=1.26
+FinMind>=0.7
+python-dotenv>=1.0
