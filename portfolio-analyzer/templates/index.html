@@ -311,11 +311,13 @@
               <tr>
                 <th>代號</th><th>名稱</th><th>股數／單位</th>
                 <th>現價</th><th>市值（台幣）</th><th>佔比</th>
+                <th title="外資+投信+自營商 當日合計（張）">法人合計(張)</th>
+                <th title="千張以上大戶股東人數（週更）週增減">千張大戶(週)</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody id="pos-tbody">
               ${p.map(pos => `
-                <tr>
+                <tr data-ticker="${pos.ticker.replace('.TW','').replace('.TWO','').replace('.L','')}">
                   <td class="ticker">${pos.ticker.replace('.TW','').replace('.L','')}</td>
                   <td>${pos.name}</td>
                   <td>${fmt(pos.shares)}</td>
@@ -327,6 +329,8 @@
                       <div class="bar" style="width:${Math.min(pos.weight * 3, 80)}px"></div>
                     </div>
                   </td>
+                  <td class="whale-cell" style="color:#8b949e;font-size:12px">${pos.currency === 'TWD' ? '…' : '—'}</td>
+                  <td class="tdcc-cell" style="color:#8b949e;font-size:12px">${pos.currency === 'TWD' ? '…' : '—'}</td>
                 </tr>
               `).join('')}
             </tbody>
@@ -389,8 +393,54 @@
       catch(e) { document.getElementById('app').innerHTML = `<div class="err">錯誤：${e.message}</div>`; }
     }
 
+    async function loadTdcc() {
+      try {
+        const r = await fetch('/api/tdcc');
+        const j = await r.json();
+        if (!j.ok) return;
+        const tdcc = j.data;
+        document.querySelectorAll('#pos-tbody tr[data-ticker]').forEach(row => {
+          const code = row.dataset.ticker;
+          const cell = row.querySelector('.tdcc-cell');
+          if (!cell) return;
+          if (!(code in tdcc)) { cell.textContent = '—'; return; }
+          const t = tdcc[code];
+          const diff = t.diff;
+          const sign = diff > 0 ? '+' : '';
+          const color = diff > 0 ? '#3fb950' : diff < 0 ? '#f85149' : '#8b949e';
+          cell.innerHTML = `<span style="color:${color};font-weight:600">${sign}${diff}</span>
+            <div style="color:#8b949e;font-size:10px;margin-top:1px">${t.people.toLocaleString()}人 [${t.date}]</div>`;
+        });
+      } catch(e) { /* 靜默失敗 */ }
+    }
+
+    async function loadWhale() {
+      try {
+        const r = await fetch('/api/whale');
+        const j = await r.json();
+        if (!j.ok) return;
+        const whale = j.data;
+        document.querySelectorAll('#pos-tbody tr[data-ticker]').forEach(row => {
+          const code = row.dataset.ticker;
+          const cell = row.querySelector('.whale-cell');
+          if (!cell) return;
+          if (!(code in whale)) { cell.textContent = '—'; return; }
+          const w = whale[code];
+          const total = w.total;
+          const sign = total > 0 ? '+' : '';
+          const color = total > 0 ? '#3fb950' : total < 0 ? '#f85149' : '#8b949e';
+          cell.innerHTML = `<span style="color:${color};font-weight:600">${sign}${total.toLocaleString()}</span>
+            <div style="color:#8b949e;font-size:10px;margin-top:1px">外資${w.foreign>0?'+':''}${w.foreign} 投信${w.trust>0?'+':''}${w.trust} 自營${w.dealer>0?'+':''}${w.dealer}</div>`;
+        });
+      } catch(e) { /* 靜默失敗 */ }
+    }
+
     (async () => {
-      try { render(await load()); }
+      try {
+        render(await load());
+        loadWhale();  // 非同步，不阻塞主畫面
+        loadTdcc();   // 非同步，TDCC 千張大戶
+      }
       catch(e) { document.getElementById('app').innerHTML = `<div class="err">載入失敗：${e.message}</div>`; }
     })();
 
