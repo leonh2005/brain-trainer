@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>大樂透選號產生器</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <style>
+    body { background: #f5f7fa; color: #2c3e50; font-family: Avenir, Helvetica, Arial, sans-serif; }
+    .page-wrap { max-width: 580px; margin: 0 auto; padding: 24px 16px 60px; }
+    h2 { font-size: 1.5rem; font-weight: 700; }
+    .subtitle { color: #6c757d; margin-bottom: 16px; }
+
+    /* ── 號碼球 ── */
+    .ball {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 36px; height: 36px; border-radius: 50%;
+      background: #7ba828; color: #fff;
+      font-family: Arial, sans-serif; font-size: 13px; font-weight: 700;
+      margin: 3px; user-select: none;
+    }
+    .ball.chosen { background: #e07820; }
+
+    /* ── 票券列 ── */
+    .stats-box { background: #fff; border-radius: 10px; padding: 12px 16px;
+                 box-shadow: 0 1px 4px rgba(0,0,0,.08); margin-bottom: 14px; }
+    .stat-line { font-size: .92rem; color: #495057; margin: 3px 0; }
+    .stat-label { color: #888; margin-right: 4px; }
+    .combo-row { display: flex; align-items: center; flex-wrap: wrap;
+                 background: #fff; border-radius: 10px; padding: 8px 12px;
+                 box-shadow: 0 1px 3px rgba(0,0,0,.07); margin-bottom: 8px; }
+    .combo-idx { color: #adb5bd; font-size: .82rem; min-width: 28px; flex-shrink: 0; }
+    .extra-note { font-size: .88rem; color: #6c757d; margin-top: 10px;
+                  background: #fff3cd; border-radius: 8px; padding: 8px 14px; }
+
+    /* ── 中5保5 號碼格 ── */
+    .num-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin: 12px 0; }
+    .num-btn {
+      aspect-ratio: 1; border-radius: 50%; border: 2px solid #dee2e6;
+      background: #fff; color: #495057; font-weight: 700; font-size: 13px;
+      cursor: pointer; transition: all .15s; display: flex;
+      align-items: center; justify-content: center;
+    }
+    .num-btn:hover { border-color: #7ba828; color: #7ba828; }
+    .num-btn.selected { background: #e07820; border-color: #e07820; color: #fff; }
+    .num-btn.selected:hover { background: #c0601a; border-color: #c0601a; }
+    .num-btn:disabled { opacity: .35; cursor: not-allowed; }
+    .guarantee-badge {
+      display: inline-block; background: #198754; color: #fff;
+      border-radius: 20px; padding: 4px 12px; font-size: .82rem; font-weight: 600;
+    }
+    .hint-box { background: #e8f5e9; border-left: 3px solid #4caf50;
+                border-radius: 0 8px 8px 0; padding: 10px 14px; font-size: .88rem;
+                color: #2e7d32; margin-bottom: 14px; line-height: 1.6; }
+    .warning-box { background: #fff8e1; border-left: 3px solid #ffc107;
+                   border-radius: 0 8px 8px 0; padding: 10px 14px; font-size: .88rem;
+                   color: #6d4c00; margin-bottom: 14px; line-height: 1.6; }
+    .disclaimer { font-size: .8rem; color: #adb5bd; margin-top: 30px; line-height: 1.6; }
+  </style>
+</head>
+<body>
+<div class="page-wrap">
+  <div class="text-center mb-3">
+    <h2>大樂透選號產生器</h2>
+    <div class="subtitle">包牌法・中5保5聰明包牌</div>
+  </div>
+
+  <!-- Tab -->
+  <ul class="nav nav-tabs mb-3" id="mainTab">
+    <li class="nav-item">
+      <button class="nav-link active" id="tab-classic" onclick="switchTab('classic')">包牌法</button>
+    </li>
+    <li class="nav-item">
+      <button class="nav-link" id="tab-g55" onclick="switchTab('g55')">🎯 中5保5</button>
+    </li>
+  </ul>
+
+  <!-- ══════════ 包牌法 ══════════ -->
+  <div id="panel-classic">
+    <div class="mb-3">
+      <select id="optionSelect" class="form-select"></select>
+    </div>
+    <div id="statsBox" class="stats-box" style="display:none"></div>
+    <div class="mb-3 d-flex gap-2">
+      <button id="btnShuffle" class="btn btn-primary btn-sm">洗亂</button>
+      <button id="btnReset"   class="btn btn-secondary btn-sm">復原</button>
+    </div>
+    <div id="combosDisplay"></div>
+  </div>
+
+  <!-- ══════════ 中5保5 ══════════ -->
+  <div id="panel-g55" style="display:none">
+
+    <div class="hint-box">
+      <strong>玩法說明：</strong>選出 <strong>6～10 個</strong>你看好的號碼，
+      系統自動套用數學覆蓋公式，<br>
+      保證「只要開出的 6 個獎號全部落在你選的號碼裡，必中至少一注三獎（5碼）以上」。
+    </div>
+
+    <!-- N 選擇 -->
+    <div class="mb-3">
+      <div class="d-flex gap-1 flex-wrap align-items-center mb-1">
+        <span style="font-size:.88rem;color:#6c757d;margin-right:4px">選幾個：</span>
+        <div class="btn-group btn-group-sm" role="group">
+          <button class="btn btn-outline-secondary" id="btnN6"  onclick="setN(6)">6</button>
+          <button class="btn btn-outline-secondary" id="btnN7"  onclick="setN(7)">7</button>
+          <button class="btn btn-outline-secondary" id="btnN8"  onclick="setN(8)">8</button>
+          <button class="btn btn-outline-secondary" id="btnN9"  onclick="setN(9)">9</button>
+          <button class="btn btn-outline-secondary" id="btnN10" onclick="setN(10)">10</button>
+        </div>
+        <span id="g55Status" style="font-size:.88rem;margin-left:8px;color:#888">尚未選號</span>
+      </div>
+      <div id="nDesc" style="font-size:.8rem;color:#6c757d"></div>
+    </div>
+
+    <!-- 1~49 號碼格 -->
+    <div class="num-grid" id="numGrid"></div>
+
+    <div class="mb-3 d-flex gap-2 flex-wrap">
+      <button class="btn btn-outline-danger btn-sm" onclick="clearSelection()">清除</button>
+      <button class="btn btn-outline-secondary btn-sm" onclick="randomFill()">隨機補齊</button>
+      <button class="btn btn-outline-secondary btn-sm" onclick="randomAll()">全部隨機</button>
+    </div>
+
+    <!-- 結果區 -->
+    <div id="g55Result"></div>
+  </div>
+
+  <!-- QR Code Modal -->
+  <div class="modal fade" id="qrModal" tabindex="-1">
+    <div class="modal-dialog modal-fullscreen-sm-down modal-lg">
+      <div class="modal-content">
+        <div class="modal-header py-2">
+          <h5 class="modal-title fs-6">掃 QR Code 逐注填單</h5>
+          <div class="ms-3 text-muted" id="qrProgress" style="font-size:.85rem"></div>
+          <button type="button" class="btn-close ms-auto" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body p-2">
+          <!-- 單注大 QR 導覽模式 -->
+          <div id="qrSingle" class="text-center">
+            <div class="mb-2 text-muted" style="font-size:.85rem">
+              點擊 QR Code 或使用箭頭切換下一注
+            </div>
+            <canvas id="qrCanvas" style="max-width:240px;width:100%;cursor:pointer"
+                    onclick="qrNext()"></canvas>
+            <div id="qrNumbers" class="mt-2" style="font-size:1.1rem;font-weight:700;letter-spacing:3px"></div>
+            <div class="mt-3 d-flex justify-content-center gap-3">
+              <button class="btn btn-outline-secondary btn-sm" onclick="qrPrev()">◀ 上一注</button>
+              <button class="btn btn-primary btn-sm" onclick="qrNext()">下一注 ▶</button>
+            </div>
+          </div>
+          <!-- 全覽模式 -->
+          <div id="qrAll" style="display:none">
+            <div id="qrGrid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px"></div>
+          </div>
+        </div>
+        <div class="modal-footer py-2 justify-content-between">
+          <button class="btn btn-sm btn-outline-secondary" onclick="toggleQrView()">
+            <span id="qrViewLabel">切換全覽</span>
+          </button>
+          <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">關閉</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="disclaimer">
+    ⚠️ 本工具僅供娛樂參考，不保證任何中獎。買彩券的期望值為負，長期必然虧損。<br>
+    請務必截圖再拿去投注；同一次投注請使用同一份號碼組合。
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════
+//  共用
+// ══════════════════════════════════════════════════
+const TICKET_PRICE = 50;
+const POOL_SIZE = 49;
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function ballHtml(n, cls = '') {
+  return `<span class="ball ${cls}">${String(n).padStart(2,'0')}</span>`;
+}
+
+function switchTab(tab) {
+  document.getElementById('panel-classic').style.display = tab === 'classic' ? '' : 'none';
+  document.getElementById('panel-g55').style.display    = tab === 'g55'     ? '' : 'none';
+  document.getElementById('tab-classic').classList.toggle('active', tab === 'classic');
+  document.getElementById('tab-g55').classList.toggle('active', tab === 'g55');
+}
+
+// ══════════════════════════════════════════════════
+//  包牌法
+// ══════════════════════════════════════════════════
+const OPTIONS = [
+  { name: '單注', odds: 0.031,
+    combos: [[0,1,2,3,4,5]] },
+  { name: '8 注，選號分散', odds: 0.2426, breakEven: 0.2426,
+    combos: [[0,1,2,3,4,5],[6,7,8,9,10,11],[12,13,14,15,16,17],[18,19,20,21,22,23],
+             [24,25,26,27,28,29],[30,31,32,33,34,35],[36,37,38,39,40,41],[42,43,44,45,46,47]] },
+  { name: '117 注，保底 400 元', guaranteed: 400, breakEven: 0.0073128374,
+    combos: [
+      [0,1,2,3,4,5],[0,1,2,6,7,8],[0,1,2,9,10,11],[0,1,2,12,13,14],[0,1,4,6,8,14],
+      [0,2,4,10,12,13],[0,3,4,6,10,13],[0,3,4,7,8,12],[0,3,4,9,11,14],[0,3,5,9,10,13],
+      [0,5,6,9,11,12],[0,5,7,8,10,14],[0,7,8,9,11,13],[1,2,3,7,11,12],[1,2,5,6,8,9],
+      [1,3,5,6,13,14],[1,3,5,7,10,11],[1,3,5,8,9,12],[1,4,6,10,11,12],[1,4,7,9,13,14],
+      [1,8,10,11,13,14],[2,3,6,7,9,13],[2,3,8,10,12,14],[2,4,5,6,7,10],[2,4,5,8,11,13],
+      [2,4,5,9,12,14],[2,6,7,11,12,14],[3,4,5,7,11,14],[3,6,8,11,12,13],[4,6,8,9,10,14],
+      [5,7,9,10,12,13],
+      [15,16,17,18,19,20],[15,16,20,23,24,25],[15,16,21,27,28,29],[15,16,22,26,29,30],
+      [15,17,18,21,22,25],[15,17,18,23,27,29],[15,17,18,24,26,28],[15,17,24,25,29,30],
+      [15,18,20,24,28,30],[15,18,21,23,26,30],[15,19,20,21,24,29],[15,19,22,23,25,28],
+      [15,19,25,26,27,30],[15,20,22,24,26,27],[16,17,20,22,28,29],[16,17,21,24,27,30],
+      [16,17,23,25,26,27],[16,18,20,21,26,27],[16,18,22,23,24,29],[16,18,23,25,28,30],
+      [16,19,21,22,23,27],[16,19,22,25,27,29],[16,19,24,26,28,30],[16,20,21,22,25,30],
+      [16,20,23,27,29,30],[17,18,22,27,28,30],[17,19,20,24,26,30],[17,19,20,25,27,28],
+      [17,19,21,22,26,29],[17,19,22,23,24,30],[17,20,21,23,24,28],[18,19,20,22,23,26],
+      [18,19,21,23,25,29],[18,19,21,24,25,27],[18,19,21,28,29,30],[18,20,25,26,28,29],
+      [21,22,24,25,26,28],[23,24,26,27,28,29],
+      [31,32,33,34,35,36],[31,32,37,38,39,40],[31,32,41,42,43,44],[31,32,45,46,47,48],
+      [31,33,37,42,43,45],[31,33,38,44,46,47],[31,33,39,40,41,48],[31,34,37,41,46,47],
+      [31,34,38,42,43,48],[31,34,39,40,44,45],[31,35,36,37,44,48],[31,35,36,38,41,45],
+      [31,35,39,42,46,47],[31,35,40,42,43,46],[31,36,39,42,43,47],[31,36,40,43,46,47],
+      [32,33,34,39,43,46],[32,33,34,40,42,47],[32,33,37,41,44,45],[32,33,38,44,45,48],
+      [32,34,37,41,45,48],[32,34,38,41,44,48],[32,35,37,38,43,47],[32,35,39,42,45,48],
+      [32,35,40,41,44,46],[32,36,37,38,42,46],[32,36,39,41,44,47],[32,36,40,43,45,48],
+      [33,34,37,38,41,44],[33,34,37,38,45,48],[33,35,37,40,45,46],[33,35,38,39,42,44],
+      [33,35,41,43,47,48],[33,36,37,39,45,47],[33,36,38,40,43,44],[33,36,41,42,46,48],
+      [34,35,37,39,41,42],[34,35,38,40,46,48],[34,35,43,44,45,47],[34,36,37,40,41,43],
+      [34,36,38,39,47,48],[34,36,42,44,45,46],[35,36,39,40,42,43],[35,36,39,40,46,47],
+      [37,39,43,44,46,48],[37,40,42,44,47,48],[38,39,41,43,45,46],[38,40,41,42,45,47]
+    ]
+  }
+];
+
+const DEFAULT_POOL = Array.from({length: POOL_SIZE}, (_, i) => i + 1);
+let pool = [...DEFAULT_POOL];
+let selectedOption = OPTIONS[1];
+
+function renderStats() {
+  const opt = selectedOption;
+  const total = opt.combos.length * TICKET_PRICE;
+  let h = `<div class="stat-line"><span class="stat-label">投注金額</span>${total.toLocaleString()} 元</div>`;
+  if (opt.odds && opt.odds < 1)
+    h += `<div class="stat-line"><span class="stat-label">中獎機率</span>${(opt.odds*100).toFixed(2)}%</div>`;
+  if (opt.breakEven)
+    h += `<div class="stat-line"><span class="stat-label">回本機率</span>${(opt.breakEven*100).toFixed(3)}%</div>`;
+  if (opt.guaranteed)
+    h += `<div class="stat-line"><span class="stat-label">保底獎金</span>${opt.guaranteed.toLocaleString()} 元</div>`;
+  if (opt.guaranteed)
+    h += `<div class="stat-line"><span class="stat-label">保底比例</span>${(opt.guaranteed/total*100).toFixed(2)}%</div>`;
+  document.getElementById('statsBox').innerHTML = h;
+  document.getElementById('statsBox').style.display = '';
+}
+
+function renderCombos() {
+  const opt = selectedOption;
+  let h = '';
+  const usedIdx = new Set(opt.combos.flat());
+  const unusedNums = [];
+  for (let i = 0; i < POOL_SIZE; i++)
+    if (!usedIdx.has(i)) unusedNums.push(pool[i]);
+
+  opt.combos.forEach((combo, ci) => {
+    const nums = combo.map(i => pool[i]).sort((a,b) => a-b);
+    h += `<div class="combo-row"><span class="combo-idx">${ci+1}.</span>
+      ${nums.map(n => ballHtml(n)).join('')}</div>`;
+  });
+
+  if (opt.combos.length === 8 && unusedNums.length > 0)
+    h += `<div class="extra-note">未選到的號碼：<strong>${unusedNums.map(n=>String(n).padStart(2,'0')).join('、')}</strong></div>`;
+
+  document.getElementById('combosDisplay').innerHTML = h;
+}
+
+function renderClassic() { renderStats(); renderCombos(); }
+
+const sel = document.getElementById('optionSelect');
+OPTIONS.forEach((opt, i) => {
+  const o = document.createElement('option');
+  o.value = i; o.textContent = opt.name; sel.appendChild(o);
+});
+sel.value = 1;
+sel.addEventListener('change', () => {
+  selectedOption = OPTIONS[+sel.value]; pool = [...DEFAULT_POOL]; renderClassic();
+});
+document.getElementById('btnShuffle').addEventListener('click', () => {
+  pool = shuffle(DEFAULT_POOL); renderClassic();
+});
+document.getElementById('btnReset').addEventListener('click', () => {
+  pool = [...DEFAULT_POOL]; renderClassic();
+});
+renderClassic();
+
+// ══════════════════════════════════════════════════
+//  中5保5
+// ══════════════════════════════════════════════════
+
+// 覆蓋設計模板（0-indexed，對應 chosen[i]）
+const COVER_6 = [[0,1,2,3,4,5]];
+const COVER_7 = [
+  [0,2,3,4,5,6],[0,1,3,4,5,6],[1,2,3,4,5,6],[0,1,2,3,4,6],[0,1,2,4,5,6],[0,1,2,3,5,6]
+];
+const COVER_8 = [
+  [0,1,2,5,6,7],[0,1,3,4,5,7],[1,2,3,4,6,7],[0,2,3,4,5,6],[0,1,2,4,6,7],[0,1,2,3,6,7],
+  [0,1,3,4,5,6],[0,1,2,3,4,5],[0,3,4,5,6,7],[0,2,3,4,5,7],[1,2,3,5,6,7],[1,2,4,5,6,7]
+];
+const COVER_9 = [
+  [1,3,4,5,6,8],[0,1,2,3,6,8],[0,1,2,3,4,5],[1,2,4,6,7,8],[0,2,3,5,6,7],
+  [0,1,3,5,7,8],[0,2,3,4,7,8],[0,4,5,6,7,8],[0,1,3,4,6,7],[0,1,2,4,5,6],
+  [1,2,3,4,5,7],[0,1,2,4,5,8],[2,3,4,5,6,8],[1,2,5,6,7,8],[0,1,2,6,7,8],
+  [0,3,4,5,6,8],[1,2,3,6,7,8],[3,4,5,6,7,8],[0,1,2,4,5,7],[0,1,3,5,6,7],
+  [0,2,3,4,6,7],[0,2,3,5,7,8],[0,1,3,4,7,8],[1,2,4,5,6,7],[1,2,3,4,5,6],
+  [1,2,3,4,5,8],[0,1,4,5,6,8],[1,2,4,5,7,8],[0,2,4,5,6,8],[0,1,2,3,5,7],
+  [0,1,3,4,5,7],[0,1,3,6,7,8]
+];
+const COVER_10 = [
+  [1,2,4,5,6,9],[1,3,4,5,8,9],[0,5,6,7,8,9],[0,1,2,3,5,6],[0,1,2,4,5,7],
+  [0,2,3,6,8,9],[2,3,4,7,8,9],[0,1,3,4,6,9],[0,2,4,5,6,8],[0,1,3,7,8,9],
+  [0,1,2,4,8,9],[0,3,4,6,7,8],[1,3,5,6,7,8],[0,2,4,6,7,9],[3,4,5,6,7,9],
+  [0,1,2,6,7,8],[1,2,5,7,8,9],[1,2,3,4,6,7],[0,2,3,5,7,9],[1,4,6,7,8,9],
+  [0,1,4,5,6,7],[0,1,4,5,7,8],[0,1,5,6,8,9],[0,1,3,4,5,7],[0,1,2,3,5,8],
+  [1,2,3,6,8,9],[2,3,5,6,8,9],[2,3,4,5,7,8],[0,1,4,5,7,9],[0,2,3,4,5,9],
+  [1,2,3,4,7,8],[1,2,4,5,6,8],[2,3,4,6,8,9],[0,2,3,4,7,8],[0,1,3,6,7,9],
+  [2,3,6,7,8,9],[0,2,3,5,6,7],[0,1,2,3,7,9],[0,4,5,6,8,9],[1,2,5,6,7,9],
+  [0,3,4,5,6,8],[2,4,5,6,7,8],[0,1,3,4,6,8],[0,1,2,3,4,6],[2,4,5,7,8,9],
+  [0,3,4,7,8,9],[0,3,5,7,8,9],[0,1,3,5,6,9],[0,2,5,7,8,9],[1,2,3,4,7,9],
+  [1,2,3,4,5,6],[1,2,3,5,7,9],[0,1,2,5,6,9]
+];
+
+const COVERS = {6:COVER_6, 7:COVER_7, 8:COVER_8, 9:COVER_9, 10:COVER_10};
+const N_PROB = {
+  6:  '1 / 13,983,816 ≈ 0.000007%（等同首獎）',
+  7:  '7 / 13,983,816 ≈ 0.00005%',
+  8:  '28 / 13,983,816 ≈ 0.0002%',
+  9:  '84 / 13,983,816 ≈ 0.0006%',
+  10: '210 / 13,983,816 ≈ 0.0015%',
+};
+const N_DESC = {
+  6:  '選 6 個，系統出 1 注。若開出的 6 個獎號恰好就是你選的號碼，即中首獎。',
+  7:  '選 7 個，系統出 6 注，保證覆蓋所有 5 碼組合。',
+  8:  '選 8 個，系統出 12 注，保證覆蓋所有 5 碼組合。',
+  9:  '選 9 個，系統出 32 注，保證覆蓋所有 5 碼組合。',
+  10: '選 10 個，系統出 53 注，保證覆蓋所有 5 碼組合。',
+};
+
+let g55N = 9;
+let chosen = []; // sorted array of selected numbers (1-49)
+
+function setN(n) {
+  g55N = n;
+  [6,7,8,9,10].forEach(v => {
+    const btn = document.getElementById(`btnN${v}`);
+    if (btn) {
+      btn.classList.toggle('btn-primary', n === v);
+      btn.classList.toggle('btn-outline-secondary', n !== v);
+    }
+  });
+  const desc = document.getElementById('nDesc');
+  if (desc) desc.textContent = N_DESC[n] || '';
+  // 若已選超過上限則截斷
+  if (chosen.length > n) { chosen = chosen.slice(0, n); updateNumGrid(); }
+  updateG55Status();
+  renderG55();
+}
+
+function buildNumGrid() {
+  const grid = document.getElementById('numGrid');
+  grid.innerHTML = '';
+  for (let i = 1; i <= 49; i++) {
+    const btn = document.createElement('button');
+    btn.className = 'num-btn';
+    btn.id = `nb_${i}`;
+    btn.textContent = String(i).padStart(2,'0');
+    btn.onclick = () => toggleNum(i);
+    grid.appendChild(btn);
+  }
+}
+
+function updateNumGrid() {
+  for (let i = 1; i <= 49; i++) {
+    const btn = document.getElementById(`nb_${i}`);
+    const isChosen = chosen.includes(i);
+    btn.classList.toggle('selected', isChosen);
+    btn.disabled = !isChosen && chosen.length >= g55N;
+  }
+}
+
+function toggleNum(n) {
+  const idx = chosen.indexOf(n);
+  if (idx >= 0) {
+    chosen.splice(idx, 1);
+  } else {
+    if (chosen.length >= g55N) return;
+    chosen.push(n);
+    chosen.sort((a,b) => a-b);
+  }
+  updateNumGrid();
+  updateG55Status();
+  renderG55();
+}
+
+function clearSelection() {
+  chosen = []; updateNumGrid(); updateG55Status(); renderG55();
+}
+
+function randomFill() {
+  const remaining = g55N - chosen.length;
+  if (remaining <= 0) return;
+  const pool = Array.from({length:49}, (_,i) => i+1).filter(n => !chosen.includes(n));
+  const picks = shuffle(pool).slice(0, remaining);
+  chosen = [...chosen, ...picks].sort((a,b) => a-b);
+  updateNumGrid(); updateG55Status(); renderG55();
+}
+
+function randomAll() {
+  const all = Array.from({length:49}, (_,i) => i+1);
+  chosen = shuffle(all).slice(0, g55N).sort((a,b) => a-b);
+  updateNumGrid(); updateG55Status(); renderG55();
+}
+
+function updateG55Status() {
+  const st = document.getElementById('g55Status');
+  const remaining = g55N - chosen.length;
+  if (remaining > 0)
+    st.textContent = `還需選 ${remaining} 個`;
+  else
+    st.textContent = `✅ 已選好 ${g55N} 個號碼`;
+  st.style.color = remaining > 0 ? '#888' : '#198754';
+}
+
+function renderG55() {
+  const el = document.getElementById('g55Result');
+  if (chosen.length < g55N) { el.innerHTML = ''; return; }
+
+  const template = COVERS[g55N];
+  const cost = template.length * TICKET_PRICE;
+
+  // 機率說明
+  const p_all_in = N_PROB[g55N] || '';
+
+  let h = `
+    <div class="stats-box">
+      <div class="stat-line"><span class="stat-label">你選的號碼</span>
+        ${chosen.map(n => `<span class="ball chosen">${String(n).padStart(2,'0')}</span>`).join('')}
+      </div>
+      <div class="stat-line" style="margin-top:8px">
+        <span class="stat-label">票數</span>${template.length} 注
+        &nbsp;│&nbsp;
+        <span class="stat-label">投注金額</span>${cost.toLocaleString()} 元
+      </div>
+      <div class="stat-line">
+        <span class="stat-label">保證</span>
+        <span class="guarantee-badge">6 獎號全落在選號內 → 必中至少一注三獎</span>
+      </div>
+      <div class="stat-line" style="color:#888;font-size:.82rem;margin-top:4px">
+        6 獎號恰好全在你選的 ${g55N} 個號碼內的機率：${p_all_in}
+      </div>
+    </div>
+    <div class="warning-box">
+      💡 <strong>注意：</strong>此保證只在「開出的 6 個號碼全部都在你選的 ${g55N} 個號碼內」時生效。<br>
+      若有任一獎號落在你未選的號碼，此保證不適用。
+    </div>
+  `;
+
+  // QR Code 按鈕
+  h += `<div class="mb-3 mt-1">
+    <button class="btn btn-success btn-sm" onclick="openQR()">
+      📷 產生 QR Code（逐注掃描填單）
+    </button>
+  </div>`;
+
+  // 票券列表
+  template.forEach((combo, ci) => {
+    const nums = combo.map(i => chosen[i]).sort((a,b) => a-b);
+    h += `<div class="combo-row"><span class="combo-idx">${ci+1}.</span>
+      ${nums.map(n => ballHtml(n, 'chosen')).join('')}</div>`;
+  });
+
+  el.innerHTML = h;
+}
+
+// ══════════════════════════════════════════════════
+//  QR Code 功能
+// ══════════════════════════════════════════════════
+let _qrTickets = [];   // [{idx, nums}]
+let _qrCurrent = 0;
+let _qrViewAll = false;
+
+function openQR() {
+  const template = COVERS[g55N];
+  _qrTickets = template.map((combo, ci) => ({
+    idx: ci + 1,
+    nums: combo.map(i => chosen[i]).sort((a,b) => a-b)
+  }));
+  _qrCurrent = 0;
+  _qrViewAll = false;
+  document.getElementById('qrSingle').style.display = '';
+  document.getElementById('qrAll').style.display = 'none';
+  document.getElementById('qrViewLabel').textContent = '切換全覽';
+
+  const modal = new bootstrap.Modal(document.getElementById('qrModal'));
+  modal.show();
+  document.getElementById('qrModal').addEventListener('shown.bs.modal', () => {
+    drawQR(_qrCurrent);
+  }, { once: true });
+}
+
+function drawQR(idx) {
+  const t = _qrTickets[idx];
+  const text = t.nums.map(n => String(n).padStart(2,'0')).join('  ');
+  const canvas = document.getElementById('qrCanvas');
+  QRCode.toCanvas(canvas, `大樂透 第${t.idx}注\n${text}`, {
+    width: 220, margin: 2,
+    color: { dark: '#1a1a1a', light: '#ffffff' }
+  });
+  document.getElementById('qrNumbers').innerHTML =
+    t.nums.map(n => `<span class="ball chosen" style="width:34px;height:34px;font-size:13px">${String(n).padStart(2,'0')}</span>`).join('');
+  document.getElementById('qrProgress').textContent =
+    `第 ${t.idx} 注 / 共 ${_qrTickets.length} 注`;
+}
+
+function qrNext() {
+  _qrCurrent = (_qrCurrent + 1) % _qrTickets.length;
+  drawQR(_qrCurrent);
+}
+
+function qrPrev() {
+  _qrCurrent = (_qrCurrent - 1 + _qrTickets.length) % _qrTickets.length;
+  drawQR(_qrCurrent);
+}
+
+function toggleQrView() {
+  _qrViewAll = !_qrViewAll;
+  document.getElementById('qrSingle').style.display = _qrViewAll ? 'none' : '';
+  document.getElementById('qrAll').style.display    = _qrViewAll ? '' : 'none';
+  document.getElementById('qrViewLabel').textContent = _qrViewAll ? '切換單注' : '切換全覽';
+
+  if (_qrViewAll) {
+    const grid = document.getElementById('qrGrid');
+    grid.innerHTML = '';
+    _qrTickets.forEach((t, i) => {
+      const cell = document.createElement('div');
+      cell.style.textAlign = 'center';
+      const cvs = document.createElement('canvas');
+      cvs.style.width = '100%';
+      cvs.style.cursor = 'pointer';
+      cvs.onclick = () => { _qrViewAll = false; _qrCurrent = i; toggleQrView(); drawQR(i); };
+      cell.appendChild(cvs);
+      const label = document.createElement('div');
+      label.style.cssText = 'font-size:.75rem;margin-top:3px;color:#555;font-weight:600';
+      label.textContent = `第${t.idx}注`;
+      cell.appendChild(label);
+      const nums = document.createElement('div');
+      nums.style.cssText = 'font-size:.65rem;color:#888;letter-spacing:1px';
+      nums.textContent = t.nums.map(n=>String(n).padStart(2,'0')).join(' ');
+      cell.appendChild(nums);
+      grid.appendChild(cell);
+      QRCode.toCanvas(cvs, t.nums.map(n=>String(n).padStart(2,'0')).join(' '), {
+        width: 100, margin: 1, color: { dark: '#1a1a1a', light: '#ffffff' }
+      });
+    });
+  }
+}
+
+// 初始化
+buildNumGrid();
+setN(9);
+</script>
+</body>
+</html>
