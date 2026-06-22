@@ -165,7 +165,7 @@ def fetch_bofa_bull_bear() -> dict:
     history: list = raw.get("history", [])
 
     # ── 嘗試從 Google News RSS + 文章標題抓最新值 ───────────────────
-    def _try_extract_bb(text: str) -> float | None:
+    def _try_extract_bb(text: str):
         # 優先：標題中直接含數字（如 "hits 8.5" / "rises to 8.8"）
         m = re.search(r'bull\s*[&＆]\s*bear\s+indicator\s+(?:hits?|rises?\s+to|at|stands?\s+at|reaches?|climbs?\s+to|falls?\s+to|drops?\s+to)\s+(\d\.\d)', text, re.I)
         if m:
