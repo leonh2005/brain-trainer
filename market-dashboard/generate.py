@@ -217,11 +217,13 @@ def fetch_bofa_bull_bear() -> dict:
                     pass
             if last.get("value") != value or cache_age >= 6:
                 history.append({"date": today, "value": value})
+                history.sort(key=lambda x: x.get("date", ""))
                 raw = {"history": history}
                 BB_CACHE.write_text(json.dumps(raw, ensure_ascii=False, indent=2))
     except Exception:
         pass
 
+    history.sort(key=lambda x: x.get("date", ""))
     latest = history[-1] if history else {}
     return {
         "value":   latest.get("value"),
