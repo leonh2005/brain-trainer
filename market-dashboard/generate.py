@@ -30,6 +30,7 @@ SP_STATE   = Path(__file__).parent / "sp_state.json"
 CAPE_CACHE = Path(__file__).parent / "cape_cache.json"
 BB_CACHE   = Path(__file__).parent / "bb_cache.json"
 MARGIN_CACHE = Path(__file__).parent / "margin_cache.json"
+BUFFETT_CACHE = Path(__file__).parent / "buffett_cache.json"
 BOT_TOKEN = "8666778924:AAFMAFKfsfx3opS2CfCBrDYMIx6vcJKACTk"
 CHAT_ID = "7556217543"
 
@@ -391,6 +392,68 @@ def fetch_margin_mktcap(tw_data: list, months: int = 24) -> list:
     return data
 
 
+def fetch_buffett_cash() -> dict:
+    """Berkshire Hathaway (BRK-B) 現金水位（季度）
+    cash 單位：十億美元（Billion USD），ratio：現金 / 總資產 %
+    cache 格式：{"history": [{"date":"YYYY-MM-DD","cash":float,"assets":float,"ratio":float}, ...]}
+    """
+    cache_data = {}
+    if BUFFETT_CACHE.exists():
+        cache_data = json.loads(BUFFETT_CACHE.read_text())
+    history: list = cache_data.get("history", [])
+
+    try:
+        brk = yf.Ticker("BRK-B")
+        bs = brk.quarterly_balance_sheet
+        if bs is None or bs.empty:
+            raise ValueError("無法取得 BRK-B 資產負債表")
+
+        cash_keys = [
+            "Cash Cash Equivalents And Short Term Investments",
+            "Cash And Cash Equivalents",
+            "CashAndCashEquivalents",
+        ]
+        asset_keys = ["Total Assets", "TotalAssets"]
+
+        cash_row = next((bs.loc[k] for k in cash_keys if k in bs.index), None)
+        asset_row = next((bs.loc[k] for k in asset_keys if k in bs.index), None)
+
+        if cash_row is None:
+            raise ValueError(f"找不到現金欄位，可用欄位：{list(bs.index)[:10]}")
+
+        hist_map = {h["date"]: h for h in history}
+        for date_col in bs.columns:
+            date_str = date_col.strftime("%Y-%m-%d")
+            cash_val = cash_row[date_col]
+            if pd.isna(cash_val):
+                continue
+            cash_b = trunc2(float(cash_val) / 1e9)
+            asset_b, ratio = None, None
+            if asset_row is not None and not pd.isna(asset_row[date_col]):
+                asset_b = trunc2(float(asset_row[date_col]) / 1e9)
+                ratio = trunc2(cash_b / asset_b * 100) if asset_b > 0 else None
+            hist_map[date_str] = {"date": date_str, "cash": cash_b, "assets": asset_b, "ratio": ratio}
+
+        history = sorted(hist_map.values(), key=lambda x: x["date"])
+        cache_data = {"history": history}
+        BUFFETT_CACHE.write_text(json.dumps(cache_data, ensure_ascii=False, indent=2))
+        latest = history[-1]
+        print(f"  Buffett 現金：{latest['cash']:.1f}B USD（{latest['date']}，占資產 {latest.get('ratio', 'N/A')}%）")
+
+    except Exception as e:
+        print(f"  Buffett 現金抓取失敗: {e}")
+
+    history = sorted(history, key=lambda x: x.get("date", ""))
+    latest = history[-1] if history else {}
+    return {
+        "cash": latest.get("cash"),
+        "assets": latest.get("assets"),
+        "ratio": latest.get("ratio"),
+        "date": latest.get("date", "N/A"),
+        "history": history,
+    }
+
+
 def fetch_bls(series_id: str, start_year: int, end_year: int) -> list:
     """BLS 公共 API（無需 API key，月度資料）"""
     try:
@@ -633,7 +696,7 @@ def fetch_fear_greed():
         return {"score": None, "rating": "N/A", "history": hist}
 
 
-def generate_html(vix_data, sp_data, ma_data, sp_hist_high, fg_data, tw_data, tw_ma_data, tw_hist_high, cape_data, recession, m1b_data, trade_data, generated_at, bb_data=None, margin_data=None):
+def generate_html(vix_data, sp_data, ma_data, sp_hist_high, fg_data, tw_data, tw_ma_data, tw_hist_high, cape_data, recession, m1b_data, trade_data, generated_at, bb_data=None, margin_data=None, buffett_data=None):
     vix_current = vix_data[-1]["y"] if vix_data else 0
     vix_date    = vix_data[-1]["x"] if vix_data else "N/A"
     sp_current  = sp_data[-1]["y"] if sp_data else 0
@@ -764,6 +827,36 @@ def generate_html(vix_data, sp_data, ma_data, sp_hist_high, fg_data, tw_data, tw
     mg_color   = "#ff4757" if mg_ratio > 4.5 else ("#ffaa00" if mg_ratio > 3.5 else "#00d68f")
     mg_label   = "🔥 偏熱 >4.5%" if mg_ratio > 4.5 else ("⚠ 注意 3.5–4.5%" if mg_ratio > 3.5 else "正常 <3.5%")
     mg_alert   = alert_class(mg_color)
+
+    # Buffett 現金水位
+    buffett_data = buffett_data or {}
+    bf_cash    = buffett_data.get("cash")
+    bf_assets  = buffett_data.get("assets")
+    bf_ratio   = buffett_data.get("ratio")
+    bf_date    = buffett_data.get("date", "N/A")
+    bf_history = buffett_data.get("history", [])
+    if bf_ratio is not None:
+        if bf_ratio >= 30:
+            bf_color = "#ff4757"; bf_label = "極度謹慎"
+        elif bf_ratio >= 20:
+            bf_color = "#ffaa00"; bf_label = "謹慎"
+        else:
+            bf_color = "#00d68f"; bf_label = "積極部署"
+        bf_display_cash  = f"{bf_cash:.1f}B"
+        bf_display_ratio = f"{bf_ratio:.1f}%"
+        bf_pct = min(bf_ratio, 50) / 50 * 100  # 0–50% → 0–100% bar
+    else:
+        bf_color = "#5a6a7e"; bf_label = "暫無資料"
+        bf_display_cash  = "N/A"
+        bf_display_ratio = "N/A"
+        bf_pct = 0
+    bf_assets_display = f"{bf_assets:.0f}B" if bf_assets else "N/A"
+    bf_alert = alert_class(bf_color) if bf_ratio is not None and bf_ratio >= 20 else ""
+    bf_bg_color = {
+        "#ff4757": "rgba(255,71,87,0.15)",
+        "#ffaa00": "rgba(255,170,0,0.15)",
+        "#00d68f": "rgba(0,214,143,0.15)",
+    }.get(bf_color, "rgba(90,106,126,0.15)")
 
     fg_score_display = f"{fg_score:.2f}" if fg_score is not None else "N/A"
     fg_label_map = {
@@ -1160,6 +1253,33 @@ def generate_html(vix_data, sp_data, ma_data, sp_hist_high, fg_data, tw_data, tw
       <canvas id="bbChart"></canvas>
     </div>
   </div>
+
+  <div class="card {bf_alert}" style="--accent: {bf_color}; grid-column: 1 / -1">
+    <div class="card-label"><span class="pulse"></span>巴菲特現金水位（Berkshire Hathaway）</div>
+    <div style="display:flex; align-items:center; gap:2rem; flex-wrap:wrap; margin-bottom:1.2rem">
+      <div>
+        <div class="card-value" style="font-size:2.8rem">{bf_display_cash}</div>
+        <div style="font-family:var(--font-mono);font-size:1.1rem;color:{bf_color};margin-top:0.3rem">{bf_display_ratio} 占總資產</div>
+      </div>
+      <div style="flex:1; min-width:200px">
+        <div style="display:flex; justify-content:space-between; font-size:0.7rem; opacity:0.5; margin-bottom:4px">
+          <span>0% 積極</span><span>20%</span><span>30%</span><span>50%+ 謹慎</span>
+        </div>
+        <div style="background:linear-gradient(90deg,#00d68f 0%,#ffaa00 40%,#ff4757 60%,#ff4757 100%); height:10px; border-radius:5px; position:relative">
+          <div style="position:absolute; top:-3px; left:calc({bf_pct:.1f}% - 8px); width:16px; height:16px; border-radius:50%; background:{bf_color}; border:2px solid #fff; box-shadow:0 0 6px {bf_color}"></div>
+        </div>
+        <div style="margin-top:8px; font-size:0.85rem">
+          <b style="color:{bf_color}">{bf_label}</b>
+          &nbsp;·&nbsp; 總資產：{bf_assets_display} USD
+          &nbsp;·&nbsp; &lt;20% 積極 / 20–30% 謹慎 / &gt;30% 極度謹慎
+          <br><span style="opacity:0.5; font-size:0.7rem">{bf_date} · 季度財報資料（BRK-B 10-Q / 10-K）</span>
+        </div>
+      </div>
+    </div>
+    <div style="position:relative; height:140px">
+      <canvas id="buffettChart"></canvas>
+    </div>
+  </div>
 </div>
 
 <div class="section-label" style="padding: 0 2.5rem 0.75rem; font-size:0.7rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--text-dim);">
@@ -1365,6 +1485,8 @@ const ISM_DATA     = {json.dumps(r_ism["data"])};
 const T10Y2Y_DATA  = {json.dumps(r_yc["data"])};
 const BB_DATA      = {json.dumps([{"x": h["date"], "y": h["value"]} for h in bb_history])};
 const MARGIN_DATA  = {json.dumps([{"x": d["x"], "y": d["y"]} for d in margin_data])};
+const BUFFETT_DATA = {json.dumps([{"x": h["date"], "y": h["cash"]} for h in bf_history if h.get("cash") is not None])};
+const BUFFETT_RATIO_DATA = {json.dumps([{"x": h["date"], "y": h["ratio"]} for h in bf_history if h.get("ratio") is not None])};
 
 const CHART_DEFAULTS = {{
   responsive: true,
@@ -2011,6 +2133,65 @@ const bbChart = new Chart(document.getElementById('bbChart').getContext('2d'), {
   plugins: [bbAnnotationPlugin],
 }});
 
+// Buffett 現金水位圖
+const buffettPlugin = {{
+  id: 'buffettBands',
+  beforeDraw(chart) {{
+    const {{ ctx, chartArea, scales }} = chart;
+    if (!chartArea || !scales.y) return;
+    const y30 = scales.y.getPixelForValue(30);
+    const y20 = scales.y.getPixelForValue(20);
+    ctx.save();
+    // 紅：>30%
+    if (y30 >= chartArea.top) {{
+      ctx.fillStyle = 'rgba(255,71,87,0.07)';
+      ctx.fillRect(chartArea.left, chartArea.top, chartArea.right - chartArea.left, Math.max(0, y30 - chartArea.top));
+    }}
+    // 黃：20-30%
+    const y30c = Math.max(y30, chartArea.top), y20c = Math.min(y20, chartArea.bottom);
+    if (y20c > y30c) {{
+      ctx.fillStyle = 'rgba(255,170,0,0.06)';
+      ctx.fillRect(chartArea.left, y30c, chartArea.right - chartArea.left, y20c - y30c);
+    }}
+    ctx.setLineDash([4,4]); ctx.lineWidth = 1;
+    if (y30 >= chartArea.top && y30 <= chartArea.bottom) {{
+      ctx.strokeStyle = 'rgba(255,71,87,0.5)';
+      ctx.beginPath(); ctx.moveTo(chartArea.left, y30); ctx.lineTo(chartArea.right, y30); ctx.stroke();
+      ctx.fillStyle = 'rgba(255,71,87,0.7)'; ctx.setLineDash([]);
+      ctx.font = "10px 'Share Tech Mono'";
+      ctx.fillText('30% 極度謹慎', chartArea.left + 6, y30 - 4);
+      ctx.setLineDash([4,4]);
+    }}
+    if (y20 >= chartArea.top && y20 <= chartArea.bottom) {{
+      ctx.strokeStyle = 'rgba(255,170,0,0.4)';
+      ctx.beginPath(); ctx.moveTo(chartArea.left, y20); ctx.lineTo(chartArea.right, y20); ctx.stroke();
+      ctx.fillStyle = 'rgba(255,170,0,0.7)'; ctx.setLineDash([]);
+      ctx.fillText('20% 謹慎', chartArea.left + 6, y20 - 4);
+    }}
+    ctx.restore();
+  }}
+}};
+const buffettChart = makeChart('buffettChart', [{{
+  data: BUFFETT_RATIO_DATA,
+  borderColor: '{bf_color}',
+  backgroundColor: '{bf_bg_color}',
+  borderWidth: 2,
+  pointRadius: BUFFETT_RATIO_DATA.length <= 20 ? 4 : 2,
+  pointBackgroundColor: '{bf_color}',
+  fill: true,
+  parsing: {{ xAxisKey: 'x', yAxisKey: 'y' }},
+  tension: 0.3,
+  segment: {{
+    borderColor: ctx => ctx.p1.parsed.y >= 30 ? '#ff4757' :
+                        ctx.p1.parsed.y >= 20 ? '#ffaa00' : '#00d68f',
+  }},
+}}], 0, null, {{
+  scales: {{ x: {{ time: {{ unit: 'quarter' }} }} }}
+}});
+Chart.register(buffettPlugin);
+buffettChart.config.plugins = [buffettPlugin];
+buffettChart.update();
+
 // Range selector
 function setRange(days) {{
   document.querySelectorAll('.btn').forEach(b => b.classList.remove('active'));
@@ -2057,6 +2238,8 @@ function setRange(days) {{
   yieldCurveChart.update('none');
   bbChart.data.datasets[0].data = filter(BB_DATA);
   bbChart.update('none');
+  buffettChart.data.datasets[0].data = filter(BUFFETT_RATIO_DATA);
+  buffettChart.update('none');
 }}
 </script>
 </body>
@@ -2099,10 +2282,13 @@ def main():
     if margin_data:
         print(f"  融資市值比：{margin_data[-1]['y']:.2f}%（{margin_data[-1]['x']}）")
 
+    print(f"[{datetime.now().strftime('%H:%M:%S')}] 抓取 Berkshire Hathaway 現金水位...")
+    buffett_data = fetch_buffett_cash()
+
     generated_at = datetime.now().strftime("%Y-%m-%d %H:%M")
     print(f"[{datetime.now().strftime('%H:%M:%S')}] 生成 HTML...")
 
-    html = generate_html(vix_data, sp_data, ma_data, sp_hist_high, fg_data, tw_data, tw_ma_data, tw_hist_high, cape_data, recession, m1b_data, trade_data, generated_at, bb_data, margin_data)
+    html = generate_html(vix_data, sp_data, ma_data, sp_hist_high, fg_data, tw_data, tw_ma_data, tw_hist_high, cape_data, recession, m1b_data, trade_data, generated_at, bb_data, margin_data, buffett_data)
     OUTPUT.write_text(html, encoding="utf-8")
 
     vix_current = vix_data[-1]["y"] if vix_data else "N/A"
