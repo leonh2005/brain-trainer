@@ -1,0 +1,524 @@
+{
+  "history": [
+    {
+      "date": "2026-04-14",
+      "highs": 56,
+      "lows": 7,
+      "total": 500,
+      "highs_pct": 11.2,
+      "lows_pct": 1.4,
+      "spx_above_ma50": true,
+      "triggered": false
+    },
+    {
+      "date": "2026-04-15",
+      "highs": 41,
+      "lows": 5,
+      "total": 501,
+      "highs_pct": 8.18,
+      "lows_pct": 0.99,
+      "spx_above_ma50": true,
+      "triggered": false
+    },
+    {
+      "date": "2026-04-16",
+      "highs": 52,
+      "lows": 3,
+      "total": 501,
+      "highs_pct": 10.37,
+      "lows_pct": 0.59,
+      "spx_above_ma50": true,
+      "triggered": false
+    },
+    {
+      "date": "2026-04-17",
+      "highs": 78,
+      "lows": 2,
+      "total": 501,
+      "highs_pct": 15.56,
+      "lows_pct": 0.39,
+      "spx_above_ma50": true,
+      "triggered": false
+    },
+    {
+      "date": "2026-04-20",
+      "highs": 78,
+      "lows": 4,
+      "total": 501,
+      "highs_pct": 15.56,
+      "lows_pct": 0.79,
+      "spx_above_ma50": true,
+      "triggered": false
+    },
+    {
+      "date": "2026-04-21",
+      "highs": 65,
+      "lows": 10,
+      "total": 501,
+      "highs_pct": 12.97,
+      "lows_pct": 1.99,
+      "spx_above_ma50": true,
+      "triggered": false
+    },
+    {
+      "date": "2026-04-22",
+      "highs": 57,
+      "lows": 10,
+      "total": 501,
+      "highs_pct": 11.37,
+      "lows_pct": 1.99,
+      "spx_above_ma50": true,
+      "triggered": false
+    },
+    {
+      "date": "2026-04-23",
+      "highs": 71,
+      "lows": 13,
+      "total": 501,
+      "highs_pct": 14.17,
+      "lows_pct": 2.59,
+      "spx_above_ma50": true,
+      "triggered": false
+    },
+    {
+      "date": "2026-04-24",
+      "highs": 61,
+      "lows": 21,
+      "total": 501,
+      "highs_pct": 12.17,
+      "lows_pct": 4.19,
+      "spx_above_ma50": true,
+      "triggered": false
+    },
+    {
+      "date": "2026-04-27",
+      "highs": 50,
+      "lows": 23,
+      "total": 501,
+      "highs_pct": 9.98,
+      "lows_pct": 4.59,
+      "spx_above_ma50": true,
+      "triggered": false
+    },
+    {
+      "date": "2026-04-28",
+      "highs": 42,
+      "lows": 31,
+      "total": 501,
+      "highs_pct": 8.38,
+      "lows_pct": 6.18,
+      "spx_above_ma50": true,
+      "triggered": true
+    },
+    {
+      "date": "2026-04-29",
+      "highs": 46,
+      "lows": 40,
+      "total": 501,
+      "highs_pct": 9.18,
+      "lows_pct": 7.98,
+      "spx_above_ma50": true,
+      "triggered": true
+    },
+    {
+      "date": "2026-04-30",
+      "highs": 87,
+      "lows": 24,
+      "total": 501,
+      "highs_pct": 17.36,
+      "lows_pct": 4.79,
+      "spx_above_ma50": true,
+      "triggered": false
+    },
+    {
+      "date": "2026-05-01",
+      "highs": 69,
+      "lows": 30,
+      "total": 501,
+      "highs_pct": 13.77,
+      "lows_pct": 5.98,
+      "spx_above_ma50": true,
+      "triggered": false
+    },
+    {
+      "date": "2026-05-04",
+      "highs": 58,
+      "lows": 41,
+      "total": 501,
+      "highs_pct": 11.57,
+      "lows_pct": 8.18,
+      "spx_above_ma50": true,
+      "triggered": true
+    },
+    {
+      "date": "2026-05-05",
+      "highs": 75,
+      "lows": 41,
+      "total": 501,
+      "highs_pct": 14.97,
+      "lows_pct": 8.18,
+      "spx_above_ma50": true,
+      "triggered": true
+    },
+    {
+      "date": "2026-05-06",
+      "highs": 78,
+      "lows": 34,
+      "total": 501,
+      "highs_pct": 15.56,
+      "lows_pct": 6.78,
+      "spx_above_ma50": true,
+      "triggered": false
+    },
+    {
+      "date": "2026-05-07",
+      "highs": 28,
+      "lows": 28,
+      "total": 501,
+      "highs_pct": 5.58,
+      "lows_pct": 5.58,
+      "spx_above_ma50": true,
+      "triggered": true
+    },
+    {
+      "date": "2026-05-08",
+      "highs": 56,
+      "lows": 44,
+      "total": 501,
+      "highs_pct": 11.17,
+      "lows_pct": 8.78,
+      "spx_above_ma50": true,
+      "triggered": true
+    },
+    {
+      "date": "2026-05-11",
+      "highs": 68,
+      "lows": 61,
+      "total": 501,
+      "highs_pct": 13.57,
+      "lows_pct": 12.17,
+      "spx_above_ma50": true,
+      "triggered": true
+    },
+    {
+      "date": "2026-05-12",
+      "highs": 52,
+      "lows": 48,
+      "total": 501,
+      "highs_pct": 10.37,
+      "lows_pct": 9.58,
+      "spx_above_ma50": true,
+      "triggered": true
+    },
+    {
+      "date": "2026-05-13",
+      "highs": 66,
+      "lows": 65,
+      "total": 501,
+      "highs_pct": 13.17,
+      "lows_pct": 12.97,
+      "spx_above_ma50": true,
+      "triggered": true
+    },
+    {
+      "date": "2026-05-14",
+      "highs": 73,
+      "lows": 43,
+      "total": 501,
+      "highs_pct": 14.57,
+      "lows_pct": 8.58,
+      "spx_above_ma50": true,
+      "triggered": true
+    },
+    {
+      "date": "2026-05-15",
+      "highs": 41,
+      "lows": 54,
+      "total": 501,
+      "highs_pct": 8.18,
+      "lows_pct": 10.77,
+      "spx_above_ma50": true,
+      "triggered": true
+    },
+    {
+      "date": "2026-05-18",
+      "highs": 50,
+      "lows": 27,
+      "total": 501,
+      "highs_pct": 9.98,
+      "lows_pct": 5.38,
+      "spx_above_ma50": true,
+      "triggered": true
+    },
+    {
+      "date": "2026-05-19",
+      "highs": 40,
+      "lows": 30,
+      "total": 501,
+      "highs_pct": 7.98,
+      "lows_pct": 5.98,
+      "spx_above_ma50": true,
+      "triggered": true
+    },
+    {
+      "date": "2026-05-20",
+      "highs": 41,
+      "lows": 5,
+      "total": 501,
+      "highs_pct": 8.18,
+      "lows_pct": 0.99,
+      "spx_above_ma50": true,
+      "triggered": false
+    },
+    {
+      "date": "2026-05-21",
+      "highs": 44,
+      "lows": 8,
+      "total": 501,
+      "highs_pct": 8.78,
+      "lows_pct": 1.59,
+      "spx_above_ma50": true,
+      "triggered": false
+    },
+    {
+      "date": "2026-05-22",
+      "highs": 60,
+      "lows": 2,
+      "total": 501,
+      "highs_pct": 11.97,
+      "lows_pct": 0.39,
+      "spx_above_ma50": true,
+      "triggered": false
+    },
+    {
+      "date": "2026-05-26",
+      "highs": 69,
+      "lows": 12,
+      "total": 501,
+      "highs_pct": 13.77,
+      "lows_pct": 2.39,
+      "spx_above_ma50": true,
+      "triggered": false
+    },
+    {
+      "date": "2026-05-27",
+      "highs": 50,
+      "lows": 19,
+      "total": 501,
+      "highs_pct": 9.98,
+      "lows_pct": 3.79,
+      "spx_above_ma50": true,
+      "triggered": false
+    },
+    {
+      "date": "2026-05-28",
+      "highs": 48,
+      "lows": 21,
+      "total": 501,
+      "highs_pct": 9.58,
+      "lows_pct": 4.19,
+      "spx_above_ma50": true,
+      "triggered": false
+    },
+    {
+      "date": "2026-05-29",
+      "highs": 45,
+      "lows": 22,
+      "total": 501,
+      "highs_pct": 8.98,
+      "lows_pct": 4.39,
+      "spx_above_ma50": true,
+      "triggered": false
+    },
+    {
+      "date": "2026-06-01",
+      "highs": 47,
+      "lows": 25,
+      "total": 501,
+      "highs_pct": 9.38,
+      "lows_pct": 4.99,
+      "spx_above_ma50": true,
+      "triggered": true
+    },
+    {
+      "date": "2026-06-02",
+      "highs": 51,
+      "lows": 28,
+      "total": 501,
+      "highs_pct": 10.17,
+      "lows_pct": 5.58,
+      "spx_above_ma50": true,
+      "triggered": true
+    },
+    {
+      "date": "2026-06-03",
+      "highs": 50,
+      "lows": 32,
+      "total": 501,
+      "highs_pct": 9.98,
+      "lows_pct": 6.38,
+      "spx_above_ma50": true,
+      "triggered": true
+    },
+    {
+      "date": "2026-06-04",
+      "highs": 56,
+      "lows": 20,
+      "total": 501,
+      "highs_pct": 11.17,
+      "lows_pct": 3.99,
+      "spx_above_ma50": true,
+      "triggered": false
+    },
+    {
+      "date": "2026-06-05",
+      "highs": 37,
+      "lows": 12,
+      "total": 501,
+      "highs_pct": 7.38,
+      "lows_pct": 2.39,
+      "spx_above_ma50": true,
+      "triggered": false
+    },
+    {
+      "date": "2026-06-08",
+      "highs": 35,
+      "lows": 19,
+      "total": 501,
+      "highs_pct": 6.98,
+      "lows_pct": 3.79,
+      "spx_above_ma50": true,
+      "triggered": true
+    },
+    {
+      "date": "2026-06-09",
+      "highs": 50,
+      "lows": 9,
+      "total": 501,
+      "highs_pct": 9.98,
+      "lows_pct": 1.79,
+      "spx_above_ma50": true,
+      "triggered": false
+    },
+    {
+      "date": "2026-06-10",
+      "highs": 46,
+      "lows": 22,
+      "total": 501,
+      "highs_pct": 9.18,
+      "lows_pct": 4.39,
+      "spx_above_ma50": true,
+      "triggered": false
+    },
+    {
+      "date": "2026-06-11",
+      "highs": 57,
+      "lows": 19,
+      "total": 501,
+      "highs_pct": 11.37,
+      "lows_pct": 3.79,
+      "spx_above_ma50": true,
+      "triggered": false
+    },
+    {
+      "date": "2026-06-12",
+      "highs": 75,
+      "lows": 13,
+      "total": 501,
+      "highs_pct": 14.97,
+      "lows_pct": 2.59,
+      "spx_above_ma50": true,
+      "triggered": false
+    },
+    {
+      "date": "2026-06-15",
+      "highs": 74,
+      "lows": 14,
+      "total": 501,
+      "highs_pct": 14.77,
+      "lows_pct": 2.79,
+      "spx_above_ma50": true,
+      "triggered": false
+    },
+    {
+      "date": "2026-06-16",
+      "highs": 64,
+      "lows": 15,
+      "total": 501,
+      "highs_pct": 12.77,
+      "lows_pct": 2.99,
+      "spx_above_ma50": true,
+      "triggered": false
+    },
+    {
+      "date": "2026-06-17",
+      "highs": 40,
+      "lows": 34,
+      "total": 501,
+      "highs_pct": 7.98,
+      "lows_pct": 6.78,
+      "spx_above_ma50": true,
+      "triggered": true
+    },
+    {
+      "date": "2026-06-18",
+      "highs": 54,
+      "lows": 34,
+      "total": 501,
+      "highs_pct": 10.77,
+      "lows_pct": 6.78,
+      "spx_above_ma50": true,
+      "triggered": true
+    },
+    {
+      "date": "2026-06-22",
+      "highs": 77,
+      "lows": 46,
+      "total": 501,
+      "highs_pct": 15.36,
+      "lows_pct": 9.18,
+      "spx_above_ma50": true,
+      "triggered": true
+    },
+    {
+      "date": "2026-06-23",
+      "highs": 52,
+      "lows": 26,
+      "total": 501,
+      "highs_pct": 10.37,
+      "lows_pct": 5.18,
+      "spx_above_ma50": true,
+      "triggered": true
+    },
+    {
+      "date": "2026-06-24",
+      "highs": 58,
+      "lows": 15,
+      "total": 501,
+      "highs_pct": 11.57,
+      "lows_pct": 2.99,
+      "spx_above_ma50": true,
+      "triggered": false
+    },
+    {
+      "date": "2026-06-25",
+      "highs": 91,
+      "lows": 32,
+      "total": 501,
+      "highs_pct": 18.16,
+      "lows_pct": 6.38,
+      "spx_above_ma50": true,
+      "triggered": false
+    },
+    {
+      "date": "2026-06-26",
+      "highs": 97,
+      "lows": 8,
+      "total": 501,
+      "highs_pct": 19.36,
+      "lows_pct": 1.59,
+      "spx_above_ma50": false,
+      "triggered": false
+    }
+  ]
+}

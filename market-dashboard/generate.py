@@ -30,7 +30,8 @@ SP_STATE   = Path(__file__).parent / "sp_state.json"
 CAPE_CACHE = Path(__file__).parent / "cape_cache.json"
 BB_CACHE   = Path(__file__).parent / "bb_cache.json"
 MARGIN_CACHE = Path(__file__).parent / "margin_cache.json"
-BUFFETT_CACHE = Path(__file__).parent / "buffett_cache.json"
+BUFFETT_CACHE    = Path(__file__).parent / "buffett_cache.json"
+HINDENBURG_CACHE = Path(__file__).parent / "hindenburg_cache.json"
 BOT_TOKEN = "8666778924:AAFMAFKfsfx3opS2CfCBrDYMIx6vcJKACTk"
 CHAT_ID = "7556217543"
 
@@ -454,6 +455,148 @@ def fetch_buffett_cash() -> dict:
     }
 
 
+def _get_sp500_tickers() -> list:
+    """從 Wikipedia 取得 S&P 500 成分股清單"""
+    try:
+        from bs4 import BeautifulSoup
+        r = requests.get(
+            "https://en.wikipedia.org/wiki/List_of_S%26P_500_companies",
+            headers={"User-Agent": "Mozilla/5.0"},
+            timeout=15,
+        )
+        soup = BeautifulSoup(r.text, "html.parser")
+        table = soup.find("table", {"id": "constituents"})
+        tickers = []
+        for row in table.find_all("tr")[1:]:
+            cells = row.find_all("td")
+            if cells:
+                tickers.append(cells[0].text.strip().replace(".", "-"))
+        return tickers
+    except Exception as e:
+        print(f"  S&P 500 清單抓取失敗: {e}")
+        return []
+
+
+def fetch_hindenburg_omen() -> dict:
+    """Hindenburg Omen 崩盤預警（以 S&P 500 成分股代理計算）
+
+    觸發條件（同一天全部成立）：
+    1. 新52周高 ≥ 成分股總數 2.2%
+    2. 新52周低 ≥ 成分股總數 2.2%
+    3. S&P 500 收盤 > 50日MA
+    4. 新高數 ≤ 2 × 新低數（市場分歧，非單邊下跌）
+
+    Cluster：36天內觸發 ≥ 2 次 = 有效崩盤警告
+
+    cache: hindenburg_cache.json
+    {"history": [{"date","highs","lows","total","highs_pct","lows_pct","spx_above_ma50","triggered"}, ...]}
+    """
+    from datetime import date as _date, timedelta
+    today_str = _date.today().strftime("%Y-%m-%d")
+
+    cache = {}
+    if HINDENBURG_CACHE.exists():
+        cache = json.loads(HINDENBURG_CACHE.read_text())
+    history: list = cache.get("history", [])
+
+    # 今日已計算則跳過昂貴的下載
+    if history and history[-1]["date"] == today_str:
+        print(f"  Hindenburg Omen：使用今日快取")
+    else:
+        try:
+            print("  下載 S&P 500 近1年數據（Hindenburg Omen）...")
+            tickers = _get_sp500_tickers()
+            if not tickers:
+                raise ValueError("無法取得 S&P 500 清單")
+
+            raw = yf.download(
+                " ".join(tickers),
+                period="1y",
+                progress=False,
+                auto_adjust=True,
+            )
+
+            # group_by='column'（預設）→ columns 為 (field, ticker)
+            if isinstance(raw.columns, pd.MultiIndex):
+                closes = raw["Close"]
+            else:
+                # 只有一支股票時（不應發生，但保險）
+                closes = raw[["Close"]].rename(columns={"Close": tickers[0]})
+            closes = closes.dropna(axis=0, how="all").dropna(axis=1, how="all")
+
+            # 52周滾動最高/最低（252交易日）
+            highs_252 = closes.rolling(252, min_periods=200).max()
+            lows_252  = closes.rolling(252, min_periods=200).min()
+
+            # SPX 50日MA
+            spx_df = yf.download("^GSPC", period="1y", progress=False, auto_adjust=True)
+            spx_close = spx_df[("Close", "^GSPC")] if isinstance(spx_df.columns, pd.MultiIndex) else spx_df["Close"]
+            spx_ma50  = spx_close.rolling(50).mean()
+
+            existing_dates = {h["date"] for h in history}
+
+            for date in closes.index[-90:]:  # 只更新近90天
+                date_str = date.strftime("%Y-%m-%d")
+                if date_str in existing_dates:
+                    continue
+
+                c   = closes.loc[date].dropna()
+                h   = highs_252.loc[date].dropna()
+                l   = lows_252.loc[date].dropna()
+                common = c.index.intersection(h.index).intersection(l.index)
+                if len(common) < 100:
+                    continue
+
+                c, h, l = c[common], h[common], l[common]
+                new_highs = int((c >= h * 0.985).sum())   # 距52周高點 1.5% 以內
+                new_lows  = int((c <= l * 1.015).sum())   # 距52周低點 1.5% 以內
+                n = len(common)
+
+                nh_pct = trunc2(new_highs / n * 100)
+                nl_pct = trunc2(new_lows  / n * 100)
+
+                spx_val  = float(spx_close.get(date) or 0)
+                ma50_val = float(spx_ma50.get(date) or 0)
+                spx_above = bool(spx_val > ma50_val > 0)
+
+                triggered = bool(
+                    nh_pct >= 2.2 and
+                    nl_pct >= 2.2 and
+                    spx_above and
+                    new_highs <= 2 * new_lows
+                )
+
+                history.append({
+                    "date": date_str,
+                    "highs": new_highs, "lows": new_lows, "total": n,
+                    "highs_pct": nh_pct, "lows_pct": nl_pct,
+                    "spx_above_ma50": spx_above,
+                    "triggered": triggered,
+                })
+
+            history.sort(key=lambda x: x["date"])
+            cache["history"] = history
+            HINDENBURG_CACHE.write_text(json.dumps(cache, ensure_ascii=False, indent=2))
+            triggered_today = next((h for h in reversed(history) if h["date"] == today_str), {}).get("triggered", False)
+            print(f"  Hindenburg Omen：{'🚨 今日觸發！' if triggered_today else '未觸發'}")
+
+        except Exception as e:
+            print(f"  Hindenburg Omen 計算失敗: {e}")
+
+    cutoff = (_date.today() - timedelta(days=36)).strftime("%Y-%m-%d")
+    signals     = [h for h in history if h.get("triggered")]
+    recent_sigs = [h for h in history if h.get("triggered") and h["date"] >= cutoff]
+    today_data  = next((h for h in reversed(history) if h["date"] == today_str), history[-1] if history else {})
+
+    return {
+        "history":          history[-90:],
+        "signals":          signals,
+        "cluster":          len(recent_sigs),
+        "last_signal_date": signals[-1]["date"] if signals else "N/A",
+        "today":            today_data,
+    }
+
+
 def fetch_bls(series_id: str, start_year: int, end_year: int) -> list:
     """BLS 公共 API（無需 API key，月度資料）"""
     try:
@@ -696,7 +839,7 @@ def fetch_fear_greed():
         return {"score": None, "rating": "N/A", "history": hist}
 
 
-def generate_html(vix_data, sp_data, ma_data, sp_hist_high, fg_data, tw_data, tw_ma_data, tw_hist_high, cape_data, recession, m1b_data, trade_data, generated_at, bb_data=None, margin_data=None, buffett_data=None):
+def generate_html(vix_data, sp_data, ma_data, sp_hist_high, fg_data, tw_data, tw_ma_data, tw_hist_high, cape_data, recession, m1b_data, trade_data, generated_at, bb_data=None, margin_data=None, buffett_data=None, hindenburg_data=None):
     vix_current = vix_data[-1]["y"] if vix_data else 0
     vix_date    = vix_data[-1]["x"] if vix_data else "N/A"
     sp_current  = sp_data[-1]["y"] if sp_data else 0
@@ -857,6 +1000,26 @@ def generate_html(vix_data, sp_data, ma_data, sp_hist_high, fg_data, tw_data, tw
         "#ffaa00": "rgba(255,170,0,0.15)",
         "#00d68f": "rgba(0,214,143,0.15)",
     }.get(bf_color, "rgba(90,106,126,0.15)")
+
+    # Hindenburg Omen
+    hindenburg_data = hindenburg_data or {}
+    ho_cluster   = hindenburg_data.get("cluster", 0)
+    ho_last_date = hindenburg_data.get("last_signal_date", "N/A")
+    ho_history   = hindenburg_data.get("history", [])
+    ho_today     = hindenburg_data.get("today", {})
+    ho_nh_pct    = ho_today.get("highs_pct", 0) or 0
+    ho_nl_pct    = ho_today.get("lows_pct", 0) or 0
+    ho_spx_above = ho_today.get("spx_above_ma50", True)
+    ho_triggered = ho_today.get("triggered", False)
+    if ho_cluster >= 2:
+        ho_color = "#ff4757"; ho_status = "🚨 有效崩盤警告（36天≥2次）"
+    elif ho_cluster == 1:
+        ho_color = "#ffaa00"; ho_status = "⚠️ 留意（36天觸發1次）"
+    elif ho_triggered:
+        ho_color = "#ffaa00"; ho_status = "⚠️ 今日初次觸發"
+    else:
+        ho_color = "#00d68f"; ho_status = "✅ 無觸發"
+    ho_alert = alert_class(ho_color) if ho_cluster >= 1 or ho_triggered else ""
 
     fg_score_display = f"{fg_score:.2f}" if fg_score is not None else "N/A"
     fg_label_map = {
@@ -1282,7 +1445,35 @@ def generate_html(vix_data, sp_data, ma_data, sp_hist_high, fg_data, tw_data, tw
   </div>
 </div>
 
-<div class="section-label" style="padding: 0 2.5rem 0.75rem; font-size:0.7rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--text-dim);">
+<div class="section-label" style="padding: 1.5rem 2.5rem 0.75rem; font-size:0.7rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--text-dim);">
+  ☠️ 崩盤預警
+</div>
+<div class="cards" style="margin-top:0; grid-template-columns: 1fr">
+  <div class="card {ho_alert}" style="--accent: {ho_color}">
+    <div class="card-label"><span class="pulse"></span>Hindenburg Omen — 崩盤預警指標</div>
+    <div style="display:flex; align-items:flex-start; gap:2.5rem; flex-wrap:wrap; margin-bottom:1.2rem">
+      <div>
+        <div class="card-value" style="font-size:4rem; line-height:1">{ho_cluster}</div>
+        <div style="font-family:var(--font-mono);font-size:0.8rem;color:var(--text-dim);margin-top:0.3rem">近36天觸發次數</div>
+        <div style="font-family:var(--font-mono);font-size:1rem;color:{ho_color};margin-top:0.5rem;font-weight:bold">{ho_status}</div>
+      </div>
+      <div style="flex:1; min-width:240px; font-family:var(--font-mono); font-size:0.82rem; color:var(--text-dim); line-height:2">
+        <div>今日新高比：<b style="color:#00b8ff">{ho_nh_pct:.1f}%</b> &nbsp;/&nbsp; 新低比：<b style="color:#ff4757">{ho_nl_pct:.1f}%</b> &nbsp;·&nbsp; 門檻 <b>2.2%</b></div>
+        <div>SPX vs 50MA：<b style="color:{'#00d68f' if ho_spx_above else '#ff4757'}">{'↑ 高於均線' if ho_spx_above else '↓ 低於均線'}</b></div>
+        <div>最後觸發日：<b style="color:{ho_color}">{ho_last_date}</b></div>
+        <div style="opacity:0.5;font-size:0.7rem;margin-top:4px">
+          觸發條件：新高≥2.2% 且 新低≥2.2% 且 SPX&gt;50MA 且 新高≤2×新低
+          <br>36天內≥2次觸發 = 有效崩盤警告 · 以 S&P 500 成分股代理 NYSE 計算
+        </div>
+      </div>
+    </div>
+    <div style="position:relative; height:160px">
+      <canvas id="hindenburgChart"></canvas>
+    </div>
+  </div>
+</div>
+
+<div class="section-label" style="padding: 1rem 2.5rem 0.75rem; font-size:0.7rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--text-dim);">
   ⚡ 衰退預警指標
 </div>
 <div class="cards" style="margin-top:0; grid-template-columns: repeat(4, 1fr)">
@@ -1487,6 +1678,9 @@ const BB_DATA      = {json.dumps([{"x": h["date"], "y": h["value"]} for h in bb_
 const MARGIN_DATA  = {json.dumps([{"x": d["x"], "y": d["y"]} for d in margin_data])};
 const BUFFETT_DATA = {json.dumps([{"x": h["date"], "y": h["cash"]} for h in bf_history if h.get("cash") is not None])};
 const BUFFETT_RATIO_DATA = {json.dumps([{"x": h["date"], "y": h["ratio"]} for h in bf_history if h.get("ratio") is not None])};
+const HO_HIGHS_DATA  = {json.dumps([{"x": h["date"], "y": h["highs_pct"]} for h in ho_history])};
+const HO_LOWS_DATA   = {json.dumps([{"x": h["date"], "y": h["lows_pct"]} for h in ho_history])};
+const HO_SIGNALS     = {json.dumps([h["date"] for h in ho_history if h.get("triggered")])};
 
 const CHART_DEFAULTS = {{
   responsive: true,
@@ -2192,6 +2386,76 @@ Chart.register(buffettPlugin);
 buffettChart.config.plugins = [buffettPlugin];
 buffettChart.update();
 
+// Hindenburg Omen 圖表
+const hoPlugin = {{
+  id: 'hoBands',
+  beforeDraw(chart) {{
+    const {{ ctx, chartArea, scales }} = chart;
+    if (!chartArea || !scales.y) return;
+    ctx.save();
+    const y22 = scales.y.getPixelForValue(2.2);
+    // 2.2% 門檻虛線
+    if (y22 >= chartArea.top && y22 <= chartArea.bottom) {{
+      ctx.strokeStyle = 'rgba(255,170,0,0.55)';
+      ctx.lineWidth = 1;
+      ctx.setLineDash([5,4]);
+      ctx.beginPath(); ctx.moveTo(chartArea.left, y22); ctx.lineTo(chartArea.right, y22); ctx.stroke();
+      ctx.fillStyle = 'rgba(255,170,0,0.75)';
+      ctx.font = "10px 'Share Tech Mono'"; ctx.setLineDash([]);
+      ctx.fillText('2.2% 門檻', chartArea.left + 6, y22 - 4);
+    }}
+    // 觸發日垂直標記
+    const xScale = scales.x;
+    HO_SIGNALS.forEach(date => {{
+      try {{
+        const xPx = xScale.getPixelForValue(new Date(date));
+        if (xPx >= chartArea.left && xPx <= chartArea.right) {{
+          ctx.strokeStyle = 'rgba(255,71,87,0.4)';
+          ctx.lineWidth = 1.5;
+          ctx.setLineDash([3,3]);
+          ctx.beginPath(); ctx.moveTo(xPx, chartArea.top); ctx.lineTo(xPx, chartArea.bottom); ctx.stroke();
+        }}
+      }} catch(e) {{}}
+    }});
+    ctx.restore();
+  }}
+}};
+const hindenburgChart = makeChart('hindenburgChart', [
+  {{
+    label: '新高%',
+    data: HO_HIGHS_DATA,
+    borderColor: '#00b8ff',
+    borderWidth: 1.5,
+    pointRadius: 0,
+    fill: false,
+    parsing: {{ xAxisKey: 'x', yAxisKey: 'y' }},
+    tension: 0.3,
+  }},
+  {{
+    label: '新低%',
+    data: HO_LOWS_DATA,
+    borderColor: '#ff4757',
+    borderWidth: 1.5,
+    pointRadius: 0,
+    fill: false,
+    parsing: {{ xAxisKey: 'x', yAxisKey: 'y' }},
+    tension: 0.3,
+  }},
+], 0, null, {{
+  plugins: {{
+    tooltip: {{
+      ...CHART_DEFAULTS.plugins.tooltip,
+      callbacks: {{
+        title: items => items[0]?.label || '',
+        label: item => `${{item.dataset.label}}: ${{item.parsed.y?.toFixed(2)}}%`,
+      }},
+    }},
+  }},
+}});
+Chart.register(hoPlugin);
+hindenburgChart.config.plugins = [hoPlugin];
+hindenburgChart.update();
+
 // Range selector
 function setRange(days) {{
   document.querySelectorAll('.btn').forEach(b => b.classList.remove('active'));
@@ -2240,6 +2504,9 @@ function setRange(days) {{
   bbChart.update('none');
   buffettChart.data.datasets[0].data = filter(BUFFETT_RATIO_DATA);
   buffettChart.update('none');
+  hindenburgChart.data.datasets[0].data = filter(HO_HIGHS_DATA);
+  hindenburgChart.data.datasets[1].data = filter(HO_LOWS_DATA);
+  hindenburgChart.update('none');
 }}
 </script>
 </body>
@@ -2285,10 +2552,13 @@ def main():
     print(f"[{datetime.now().strftime('%H:%M:%S')}] 抓取 Berkshire Hathaway 現金水位...")
     buffett_data = fetch_buffett_cash()
 
+    print(f"[{datetime.now().strftime('%H:%M:%S')}] 計算 Hindenburg Omen...")
+    hindenburg_data = fetch_hindenburg_omen()
+
     generated_at = datetime.now().strftime("%Y-%m-%d %H:%M")
     print(f"[{datetime.now().strftime('%H:%M:%S')}] 生成 HTML...")
 
-    html = generate_html(vix_data, sp_data, ma_data, sp_hist_high, fg_data, tw_data, tw_ma_data, tw_hist_high, cape_data, recession, m1b_data, trade_data, generated_at, bb_data, margin_data, buffett_data)
+    html = generate_html(vix_data, sp_data, ma_data, sp_hist_high, fg_data, tw_data, tw_ma_data, tw_hist_high, cape_data, recession, m1b_data, trade_data, generated_at, bb_data, margin_data, buffett_data, hindenburg_data)
     OUTPUT.write_text(html, encoding="utf-8")
 
     vix_current = vix_data[-1]["y"] if vix_data else "N/A"
