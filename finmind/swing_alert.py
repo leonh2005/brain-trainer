@@ -227,20 +227,19 @@ for _, row in pool.iterrows():
     avg5 = get_avg5_vol(code)
     signal = vol_signal(row['vol_k'], avg5, row['chg_pct'], row['close_pos'])
 
-    if fi_net > 0:
-        candidates.append({
-            'code':      code,
-            'name':      row['Name'],
-            'close':     row['ClosingPrice'],
-            'chg_pct':   row['chg_pct'],
-            'amp_pct':   row['amp_pct'],
-            'vol_k':     int(row['vol_k']),
-            'avg5':      int(avg5),
-            'close_pos': row['close_pos'],
-            'fi_net':    fi_net,
-            'fi_date':   fi_date,
-            'signal':    signal,
-        })
+    candidates.append({
+        'code':      code,
+        'name':      row['Name'],
+        'close':     row['ClosingPrice'],
+        'chg_pct':   row['chg_pct'],
+        'amp_pct':   row['amp_pct'],
+        'vol_k':     int(row['vol_k']),
+        'avg5':      int(avg5),
+        'close_pos': row['close_pos'],
+        'fi_net':    fi_net,
+        'fi_date':   fi_date,
+        'signal':    signal,
+    })
 
 # 自選股量價訊號
 watchlist_data = []
@@ -278,11 +277,12 @@ mkt_dir = "偏多 ↑" if fut_diff > 0 else "偏空 ↓"
 lines = [f"🌙 <b>隔日沖候選</b>｜{TODAY} 12:30\n"]
 lines.append(f"🌐 大盤外資期貨（{fut_date}）：{mkt_dir}（{fut_diff:+,} 口）\n")
 lines.append("📋 <b>篩選條件</b>")
-lines.append("量&gt;5000張 ＋ 漲&gt;2% ＋ 收高70%+ ＋ 外資買超\n")
+lines.append("量&gt;5000張 ＋ 漲&gt;2% ＋ 收高70%+\n")
 
 if candidates:
     lines.append(f"✅ 符合 {len(candidates)} 檔：\n")
     for c in candidates[:8]:
+        fi_icon = "🟢外資買超" if c['fi_net'] > 0 else ("🔴外資賣超" if c['fi_net'] < 0 else "⚪外資持平")
         ai = analyze_stock(
             code=c['code'], name=c['name'], close=c['close'],
             chg_pct=c['chg_pct'], amp_pct=c['amp_pct'],
@@ -290,16 +290,16 @@ if candidates:
             fi_net=c['fi_net'], signal=c['signal'], strategy="隔日沖"
         )
         lines.append(
-            f"🟢 <b>{c['code']} {c['name']}</b>\n"
+            f"📈 <b>{c['code']} {c['name']}</b>\n"
             f"   收:{c['close']:.1f}  漲:{c['chg_pct']:+.1f}%  收盤位:{c['close_pos']:.0f}%\n"
-            f"   量:{c['vol_k']:,}張（均{c['avg5']:,}）  外資:{c['fi_net']:+,}張\n"
+            f"   量:{c['vol_k']:,}張（均{c['avg5']:,}）  {fi_icon} {c['fi_net']:+,}張\n"
             f"   {c['signal']}\n"
             f"{format_ai_block(ai)}\n"
         )
     lines.append("⚡ 進場：收盤前30分鐘（14:00~14:30）確認量增收高再買")
     lines.append("🛑 出場：隔日開盤漲2~4%賣，開盤跳空綠立刻出\n")
 else:
-    lines.append("❌ 今日無符合隔日沖條件標的（外資未買超）\n")
+    lines.append("❌ 今日無符合隔日沖條件標的（量/漲幅/收盤位不足）\n")
 
 if watchlist_data:
     lines.append("👀 <b>自選股狀況</b>")
