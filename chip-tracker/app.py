@@ -23,14 +23,24 @@ def _stock_payload(conn, s: dict) -> dict:
     daily = db.get_daily_history(conn, code, days=30)   # date DESC
     weekly = db.get_weekly_history(conn, code, weeks=13)  # date DESC
 
-    latest = daily[0] if daily else {}
-    foreign_series = [d["foreign_net"] for d in daily]
-    trust_series = [d["trust_net"] for d in daily]
+    def _latest(key):
+        """各指標公布時間不同（盤中價先出、法人/融資收盤後），各自取最新有值列。"""
+        for d in daily:
+            if d.get(key) is not None:
+                return d
+        return {}
 
+    price_row = _latest("close")
+    inst_row = _latest("total_net")
+    # 連買天數只看已公布法人的交易日，略過今日尚未公布的空列
+    inst_days = [d for d in daily if d.get("total_net") is not None]
+    foreign_series = [d["foreign_net"] for d in inst_days]
+    trust_series = [d["trust_net"] for d in inst_days]
+
+    margin_rows = [d for d in daily if d.get("margin_balance") is not None]
     margin_change = None
-    if len(daily) >= 2 and daily[0].get("margin_balance") is not None \
-            and daily[1].get("margin_balance") is not None:
-        margin_change = daily[0]["margin_balance"] - daily[1]["margin_balance"]
+    if len(margin_rows) >= 2:
+        margin_change = margin_rows[0]["margin_balance"] - margin_rows[1]["margin_balance"]
 
     # 外資持股比率：取最近兩個有值的日子算日增減
     fr = [(d["date"], d["foreign_ratio"]) for d in daily if d.get("foreign_ratio") is not None]
@@ -48,16 +58,17 @@ def _stock_payload(conn, s: dict) -> dict:
     return {
         "code": code,
         "name": s["name"],
-        "date": latest.get("date"),
-        "close": latest.get("close"),
-        "change_pct": latest.get("change_pct"),
-        "foreign_net": latest.get("foreign_net"),
-        "trust_net": latest.get("trust_net"),
-        "dealer_net": latest.get("dealer_net"),
-        "total_net": latest.get("total_net"),
+        "date": price_row.get("date"),
+        "close": price_row.get("close"),
+        "change_pct": price_row.get("change_pct"),
+        "inst_date": inst_row.get("date"),
+        "foreign_net": inst_row.get("foreign_net"),
+        "trust_net": inst_row.get("trust_net"),
+        "dealer_net": inst_row.get("dealer_net"),
+        "total_net": inst_row.get("total_net"),
         "foreign_streak": db.streak(foreign_series),
         "trust_streak": db.streak(trust_series),
-        "margin_balance": latest.get("margin_balance"),
+        "margin_balance": margin_rows[0]["margin_balance"] if margin_rows else None,
         "margin_change": margin_change,
         "foreign_ratio": foreign_ratio,
         "foreign_ratio_date": foreign_ratio_date,
@@ -72,6 +83,14 @@ def _stock_payload(conn, s: dict) -> dict:
         "tdcc_prev_date": w_prev.get("date"),
         "big400_series": [
             {"date": w["date"], "pct": w["big400_pct"]} for w in reversed(weekly)
+        ],
+        "margin_series": [
+            {"date": d["date"], "v": d["margin_balance"]}
+            for d in reversed(daily) if d.get("margin_balance") is not None
+        ],
+        "foreign_ratio_series": [
+            {"date": d["date"], "v": d["foreign_ratio"]}
+            for d in reversed(daily) if d.get("foreign_ratio") is not None
         ],
     }
 
@@ -138,6 +157,102 @@ def api_remove_stock():
         return jsonify({"ok": True})
     finally:
         conn.close()
+
+
+_sj_api = None
+
+
+def _get_shioaji():
+    """Shioaji 即時行情 singleton；憑證讀 .secrets/shioaji.env。"""
+    global _sj_api
+    if _sj_api is None:
+        import shioaji as sj
+
+        creds = {}
+        with open(os.path.expanduser("~/CCProject/.secrets/shioaji.env")) as f:
+            for line in f:
+                key, _, val = line.strip().partition("=")
+                if key:
+                    creds[key] = val
+        api = sj.Shioaji(simulation=False)
+        api.login(api_key=creds["SHIOAJI_API_KEY"], secret_key=creds["SHIOAJI_SECRET_KEY"],
+                  contracts_timeout=15000)
+        _sj_api = api
+    return _sj_api
+
+
+_quote_cache = {"ts": 0.0, "data": {}}
+_QUOTE_TTL = 60
+
+
+@app.get("/api/quotes")
+def api_quotes():
+    """全清單即時報價：Shioaji snapshot 優先，配額耗盡/失敗退 yfinance（延遲），60 秒快取。
+
+    fail-open：全部失敗回空 dict，前端保留 DB 收盤價。
+    """
+    import time as _time
+
+    now = _time.time()
+    if now - _quote_cache["ts"] < _QUOTE_TTL and _quote_cache["data"]:
+        return jsonify(_quote_cache["data"])
+
+    conn = db.get_conn()
+    try:
+        codes = [s["code"] for s in db.list_stocks(conn)]
+    finally:
+        conn.close()
+
+    result = {}
+    try:
+        api = _get_shioaji()
+        contracts = []
+        for c in codes:
+            ct = api.Contracts.Stocks.TSE.get(c) or api.Contracts.Stocks.OTC.get(c)
+            if ct is not None:
+                contracts.append(ct)
+        for snap in api.snapshots(contracts):
+            price = float(snap.close)
+            prev = price - float(snap.change_price)
+            result[snap.code] = {
+                "price": price,
+                "change_pct": round(float(snap.change_price) / prev * 100, 2) if prev else None,
+                "ts": int(snap.ts // 1_000_000_000),
+                "delayed": False,
+            }
+    except Exception as e:
+        app.logger.warning("Shioaji 即時報價失敗: %s", e)
+
+    # Shioaji 每日流量配額（500MB）耗盡時 snapshots 回空 → yfinance 延遲報價備援
+    missing = [c for c in codes if c not in result]
+    if missing:
+        try:
+            import yfinance as yf
+
+            for c in missing:
+                for suffix in (".TW", ".TWO"):
+                    try:
+                        fi = yf.Ticker(f"{c}{suffix}").fast_info
+                        price = fi.last_price
+                        if not price:
+                            continue
+                        prev = fi.previous_close or 0
+                        result[c] = {
+                            "price": round(float(price), 2),
+                            "change_pct": round((price - prev) / prev * 100, 2) if prev else None,
+                            "ts": int(now),
+                            "delayed": True,
+                        }
+                        break
+                    except Exception:
+                        continue
+        except Exception as e:
+            app.logger.warning("yfinance 備援失敗: %s", e)
+
+    if result:
+        _quote_cache["ts"] = now
+        _quote_cache["data"] = result
+    return jsonify(result)
 
 
 @app.post("/api/refresh")

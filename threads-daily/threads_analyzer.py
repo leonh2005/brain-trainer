@@ -19,7 +19,7 @@ STATE_FILE     = BASE_DIR / "state.json"
 TELEGRAM_TOKEN = open(os.path.expanduser("~/CCProject/.secrets/telegram_token.txt")).read().strip()
 TELEGRAM_CHAT  = "7556217543"
 FF_PROFILE     = Path.home() / "Library/Application Support/Firefox/Profiles/ro7nczf2.default-release"
-OPENAI_KEY     = open(os.path.expanduser("~/CCProject/.secrets/openai_key.txt")).read().strip()
+OPENAI_KEY     = open(os.path.expanduser("~/CCProject/.secrets/openai_news_key.txt")).read().strip()
 
 # ── 工具函數 ─────────────────────────────────────────────────────────────────
 def send_telegram(msg: str):

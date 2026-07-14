@@ -1,29 +1,30 @@
-# Claude Handoff 20260714_1257
-> 自動生成於 2026-07-14 12:57
+# Claude Handoff 20260714_1602
+> 自動生成於 2026-07-14 16:02
 
 ## 未提交的檔案異動
 ```
 ? TradingAgents
  M chip-tracker/app.py
  M chip-tracker/chip.db
- M chip-tracker/db.py
  M chip-tracker/templates/index.html
- M chip-tracker/tests/test_core.py
- M chip-tracker/updater.py
  m daily-stock-analysis
+ M finmind/intraday_monitor.py
  M gemma_work/latest.md
- M news-analyzer/trump_seen.json
- M rabbit-care/rabbit.db
+ M market-dashboard/fg_history.json
+ M market-dashboard/index.html
+ M market-dashboard/margin_cache.json
+ M market-dashboard/sp_state.json
  m stock-screener-ai
+ M threads-daily/threads_analyzer.py
 ```
 
 ## 近期 Commits
 ```
-1283ad10 chore: 自動同步 2026-07-14 08:40
-52dc2825 chore: 自動同步 2026-07-14 03:40
-81c23cdf chore: 自動同步 2026-07-13 22:40
-cf9f6768 chore: 自動同步 2026-07-13 17:40
-53c04c6b chore: 自動同步 2026-07-13 12:40
+0eeb4c38 chore: 兩週工作同步 + 安全修正：移除所有硬編碼金鑰改讀 .secrets/（Telegram×2/DeepSeek/OpenAI/Gemini/Anthropic）
+7a0b5106 chore: 自動同步 2026-06-30 14:40
+8f9cce26 chore: 自動同步 2026-06-30 09:40
+ac3d2eca chore: 自動同步 2026-06-30 04:40
+f4ae5931 chore: 自動同步 2026-06-29 23:40
 ```
 
 ## 給 Hermes 的備註
