@@ -30,7 +30,7 @@ load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
 warnings.filterwarnings('ignore')
 
 # ── 設定 ──────────────────────────────────────────
-BOT_TOKEN = "8666778924:AAFMAFKfsfx3opS2CfCBrDYMIx6vcJKACTk"
+BOT_TOKEN = open(os.path.expanduser("~/CCProject/.secrets/telegram_token.txt")).read().strip()
 CHAT_ID   = "7556217543"
 TOKEN     = open('/Users/steven/CCProject/.secrets/finmind_token.txt').read().strip()
 TODAY     = datetime.today().strftime('%Y-%m-%d')

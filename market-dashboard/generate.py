@@ -3,6 +3,7 @@
 市場恐慌儀表板生成器
 每日抓取 VIX、S&P 500 200MA、CNN Fear & Greed，生成自含 HTML
 """
+import os
 
 import json
 import math
@@ -32,7 +33,7 @@ BB_CACHE   = Path(__file__).parent / "bb_cache.json"
 MARGIN_CACHE = Path(__file__).parent / "margin_cache.json"
 BUFFETT_CACHE    = Path(__file__).parent / "buffett_cache.json"
 HINDENBURG_CACHE = Path(__file__).parent / "hindenburg_cache.json"
-BOT_TOKEN = "8666778924:AAFMAFKfsfx3opS2CfCBrDYMIx6vcJKACTk"
+BOT_TOKEN = open(os.path.expanduser("~/CCProject/.secrets/telegram_token.txt")).read().strip()
 CHAT_ID = "7556217543"
 
 
@@ -859,21 +860,28 @@ def generate_html(vix_data, sp_data, ma_data, sp_hist_high, fg_data, tw_data, tw
     cape_current = cape_data[-1]["y"] if cape_data else 0
     cape_date    = cape_data[-1]["x"] if cape_data else "N/A"
 
-    # 成交量/M1B（傳統指標：當月累計成交 / M1B 期底）
+    # 成交量/M1B（日比值：當日+前日成交額之和 ÷ M1B，參考 MoneyDJ 大盤散戶指標公式）
     m1b_current   = m1b_data[-1]["y"] if m1b_data else 0      # 億元
     m1b_date      = m1b_data[-1]["x"] if m1b_data else "N/A"
     trade_date    = trade_data[-1]["x"] if trade_data else "N/A"
-    # 累計當月成交金額
     if trade_data:
-        cur_month = trade_data[-1]["x"][:7]          # "YYYY-MM"
-        trade_month_total = sum(d["y"] for d in trade_data if d["x"].startswith(cur_month))
-        trade_current = trade_data[-1]["y"]           # 最新單日（僅供顯示）
+        cur_month = trade_data[-1]["x"][:7]
+        trade_current  = trade_data[-1]["y"]           # 當日成交
+        trade_prev     = trade_data[-2]["y"] if len(trade_data) >= 2 else 0  # 前日成交
+        # 月累計（供圖表/副文字使用）
+        monthly_totals: dict = {}
+        for d in trade_data:
+            m = d["x"][:7]
+            monthly_totals[m] = monthly_totals.get(m, 0) + d["y"]
+        trade_month_total = monthly_totals.get(cur_month, 0)
     else:
-        trade_month_total = 0
         trade_current = 0
-    m1b_ratio     = trunc2(trade_month_total / m1b_current * 100) if m1b_current else 0
-    m1b_overheat  = m1b_ratio > 100
-    m1b_color     = "#ff4757" if m1b_ratio > 100 else ("#ffaa00" if m1b_ratio > 70 else "#00d68f")
+        trade_prev = 0
+        trade_month_total = 0
+    # 日比值 = 當日成交 ÷ M1B × 100%（參考 MoneyDJ 大盤散戶指標）
+    m1b_ratio    = trunc2(trade_current / m1b_current * 100) if m1b_current else 0
+    m1b_overheat = m1b_ratio > 10
+    m1b_color    = "#ff4757" if m1b_ratio > 10 else ("#ffaa00" if m1b_ratio > 7 else "#00d68f")
 
     # 衰退指標
     r_unemp = recession["unrate"]
@@ -1366,12 +1374,12 @@ def generate_html(vix_data, sp_data, ma_data, sp_hist_high, fg_data, tw_data, tw
   </div>
 
   <div class="card {m1b_alert}" style="--accent: {m1b_color}">
-    <div class="card-label"><span class="pulse"></span>台股成交量 / M1B</div>
+    <div class="card-label"><span class="pulse"></span>台股成交量 / M1B（日比值）</div>
     <div class="card-value">{m1b_ratio:.2f}<span style="font-size:1.2rem">%</span></div>
     <div class="card-sub">
-      {'<b>🔥 市場極熱 &gt;100%</b>' if m1b_overheat else ('<b>⚠ 偏熱 70–100%</b>' if m1b_ratio > 70 else '<b>正常 &lt;70%</b>')}
-      <br>月累計成交：<b>{trade_month_total:,.0f}</b> 億元
-      <br>當日成交：<b>{trade_current:,.0f}</b> 億元
+      {'<b>🔥 過熱 &gt;10%</b>' if m1b_overheat else ('<b>⚠ 偏熱 7–10%</b>' if m1b_ratio > 7 else '<b>正常 &lt;7%</b>')}
+      <br>當日：<b>{trade_current:,.0f}</b> &nbsp;前日：<b>{trade_prev:,.0f}</b> 億元
+      <br>當月累計：<b>{trade_month_total:,.0f}</b> 億元
       <br>M1B（{m1b_date}期底）：<b>{m1b_current:,.0f}</b> 億元
       <br><span style="opacity:0.5">{trade_date}</span>
     </div>
@@ -1385,6 +1393,36 @@ def generate_html(vix_data, sp_data, ma_data, sp_hist_high, fg_data, tw_data, tw
       <br>融資餘額：<b>{mg_margin:,.0f}</b> 億元
       <br>總市值：<b>{mg_mktcap:,.0f}</b> 億元
       <br><span style="opacity:0.5">{mg_date}</span>
+    </div>
+  </div>
+
+  <div class="card {bb_alert}" style="--accent: {bb_color}">
+    <div class="card-label"><span class="pulse"></span>美銀牛熊指標</div>
+    <div class="card-value">{bb_display}</div>
+    <div class="card-sub">
+      <b>{bb_label}</b>
+      &nbsp;·&nbsp; 0–10 分
+      <br><span style="opacity:0.5">{bb_date}</span>
+    </div>
+  </div>
+
+  <div class="card {bf_alert}" style="--accent: {bf_color}">
+    <div class="card-label"><span class="pulse"></span>巴菲特現金占比</div>
+    <div class="card-value">{bf_display_ratio}</div>
+    <div class="card-sub">
+      <b>{bf_label}</b>
+      &nbsp;·&nbsp; 現金 {bf_display_cash}
+      <br><span style="opacity:0.5">{bf_date}</span>
+    </div>
+  </div>
+
+  <div class="card {ho_alert}" style="--accent: {ho_color}">
+    <div class="card-label"><span class="pulse"></span>Hindenburg 崩盤預警</div>
+    <div class="card-value">{ho_cluster}</div>
+    <div class="card-sub">
+      <b>{ho_status}</b>
+      &nbsp;·&nbsp; 近36天觸發次數
+      <br><span style="opacity:0.5">最近訊號：{ho_last_date}</span>
     </div>
   </div>
 
@@ -1425,8 +1463,11 @@ def generate_html(vix_data, sp_data, ma_data, sp_hist_high, fg_data, tw_data, tw
         <div style="font-family:var(--font-mono);font-size:1.1rem;color:{bf_color};margin-top:0.3rem">{bf_display_ratio} 占總資產</div>
       </div>
       <div style="flex:1; min-width:200px">
-        <div style="display:flex; justify-content:space-between; font-size:0.7rem; opacity:0.5; margin-bottom:4px">
-          <span>0% 積極</span><span>20%</span><span>30%</span><span>50%+ 謹慎</span>
+        <div style="position:relative; height:14px; font-size:0.7rem; opacity:0.5; margin-bottom:4px">
+          <span style="position:absolute;left:0">0% 積極</span>
+          <span style="position:absolute;left:40%;transform:translateX(-50%)">20%</span>
+          <span style="position:absolute;left:60%;transform:translateX(-50%)">30%</span>
+          <span style="position:absolute;right:0">50%+謹慎</span>
         </div>
         <div style="background:linear-gradient(90deg,#00d68f 0%,#ffaa00 40%,#ff4757 60%,#ff4757 100%); height:10px; border-radius:5px; position:relative">
           <div style="position:absolute; top:-3px; left:calc({bf_pct:.1f}% - 8px); width:16px; height:16px; border-radius:50%; background:{bf_color}; border:2px solid #fff; box-shadow:0 0 6px {bf_color}"></div>
@@ -2379,7 +2420,7 @@ const buffettChart = makeChart('buffettChart', [{{
     borderColor: ctx => ctx.p1.parsed.y >= 30 ? '#ff4757' :
                         ctx.p1.parsed.y >= 20 ? '#ffaa00' : '#00d68f',
   }},
-}}], 0, null, {{
+}}], null, null, {{
   scales: {{ x: {{ time: {{ unit: 'quarter' }} }} }}
 }});
 Chart.register(buffettPlugin);
@@ -2606,6 +2647,42 @@ def main():
                 f"200MA：{ma_current:,.2f}\n"
                 f"偏離：+{sp_vs_ma}%"
             )
+
+    # ── 九宮格多指標警報（≥6 格亮燈時推播）──────────────────────────────────
+    vix_cur      = vix_data[-1]["y"] if vix_data else 0
+    sp_cur       = sp_data[-1]["y"] if sp_data else 0
+    ma_cur       = ma_data[-1]["y"] if ma_data else 0
+    fg_score_val = fg_data.get("score") or 100
+    cape_cur     = cape_data[-1]["y"] if cape_data else 0
+    m1b_cur      = m1b_data[-1]["y"] if m1b_data else 0
+    trade_cur    = trade_data[-1]["y"] if trade_data else 0
+    m1b_r        = trunc2(trade_cur / m1b_cur * 100) if m1b_cur else 0
+    mg_r         = margin_data[-1]["y"] if margin_data else 0
+    bb_val       = (bb_data or {}).get("value")
+    bf_r         = (buffett_data or {}).get("ratio")
+    sp_vs_ma_pct = trunc2((sp_cur / ma_cur - 1) * 100) if ma_cur else 0
+
+    alert_grid = [
+        ("VIX",        vix_cur > 20,                                          f"{vix_cur:.2f}（>20 警戒）"),
+        ("F&G",        fg_score_val < 45,                                     f"{fg_score_val:.1f}（<45 恐慌）"),
+        ("CAPE",       cape_cur > 25,                                         f"{cape_cur:.1f}（>25 偏高）"),
+        ("S&P vs 200MA", sp_vs_ma_pct < 0,                                   f"{sp_vs_ma_pct:+.2f}%"),
+        ("台股 vs 200MA", False,                                              "（不納入警示）"),
+        ("M1B比",      m1b_r > 7,                                            f"{m1b_r:.2f}%（>7% 偏熱）"),
+        ("融資市值比", mg_r > 3.5,                                            f"{mg_r:.2f}%（>3.5%）"),
+        ("美銀牛熊",   bb_val is not None and (bb_val >= 8.0 or bb_val < 2.0), f"{bb_val if bb_val is not None else 'N/A'}"),
+        ("巴菲特現金", bf_r is not None and bf_r >= 20,                      f"{bf_r:.1f}%（>=20% 謹慎）" if bf_r is not None else "N/A"),
+    ]
+    alert_count = sum(1 for _, triggered, _ in alert_grid if triggered)
+    if alert_count >= 6:
+        lines = [f"🚨 市場警報：九宮格同時亮燈 {alert_count}/9 格", ""]
+        for name, triggered, val in alert_grid:
+            icon = "🔴" if triggered else ("⚪" if name == "台股 vs 200MA" else "🟢")
+            lines.append(f"{icon} {name}：{val}")
+        send_telegram("\n".join(lines))
+        print(f"  ⚠ 九宮格警報推播：{alert_count}/9 格亮燈")
+    else:
+        print(f"  九宮格亮燈：{alert_count}/9 格（門檻 6 格）")
 
 
 if __name__ == "__main__":

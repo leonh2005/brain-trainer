@@ -1,7 +1,7 @@
 #!/bin/bash
 # Mac 每週自動清理
 LOG="/Users/steven/CCProject/logs/mac_cleanup.log"
-BOT="8666778924:AAFMAFKfsfx3opS2CfCBrDYMIx6vcJKACTk"
+BOT="$(cat "$HOME/CCProject/.secrets/telegram_token.txt")"
 CHAT="7556217543"
 
 log() { echo "[$(date '+%Y-%m-%d %H:%M:%S')] $1" >> "$LOG"; }

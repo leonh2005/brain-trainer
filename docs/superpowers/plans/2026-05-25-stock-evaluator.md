@@ -62,7 +62,7 @@ from openai import OpenAI
 在 `analyze()` 函式之前加入：
 
 ```python
-DEEPSEEK_API_KEY = "sk-49f9f0a651514aff96412fa7ad11ae85"
+DEEPSEEK_API_KEY = "<REDACTED>"
 DISCOUNT_RATE = 0.10
 TERMINAL_GROWTH = 0.03
 
@@ -213,7 +213,7 @@ def api_ai_analysis():
 cd /Users/steven/CCProject/stock_analyzer && \
 venv/bin/python -c "
 from openai import OpenAI
-client = OpenAI(api_key='sk-49f9f0a651514aff96412fa7ad11ae85', base_url='https://api.deepseek.com')
+client = OpenAI(api_key='<REDACTED>', base_url='https://api.deepseek.com')
 r = client.chat.completions.create(model='deepseek-chat', max_tokens=20, messages=[{'role':'user','content':'hi'}])
 print(r.choices[0].message.content)
 "

@@ -26,7 +26,7 @@ logging.basicConfig(
 )
 logger = logging.getLogger("pipeline")
 
-BOT_TOKEN = "8666778924:AAFMAFKfsfx3opS2CfCBrDYMIx6vcJKACTk"
+BOT_TOKEN = open(os.path.expanduser("~/CCProject/.secrets/telegram_token.txt")).read().strip()
 CHAT_ID   = "7556217543"
 STATE_FILE = Path(__file__).parent / "pipeline_state.json"
 

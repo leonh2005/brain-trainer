@@ -16,10 +16,10 @@ import requests
 # ── 設定 ────────────────────────────────────────────────────────────────────
 BASE_DIR       = Path(__file__).parent
 STATE_FILE     = BASE_DIR / "state.json"
-TELEGRAM_TOKEN = "8666778924:AAFMAFKfsfx3opS2CfCBrDYMIx6vcJKACTk"
+TELEGRAM_TOKEN = open(os.path.expanduser("~/CCProject/.secrets/telegram_token.txt")).read().strip()
 TELEGRAM_CHAT  = "7556217543"
 FF_PROFILE     = Path.home() / "Library/Application Support/Firefox/Profiles/ro7nczf2.default-release"
-OPENAI_KEY     = "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"
+OPENAI_KEY     = open(os.path.expanduser("~/CCProject/.secrets/openai_key.txt")).read().strip()
 
 # ── 工具函數 ─────────────────────────────────────────────────────────────────
 def send_telegram(msg: str):

@@ -34,7 +34,7 @@ load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
 warnings.filterwarnings('ignore')
 
 # ── 設定 ─────────────────────────────────────────────────────────────────────
-BOT_TOKEN        = "8666778924:AAFMAFKfsfx3opS2CfCBrDYMIx6vcJKACTk"
+BOT_TOKEN        = open(os.path.expanduser("~/CCProject/.secrets/telegram_token.txt")).read().strip()
 CHAT_ID          = "7556217543"
 SIGNAL_THRESHOLD = 4                    # 觸發推播的最低訊號數
 VOL_SIGNAL_KEYS  = ['昨量', '單K', '超越開盤量']  # 必要量能訊號（至少 1 個）

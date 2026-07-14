@@ -6,7 +6,7 @@ bars = data._sj_stock_1min('2330', '$(date +%Y-%m-%d)')
 print(len(bars))
 " 2>/dev/null)
 
-TOKEN="8666778924:AAFMAFKfsfx3opS2CfCBrDYMIx6vcJKACTk"
+TOKEN="$(cat "$HOME/CCProject/.secrets/telegram_token.txt")"
 CHAT_ID="7556217543"
 
 if [ "$RESULT" -gt 0 ] 2>/dev/null; then

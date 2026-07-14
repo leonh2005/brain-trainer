@@ -1,7 +1,7 @@
 #!/bin/bash
 # 每日 log 掃描腳本：檢查所有監測任務過去 24 小時的錯誤並推播 Telegram
 
-TG_TOKEN="8666778924:AAFMAFKfsfx3opS2CfCBrDYMIx6vcJKACTk"
+TG_TOKEN="$(cat "$HOME/CCProject/.secrets/telegram_token.txt")"
 TG_CHAT="7556217543"
 SSH_KEY="$HOME/.ssh/oracle_line_bot"
 VM_HOST="ubuntu@161.33.6.190"

@@ -1,7 +1,7 @@
 #!/bin/bash
 # 啟動 Cloudflare Quick Tunnel 並將 URL 傳送至 Telegram
 
-BOT_TOKEN="8666778924:AAFMAFKfsfx3opS2CfCBrDYMIx6vcJKACTk"
+BOT_TOKEN="$(cat "$HOME/CCProject/.secrets/telegram_token.txt")"
 CHAT_ID="7556217543"
 LOG="/Users/steven/CCProject/rabbit-care/tunnel.log"
 

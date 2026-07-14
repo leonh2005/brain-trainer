@@ -3,6 +3,7 @@
 每 5 分鐘執行，台股交易時間 09:00-13:35
 接近 1% 或跌破均線時推 Telegram
 """
+import os
 
 import json
 from datetime import datetime, date, timedelta, time
@@ -11,7 +12,7 @@ from pathlib import Path
 import requests
 import shioaji as sj
 
-TELEGRAM_TOKEN  = "8666778924:AAFMAFKfsfx3opS2CfCBrDYMIx6vcJKACTk"
+TELEGRAM_TOKEN  = open(os.path.expanduser("~/CCProject/.secrets/telegram_token.txt")).read().strip()
 TELEGRAM_CHAT_ID = "7556217543"
 SHIOAJI_API_KEY    = "hj7FsrPYHW9nNiHrcDB2DLHu6LhH3uYvjpR2NdK23E9"
 SHIOAJI_SECRET_KEY = "A8CRXZEvWePQgvdZdmCUjzNWwP4xtLf7AdzYE8Cz3Vig"

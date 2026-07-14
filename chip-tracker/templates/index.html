@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>台股籌碼追蹤</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+<style>
+:root {
+  --bg: #0a0e14; --card: #111722; --border: #1e2a3a;
+  --text: #e8edf4; --text-dim: #5a6a7e; --font-mono: "SF Mono", Menlo, monospace;
+  --red: #ff4757; --green: #00d68f; --amber: #ffaa00; --blue: #3b82f6;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: var(--bg); color: var(--text); font-family: -apple-system, "PingFang TC", sans-serif; }
+header { display: flex; align-items: center; gap: 1rem; padding: 1.5rem 2rem; border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+h1 { font-size: 1.3rem; } h1 span { color: var(--red); }
+.updated { color: var(--text-dim); font-size: 0.8rem; font-family: var(--font-mono); }
+button { background: var(--card); color: var(--text); border: 1px solid var(--border); border-radius: 6px; padding: 0.45rem 0.9rem; cursor: pointer; font-size: 0.85rem; }
+button:hover { border-color: var(--blue); }
+.add-bar { display: flex; gap: 0.5rem; padding: 1rem 2rem; align-items: center; flex-wrap: wrap; }
+.add-bar input { background: var(--card); border: 1px solid var(--border); color: var(--text); border-radius: 6px; padding: 0.45rem 0.7rem; width: 7rem; font-family: var(--font-mono); }
+.add-bar select { background: var(--card); border: 1px solid var(--border); color: var(--text); border-radius: 6px; padding: 0.45rem; }
+.msg { font-size: 0.8rem; color: var(--amber); }
+.section-label { padding: 1rem 2rem 0.4rem; font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-dim); }
+.stock-list { padding: 0 2rem 1rem; display: grid; gap: 0.7rem; }
+.stock { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 0.9rem 1.1rem; display: grid; grid-template-columns: 11rem 1fr 12rem 8rem; gap: 1rem; align-items: center; }
+.stock .head .code { font-family: var(--font-mono); color: var(--text-dim); font-size: 0.75rem; }
+.stock .head .name { font-size: 1.05rem; font-weight: 600; }
+.stock .head .price { font-family: var(--font-mono); font-size: 0.9rem; margin-top: 2px; }
+.metrics { display: flex; gap: 1.4rem; flex-wrap: wrap; }
+.metric .k { font-size: 0.68rem; color: var(--text-dim); }
+.metric .v { font-family: var(--font-mono); font-size: 0.95rem; }
+.badge { display: inline-block; font-size: 0.65rem; border-radius: 4px; padding: 1px 5px; margin-left: 4px; background: rgba(255,71,87,0.18); color: var(--red); }
+.badge.hot { background: var(--red); color: #fff; }
+.up { color: var(--red); } .down { color: var(--green); } .flat { color: var(--text-dim); }
+.spark-box { position: relative; height: 42px; width: 100%; }
+.spark-wrap .k { font-size: 0.68rem; color: var(--text-dim); }
+.rm { justify-self: end; background: none; border: none; color: var(--text-dim); font-size: 1rem; cursor: pointer; }
+.rm:hover { color: var(--red); }
+.empty { color: var(--text-dim); font-size: 0.85rem; padding: 0.5rem 0; }
+.tdcc-date { font-size: 0.62rem; color: var(--text-dim); }
+@media (max-width: 900px) { .stock { grid-template-columns: 1fr; } .rm { justify-self: start; } }
+</style>
+</head>
+<body>
+<header>
+  <h1>台股<span>籌碼</span>追蹤</h1>
+  <div class="updated" id="updated">載入中…</div>
+  <button id="refresh">立即更新</button>
+</header>
+
+<div class="add-bar">
+  <input id="code" placeholder="代碼或股名 如 2330 / 台積電" maxlength="12" style="width:11rem">
+  <select id="listType">
+    <option value="holding">庫存</option>
+    <option value="watch">觀察</option>
+  </select>
+  <button id="add">＋ 加入</button>
+  <span class="msg" id="msg"></span>
+</div>
+
+<div class="section-label">💼 庫存清單</div>
+<div class="stock-list" id="holding"></div>
+<div class="section-label">👀 觀察清單</div>
+<div class="stock-list" id="watch"></div>
+
+<script>
+const esc = s => s == null ? "" : String(s).replace(/[&<>"']/g,
+  c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const fmtLots = v => v == null ? "—" : (v > 0 ? "+" : "") + v.toLocaleString();
+const cls = v => v == null ? "flat" : v > 0 ? "up" : v < 0 ? "down" : "flat";
+const fmtPct = v => v == null ? "—" : v.toFixed(2) + "%";
+
+function metricHtml(label, valueHtml) {
+  return `<div class="metric"><div class="k">${label}</div><div class="v">${valueHtml}</div></div>`;
+}
+
+function stockHtml(s) {
+  const chg = s.change_pct == null ? "" :
+    `<span class="${cls(s.change_pct)}">${s.change_pct > 0 ? "+" : ""}${s.change_pct}%</span>`;
+  const price = s.close == null ? "—" : s.close.toLocaleString();
+  const streakF = s.foreign_streak >= 2 ? `<span class="badge ${s.foreign_streak >= 3 ? "hot" : ""}">連${s.foreign_streak}買</span>` : "";
+  const streakT = s.trust_streak >= 2 ? `<span class="badge ${s.trust_streak >= 3 ? "hot" : ""}">連${s.trust_streak}買</span>` : "";
+  const md = d => d ? d.slice(5).replace("-", "/") : "";
+  const big400delta = (s.big400_pct != null && s.big400_prev != null)
+    ? ` <span class="${cls(s.big400_pct - s.big400_prev)}">(${(s.big400_pct - s.big400_prev) >= 0 ? "▲" : "▼"}${Math.abs(s.big400_pct - s.big400_prev).toFixed(2)} vs ${md(s.tdcc_prev_date)})</span>` : "";
+  const whaleDelta = s.whale_change == null ? "" :
+    ` <span class="${cls(s.whale_change)}">(${s.whale_change > 0 ? "+" : ""}${s.whale_change})</span>`;
+  const marginDelta = s.margin_change == null ? "" :
+    ` <span class="${cls(s.margin_change)}">(${s.margin_change > 0 ? "+" : ""}${s.margin_change.toLocaleString()})</span>`;
+
+  return `<div class="stock" data-code="${s.code}">
+    <div class="head">
+      <div class="code">${s.code} · ${esc(s.date)}</div>
+      <div class="name">${esc(s.name)}</div>
+      <div class="price">${price} ${chg}</div>
+    </div>
+    <div class="metrics">
+      ${metricHtml("外資(張)", `<span class="${cls(s.foreign_net)}">${fmtLots(s.foreign_net)}</span>${streakF}`)}
+      ${metricHtml("投信(張)", `<span class="${cls(s.trust_net)}">${fmtLots(s.trust_net)}</span>${streakT}`)}
+      ${metricHtml("自營(張)", `<span class="${cls(s.dealer_net)}">${fmtLots(s.dealer_net)}</span>`)}
+      ${metricHtml("合計(張)", `<span class="${cls(s.total_net)}">${fmtLots(s.total_net)}</span>`)}
+      ${metricHtml("融資餘額(張)", `${s.margin_balance == null ? "—" : s.margin_balance.toLocaleString()}${marginDelta}`)}
+      ${metricHtml(`外資持股 ${esc(md(s.foreign_ratio_date))}`, `${fmtPct(s.foreign_ratio)}${s.foreign_ratio_change == null ? "" : ` <span class="${cls(s.foreign_ratio_change)}">(${s.foreign_ratio_change >= 0 ? "▲" : "▼"}${Math.abs(s.foreign_ratio_change).toFixed(2)} vs ${md(s.foreign_ratio_prev_date)})</span>`}`)}
+      ${metricHtml(`大戶400張+ 週${esc(md(s.tdcc_date))}`, `${fmtPct(s.big400_pct)}${big400delta}`)}
+      ${metricHtml(`千張大戶 週${esc(md(s.tdcc_date))}`, `${s.whale_holders == null ? "—" : s.whale_holders.toLocaleString() + "人"}${whaleDelta}`)}
+      ${metricHtml(`散戶 週${esc(md(s.tdcc_date))}`, fmtPct(s.retail_pct))}
+    </div>
+    <div class="spark-wrap">
+      <div class="k">大戶% 週趨勢 <span class="tdcc-date">${esc(s.tdcc_date)}</span></div>
+      <div class="spark-box"><canvas id="spark-${s.code}"></canvas></div>
+    </div>
+    <button class="rm" title="移除" onclick="removeStock('${s.code}')">✕</button>
+  </div>`;
+}
+
+function drawSpark(s) {
+  const el = document.getElementById(`spark-${s.code}`);
+  if (!el || !s.big400_series || s.big400_series.filter(p => p.pct != null).length === 0) return;
+  new Chart(el, {
+    type: "line",
+    data: {
+      labels: s.big400_series.map(p => p.date),
+      datasets: [{ data: s.big400_series.map(p => p.pct), borderColor: "#3b82f6",
+                   borderWidth: 1.5, pointRadius: 1.5, tension: 0.3, fill: false }]
+    },
+    options: { plugins: { legend: { display: false }, tooltip: { enabled: true } },
+               scales: { x: { display: false }, y: { display: false } },
+               maintainAspectRatio: false, animation: false }
+  });
+}
+
+let lastUpdate = null;
+async function load() {
+  const r = await fetch("/api/data");
+  const data = await r.json();
+  lastUpdate = data.last_update;
+  document.getElementById("updated").textContent = "最後更新：" + (data.last_update || "尚無資料");
+  for (const key of ["holding", "watch"]) {
+    const el = document.getElementById(key);
+    const list = data[key];
+    el.innerHTML = list.length ? list.map(stockHtml).join("") : '<div class="empty">尚未加入任何股票</div>';
+    list.forEach(drawSpark);
+  }
+}
+
+async function removeStock(code) {
+  if (!confirm(`移除 ${code}？（歷史資料保留）`)) return;
+  await fetch("/api/stocks/remove", { method: "POST", headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({ code }) });
+  load();
+}
+
+document.getElementById("add").onclick = async () => {
+  const code = document.getElementById("code").value.trim();
+  const listType = document.getElementById("listType").value;
+  const msg = document.getElementById("msg");
+  if (!code) return;
+  msg.textContent = "加入中（回補 45 天籌碼＋12 週集保資料，約 20 秒）…";
+  try {
+    const r = await fetch("/api/stocks", { method: "POST", headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({ code, list_type: listType }) });
+    const res = await r.json();
+    msg.textContent = res.ok ? `已加入 ${res.name}` : res.error;
+    if (res.ok) { document.getElementById("code").value = ""; load(); }
+  } catch (e) { msg.textContent = "加入失敗：" + e; }
+};
+
+document.getElementById("refresh").onclick = async () => {
+  await fetch("/api/refresh", { method: "POST" });
+  const btn = document.getElementById("refresh");
+  btn.textContent = "更新中…"; btn.disabled = true;
+  const poll = setInterval(async () => {
+    const r = await fetch("/api/data");
+    const d = await r.json();
+    if (d.last_update !== lastUpdate) {
+      clearInterval(poll); btn.textContent = "立即更新"; btn.disabled = false; load();
+    }
+  }, 5000);
+  setTimeout(() => { clearInterval(poll); btn.textContent = "立即更新"; btn.disabled = false; load(); }, 120000);
+};
+
+load();
+</script>
+</body>
+</html>

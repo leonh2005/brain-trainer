@@ -1,12 +1,11 @@
 #!/bin/bash
 # 半夜服務狀態檢查 — 純 bash，只在發現問題時才呼叫 claude
 
-BOT_TOKEN="8666778924:AAFMAFKfsfx3opG7MIx6vcJKACTk"
 CHAT_ID="7556217543"
 SSH="ssh -i ~/.ssh/oracle_line_bot -o ConnectTimeout=10 -o BatchMode=yes ubuntu@161.33.6.190"
 CLAUDE=/Users/steven/.local/bin/claude
 LOG_DIR=~/CCProject/logs
-BOT_TOKEN="8666778924:AAFMAFKfsfx3opS2CfCBrDYMIx6vcJKACTk"
+BOT_TOKEN="$(cat "$HOME/CCProject/.secrets/telegram_token.txt")"
 
 send_telegram() {
     curl -s -X POST "https://api.telegram.org/bot${BOT_TOKEN}/sendMessage" \

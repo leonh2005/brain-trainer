@@ -4,7 +4,7 @@
 
 export PATH="/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/usr/bin:/bin:$PATH"
 
-TELEGRAM_TOKEN="8666778924:AAFMAFKfsfx3opS2CfCBrDYMIx6vcJKACTk"
+TELEGRAM_TOKEN="$(cat "$HOME/CCProject/.secrets/telegram_token.txt")"
 TELEGRAM_CHAT_ID="7556217543"
 LOG="/Users/steven/CCProject/logs/service_watchdog.log"
 LOCK_DIR="/tmp/watchdog_locks"

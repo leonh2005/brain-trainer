@@ -14,7 +14,7 @@ CYCLE = 5 * 3600  # 5小時
 # 參考重置點（2026-03-28 21:00，之後每5小時遞推）
 REFERENCE = datetime(2026, 3, 28, 21, 0, 0, tzinfo=TZ)
 
-BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN', '8666778924:AAFMAFKfsfx3opS2CfCBrDYMIx6vcJKACTk')
+BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN', open(os.path.expanduser("~/CCProject/.secrets/telegram_token.txt")).read().strip())
 CHAT_ID   = os.getenv('TELEGRAM_CHAT_ID', '7556217543')
 
 REPOS = [

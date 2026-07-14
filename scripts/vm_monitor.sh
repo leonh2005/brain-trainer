@@ -2,7 +2,7 @@
 # Oracle VM 連線監測 — 每小時 :30 執行
 # SSH 連不上時推 Telegram，並嘗試用 OCI CLI 重開
 
-TELEGRAM_TOKEN="8666778924:AAFMAFKfsfx3opS2CfCBrDYMIx6vcJKACTk"
+TELEGRAM_TOKEN="$(cat "$HOME/CCProject/.secrets/telegram_token.txt")"
 TELEGRAM_CHAT_ID="7556217543"
 SSH_KEY="$HOME/.ssh/oracle_line_bot"
 VM_HOST="ubuntu@161.33.6.190"

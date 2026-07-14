@@ -31,3 +31,4 @@ timesfm/model/*.safetensors
 
 # Superpowers brainstorm logs
 .superpowers/
+.claude/settings.local.json

@@ -10,7 +10,7 @@ PROFILE = os.path.expanduser('~/Library/Application Support/Firefox/Profiles/ro7
 URL = 'https://shopee.tw/%E7%BE%8E%E5%9C%8BRabbit-Hole-Hay%E5%85%94%E5%AD%90%E6%B4%9E%E7%89%A7%E8%8D%89%E4%B8%AD%E7%BA%96-%E8%BB%9F%E7%BA%96-%E6%9E%9C%E5%9C%92(%E8%A2%8B%E8%A3%9D285g%E3%80%81908g)-i.4430087.1385536293'
 TARGET = '提摩西二切(軟纖)908g'
 QTY = 2
-TELEGRAM_TOKEN = '8666778924:AAFMAFKfsfx3opS2CfCBrDYMIx6vcJKACTk'
+TELEGRAM_TOKEN = open(os.path.expanduser("~/CCProject/.secrets/telegram_token.txt")).read().strip()
 CHAT_ID = '7556217543'
 
 def tg(msg):
@@ -72,8 +72,8 @@ try:
     qty_input.send_keys(str(QTY))
     time.sleep(1)
 
-    # 加入購物車
-    cart_btn = driver.find_element(By.XPATH, '//button[contains(@class,"btn-tinted") and contains(text(),"加入購物車")]')
+    # 加入購物車（不依賴 class name，蝦皮常改）
+    cart_btn = driver.find_element(By.XPATH, '//button[contains(.,"加入購物車")]')
     driver.execute_script('arguments[0].scrollIntoView()', cart_btn)
     driver.execute_script('arguments[0].click()', cart_btn)
     time.sleep(4)
@@ -108,7 +108,7 @@ try:
     # 點結帳按鈕
     checkout_btn = driver.find_element(
         By.XPATH,
-        '//button[contains(text(),"去結帳") or contains(text(),"結帳") or contains(text(),"Checkout")]'
+        '//button[contains(.,"買單") or contains(.,"結帳") or contains(.,"Checkout")]'
     )
     driver.execute_script('arguments[0].click()', checkout_btn)
     time.sleep(6)
@@ -141,7 +141,7 @@ try:
     # 提交訂單
     submit_btn = wait.until(EC.element_to_be_clickable((
         By.XPATH,
-        '//button[contains(text(),"提交訂單") or contains(text(),"Place Order") or contains(text(),"下訂單")]'
+        '//button[contains(.,"提交訂單") or contains(.,"Place Order") or contains(.,"下訂單")]'
     )))
     driver.execute_script('arguments[0].click()', submit_btn)
     time.sleep(6)
@@ -169,6 +169,8 @@ try:
         print('ORDER_UNCERTAIN')
 
 except Exception as e:
+    err_msg = str(e).split('\n')[0][:200]
+    tg(f'🚨 蝦皮軟纖監控出錯\n{err_msg}\n\n請檢查 log：\n~/CCProject/logs/shopee_stock.log')
     print(f'ERROR: {e}', file=sys.stderr)
     print('ERROR')
     raise

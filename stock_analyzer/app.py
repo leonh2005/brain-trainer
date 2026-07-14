@@ -15,7 +15,7 @@ import feedparser
 
 app = Flask(__name__)
 
-DEEPSEEK_API_KEY = "sk-49f9f0a651514aff96412fa7ad11ae85"
+DEEPSEEK_API_KEY = open(os.path.expanduser("~/CCProject/.secrets/deepseek_key.txt")).read().strip()
 FINMIND_TOKEN = os.environ["FINMIND_TOKEN"]
 DISCOUNT_RATE = 0.10
 TERMINAL_GROWTH = 0.03

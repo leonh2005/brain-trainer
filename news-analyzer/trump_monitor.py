@@ -24,7 +24,7 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(mess
 logger = logging.getLogger("trump_monitor")
 
 TZ = ZoneInfo("Asia/Taipei")
-BOT_TOKEN  = "8666778924:AAFMAFKfsfx3opS2CfCBrDYMIx6vcJKACTk"
+BOT_TOKEN  = open(os.path.expanduser("~/CCProject/.secrets/telegram_token.txt")).read().strip()
 CHAT_ID    = "7556217543"
 SEEN_FILE  = Path(__file__).parent / "trump_seen.json"
 STATE_FILE = Path(__file__).parent / "trump_state.json"
