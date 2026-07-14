@@ -79,6 +79,7 @@ def _stock_payload(conn, s: dict) -> dict:
         "whale_holders": w_latest.get("whale_holders"),
         "whale_change": whale_change,
         "retail_pct": w_latest.get("retail_pct"),
+        "retail_prev": w_prev.get("retail_pct"),
         "tdcc_date": w_latest.get("date"),
         "tdcc_prev_date": w_prev.get("date"),
         "big400_series": [
