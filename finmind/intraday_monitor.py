@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 """
 盤中主力發動偵測器（雙向）— 每 60 秒執行（09:05–13:30 交易時段）
+
+資料層（2026-07-14 改訂閱制）：啟動時對監控股訂閱即時 tick 並本地累積，
+1 分鐘 K 棒由本地 tick 重算；中途重啟以一次 api.ticks 回補當日。
+（舊版每 60 秒重抓全日 ticks，一天吃掉 Shioaji ~400MB 流量配額）
 偵測 13 項指標，多方/空方均觸發推播：
   - 需同時滿足：訊號數 ≥ SIGNAL_THRESHOLD 且含至少 1 個量能訊號
 
@@ -22,6 +26,7 @@
 
 import json
 import os
+import threading
 import warnings
 from datetime import date, datetime, timedelta
 
@@ -85,28 +90,94 @@ def trading_days_ago(n):
     return d.strftime('%Y-%m-%d')
 
 
-# ── 資料取得 ─────────────────────────────────────────────────────────────────
+# ── 資料取得（訂閱制 tick 累積）─────────────────────────────────────────────
+# {code: [(ts, close, volume, tick_type), ...]}；callback 在 Shioaji 執行緒，需加鎖
+_tick_store: dict = {}
+_tick_lock = threading.Lock()
 
-def get_1min_kbars(code: str) -> pd.DataFrame:
-    """用 ticks resample 成今日 1 分鐘 K 棒，並附帶 bid_vol/ask_vol 欄位"""
-    try:
-        api = _get_sj()
+
+def _setup_tick_stream(api):
+    """訂閱監控清單即時 tick，累積到 _tick_store。"""
+
+    @api.on_tick_stk_v1()
+    def _on_tick(exchange, tick):
+        if getattr(tick, 'simtrade', False):  # 排除試撮
+            return
+        row = (pd.Timestamp(tick.datetime), float(tick.close), int(tick.volume), int(tick.tick_type))
+        with _tick_lock:
+            _tick_store.setdefault(tick.code, []).append(row)
+
+    ok = 0
+    for code in WATCHLIST:
+        try:
+            contract = api.Contracts.Stocks.get(code)
+            if contract is None:
+                print(f'[subscribe] {code} 無合約，跳過')
+                continue
+            api.quote.subscribe(
+                contract,
+                quote_type=sj.constant.QuoteType.Tick,
+                version=sj.constant.QuoteVersion.v1,
+            )
+            ok += 1
+        except Exception as e:
+            print(f'[subscribe] {code} 失敗（該檔今日無即時資料）: {e}')
+    print(f'[startup] 已訂閱 {ok}/{len(WATCHLIST)} 檔即時 tick')
+
+
+def _backfill_today_ticks(api):
+    """中途啟動時一次性回補當日 ticks（僅啟動時呼叫，之後全靠訂閱流）。"""
+    import time as _t
+
+    today = str(date.today())
+    for code in WATCHLIST:
         contract = api.Contracts.Stocks.get(code)
         if contract is None:
+            continue
+        try:
+            ticks = api.ticks(contract, date=today)
+            ts = pd.to_datetime(list(ticks.ts), unit='ns')
+            # 歷史 ticks 理論上不含試撮；若 SDK 提供 simtrade 欄位則防禦性過濾（與即時流一致）
+            sim = list(getattr(ticks, 'simtrade', []) or [])
+            rows = [
+                (ts[i], float(ticks.close[i]), int(ticks.volume[i]), int(ticks.tick_type[i]))
+                for i in range(len(ts))
+                if not sim or not sim[i]
+            ]
+        except Exception as e:
+            print(f'[backfill] {code} 失敗: {e}')
+            continue
+        with _tick_lock:
+            streamed = _tick_store.get(code, [])
+            # 已有串流 tick 時，回補只保留串流開始前的部分，避免重複計量
+            cutoff = streamed[0][0] if streamed else None
+            kept = [r for r in rows if cutoff is None or r[0] < cutoff]
+            _tick_store[code] = kept + streamed
+            # 時間基準對齊檢查用（首日驗證：兩值應相近、絕無小時級落差）
+            if kept and streamed:
+                print(f'[backfill] {code}: 回補{len(kept)}筆(至 {kept[-1][0]}) + 串流{len(streamed)}筆(自 {streamed[0][0]})')
+        _t.sleep(0.2)
+    total = sum(len(v) for v in _tick_store.values())
+    print(f'[startup] 當日 ticks 回補完成（共 {total} 筆）')
+
+
+def get_1min_kbars(code: str) -> pd.DataFrame:
+    """由本地累積的 tick resample 成今日 1 分鐘 K 棒，附 bid_vol/ask_vol 欄位。
+
+    輸出格式與舊版（api.ticks 全量重抓）完全一致，訊號計算不受影響。
+    """
+    try:
+        with _tick_lock:
+            rows = list(_tick_store.get(code, []))
+        if not rows:
             return pd.DataFrame()
-        today = str(date.today())
-        ticks = api.ticks(contract, date=today)
-        df = pd.DataFrame({**ticks})
-        if df.empty:
-            return df
-        df['ts'] = pd.to_datetime(df['ts'], unit='ns')
+        df = pd.DataFrame(rows, columns=['ts', 'close', 'volume', 'tick_type'])
         df = df.set_index('ts').sort_index()
         ohlcv = df['close'].resample('1min').ohlc()
         ohlcv['volume'] = df['volume'].resample('1min').sum()
         ohlcv['ask_vol'] = df[df['tick_type']==1]['volume'].resample('1min').sum()
         ohlcv['bid_vol'] = df[df['tick_type']==2]['volume'].resample('1min').sum()
         ohlcv = ohlcv.dropna(subset=['open']).reset_index()
-        ohlcv.rename(columns={'ts': 'ts'}, inplace=True)
         return ohlcv
     except Exception as e:
         print(f'[ticks] {code} 失敗: {e}')
@@ -162,25 +233,30 @@ def _save_avg5_cache(stocks: dict):
 def get_avg5_vol(code: str, cache: dict) -> int:
     if code in cache:
         return cache[code]
-    try:
-        api = _get_sj()
-        contract = api.Contracts.Stocks.get(code)
-        if contract is None:
-            return 0
-        start = str(date.today() - timedelta(days=20))
-        end   = str(date.today() - timedelta(days=1))
-        kb = api.kbars(contract, start=start, end=end)
-        df = pd.DataFrame({**kb})
-        if df.empty:
-            return 0
-        df['ts'] = pd.to_datetime(df['ts'])
-        df['_d'] = df['ts'].dt.date
-        daily = df.groupby('_d')['Volume'].sum().reset_index()
-        result = int(round(daily['Volume'].tail(5).mean(), 0)) if len(daily) >= 5 else 0
-        cache[code] = result
-        return result
-    except Exception as e:
-        print(f'[avg5] {code} 失敗: {e}')
+    api = _get_sj()
+    contract = api.Contracts.Stocks.get(code)
+    if contract is None:
+        return 0
+    start = str(date.today() - timedelta(days=20))
+    end   = str(date.today() - timedelta(days=1))
+    # 當日首次 kbars 呼叫偶發失敗（連線暖機），重試一次即可（2408 每日固定中招）
+    for attempt in (1, 2):
+        try:
+            kb = api.kbars(contract, start=start, end=end)
+            df = pd.DataFrame({**kb})
+            if df.empty:
+                return 0
+            df['ts'] = pd.to_datetime(df['ts'])
+            df['_d'] = df['ts'].dt.date
+            daily = df.groupby('_d')['Volume'].sum().reset_index()
+            result = int(round(daily['Volume'].tail(5).mean(), 0)) if len(daily) >= 5 else 0
+            cache[code] = result
+            return result
+        except Exception as e:
+            print(f'[avg5] {code} 第{attempt}次失敗: {e}')
+            if attempt == 1:
+                import time as _t
+                _t.sleep(2)
     return 0
 
 
@@ -558,6 +634,9 @@ if __name__ == '__main__':
     else:
         print('[startup] Shioaji 暖機逾時（60s），結束')
         exit(1)
+
+    _setup_tick_stream(_api)      # 先訂閱（即刻開始累積）
+    _backfill_today_ticks(_api)   # 再回補訂閱前的當日 ticks（僅此一次 api.ticks）
 
     while True:
         _now = datetime.now()

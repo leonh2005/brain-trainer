@@ -24,7 +24,7 @@ button:hover { border-color: var(--blue); }
 .msg { font-size: 0.8rem; color: var(--amber); }
 .section-label { padding: 1rem 2rem 0.4rem; font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-dim); }
 .stock-list { padding: 0 2rem 1rem; display: grid; gap: 0.7rem; }
-.stock { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 0.9rem 1.1rem; display: grid; grid-template-columns: 11rem 1fr 12rem 8rem; gap: 1rem; align-items: center; }
+.stock { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 0.9rem 1.1rem; display: grid; grid-template-columns: 10rem 1fr 24rem 2rem; gap: 1rem; align-items: center; }
 .stock .head .code { font-family: var(--font-mono); color: var(--text-dim); font-size: 0.75rem; }
 .stock .head .name { font-size: 1.05rem; font-weight: 600; }
 .stock .head .price { font-family: var(--font-mono); font-size: 0.9rem; margin-top: 2px; }
@@ -34,8 +34,10 @@ button:hover { border-color: var(--blue); }
 .badge { display: inline-block; font-size: 0.65rem; border-radius: 4px; padding: 1px 5px; margin-left: 4px; background: rgba(255,71,87,0.18); color: var(--red); }
 .badge.hot { background: var(--red); color: #fff; }
 .up { color: var(--red); } .down { color: var(--green); } .flat { color: var(--text-dim); }
+.spark-group { display: flex; gap: 0.8rem; }
+.spark-wrap { flex: 1; min-width: 0; }
 .spark-box { position: relative; height: 42px; width: 100%; }
-.spark-wrap .k { font-size: 0.68rem; color: var(--text-dim); }
+.spark-wrap .k { font-size: 0.65rem; color: var(--text-dim); white-space: nowrap; overflow: hidden; }
 .rm { justify-self: end; background: none; border: none; color: var(--text-dim); font-size: 1rem; cursor: pointer; }
 .rm:hover { color: var(--red); }
 .empty { color: var(--text-dim); font-size: 0.85rem; padding: 0.5rem 0; }
@@ -94,10 +96,10 @@ function stockHtml(s) {
     <div class="head">
       <div class="code">${s.code} · ${esc(s.date)}</div>
       <div class="name">${esc(s.name)}</div>
-      <div class="price">${price} ${chg}</div>
+      <div class="price" id="price-${s.code}">${price} ${chg}</div>
     </div>
     <div class="metrics">
-      ${metricHtml("外資(張)", `<span class="${cls(s.foreign_net)}">${fmtLots(s.foreign_net)}</span>${streakF}`)}
+      ${metricHtml(`外資(張) ${esc(md(s.inst_date))}`, `<span class="${cls(s.foreign_net)}">${fmtLots(s.foreign_net)}</span>${streakF}`)}
       ${metricHtml("投信(張)", `<span class="${cls(s.trust_net)}">${fmtLots(s.trust_net)}</span>${streakT}`)}
       ${metricHtml("自營(張)", `<span class="${cls(s.dealer_net)}">${fmtLots(s.dealer_net)}</span>`)}
       ${metricHtml("合計(張)", `<span class="${cls(s.total_net)}">${fmtLots(s.total_net)}</span>`)}
@@ -107,28 +109,62 @@ function stockHtml(s) {
       ${metricHtml(`千張大戶 週${esc(md(s.tdcc_date))}`, `${s.whale_holders == null ? "—" : s.whale_holders.toLocaleString() + "人"}${whaleDelta}`)}
       ${metricHtml(`散戶 週${esc(md(s.tdcc_date))}`, fmtPct(s.retail_pct))}
     </div>
-    <div class="spark-wrap">
-      <div class="k">大戶% 週趨勢 <span class="tdcc-date">${esc(s.tdcc_date)}</span></div>
-      <div class="spark-box"><canvas id="spark-${s.code}"></canvas></div>
+    <div class="spark-group">
+      <div class="spark-wrap">
+        <div class="k">大戶% 週趨勢</div>
+        <div class="spark-box"><canvas id="spark-big-${s.code}"></canvas></div>
+      </div>
+      <div class="spark-wrap">
+        <div class="k">融資餘額 30日</div>
+        <div class="spark-box"><canvas id="spark-margin-${s.code}"></canvas></div>
+      </div>
+      <div class="spark-wrap">
+        <div class="k">外資持股% 30日</div>
+        <div class="spark-box"><canvas id="spark-foreign-${s.code}"></canvas></div>
+      </div>
     </div>
     <button class="rm" title="移除" onclick="removeStock('${s.code}')">✕</button>
   </div>`;
 }
 
-function drawSpark(s) {
-  const el = document.getElementById(`spark-${s.code}`);
-  if (!el || !s.big400_series || s.big400_series.filter(p => p.pct != null).length === 0) return;
+function drawOneSpark(canvasId, series, color) {
+  const el = document.getElementById(canvasId);
+  if (!el || !series || series.filter(p => p.v != null).length < 2) return;
   new Chart(el, {
     type: "line",
     data: {
-      labels: s.big400_series.map(p => p.date),
-      datasets: [{ data: s.big400_series.map(p => p.pct), borderColor: "#3b82f6",
-                   borderWidth: 1.5, pointRadius: 1.5, tension: 0.3, fill: false }]
+      labels: series.map(p => p.date),
+      datasets: [{ data: series.map(p => p.v), borderColor: color,
+                   borderWidth: 1.5, pointRadius: 1, tension: 0.3, fill: false }]
     },
     options: { plugins: { legend: { display: false }, tooltip: { enabled: true } },
                scales: { x: { display: false }, y: { display: false } },
                maintainAspectRatio: false, animation: false }
   });
+}
+
+function drawSpark(s) {
+  drawOneSpark(`spark-big-${s.code}`,
+    (s.big400_series || []).map(p => ({date: p.date, v: p.pct})), "#3b82f6");
+  drawOneSpark(`spark-margin-${s.code}`, s.margin_series, "#ffaa00");
+  drawOneSpark(`spark-foreign-${s.code}`, s.foreign_ratio_series, "#00d68f");
+}
+
+async function loadQuotes() {
+  // Shioaji 即時報價：載入完成後把 DB 收盤價蓋成最新價（失敗則保留原值）
+  try {
+    const r = await fetch("/api/quotes");
+    const quotes = await r.json();
+    for (const [code, q] of Object.entries(quotes)) {
+      const el = document.getElementById(`price-${code}`);
+      if (!el || q.price == null) continue;
+      const chg = q.change_pct == null ? "" :
+        `<span class="${cls(q.change_pct)}">${q.change_pct > 0 ? "+" : ""}${q.change_pct}%</span>`;
+      const t = new Date(q.ts * 1000);
+      const hhmm = `${String(t.getHours()).padStart(2,"0")}:${String(t.getMinutes()).padStart(2,"0")}`;
+      el.innerHTML = `${q.price.toLocaleString()} ${chg} <span style="font-size:0.65rem;color:var(--text-dim)">${q.delayed ? "延遲" : "即時"} ${hhmm}</span>`;
+    }
+  } catch (e) { /* fail-open */ }
 }
 
 let lastUpdate = null;
@@ -143,6 +179,7 @@ async function load() {
     el.innerHTML = list.length ? list.map(stockHtml).join("") : '<div class="empty">尚未加入任何股票</div>';
     list.forEach(drawSpark);
   }
+  loadQuotes();
 }
 
 async function removeStock(code) {
