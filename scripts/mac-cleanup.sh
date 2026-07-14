@@ -38,7 +38,7 @@ echo "Disk: ${AVAIL} free (${USED} used)"
 
 # 6. Telegram notification
 MSG=$(cat "$LOG")
-curl -s -X POST "https://api.telegram.org/bot***REDACTED***/sendMessage" \
+curl -s -X POST "https://api.telegram.org/bot$(cat "$HOME/CCProject/.secrets/telegram_token.txt")/sendMessage" \
     -d "chat_id=7556217543" \
     --data-urlencode "text=🧹 Mac Cleanup
 ${MSG}"

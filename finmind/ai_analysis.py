@@ -7,7 +7,7 @@ import json
 import os
 from openai import OpenAI, APIStatusError
 
-DEEPSEEK_API_KEY = "***REDACTED***"
+DEEPSEEK_API_KEY = open(os.path.expanduser("~/CCProject/.secrets/deepseek_key.txt")).read().strip()
 
 _client = None
 
@@ -83,7 +83,7 @@ def analyze_stock(code: str, name: str, close: float, chg_pct: float,
 def _send_credit_alert():
     """DeepSeek 餘額不足時推播 Telegram"""
     import requests
-    BOT_TOKEN = "***REDACTED***"
+    BOT_TOKEN = open(os.path.expanduser("~/CCProject/.secrets/telegram_token.txt")).read().strip()
     CHAT_ID   = "7556217543"
     requests.post(
         f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage",

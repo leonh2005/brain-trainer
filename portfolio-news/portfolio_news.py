@@ -23,9 +23,9 @@ load_dotenv(Path(__file__).parent / ".env")
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 logger = logging.getLogger("portfolio_news")
 
-BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "***REDACTED***")
+BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", open(os.path.expanduser("~/CCProject/.secrets/telegram_token.txt")).read().strip())
 CHAT_ID   = os.getenv("TELEGRAM_CHAT_ID", "7556217543")
-DEEPSEEK_API_KEY = os.getenv("DEEPSEEK_API_KEY", "***REDACTED***")
+DEEPSEEK_API_KEY = os.getenv("DEEPSEEK_API_KEY", open(os.path.expanduser("~/CCProject/.secrets/deepseek_key.txt")).read().strip())
 
 MAX_FETCH   = 50   # RSS 最多抓幾則
 MAX_SEND    = 20   # 去重後送 DeepSeek 上限

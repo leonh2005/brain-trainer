@@ -1,7 +1,24 @@
+import calendar
 import feedparser
 import logging
+from datetime import datetime, timezone
 
 logger = logging.getLogger(__name__)
+
+
+def normalize_published(entry):
+    """Return the entry's published time as an ISO 8601 UTC string, or None."""
+    parsed = entry.get("published_parsed") or entry.get("updated_parsed")
+    if parsed:
+        return datetime.fromtimestamp(calendar.timegm(parsed), tz=timezone.utc).isoformat()
+    raw = entry.get("published")
+    if raw:
+        try:
+            from email.utils import parsedate_to_datetime
+            return parsedate_to_datetime(raw).astimezone(timezone.utc).isoformat()
+        except (TypeError, ValueError):
+            return raw
+    return None
 
 RSS_SOURCES = [
     {"url": "https://tw.stock.yahoo.com/rss", "source": "yahoo_tw"},
@@ -23,7 +40,7 @@ def fetch_rss(url, source_name):
                 "title": entry.title,
                 "url": entry.link,
                 "content": entry.summary if hasattr(entry, "summary") else "",
-                "published_at": entry.get("published", None),
+                "published_at": normalize_published(entry),
             })
         return articles
     except Exception as e:

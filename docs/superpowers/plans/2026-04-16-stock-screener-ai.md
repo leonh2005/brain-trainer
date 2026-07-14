@@ -60,7 +60,7 @@ pip install -r requirements.txt
 # config.py
 import os
 
-DEEPSEEK_API_KEY = "***REDACTED***"
+DEEPSEEK_API_KEY = "<REDACTED>"
 FINMIND_TOKEN = open(os.path.expanduser("~/.secrets/finmind_token.txt") if os.path.exists(os.path.expanduser("~/.secrets/finmind_token.txt")) else os.path.expanduser("~/CCProject/.secrets/finmind_token.txt")).read().strip()
 SHIOAJI_API_KEY = "hj7FsrPYHW9nNiHrcDB2DLHu6LhH3uYvjpR2NdK23E9"
 SHIOAJI_SECRET_KEY = "A8CRXZEvWePQgvdZdmCUjzNWwP4xtLf7AdzYE8Cz3Vig"
