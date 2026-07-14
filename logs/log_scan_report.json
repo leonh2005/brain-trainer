@@ -1,6 +1,6 @@
 {
-  "scanned_at": "2026-07-14 03:00:13",
-  "since": "2026-07-13 03:00:00",
+  "scanned_at": "2026-07-15 03:00:14",
+  "since": "2026-07-14 03:00:01",
   "results": {
     "市場儀表板": {
       "exists": true,
@@ -16,9 +16,9 @@
     },
     "motion-watcher": {
       "exists": true,
-      "errors": 4165,
-      "last_error": "[h264 @ 0xb7185b100] error while decoding MB 151 2, bytestream 21605",
-      "fix": "尚無對應建議，需人工判斷"
+      "errors": 5993,
+      "last_error": "2026-07-15 02:58:45,282 ERROR OpenAI 分析失敗 (第 3 次): Error code: 401 - {'error': {'message': 'Incorrect API key provided: sk-proj-********************************************************************************************************************************************************EM0A. You can find y",
+      "fix": "Session/Token 過期 → 重新登入對應網站或更新 API Key"
     },
     "Cloudflare Tunnel": {
       "exists": true,
@@ -28,8 +28,8 @@
     },
     "財經新聞分析": {
       "exists": true,
-      "errors": 154,
-      "last_error": "2026-07-14 03:00:05,758 [WARNING] fetcher.reddit_fetcher: Reddit fetch failed: received 401 HTTP response",
+      "errors": 159,
+      "last_error": "2026-07-15 03:00:06,135 [WARNING] fetcher.reddit_fetcher: Reddit fetch failed: received 401 HTTP response",
       "fix": "Session/Token 過期 → 重新登入對應網站或更新 API Key"
     },
     "川普監測": {
@@ -40,15 +40,15 @@
     },
     "持倉新聞(台股)": {
       "exists": true,
-      "errors": 11,
-      "last_error": "2026-07-13 08:30:42,718 ERROR DeepSeek 分析失敗 00881：Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}",
+      "errors": 6,
+      "last_error": "2026-07-14 08:30:32,699 ERROR DeepSeek 分析失敗 00881：Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}",
       "fix": "尚無對應建議，需人工判斷"
     },
     "持倉新聞(美股)": {
       "exists": true,
-      "errors": 3,
-      "last_error": "2026-07-13 21:00:12,326 ERROR DeepSeek 分析失敗 00635U：Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}",
-      "fix": "尚無對應建議，需人工判斷"
+      "errors": 0,
+      "last_error": null,
+      "fix": null
     },
     "HolaQuant": {
       "exists": true,
@@ -76,8 +76,8 @@
     },
     "當沖推播": {
       "exists": true,
-      "errors": 247,
-      "last_error": "[AI] 1802 API 錯誤 402: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}",
+      "errors": 256,
+      "last_error": "[AI] 6505 API 錯誤 402: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}",
       "fix": "尚無對應建議，需人工判斷"
     },
     "隔日沖推播": {
@@ -88,8 +88,8 @@
     },
     "盤中監控": {
       "exists": true,
-      "errors": 128,
-      "last_error": "檢查 2408 南亞科 ... [avg5] 2408 失敗: Topic: api/v1/data/kbars, Corr: c22, Client: PYAPI/N124711691/0713/010003/322933/220.141.3.56, payload: {'token': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYmYiOjE3ODM5MDQ0MDMsImV4cCI6MTc4Mzk5MDgwMywic2ltdWxhdGlvbiI6ZmFsc2UsInBlcnNvbl9pZCI6Ik4xMjQ3MTE2OTEiLCJ2ZXJzaW9u",
+      "errors": 129,
+      "last_error": "檢查 2408 南亞科 ... [avg5] 2408 失敗: Topic: api/v1/data/kbars, Corr: c22, Client: PYAPI/N124711691/0714/010003/418869/220.141.39.93, payload: {'token': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYmYiOjE3ODM5OTA4MDMsImV4cCI6MTc4NDA3NzIwMywic2ltdWxhdGlvbiI6ZmFsc2UsInBlcnNvbl9pZCI6Ik4xMjQ3MTE2OTEiLCJ2ZXJzaW9",
       "fix": "尚無對應建議，需人工判斷"
     },
     "蝦皮軟纖監測": {
@@ -112,8 +112,8 @@
     },
     "Claude週期監測": {
       "exists": true,
-      "errors": 321,
-      "last_error": "google.genai.errors.ServerError: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.', 'status': 'UNAVAILABLE'}}",
+      "errors": 337,
+      "last_error": "google.genai.errors.ClientError: 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reason': 'API_KEY_INVALID', 'domain': 'googleapis.com', 'metad",
       "fix": "尚無對應建議，需人工判斷"
     },
     "Threads每日": {
