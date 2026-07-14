@@ -107,7 +107,8 @@ function stockHtml(s) {
       ${metricHtml(`外資持股 ${esc(md(s.foreign_ratio_date))}`, `${fmtPct(s.foreign_ratio)}${s.foreign_ratio_change == null ? "" : ` <span class="${cls(s.foreign_ratio_change)}">(${s.foreign_ratio_change >= 0 ? "▲" : "▼"}${Math.abs(s.foreign_ratio_change).toFixed(2)} vs ${md(s.foreign_ratio_prev_date)})</span>`}`)}
       ${metricHtml(`大戶400張+ 週${esc(md(s.tdcc_date))}`, `${fmtPct(s.big400_pct)}${big400delta}`)}
       ${metricHtml(`千張大戶 週${esc(md(s.tdcc_date))}`, `${s.whale_holders == null ? "—" : s.whale_holders.toLocaleString() + "人"}${whaleDelta}`)}
-      ${metricHtml(`散戶 週${esc(md(s.tdcc_date))}`, fmtPct(s.retail_pct))}
+      ${metricHtml(`散戶 週${esc(md(s.tdcc_date))}`, `${fmtPct(s.retail_pct)}${(s.retail_pct != null && s.retail_prev != null)
+        ? ` <span class="${cls(s.retail_pct - s.retail_prev)}">(${(s.retail_pct - s.retail_prev) >= 0 ? "▲" : "▼"}${Math.abs(s.retail_pct - s.retail_prev).toFixed(2)} vs ${md(s.tdcc_prev_date)})</span>` : ""}`)}
     </div>
     <div class="spark-group">
       <div class="spark-wrap">
