@@ -1,43 +1,50 @@
-import praw
+import feedparser
+import html
 import logging
-import os
+import re
+import requests
+import time
 from datetime import datetime, timezone
-from dotenv import load_dotenv
 
-load_dotenv()
 logger = logging.getLogger(__name__)
 
 SUBREDDITS = ["stocks", "investing", "wallstreetbets"]
 MAX_CONTENT = 500
+# Reddit 的 .json 公開端點會 403 擋非瀏覽器流量，.rss 搭配瀏覽器 UA 可用（2026-07 實測）
+HEADERS = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Version/17.4 Safari/605.1.15"}
 
 
-def build_reddit_client():
-    return praw.Reddit(
-        client_id=os.getenv("REDDIT_CLIENT_ID"),
-        client_secret=os.getenv("REDDIT_CLIENT_SECRET"),
-        user_agent=os.getenv("REDDIT_USER_AGENT", "news-analyzer/1.0"),
-    )
+def _strip_html(text):
+    return html.unescape(re.sub(r"<[^>]+>", " ", text or "")).strip()
 
 
 def fetch_reddit(subreddits=None, limit=20):
-    """Fetch hot posts from given subreddits."""
+    """Fetch hot posts via Reddit RSS（免憑證，取代原 praw 401 問題）."""
     if subreddits is None:
         subreddits = SUBREDDITS
-    try:
-        reddit = build_reddit_client()
-        articles = []
-        for name in subreddits:
-            sub = reddit.subreddit(name)
-            for post in sub.hot(limit=limit):
+    articles = []
+    for i, name in enumerate(subreddits):
+        if i:
+            time.sleep(30)  # Reddit 免登入限流嚴格，5 秒仍會 429（2026-07 實測）
+        try:
+            resp = requests.get(
+                f"https://www.reddit.com/r/{name}/hot/.rss",
+                headers=HEADERS, timeout=15,
+            )
+            resp.raise_for_status()
+            feed = feedparser.parse(resp.text)
+            for entry in feed.entries[:limit]:
+                published = None
+                if getattr(entry, "published_parsed", None):
+                    published = datetime(*entry.published_parsed[:6], tzinfo=timezone.utc).isoformat()
                 articles.append({
                     "source": "reddit",
-                    "title": post.title,
-                    "url": post.url,
-                    "content": post.selftext[:MAX_CONTENT],
-                    "published_at": datetime.fromtimestamp(post.created_utc, tz=timezone.utc).isoformat(),
+                    "title": entry.title,
+                    "url": entry.link,
+                    "content": _strip_html(getattr(entry, "summary", ""))[:MAX_CONTENT],
+                    "published_at": published,
                 })
-        logger.info(f"[reddit] fetched {len(articles)} articles")
-        return articles
-    except Exception as e:
-        logger.warning(f"Reddit fetch failed: {e}")
-        return []
+        except Exception as e:
+            logger.warning(f"Reddit fetch failed for r/{name}: {e}")
+    logger.info(f"[reddit] fetched {len(articles)} articles")
+    return articles

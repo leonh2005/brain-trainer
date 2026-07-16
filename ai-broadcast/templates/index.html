@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="utf-8">
+<title>AI 廣播</title>
+<style>
+  body { font: 16px -apple-system, "PingFang TC", sans-serif; background: #12121f; color: #e8e8f0;
+         max-width: 640px; margin: 0 auto; padding: 40px 20px; }
+  h1 { font-size: 22px; } h1 span { color: #7ec8ff; }
+  p.hint { color: #888; font-size: 14px; margin-top: 4px; }
+  textarea { width: 100%; box-sizing: border-box; padding: 14px; border-radius: 10px;
+             border: 1px solid #333; background: #1c1c2e; color: #eee; font-size: 16px;
+             min-height: 90px; resize: vertical; }
+  .targets { display: flex; gap: 10px; margin: 16px 0; flex-wrap: wrap; }
+  .chip { display: flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: 999px;
+          border: 2px solid #333; cursor: pointer; user-select: none; }
+  .chip.on { border-color: #7ec8ff; background: #1c2c3e; }
+  .chip .dot { width: 10px; height: 10px; border-radius: 50%; }
+  button.go { width: 100%; padding: 14px; border-radius: 10px; border: 0; background: #7ec8ff;
+              color: #12121f; font-size: 17px; font-weight: 700; cursor: pointer; }
+  button.go:disabled { opacity: .5; cursor: default; }
+  #msg { margin-top: 14px; font-size: 14px; min-height: 20px; }
+  #msg.err { color: #f88; } #msg.ok { color: #8f8; }
+</style>
+</head>
+<body>
+<h1>AI <span>廣播</span></h1>
+<p class="hint">打一次問題，用你已登入的 Firefox 帳號同時開各家分頁自動送出。</p>
+
+<textarea id="topic" placeholder="輸入問題，Enter 送出（Shift+Enter 換行）"></textarea>
+
+<div class="targets">
+  {% for sid, s in services.items() %}
+  <div class="chip on" data-sid="{{ sid }}" onclick="toggle(this)">
+    <span class="dot" style="background: {{ s.color }}"></span>{{ s.name }}
+  </div>
+  {% endfor %}
+</div>
+
+<button class="go" id="gobtn" onclick="broadcast()">廣播</button>
+<div id="msg"></div>
+
+<script>
+function toggle(el) { el.classList.toggle('on'); }
+document.getElementById('topic').addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); broadcast(); }
+});
+async function broadcast() {
+  const topic = document.getElementById('topic').value.trim();
+  const msg = document.getElementById('msg');
+  if (!topic) { msg.className = 'err'; msg.textContent = '請先輸入問題'; return; }
+  const targets = [...document.querySelectorAll('.chip.on')].map(c => c.dataset.sid);
+  if (!targets.length) { msg.className = 'err'; msg.textContent = '至少選一家'; return; }
+  const btn = document.getElementById('gobtn');
+  btn.disabled = true; msg.className = ''; msg.textContent = '開分頁中…';
+  try {
+    const r = await fetch('/api/broadcast', {
+      method: 'POST', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({topic, targets}),
+    });
+    const d = await r.json();
+    if (r.ok) { msg.className = 'ok'; msg.textContent = '已送到：' + d.opened.join('、'); }
+    else { msg.className = 'err'; msg.textContent = d.error; }
+  } catch (e) { msg.className = 'err'; msg.textContent = '失敗：' + e; }
+  btn.disabled = false;
+}
+</script>
+</body>
+</html>

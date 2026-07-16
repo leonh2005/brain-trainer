@@ -54,6 +54,7 @@
   .source-cnbc      { background: #b45309; }
   .source-ptt       { background: #15803d; }
   .source-reddit    { background: #c2410c; }
+  .source-technews  { background: #6d28d9; }
   .source-x         { background: #1d4ed8; }
   .pagination { padding: 16px 24px; display: flex; gap: 8px; align-items: center; color: #64748b; font-size: 0.875rem; }
   .pagination button { background: #1e293b; color: #94a3b8; border: none; padding: 6px 14px; border-radius: 6px; cursor: pointer; }
@@ -111,6 +112,9 @@
     <option value="marketwatch">MarketWatch</option>
     <option value="cnbc">CNBC</option>
     <option value="ptt">PTT</option>
+    <option value="cnyes">鉅亨網</option>
+    <option value="technews">科技新報</option>
+    <option value="reddit">Reddit</option>
   </select>
   <input type="date" id="dateInput" onchange="loadStats(); loadArticles(1)">
   <select id="scoreFilter" onchange="loadArticles(1)">
