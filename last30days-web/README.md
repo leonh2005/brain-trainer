@@ -6,7 +6,10 @@
 - **LaunchAgent**: `com.steven.last30days-web`（KeepAlive，log 在 `webui.log`）
 - **報告庫**: `~/Documents/Last30Days/`（與 CLI / Claude Code 跑的研究共用）
 - **引擎路徑**: 動態 glob `~/.claude/plugins/cache/last30days-skill/last30days/*/…`，plugin 更新不用改
-- **翻譯**: Groq `llama-3.3-70b-versatile`，key 讀 `~/.config/last30days/.env` 的 `GROQ_API_KEY`；譯文存成 `<原檔名>.zh.html`，不重翻
+- **報告格式**: `--emit brief` 產完整合成報告（Markdown），檔名 = 中文主題 + 時間戳（引擎的 `--emit html` 只是給 LLM 宿主的統計外殼，別用）
+- **台灣新聞語料庫**: 每次跑研究前從 news-analyzer 的 `news.db` 匯出近 35 天文章到 `corpus/`（每 6 小時刷新），接引擎 `--corpus`——台股主題靠這個 + YouTube 台灣財經節目
+- **引擎 LLM planner**: `~/.config/last30days/.env` 的 `OPENAI_API_KEY`（news key）。沒有它，中文具名主題在 headless 模式會搜不到東西
+- **翻譯**: Groq `llama-3.3-70b-versatile`，key 讀 `~/.config/last30days/.env` 的 `GROQ_API_KEY`；譯文存成 `<原檔名>.zh.md`，不重翻
 
 ## 功能
 

@@ -1,5 +1,7 @@
+import re
 import requests
 import logging
+from datetime import datetime, timezone
 from bs4 import BeautifulSoup
 
 logger = logging.getLogger(__name__)
@@ -36,6 +38,14 @@ def parse_article_page(html):
     return "", text[:MAX_CONTENT]
 
 
+def published_from_url(url):
+    """PTT 文章 URL 的 M.<epoch>.A 就是發文時間"""
+    m = re.search(r"/M\.(\d{10})\.", url)
+    if not m:
+        return None
+    return datetime.fromtimestamp(int(m.group(1)), tz=timezone.utc).isoformat()
+
+
 def fetch_ptt(max_articles=30):
     """Fetch PTT Stock board articles."""
     try:
@@ -51,7 +61,7 @@ def fetch_ptt(max_articles=30):
                     "title": item["title"],
                     "url": item["url"],
                     "content": content,
-                    "published_at": None,
+                    "published_at": published_from_url(item["url"]),
                 })
             except Exception as e:
                 logger.warning(f"PTT article fetch failed {item['url']}: {e}")

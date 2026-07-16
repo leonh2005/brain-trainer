@@ -26,6 +26,8 @@ RSS_SOURCES = [
     {"url": "https://money.udn.com/rssfeed/news/1001/USD/NEWS.rss", "source": "udn"},
     {"url": "https://feeds.marketwatch.com/marketwatch/topstories/", "source": "marketwatch"},
     {"url": "https://www.cnbc.com/id/10001147/device/rss/rss.html", "source": "cnbc"},
+    {"url": "https://news.cnyes.com/rss/v1/news/category/tw_stock", "source": "cnyes"},
+    {"url": "https://technews.tw/feed/", "source": "technews"},
 ]
 
 
