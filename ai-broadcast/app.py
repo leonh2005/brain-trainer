@@ -6,11 +6,13 @@ from flask import Flask, jsonify, render_template, request
 
 app = Flask(__name__)
 
-# 每家的網頁版 URL 模板，{q} 會換成 URL-encode 後的問題。
-# 只放 ChatALL 沒有網頁版連接器的家；Gemini/Perplexity 由 ChatALL 負責。
+# 每家的網頁版 URL 模板，{q} 會換成 URL-encode 後的問題。四家的自動送出行為都實測過。
+# Gemini 官方不支援 URL 預填，改走 Google AI Mode（udm=50，同為 Gemini 驅動）。
 SERVICES = {
-    "chatgpt": {"name": "ChatGPT", "color": "#10a37f", "url": "https://chatgpt.com/?q={q}"},
-    "grok":    {"name": "Grok",    "color": "#1a1a1a", "url": "https://grok.com/?q={q}"},
+    "gemini":     {"name": "Gemini",     "color": "#4285f4", "url": "https://www.google.com/search?udm=50&q={q}"},
+    "chatgpt":    {"name": "ChatGPT",    "color": "#10a37f", "url": "https://chatgpt.com/?q={q}"},
+    "grok":       {"name": "Grok",       "color": "#1a1a1a", "url": "https://grok.com/?q={q}"},
+    "perplexity": {"name": "Perplexity", "color": "#20808d", "url": "https://www.perplexity.ai/search?q={q}"},
 }
 
 
@@ -41,4 +43,4 @@ def broadcast():
 
 
 if __name__ == "__main__":
-    app.run(port=5060)
+    app.run(port=5070)
