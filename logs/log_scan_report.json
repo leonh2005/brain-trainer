@@ -1,12 +1,12 @@
 {
-  "scanned_at": "2026-07-16 03:00:13",
-  "since": "2026-07-15 03:00:00",
+  "scanned_at": "2026-07-17 03:00:14",
+  "since": "2026-07-16 03:00:01",
   "results": {
     "市場儀表板": {
       "exists": true,
-      "errors": 48,
-      "last_error": "TypeError: unsupported operand type(s) for |: 'type' and 'NoneType'",
-      "fix": "尚無對應建議，需人工判斷"
+      "errors": 50,
+      "last_error": "BLS CUSR0000SA0L1E 失敗: HTTPSConnectionPool(host='api.bls.gov', port=443): Read timed out. (read timeout=20)",
+      "fix": "網路逾時 → 確認目標服務可達，或增加 timeout 設定"
     },
     "兔子照護": {
       "exists": true,
@@ -16,9 +16,9 @@
     },
     "motion-watcher": {
       "exists": true,
-      "errors": 7877,
-      "last_error": "2026-07-16 02:58:45,900 ERROR OpenAI 分析失敗 (第 3 次): Error code: 401 - {'error': {'message': 'Incorrect API key provided: sk-proj-********************************************************************************************************************************************************EM0A. You can find y",
-      "fix": "Session/Token 過期 → 重新登入對應網站或更新 API Key"
+      "errors": 6072,
+      "last_error": "[h264 @ 0xb3ecf6a00] error while decoding MB 157 3, bytestream 4503",
+      "fix": "尚無對應建議，需人工判斷"
     },
     "Cloudflare Tunnel": {
       "exists": true,
@@ -28,15 +28,15 @@
     },
     "財經新聞分析": {
       "exists": true,
-      "errors": 155,
-      "last_error": "2026-07-16 03:00:04,087 [WARNING] fetcher.reddit_fetcher: Reddit fetch failed: received 401 HTTP response",
-      "fix": "Session/Token 過期 → 重新登入對應網站或更新 API Key"
+      "errors": 154,
+      "last_error": "2026-07-17 02:45:39,367 [WARNING] fetcher.reddit_fetcher: Reddit fetch failed for r/investing: 429 Client Error: Too Many Requests for url: https://www.reddit.com/r/investing/hot/.rss",
+      "fix": "尚無對應建議，需人工判斷"
     },
     "川普監測": {
       "exists": true,
-      "errors": 912,
-      "last_error": "2026-07-15 11:55:04,122 WARNING 分析失敗：US cuts India tariff threat from 500% to 100% unde — 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reaso",
-      "fix": "尚無對應建議，需人工判斷"
+      "errors": 903,
+      "last_error": "ModuleNotFoundError: No module named 'google'",
+      "fix": "檔案或套件遺失 → 確認路徑或重新安裝 pip 套件"
     },
     "持倉新聞(台股)": {
       "exists": true,
@@ -88,8 +88,8 @@
     },
     "盤中監控": {
       "exists": true,
-      "errors": 130,
-      "last_error": "[backfill] 2408 失敗: Topic: api/v1/data/ticks, Corr: c21, Client: PYAPI/N124711691/0715/010002/717207/220.141.39.93, payload: {'token': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYmYiOjE3ODQwNzcyMDMsImV4cCI6MTc4NDE2MzYwMywic2ltdWxhdGlvbiI6ZmFsc2UsInBlcnNvbl9pZCI6Ik4xMjQ3MTE2OTEiLCJ2ZXJzaW9uIjoiMS4zLjI",
+      "errors": 131,
+      "last_error": "[backfill] 2408 失敗: Topic: api/v1/data/ticks, Corr: c21, Client: PYAPI/N124711691/0716/010003/416466/220.141.39.93, payload: {'token': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYmYiOjE3ODQxNjM2MDMsImV4cCI6MTc4NDI1MDAwMywic2ltdWxhdGlvbiI6ZmFsc2UsInBlcnNvbl9pZCI6Ik4xMjQ3MTE2OTEiLCJ2ZXJzaW9uIjoiMS4zLjI",
       "fix": "尚無對應建議，需人工判斷"
     },
     "蝦皮軟纖監測": {
@@ -112,7 +112,7 @@
     },
     "Claude週期監測": {
       "exists": true,
-      "errors": 377,
+      "errors": 417,
       "last_error": "google.genai.errors.ClientError: 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reason': 'API_KEY_INVALID', 'domain': 'googleapis.com', 'metad",
       "fix": "尚無對應建議，需人工判斷"
     },

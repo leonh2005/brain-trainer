@@ -1,32 +1,24 @@
-# Claude Handoff 20260716_2328
-> 自動生成於 2026-07-16 23:28
+# Claude Handoff 20260717_0441
+> 自動生成於 2026-07-17 04:41
 
 ## 未提交的檔案異動
 ```
 ? TradingAgents
- M chip-tracker/chip.db
+ M ai-broadcast/app.py
  m daily-stock-analysis
  M gemma_work/latest.md
- M last30days-web/README.md
- M last30days-web/app.py
- M news-analyzer/fetcher/ptt_fetcher.py
- M news-analyzer/fetcher/reddit_fetcher.py
- M news-analyzer/fetcher/rss_fetcher.py
- M news-analyzer/templates/index.html
- M news-analyzer/tests/test_reddit_fetcher.py
+ M logs/log_scan_report.json
  M rabbit-care/rabbit.db
  m stock-screener-ai
-?? ai-broadcast/
-?? last30days-web/.gitignore
 ```
 
 ## 近期 Commits
 ```
+aec4d32c chore: 自動同步 2026-07-17 01:40
 da209d94 chore: 自動同步 2026-07-16 20:40
 288b717f chore: 自動同步 2026-07-16 15:40
 fe813bd1 chore: 自動同步 2026-07-16 10:40
 3fec2573 chore: 自動同步 2026-07-16 05:40
-bad58fa3 chore: 自動同步 2026-07-16 00:40
 ```
 
 ## 給 Hermes 的備註
