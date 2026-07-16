@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="utf-8">
+<title>last30days 研究站</title>
+<style>
+  body { font: 15px -apple-system, "PingFang TC", sans-serif; background: #12121f; color: #e8e8f0;
+         max-width: 860px; margin: 0 auto; padding: 32px 20px; }
+  h1 { font-size: 22px; } h1 span { color: #7ec8ff; }
+  .runbox { display: flex; gap: 10px; margin: 20px 0; }
+  input[type=text] { flex: 1; padding: 10px 14px; border-radius: 8px; border: 1px solid #333;
+                     background: #1c1c2e; color: #eee; font-size: 15px; }
+  select, button { padding: 10px 14px; border-radius: 8px; border: 1px solid #333;
+                   background: #1c1c2e; color: #eee; font-size: 15px; }
+  button.go { background: #7ec8ff; color: #12121f; border: 0; cursor: pointer; font-weight: 600; }
+  button.go:disabled { opacity: .5; cursor: default; }
+  #progress { background: #1c1c2e; border-radius: 8px; padding: 12px 16px; margin: 12px 0;
+              font-family: monospace; font-size: 13px; color: #9ad; display: none; white-space: pre-wrap; }
+  #progress.error { color: #f88; }
+  .report { display: flex; align-items: center; gap: 12px; padding: 12px 16px; margin: 8px 0;
+            background: #1c1c2e; border-radius: 8px; }
+  .report a { color: #7ec8ff; text-decoration: none; flex: 1; }
+  .report .zh { font-size: 12px; color: #8f8; }
+  .report .time { font-size: 12px; color: #888; }
+  #filter { width: 100%; box-sizing: border-box; margin-bottom: 8px; }
+</style>
+</head>
+<body>
+<h1>/last30days <span>研究站</span></h1>
+
+<div class="runbox">
+  <input type="text" id="topic" placeholder="輸入研究主題，例如：台積電 CoWoS 擴產" onkeydown="if(event.key==='Enter')go()">
+  <select id="depth">
+    <option value="quick">快速</option>
+    <option value="deep">深入</option>
+  </select>
+  <button class="go" id="gobtn" onclick="go()" {% if running %}disabled{% endif %}>開始研究</button>
+</div>
+<div id="progress"></div>
+
+<h3>研究庫（{{ reports|length }}）</h3>
+{% if reports %}
+<input type="text" id="filter" placeholder="過濾…" oninput="doFilter()">
+{% endif %}
+<div id="list">
+  {% for r in reports %}
+  <div class="report" data-title="{{ r.title|lower }}">
+    <a href="/report/{{ r.name }}">{{ r.title }}</a>
+    {% if r.has_zh %}<span class="zh">中文版✓</span>{% endif %}
+    <span class="time">{{ r.mtime }}</span>
+  </div>
+  {% else %}
+  <p style="color:#888">還沒有報告，跑一個吧。</p>
+  {% endfor %}
+</div>
+
+<script>
+async function go() {
+  const topic = document.getElementById('topic').value.trim();
+  if (!topic) return;
+  const depth = document.getElementById('depth').value;
+  const btn = document.getElementById('gobtn');
+  const prog = document.getElementById('progress');
+  btn.disabled = true;
+  prog.style.display = 'block';
+  prog.className = '';
+  prog.textContent = '提交中…';
+  const resp = await fetch('/api/run', {
+    method: 'POST', headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({topic, depth}),
+  });
+  const data = await resp.json();
+  if (!resp.ok) { prog.className = 'error'; prog.textContent = data.error; btn.disabled = false; return; }
+  poll(data.job_id);
+}
+async function poll(id) {
+  const prog = document.getElementById('progress');
+  const timer = setInterval(async () => {
+    const r = await fetch('/api/status/' + id);
+    if (!r.ok) return;
+    const j = await r.json();
+    if (j.status === 'done') { clearInterval(timer); location.href = '/report/' + j.file; }
+    else if (j.status === 'error') {
+      clearInterval(timer);
+      prog.className = 'error';
+      prog.textContent = '失敗：' + j.error;
+      document.getElementById('gobtn').disabled = false;
+    } else prog.textContent = '[' + j.status + '] ' + j.topic + '\n' + (j.progress || '');
+  }, 2000);
+}
+function doFilter() {
+  const q = document.getElementById('filter').value.toLowerCase();
+  document.querySelectorAll('.report').forEach(el =>
+    el.style.display = el.dataset.title.includes(q) ? '' : 'none');
+}
+</script>
+</body>
+</html>
