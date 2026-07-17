@@ -1,6 +1,6 @@
 {
-  "scanned_at": "2026-07-17 03:00:14",
-  "since": "2026-07-16 03:00:01",
+  "scanned_at": "2026-07-18 03:00:14",
+  "since": "2026-07-17 03:00:01",
   "results": {
     "市場儀表板": {
       "exists": true,
@@ -16,8 +16,8 @@
     },
     "motion-watcher": {
       "exists": true,
-      "errors": 6072,
-      "last_error": "[h264 @ 0xb3ecf6a00] error while decoding MB 157 3, bytestream 4503",
+      "errors": 4619,
+      "last_error": "[h264 @ 0x9f8695f80] error while decoding MB 130 60, bytestream 67767",
       "fix": "尚無對應建議，需人工判斷"
     },
     "Cloudflare Tunnel": {
@@ -28,8 +28,8 @@
     },
     "財經新聞分析": {
       "exists": true,
-      "errors": 154,
-      "last_error": "2026-07-17 02:45:39,367 [WARNING] fetcher.reddit_fetcher: Reddit fetch failed for r/investing: 429 Client Error: Too Many Requests for url: https://www.reddit.com/r/investing/hot/.rss",
+      "errors": 150,
+      "last_error": "2026-07-18 02:45:40,333 [WARNING] fetcher.reddit_fetcher: Reddit fetch failed for r/investing: 429 Client Error: Too Many Requests for url: https://www.reddit.com/r/investing/hot/.rss",
       "fix": "尚無對應建議，需人工判斷"
     },
     "川普監測": {
@@ -88,8 +88,8 @@
     },
     "盤中監控": {
       "exists": true,
-      "errors": 131,
-      "last_error": "[backfill] 2408 失敗: Topic: api/v1/data/ticks, Corr: c21, Client: PYAPI/N124711691/0716/010003/416466/220.141.39.93, payload: {'token': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYmYiOjE3ODQxNjM2MDMsImV4cCI6MTc4NDI1MDAwMywic2ltdWxhdGlvbiI6ZmFsc2UsInBlcnNvbl9pZCI6Ik4xMjQ3MTE2OTEiLCJ2ZXJzaW9uIjoiMS4zLjI",
+      "errors": 132,
+      "last_error": "[backfill] 2408 失敗: Topic: api/v1/data/ticks, Corr: c21, Client: PYAPI/N124711691/0717/010003/783300/220.141.3.252, payload: {'token': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYmYiOjE3ODQyNTAwMDQsImV4cCI6MTc4NDMzNjQwNCwic2ltdWxhdGlvbiI6ZmFsc2UsInBlcnNvbl9pZCI6Ik4xMjQ3MTE2OTEiLCJ2ZXJzaW9uIjoiMS4zLjI",
       "fix": "尚無對應建議，需人工判斷"
     },
     "蝦皮軟纖監測": {
@@ -112,7 +112,7 @@
     },
     "Claude週期監測": {
       "exists": true,
-      "errors": 417,
+      "errors": 458,
       "last_error": "google.genai.errors.ClientError: 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reason': 'API_KEY_INVALID', 'domain': 'googleapis.com', 'metad",
       "fix": "尚無對應建議，需人工判斷"
     },
