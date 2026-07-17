@@ -1,0 +1,82 @@
+"""動作按鈕 job registry — 白名單制，只能執行此處列出的任務"""
+import subprocess
+import time
+
+CC = '/Users/steven/CCProject'
+FINMIND_PY = f'{CC}/finmind/venv/bin/python3'
+
+# id → 定義。cmd 類直接 subprocess；label 類走 launchctl kickstart
+JOBS = {
+    'swing-rerun': {
+        'name': '重跑隔日沖選股',
+        'cmd': [FINMIND_PY, f'{CC}/telebot/screener.py'],
+        'cwd': f'{CC}/telebot',
+        'log': f'{CC}/logs/screener.log',
+    },
+    'daytrade-rerun': {
+        'name': '重跑當沖選股',
+        'cmd': [FINMIND_PY, f'{CC}/finmind/daytrade_alert.py'],
+        'cwd': f'{CC}/finmind',
+        'log': f'{CC}/logs/daytrade.log',
+    },
+    'chip-update': {
+        'name': '更新籌碼資料',
+        'label': 'com.steven.chip-tracker-updater',
+        'log': f'{CC}/logs/chip-tracker-updater.log',
+    },
+    'market-rebuild': {
+        'name': '重建市場恐慌儀表板',
+        'label': 'com.steven.market-dashboard',
+        'log': f'{CC}/logs/market-dashboard.log',
+    },
+}
+
+_running: dict = {}  # id → {proc?, started}
+
+
+def list_jobs():
+    return [{'id': jid, 'name': j['name'], 'running': is_running(jid)} for jid, j in JOBS.items()]
+
+
+def is_running(jid: str) -> bool:
+    r = _running.get(jid)
+    if not r:
+        return False
+    proc = r.get('proc')
+    if proc is not None and proc.poll() is None:
+        return True
+    # launchctl 類無法追蹤 proc，以 60 秒內視為執行中
+    if proc is None and time.time() - r['started'] < 60:
+        return True
+    return False
+
+
+def run(jid: str):
+    job = JOBS.get(jid)
+    if job is None:
+        raise KeyError(jid)
+    if is_running(jid):
+        return {'started': False, 'reason': 'already running'}
+    if 'cmd' in job:
+        logf = open(job['log'], 'a')
+        proc = subprocess.Popen(job['cmd'], cwd=job.get('cwd'), stdout=logf, stderr=logf)
+        _running[jid] = {'proc': proc, 'started': time.time()}
+    else:
+        # 不加 -k：避免 kill 掉正在執行的更新作業（如籌碼更新需數分鐘）
+        subprocess.run(['launchctl', 'kickstart', f'gui/501/{job["label"]}'],
+                       capture_output=True, timeout=15)
+        _running[jid] = {'proc': None, 'started': time.time()}
+    return {'started': True}
+
+
+def status(jid: str):
+    job = JOBS.get(jid)
+    if job is None:
+        raise KeyError(jid)
+    tail = ''
+    try:
+        with open(job['log'], errors='replace') as f:
+            tail = ''.join(f.readlines()[-15:])
+    except OSError:
+        pass
+    return {'id': jid, 'name': job['name'], 'running': is_running(jid), 'log_tail': tail}
