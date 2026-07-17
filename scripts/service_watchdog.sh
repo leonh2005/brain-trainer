@@ -62,7 +62,38 @@ check_and_restart() {
   fi
 }
 
+# LaunchAgent(KeepAlive) 管理的服務：用 kickstart 重啟，不用 nohup 以免雙進程
+check_launchagent() {
+  local name="$1"
+  local port="$2"
+  local label="$3"
+  local lock_file="$LOCK_DIR/${name}.lock"
+
+  if is_port_up "$port"; then
+    [ -f "$lock_file" ] && rm -f "$lock_file"
+    return
+  fi
+  if [ -f "$lock_file" ]; then
+    local age=$(( $(date +%s) - $(stat -f %m "$lock_file" 2>/dev/null || echo 0) ))
+    [ "$age" -lt 1800 ] && return
+  fi
+  log "KICKSTART $name (port $port)"
+  touch "$lock_file"
+  launchctl kickstart -k "gui/$(id -u)/$label"
+  sleep 5
+  if is_port_up "$port"; then
+    log "OK $name 重啟成功"
+    send_telegram "✅ [Watchdog] $name (port $port) 已透過 launchctl 重啟"
+    rm -f "$lock_file"
+  else
+    log "FAIL $name 重啟失敗"
+    send_telegram "❌ [Watchdog] $name (port $port) 重啟失敗，請手動檢查"
+  fi
+}
+
 # ── 服務清單 ─────────────────────────────────────────────────────
+
+check_launchagent "command-center" 5950 "com.steven.command-center"
 
 check_and_restart "stock-screener"    5001 \
   "/opt/homebrew/bin/python3.14 app.py" \
