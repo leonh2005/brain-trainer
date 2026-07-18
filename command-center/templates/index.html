@@ -91,6 +91,10 @@ header{display:flex; align-items:center; gap:16px; margin-bottom:22px}
 .card-head .ic{font-size:14px}
 .card-head h3{font-size:12.5px; font-weight:600; color:var(--fg); letter-spacing:-.01em}
 .card-head .ts{margin-left:auto; font-size:10px; color:var(--faint); font-family:var(--mono)}
+.card-head .site-btn{margin-left:8px; color:var(--faint); text-decoration:none; font-size:13px; width:22px; height:22px; display:grid; place-items:center; border-radius:6px; transition:.15s; flex:none}
+.card-head .site-btn:hover{background:var(--bg-soft); color:var(--accent)}
+.card-head .ts + .site-btn{margin-left:8px}
+.card-head:has(.site-btn) .ts{margin-left:auto}
 .card-body{min-height:26px}
 .empty{color:var(--faint); font-size:12px; padding:6px 0}
 .err{color:var(--up); font-size:11px; font-family:var(--mono); word-break:break-all}
@@ -230,6 +234,9 @@ header{display:flex; align-items:center; gap:16px; margin-bottom:22px}
     <!-- 投組與生活 -->
     <div class="sec-label">投組與生活</div>
     <div class="grid" id="life"></div>
+
+    <div class="sec-label">🧰 離線工具箱（平常沒開著，需要時手動啟動）</div>
+    <div class="grid" id="tools"></div>
   </div>
 
   <!-- 聊天欄 -->
@@ -273,26 +280,26 @@ let tmr; function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('
 
 /* ── 訊號卡片定義 ── */
 const CARDS=[
-  {id:'swing',   ic:'🌙', title:'隔日沖候選', span:'', url:'/api/signals/swing', render:renderSwing},
-  {id:'daytrade',ic:'⚡', title:'當沖候選',   span:'', url:'/api/signals/daytrade', render:renderDaytrade},
-  {id:'intraday',ic:'🎯', title:'盤中主力訊號', span:'wide', url:'/api/signals/intraday', render:renderIntraday},
-  {id:'news',    ic:'📰', title:'新聞情緒',   span:'', url:'/api/signals/news', render:renderNews},
+  {id:'swing',   ic:'🌙', title:'隔日沖候選', span:'', url:'/api/signals/swing', render:renderSwing, site:'http://localhost:5500'},
+  {id:'daytrade',ic:'⚡', title:'當沖候選',   span:'', url:'/api/signals/daytrade', render:renderDaytrade, site:'http://localhost:5400'},
+  {id:'intraday',ic:'🎯', title:'盤中主力訊號', span:'wide', url:'/api/signals/intraday', render:renderIntraday, site:'http://localhost:5400'},
+  {id:'news',    ic:'📰', title:'新聞情緒',   span:'', url:'/api/signals/news', render:renderNews, site:'http://localhost:5300'},
   {id:'market',  ic:'🌡️', title:'市場恐慌指標', span:'wide', url:'/api/signals/market-fear', render:renderMarket},
-  {id:'chips',   ic:'📊', title:'籌碼追蹤',   span:'wide', url:'/api/signals/chips', render:renderChips},
+  {id:'chips',   ic:'📊', title:'籌碼追蹤',   span:'wide', url:'/api/signals/chips', render:renderChips, site:'http://localhost:5850'},
   {id:'ma',      ic:'📈', title:'均線警報',   span:'', url:'/api/signals/ma', render:renderMA},
 ];
 const LIFE=[
-  {id:'portfolio',ic:'💼', title:'投資組合', span:'wide', url:'/api/portfolio', render:renderPortfolio},
+  {id:'portfolio',ic:'💼', title:'投資組合', span:'wide', url:'/api/portfolio', render:renderPortfolio, site:'http://localhost:5800'},
   {id:'steamdeck',ic:'🎮', title:'Steam Deck OLED 二手', span:'wide', url:'/api/steamdeck', render:renderSteamdeck},
-  {id:'rabbit',   ic:'🐰', title:'兔子照護', span:'', url:'/api/life/rabbit', render:renderRabbit},
-  {id:'skill',    ic:'🌳', title:'技能樹',   span:'', url:'/api/life/skilltree', render:renderSkill},
+  {id:'rabbit',   ic:'🐰', title:'兔子照護', span:'', url:'/api/life/rabbit', render:renderRabbit, site:'http://localhost:5200'},
+  {id:'skill',    ic:'🌳', title:'技能樹',   span:'', url:'/api/life/skilltree', render:renderSkill, site:'http://localhost:5500'},
 ];
 
 function mount(container,defs){
   const wrap=$(container);
   defs.forEach(d=>{
     const c=el('div','card fade-in'+(d.span?' '+d.span:''));
-    c.innerHTML=`<div class="card-head"><span class="ic">${d.ic}</span><h3>${d.title}</h3><span class="ts" id="ts-${d.id}"></span></div><div class="card-body" id="cb-${d.id}"><div class="skel" style="width:70%"></div><div class="skel" style="width:45%"></div></div>`;
+    c.innerHTML=`<div class="card-head"><span class="ic">${d.ic}</span><h3>${d.title}</h3><span class="ts" id="ts-${d.id}"></span>${d.site?`<a class="site-btn" href="${d.site}" target="_blank" title="開啟服務網站">↗</a>`:''}</div><div class="card-body" id="cb-${d.id}"><div class="skel" style="width:70%"></div><div class="skel" style="width:45%"></div></div>`;
     wrap.appendChild(c);
     fetch(d.url).then(r=>r.json()).then(res=>{
       $('#ts-'+d.id).textContent=res.updated||'';
@@ -394,7 +401,7 @@ function renderMA(d){
     const code=m.key.split('_')[0], type=m.key.split('_')[1];
     const above=m.price>=m.ma;
     const row=el('div','row');
-    row.innerHTML=`<span class="tk">${code}</span><span class="mini" style="margin-left:6px">${type}</span><span class="spacer"></span><span class="chg ${above?'up':'down'}" style="font-size:11px">${above?'▲上':'▼下'} ${fmt(m.price)}</span><span class="mini" style="margin-left:8px">${m.at}</span>`;
+    row.innerHTML=`<span class="tk">${m.name||code}<span class="code">${code}</span></span><span class="mini" style="margin-left:6px">${type}</span><span class="spacer"></span><span class="chg ${above?'up':'down'}" style="font-size:11px">${above?'▲上':'▼下'} ${fmt(m.price)}</span><span class="mini" style="margin-left:8px">${m.at}</span>`;
     box.appendChild(row);
   });
   return box;
@@ -541,8 +548,21 @@ function askChat(prompt){
     }).catch(e=>{body.innerHTML=`<div class="who">AI 助理</div><span class="err">${e.message}</span>`;busy=false;$('#chat-st').textContent=''});
 }
 
+const TOOLS=[
+  {ic:'🤖', title:'TradingAgents 多Agent分析', desc:'多個 AI Agent 深度分析個股：技術面／基本面／新聞面＋多空辯論', site:'http://localhost:5500', how:'在 stock-screener-ai (5500) 的「多Agent深度分析」分頁使用'},
+  {ic:'📚', title:'tw-coverage 台股研究報告', desc:'1735 家台股公司研究報告，wikilink 供應鏈搜尋', path:'~/CCProject/tw-coverage/', how:'用 Obsidian 或編輯器開啟資料夾查閱'},
+];
+function mountTools(){
+  const wrap=$('#tools');
+  TOOLS.forEach(t=>{
+    const c=el('div','card fade-in');
+    c.innerHTML=`<div class="card-head"><span class="ic">${t.ic}</span><h3>${t.title}</h3>${t.site?`<a class="site-btn" href="${t.site}" target="_blank" title="開啟服務網站">↗</a>`:''}</div><div class="card-body"><div class="mini" style="line-height:1.7;color:var(--muted)">${t.desc}</div>${t.path?`<div class="mini" style="margin-top:8px">📁 ${t.path}</div>`:''}<div class="mini" style="margin-top:6px;color:var(--accent-soft)">▸ ${t.how}</div></div>`;
+    wrap.appendChild(c);
+  });
+}
 mount('#signals',CARDS);
 mount('#life',LIFE);
+mountTools();
 </script>
 </body>
 </html>
