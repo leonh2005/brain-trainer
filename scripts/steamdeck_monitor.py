@@ -68,6 +68,7 @@ def fetch_ruten():
         out[f"ruten_{it['id']}"] = {
             'source': '露天', 'name': name[:80], 'price': f"${price:,}",
             'seller': it.get('store_name') or it.get('user') or '',
+            'condition': '', 'posted_ts': it.get('post_time', 0) or 0,
             'url': f"https://www.ruten.com.tw/item/show?{it['id']}",
         }
     return out
@@ -93,9 +94,12 @@ def fetch_ptt():
             if any(w in t for w in PTT_SOLD):         # 排除已售出（＝無庫存）
                 continue
             mid = href.rstrip('.html').split('/')[-1]
+            # PTT 文章代碼 M.<epoch>.A.xxx → 上架時間
+            tsm = re.search(r'M\.(\d+)\.A', mid)
             out[f'ptt_{mid}'] = {
                 'source': f'PTT/{board}', 'name': t, 'price': '見內文',
-                'seller': '', 'url': f'https://www.ptt.cc{href}',
+                'seller': '', 'condition': '', 'posted_ts': int(tsm.group(1)) if tsm else 0,
+                'url': f'https://www.ptt.cc{href}',
             }
     return out
 
@@ -149,8 +153,10 @@ def main():
 
 
 def _persist(current):
+    # seen 記全部 uid（推播 dedup）；current 只留最新 5 筆給版面
     json.dump(list(current), open(SEEN_FILE, 'w'))
-    payload = {'updated': f'{datetime.now():%Y-%m-%d %H:%M}', 'items': list(current.values())}
+    top5 = sorted(current.values(), key=lambda x: x.get('posted_ts', 0), reverse=True)[:5]
+    payload = {'updated': f'{datetime.now():%Y-%m-%d %H:%M}', 'items': top5}
     json.dump(payload, open(CURRENT_FILE, 'w'), ensure_ascii=False)
 
 

@@ -1,29 +1,26 @@
-# Claude Handoff 20260718_0235
-> 自動生成於 2026-07-18 02:35
+# Claude Handoff 20260718_1055
+> 自動生成於 2026-07-18 10:55
 
 ## 未提交的檔案異動
 ```
 ? TradingAgents
  M chip-tracker/chip.db
+ M command-center/templates/index.html
  m daily-stock-analysis
- M gemma_work/latest.md
  M rabbit-care/rabbit.db
- M scripts/service_watchdog.sh
+ M scripts/steamdeck_carousell.py
+ M scripts/steamdeck_current.json
+ M scripts/steamdeck_monitor.py
  m stock-screener-ai
-?? command-center/
-?? scripts/steamdeck_carousell.py
-?? scripts/steamdeck_current.json
-?? scripts/steamdeck_monitor.py
-?? scripts/steamdeck_seen.json
 ```
 
 ## 近期 Commits
 ```
+f1bdf673 chore: 自動同步 2026-07-18 07:40
+3d18143a chore: 自動同步 2026-07-18 02:40
 d5cc8e36 chore: 自動同步 2026-07-17 21:40
 fbd3b1cb chore: 自動同步 2026-07-17 16:40
 12253580 chore: 自動同步 2026-07-17 11:40
-610316f0 chore: 自動同步 2026-07-17 06:40
-aec4d32c chore: 自動同步 2026-07-17 01:40
 ```
 
 ## 給 Hermes 的備註
