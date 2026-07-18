@@ -1,10 +1,10 @@
 {
-  "scanned_at": "2026-07-18 03:00:14",
-  "since": "2026-07-17 03:00:01",
+  "scanned_at": "2026-07-19 03:00:14",
+  "since": "2026-07-18 03:00:00",
   "results": {
     "市場儀表板": {
       "exists": true,
-      "errors": 50,
+      "errors": 51,
       "last_error": "BLS CUSR0000SA0L1E 失敗: HTTPSConnectionPool(host='api.bls.gov', port=443): Read timed out. (read timeout=20)",
       "fix": "網路逾時 → 確認目標服務可達，或增加 timeout 設定"
     },
@@ -16,8 +16,8 @@
     },
     "motion-watcher": {
       "exists": true,
-      "errors": 4619,
-      "last_error": "[h264 @ 0x9f8695f80] error while decoding MB 130 60, bytestream 67767",
+      "errors": 4737,
+      "last_error": "[h264 @ 0x9f8697480] error while decoding MB 131 1, bytestream 57837",
       "fix": "尚無對應建議，需人工判斷"
     },
     "Cloudflare Tunnel": {
@@ -28,8 +28,8 @@
     },
     "財經新聞分析": {
       "exists": true,
-      "errors": 150,
-      "last_error": "2026-07-18 02:45:40,333 [WARNING] fetcher.reddit_fetcher: Reddit fetch failed for r/investing: 429 Client Error: Too Many Requests for url: https://www.reddit.com/r/investing/hot/.rss",
+      "errors": 151,
+      "last_error": "2026-07-19 02:45:37,289 [WARNING] fetcher.reddit_fetcher: Reddit fetch failed for r/investing: 429 Client Error: Too Many Requests for url: https://www.reddit.com/r/investing/hot/.rss",
       "fix": "尚無對應建議，需人工判斷"
     },
     "川普監測": {
@@ -112,7 +112,7 @@
     },
     "Claude週期監測": {
       "exists": true,
-      "errors": 458,
+      "errors": 490,
       "last_error": "google.genai.errors.ClientError: 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reason': 'API_KEY_INVALID', 'domain': 'googleapis.com', 'metad",
       "fix": "尚無對應建議，需人工判斷"
     },

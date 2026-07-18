@@ -95,11 +95,28 @@ def intraday():
     return {'signals': signals[-20:] if is_today else [], 'last_check': last_check}, _mtime(p)
 
 
+_ma_names_cache = None
+
+def _ma_names():
+    """從 ma_monitor.py 的 STOCKS 定義解析 代碼→中文名（不 import，避免 shioaji 依賴）"""
+    global _ma_names_cache
+    if _ma_names_cache is None:
+        _ma_names_cache = {}
+        try:
+            txt = open(f'{CC}/scripts/ma_monitor.py').read()
+            for code, name in re.findall(r'"(\d{4})":\s*\("[^"]*",\s*"([^"]+)"\)', txt):
+                _ma_names_cache[code] = name
+        except OSError:
+            pass
+    return _ma_names_cache
+
+
 @_wrap
 def ma():
     p = f'{CC}/scripts/ma_monitor_state.json'
     state = _read_json(p)
-    items = [{'key': k, **v} for k, v in state.items()]
+    names = _ma_names()
+    items = [{'key': k, 'name': names.get(k.split('_')[0], ''), **v} for k, v in state.items()]
     return items, _mtime(p)
 
 

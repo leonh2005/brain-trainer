@@ -16,7 +16,6 @@ VM_SSH_KEY = os.path.expanduser("~/.ssh/oracle_line_bot")
 
 # ── 本地 Web 服務 ────────────────────────────────────────────
 LOCAL_SERVICES = [
-    {"name": "banini-tracker",      "port": 3099, "url": "http://localhost:3099", "watchdog": True},
     {"name": "stock-screener",      "port": 5001, "url": "http://localhost:5001", "watchdog": True},
     {"name": "ai-compare",          "port": 5050, "url": "http://localhost:5050", "watchdog": False},
     {"name": "stock_analyzer",      "port": 5100, "url": "http://localhost:5100", "watchdog": False},
@@ -25,7 +24,6 @@ LOCAL_SERVICES = [
     {"name": "news-analyzer",       "port": 5300, "url": "http://localhost:5300", "watchdog": True},
     {"name": "daytrade-replay",     "port": 5400, "url": "http://localhost:5400", "watchdog": True},
     {"name": "stock-screener-ai",   "port": 5500, "url": "http://localhost:5500", "watchdog": True},
-    {"name": "timesfm",             "port": 5550, "url": "http://localhost:5550", "watchdog": True},
     {"name": "dashboard",           "port": 5600, "url": "http://localhost:5600", "watchdog": True},
     {"name": "dsa-webui",           "port": 5650, "url": "http://localhost:5650", "watchdog": True},
     {"name": "kelly-fibonacci",     "port": 5700, "url": "http://localhost:5700", "watchdog": True},
