@@ -6,6 +6,33 @@ import re
 import shutil
 import sqlite3
 import tempfile
+import time
+
+_COND = {'like new': '近全新', 'brand new': '全新', 'used': '二手',
+         'well used': '使用痕跡多', 'heavily used': '重度使用'}
+_UNIT = {'second': 1, 'minute': 60, 'hour': 3600, 'day': 86400,
+         'week': 604800, 'month': 2592000, 'year': 31536000}
+_UNIT_ZH = {'秒': 1, '分鐘': 60, '小時': 3600, '天': 86400,
+            '週': 604800, '個月': 2592000, '月': 2592000, '年': 31536000}
+
+
+def _cond_zh(s):
+    return _COND.get(s.strip().lower(), s.strip())
+
+
+def _rel_to_ts(s):
+    """'17 小時前' / '17 hours ago' → epoch"""
+    now = time.time()
+    s = s.strip()
+    if '昨天' in s or 'yesterday' in s.lower():
+        return now - 86400
+    m = re.match(r'(\d+)\s*(秒|分鐘|小時|天|週|個月|月|年)前', s)
+    if m:
+        return now - int(m.group(1)) * _UNIT_ZH[m.group(2)]
+    m = re.match(r'(\d+)\s+(\w+?)s?\s+ago', s, re.I)
+    if m:
+        return now - int(m.group(1)) * _UNIT.get(m.group(2).lower(), 0)
+    return now
 
 SEARCH_URL = 'https://tw.carousell.com/search/steam%20deck%20oled?sort_by=3'
 MIN_PRICE = 15000
@@ -59,12 +86,18 @@ def fetch():
         page.goto(SEARCH_URL, wait_until='domcontentloaded', timeout=40000)
         page.wait_for_timeout(4000)
         cards = page.evaluate("""() => {
-            const r = [];
-            document.querySelectorAll('a[href*="/p/"]').forEach(a => {
-                const t = a.innerText.trim();
-                if (t && /deck/i.test(t)) r.push({href:a.getAttribute('href'), text:t.replace(/\\n+/g,' | ')});
-            });
-            return [...new Map(r.map(c=>[c.href.split('?')[0],c])).values()];
+            const out = [], seen = new Set();
+            for (const a of document.querySelectorAll('a[href*="/p/"]')) {
+                if (!/deck/i.test(a.innerText)) continue;
+                const href = a.getAttribute('href').split('?')[0];
+                if (seen.has(href)) continue;
+                seen.add(href);
+                let card = a;
+                while (card.parentElement && card.parentElement.querySelectorAll('a[href*="/p/"]').length === 1) card = card.parentElement;
+                const tm = card.innerText.match(/(\\d+\\s*(?:秒|分鐘|小時|天|週|個月|月|年)前|昨天|\\d+\\s+(?:second|minute|hour|day|week|month|year)s?\\s+ago|yesterday)/i);
+                out.push({href, text: a.innerText.replace(/\\n+/g,' | '), posted: tm ? tm[1] : ''});
+            }
+            return out;
         }""")
         browser.close()
 
@@ -73,7 +106,7 @@ def fetch():
         low = text.lower()
         if 'deck' not in low or 'oled' not in low:
             continue
-        if 'sold' in low:                       # 已售出＝無庫存
+        if 'sold' in low or '已售' in text or '售出' in text:   # 已售出＝無庫存
             continue
         if any(w in low for w in EXCLUDE):
             continue
@@ -81,9 +114,12 @@ def fetch():
         if price < MIN_PRICE:
             continue
         pid = c['href'].split('?')[0].rstrip('/').split('-')[-1]
-        title = text.split(' | ')[0][:80]
+        parts = text.split(' | ')
+        title = parts[0][:80]
+        condition = _cond_zh(parts[2]) if len(parts) >= 3 else ''
         out[f'carousell_{pid}'] = {
             'source': '旋轉', 'name': title, 'price': f'${price:,}', 'seller': '',
+            'condition': condition, 'posted_ts': _rel_to_ts(c['posted']) if c['posted'] else time.time(),
             'url': f"https://tw.carousell.com{c['href'].split('?')[0]}",
         }
     return out

@@ -260,6 +260,7 @@ header{display:flex; align-items:center; gap:16px; margin-bottom:22px}
 <script>
 const $=s=>document.querySelector(s), el=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!=null)e.innerHTML=h;return e};
 const fmt=n=>n==null?'—':(typeof n==='number'?n.toLocaleString('en-US',{maximumFractionDigits:2}):n);
+const ago=ts=>{if(!ts)return'';const s=Date.now()/1000-ts;if(s<3600)return Math.max(1,Math.floor(s/60))+'分前';if(s<86400)return Math.floor(s/3600)+'小時前';if(s<2592000)return Math.floor(s/86400)+'天前';return Math.floor(s/2592000)+'個月前'};
 const chgCls=v=>v>0?'up':(v<0?'down':'');
 const arrow=v=>v>0?'▲':(v<0?'▼':'·');
 
@@ -430,7 +431,7 @@ function renderRabbit(d){
   return box;
 }
 function renderSteamdeck(d){
-  const arr=Array.isArray(d)?d:[];
+  const arr=(Array.isArray(d)?d:[]).slice(0,5);
   if(!arr.length)return el('div','empty','目前無符合標的（≥$15,000 且有庫存）');
   const box=el('div');
   const srcColor={'旋轉':'var(--accent)','露天':'var(--sky)'};
@@ -438,9 +439,11 @@ function renderSteamdeck(d){
     const row=el('div','row');
     const src=it.source.split('/')[0];
     const col=srcColor[src]||'var(--faint)';
+    const meta=[it.condition, ago(it.posted_ts)].filter(Boolean).join(' · ');
     row.innerHTML=`<a href="${it.url}" target="_blank" style="text-decoration:none;color:inherit;display:flex;align-items:center;gap:8px;flex:1;min-width:0">`+
       `<span class="badge" style="background:${col}1e;color:${col};flex:none">${src}</span>`+
       `<span class="tk" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${it.name}</span>`+
+      (meta?`<span class="mini" style="flex:none">${meta}</span>`:'')+
       `<span class="spacer"></span>`+
       `<span class="chg up" style="font-size:12px;flex:none">${it.price}</span></a>`;
     box.appendChild(row);
