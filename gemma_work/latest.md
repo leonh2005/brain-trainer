@@ -1,34 +1,23 @@
-# Claude Handoff 20260720_1439
-> 自動生成於 2026-07-20 14:39
+# Claude Handoff 20260720_1632
+> 自動生成於 2026-07-20 16:32
 
 ## 未提交的檔案異動
 ```
 ? TradingAgents
- M chip-tracker/app.py
  M chip-tracker/chip.db
- M command-center/jobs.py
- M command-center/templates/index.html
  m daily-stock-analysis
  M gemma_work/latest.md
- M market-dashboard/bb_cache.json
- M market-dashboard/index.html
- M market-dashboard/margin_cache.json
- M market-dashboard/sp_state.json
- M news-analyzer/trump_seen.json
  M rabbit-care/rabbit.db
- M scripts/steamdeck_current.json
- M scripts/steamdeck_seen.json
- m stock-screener-ai
-?? hermes-config/
+ M stock-screener-ai
 ```
 
 ## 近期 Commits
 ```
+d26e86eb feat: 市場恐慌指標卡片加上儀表板連結按鈕
+f04a08f2 chore: 自動同步 2026-07-20 14:40
 0519caa8 chore: 自動同步 2026-07-20 09:40
 1e41e420 chore: 自動同步 2026-07-20 04:40
 5785b1c0 chore: 自動同步 2026-07-19 23:40
-4c9dc31b chore: 自動同步 2026-07-19 18:40
-d49c9135 chore: 自動同步 2026-07-19 13:40
 ```
 
 ## 給 Hermes 的備註
