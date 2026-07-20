@@ -1,10 +1,11 @@
 """AI 指揮中心 — 統一入口儀表板（port 5950，對既有服務全唯讀）"""
 from fastapi import FastAPI, HTTPException
-from fastapi.responses import HTMLResponse, StreamingResponse
+from fastapi.responses import HTMLResponse, StreamingResponse, FileResponse
 from fastapi.templating import Jinja2Templates
 from fastapi import Request
 from pydantic import BaseModel
 import uvicorn
+import os
 
 import agent as agent_mod
 import jobs as jobs_mod
@@ -17,6 +18,15 @@ templates = Jinja2Templates(directory='templates')
 @app.get('/api/health')
 def health():
     return {'status': 'ok', 'service': 'command-center'}
+
+
+@app.get('/market-dashboard')
+def market_dashboard():
+    """市場恐慌儀表板靜態報告（每日 07:30 由 market-dashboard 服務產生）。"""
+    path = f'{sources.CC}/market-dashboard/index.html'
+    if not os.path.exists(path):
+        raise HTTPException(404, '市場恐慌儀表板尚未產生')
+    return FileResponse(path)
 
 
 @app.get('/api/signals/{name}')
