@@ -1,6 +1,6 @@
 {
-  "scanned_at": "2026-07-20 03:00:14",
-  "since": "2026-07-19 03:00:00",
+  "scanned_at": "2026-07-21 03:00:14",
+  "since": "2026-07-20 03:00:00",
   "results": {
     "市場儀表板": {
       "exists": true,
@@ -16,8 +16,8 @@
     },
     "motion-watcher": {
       "exists": true,
-      "errors": 4883,
-      "last_error": "[h264 @ 0x9f8695c00] error while decoding MB 0 61, bytestream 2772",
+      "errors": 5112,
+      "last_error": "[h264 @ 0x9f6f04000] error while decoding MB 0 34, bytestream 103571",
       "fix": "尚無對應建議，需人工判斷"
     },
     "Cloudflare Tunnel": {
@@ -28,8 +28,8 @@
     },
     "財經新聞分析": {
       "exists": true,
-      "errors": 152,
-      "last_error": "2026-07-20 02:45:39,101 [WARNING] fetcher.reddit_fetcher: Reddit fetch failed for r/investing: 429 Client Error: Too Many Requests for url: https://www.reddit.com/r/investing/hot/.rss",
+      "errors": 154,
+      "last_error": "2026-07-21 02:45:37,633 [WARNING] fetcher.reddit_fetcher: Reddit fetch failed for r/investing: 429 Client Error: Too Many Requests for url: https://www.reddit.com/r/investing/hot/.rss",
       "fix": "尚無對應建議，需人工判斷"
     },
     "川普監測": {
@@ -40,9 +40,9 @@
     },
     "持倉新聞(台股)": {
       "exists": true,
-      "errors": 0,
-      "last_error": null,
-      "fix": null
+      "errors": 4,
+      "last_error": "2026-07-20 08:30:13,931 WARNING 集保大戶資料失敗 2317：HTTPSConnectionPool(host='www.tdcc.com.tw', port=443): Max retries exceeded with url: /smWeb/QryStockAjax.do (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Missing Subject Key Identifier (_ssl",
+      "fix": "Port 被佔用或服務未啟動 → 檢查 LaunchAgent 是否正常載入"
     },
     "持倉新聞(美股)": {
       "exists": true,
@@ -88,8 +88,8 @@
     },
     "盤中監控": {
       "exists": true,
-      "errors": 132,
-      "last_error": "[backfill] 2408 失敗: Topic: api/v1/data/ticks, Corr: c21, Client: PYAPI/N124711691/0717/010003/783300/220.141.3.252, payload: {'token': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYmYiOjE3ODQyNTAwMDQsImV4cCI6MTc4NDMzNjQwNCwic2ltdWxhdGlvbiI6ZmFsc2UsInBlcnNvbl9pZCI6Ik4xMjQ3MTE2OTEiLCJ2ZXJzaW9uIjoiMS4zLjI",
+      "errors": 137,
+      "last_error": "[snapshot] 失敗: Topic: api/v1/data/snapshots, Corr: c44, Client: PYAPI/N124711691/0720/010003/194895/220.141.42.155, payload: {'token': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYmYiOjE3ODQ1MDkyMDMsImV4cCI6MTc4NDU5NTYwMywic2ltdWxhdGlvbiI6ZmFsc2UsInBlcnNvbl9pZCI6Ik4xMjQ3MTE2OTEiLCJ2ZXJzaW9uIjoiMS4zLjI",
       "fix": "尚無對應建議，需人工判斷"
     },
     "蝦皮軟纖監測": {
@@ -112,7 +112,7 @@
     },
     "Claude週期監測": {
       "exists": true,
-      "errors": 530,
+      "errors": 570,
       "last_error": "google.genai.errors.ClientError: 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reason': 'API_KEY_INVALID', 'domain': 'googleapis.com', 'metad",
       "fix": "尚無對應建議，需人工判斷"
     },
