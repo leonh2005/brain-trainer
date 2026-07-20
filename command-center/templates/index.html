@@ -387,7 +387,7 @@ function renderChips(d){
   hs.slice(0,7).forEach(h=>{
     const row=el('div','row');
     const fn=h.foreign_net;
-    row.innerHTML=`<span class="tk">${h.name||''}<span class="code">${h.code}</span></span><span class="chg ${chgCls(h.change_pct)}" style="margin-left:8px;font-size:11px">${arrow(h.change_pct)}${fmt(h.change_pct)}%</span><span class="spacer"></span><span class="mini">外資 <b style="color:${fn>0?'var(--up)':'var(--down)'}">${fn>0?'+':''}${fmt(fn)}</b></span>`;
+    row.innerHTML=`<span class="tk">${h.name||''}<span class="code">${h.code}</span></span><span class="mini" style="margin-left:8px;font-weight:600;color:var(--fg)">${h.close!=null?fmt(h.close):'—'}</span><span class="chg ${chgCls(h.change_pct)}" style="margin-left:6px;font-size:11px">${arrow(h.change_pct)}${fmt(h.change_pct)}%</span><span class="spacer"></span><span class="mini">外資 <b style="color:${fn>0?'var(--up)':'var(--down)'}">${fn>0?'+':''}${fmt(fn)}</b></span>`;
     box.appendChild(row);
   });
   return box;
