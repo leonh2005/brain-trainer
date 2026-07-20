@@ -1,9 +1,18 @@
 """動作按鈕 job registry — 白名單制，只能執行此處列出的任務"""
+import os
+import socket
 import subprocess
 import time
 
 CC = '/Users/steven/CCProject'
 FINMIND_PY = f'{CC}/finmind/venv/bin/python3'
+COMFY = '/Volumes/1TOWC/ComfyUI'
+
+
+def _port_up(port: int) -> bool:
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.settimeout(0.5)
+        return s.connect_ex(('127.0.0.1', port)) == 0
 
 # id → 定義。cmd 類直接 subprocess；label 類走 launchctl kickstart
 JOBS = {
@@ -29,6 +38,14 @@ JOBS = {
         'label': 'com.steven.market-dashboard',
         'log': f'{CC}/logs/market-dashboard.log',
     },
+    'comfyui': {
+        'name': '啟動 ComfyUI（AI 影片）',
+        'server': [f'{COMFY}/venv/bin/python', 'main.py'],
+        'cwd': COMFY,
+        'port': 8188,
+        'requires': COMFY,          # 外接硬碟目錄，未掛載則不啟動
+        'log': f'{CC}/logs/comfyui.log',
+    },
 }
 
 _running: dict = {}  # id → {proc?, started}
@@ -39,6 +56,10 @@ def list_jobs():
 
 
 def is_running(jid: str) -> bool:
+    job = JOBS.get(jid, {})
+    # server 類：以 port 是否在聽判斷（跨進程可靠）
+    if 'server' in job:
+        return _port_up(job['port'])
     r = _running.get(jid)
     if not r:
         return False
@@ -57,7 +78,16 @@ def run(jid: str):
         raise KeyError(jid)
     if is_running(jid):
         return {'started': False, 'reason': 'already running'}
-    if 'cmd' in job:
+    if 'server' in job:
+        # 外接硬碟服務：先確認掛載
+        if not os.path.isdir(job['requires']):
+            return {'started': False, 'reason': '外接硬碟未掛載，請插上 1TOWC'}
+        logf = open(job['log'], 'a')
+        # start_new_session：脫離 command-center，服務可獨立常駐
+        subprocess.Popen(job['server'], cwd=job['cwd'], stdout=logf, stderr=logf,
+                         start_new_session=True)
+        _running[jid] = {'proc': None, 'started': time.time()}
+    elif 'cmd' in job:
         logf = open(job['log'], 'a')
         proc = subprocess.Popen(job['cmd'], cwd=job.get('cwd'), stdout=logf, stderr=logf)
         _running[jid] = {'proc': proc, 'started': time.time()}
