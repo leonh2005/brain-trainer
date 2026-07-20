@@ -204,25 +204,30 @@ def api_quotes():
     finally:
         conn.close()
 
+    global _sj_api
     result = {}
-    try:
-        api = _get_shioaji()
-        contracts = []
-        for c in codes:
-            ct = api.Contracts.Stocks.TSE.get(c) or api.Contracts.Stocks.OTC.get(c)
-            if ct is not None:
-                contracts.append(ct)
-        for snap in api.snapshots(contracts):
-            price = float(snap.close)
-            prev = price - float(snap.change_price)
-            result[snap.code] = {
-                "price": price,
-                "change_pct": round(float(snap.change_price) / prev * 100, 2) if prev else None,
-                "ts": int(snap.ts // 1_000_000_000),
-                "delayed": False,
-            }
-    except Exception as e:
-        app.logger.warning("Shioaji 即時報價失敗: %s", e)
+    # Shioaji session token 約 24h 過期（401 Token is expired）→ 重置 singleton 重登一次
+    for attempt in (1, 2):
+        try:
+            api = _get_shioaji()
+            contracts = []
+            for c in codes:
+                ct = api.Contracts.Stocks.TSE.get(c) or api.Contracts.Stocks.OTC.get(c)
+                if ct is not None:
+                    contracts.append(ct)
+            for snap in api.snapshots(contracts):
+                price = float(snap.close)
+                prev = price - float(snap.change_price)
+                result[snap.code] = {
+                    "price": price,
+                    "change_pct": round(float(snap.change_price) / prev * 100, 2) if prev else None,
+                    "ts": int(snap.ts // 1_000_000_000),
+                    "delayed": False,
+                }
+            break
+        except Exception as e:
+            app.logger.warning("Shioaji 即時報價失敗(第%d次): %s", attempt, e)
+            _sj_api = None
 
     # Shioaji 每日流量配額（500MB）耗盡時 snapshots 回空 → yfinance 延遲報價備援
     missing = [c for c in codes if c not in result]

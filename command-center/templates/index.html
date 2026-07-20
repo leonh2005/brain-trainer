@@ -483,8 +483,8 @@ fetch('/api/health-all').then(r=>r.json()).then(res=>{
 document.querySelectorAll('#actions .btn[data-job]').forEach(b=>{
   b.addEventListener('click',()=>runJob(b));
 });
-function runJob(btn){
-  const id=btn.dataset.job;
+function runJob(btn, jobId){
+  const id=jobId||btn.dataset.job;
   btn.disabled=true;btn.classList.add('busy');const orig=btn.innerHTML;btn.innerHTML=btn.innerHTML.replace(/^(<span.*?<\/span>)?.*/,'$1 執行中…');
   fetch(`/api/jobs/${id}/run`,{method:'POST'}).then(r=>r.json()).then(res=>{
     toast(res.started?'✅ 已觸發，稍候查看結果':('⚠️ '+(res.reason||'未啟動')));
@@ -549,6 +549,7 @@ function askChat(prompt){
 }
 
 const TOOLS=[
+  {ic:'🎬', title:'ComfyUI（AI 影片生成）', desc:'本地 LTX Video 文生／圖生影片，裝在外接硬碟 1TOWC', site:'http://localhost:8188', launch:'comfyui', how:'按「啟動」開服務，約 15 秒後點 ↗ 開介面（需插著 1TOWC 硬碟）'},
   {ic:'🤖', title:'TradingAgents 多Agent分析', desc:'多個 AI Agent 深度分析個股：技術面／基本面／新聞面＋多空辯論', site:'http://localhost:5500', how:'在 stock-screener-ai (5500) 的「多Agent深度分析」分頁使用'},
   {ic:'📚', title:'tw-coverage 台股研究報告', desc:'1735 家台股公司研究報告，wikilink 供應鏈搜尋', path:'~/CCProject/tw-coverage/', how:'用 Obsidian 或編輯器開啟資料夾查閱'},
 ];
@@ -556,9 +557,10 @@ function mountTools(){
   const wrap=$('#tools');
   TOOLS.forEach(t=>{
     const c=el('div','card fade-in');
-    c.innerHTML=`<div class="card-head"><span class="ic">${t.ic}</span><h3>${t.title}</h3>${t.site?`<a class="site-btn" href="${t.site}" target="_blank" title="開啟服務網站">↗</a>`:''}</div><div class="card-body"><div class="mini" style="line-height:1.7;color:var(--muted)">${t.desc}</div>${t.path?`<div class="mini" style="margin-top:8px">📁 ${t.path}</div>`:''}<div class="mini" style="margin-top:6px;color:var(--accent-soft)">▸ ${t.how}</div></div>`;
+    c.innerHTML=`<div class="card-head"><span class="ic">${t.ic}</span><h3>${t.title}</h3>${t.site?`<a class="site-btn" href="${t.site}" target="_blank" title="開啟服務網站">↗</a>`:''}</div><div class="card-body"><div class="mini" style="line-height:1.7;color:var(--muted)">${t.desc}</div>${t.path?`<div class="mini" style="margin-top:8px">📁 ${t.path}</div>`:''}<div class="mini" style="margin-top:6px;color:var(--accent-soft)">▸ ${t.how}</div>${t.launch?`<button class="btn" data-tool-job="${t.launch}" style="margin-top:11px"><span class="k">▶</span>啟動</button>`:''}</div>`;
     wrap.appendChild(c);
   });
+  wrap.querySelectorAll('.btn[data-tool-job]').forEach(b=>b.addEventListener('click',()=>runJob(b, b.dataset.toolJob)));
 }
 mount('#signals',CARDS);
 mount('#life',LIFE);
