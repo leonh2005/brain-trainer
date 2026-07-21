@@ -1,6 +1,6 @@
 {
-  "scanned_at": "2026-07-21 03:00:14",
-  "since": "2026-07-20 03:00:00",
+  "scanned_at": "2026-07-22 03:00:14",
+  "since": "2026-07-21 03:00:00",
   "results": {
     "市場儀表板": {
       "exists": true,
@@ -16,8 +16,8 @@
     },
     "motion-watcher": {
       "exists": true,
-      "errors": 5112,
-      "last_error": "[h264 @ 0x9f6f04000] error while decoding MB 0 34, bytestream 103571",
+      "errors": 5236,
+      "last_error": "[h264 @ 0x9f6f04e00] error while decoding MB 150 8, bytestream -5",
       "fix": "尚無對應建議，需人工判斷"
     },
     "Cloudflare Tunnel": {
@@ -28,21 +28,21 @@
     },
     "財經新聞分析": {
       "exists": true,
-      "errors": 154,
-      "last_error": "2026-07-21 02:45:37,633 [WARNING] fetcher.reddit_fetcher: Reddit fetch failed for r/investing: 429 Client Error: Too Many Requests for url: https://www.reddit.com/r/investing/hot/.rss",
+      "errors": 153,
+      "last_error": "2026-07-22 02:45:37,904 [WARNING] fetcher.reddit_fetcher: Reddit fetch failed for r/investing: 429 Client Error: Too Many Requests for url: https://www.reddit.com/r/investing/hot/.rss",
       "fix": "尚無對應建議，需人工判斷"
     },
     "川普監測": {
       "exists": true,
-      "errors": 903,
-      "last_error": "ModuleNotFoundError: No module named 'google'",
-      "fix": "檔案或套件遺失 → 確認路徑或重新安裝 pip 套件"
+      "errors": 904,
+      "last_error": "2026-07-21 11:55:04,135 WARNING 分析失敗：investingLive Asia-Pacific market moving news: Tru — 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reaso",
+      "fix": "尚無對應建議，需人工判斷"
     },
     "持倉新聞(台股)": {
       "exists": true,
-      "errors": 4,
-      "last_error": "2026-07-20 08:30:13,931 WARNING 集保大戶資料失敗 2317：HTTPSConnectionPool(host='www.tdcc.com.tw', port=443): Max retries exceeded with url: /smWeb/QryStockAjax.do (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Missing Subject Key Identifier (_ssl",
-      "fix": "Port 被佔用或服務未啟動 → 檢查 LaunchAgent 是否正常載入"
+      "errors": 0,
+      "last_error": null,
+      "fix": null
     },
     "持倉新聞(美股)": {
       "exists": true,
@@ -88,8 +88,8 @@
     },
     "盤中監控": {
       "exists": true,
-      "errors": 137,
-      "last_error": "[snapshot] 失敗: Topic: api/v1/data/snapshots, Corr: c44, Client: PYAPI/N124711691/0720/010003/194895/220.141.42.155, payload: {'token': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYmYiOjE3ODQ1MDkyMDMsImV4cCI6MTc4NDU5NTYwMywic2ltdWxhdGlvbiI6ZmFsc2UsInBlcnNvbl9pZCI6Ik4xMjQ3MTE2OTEiLCJ2ZXJzaW9uIjoiMS4zLjI",
+      "errors": 141,
+      "last_error": "Response Code: 0 | Event Code: 12 | Info: TCP: Could not read from socket 10, error = Connection reset by peer (54) | Event: Session reconnecting",
       "fix": "尚無對應建議，需人工判斷"
     },
     "蝦皮軟纖監測": {
@@ -112,7 +112,7 @@
     },
     "Claude週期監測": {
       "exists": true,
-      "errors": 570,
+      "errors": 610,
       "last_error": "google.genai.errors.ClientError: 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reason': 'API_KEY_INVALID', 'domain': 'googleapis.com', 'metad",
       "fix": "尚無對應建議，需人工判斷"
     },
