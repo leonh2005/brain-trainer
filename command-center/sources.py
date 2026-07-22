@@ -215,8 +215,8 @@ def skilltree():
 
 
 @_wrap
-def steamdeck():
-    p = f'{CC}/scripts/steamdeck_current.json'
+def hay():
+    p = f'{CC}/scripts/hay_current.json'
     d = _read_json(p)
     return d.get('items', []), d.get('updated', _mtime(p))
 
