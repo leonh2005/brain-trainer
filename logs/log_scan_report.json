@@ -1,6 +1,6 @@
 {
-  "scanned_at": "2026-07-22 03:00:14",
-  "since": "2026-07-21 03:00:00",
+  "scanned_at": "2026-07-23 03:00:14",
+  "since": "2026-07-22 03:00:00",
   "results": {
     "市場儀表板": {
       "exists": true,
@@ -16,8 +16,8 @@
     },
     "motion-watcher": {
       "exists": true,
-      "errors": 5236,
-      "last_error": "[h264 @ 0x9f6f04e00] error while decoding MB 150 8, bytestream -5",
+      "errors": 5419,
+      "last_error": "[h264 @ 0x9f591a300] error while decoding MB 43 47, bytestream 1965",
       "fix": "尚無對應建議，需人工判斷"
     },
     "Cloudflare Tunnel": {
@@ -28,14 +28,14 @@
     },
     "財經新聞分析": {
       "exists": true,
-      "errors": 153,
-      "last_error": "2026-07-22 02:45:37,904 [WARNING] fetcher.reddit_fetcher: Reddit fetch failed for r/investing: 429 Client Error: Too Many Requests for url: https://www.reddit.com/r/investing/hot/.rss",
+      "errors": 152,
+      "last_error": "2026-07-23 02:45:38,056 [WARNING] fetcher.reddit_fetcher: Reddit fetch failed for r/investing: 429 Client Error: Too Many Requests for url: https://www.reddit.com/r/investing/hot/.rss",
       "fix": "尚無對應建議，需人工判斷"
     },
     "川普監測": {
       "exists": true,
       "errors": 904,
-      "last_error": "2026-07-21 11:55:04,135 WARNING 分析失敗：investingLive Asia-Pacific market moving news: Tru — 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reaso",
+      "last_error": "2026-07-22 13:10:03,712 WARNING 分析失敗：Trump's push for American-made AI chips hits TSMC' — 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reaso",
       "fix": "尚無對應建議，需人工判斷"
     },
     "持倉新聞(台股)": {
@@ -88,8 +88,8 @@
     },
     "盤中監控": {
       "exists": true,
-      "errors": 141,
-      "last_error": "Response Code: 0 | Event Code: 12 | Info: TCP: Could not read from socket 10, error = Connection reset by peer (54) | Event: Session reconnecting",
+      "errors": 197,
+      "last_error": "[snapshot] 失敗: Topic: api/v1/data/snapshots, Corr: c275, Client: PYAPI/N124711691/0722/010003/339677/220.141.42.155, payload: {'token': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYmYiOjE3ODQ2ODIwMDMsImV4cCI6MTc4NDc2ODQwMywic2ltdWxhdGlvbiI6ZmFsc2UsInBlcnNvbl9pZCI6Ik4xMjQ3MTE2OTEiLCJ2ZXJzaW9uIjoiMS4zLj",
       "fix": "尚無對應建議，需人工判斷"
     },
     "蝦皮軟纖監測": {
@@ -112,7 +112,7 @@
     },
     "Claude週期監測": {
       "exists": true,
-      "errors": 610,
+      "errors": 650,
       "last_error": "google.genai.errors.ClientError: 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reason': 'API_KEY_INVALID', 'domain': 'googleapis.com', 'metad",
       "fix": "尚無對應建議，需人工判斷"
     },
