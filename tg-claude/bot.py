@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import os
+import time
 import logging
 import asyncio
 import anthropic
@@ -17,6 +18,12 @@ client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
 
 # 每個 chat 的對話歷史
 histories: dict[int, list] = {}
+
+# Watchdog：短時間內連續網路錯誤累積到門檻就結束進程，交由 LaunchAgent 重啟
+MAX_CONSECUTIVE_ERRORS = 12
+ERROR_RESET_SECONDS = 120
+consecutive_errors = 0
+last_error_time = 0.0
 
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat_id = update.effective_chat.id
@@ -56,11 +63,25 @@ async def handle_clear(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("✅ 對話記憶已清除")
 
 async def error_handler(update, context):
+    global consecutive_errors, last_error_time
     if isinstance(context.error, Conflict):
+        # 雙開衝突：重啟解決不了，不計入 watchdog
         logging.warning("Conflict 衝突，等待後重試…")
         await asyncio.sleep(5)
-    else:
-        logging.error(f"錯誤: {context.error}")
+        return
+
+    now = time.monotonic()
+    if now - last_error_time > ERROR_RESET_SECONDS:
+        consecutive_errors = 0  # 距上次錯誤夠久，視為健康，重置
+    last_error_time = now
+    consecutive_errors += 1
+    logging.error(f"錯誤 ({consecutive_errors}/{MAX_CONSECUTIVE_ERRORS}): {context.error}")
+
+    if consecutive_errors >= MAX_CONSECUTIVE_ERRORS:
+        logging.error("連續網路錯誤過多（疑似 DNS/連線卡死），結束進程讓 LaunchAgent 重啟")
+        # 刻意用 os._exit 跳過 cleanup：目的就是強制乾淨重啟，
+        # sys.exit 在 async handler 內不保證能讓 run_polling 真正結束。
+        os._exit(1)
 
 if __name__ == "__main__":
     app = ApplicationBuilder().token(TELEGRAM_TOKEN).build()
