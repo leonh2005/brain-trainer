@@ -48,7 +48,8 @@ for port in $(echo "${!OPTIONAL_SERVICES[@]}" | tr ' ' '\n' | sort -n); do
 done
 
 # 2. VM 服務
-VM_STATUS=$(ssh -i ~/.ssh/oracle_line_bot -o ConnectTimeout=6 -o BatchMode=yes ubuntu@161.33.6.190 \
+VM_STATUS=$(ssh -i ~/.ssh/oracle_line_bot -o ConnectTimeout=6 -o BatchMode=yes \
+  -o ServerAliveInterval=3 -o ServerAliveCountMax=2 ubuntu@161.33.6.190 \
   "ps aux | grep -v grep" 2>/dev/null)
 
 if echo "$VM_STATUS" | grep -q "/telebot/"; then
