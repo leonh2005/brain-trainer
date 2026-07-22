@@ -1,0 +1,22 @@
+30 9 * * 1-5 /Users/steven/CCProject/finmind/venv/bin/python3 /Users/steven/CCProject/finmind/daytrade_alert.py >> /Users/steven/CCProject/logs/daytrade.log 2>&1
+0 2 * * * /tmp/test_renpy_demo.sh >> /tmp/renpy_test.log 2>&1
+0 14 * * * cd /Users/steven/CCProject/market-dashboard && /usr/bin/python3 generate.py >> /Users/steven/CCProject/logs/market_dashboard.log 2>&1
+*/15 * * * * /Users/steven/CCProject/news-analyzer/venv/bin/python /Users/steven/CCProject/news-analyzer/pipeline.py >> /Users/steven/CCProject/news-analyzer/pipeline.log 2>&1
+*/30 9-13 * * 1-5 /Users/steven/CCProject/finmind/venv/bin/python3 /Users/steven/CCProject/finmind/vol_rank_updater.py >> /Users/steven/CCProject/logs/vol_rank_updater.log 2>&1
+0 9 * * 1-5 /Users/steven/CCProject/finmind/venv/bin/python3 /Users/steven/CCProject/finmind/intraday_monitor.py >> /Users/steven/CCProject/logs/intraday_monitor.log 2>&1
+0 0 * * 1 find /Users/steven/Desktop -maxdepth 1 -type f \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' -o -iname '*.gif' -o -iname '*.bmp' -o -iname '*.tiff' -o -iname '*.tif' -o -iname '*.webp' -o -iname '*.heic' -o -iname '*.heif' \) -delete
+0 8 * * * /opt/homebrew/bin/python3.13 /Users/steven/CCProject/threads-daily/threads_analyzer.py >> /Users/steven/CCProject/threads-daily/cron.log 2>&1
+0 14 * * 1-5 cd /Users/steven/CCProject/telebot && /Users/steven/CCProject/finmind/venv/bin/python3 /Users/steven/CCProject/telebot/screener.py >> /Users/steven/CCProject/logs/screener.log 2>&1
+#PAUSED# 5 8 * * * /Users/steven/CCProject/shopee_keepalive.sh >> /Users/steven/CCProject/logs/shopee_keepalive.log 2>&1
+0 10 22 4 * /Users/steven/CCProject/shioaji_check.sh
+0 9 * * * /Users/steven/CCProject/scripts/daily_log_check.sh >> /Users/steven/CCProject/logs/daily_log_check.log 2>&1
+0 9 * * * /opt/homebrew/bin/python3.13 /Users/steven/CCProject/scripts/94i_signin.py >> /Users/steven/CCProject/logs/94i_signin.log 2>&1
+0 9 * * * /opt/homebrew/bin/python3.13 /Users/steven/CCProject/scripts/pressplay_signin.py >> /Users/steven/CCProject/logs/pressplay_signin.log 2>&1
+*/5 8-13 * * 1-5 /Users/steven/CCProject/news-analyzer/venv/bin/python /Users/steven/CCProject/news-analyzer/trump_monitor.py >> /Users/steven/CCProject/news-analyzer/trump_monitor.log 2>&1
+*/5 * * * * /Users/steven/CCProject/scripts/service_watchdog.sh >> /Users/steven/CCProject/logs/service_watchdog.log 2>&1
+0 18 * * 0 /bin/bash /Users/steven/CCProject/scripts/mac_cleanup.sh
+30 * * * * /Users/steven/CCProject/scripts/vm_monitor.sh >> /Users/steven/CCProject/logs/vm_monitor.log 2>&1
+*/5 9-13 * * 1-5 /usr/bin/python3 /Users/steven/CCProject/scripts/ma_monitor.py >> /Users/steven/CCProject/logs/ma_monitor.log 2>&1
+0 3 * * * /usr/bin/python3 /Users/steven/CCProject/scripts/log_scanner.py >> /Users/steven/CCProject/logs/log_scanner.log 2>&1
+0 14 * * * /usr/bin/python3 /Users/steven/CCProject/scripts/log_scanner.py --report >> /Users/steven/CCProject/logs/log_scanner.log 2>&1
+0 10 * * * /Users/steven/CCProject/scripts/sd-venv/bin/python /Users/steven/CCProject/scripts/steamdeck_monitor.py >> /Users/steven/CCProject/logs/steamdeck_monitor.log 2>&1

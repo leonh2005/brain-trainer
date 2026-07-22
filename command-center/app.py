@@ -57,9 +57,9 @@ def life_skilltree():
     return sources.skilltree()
 
 
-@app.get('/api/steamdeck')
-def steamdeck():
-    return sources.steamdeck()
+@app.get('/api/hay')
+def hay():
+    return sources.hay()
 
 
 @app.get('/api/jobs')

@@ -290,7 +290,7 @@ const CARDS=[
 ];
 const LIFE=[
   {id:'portfolio',ic:'💼', title:'投資組合', span:'wide', url:'/api/portfolio', render:renderPortfolio, site:'http://localhost:5800'},
-  {id:'steamdeck',ic:'🎮', title:'Steam Deck OLED 二手', span:'wide', url:'/api/steamdeck', render:renderSteamdeck},
+  {id:'hay',      ic:'🌾', title:'RHH 軟纖補貨', span:'wide', url:'/api/hay', render:renderHay},
   {id:'rabbit',   ic:'🐰', title:'兔子照護', span:'', url:'/api/life/rabbit', render:renderRabbit, site:'http://localhost:5200'},
   {id:'skill',    ic:'🌳', title:'技能樹',   span:'', url:'/api/life/skilltree', render:renderSkill, site:'http://localhost:5500'},
 ];
@@ -437,22 +437,21 @@ function renderRabbit(d){
   box.appendChild(info);
   return box;
 }
-function renderSteamdeck(d){
-  const arr=(Array.isArray(d)?d:[]).slice(0,5);
-  if(!arr.length)return el('div','empty','目前無符合標的（≥$15,000 且有庫存）');
+function renderHay(d){
+  const arr=Array.isArray(d)?d:[];
+  if(!arr.length)return el('div','empty','無軟纖品項資料');
   const box=el('div');
-  const srcColor={'旋轉':'var(--accent)','露天':'var(--sky)'};
   arr.forEach(it=>{
     const row=el('div','row');
-    const src=it.source.split('/')[0];
-    const col=srcColor[src]||'var(--faint)';
-    const meta=[it.condition, ago(it.posted_ts)].filter(Boolean).join(' · ');
+    const stockCol=it.in_stock?'var(--up)':'var(--faint)';
+    const stockTxt=it.in_stock?'有貨':'缺貨';
+    const price=it.price?`$${it.price}`:'';
     row.innerHTML=`<a href="${it.url}" target="_blank" style="text-decoration:none;color:inherit;display:flex;align-items:center;gap:8px;flex:1;min-width:0">`+
-      `<span class="badge" style="background:${col}1e;color:${col};flex:none">${src}</span>`+
-      `<span class="tk" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${it.name}</span>`+
-      (meta?`<span class="mini" style="flex:none">${meta}</span>`:'')+
+      `<span class="badge" style="background:var(--accent)1e;color:var(--accent);flex:none">${it.shop}</span>`+
+      `<span class="tk" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${it.variant}</span>`+
+      (price?`<span class="mini" style="flex:none">${price}</span>`:'')+
       `<span class="spacer"></span>`+
-      `<span class="chg up" style="font-size:12px;flex:none">${it.price}</span></a>`;
+      `<span class="chg" style="font-size:12px;flex:none;color:${stockCol}">${stockTxt}</span></a>`;
     box.appendChild(row);
   });
   return box;
