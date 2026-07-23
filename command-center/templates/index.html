@@ -328,7 +328,13 @@ function renderDaytrade(d){
   if(!arr.length)return el('div','empty','今日無當沖候選');
   const box=el('div','', '');
   box.style.cssText='display:flex;flex-wrap:wrap;gap:7px';
-  arr.forEach(code=>{const b=el('span','pill');b.innerHTML=`<span class="tk" style="font-size:12px">${code}</span>`;box.appendChild(b)});
+  arr.forEach(item=>{
+    const code=typeof item==='string'?item:(item.code||'');
+    const name=typeof item==='string'?'':(item.name||'');
+    const b=el('span','pill');
+    b.innerHTML=`<span class="tk" style="font-size:12px">${name}<span class="code">${code}</span></span>`;
+    box.appendChild(b);
+  });
   return box;
 }
 function renderIntraday(d){
