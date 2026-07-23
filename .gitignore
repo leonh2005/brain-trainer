@@ -32,3 +32,6 @@ timesfm/model/*.safetensors
 # Superpowers brainstorm logs
 .superpowers/
 .claude/settings.local.json
+scripts/hay-venv/
+scripts/hay_current.json
+scripts/hay_seen.json

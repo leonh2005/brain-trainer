@@ -209,10 +209,10 @@ print(msg)
 
 # 儲存候選清單供盤中監控腳本使用
 import json
-candidate_codes = [c['code'] for c in candidates]
+candidate_list = [{'code': c['code'], 'name': c['name']} for c in candidates]
 with open('/tmp/daytrade_candidates.json', 'w') as f:
-    json.dump(candidate_codes, f)
-print(f'[daytrade] 候選清單已寫入 /tmp/daytrade_candidates.json: {candidate_codes}')
+    json.dump(candidate_list, f, ensure_ascii=False)
+print(f'[daytrade] 候選清單已寫入 /tmp/daytrade_candidates.json: {[c["code"] for c in candidate_list]}')
 
 if _sj_api is not None:
     _sj_api.logout()
