@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>模擬投資儀表板</title>
+<style>
+:root{
+  --bg:#f7f2e4; --bg-soft:#f0e9d6; --card:#fffdf7; --card-hover:#fbf7ec;
+  --border:#ddd4bd; --border-soft:#e8e0cb;
+  --fg:#141413; --muted:#73716a; --faint:#a8a599;
+  --up:#c15f3c; --down:#5f7346;         /* 台股：紅漲綠跌 */
+  --accent:#d97757; --accent-soft:#c15f3c;
+  --radius:14px; --radius-sm:9px;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  background:var(--bg); color:var(--fg);
+  font-family:-apple-system,"PingFang TC","Segoe UI",sans-serif;
+  font-size:13.5px; line-height:1.5; letter-spacing:-.005em;
+  min-height:100vh; padding:22px 26px 60px;
+  background-image:
+    radial-gradient(900px 500px at 12% -8%, rgba(217,119,87,.09), transparent 60%),
+    radial-gradient(800px 500px at 100% 0%, rgba(106,155,204,.06), transparent 55%);
+  background-attachment:fixed;
+}
+.wrap{max-width:1080px; margin:0 auto}
+header{display:flex; align-items:center; gap:14px; margin-bottom:20px; flex-wrap:wrap}
+.brand{display:flex; align-items:center; gap:11px}
+.brand .logo{
+  width:34px; height:34px; border-radius:10px;
+  background:linear-gradient(140deg,var(--accent),var(--accent-soft));
+  display:grid; place-items:center; font-size:17px; color:#fff;
+  box-shadow:0 6px 16px -6px rgba(217,119,87,.55);
+}
+.brand h1{font-size:16px; font-weight:600; letter-spacing:-.02em}
+.brand .sub{font-size:11px; color:var(--faint); font-weight:400}
+.acct-switch{margin-left:auto; display:flex; gap:6px}
+.acct-btn{
+  padding:8px 16px; border-radius:999px; border:1px solid var(--border-soft);
+  background:var(--card); color:var(--muted); font-size:12.5px; font-weight:600;
+  cursor:pointer; transition:.15s;
+}
+.acct-btn:hover{border-color:var(--accent); color:var(--fg)}
+.acct-btn.active{background:var(--accent); border-color:var(--accent); color:#fff}
+
+.sec-label{
+  display:flex; align-items:center; gap:9px; margin:24px 2px 12px;
+  font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.09em; color:var(--faint);
+}
+.sec-label::after{content:''; flex:1; height:1px; background:linear-gradient(90deg,var(--border),transparent)}
+
+.card{
+  background:var(--card); border:1px solid var(--border-soft); border-radius:var(--radius);
+  padding:16px 18px; box-shadow:0 1px 2px rgba(20,20,19,.04), 0 4px 14px -8px rgba(20,20,19,.08);
+}
+.card + .card{margin-top:14px}
+.card-head{display:flex; align-items:center; gap:8px; margin-bottom:12px}
+.card-head .ic{font-size:14px}
+.card-head h3{font-size:12.5px; font-weight:600; letter-spacing:-.01em}
+.card-head .meta{margin-left:auto; font-size:11px; color:var(--faint); font-family:var(--mono)}
+
+table{width:100%; border-collapse:collapse; font-size:12.5px}
+th{
+  text-align:right; font-size:10.5px; font-weight:600; color:var(--faint);
+  text-transform:uppercase; letter-spacing:.05em; padding:6px 8px; border-bottom:1px solid var(--border-soft);
+}
+th:first-child, td:first-child{text-align:left}
+td{padding:9px 8px; border-bottom:1px solid var(--border-soft); font-family:var(--mono); text-align:right}
+tr:last-child td{border-bottom:0}
+td.name{font-family:-apple-system,sans-serif; font-weight:600; color:var(--fg)}
+td .cat{display:block; font-size:10px; color:var(--faint); font-weight:400; font-family:-apple-system,sans-serif}
+.up{color:var(--up)} .down{color:var(--down)}
+
+.empty{color:var(--faint); font-size:12px; padding:6px 0}
+.badge{
+  font-size:10px; padding:2px 8px; border-radius:6px; font-weight:600; font-family:var(--mono);
+  display:inline-block;
+}
+.badge.drift{background:rgba(217,119,87,.14); color:var(--accent-soft)}
+.badge.sat{background:rgba(95,115,70,.14); color:var(--down)}
+
+.reb-row{display:flex; align-items:center; gap:10px; padding:8px 0; border-bottom:1px solid var(--border-soft)}
+.reb-row:last-child{border-bottom:0}
+.reb-row .txt{font-size:12px; color:var(--fg)}
+.reb-row .txt b{font-weight:600}
+
+.dca-grid{display:flex; gap:22px; flex-wrap:wrap; align-items:center}
+.dca-stat{font-family:var(--mono)}
+.dca-stat .n{font-size:22px; font-weight:600; color:var(--accent)}
+.dca-stat .lbl{font-size:10.5px; color:var(--faint); text-transform:uppercase; letter-spacing:.05em}
+.dca-note{font-size:11.5px; color:var(--muted); flex:1; min-width:220px}
+
+.err{color:var(--up); font-size:11px; font-family:var(--mono); padding:10px 0}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <div class="logo">📈</div>
+      <div>
+        <h1>模擬投資儀表板</h1>
+        <div class="sub" id="acctName">載入中…</div>
+      </div>
+    </div>
+    <div class="acct-switch" id="acctSwitch"></div>
+  </header>
+
+  <div class="sec-label">配置總表</div>
+  <div class="card">
+    <div class="card-head"><span class="ic">📊</span><h3>目標 vs 實際配置</h3><span class="meta" id="allocMeta"></span></div>
+    <div class="card-body" id="allocTable"><div class="empty">載入中…</div></div>
+  </div>
+
+  <div class="sec-label">淨值曲線</div>
+  <div class="card">
+    <div class="card-head"><span class="ic">📉</span><h3>NAV</h3><span class="meta" id="navMeta"></span></div>
+    <div class="card-body" id="navChart"><div class="empty">載入中…</div></div>
+  </div>
+
+  <div class="sec-label">DCA 進度</div>
+  <div class="card">
+    <div class="card-head"><span class="ic">🗓️</span><h3>定期定額</h3></div>
+    <div class="card-body dca-grid" id="dcaBody"><div class="empty">載入中…</div></div>
+  </div>
+
+  <div class="sec-label">再平衡警示</div>
+  <div class="card" id="rebalCard">
+    <div class="card-head"><span class="ic">⚖️</span><h3>再平衡訊號</h3></div>
+    <div class="card-body" id="rebalBody"><div class="empty">載入中…</div></div>
+  </div>
+</div>
+
+<script>
+let currentAid = 'A';
+let accountsData = [];
+
+function fmt(n, digits){
+  if (n === null || n === undefined || isNaN(n)) return '—';
+  digits = digits === undefined ? 0 : digits;
+  return n.toLocaleString('zh-TW', {minimumFractionDigits: digits, maximumFractionDigits: digits});
+}
+function pct(n){ return fmt(n, 2) + '%'; }
+function signClass(n){ return n > 0 ? 'up' : (n < 0 ? 'down' : ''); }
+function sign(n){ return n > 0 ? '+' : ''; }
+
+async function loadAccounts(){
+  const res = await fetch('/api/accounts');
+  accountsData = await res.json();
+  const sw = document.getElementById('acctSwitch');
+  sw.innerHTML = accountsData.map(a =>
+    `<button class="acct-btn${a.id===currentAid?' active':''}" data-aid="${a.id}">${a.id}</button>`
+  ).join('');
+  sw.querySelectorAll('.acct-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      currentAid = btn.dataset.aid;
+      sw.querySelectorAll('.acct-btn').forEach(b => b.classList.toggle('active', b === btn));
+      loadAll();
+    });
+  });
+}
+
+async function loadAllocation(){
+  const el = document.getElementById('allocTable');
+  try {
+    const res = await fetch('/api/account/' + currentAid);
+    const data = await res.json();
+    document.getElementById('acctName').textContent = data.account.name + '（本金 NT$' + fmt(data.account.capital_twd) + '）';
+
+    const latest = data.latest;
+    document.getElementById('allocMeta').textContent = latest ? latest.date + ' 收盤' : '尚無快照';
+
+    const holdingsByTicker = {};
+    data.holdings.forEach(h => holdingsByTicker[h.ticker] = h);
+    const total = latest ? latest.total_value_twd : null;
+
+    if (!data.targets.length) {
+      el.innerHTML = '<div class="empty">無配置目標</div>';
+      return;
+    }
+
+    const rows = data.targets.map(t => {
+      const h = holdingsByTicker[t.ticker] || {shares: 0, cost_twd: 0, market_value: 0};
+      const marketValue = h.market_value !== undefined ? h.market_value : h.cost_twd;
+      const actualPct = total ? (100 * marketValue / total) : null;
+      const drift = actualPct !== null ? (actualPct - t.target_pct) : null;
+      const pnl = marketValue - h.cost_twd;
+      return `<tr>
+        <td class="name">${t.ticker}<span class="cat">${t.category}</span></td>
+        <td>${pct(t.target_pct)}</td>
+        <td>${actualPct !== null ? pct(actualPct) : '—'}</td>
+        <td class="${drift !== null ? signClass(drift) : ''}">${drift !== null ? sign(drift) + fmt(drift, 2) + 'pp' : '—'}</td>
+        <td>${fmt(h.shares, h.shares % 1 === 0 ? 0 : 2)}</td>
+        <td>NT$${fmt(h.cost_twd)}</td>
+        <td>NT$${fmt(marketValue)}</td>
+        <td class="${signClass(pnl)}">${sign(pnl)}NT$${fmt(pnl)}</td>
+      </tr>`;
+    }).join('');
+
+    el.innerHTML = `<table>
+      <thead><tr>
+        <th>標的</th><th>目標%</th><th>實際%</th><th>偏離</th>
+        <th>股數</th><th>成本</th><th>現值</th><th>未實現損益</th>
+      </tr></thead>
+      <tbody>${rows}</tbody>
+    </table>`;
+  } catch (e) {
+    el.innerHTML = '<div class="err">載入失敗：' + e + '</div>';
+  }
+}
+
+function drawNavSvg(points){
+  const w = 640, h = 180, pad = 28;
+  if (points.length < 2) {
+    return '<div class="empty">快照筆數不足，無法繪製曲線</div>';
+  }
+  const values = points.map(p => p.total_value_twd);
+  const min = Math.min(...values), max = Math.max(...values);
+  const range = (max - min) || 1;
+  const stepX = (w - pad * 2) / (points.length - 1);
+  const coords = points.map((p, i) => {
+    const x = pad + i * stepX;
+    const y = h - pad - ((p.total_value_twd - min) / range) * (h - pad * 2);
+    return [x, y];
+  });
+  const path = coords.map((c, i) => (i === 0 ? 'M' : 'L') + c[0].toFixed(1) + ' ' + c[1].toFixed(1)).join(' ');
+  const areaPath = path + ` L${coords[coords.length-1][0].toFixed(1)} ${h-pad} L${coords[0][0].toFixed(1)} ${h-pad} Z`;
+  const last = points[points.length - 1];
+  const first = points[0];
+  const changeUp = last.total_value_twd >= first.total_value_twd;
+  const lineColor = changeUp ? '#c15f3c' : '#5f7346';
+  const dots = coords.map((c, i) =>
+    `<circle cx="${c[0].toFixed(1)}" cy="${c[1].toFixed(1)}" r="2.5" fill="${lineColor}"><title>${points[i].date}: NT$${Math.round(points[i].total_value_twd).toLocaleString()}</title></circle>`
+  ).join('');
+  return `<svg viewBox="0 0 ${w} ${h}" width="100%" height="${h}" style="display:block">
+    <defs>
+      <linearGradient id="navFill" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="${lineColor}" stop-opacity="0.18"/>
+        <stop offset="100%" stop-color="${lineColor}" stop-opacity="0"/>
+      </linearGradient>
+    </defs>
+    <path d="${areaPath}" fill="url(#navFill)" stroke="none"/>
+    <path d="${path}" fill="none" stroke="${lineColor}" stroke-width="2"/>
+    ${dots}
+  </svg>`;
+}
+
+async function loadNav(){
+  const el = document.getElementById('navChart');
+  try {
+    const res = await fetch('/api/account/' + currentAid + '/nav');
+    const points = await res.json();
+    document.getElementById('navMeta').textContent = points.length ? points.length + ' 筆快照' : '';
+    if (!points.length) {
+      el.innerHTML = '<div class="empty">尚無淨值快照</div>';
+      return;
+    }
+    el.innerHTML = drawNavSvg(points);
+  } catch (e) {
+    el.innerHTML = '<div class="err">載入失敗：' + e + '</div>';
+  }
+}
+
+async function loadDca(){
+  const el = document.getElementById('dcaBody');
+  try {
+    const res = await fetch('/api/account/' + currentAid);
+    const data = await res.json();
+    el.innerHTML = `
+      <div class="dca-stat"><div class="n">6</div><div class="lbl">規劃批數</div></div>
+      <div class="dca-note">此系統以一次性配置為主，DCA 批次進度需搭配交易紀錄追蹤（目前 API 未提供批次明細）。帳戶：<b>${data.account.name}</b>，本金 NT$${fmt(data.account.capital_twd)}。</div>
+    `;
+  } catch (e) {
+    el.innerHTML = '<div class="err">載入失敗：' + e + '</div>';
+  }
+}
+
+async function loadRebalance(){
+  const el = document.getElementById('rebalBody');
+  try {
+    const res = await fetch('/api/account/' + currentAid + '/rebalance');
+    const sigs = await res.json();
+    if (!sigs.length) {
+      el.innerHTML = '<div class="empty">目前無再平衡訊號</div>';
+      return;
+    }
+    el.innerHTML = sigs.map(s => {
+      if (s.type === 'drift') {
+        return `<div class="reb-row">
+          <span class="badge drift">偏離</span>
+          <span class="txt"><b>${s.category}</b> 實際 ${pct(s.actual_pct)} vs 目標 ${pct(s.target_pct)}</span>
+        </div>`;
+      }
+      if (s.type === 'satellite_take_profit') {
+        return `<div class="reb-row">
+          <span class="badge sat">獲利了結</span>
+          <span class="txt">衛星部位市值 NT$${fmt(s.market_value)} 已超過目標 NT$${fmt(s.target)} 建議倍數，考慮減碼</span>
+        </div>`;
+      }
+      return `<div class="reb-row"><span class="txt">${JSON.stringify(s)}</span></div>`;
+    }).join('');
+  } catch (e) {
+    el.innerHTML = '<div class="err">載入失敗：' + e + '</div>';
+  }
+}
+
+function loadAll(){
+  loadAllocation();
+  loadNav();
+  loadDca();
+  loadRebalance();
+}
+
+loadAccounts().then(loadAll);
+</script>
+</body>
+</html>

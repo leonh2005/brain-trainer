@@ -62,6 +62,11 @@ def hay():
     return sources.hay()
 
 
+@app.get('/api/life/sim-invest')
+def life_sim_invest():
+    return sources.sim_invest()
+
+
 @app.get('/api/jobs')
 def jobs_list():
     return jobs_mod.list_jobs()
