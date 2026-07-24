@@ -172,7 +172,6 @@ async function loadAllocation(){
     const latest = data.latest;
     document.getElementById('allocMeta').textContent = latest ? latest.date + ' 收盤' : '尚無快照';
 
-    const byCat = latest && latest.by_category_json ? JSON.parse(latest.by_category_json) : {};
     const holdingsByTicker = {};
     data.holdings.forEach(h => holdingsByTicker[h.ticker] = h);
     const total = latest ? latest.total_value_twd : null;
@@ -183,8 +182,8 @@ async function loadAllocation(){
     }
 
     const rows = data.targets.map(t => {
-      const h = holdingsByTicker[t.ticker] || {shares: 0, cost_twd: 0};
-      const marketValue = byCat.hasOwnProperty(t.category) ? byCat[t.category] : h.cost_twd;
+      const h = holdingsByTicker[t.ticker] || {shares: 0, cost_twd: 0, market_value: 0};
+      const marketValue = h.market_value !== undefined ? h.market_value : h.cost_twd;
       const actualPct = total ? (100 * marketValue / total) : null;
       const drift = actualPct !== null ? (actualPct - t.target_pct) : null;
       const pnl = marketValue - h.cost_twd;

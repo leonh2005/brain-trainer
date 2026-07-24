@@ -91,7 +91,8 @@ def test_rebalance_flat_no_signal():
     for n in range(1, 7):
         engine.run_dca_tranche(conn, "A", plan, f"2026-0{n}-01", n, q, fx)
     # 全部建完、價格不變 → 各類比例=目標，無訊號
-    signals = engine.check_rebalance(conn, "A", plan, "2026-12-01", q, fx)
+    engine.daily_snapshot(conn, "A", plan, "2026-12-01", q, fx)
+    signals = engine.check_rebalance(conn, "A", plan)
     assert signals == []
 
 def test_rebalance_satellite_take_profit():
@@ -99,5 +100,30 @@ def test_rebalance_satellite_take_profit():
     engine.build_lump(conn, "A", plan, "2026-07-24", q, fx)   # 衛星個股 $10 建倉
     # 衛星（美股個股）漲 2 倍 → 市值 2x 目標 > 1.5x → 觸發
     boom = lambda tk, m: 20.0 if m == "US" else 10.0
-    signals = engine.check_rebalance(conn, "A", plan, "2026-08-01", boom, fx)
+    engine.daily_snapshot(conn, "A", plan, "2026-08-01", boom, fx)
+    signals = engine.check_rebalance(conn, "A", plan)
     assert any(s["type"] == "satellite_take_profit" for s in signals)
+
+def test_rebalance_no_snapshot_returns_empty():
+    conn, plan = _fresh("A")
+    assert engine.check_rebalance(conn, "A", plan) == []
+
+def test_valuate_returns_by_ticker_without_writing():
+    conn, plan = _fresh("A")
+    engine.build_lump(conn, "A", plan, "2026-07-24", q, fx)
+    snap = engine.valuate(conn, "A", plan, q, fx)
+    assert "BE" in snap["by_ticker"]
+    be = snap["by_ticker"]["BE"]
+    assert abs(be["market_value"] - be["cost_twd"]) < 1.0   # 建倉價=報價，未實現損益=0
+    assert be["shares"] > 0
+    assert store.latest_snapshot(conn, "A") is None   # 唯讀，未寫入
+
+def test_daily_snapshot_persists_by_ticker_json():
+    import json
+    conn, plan = _fresh("A")
+    engine.build_lump(conn, "A", plan, "2026-07-24", q, fx)
+    engine.daily_snapshot(conn, "A", plan, "2026-07-24", q, fx)
+    row = store.latest_snapshot(conn, "A")
+    by_ticker = json.loads(row["by_ticker_json"])
+    assert "BE" in by_ticker
+    assert "market_value" in by_ticker["BE"]

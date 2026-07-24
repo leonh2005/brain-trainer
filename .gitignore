@@ -36,3 +36,4 @@ scripts/hay-venv/
 scripts/hay_current.json
 scripts/hay_seen.json
 sim-invest/sim.db
+sim-invest/.coverage
