@@ -36,3 +36,21 @@ def test_build_lump_only_lump_targets():
     be = next(t for t in trades if t["ticker"] == "BE")
     assert be["tranche_no"] == 0
     assert abs(be["cost_twd"] - 412_222.22) < 1.0
+
+def test_dca_tranche_invests_one_sixth():
+    conn, plan = _fresh("A")
+    engine.run_dca_tranche(conn, "A", plan, "2026-08-01", 1, q, fx)
+    trades = store.get_trades(conn, "A")
+    # A 帳戶 dca 標的 7 檔
+    assert len(trades) == 7
+    assert {t["ticker"] for t in trades} == {"XLP","XLU","GLD","EFV","EWJ","VWO","0050"}
+    xlp = next(t for t in trades if t["ticker"] == "XLP")
+    assert xlp["tranche_no"] == 1
+    assert abs(xlp["cost_twd"] - 900_000/6) < 1.0   # 150,000
+
+def test_six_tranches_fully_invest_dca_targets():
+    conn, plan = _fresh("A")
+    for n in range(1, 7):
+        engine.run_dca_tranche(conn, "A", plan, f"2026-0{n}-01", n, q, fx)
+    trades = [t for t in store.get_trades(conn, "A") if t["ticker"] == "EFV"]
+    assert abs(sum(t["cost_twd"] for t in trades) - 1_413_333.33) < 1.0
