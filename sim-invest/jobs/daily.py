@@ -31,6 +31,6 @@ def run_day(conn, account_id, today, quote_fn, fx_fn) -> dict:
     n = due_tranche(start, today, plan.dca_months)
     if n is not None:
         already = {tr["tranche_no"] for tr in store.get_trades(conn, account_id)}
-        if n not in already or n == 1 and not existing:
+        if n not in already:
             engine.run_dca_tranche(conn, account_id, plan, today, n, quote_fn, fx_fn)
     return engine.daily_snapshot(conn, account_id, plan, today, quote_fn, fx_fn)

@@ -1,19 +1,28 @@
 """模擬投資 Flask 服務（port 5250，唯讀報價，絕不真實下單）。"""
+import json
 import os
-from datetime import date
-from flask import Flask, jsonify, render_template
+from flask import Flask, g, jsonify, render_template
 
 import store
 import engine
-import quotes
 from plans import PLANS
 
 app = Flask(__name__)
-DB = os.environ.get("SIM_DB", "sim.db")
+_BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DB = os.environ.get("SIM_DB", os.path.join(_BASE_DIR, "sim.db"))
 
 
 def _conn():
-    return store.connect(DB)
+    if "db" not in g:
+        g.db = store.connect(DB)
+    return g.db
+
+
+@app.teardown_appcontext
+def _close_conn(exc=None):
+    conn = g.pop("db", None)
+    if conn is not None:
+        conn.close()
 
 
 @app.get("/api/health")
@@ -35,9 +44,16 @@ def account(aid):
     conn = _conn()
     hs = engine.holdings(conn, aid)
     latest = store.latest_snapshot(conn, aid)
+    by_ticker = {}
+    if latest and latest["by_ticker_json"]:
+        by_ticker = json.loads(latest["by_ticker_json"])
+    holdings = []
+    for k, v in hs.items():
+        market_value = by_ticker.get(k, {}).get("market_value", v["cost_twd"])
+        holdings.append({"ticker": k, **v, "market_value": market_value})
     return jsonify(
         account={"id": aid, "name": plan.name, "capital_twd": plan.capital_twd},
-        holdings=[{"ticker": k, **v} for k, v in hs.items()],
+        holdings=holdings,
         targets=[{"ticker": t.ticker, "category": t.category,
                   "target_twd": t.target_twd, "build_method": t.build_method,
                   "target_pct": round(100 * t.target_twd / plan.capital_twd, 2)}
@@ -60,8 +76,7 @@ def rebalance(aid):
     if aid not in PLANS:
         return jsonify(error="unknown account"), 404
     conn = _conn()
-    sigs = engine.check_rebalance(conn, aid, PLANS[aid], date.today().isoformat(),
-                                  quotes.get_quote, quotes.get_fx)
+    sigs = engine.check_rebalance(conn, aid, PLANS[aid])
     return jsonify(sigs)
 
 

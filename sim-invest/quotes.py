@@ -23,8 +23,6 @@ def _yf_close(symbol: str) -> float:
     return float(data["Close"].iloc[-1])
 
 
-_SHIOAJI_SUFFIX = {"0050": "0050", "00864B": "00864B"}  # 皆為上市代號
-
 _SECRETS_DIR = "/Users/steven/CCProject/.secrets"
 
 
@@ -48,7 +46,7 @@ def _shioaji_close(ticker: str) -> float:
     import shioaji as sj
     api_key, secret_key = _shioaji_keys()
     api = sj.Shioaji()
-    api.login(api_key, secret_key)
+    api.login(api_key=api_key, secret_key=secret_key)
     try:
         contract = api.Contracts.Stocks[ticker]
         snap = api.snapshots([contract])[0]

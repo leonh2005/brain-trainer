@@ -28,6 +28,7 @@ CREATE TABLE IF NOT EXISTS snapshots(
     cash_twd REAL NOT NULL,
     unrealized_pnl_twd REAL NOT NULL,
     by_category_json TEXT NOT NULL,
+    by_ticker_json TEXT,
     PRIMARY KEY(account_id, date)
 );
 """
@@ -37,6 +38,10 @@ def connect(path: str) -> sqlite3.Connection:
     conn = sqlite3.connect(path)
     conn.row_factory = sqlite3.Row
     conn.executescript(SCHEMA)
+    cols = {r["name"] for r in conn.execute("PRAGMA table_info(snapshots)")}
+    if "by_ticker_json" not in cols:
+        conn.execute("ALTER TABLE snapshots ADD COLUMN by_ticker_json TEXT")
+        conn.commit()
     return conn
 
 
@@ -72,11 +77,11 @@ def get_trades(conn, account_id):
 
 
 def add_snapshot(conn, account_id, date, total_value_twd, cash_twd,
-                 unrealized_pnl_twd, by_category_json):
+                 unrealized_pnl_twd, by_category_json, by_ticker_json=None):
     conn.execute(
-        "INSERT OR REPLACE INTO snapshots VALUES(?,?,?,?,?,?)",
+        "INSERT OR REPLACE INTO snapshots VALUES(?,?,?,?,?,?,?)",
         (account_id, date, total_value_twd, cash_twd,
-         unrealized_pnl_twd, by_category_json),
+         unrealized_pnl_twd, by_category_json, by_ticker_json),
     )
     conn.commit()
 
