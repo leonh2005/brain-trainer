@@ -25,3 +25,10 @@ def build_lump(conn, account_id, plan, date, quote_fn, fx_fn) -> None:
     for t in plan.targets:
         if t.build_method == "lump":
             _buy(conn, account_id, date, t, t.target_twd, quote_fn, fx_fn, 0)
+
+
+def run_dca_tranche(conn, account_id, plan, date, tranche_no, quote_fn, fx_fn) -> None:
+    for t in plan.targets:
+        if t.build_method == "dca":
+            amount = t.target_twd / plan.dca_months
+            _buy(conn, account_id, date, t, amount, quote_fn, fx_fn, tranche_no)
