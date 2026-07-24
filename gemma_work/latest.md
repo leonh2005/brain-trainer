@@ -1,29 +1,23 @@
-# Claude Handoff 20260724_1442
-> 自動生成於 2026-07-24 14:42
+# Claude Handoff 20260724_2327
+> 自動生成於 2026-07-24 23:27
 
 ## 未提交的檔案異動
 ```
 ? TradingAgents
- M command-center/templates/index.html
+ M chip-tracker/chip.db
  m daily-stock-analysis
  M gemma_work/latest.md
- M market-dashboard/bb_cache.json
- M market-dashboard/fg_history.json
- M market-dashboard/index.html
- M market-dashboard/margin_cache.json
- M market-dashboard/sp_state.json
  M rabbit-care/rabbit.db
  m stock-screener-ai
-?? command-center/_page_snapshot.html
 ```
 
 ## 近期 Commits
 ```
-88d38acb chore: 自動同步 2026-07-24 13:40
-7d63555e chore: 自動同步 2026-07-24 08:40
-847cd2ee chore: 自動同步 2026-07-24 03:40
-e44dcbdf feat: 當沖候選顯示中文股名 + 清理 hay 監控暫存追蹤
-ff20c748 chore: 自動同步 2026-07-23 22:40
+5dfc56a3 fix(command-center): 市場分析卡取正確 hit_rate/即時漲跌 key
+70ac46c2 feat(command-center): 市場分析卡
+3cf1f0ba feat(market-analysis): 26年大盤日內型態/相關性/六大權值股單頁儀表板
+8dc4f82b feat: sim-invest 模擬投資台美股服務
+431b545c fix(sim-invest): DCA 改補投模型,涵蓋月底起始日與排程漏跑
 ```
 
 ## 給 Hermes 的備註
