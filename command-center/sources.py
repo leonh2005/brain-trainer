@@ -242,6 +242,26 @@ def sim_invest():
     return out, datetime.now().strftime('%Y-%m-%d %H:%M')
 
 
+@_wrap
+def market_analysis():
+    analysis = _proxy('http://localhost:5350/api/analysis', ttl=300)
+    live = _proxy('http://localhost:5350/api/live', ttl=60)
+
+    hit_rates = analysis.get('hit_rates') or {}
+    next_day_up = hit_rates.get('next_day_up', 0)
+
+    intraday_types = analysis.get('intraday_types') or []
+    top_type = intraday_types[0] if intraday_types else None
+
+    index_change_pct = live.get('index_change_pct', 0)
+
+    return {
+        'top_type': top_type,
+        'hit_up': next_day_up,
+        'index_change_pct': index_change_pct,
+    }, datetime.now().strftime('%Y-%m-%d %H:%M')
+
+
 SIGNALS = {
     'daytrade': daytrade, 'swing': swing, 'intraday': intraday, 'ma': ma,
     'chips': chips, 'news': news, 'market-fear': market_fear,

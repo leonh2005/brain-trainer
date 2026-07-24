@@ -303,6 +303,7 @@ const LIFE=[
   {id:'rabbit',   ic:'🐰', title:'兔子照護', span:'', url:'/api/life/rabbit', render:renderRabbit, site:'http://localhost:5200'},
   {id:'skill',    ic:'🌳', title:'技能樹',   span:'', url:'/api/life/skilltree', render:renderSkill, site:'http://localhost:5500'},
   {id:'sim-invest',ic:'📈', title:'模擬投資', span:'wide', url:'/api/life/sim-invest', render:renderSimInvest, site:'http://localhost:5250'},
+  {id:'market-analysis',ic:'📊', title:'市場分析', span:'wide', url:'/api/life/market-analysis', render:renderMarketAnalysis, site:'http://localhost:5350'},
 ];
 
 function mount(container,defs){
@@ -452,6 +453,19 @@ function renderSimInvest(d){
     m.innerHTML=`<span class="k">${a.name}</span><span class="v" style="color:${chgCls(pnl)==='down'?'var(--down)':(chgCls(pnl)==='up'?'var(--up)':'var(--fg)')}">${fmt(a.total_value_twd)} <span class="mini">(${pnl>0?'+':''}${fmt(pnl)})</span></span>`;
     mg.appendChild(m);
   });
+  box.appendChild(mg);
+  return box;
+}
+function renderMarketAnalysis(d){
+  if(!d)return el('div','empty','無資料');
+  const box=el('div');
+  const mg=el('div','mg');mg.style.marginBottom='13px';
+  const items=[
+    ['最常見日內型態', d.top_type||'—'],
+    ['隔日同漲勝率', d.hit_up!=null?fmt(d.hit_up)+'%':'—'],
+    ['大盤即時漲跌', d.index_change_pct!=null?`${d.index_change_pct>0?'+':''}${fmt(d.index_change_pct)}%`:'—'],
+  ];
+  items.forEach(([k,v])=>{const m=el('div','m');const cl=(typeof v==='string'&&v.startsWith('-'))?'var(--down)':'var(--fg)';if(k==='大盤即時漲跌'&&typeof v==='string'){if(v.startsWith('+'))m.innerHTML=`<span class="k">${k}</span><span class="v" style="color:var(--up)">${v}</span>`;else if(v.startsWith('-'))m.innerHTML=`<span class="k">${k}</span><span class="v" style="color:var(--down)">${v}</span>`;else m.innerHTML=`<span class="k">${k}</span><span class="v" style="color:var(--fg)">${v}</span>`}else m.innerHTML=`<span class="k">${k}</span><span class="v">${v}</span>`;mg.appendChild(m)});
   box.appendChild(mg);
   return box;
 }
