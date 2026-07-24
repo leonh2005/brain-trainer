@@ -67,6 +67,11 @@ def life_sim_invest():
     return sources.sim_invest()
 
 
+@app.get('/api/life/market-analysis')
+def life_market_analysis():
+    return sources.market_analysis()
+
+
 @app.get('/api/jobs')
 def jobs_list():
     return jobs_mod.list_jobs()
