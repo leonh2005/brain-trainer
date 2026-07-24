@@ -17,3 +17,13 @@ def test_health_and_accounts(tmp_path, monkeypatch):
     assert ids == ["A", "B"]
     nav = c.get("/api/account/A/nav").get_json()
     assert nav[0]["total_value_twd"] == 9_000_000
+
+def test_nav_unknown_account_404(tmp_path, monkeypatch):
+    db = tmp_path / "t2.db"
+    monkeypatch.setenv("SIM_DB", str(db))
+    import store as _s
+    _s.connect(str(db)).close()
+    import importlib, app as appmod
+    importlib.reload(appmod)
+    c = appmod.app.test_client()
+    assert c.get("/api/account/ZZZ/nav").status_code == 404
