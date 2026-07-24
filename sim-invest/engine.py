@@ -32,3 +32,45 @@ def run_dca_tranche(conn, account_id, plan, date, tranche_no, quote_fn, fx_fn) -
         if t.build_method == "dca":
             amount = t.target_twd / plan.dca_months
             _buy(conn, account_id, date, t, amount, quote_fn, fx_fn, tranche_no)
+
+
+def holdings(conn, account_id) -> dict:
+    import store
+    agg: dict = {}
+    for tr in store.get_trades(conn, account_id):
+        h = agg.setdefault(tr["ticker"], {
+            "shares": 0.0, "market": tr["market"], "cost_twd": 0.0,
+        })
+        h["shares"] += tr["shares"]
+        h["cost_twd"] += tr["cost_twd"]
+    return agg
+
+
+def _category_of(plan, ticker):
+    for t in plan.targets:
+        if t.ticker == ticker:
+            return t.category
+    return "其他"
+
+
+def daily_snapshot(conn, account_id, plan, date, quote_fn, fx_fn) -> dict:
+    import store
+    hs = holdings(conn, account_id)
+    fx = fx_fn()
+    market_value = 0.0
+    invested = 0.0
+    by_cat: dict = {}
+    for ticker, h in hs.items():
+        native = quote_fn(ticker, h["market"])
+        ptwd = native * fx if h["market"] == "US" else native
+        mv = h["shares"] * ptwd
+        market_value += mv
+        invested += h["cost_twd"]
+        cat = _category_of(plan, ticker)
+        by_cat[cat] = by_cat.get(cat, 0.0) + mv
+    cash = plan.capital_twd - invested
+    total = cash + market_value
+    pnl = market_value - invested
+    store.add_snapshot(conn, account_id, date, total, cash, pnl, json.dumps(by_cat))
+    return {"total_value_twd": total, "cash_twd": cash,
+            "unrealized_pnl_twd": pnl, "by_category": by_cat}
