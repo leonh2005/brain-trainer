@@ -84,3 +84,20 @@ def test_snapshot_by_category_keys():
     snap = engine.daily_snapshot(conn, "A", plan, "2026-07-24", q, fx)
     assert "AI基建衛星" in snap["by_category"]
     assert "短債防禦" in snap["by_category"]
+
+def test_rebalance_flat_no_signal():
+    conn, plan = _fresh("A")
+    engine.build_lump(conn, "A", plan, "2026-07-24", q, fx)
+    for n in range(1, 7):
+        engine.run_dca_tranche(conn, "A", plan, f"2026-0{n}-01", n, q, fx)
+    # 全部建完、價格不變 → 各類比例=目標，無訊號
+    signals = engine.check_rebalance(conn, "A", plan, "2026-12-01", q, fx)
+    assert signals == []
+
+def test_rebalance_satellite_take_profit():
+    conn, plan = _fresh("A")
+    engine.build_lump(conn, "A", plan, "2026-07-24", q, fx)   # 衛星個股 $10 建倉
+    # 衛星（美股個股）漲 2 倍 → 市值 2x 目標 > 1.5x → 觸發
+    boom = lambda tk, m: 20.0 if m == "US" else 10.0
+    signals = engine.check_rebalance(conn, "A", plan, "2026-08-01", boom, fx)
+    assert any(s["type"] == "satellite_take_profit" for s in signals)

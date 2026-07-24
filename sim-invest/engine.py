@@ -74,3 +74,34 @@ def daily_snapshot(conn, account_id, plan, date, quote_fn, fx_fn) -> dict:
     store.add_snapshot(conn, account_id, date, total, cash, pnl, json.dumps(by_cat))
     return {"total_value_twd": total, "cash_twd": cash,
             "unrealized_pnl_twd": pnl, "by_category": by_cat}
+
+
+DRIFT_PP = 5.0          # 百分點
+SATELLITE_MULT = 1.5
+SATELLITE_CAT = "AI基建衛星"
+
+
+def check_rebalance(conn, account_id, plan, date, quote_fn, fx_fn) -> list:
+    snap = daily_snapshot(conn, account_id, plan, date, quote_fn, fx_fn)
+    total = snap["total_value_twd"]
+    by_cat = snap["by_category"]
+    signals = []
+    # 目標比例（依 capital）
+    target_by_cat: dict = {}
+    for t in plan.targets:
+        target_by_cat[t.category] = target_by_cat.get(t.category, 0.0) + t.target_twd
+    for cat, tgt_twd in target_by_cat.items():
+        actual_pct = 100.0 * by_cat.get(cat, 0.0) / total if total else 0.0
+        target_pct = 100.0 * tgt_twd / plan.capital_twd
+        if abs(actual_pct - target_pct) > DRIFT_PP:
+            signals.append({"type": "drift", "category": cat,
+                            "actual_pct": round(actual_pct, 2),
+                            "target_pct": round(target_pct, 2)})
+    # 衛星獲利了結
+    sat_mv = by_cat.get(SATELLITE_CAT, 0.0)
+    sat_tgt = target_by_cat.get(SATELLITE_CAT, 0.0)
+    if sat_tgt and sat_mv > sat_tgt * SATELLITE_MULT:
+        signals.append({"type": "satellite_take_profit",
+                        "market_value": round(sat_mv, 0),
+                        "target": round(sat_tgt, 0)})
+    return signals
