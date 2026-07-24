@@ -54,3 +54,33 @@ def test_six_tranches_fully_invest_dca_targets():
         engine.run_dca_tranche(conn, "A", plan, f"2026-0{n}-01", n, q, fx)
     trades = [t for t in store.get_trades(conn, "A") if t["ticker"] == "EFV"]
     assert abs(sum(t["cost_twd"] for t in trades) - 1_413_333.33) < 1.0
+
+def test_snapshot_all_lump_at_flat_price():
+    # 只建 lump 部位，報價與建倉同價 → 未實現損益=0、現金=本金−已投入
+    conn, plan = _fresh("A")
+    engine.build_lump(conn, "A", plan, "2026-07-24", q, fx)
+    snap = engine.daily_snapshot(conn, "A", plan, "2026-07-24", q, fx)
+    invested = sum(t.target_twd for t in plan.targets if t.build_method == "lump")
+    assert abs(snap["cash_twd"] - (9_000_000 - invested)) < 1.0
+    assert abs(snap["unrealized_pnl_twd"]) < 1.0
+    assert abs(snap["total_value_twd"] - 9_000_000) < 1.0
+    # 寫入 DB
+    assert store.latest_snapshot(conn, "A")["date"] == "2026-07-24"
+
+def test_snapshot_reflects_price_gain():
+    conn, plan = _fresh("A")
+    engine.build_lump(conn, "A", plan, "2026-07-24", q, fx)      # 建倉價 $10
+    # 之後美股漲一倍（$20），台股不變
+    up = lambda tk, m: 20.0 if m == "US" else 10.0
+    snap = engine.daily_snapshot(conn, "A", plan, "2026-07-25", up, fx)
+    # lump 美股部位（BE/SNDK/CORZ/IREN/CRWV）市值翻倍，00864B（TW）不變
+    us_cost = sum(t.target_twd for t in plan.targets
+                  if t.build_method == "lump" and t.market == "US")
+    assert abs(snap["unrealized_pnl_twd"] - us_cost) < 1.0        # 美股獲利 = 成本×100%
+
+def test_snapshot_by_category_keys():
+    conn, plan = _fresh("A")
+    engine.build_lump(conn, "A", plan, "2026-07-24", q, fx)
+    snap = engine.daily_snapshot(conn, "A", plan, "2026-07-24", q, fx)
+    assert "AI基建衛星" in snap["by_category"]
+    assert "短債防禦" in snap["by_category"]
