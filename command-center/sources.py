@@ -227,6 +227,21 @@ def stock_query(symbol: str):
     return d, datetime.now().strftime('%Y-%m-%d %H:%M')
 
 
+@_wrap
+def sim_invest():
+    accounts = _proxy('http://localhost:5250/api/accounts', ttl=300)
+    out = []
+    for a in accounts:
+        detail = _proxy(f"http://localhost:5250/api/account/{a['id']}", ttl=300)
+        latest = detail.get('latest') or {}
+        out.append({
+            'id': a['id'], 'name': a['name'],
+            'total_value_twd': latest.get('total_value_twd'),
+            'unrealized_pnl_twd': latest.get('unrealized_pnl_twd'),
+        })
+    return out, datetime.now().strftime('%Y-%m-%d %H:%M')
+
+
 SIGNALS = {
     'daytrade': daytrade, 'swing': swing, 'intraday': intraday, 'ma': ma,
     'chips': chips, 'news': news, 'market-fear': market_fear,
