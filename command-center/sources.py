@@ -248,12 +248,13 @@ def market_analysis():
     live = _proxy('http://localhost:5350/api/live', ttl=60)
 
     hit_rates = analysis.get('hit_rates') or {}
-    next_day_up = hit_rates.get('next_day_up', 0)
+    same_dir = hit_rates.get('sox_tsm_same_dir_twii_same') or {}
+    next_day_up = same_dir.get('up', 0)  # 費半+台積電ADR 同漲→隔日台股同漲 %
 
     intraday_types = analysis.get('intraday_types') or []
     top_type = intraday_types[0] if intraday_types else None
 
-    index_change_pct = live.get('index_change_pct', 0)
+    index_change_pct = (live.get('index') or {}).get('change_pct', 0)
 
     return {
         'top_type': top_type,
