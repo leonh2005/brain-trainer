@@ -1,6 +1,6 @@
 {
-  "scanned_at": "2026-07-24 03:00:15",
-  "since": "2026-07-23 03:00:00",
+  "scanned_at": "2026-07-25 03:00:15",
+  "since": "2026-07-24 03:00:00",
   "results": {
     "市場儀表板": {
       "exists": true,
@@ -16,8 +16,8 @@
     },
     "motion-watcher": {
       "exists": true,
-      "errors": 5478,
-      "last_error": "[h264 @ 0x9f591aa00] error while decoding MB 0 14, bytestream 52906",
+      "errors": 5527,
+      "last_error": "[h264 @ 0x9f591bb80] error while decoding MB 0 3, bytestream -2",
       "fix": "尚無對應建議，需人工判斷"
     },
     "Cloudflare Tunnel": {
@@ -28,21 +28,21 @@
     },
     "財經新聞分析": {
       "exists": true,
-      "errors": 151,
-      "last_error": "2026-07-24 02:45:37,205 [WARNING] fetcher.reddit_fetcher: Reddit fetch failed for r/investing: 429 Client Error: Too Many Requests for url: https://www.reddit.com/r/investing/hot/.rss",
+      "errors": 156,
+      "last_error": "2026-07-25 02:45:37,381 [WARNING] fetcher.reddit_fetcher: Reddit fetch failed for r/investing: 429 Client Error: Too Many Requests for url: https://www.reddit.com/r/investing/hot/.rss",
       "fix": "尚無對應建議，需人工判斷"
     },
     "川普監測": {
       "exists": true,
-      "errors": 903,
-      "last_error": "ModuleNotFoundError: No module named 'google'",
-      "fix": "檔案或套件遺失 → 確認路徑或重新安裝 pip 套件"
+      "errors": 904,
+      "last_error": "2026-07-24 12:25:03,659 WARNING 分析失敗：Asia stocks fall as Trump tariffs rattle exporters — 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reaso",
+      "fix": "尚無對應建議，需人工判斷"
     },
     "持倉新聞(台股)": {
       "exists": true,
-      "errors": 0,
-      "last_error": null,
-      "fix": null
+      "errors": 2,
+      "last_error": "2026-07-24 08:30:35,359 WARNING T86 失敗 2317 day=20260724：HTTPSConnectionPool(host='www.twse.com.tw', port=443): Read timed out. (read timeout=10)",
+      "fix": "網路逾時 → 確認目標服務可達，或增加 timeout 設定"
     },
     "持倉新聞(美股)": {
       "exists": true,
@@ -88,9 +88,9 @@
     },
     "盤中監控": {
       "exists": true,
-      "errors": 198,
-      "last_error": "[backfill] 2408 失敗: Topic: api/v1/data/ticks, Corr: c21, Client: PYAPI/N124711691/0723/010003/480543/220.141.44.196, payload: {'token': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYmYiOjE3ODQ3Njg0MDMsImV4cCI6MTc4NDg1NDgwMywic2ltdWxhdGlvbiI6ZmFsc2UsInBlcnNvbl9pZCI6Ik4xMjQ3MTE2OTEiLCJ2ZXJzaW9uIjoiMS4zLj",
-      "fix": "尚無對應建議，需人工判斷"
+      "errors": 199,
+      "last_error": "[backfill] 2408 失敗: Topic: api/v1/data/ticks, Corr: c21, Client: PYAPI/N124711691/0724/010003/067401/220.141.44.196, payload: {'token': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYmYiOjE3ODQ4NTQ4MDMsImV4cCI6MTc4NDk0MTIwMywic2ltdWxhdGlvbiI6ZmFsc2UsInBlcnNvbl9pZCI6Ik4xMjQ3MTE2OTEiLCJ2ZXJzaW9uIjoiMS4zLj",
+      "fix": "Session/Token 過期 → 重新登入對應網站或更新 API Key"
     },
     "蝦皮軟纖監測": {
       "exists": true,
@@ -112,7 +112,7 @@
     },
     "Claude週期監測": {
       "exists": true,
-      "errors": 682,
+      "errors": 722,
       "last_error": "google.genai.errors.ClientError: 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reason': 'API_KEY_INVALID', 'domain': 'googleapis.com', 'metad",
       "fix": "尚無對應建議，需人工判斷"
     },
