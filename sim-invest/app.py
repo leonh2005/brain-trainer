@@ -1,6 +1,6 @@
 """模擬投資 Flask 服務（port 5250，唯讀報價，絕不真實下單）。"""
 import os
-import json
+from datetime import date
 from flask import Flask, jsonify, render_template
 
 import store
@@ -48,6 +48,8 @@ def account(aid):
 
 @app.get("/api/account/<aid>/nav")
 def nav(aid):
+    if aid not in PLANS:
+        return jsonify(error="unknown account"), 404
     conn = _conn()
     return jsonify([{"date": s["date"], "total_value_twd": s["total_value_twd"]}
                     for s in store.get_snapshots(conn, aid)])
@@ -57,7 +59,6 @@ def nav(aid):
 def rebalance(aid):
     if aid not in PLANS:
         return jsonify(error="unknown account"), 404
-    from datetime import date
     conn = _conn()
     sigs = engine.check_rebalance(conn, aid, PLANS[aid], date.today().isoformat(),
                                   quotes.get_quote, quotes.get_fx)
@@ -70,5 +71,4 @@ def index():
 
 
 if __name__ == "__main__":
-    import uvicorn  # noqa
     app.run(host="127.0.0.1", port=5250)
