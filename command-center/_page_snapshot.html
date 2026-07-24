@@ -106,9 +106,6 @@ header{display:flex; align-items:center; gap:16px; margin-bottom:22px}
 .row:last-child{border-bottom:0}
 .tk{font-family:var(--mono); font-weight:600; font-size:12px; color:var(--fg)}
 .tk .code{color:var(--faint); font-weight:400; margin-left:5px; font-size:11px}
-a.tk{text-decoration:none; cursor:pointer; transition:color .15s}
-a.tk:hover{color:var(--accent)}
-a.tk:hover .code{color:var(--accent-soft)}
 .spacer{flex:1}
 .chg{font-family:var(--mono); font-size:12px; font-weight:600}
 .chg.up{color:var(--up)} .chg.down{color:var(--down)}
@@ -273,12 +270,6 @@ const fmt=n=>n==null?'—':(typeof n==='number'?n.toLocaleString('en-US',{maximu
 const ago=ts=>{if(!ts)return'';const s=Date.now()/1000-ts;if(s<3600)return Math.max(1,Math.floor(s/60))+'分前';if(s<86400)return Math.floor(s/3600)+'小時前';if(s<2592000)return Math.floor(s/86400)+'天前';return Math.floor(s/2592000)+'個月前'};
 const chgCls=v=>v>0?'up':(v<0?'down':'');
 const arrow=v=>v>0?'▲':(v<0?'▼':'·');
-/* 台股代號 → Yahoo 股市個股頁；無代號則退回純文字 */
-const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const yq=code=>`https://tw.stock.yahoo.com/quote/${encodeURIComponent(code)}`;
-const tkLink=(name,code,extra='')=>code
-  ?`<a class="tk"${extra} href="${yq(code)}" target="_blank" rel="noopener" title="Yahoo 股市 ${esc(code)}">${esc(name)}<span class="code">${esc(code)}</span></a>`
-  :`<span class="tk"${extra}>${esc(name)}</span>`;
 
 /* clock */
 function tick(){const d=new Date();$('#clock-t').textContent=d.toLocaleTimeString('zh-TW',{hour12:false});$('#clock-d').textContent=d.toLocaleDateString('zh-TW',{month:'long',day:'numeric',weekday:'short'})}
@@ -327,7 +318,7 @@ function renderSwing(d){
   const box=el('div');
   rs.slice(0,8).forEach(r=>{
     const row=el('div','row');
-    row.innerHTML=`${tkLink(r.name,r.code)}<span class="spacer"></span><span class="chg ${chgCls(r.pct_change)}">${arrow(r.pct_change)} ${fmt(r.pct_change)}%</span>`;
+    row.innerHTML=`<span class="tk">${r.name||''}<span class="code">${r.code}</span></span><span class="spacer"></span><span class="chg ${chgCls(r.pct_change)}">${arrow(r.pct_change)} ${fmt(r.pct_change)}%</span>`;
     box.appendChild(row);
   });
   return box;
@@ -341,7 +332,7 @@ function renderDaytrade(d){
     const code=typeof item==='string'?item:(item.code||'');
     const name=typeof item==='string'?'':(item.name||'');
     const b=el('span','pill');
-    b.innerHTML=tkLink(name,code,' style="font-size:12px"');
+    b.innerHTML=`<span class="tk" style="font-size:12px">${name}<span class="code">${code}</span></span>`;
     box.appendChild(b);
   });
   return box;
@@ -353,7 +344,7 @@ function renderIntraday(d){
   sg.slice(-9).reverse().forEach(s=>{
     const row=el('div','row');
     const cls=s.side==='多方'?'long':'short';
-    row.innerHTML=`<span class="badge ${cls}">${s.side}</span>${tkLink(s.name,s.code)}<span class="spacer"></span><span class="mini">信心 ${s.confidence}%</span><span class="mini" style="margin-left:8px">${s.at||''}</span>`;
+    row.innerHTML=`<span class="badge ${cls}">${s.side}</span><span class="tk">${s.name}<span class="code">${s.code}</span></span><span class="spacer"></span><span class="mini">信心 ${s.confidence}%</span><span class="mini" style="margin-left:8px">${s.at||''}</span>`;
     box.appendChild(row);
   });
   return box;
@@ -402,7 +393,7 @@ function renderChips(d){
   hs.slice(0,7).forEach(h=>{
     const row=el('div','row');
     const fn=h.foreign_net;
-    row.innerHTML=`${tkLink(h.name,h.code)}<span class="mini" style="margin-left:8px;font-weight:600;color:var(--fg)">${h.close!=null?fmt(h.close):'—'}</span><span class="chg ${chgCls(h.change_pct)}" style="margin-left:6px;font-size:11px">${arrow(h.change_pct)}${fmt(h.change_pct)}%</span><span class="spacer"></span><span class="mini">外資 <b style="color:${fn>0?'var(--up)':'var(--down)'}">${fn>0?'+':''}${fmt(fn)}</b></span>`;
+    row.innerHTML=`<span class="tk">${h.name||''}<span class="code">${h.code}</span></span><span class="mini" style="margin-left:8px;font-weight:600;color:var(--fg)">${h.close!=null?fmt(h.close):'—'}</span><span class="chg ${chgCls(h.change_pct)}" style="margin-left:6px;font-size:11px">${arrow(h.change_pct)}${fmt(h.change_pct)}%</span><span class="spacer"></span><span class="mini">外資 <b style="color:${fn>0?'var(--up)':'var(--down)'}">${fn>0?'+':''}${fmt(fn)}</b></span>`;
     box.appendChild(row);
   });
   return box;
@@ -416,7 +407,7 @@ function renderMA(d){
     const code=m.key.split('_')[0], type=m.key.split('_')[1];
     const above=m.price>=m.ma;
     const row=el('div','row');
-    row.innerHTML=`${tkLink(m.name||code,code)}<span class="mini" style="margin-left:6px">${type}</span><span class="spacer"></span><span class="chg ${above?'up':'down'}" style="font-size:11px">${above?'▲上':'▼下'} ${fmt(m.price)}</span><span class="mini" style="margin-left:8px">${m.at}</span>`;
+    row.innerHTML=`<span class="tk">${m.name||code}<span class="code">${code}</span></span><span class="mini" style="margin-left:6px">${type}</span><span class="spacer"></span><span class="chg ${above?'up':'down'}" style="font-size:11px">${above?'▲上':'▼下'} ${fmt(m.price)}</span><span class="mini" style="margin-left:8px">${m.at}</span>`;
     box.appendChild(row);
   });
   return box;
@@ -433,9 +424,7 @@ function renderPortfolio(d){
   box.appendChild(mg);
   p.positions.slice(0,6).forEach(pos=>{
     const row=el('div','row');
-    const isTw=(pos.ticker||'').endsWith('.TW'), code=(pos.ticker||'').replace('.TW','');
-    const nameCell=isTw?tkLink(pos.name,code):`<span class="tk">${pos.name}<span class="code">${code}</span></span>`;
-    row.innerHTML=`${nameCell}<span class="spacer"></span><span class="mini">${fmt(pos.weight)}%</span><span class="chg" style="font-size:11px;margin-left:10px;color:var(--muted)">${fmt(pos.value_twd)}</span>`;
+    row.innerHTML=`<span class="tk">${pos.name}<span class="code">${(pos.ticker||'').replace('.TW','')}</span></span><span class="spacer"></span><span class="mini">${fmt(pos.weight)}%</span><span class="chg" style="font-size:11px;margin-left:10px;color:var(--muted)">${fmt(pos.value_twd)}</span>`;
     box.appendChild(row);
   });
   return box;
