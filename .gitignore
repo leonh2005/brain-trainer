@@ -5,6 +5,7 @@
 !**/.env.example
 .secrets/
 finmind/venv/
+market-analysis/venv/
 tw-coverage/
 BettaFish/
 line-claude-bot/
