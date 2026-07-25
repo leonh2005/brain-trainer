@@ -210,24 +210,29 @@ function pctClass(v){
 
 // 依類型名稱關鍵字回傳一個小型日內走勢示意圖（SVG polyline）
 function typeGlyph(name){
+  // [關鍵字, 走勢點, 方向]  方向：up=收紅(紅) down=收黑(綠) na=中性(橘)
   const P = [
-    ['探底回升', '2,7 16,18 28,15 42,4'],   // 探底後回升（長下影）
-    ['趨勢單邊', '2,18 42,3'],               // 單邊到收極端
-    ['窄幅紅',   '2,13 12,10 22,12 32,9 42,8'],
-    ['窄幅黑',   '2,9 12,12 22,10 32,13 42,14'],
-    ['衝高回落', '2,14 16,3 30,6 42,16'],     // 衝高後回落（長上影）
-    ['十字',     '2,11 42,11'],
-    ['V轉',      '2,9 20,19 42,3'],           // 開低→深探→拉高
-    ['開低走高', '2,18 42,4'],
-    ['開低走低', '2,9 42,19'],
-    ['開高走低', '2,4 42,19'],
+    ['探底回升', '2,7 16,18 28,15 42,4',        'up'],   // 探底回升收高（長下影）
+    ['趨勢單邊', '2,18 42,3',                    'na'],   // 單邊到收極端（方向不定）
+    ['窄幅紅',   '2,13 12,10 22,12 32,9 42,8',   'up'],   // 紅盤
+    ['窄幅黑',   '2,9 12,12 22,10 32,13 42,14',  'down'], // 黑盤
+    ['衝高回落', '2,14 16,3 30,6 42,16',         'down'], // 衝高回落收低（長上影）
+    ['十字',     '2,11 42,11',                   'na'],   // 十字變盤（中性）
+    ['V轉',      '2,9 20,19 42,3',               'up'],   // 開低深探拉高翻紅
+    ['開低走高', '2,18 42,4',                    'up'],
+    ['開低走低', '2,9 42,19',                    'down'],
+    ['開高走低', '2,4 42,19',                    'down'],
   ];
-  let pts = '2,11 42,11';
-  for (const [k, v] of P){ if (name.indexOf(k) >= 0){ pts = v; break; } }
+  let pts = '2,11 42,11', dir = 'na';
+  for (const [k, v, d] of P){ if (name.indexOf(k) >= 0){ pts = v; dir = d; break; } }
+  const color = dir === 'up' ? 'var(--up)' : dir === 'down' ? 'var(--down)' : 'var(--accent)';
   return `<svg class="glyph" viewBox="0 0 44 22" width="40" height="20" aria-hidden="true">`
-       + `<polyline points="${pts}" fill="none" stroke="var(--accent)" stroke-width="2" `
+       + `<polyline points="${pts}" fill="none" stroke="${color}" stroke-width="2" `
        + `stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 }
+
+// 六大權值股依大盤權重(市值)由高到低的排名，供「盤中即時追蹤」排序
+const WEIGHT_RANK = {'2330':1,'2454':2,'2308':3,'2317':4,'3711':5,'2382':6};
 
 async function loadAnalysis(){
   try{
@@ -298,13 +303,6 @@ async function loadAnalysis(){
       </tr>
     `).join('') || '<tr><td colspan="5" class="empty">無資料</td></tr>';
 
-    // 記錄各股相關性（近2年優先），供「盤中即時追蹤」依相關性排序
-    window.STOCK_CORR = {};
-    ws.forEach(s => {
-      const key = String(s.code).replace('.TW', '');
-      window.STOCK_CORR[key] = (s.corr_2y != null ? s.corr_2y : s.corr_full) || 0;
-    });
-
   }catch(e){
     document.getElementById('type-bars').innerHTML = '<div class="empty">載入失敗</div>';
   }
@@ -326,10 +324,9 @@ async function loadLive(){
     document.getElementById('live-updated').textContent = `更新於 ${d.updated || '--'} (${d.source || '--'})`;
 
     const stocks = d.stocks || [];
-    // 依與大盤的相關性由高到低排序（相關性資料來自 loadAnalysis）
-    const corr = window.STOCK_CORR || {};
+    // 依大盤權重(市值/影響指數點數)由高到低排序
     stocks.sort((a, b) =>
-      (corr[String(b.code).replace('.TW', '')] || 0) - (corr[String(a.code).replace('.TW', '')] || 0));
+      (WEIGHT_RANK[String(a.code).replace('.TW','')] || 99) - (WEIGHT_RANK[String(b.code).replace('.TW','')] || 99));
     document.getElementById('live-stocks').innerHTML = stocks.map(s => `
       <div class="live-tile">
         <div><span class="name">${s.name}</span><span class="code">${s.code}</span></div>
@@ -342,8 +339,9 @@ async function loadLive(){
   }
 }
 
-// 先載入分析（建立 STOCK_CORR 相關性順序），再跑即時追蹤，確保依相關性排序
-loadAnalysis().then(() => { loadLive(); setInterval(loadLive, 15000); });
+loadAnalysis();
+loadLive();
+setInterval(loadLive, 15000);
 </script>
 </body>
 </html>
