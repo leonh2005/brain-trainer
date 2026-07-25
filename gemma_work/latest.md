@@ -1,20 +1,23 @@
-# Claude Handoff 20260724_2345
-> 自動生成於 2026-07-24 23:45
+# Claude Handoff 20260725_1256
+> 自動生成於 2026-07-25 12:56
 
 ## 未提交的檔案異動
 ```
 ? TradingAgents
+ M chip-tracker/chip.db
  m daily-stock-analysis
+ M gemma_work/latest.md
+ M rabbit-care/rabbit.db
  m stock-screener-ai
 ```
 
 ## 近期 Commits
 ```
+130a309d feat: sim-invest 總損益統計 + market-analysis 日內型態小圖/矩陣說明/即時追蹤依相關性排序
+47fa980d fix(command-center): 模擬投資/市場分析卡 render 資料層級錯誤
+6c284ad9 chore: 自動同步 2026-07-25 09:40
+952bf0d3 chore: 自動同步 2026-07-25 04:40
 ccaf48b6 chore: 自動同步 2026-07-24 23:40
-5dfc56a3 fix(command-center): 市場分析卡取正確 hit_rate/即時漲跌 key
-70ac46c2 feat(command-center): 市場分析卡
-3cf1f0ba feat(market-analysis): 26年大盤日內型態/相關性/六大權值股單頁儀表板
-8dc4f82b feat: sim-invest 模擬投資台美股服務
 ```
 
 ## 給 Hermes 的備註
