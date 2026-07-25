@@ -1,5 +1,5 @@
-# Claude Handoff 20260725_1256
-> 自動生成於 2026-07-25 12:56
+# Claude Handoff 20260725_1806
+> 自動生成於 2026-07-25 18:06
 
 ## 未提交的檔案異動
 ```
@@ -13,11 +13,11 @@
 
 ## 近期 Commits
 ```
+3df8e0d3 feat(sim-invest): 點擊未實現損益表頭排序(高低/低高/原順序循環)
+c0210c05 feat(sim-invest): 未實現損益欄加上報酬率百分比
+6e0cb26a feat(market-analysis): 日內型態小圖依漲跌配色(綠跌紅漲) + 即時追蹤改依權重排序
+a265c143 chore: 自動同步 2026-07-25 14:40
 130a309d feat: sim-invest 總損益統計 + market-analysis 日內型態小圖/矩陣說明/即時追蹤依相關性排序
-47fa980d fix(command-center): 模擬投資/市場分析卡 render 資料層級錯誤
-6c284ad9 chore: 自動同步 2026-07-25 09:40
-952bf0d3 chore: 自動同步 2026-07-25 04:40
-ccaf48b6 chore: 自動同步 2026-07-24 23:40
 ```
 
 ## 給 Hermes 的備註
