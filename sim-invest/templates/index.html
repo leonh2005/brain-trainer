@@ -163,6 +163,39 @@ async function loadAccounts(){
   });
 }
 
+let allocRows = [];
+let allocSortDir = 0;  // 0=依配置順序, -1=損益高→低, 1=損益低→高
+
+function renderAllocTable(){
+  const el = document.getElementById('allocTable');
+  const rows = allocRows.slice();
+  if (allocSortDir !== 0) rows.sort((a, b) => (a.pnl - b.pnl) * allocSortDir);
+  const arrow = allocSortDir === -1 ? ' ▼' : (allocSortDir === 1 ? ' ▲' : '');
+  const body = rows.map(r => `<tr>
+    <td class="name">${r.ticker}<span class="cat">${r.category}</span></td>
+    <td>${pct(r.target_pct)}</td>
+    <td>${r.actualPct !== null ? pct(r.actualPct) : '—'}</td>
+    <td class="${r.drift !== null ? signClass(r.drift) : ''}">${r.drift !== null ? sign(r.drift) + fmt(r.drift, 2) + 'pp' : '—'}</td>
+    <td>${fmt(r.shares, r.shares % 1 === 0 ? 0 : 2)}</td>
+    <td>NT$${fmt(r.cost_twd)}</td>
+    <td>NT$${fmt(r.marketValue)}</td>
+    <td class="${signClass(r.pnl)}">${sign(r.pnl)}NT$${fmt(r.pnl)}${r.cost_twd > 0 ? `<span style="font-size:11px;font-weight:400;opacity:.8">（${sign(100 * r.pnl / r.cost_twd)}${fmt(100 * r.pnl / r.cost_twd, 2)}%）</span>` : ''}</td>
+  </tr>`).join('');
+  el.innerHTML = `<table>
+    <thead><tr>
+      <th>標的</th><th>目標%</th><th>實際%</th><th>偏離</th>
+      <th>股數</th><th>成本</th><th>現值</th>
+      <th id="pnlHead" style="cursor:pointer;user-select:none" title="點擊排序(高→低 / 低→高 / 原順序)">未實現損益${arrow}</th>
+    </tr></thead>
+    <tbody>${body}</tbody>
+  </table>`;
+  const head = document.getElementById('pnlHead');
+  if (head) head.addEventListener('click', () => {
+    allocSortDir = allocSortDir === 0 ? -1 : (allocSortDir === -1 ? 1 : 0);
+    renderAllocTable();
+  });
+}
+
 async function loadAllocation(){
   const el = document.getElementById('allocTable');
   try {
@@ -193,31 +226,16 @@ async function loadAllocation(){
       return;
     }
 
-    const rows = data.targets.map(t => {
+    allocRows = data.targets.map(t => {
       const h = holdingsByTicker[t.ticker] || {shares: 0, cost_twd: 0, market_value: 0};
       const marketValue = h.market_value !== undefined ? h.market_value : h.cost_twd;
       const actualPct = total ? (100 * marketValue / total) : null;
       const drift = actualPct !== null ? (actualPct - t.target_pct) : null;
       const pnl = marketValue - h.cost_twd;
-      return `<tr>
-        <td class="name">${t.ticker}<span class="cat">${t.category}</span></td>
-        <td>${pct(t.target_pct)}</td>
-        <td>${actualPct !== null ? pct(actualPct) : '—'}</td>
-        <td class="${drift !== null ? signClass(drift) : ''}">${drift !== null ? sign(drift) + fmt(drift, 2) + 'pp' : '—'}</td>
-        <td>${fmt(h.shares, h.shares % 1 === 0 ? 0 : 2)}</td>
-        <td>NT$${fmt(h.cost_twd)}</td>
-        <td>NT$${fmt(marketValue)}</td>
-        <td class="${signClass(pnl)}">${sign(pnl)}NT$${fmt(pnl)}${h.cost_twd > 0 ? `<span style="font-size:11px;font-weight:400;opacity:.8">（${sign(100 * pnl / h.cost_twd)}${fmt(100 * pnl / h.cost_twd, 2)}%）</span>` : ''}</td>
-      </tr>`;
-    }).join('');
-
-    el.innerHTML = `<table>
-      <thead><tr>
-        <th>標的</th><th>目標%</th><th>實際%</th><th>偏離</th>
-        <th>股數</th><th>成本</th><th>現值</th><th>未實現損益</th>
-      </tr></thead>
-      <tbody>${rows}</tbody>
-    </table>`;
+      return {ticker: t.ticker, category: t.category, target_pct: t.target_pct,
+              actualPct, drift, shares: h.shares, cost_twd: h.cost_twd, marketValue, pnl};
+    });
+    renderAllocTable();
   } catch (e) {
     el.innerHTML = '<div class="err">載入失敗：' + e + '</div>';
   }
