@@ -103,6 +103,7 @@ td .cat{display:block; font-size:10px; color:var(--faint); font-weight:400; font
       <div>
         <h1>模擬投資儀表板</h1>
         <div class="sub" id="acctName">載入中…</div>
+        <div class="sub" id="acctPnl" style="margin-top:3px;font-weight:600"></div>
       </div>
     </div>
     <div class="acct-switch" id="acctSwitch"></div>
@@ -175,6 +176,17 @@ async function loadAllocation(){
     const holdingsByTicker = {};
     data.holdings.forEach(h => holdingsByTicker[h.ticker] = h);
     const total = latest ? latest.total_value_twd : null;
+
+    // 總損益 = 總市值 − 本金
+    const cap = data.account.capital_twd;
+    const totalPnl = total !== null ? (total - cap) : null;
+    const pnlEl = document.getElementById('acctPnl');
+    if (totalPnl !== null) {
+      const pnlPct = 100 * totalPnl / cap;
+      pnlEl.innerHTML = `總損益 <span class="${signClass(totalPnl)}">${sign(totalPnl)}NT$${fmt(totalPnl)}（${sign(pnlPct)}${fmt(pnlPct, 2)}%）</span>`;
+    } else {
+      pnlEl.textContent = '';
+    }
 
     if (!data.targets.length) {
       el.innerHTML = '<div class="empty">無配置目標</div>';

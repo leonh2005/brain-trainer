@@ -52,7 +52,11 @@ header .sub{font-size:11.5px; color:var(--faint)}
 
 /* 區塊① 橫向長條 */
 .bar-row{display:flex; align-items:center; gap:10px; margin-bottom:9px}
-.bar-name{width:170px; flex:none; font-size:12.5px; color:var(--fg)}
+.bar-name{width:196px; flex:none; display:flex; align-items:center; gap:8px; font-size:12.5px; color:var(--fg)}
+.bar-name .glyph{flex:none}
+.bar-name span{white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.matrix-note{font-size:11.5px; color:var(--muted); line-height:1.65; margin-top:11px; padding-top:10px; border-top:1px solid var(--border-soft)}
+.matrix-note b{color:var(--fg)}
 .bar-track{flex:1; height:16px; background:var(--bg-soft); border-radius:6px; overflow:hidden; position:relative}
 .bar-fill{height:100%; background:linear-gradient(90deg,var(--accent),var(--accent-soft)); border-radius:6px 0 0 6px}
 .bar-meta{width:120px; flex:none; text-align:right; font-family:var(--mono); font-size:11.5px; color:var(--muted)}
@@ -149,6 +153,11 @@ tr.highlight td{background:rgba(217,119,87,.07); font-weight:700}
       <thead><tr><th>組合</th><th>全期</th><th>近2年</th></tr></thead>
       <tbody></tbody>
     </table>
+    <div class="matrix-note">
+      <b>數值意義:</b>這是「同一天」兩個市場日報酬的相關係數,範圍 −1~1,越接近 <b>1</b> 代表當天漲跌越同步、接近 <b>0</b> 代表幾乎無關。<br>
+      · <b>SOX × TSM ≈ 0.72（近2年 0.81)</b>:費半指數與台積電 ADR 高度連動,基本上一起走。<br>
+      · <b>TWII × SOX ≈ 0.17</b>:台股大盤與費半「同日」關聯偏低 —— 因時差,美股當天的走勢要到<b>隔天</b>才反映到台股,所以同日看不出關聯(真正的影響在下方「隔夜領先」)。
+    </div>
   </div>
   <div class="card">
     <h3>隔夜領先相關(t日美股 → t+1日台股)</h3>
@@ -156,6 +165,11 @@ tr.highlight td{background:rgba(217,119,87,.07); font-weight:700}
       <thead><tr><th>領先關係</th><th>全期</th><th>近2年</th></tr></thead>
       <tbody></tbody>
     </table>
+    <div class="matrix-note">
+      <b>數值意義:</b>這裡把「t 日美股」對「t+1 日台股」做相關 —— 也就是<b>昨晚美股 → 今天台股</b>的領先效果。數值越高,昨晚美股的方向越能<b>預示今日台股</b>。<br>
+      · <b>SOX → 隔日 TWII:全期 0.35 → 近2年 0.53</b>:近年費半對台股隔日的領先性明顯增強,且比「同日相關(0.17)」高很多 → 隔夜的預測力遠大於同日。<br>
+      · 實務讀法:昨晚費半、台積電 ADR 收紅,今天台股偏多的機率上升(下方「隔日方向勝率」給出具體命中率)。
+    </div>
   </div>
   <div class="card">
     <h3>隔日方向勝率</h3>
@@ -194,6 +208,27 @@ function pctClass(v){
   return v >= 0 ? 'up' : 'down';
 }
 
+// 依類型名稱關鍵字回傳一個小型日內走勢示意圖（SVG polyline）
+function typeGlyph(name){
+  const P = [
+    ['探底回升', '2,7 16,18 28,15 42,4'],   // 探底後回升（長下影）
+    ['趨勢單邊', '2,18 42,3'],               // 單邊到收極端
+    ['窄幅紅',   '2,13 12,10 22,12 32,9 42,8'],
+    ['窄幅黑',   '2,9 12,12 22,10 32,13 42,14'],
+    ['衝高回落', '2,14 16,3 30,6 42,16'],     // 衝高後回落（長上影）
+    ['十字',     '2,11 42,11'],
+    ['V轉',      '2,9 20,19 42,3'],           // 開低→深探→拉高
+    ['開低走高', '2,18 42,4'],
+    ['開低走低', '2,9 42,19'],
+    ['開高走低', '2,4 42,19'],
+  ];
+  let pts = '2,11 42,11';
+  for (const [k, v] of P){ if (name.indexOf(k) >= 0){ pts = v; break; } }
+  return `<svg class="glyph" viewBox="0 0 44 22" width="40" height="20" aria-hidden="true">`
+       + `<polyline points="${pts}" fill="none" stroke="var(--accent)" stroke-width="2" `
+       + `stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+}
+
 async function loadAnalysis(){
   try{
     const res = await fetch('/api/analysis');
@@ -207,7 +242,7 @@ async function loadAnalysis(){
       `26 年統計(^TWII 2000–2026,${daysTotal} 個交易日)`;
     document.getElementById('type-bars').innerHTML = types.map(t => `
       <div class="bar-row">
-        <div class="bar-name">${t.name}</div>
+        <div class="bar-name">${typeGlyph(t.name)}<span>${t.name}</span></div>
         <div class="bar-track"><div class="bar-fill" style="width:${(t.pct/maxPct*100).toFixed(1)}%"></div></div>
         <div class="bar-meta">${t.pct.toFixed(2)}% · ${t.count}天</div>
       </div>
@@ -263,6 +298,13 @@ async function loadAnalysis(){
       </tr>
     `).join('') || '<tr><td colspan="5" class="empty">無資料</td></tr>';
 
+    // 記錄各股相關性（近2年優先），供「盤中即時追蹤」依相關性排序
+    window.STOCK_CORR = {};
+    ws.forEach(s => {
+      const key = String(s.code).replace('.TW', '');
+      window.STOCK_CORR[key] = (s.corr_2y != null ? s.corr_2y : s.corr_full) || 0;
+    });
+
   }catch(e){
     document.getElementById('type-bars').innerHTML = '<div class="empty">載入失敗</div>';
   }
@@ -284,6 +326,10 @@ async function loadLive(){
     document.getElementById('live-updated').textContent = `更新於 ${d.updated || '--'} (${d.source || '--'})`;
 
     const stocks = d.stocks || [];
+    // 依與大盤的相關性由高到低排序（相關性資料來自 loadAnalysis）
+    const corr = window.STOCK_CORR || {};
+    stocks.sort((a, b) =>
+      (corr[String(b.code).replace('.TW', '')] || 0) - (corr[String(a.code).replace('.TW', '')] || 0));
     document.getElementById('live-stocks').innerHTML = stocks.map(s => `
       <div class="live-tile">
         <div><span class="name">${s.name}</span><span class="code">${s.code}</span></div>
@@ -296,9 +342,8 @@ async function loadLive(){
   }
 }
 
-loadAnalysis();
-loadLive();
-setInterval(loadLive, 15000);
+// 先載入分析（建立 STOCK_CORR 相關性順序），再跑即時追蹤，確保依相關性排序
+loadAnalysis().then(() => { loadLive(); setInterval(loadLive, 15000); });
 </script>
 </body>
 </html>
