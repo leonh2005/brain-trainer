@@ -207,7 +207,7 @@ async function loadAllocation(){
         <td>${fmt(h.shares, h.shares % 1 === 0 ? 0 : 2)}</td>
         <td>NT$${fmt(h.cost_twd)}</td>
         <td>NT$${fmt(marketValue)}</td>
-        <td class="${signClass(pnl)}">${sign(pnl)}NT$${fmt(pnl)}</td>
+        <td class="${signClass(pnl)}">${sign(pnl)}NT$${fmt(pnl)}${h.cost_twd > 0 ? `<span style="font-size:11px;font-weight:400;opacity:.8">（${sign(100 * pnl / h.cost_twd)}${fmt(100 * pnl / h.cost_twd, 2)}%）</span>` : ''}</td>
       </tr>`;
     }).join('');
 
