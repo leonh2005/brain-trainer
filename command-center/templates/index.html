@@ -443,7 +443,7 @@ function renderPortfolio(d){
   return box;
 }
 function renderSimInvest(d){
-  const accts=(d&&d.data)||[];
+  const accts=Array.isArray(d)?d:[];
   if(!accts.length)return el('div','empty','無帳戶資料');
   const box=el('div');
   const mg=el('div','mg');mg.style.marginBottom='13px';
@@ -461,7 +461,7 @@ function renderMarketAnalysis(d){
   const box=el('div');
   const mg=el('div','mg');mg.style.marginBottom='13px';
   const items=[
-    ['最常見日內型態', d.top_type||'—'],
+    ['最常見日內型態', (d.top_type&&d.top_type.name)||'—'],
     ['隔日同漲勝率', d.hit_up!=null?fmt(d.hit_up)+'%':'—'],
     ['大盤即時漲跌', d.index_change_pct!=null?`${d.index_change_pct>0?'+':''}${fmt(d.index_change_pct)}%`:'—'],
   ];
