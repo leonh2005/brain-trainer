@@ -1,6 +1,6 @@
 {
-  "scanned_at": "2026-07-26 03:00:15",
-  "since": "2026-07-25 03:00:00",
+  "scanned_at": "2026-07-27 03:00:15",
+  "since": "2026-07-26 03:00:00",
   "results": {
     "市場儀表板": {
       "exists": true,
@@ -16,8 +16,8 @@
     },
     "motion-watcher": {
       "exists": true,
-      "errors": 5559,
-      "last_error": "[h264 @ 0x9f5918000] error while decoding MB 0 31, bytestream 162",
+      "errors": 5597,
+      "last_error": "[h264 @ 0x9f5918380] error while decoding MB 152 10, bytestream -5",
       "fix": "尚無對應建議，需人工判斷"
     },
     "Cloudflare Tunnel": {
@@ -28,8 +28,8 @@
     },
     "財經新聞分析": {
       "exists": true,
-      "errors": 154,
-      "last_error": "2026-07-26 02:45:36,498 [WARNING] fetcher.reddit_fetcher: Reddit fetch failed for r/investing: 429 Client Error: Too Many Requests for url: https://www.reddit.com/r/investing/hot/.rss",
+      "errors": 153,
+      "last_error": "2026-07-27 02:45:38,803 [WARNING] fetcher.reddit_fetcher: Reddit fetch failed for r/investing: 429 Client Error: Too Many Requests for url: https://www.reddit.com/r/investing/hot/.rss",
       "fix": "尚無對應建議，需人工判斷"
     },
     "川普監測": {
@@ -40,15 +40,15 @@
     },
     "持倉新聞(台股)": {
       "exists": true,
-      "errors": 5,
-      "last_error": "2026-07-25 08:30:11,153 ERROR DeepSeek 分析失敗 00881：Error code: 400 - {'error': {'message': 'The supported API model names are deepseek-v4-pro or deepseek-v4-flash, but you passed deepseek-chat.', 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_request_error'}}",
+      "errors": 3,
+      "last_error": "2026-07-26 08:30:12,262 ERROR DeepSeek 分析失敗 2317：Error code: 400 - {'error': {'message': 'The supported API model names are deepseek-v4-pro or deepseek-v4-flash, but you passed deepseek-chat.', 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_request_error'}}",
       "fix": "尚無對應建議，需人工判斷"
     },
     "持倉新聞(美股)": {
       "exists": true,
-      "errors": 2,
-      "last_error": "2026-07-25 21:00:08,391 ERROR DeepSeek 分析失敗 00864B：Error code: 400 - {'error': {'message': 'The supported API model names are deepseek-v4-pro or deepseek-v4-flash, but you passed deepseek-chat.', 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_request_error'}}",
-      "fix": "尚無對應建議，需人工判斷"
+      "errors": 0,
+      "last_error": null,
+      "fix": null
     },
     "HolaQuant": {
       "exists": true,
@@ -112,7 +112,7 @@
     },
     "Claude週期監測": {
       "exists": true,
-      "errors": 762,
+      "errors": 802,
       "last_error": "google.genai.errors.ClientError: 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reason': 'API_KEY_INVALID', 'domain': 'googleapis.com', 'metad",
       "fix": "尚無對應建議，需人工判斷"
     },
