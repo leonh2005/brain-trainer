@@ -122,6 +122,13 @@ def _war_news():
     return news
 
 
+def _tw_econ():
+    """台灣官方數據（手動維護檔，無乾淨免費 API）。"""
+    path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "tw_econ.json")
+    with open(path, encoding="utf-8") as f:
+        return json.load(f)
+
+
 def _build():
     data = {}
     for key, fn in [
@@ -131,6 +138,7 @@ def _build():
         ("fed_rate", _fed_rate),
         ("earnings", _earnings),
         ("war", _war_news),
+        ("tw", _tw_econ),
     ]:
         try:
             data[key] = fn()

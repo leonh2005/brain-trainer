@@ -410,16 +410,21 @@ async function loadEcon(){
       </div>`;
     }).join('') || '<div class="empty">無資料</div>';
 
-    const cpi = d.cpi_us, core = d.cpi_core_us, fed = d.fed_rate, stats = [];
+    const cpi = d.cpi_us, core = d.cpi_core_us, fed = d.fed_rate, tw = d.tw || {}, stats = [];
     if (cpi) stats.push(`<div class="es"><div class="k">美國 CPI 年增（${cpi.date.slice(0,7)}）</div><div class="v">${cpi.yoy}%</div></div>`);
-    if (core) stats.push(`<div class="es"><div class="k">核心 CPI 年增</div><div class="v">${core.yoy}%</div></div>`);
+    if (core) stats.push(`<div class="es"><div class="k">美國 核心 CPI</div><div class="v">${core.yoy}%</div></div>`);
     if (fed) stats.push(`<div class="es"><div class="k">Fed 政策利率（${fed.date}）</div><div class="v">${fed.lower}–${fed.upper}%</div></div>`);
+    if (tw.cpi) stats.push(`<div class="es"><div class="k">台灣 CPI 年增（${tw.cpi.date}）</div><div class="v">${tw.cpi.yoy}%</div></div>`);
+    if (tw.cpi) stats.push(`<div class="es"><div class="k">台灣 核心 CPI</div><div class="v">${tw.cpi.core}%</div></div>`);
+    if (tw.rate) stats.push(`<div class="es"><div class="k">台灣 央行重貼現率</div><div class="v">${tw.rate.rate}%</div></div>`);
     document.getElementById('econ-data').innerHTML = stats.join('') || '<div class="empty">無資料</div>';
 
     const ea = d.earnings || [];
-    document.getElementById('econ-earnings').innerHTML = ea.length
+    const earnHtml = ea.length
       ? ea.map(e => `<div class="earn-row"><span class="ed">${e.date}</span><span>${e.name}（${e.symbol}）</span></div>`).join('')
-      : '<div class="empty">未來 45 天無龍頭法說會</div>';
+      : '<div class="empty">未來 45 天無美股龍頭法說會</div>';
+    const enote = tw.earnings_note ? `<div class="note" style="margin-top:9px">${tw.earnings_note}</div>` : '';
+    document.getElementById('econ-earnings').innerHTML = earnHtml + enote;
 
     const war = d.war || [];
     document.getElementById('econ-war').innerHTML = war.length
