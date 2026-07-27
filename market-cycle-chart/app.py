@@ -91,6 +91,7 @@ def chart_data():
             "anchors": script["anchors"],
             "targets": script["targets"],
             "retracements": script.get("retracements", []),
+            "projected": script.get("projected", []),
         },
         "market_cycles": cycles.DEFAULT_CYCLES,
         "econ_cycles": econ_cycles.DEFAULT_ECON_CYCLES,
@@ -125,4 +126,4 @@ def taiex():
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5900, debug=False)
+    app.run(host="0.0.0.0", port=5905, debug=False)

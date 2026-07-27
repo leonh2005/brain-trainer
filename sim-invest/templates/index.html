@@ -60,6 +60,9 @@ header{display:flex; align-items:center; gap:14px; margin-bottom:20px; flex-wrap
 .card-head .ic{font-size:14px}
 .card-head h3{font-size:12.5px; font-weight:600; letter-spacing:-.01em}
 .card-head .meta{margin-left:auto; font-size:11px; color:var(--faint); font-family:var(--mono)}
+.refresh-btn{margin-left:10px; padding:5px 12px; border-radius:999px; border:1px solid var(--border-soft); background:var(--card); color:var(--muted); font-size:11.5px; font-weight:600; cursor:pointer; transition:.15s}
+.refresh-btn:hover{border-color:var(--accent); color:var(--fg)}
+.refresh-btn:disabled{opacity:.5; cursor:default}
 
 table{width:100%; border-collapse:collapse; font-size:12.5px}
 th{
@@ -111,7 +114,7 @@ td .cat{display:block; font-size:10px; color:var(--faint); font-weight:400; font
 
   <div class="sec-label">配置總表</div>
   <div class="card">
-    <div class="card-head"><span class="ic">📊</span><h3>目標 vs 實際配置</h3><span class="meta" id="allocMeta"></span></div>
+    <div class="card-head"><span class="ic">📊</span><h3>目標 vs 實際配置</h3><span class="meta" id="allocMeta"></span><button id="refreshBtn" class="refresh-btn">🔄 刷新報價</button></div>
     <div class="card-body" id="allocTable"><div class="empty">載入中…</div></div>
   </div>
 
@@ -177,6 +180,8 @@ function renderAllocTable(){
     <td>${r.actualPct !== null ? pct(r.actualPct) : '—'}</td>
     <td class="${r.drift !== null ? signClass(r.drift) : ''}">${r.drift !== null ? sign(r.drift) + fmt(r.drift, 2) + 'pp' : '—'}</td>
     <td>${fmt(r.shares, r.shares % 1 === 0 ? 0 : 2)}</td>
+    <td${r.error ? ` style="color:var(--faint)" title="報價失敗：${String(r.error).replace(/"/g, '&quot;')}"` : ''}>${r.error ? '報價失敗' : (r.native != null ? (r.market === 'US' ? '$' : '') + fmt(r.native, 2) : '—')}</td>
+    <td class="${r.changePct != null ? signClass(r.changePct) : ''}">${r.changePct != null ? sign(r.changePct) + fmt(r.changePct, 2) + '%' : '—'}</td>
     <td>NT$${fmt(r.cost_twd)}</td>
     <td>NT$${fmt(r.marketValue)}</td>
     <td class="${signClass(r.pnl)}">${sign(r.pnl)}NT$${fmt(r.pnl)}${r.cost_twd > 0 ? `<span style="font-size:11px;font-weight:400;opacity:.8">（${sign(100 * r.pnl / r.cost_twd)}${fmt(100 * r.pnl / r.cost_twd, 2)}%）</span>` : ''}</td>
@@ -184,7 +189,7 @@ function renderAllocTable(){
   el.innerHTML = `<table>
     <thead><tr>
       <th>標的</th><th>目標%</th><th>實際%</th><th>偏離</th>
-      <th>股數</th><th>成本</th><th>現值</th>
+      <th>股數</th><th>現價</th><th>當日%</th><th>成本</th><th>現值</th>
       <th id="pnlHead" style="cursor:pointer;user-select:none" title="點擊排序(高→低 / 低→高 / 原順序)">未實現損益${arrow}</th>
     </tr></thead>
     <tbody>${body}</tbody>
@@ -343,6 +348,42 @@ function loadAll(){
   loadRebalance();
 }
 
+async function refreshLive(){
+  const btn = document.getElementById('refreshBtn');
+  const label = btn.textContent;
+  btn.disabled = true; btn.textContent = '報價中…';
+  try {
+    const res = await fetch('/api/account/' + currentAid + '/live');
+    const data = await res.json();
+    if (data.error) throw new Error(data.error);
+    const byTicker = {};
+    data.holdings.forEach(h => byTicker[h.ticker] = h);
+    const total = data.total_value_twd;
+    allocRows.forEach(r => {
+      const h = byTicker[r.ticker];
+      if (h) {
+        r.market = h.market; r.native = h.last_native; r.changePct = h.change_pct; r.error = h.error;
+        if (h.market_value != null) { r.marketValue = h.market_value; r.pnl = h.pnl; }
+      }
+      r.actualPct = total ? (100 * r.marketValue / total) : r.actualPct;
+      r.drift = r.actualPct !== null ? (r.actualPct - r.target_pct) : r.drift;
+    });
+    renderAllocTable();
+    const cap = (accountsData.find(a => a.id === currentAid) || {}).capital_twd;
+    if (cap && total != null) {
+      const totalPnl = total - cap, pnlPct = 100 * totalPnl / cap;
+      document.getElementById('acctPnl').innerHTML =
+        `總損益(即時) <span class="${signClass(totalPnl)}">${sign(totalPnl)}NT$${fmt(totalPnl)}（${sign(pnlPct)}${fmt(pnlPct, 2)}%）</span>`;
+    }
+    document.getElementById('allocMeta').textContent = '即時報價 · 匯率 ' + data.fx;
+  } catch (e) {
+    document.getElementById('allocMeta').textContent = '報價失敗：' + e.message;
+  } finally {
+    btn.disabled = false; btn.textContent = label;
+  }
+}
+
+document.getElementById('refreshBtn').addEventListener('click', refreshLive);
 loadAccounts().then(loadAll);
 </script>
 </body>
