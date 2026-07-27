@@ -88,6 +88,11 @@ tr.highlight td{background:rgba(217,119,87,.07); font-weight:700}
 /* 即時追蹤 */
 .live-head{display:flex; align-items:center; gap:10px; margin-bottom:14px}
 .live-head .idx-price{font-family:var(--mono); font-size:22px; font-weight:800}
+.regional-row{display:flex; gap:22px; flex-wrap:wrap; margin:2px 0 14px}
+.regional-row .reg-item{font-size:12.5px; color:var(--muted)}
+.regional-row .reg-name{color:var(--fg); font-weight:600}
+.regional-row .reg-price{font-family:var(--mono); font-weight:600; margin:0 4px}
+.regional-row .reg-chg{font-family:var(--mono); font-weight:600}
 .live-head .idx-pct{font-family:var(--mono); font-size:16px; font-weight:700; padding:3px 10px; border-radius:999px}
 .idx-pct.up{background:rgba(193,95,60,.12); color:var(--up)}
 .idx-pct.down{background:rgba(95,115,70,.14); color:var(--down)}
@@ -193,6 +198,7 @@ tr.highlight td{background:rgba(217,119,87,.07); font-weight:700}
       <div class="idx-pct" id="live-idx-pct">--</div>
       <div class="updated" id="live-updated">尚無資料</div>
     </div>
+    <div class="regional-row" id="live-regional"></div>
     <div class="live-grid" id="live-stocks"><div class="empty">暫無即時資料</div></div>
   </div>
 </div>
@@ -324,6 +330,14 @@ async function loadLive(){
     pctEl.textContent = cpTxt ? `${cpTxt} 點（${fmtPct(idx.change_pct)}）` : fmtPct(idx.change_pct);
     pctEl.className = 'idx-pct ' + pctClass(idx.change_pct);
     document.getElementById('live-updated').textContent = `更新於 ${d.updated || '--'} (${d.source || '--'})`;
+
+    // 日股/韓股大盤（yfinance）
+    const reg = d.regional || [];
+    document.getElementById('live-regional').innerHTML = reg.map(r => {
+      const rp = (r.change_point != null && !isNaN(r.change_point)) ? ((r.change_point > 0 ? '+' : '') + r.change_point.toFixed(2)) : '--';
+      return `<span class="reg-item"><span class="reg-name">${r.name}</span><span class="reg-price">${r.price != null ? r.price : '--'}</span>`
+           + `<span class="reg-chg ${pctClass(r.change_pct)}">${rp}（${fmtPct(r.change_pct)}）</span></span>`;
+    }).join('');
 
     const stocks = d.stocks || [];
     // 依大盤權重(市值/影響指數點數)由高到低排序
