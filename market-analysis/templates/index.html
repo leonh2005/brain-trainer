@@ -108,6 +108,11 @@ tr.highlight td{background:rgba(217,119,87,.07); font-weight:700}
 .earn-row{display:flex; gap:10px; align-items:baseline; font-size:12.5px; padding:5px 0; border-bottom:1px solid var(--border-soft)}
 .earn-row:last-child{border-bottom:0}
 .earn-row .ed{font-family:var(--mono); color:var(--accent-soft); font-weight:600; min-width:92px}
+.sig{display:inline-block; font-size:10.5px; font-weight:700; padding:1px 7px; border-radius:5px; margin-left:6px; vertical-align:middle}
+.sig.bull{background:rgba(193,95,60,.14); color:var(--up)}
+.sig.bear{background:rgba(95,115,70,.16); color:var(--down)}
+.sig.na{background:var(--bg); color:var(--faint)}
+.econ-tile .sig{margin-left:0; margin-top:5px}
 .live-head .idx-pct{font-family:var(--mono); font-size:16px; font-weight:700; padding:3px 10px; border-radius:999px}
 .idx-pct.up{background:rgba(193,95,60,.12); color:var(--up)}
 .idx-pct.down{background:rgba(95,115,70,.14); color:var(--down)}
@@ -393,6 +398,16 @@ async function loadLive(fresh){
   }
 }
 
+// 對台股利多(bull=紅)/利空(bear=綠)/中性(na) 徽章
+function sigBadge(sig){
+  const label = sig === 'bull' ? '利多' : (sig === 'bear' ? '利空' : '中性');
+  return `<span class="sig ${sig}">${label}</span>`;
+}
+// 油/金/美元/殖利率/VIX：近月上升=利空、下降=利多（|變動|<1% 視為中性）
+function mktSig(v){ if (v == null || isNaN(v) || Math.abs(v) < 1) return 'na'; return v > 0 ? 'bear' : 'bull'; }
+// CPI：>3% 通膨高=利空、<2% 溫和=利多、其間中性
+function cpiSig(y){ return y > 3 ? 'bear' : (y < 2 ? 'bull' : 'na'); }
+
 async function loadEcon(){
   try{
     const j = await (await fetch('/api/econ')).json();
@@ -407,16 +422,18 @@ async function loadEcon(){
         <div class="ev">${val}</div>
         <div class="ec ${pctClass(m.chg_pct)}">當日 ${fmtPct(m.chg_pct)}</div>
         <div class="em">近月 <span class="${pctClass(m.mo_pct)}">${fmtPct(m.mo_pct)}</span></div>
+        <div>${sigBadge(mktSig(m.mo_pct))}</div>
       </div>`;
     }).join('') || '<div class="empty">無資料</div>';
 
     const cpi = d.cpi_us, core = d.cpi_core_us, fed = d.fed_rate, tw = d.tw || {}, stats = [];
-    if (cpi) stats.push(`<div class="es"><div class="k">美國 CPI 年增（${cpi.date.slice(0,7)}）</div><div class="v">${cpi.yoy}%</div></div>`);
-    if (core) stats.push(`<div class="es"><div class="k">美國 核心 CPI</div><div class="v">${core.yoy}%</div></div>`);
-    if (fed) stats.push(`<div class="es"><div class="k">Fed 政策利率（${fed.date}）</div><div class="v">${fed.lower}–${fed.upper}%</div></div>`);
-    if (tw.cpi) stats.push(`<div class="es"><div class="k">台灣 CPI 年增（${tw.cpi.date}）</div><div class="v">${tw.cpi.yoy}%</div></div>`);
-    if (tw.cpi) stats.push(`<div class="es"><div class="k">台灣 核心 CPI</div><div class="v">${tw.cpi.core}%</div></div>`);
-    if (tw.rate) stats.push(`<div class="es"><div class="k">台灣 央行重貼現率</div><div class="v">${tw.rate.rate}%</div></div>`);
+    const fedSig = fed ? (fed.trend === '降' ? 'bull' : (fed.trend === '升' ? 'bear' : 'na')) : 'na';
+    if (cpi) stats.push(`<div class="es"><div class="k">美國 CPI 年增（${cpi.date.slice(0,7)}）${sigBadge(cpiSig(cpi.yoy))}</div><div class="v">${cpi.yoy}%</div></div>`);
+    if (core) stats.push(`<div class="es"><div class="k">美國 核心 CPI ${sigBadge(cpiSig(core.yoy))}</div><div class="v">${core.yoy}%</div></div>`);
+    if (fed) stats.push(`<div class="es"><div class="k">Fed 政策利率（${fed.date} · ${fed.trend}息）${sigBadge(fedSig)}</div><div class="v">${fed.lower}–${fed.upper}%</div></div>`);
+    if (tw.cpi) stats.push(`<div class="es"><div class="k">台灣 CPI 年增（${tw.cpi.date}）${sigBadge(cpiSig(tw.cpi.yoy))}</div><div class="v">${tw.cpi.yoy}%</div></div>`);
+    if (tw.cpi) stats.push(`<div class="es"><div class="k">台灣 核心 CPI ${sigBadge(cpiSig(tw.cpi.core))}</div><div class="v">${tw.cpi.core}%</div></div>`);
+    if (tw.rate) stats.push(`<div class="es"><div class="k">台灣 央行重貼現率 ${sigBadge('na')}</div><div class="v">${tw.rate.rate}%</div></div>`);
     document.getElementById('econ-data').innerHTML = stats.join('') || '<div class="empty">無資料</div>';
 
     const ea = d.earnings || [];

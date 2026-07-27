@@ -88,7 +88,10 @@ def _fed_rate():
     up, lo = _fred_rows("DFEDTARU"), _fred_rows("DFEDTARL")
     if not up or not lo:
         return None
-    return {"upper": up[-1][1], "lower": lo[-1][1], "date": up[-1][0]}
+    latest = up[-1][1]
+    ago = up[-252][1] if len(up) > 252 else up[0][1]   # 約一年前
+    trend = "降" if latest < ago else ("升" if latest > ago else "平")
+    return {"upper": up[-1][1], "lower": lo[-1][1], "date": up[-1][0], "trend": trend}
 
 
 def _earnings():
