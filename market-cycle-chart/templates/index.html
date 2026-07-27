@@ -111,6 +111,19 @@ function renderMonthly(){
     line:{color:COLORS.wave,width:2.5,dash:'dot'},marker:{color:COLORS.wave,size:9,symbol:'diamond'},
     hovertext:wave.anchors.map(a=>a.wave+' '+a.price+'<br>'+(a.note||'')),hoverinfo:'text',yaxis:'y'});
 
+  // 杜金龍預期後續波浪(從現在接續，空心菱形+點虛線區隔「已發生 vs 預期」)
+  if(wave.projected&&wave.projected.length){
+    traces.push({
+      x:[d.current_ym,...wave.projected.map(p=>p.date)],
+      y:[d.current_price,...wave.projected.map(p=>p.price)],
+      name:'杜金龍預期後續',type:'scatter',mode:'lines+markers+text',
+      text:['',...wave.projected.map(p=>p.wave)],textposition:'bottom center',
+      textfont:{color:COLORS.target,size:10},opacity:.85,
+      line:{color:COLORS.target,width:2,dash:'dashdot'},
+      marker:{color:COLORS.target,size:10,symbol:'diamond-open'},
+      hovertext:['現在',...wave.projected.map(p=>p.wave+' '+p.price+'<br>'+(p.note||''))],hoverinfo:'text',yaxis:'y'});
+  }
+
   // 目標水平線
   wave.targets.forEach((t,i)=>{
     shapes.push({type:'line',xref:'paper',x0:0,x1:1,yref:'y',y0:t.price,y1:t.price,
@@ -147,7 +160,37 @@ function renderMonthly(){
   annos.push({x:d.current_ym,xref:'x',y:1,yref:'paper',text:'現在 '+d.current_ym,showarrow:false,
     font:{color:COLORS.current,size:11},xanchor:'left',yanchor:'top'});
 
-  Plotly.react('chart',traces,monthlyLayout(shapes,annos),{responsive:true,displayModeBar:false});
+  Plotly.react('chart',traces,monthlyLayout(shapes,annos),
+    {responsive:true,scrollZoom:false,displayModeBar:true,displaylogo:false,
+     modeBarButtonsToRemove:['select2d','lasso2d']});
+  setupWheelZoom();
+}
+
+// 看盤軟體式滾輪：只縮時間軸(x)、以滑鼠為中心、y 跟著可見價格自動適配
+function setupWheelZoom(){
+  const gd=document.getElementById('chart');
+  if(gd._wheelBound) return; gd._wheelBound=true;
+  gd.addEventListener('wheel',e=>{
+    if(DAILY_VIEW||!CHART) return;             // 日線用 Plotly 預設
+    const fl=gd._fullLayout; if(!fl||!fl.xaxis) return;
+    const xa=fl.xaxis; e.preventDefault();
+    let [r0,r1]=xa.range;
+    const bb=gd.getBoundingClientRect();
+    const frac=Math.min(1,Math.max(0,(e.clientX-bb.left-xa._offset)/xa._length));
+    const xm=r0+frac*(r1-r0);                  // 滑鼠對應的時間索引(縮放錨點)
+    const factor=e.deltaY>0?1.2:0.83;          // 下滾看更多、上滾看更近
+    const N=CHART.timeline.length;
+    let n0=Math.max(-0.5, xm-(xm-r0)*factor);
+    let n1=Math.min(N-0.5, xm+(r1-xm)*factor);
+    if(n1-n0<3) return;                         // 最少顯示 3 個月
+    // y 依可見 x 範圍內的指數自動適配(像看盤軟體)
+    const lo=Math.max(0,Math.floor(n0)), hi=Math.min(N-1,Math.ceil(n1));
+    let ymin=Infinity,ymax=-Infinity;
+    for(let i=lo;i<=hi;i++){const v=CHART.taiex_close[i]; if(v!=null){if(v<ymin)ymin=v;if(v>ymax)ymax=v;}}
+    const upd={'xaxis.range':[n0,n1]};
+    if(ymin<ymax){const pad=(ymax-ymin)*0.12; upd['yaxis.range']=[ymin-pad,ymax+pad];}
+    Plotly.relayout(gd,upd);
+  },{passive:false});
 }
 
 function monthlyLayout(shapes,annos){
@@ -159,7 +202,7 @@ function monthlyLayout(shapes,annos){
     yaxis:{title:'加權指數',gridcolor:'#21262d',side:'left'},
     yaxis2:{overlaying:'y',side:'right',range:[-1.25,1.25],showgrid:false,
       title:'週期相位',zeroline:true,zerolinecolor:'#30363d',tickfont:{size:9}},
-    shapes,annotations:annos,hovermode:'closest',
+    shapes,annotations:annos,hovermode:'closest',dragmode:'pan',
   };
 }
 
@@ -180,8 +223,9 @@ async function renderDaily(){
     paper_bgcolor:'#0e1117',plot_bgcolor:'#0e1117',font:{color:'#e6edf3'},
     margin:{l:60,r:20,t:20,b:40},showlegend:true,legend:{orientation:'h',y:-0.08},
     xaxis:{gridcolor:'#21262d',rangeslider:{visible:false},tickfont:{size:10}},
-    yaxis:{title:'加權指數',gridcolor:'#21262d'},hovermode:'x unified',
-  },{responsive:true,displayModeBar:false});
+    yaxis:{title:'加權指數',gridcolor:'#21262d'},hovermode:'x unified',dragmode:'pan',
+  },{responsive:true,scrollZoom:true,displayModeBar:true,displaylogo:false,
+     modeBarButtonsToRemove:['select2d','lasso2d']});
 }
 
 function renderCycleParams(){

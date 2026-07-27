@@ -5,6 +5,7 @@ from flask import Flask, g, jsonify, render_template
 
 import store
 import engine
+import quotes
 from plans import PLANS
 
 app = Flask(__name__)
@@ -78,6 +79,43 @@ def rebalance(aid):
     conn = _conn()
     sigs = engine.check_rebalance(conn, aid, PLANS[aid])
     return jsonify(sigs)
+
+
+@app.get("/api/account/<aid>/live")
+def live(aid):
+    """即時報價估值（唯讀，手動刷新用）：逐檔現價、當日漲跌%、即時市值與未實現損益。"""
+    if aid not in PLANS:
+        return jsonify(error="unknown account"), 404
+    plan = PLANS[aid]
+    conn = _conn()
+    hs = engine.holdings(conn, aid)
+    try:
+        fx = quotes.get_fx()
+    except Exception as e:
+        return jsonify(error=f"匯率取得失敗: {e}"), 502
+    rows = []
+    total_mv = 0.0
+    total_cost = 0.0
+    for ticker, h in hs.items():
+        cost = h["cost_twd"]
+        total_cost += cost
+        try:
+            d = quotes.get_quote_detail(ticker, h["market"])
+            ptwd = d["last"] * fx if h["market"] == "US" else d["last"]
+            mv = h["shares"] * ptwd
+            total_mv += mv
+            rows.append({"ticker": ticker, "market": h["market"], "shares": h["shares"],
+                         "cost_twd": cost, "last_native": d["last"],
+                         "change_pct": round(d["change_pct"], 2),
+                         "market_value": mv, "pnl": mv - cost})
+        except Exception as e:
+            total_mv += cost  # 報價失敗以成本占位，維持 total_value 基準與逐檔一致
+            rows.append({"ticker": ticker, "market": h["market"], "shares": h["shares"],
+                         "cost_twd": cost, "last_native": None, "change_pct": None,
+                         "market_value": cost, "pnl": 0.0, "error": str(e)})
+    cash = plan.capital_twd - total_cost
+    return jsonify(fx=round(fx, 3), holdings=rows, cash_twd=cash,
+                   total_value_twd=cash + total_mv)
 
 
 @app.get("/")
