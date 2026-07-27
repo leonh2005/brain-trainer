@@ -129,6 +129,28 @@ def _fetch_via_yfinance():
     }
 
 
+def _regional_indices():
+    """日股(日經225)、韓股(KOSPI) 大盤，走 yfinance(Shioaji 無海外指數)。"""
+    import yfinance as yf
+    out = []
+    for code, name, ticker in [("N225", "日經225", "^N225"), ("KOSPI", "韓股KOSPI", "^KS11")]:
+        try:
+            closes = yf.Ticker(ticker).history(period="5d")["Close"].dropna()
+            if len(closes) < 2:
+                continue
+            close, prev = float(closes.iloc[-1]), float(closes.iloc[-2])
+            out.append({
+                "code": code,
+                "name": name,
+                "price": round(close, 2),
+                "change_pct": round((close - prev) / prev * 100, 2),
+                "change_point": round(close - prev, 2),
+            })
+        except Exception:
+            continue
+    return out
+
+
 def _fetch_live():
     now = time.time()
     if _live_cache["data"] is not None and now - _live_cache["ts"] < CACHE_TTL:
@@ -145,6 +167,10 @@ def _fetch_live():
             _live_cache["ts"] = now
             return result
 
+    try:
+        result["regional"] = _regional_indices()
+    except Exception:
+        result["regional"] = []
     result["ok"] = True
     result["updated"] = time.strftime("%H:%M:%S")
     _live_cache["data"] = result
