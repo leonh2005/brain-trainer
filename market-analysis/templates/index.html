@@ -192,7 +192,9 @@ tr.highlight td{background:rgba(217,119,87,.07); font-weight:700}
     </table>
   </div>
   <div class="card">
-    <h3>盤中即時追蹤 <span style="font-weight:400;color:var(--faint);font-size:11px">(每15秒刷新)</span></h3>
+    <h3>盤中即時追蹤 <span style="font-weight:400;color:var(--faint);font-size:11px">(每15秒自動刷新)</span>
+      <button id="live-refresh" title="立即刷新最新報價 (F5)" style="margin-left:8px;font-size:11px;padding:2px 9px;border:1px solid var(--border-soft);background:var(--bg-soft);border-radius:6px;cursor:pointer;color:var(--muted)">🔄 手動刷新</button>
+    </h3>
     <div class="live-head">
       <div>大盤 <span class="idx-price" id="live-idx-price">--</span></div>
       <div class="idx-pct" id="live-idx-pct">--</div>
@@ -314,9 +316,9 @@ async function loadAnalysis(){
   }
 }
 
-async function loadLive(){
+async function loadLive(fresh){
   try{
-    const res = await fetch('/api/live');
+    const res = await fetch('/api/live' + (fresh ? '?fresh=1' : ''));
     const d = await res.json();
     if (!d.ok){
       document.getElementById('live-updated').textContent = '暫無即時資料';
@@ -357,7 +359,19 @@ async function loadLive(){
 
 loadAnalysis();
 loadLive();
-setInterval(loadLive, 15000);
+setInterval(() => loadLive(), 15000);
+
+// 手動刷新（🔄 按鈕 / F5）：繞過 30 秒快取抓最新報價
+async function manualRefresh(){
+  const btn = document.getElementById('live-refresh');
+  if (btn){ btn.disabled = true; btn.textContent = '⏳ 刷新中…'; }
+  try { await loadLive(true); }
+  finally { if (btn){ btn.disabled = false; btn.textContent = '🔄 手動刷新'; } }
+}
+document.getElementById('live-refresh').addEventListener('click', manualRefresh);
+document.addEventListener('keydown', e => {
+  if (e.key === 'F5'){ e.preventDefault(); manualRefresh(); }
+});
 </script>
 </body>
 </html>

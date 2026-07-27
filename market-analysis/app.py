@@ -7,7 +7,7 @@ import json
 import os
 import time
 
-from flask import Flask, jsonify, render_template
+from flask import Flask, jsonify, render_template, request
 
 app = Flask(__name__)
 
@@ -151,9 +151,9 @@ def _regional_indices():
     return out
 
 
-def _fetch_live():
+def _fetch_live(force=False):
     now = time.time()
-    if _live_cache["data"] is not None and now - _live_cache["ts"] < CACHE_TTL:
+    if not force and _live_cache["data"] is not None and now - _live_cache["ts"] < CACHE_TTL:
         return _live_cache["data"]
 
     try:
@@ -192,7 +192,7 @@ def analysis():
 @app.get("/api/live")
 def live():
     try:
-        return jsonify(_fetch_live())
+        return jsonify(_fetch_live(force=request.args.get("fresh") == "1"))
     except Exception as e:
         return jsonify({"ok": False, "error": str(e)})
 
