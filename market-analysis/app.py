@@ -76,7 +76,11 @@ def _fetch_via_shioaji():
             )
 
         return {
-            "index": {"price": index_close, "change_pct": index_pct},
+            "index": {
+                "price": index_close,
+                "change_pct": index_pct,
+                "change_point": round(idx_snap.change_price, 2),
+            },
             "stocks": stocks_out,
             "source": "shioaji",
         }
@@ -118,6 +122,7 @@ def _fetch_via_yfinance():
         "index": {
             "price": round(index_close, 2) if index_close else None,
             "change_pct": index_pct,
+            "change_point": round(index_close - index_prev, 2) if (index_close and index_prev) else None,
         },
         "stocks": stocks_out,
         "source": "yfinance",

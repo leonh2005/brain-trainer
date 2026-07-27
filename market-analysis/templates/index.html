@@ -319,7 +319,9 @@ async function loadLive(){
     const idx = d.index || {};
     document.getElementById('live-idx-price').textContent = idx.price != null ? idx.price : '--';
     const pctEl = document.getElementById('live-idx-pct');
-    pctEl.textContent = fmtPct(idx.change_pct);
+    const cp = idx.change_point;
+    const cpTxt = (cp == null || isNaN(cp)) ? '' : ((cp > 0 ? '+' : '') + cp.toFixed(2));
+    pctEl.textContent = cpTxt ? `${cpTxt} 點（${fmtPct(idx.change_pct)}）` : fmtPct(idx.change_pct);
     pctEl.className = 'idx-pct ' + pctClass(idx.change_pct);
     document.getElementById('live-updated').textContent = `更新於 ${d.updated || '--'} (${d.source || '--'})`;
 
