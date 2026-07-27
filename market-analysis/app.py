@@ -63,7 +63,8 @@ def _fetch_via_shioaji():
         pct = d["change_rate"] if d["change_rate"] is not None else (
             round((d["close"] - ref) / ref * 100, 2) if ref else 0.0
         )
-        stocks_out.append({"code": s["code"], "name": s["name"], "price": d["close"], "change_pct": pct})
+        stocks_out.append({"code": s["code"], "name": s["name"], "price": d["close"],
+                           "change_pct": pct, "change_point": round(d["change_price"], 2)})
 
     return {
         "index": {
@@ -100,7 +101,8 @@ def _fetch_via_yfinance():
             continue
         pct = round((close - prev) / prev * 100, 2)
         stocks_out.append(
-            {"code": s["code"], "name": s["name"], "price": round(close, 2), "change_pct": pct}
+            {"code": s["code"], "name": s["name"], "price": round(close, 2),
+             "change_pct": pct, "change_point": round(close - prev, 2)}
         )
 
     return {

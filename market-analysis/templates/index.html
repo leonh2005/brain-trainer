@@ -345,13 +345,15 @@ async function loadLive(fresh){
     // 依大盤權重(市值/影響指數點數)由高到低排序
     stocks.sort((a, b) =>
       (WEIGHT_RANK[String(a.code).replace('.TW','')] || 99) - (WEIGHT_RANK[String(b.code).replace('.TW','')] || 99));
-    document.getElementById('live-stocks').innerHTML = stocks.map(s => `
+    document.getElementById('live-stocks').innerHTML = stocks.map(s => {
+      const sp = (s.change_point != null && !isNaN(s.change_point)) ? ((s.change_point > 0 ? '+' : '') + s.change_point.toFixed(2)) : '';
+      return `
       <div class="live-tile">
         <div><span class="name">${s.name}</span><span class="code">${s.code}</span></div>
         <div class="price">${s.price}</div>
-        <div class="pct ${pctClass(s.change_pct)}">${fmtPct(s.change_pct)}</div>
-      </div>
-    `).join('') || '<div class="empty">暫無即時資料</div>';
+        <div class="pct ${pctClass(s.change_pct)}">${sp ? sp + '（' + fmtPct(s.change_pct) + '）' : fmtPct(s.change_pct)}</div>
+      </div>`;
+    }).join('') || '<div class="empty">暫無即時資料</div>';
   }catch(e){
     document.getElementById('live-updated').textContent = '暫無即時資料';
   }
