@@ -93,6 +93,21 @@ tr.highlight td{background:rgba(217,119,87,.07); font-weight:700}
 .regional-row .reg-name{color:var(--fg); font-weight:600}
 .regional-row .reg-price{font-family:var(--mono); font-weight:600; margin:0 4px}
 .regional-row .reg-chg{font-family:var(--mono); font-weight:600}
+.econ-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:10px}
+.econ-tile{background:var(--bg-soft); border:1px solid var(--border-soft); border-radius:9px; padding:9px 11px}
+.econ-tile .en{font-size:12px; color:var(--muted)}
+.econ-tile .ev{font-family:var(--mono); font-size:17px; font-weight:700; margin-top:3px}
+.econ-tile .ec{font-family:var(--mono); font-size:11.5px; font-weight:600; margin-top:2px}
+.econ-tile .em{font-family:var(--mono); font-size:11px; color:var(--faint); margin-top:1px}
+.econ-stats{display:flex; gap:26px; flex-wrap:wrap}
+.econ-stats .es .k{font-size:11.5px; color:var(--muted)}
+.econ-stats .es .v{font-family:var(--mono); font-size:20px; font-weight:700; margin-top:2px}
+.econ-list{display:flex; flex-direction:column; gap:7px}
+.econ-list a{color:var(--fg); text-decoration:none; font-size:12.5px; line-height:1.5}
+.econ-list a:hover{color:var(--accent)}
+.earn-row{display:flex; gap:10px; align-items:baseline; font-size:12.5px; padding:5px 0; border-bottom:1px solid var(--border-soft)}
+.earn-row:last-child{border-bottom:0}
+.earn-row .ed{font-family:var(--mono); color:var(--accent-soft); font-weight:600; min-width:92px}
 .live-head .idx-pct{font-family:var(--mono); font-size:16px; font-weight:700; padding:3px 10px; border-radius:999px}
 .idx-pct.up{background:rgba(193,95,60,.12); color:var(--up)}
 .idx-pct.down{background:rgba(95,115,70,.14); color:var(--down)}
@@ -202,6 +217,25 @@ tr.highlight td{background:rgba(217,119,87,.07); font-weight:700}
     </div>
     <div class="regional-row" id="live-regional"></div>
     <div class="live-grid" id="live-stocks"><div class="empty">暫無即時資料</div></div>
+  </div>
+
+  <!-- 區塊④ 近月經濟總覽 -->
+  <div class="sec-label">④ 近月經濟總覽 <span style="font-weight:400;color:var(--faint);font-size:11px" id="econ-updated"></span></div>
+  <div class="card">
+    <h3>市場數值 <span style="font-weight:400;color:var(--faint);font-size:11px">(現價 · 當日 · 近一月)</span></h3>
+    <div class="econ-grid" id="econ-market"><div class="empty">載入中...</div></div>
+  </div>
+  <div class="card">
+    <h3>經濟數據(CPI · 政策利率)</h3>
+    <div class="econ-stats" id="econ-data"><div class="empty">載入中...</div></div>
+  </div>
+  <div class="card">
+    <h3>台美龍頭法說會 <span style="font-weight:400;color:var(--faint);font-size:11px">(未來 45 天)</span></h3>
+    <div id="econ-earnings"><div class="empty">載入中...</div></div>
+  </div>
+  <div class="card">
+    <h3>戰爭 / 地緣消息 <span style="font-weight:400;color:var(--faint);font-size:11px">(近 14 天)</span></h3>
+    <div id="econ-war"><div class="empty">載入中...</div></div>
   </div>
 </div>
 
@@ -359,9 +393,48 @@ async function loadLive(fresh){
   }
 }
 
+async function loadEcon(){
+  try{
+    const j = await (await fetch('/api/econ')).json();
+    if(!j.ok){ document.getElementById('econ-market').innerHTML='<div class="empty">載入失敗</div>'; return; }
+    const d = j.data;
+    document.getElementById('econ-updated').textContent = '更新於 ' + (d.updated || '--');
+
+    document.getElementById('econ-market').innerHTML = (d.market || []).map(m => {
+      const val = (m.unit === '$' ? '$' : '') + m.price + (m.unit === '%' ? '%' : '');
+      return `<div class="econ-tile">
+        <div class="en">${m.name}</div>
+        <div class="ev">${val}</div>
+        <div class="ec ${pctClass(m.chg_pct)}">當日 ${fmtPct(m.chg_pct)}</div>
+        <div class="em">近月 <span class="${pctClass(m.mo_pct)}">${fmtPct(m.mo_pct)}</span></div>
+      </div>`;
+    }).join('') || '<div class="empty">無資料</div>';
+
+    const cpi = d.cpi_us, core = d.cpi_core_us, fed = d.fed_rate, stats = [];
+    if (cpi) stats.push(`<div class="es"><div class="k">美國 CPI 年增（${cpi.date.slice(0,7)}）</div><div class="v">${cpi.yoy}%</div></div>`);
+    if (core) stats.push(`<div class="es"><div class="k">核心 CPI 年增</div><div class="v">${core.yoy}%</div></div>`);
+    if (fed) stats.push(`<div class="es"><div class="k">Fed 政策利率（${fed.date}）</div><div class="v">${fed.lower}–${fed.upper}%</div></div>`);
+    document.getElementById('econ-data').innerHTML = stats.join('') || '<div class="empty">無資料</div>';
+
+    const ea = d.earnings || [];
+    document.getElementById('econ-earnings').innerHTML = ea.length
+      ? ea.map(e => `<div class="earn-row"><span class="ed">${e.date}</span><span>${e.name}（${e.symbol}）</span></div>`).join('')
+      : '<div class="empty">未來 45 天無龍頭法說會</div>';
+
+    const war = d.war || [];
+    document.getElementById('econ-war').innerHTML = war.length
+      ? '<div class="econ-list">' + war.map(n => `<a href="${n.link}" target="_blank" rel="noopener">· ${n.title}</a>`).join('') + '</div>'
+      : '<div class="empty">無相關新聞</div>';
+  }catch(e){
+    document.getElementById('econ-market').innerHTML = '<div class="empty">載入失敗</div>';
+  }
+}
+
 loadAnalysis();
 loadLive();
+loadEcon();
 setInterval(() => loadLive(), 15000);
+setInterval(loadEcon, 900000);  // 經濟總覽每 15 分更新
 
 // 手動刷新（🔄 按鈕 / F5）：繞過 30 秒快取抓最新報價
 async function manualRefresh(){

@@ -184,6 +184,15 @@ def live():
         return jsonify({"ok": False, "error": str(e)})
 
 
+@app.get("/api/econ")
+def econ_api():
+    try:
+        import econ
+        return jsonify({"ok": True, "data": econ.get_econ(force=request.args.get("fresh") == "1")})
+    except Exception as e:
+        return jsonify({"ok": False, "error": str(e)})
+
+
 @app.get("/")
 def index():
     return render_template("index.html")
