@@ -1,5 +1,5 @@
-# Claude Handoff 20260727_1128
-> 自動生成於 2026-07-27 11:28
+# Claude Handoff 20260727_1234
+> 自動生成於 2026-07-27 12:34
 
 ## 未提交的檔案異動
 ```
@@ -7,23 +7,17 @@
  M chip-tracker/chip.db
  m daily-stock-analysis
  M gemma_work/latest.md
- M market-dashboard/bb_cache.json
- M market-dashboard/fg_history.json
- M market-dashboard/index.html
- M market-dashboard/sp_state.json
  M news-analyzer/trump_seen.json
- M news-analyzer/trump_state.json
- M rabbit-care/rabbit.db
  m stock-screener-ai
 ```
 
 ## 近期 Commits
 ```
+cc3d265f feat(market-analysis): 經濟總覽每個數值標示對台股利多/利空/中性
+8c9295e4 feat(market-analysis): 經濟總覽補台灣 CPI/央行利率 + 台股法說會說明
+5af7b3c8 feat(market-analysis): 新增「近月經濟總覽」看板(油金匯債VIX + CPI/Fed + 龍頭法說會 + 戰爭新聞)
+14cc1ea6 chore: 自動同步 2026-07-27 11:40
 35cc3384 feat(market-analysis): 盤中即時追蹤個股加顯示漲跌點數
-61fc7c20 refactor: 建 shioaji-gateway 共用單一 Shioaji 連線,market-analysis 與 ma_monitor 改用它
-b0f09d52 perf(market-analysis): Shioaji 改持久長連線(免每次重登),失效自動重登+鎖序列化
-0ff3e93e feat(market-analysis): 盤中即時追蹤加手動刷新(🔄按鈕/F5,繞過30秒快取抓最新)
-62db4fa1 feat(market-analysis): 即時追蹤新增日股(日經225)與韓股(KOSPI)大盤指數
 ```
 
 ## 給 Hermes 的備註
