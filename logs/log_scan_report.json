@@ -1,6 +1,6 @@
 {
-  "scanned_at": "2026-07-27 03:00:15",
-  "since": "2026-07-26 03:00:00",
+  "scanned_at": "2026-07-28 03:00:15",
+  "since": "2026-07-27 03:00:00",
   "results": {
     "市場儀表板": {
       "exists": true,
@@ -16,8 +16,8 @@
     },
     "motion-watcher": {
       "exists": true,
-      "errors": 5597,
-      "last_error": "[h264 @ 0x9f5918380] error while decoding MB 152 10, bytestream -5",
+      "errors": 5653,
+      "last_error": "[h264 @ 0x9f6f04000] error while decoding MB 0 20, bytestream 273",
       "fix": "尚無對應建議，需人工判斷"
     },
     "Cloudflare Tunnel": {
@@ -29,7 +29,7 @@
     "財經新聞分析": {
       "exists": true,
       "errors": 153,
-      "last_error": "2026-07-27 02:45:38,803 [WARNING] fetcher.reddit_fetcher: Reddit fetch failed for r/investing: 429 Client Error: Too Many Requests for url: https://www.reddit.com/r/investing/hot/.rss",
+      "last_error": "2026-07-28 02:45:38,206 [WARNING] fetcher.reddit_fetcher: Reddit fetch failed for r/investing: 429 Client Error: Too Many Requests for url: https://www.reddit.com/r/investing/hot/.rss",
       "fix": "尚無對應建議，需人工判斷"
     },
     "川普監測": {
@@ -40,9 +40,9 @@
     },
     "持倉新聞(台股)": {
       "exists": true,
-      "errors": 3,
-      "last_error": "2026-07-26 08:30:12,262 ERROR DeepSeek 分析失敗 2317：Error code: 400 - {'error': {'message': 'The supported API model names are deepseek-v4-pro or deepseek-v4-flash, but you passed deepseek-chat.', 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_request_error'}}",
-      "fix": "尚無對應建議，需人工判斷"
+      "errors": 4,
+      "last_error": "2026-07-27 08:30:12,641 WARNING 集保大戶資料失敗 2317：HTTPSConnectionPool(host='www.tdcc.com.tw', port=443): Max retries exceeded with url: /smWeb/QryStockAjax.do (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Missing Subject Key Identifier (_ssl",
+      "fix": "Port 被佔用或服務未啟動 → 檢查 LaunchAgent 是否正常載入"
     },
     "持倉新聞(美股)": {
       "exists": true,
@@ -57,10 +57,10 @@
       "fix": null
     },
     "凱利倉位計算": {
-      "exists": true,
-      "errors": 10,
-      "last_error": "ModuleNotFoundError: No module named 'yfinance'",
-      "fix": "檔案或套件遺失 → 確認路徑或重新安裝 pip 套件"
+      "exists": false,
+      "errors": 0,
+      "last_error": null,
+      "fix": null
     },
     "選股AI": {
       "exists": true,
@@ -88,9 +88,9 @@
     },
     "盤中監控": {
       "exists": true,
-      "errors": 199,
-      "last_error": "[backfill] 2408 失敗: Topic: api/v1/data/ticks, Corr: c21, Client: PYAPI/N124711691/0724/010003/067401/220.141.44.196, payload: {'token': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYmYiOjE3ODQ4NTQ4MDMsImV4cCI6MTc4NDk0MTIwMywic2ltdWxhdGlvbiI6ZmFsc2UsInBlcnNvbl9pZCI6Ik4xMjQ3MTE2OTEiLCJ2ZXJzaW9uIjoiMS4zLj",
-      "fix": "Session/Token 過期 → 重新登入對應網站或更新 API Key"
+      "errors": 200,
+      "last_error": "[backfill] 2408 失敗: Topic: api/v1/data/ticks, Corr: c21, Client: PYAPI/N124711691/0727/010003/432554/220.141.4.163, payload: {'token': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYmYiOjE3ODUxMTQwMDMsImV4cCI6MTc4NTIwMDQwMywic2ltdWxhdGlvbiI6ZmFsc2UsInBlcnNvbl9pZCI6Ik4xMjQ3MTE2OTEiLCJ2ZXJzaW9uIjoiMS4zLjI",
+      "fix": "尚無對應建議，需人工判斷"
     },
     "蝦皮軟纖監測": {
       "exists": true,
@@ -112,7 +112,7 @@
     },
     "Claude週期監測": {
       "exists": true,
-      "errors": 802,
+      "errors": 842,
       "last_error": "google.genai.errors.ClientError: 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reason': 'API_KEY_INVALID', 'domain': 'googleapis.com', 'metad",
       "fix": "尚無對應建議，需人工判斷"
     },
