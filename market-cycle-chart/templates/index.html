@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>台股市場週期圖 · 杜金龍波浪劇本</title>
+<script src="/static/plotly.min.js"></script>
+<style>
+  :root{
+    --bg:#0e1117; --panel:#161b22; --border:#30363d; --text:#e6edf3; --muted:#8b949e;
+    --accent:#d4a017; --up:#f85149; --down:#3fb950;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,"PingFang TC","Microsoft JhengHei",sans-serif}
+  header{padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+  header h1{font-size:18px;margin:0;font-weight:600}
+  header h1 small{color:var(--muted);font-weight:400;font-size:12px;margin-left:8px}
+  .controls{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-left:auto}
+  select,button{background:var(--panel);color:var(--text);border:1px solid var(--border);border-radius:6px;padding:6px 10px;font-size:13px;cursor:pointer}
+  button.active{background:var(--accent);color:#000;border-color:var(--accent);font-weight:600}
+  .layout{display:flex;gap:0;height:calc(100vh - 59px)}
+  #chart{flex:1;min-width:0}
+  aside{width:300px;border-left:1px solid var(--border);padding:16px;overflow-y:auto;background:var(--panel)}
+  aside h2{font-size:13px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin:18px 0 8px}
+  aside h2:first-child{margin-top:0}
+  .kv{display:flex;justify-content:space-between;font-size:13px;padding:4px 0;border-bottom:1px dashed var(--border)}
+  .kv .v{font-weight:600}
+  .stage-底部{color:var(--down)} .stage-頂部{color:var(--up)}
+  .stage-上升段{color:#58a6ff} .stage-下降段{color:#db6d28}
+  .cyc-row{margin:10px 0;padding:10px;background:var(--bg);border-radius:6px;border:1px solid var(--border)}
+  .cyc-row .name{font-size:12px;margin-bottom:6px;display:flex;justify-content:space-between}
+  .cyc-row label{font-size:11px;color:var(--muted);display:block;margin:6px 0 2px}
+  .cyc-row input[type=range]{width:100%}
+  .cyc-row input[type=month]{background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:4px;padding:3px;font-size:11px;width:100%}
+  .src{font-size:11px;color:var(--muted);line-height:1.5;margin-top:6px}
+  .src a{color:var(--accent)}
+  #paramPanel.hidden{display:none}
+  .err{color:var(--up);padding:20px}
+</style>
+</head>
+<body>
+<header>
+  <h1>台股市場週期圖<small>杜金龍波浪劇本 × 市場週期共振</small></h1>
+  <div class="controls">
+    <label style="font-size:12px;color:var(--muted)">劇本</label>
+    <select id="scriptSel"></select>
+    <button id="btnMonthly" class="active">月線(大浪)</button>
+    <button id="btnDaily">日線+均線</button>
+    <button id="btnEcon">經濟背景層：關</button>
+  </div>
+</header>
+<div class="layout">
+  <div id="chart"></div>
+  <aside>
+    <div id="sidebar"></div>
+    <div id="paramPanel">
+      <h2>市場週期參數(可微調)</h2>
+      <div id="cycleParams"></div>
+    </div>
+  </aside>
+</div>
+
+<script>
+const COLORS = {
+  taiex:'#e6edf3', wave:'#d4a017', target:'#db6d28', retr:'rgba(63,185,80,.18)',
+  current:'#f85149', down:'#3fb950',
+  bull_bear:'#58a6ff', silicon:'#bc8cff', seasonal:'#56d4a0',
+  kitchin:'rgba(139,148,158,.55)', juglar:'rgba(139,148,158,.4)',
+};
+function showError(msg){
+  const el=document.getElementById('chart');el.innerHTML='';
+  const d=document.createElement('div');d.className='err';d.textContent=msg;el.appendChild(d);
+}
+let CHART=null;         // 最近一次 chart-data
+let SHOW_ECON=false;
+let CYCLE_OVERRIDES={}; // key -> {period_months, trough_ym}
+
+function monthsBetween(fromYm,toYm){
+  const [fy,fm]=fromYm.split('-').map(Number), [ty,tm]=toYm.split('-').map(Number);
+  return (ty-fy)*12+(tm-fm);
+}
+function sineSeries(timeline,period,trough){
+  return timeline.map(ym=>+(-Math.cos(2*Math.PI*monthsBetween(trough,ym)/period)).toFixed(4));
+}
+function cycleParam(cy){
+  const o=CYCLE_OVERRIDES[cy.key]||{};
+  return {period:o.period_months||cy.period_months, trough:o.trough_ym||cy.trough_ym};
+}
+
+async function loadChartData(){
+  const id=document.getElementById('scriptSel').value||'v1';
+  const r=await fetch('/api/chart-data?script='+id);
+  const d=await r.json();
+  if(d.error){showError('載入失敗：'+d.error);return;}
+  CHART=d; CYCLE_OVERRIDES={};
+  renderCycleParams(); renderMonthly(); renderSidebar();
+}
+
+function renderMonthly(){
+  const d=CHART, tl=d.timeline, traces=[], shapes=[], annos=[];
+
+  // 加權指數月線收盤(主 y 軸)
+  traces.push({x:tl,y:d.taiex_close,name:'加權指數(月收)',type:'scatter',mode:'lines',
+    line:{color:COLORS.taiex,width:2},connectgaps:false,yaxis:'y'});
+
+  // 杜金龍波浪 anchors 連線 + 標記(主 y 軸)
+  const wave=d.wave;
+  traces.push({x:wave.anchors.map(a=>a.date),y:wave.anchors.map(a=>a.price),
+    name:'杜金龍波浪',type:'scatter',mode:'lines+markers+text',
+    text:wave.anchors.map(a=>a.wave),textposition:'top center',textfont:{color:COLORS.wave,size:10},
+    line:{color:COLORS.wave,width:2.5,dash:'dot'},marker:{color:COLORS.wave,size:9,symbol:'diamond'},
+    hovertext:wave.anchors.map(a=>a.wave+' '+a.price+'<br>'+(a.note||'')),hoverinfo:'text',yaxis:'y'});
+
+  // 目標水平線
+  wave.targets.forEach((t,i)=>{
+    shapes.push({type:'line',xref:'paper',x0:0,x1:1,yref:'y',y0:t.price,y1:t.price,
+      line:{color:COLORS.target,width:1.2,dash:'dash'}});
+    annos.push({xref:'paper',x:0,y:t.price,yref:'y',text:'目標 '+t.price.toLocaleString(),showarrow:false,
+      font:{color:COLORS.target,size:10},xanchor:'left',yanchor:i%2?'top':'bottom',bgcolor:'rgba(14,17,23,.7)'});
+  });
+  // 回檔買點區間
+  (wave.retracements||[]).forEach(rr=>{
+    shapes.push({type:'rect',xref:'paper',x0:0,x1:1,yref:'y',y0:rr.low,y1:rr.high,
+      fillcolor:COLORS.retr,line:{width:0}});
+    annos.push({xref:'paper',x:0,y:rr.high,yref:'y',text:rr.label,showarrow:false,
+      font:{color:COLORS.down,size:9},xanchor:'left',yanchor:'bottom'});
+  });
+
+  // 市場週期正弦波(次 y 軸)
+  d.market_cycles.forEach(cy=>{
+    const p=cycleParam(cy);
+    traces.push({x:tl,y:sineSeries(tl,p.period,p.trough),name:cy.name,type:'scatter',mode:'lines',
+      line:{color:COLORS[cy.key],width:1.5},yaxis:'y2',hoverinfo:'name'});
+  });
+  // 經濟背景層(次 y 軸，可開關)
+  if(SHOW_ECON){
+    d.econ_cycles.forEach(cy=>{
+      const p=cycleParam(cy);
+      traces.push({x:tl,y:sineSeries(tl,p.period,p.trough),name:cy.name,type:'scatter',mode:'lines',
+        line:{color:COLORS[cy.key],width:1,dash:'dot'},yaxis:'y2',hoverinfo:'name'});
+    });
+  }
+
+  // 當前月份垂直線
+  shapes.push({type:'line',xref:'x',x0:d.current_ym,x1:d.current_ym,yref:'paper',y0:0,y1:1,
+    line:{color:COLORS.current,width:1.5,dash:'dashdot'}});
+  annos.push({x:d.current_ym,xref:'x',y:1,yref:'paper',text:'現在 '+d.current_ym,showarrow:false,
+    font:{color:COLORS.current,size:11},xanchor:'left',yanchor:'top'});
+
+  Plotly.react('chart',traces,monthlyLayout(shapes,annos),{responsive:true,displayModeBar:false});
+}
+
+function monthlyLayout(shapes,annos){
+  return {
+    paper_bgcolor:'#0e1117',plot_bgcolor:'#0e1117',font:{color:'#e6edf3'},
+    margin:{l:60,r:70,t:20,b:40},showlegend:true,
+    legend:{orientation:'h',y:-0.08,font:{size:11}},
+    xaxis:{type:'category',gridcolor:'#21262d',nticks:16,tickangle:-45,tickfont:{size:10}},
+    yaxis:{title:'加權指數',gridcolor:'#21262d',side:'left'},
+    yaxis2:{overlaying:'y',side:'right',range:[-1.25,1.25],showgrid:false,
+      title:'週期相位',zeroline:true,zerolinecolor:'#30363d',tickfont:{size:9}},
+    shapes,annotations:annos,hovermode:'closest',
+  };
+}
+
+async function renderDaily(){
+  const r=await fetch('/api/taiex?timeframe=daily');
+  const d=await r.json();
+  if(d.error){showError(d.error);return;}
+  const x=d.rows.map(r=>r.date);
+  const traces=[
+    {x,open:d.rows.map(r=>r.open),high:d.rows.map(r=>r.high),low:d.rows.map(r=>r.low),
+     close:d.rows.map(r=>r.close),type:'candlestick',name:'加權指數',
+     increasing:{line:{color:'#f85149'}},decreasing:{line:{color:'#3fb950'}}},
+    {x,y:d.rows.map(r=>r.ma5),name:'5MA',type:'scatter',mode:'lines',line:{color:'#d4a017',width:1}},
+    {x,y:d.rows.map(r=>r.ma20),name:'20MA',type:'scatter',mode:'lines',line:{color:'#58a6ff',width:1}},
+    {x,y:d.rows.map(r=>r.ma60),name:'60MA',type:'scatter',mode:'lines',line:{color:'#bc8cff',width:1}},
+  ];
+  Plotly.react('chart',traces,{
+    paper_bgcolor:'#0e1117',plot_bgcolor:'#0e1117',font:{color:'#e6edf3'},
+    margin:{l:60,r:20,t:20,b:40},showlegend:true,legend:{orientation:'h',y:-0.08},
+    xaxis:{gridcolor:'#21262d',rangeslider:{visible:false},tickfont:{size:10}},
+    yaxis:{title:'加權指數',gridcolor:'#21262d'},hovermode:'x unified',
+  },{responsive:true,displayModeBar:false});
+}
+
+function renderCycleParams(){
+  const box=document.getElementById('cycleParams');box.innerHTML='';
+  CHART.market_cycles.forEach(cy=>{
+    const p=cycleParam(cy);
+    const div=document.createElement('div');div.className='cyc-row';
+    div.innerHTML=`<div class="name"><span style="color:${COLORS[cy.key]}">${cy.name}</span><span id="lbl_${cy.key}">${p.period}月</span></div>
+      <label>週期長度(月)</label><input type="range" min="6" max="140" value="${p.period}" data-key="${cy.key}" data-f="period">
+      <label>谷底錨點</label><input type="month" value="${p.trough}" data-key="${cy.key}" data-f="trough">`;
+    box.appendChild(div);
+  });
+  box.querySelectorAll('input').forEach(inp=>inp.addEventListener('input',e=>{
+    const k=e.target.dataset.key,f=e.target.dataset.f;
+    CYCLE_OVERRIDES[k]=CYCLE_OVERRIDES[k]||{};
+    if(f==='period'){CYCLE_OVERRIDES[k].period_months=+e.target.value;document.getElementById('lbl_'+k).textContent=e.target.value+'月';}
+    else CYCLE_OVERRIDES[k].trough_ym=e.target.value;
+    renderMonthly();
+  }));
+}
+
+function renderSidebar(){
+  const w=CHART.position.wave, st=CHART.position.stages, wave=CHART.wave;
+  let h=`<h2>現在位置</h2>
+    <div class="kv"><span>當前月份</span><span class="v">${w.current_ym}</span></div>
+    <div class="kv"><span>加權指數</span><span class="v">${Math.round(w.current_price).toLocaleString()}</span></div>
+    <div class="kv"><span>已過波段</span><span class="v">${w.last_passed_wave||'—'}</span></div>`;
+  h+=`<h2>距杜金龍目標</h2>`;
+  w.targets.forEach(t=>{h+=`<div class="kv"><span>${t.label}</span><span class="v" style="color:${COLORS.target}">${t.price.toLocaleString()} (${t.gap_pct>0?'+':''}${t.gap_pct}%)</span></div>`;});
+  if(w.retracements.length){h+=`<h2>回檔買點</h2>`;
+    w.retracements.forEach(r=>{h+=`<div class="kv"><span>${r.label}</span><span class="v" style="color:var(--down)">${r.low.toLocaleString()}~${r.high.toLocaleString()}</span></div>`;});}
+  h+=`<h2>市場週期段位</h2>`;
+  st.market.forEach(s=>{h+=`<div class="kv"><span>${s.name}</span><span class="v stage-${s.stage}">${s.stage}</span></div>`;});
+  h+=`<h2>經濟週期段位</h2>`;
+  st.econ.forEach(s=>{h+=`<div class="kv"><span>${s.name}</span><span class="v stage-${s.stage}">${s.stage}</span></div>`;});
+  h+=`<div class="src">劇本：${wave.label}<br>來源：<a href="${wave.source}" target="_blank">報導連結</a> (${wave.source_date})<br>${wave.description||''}</div>`;
+  document.getElementById('sidebar').innerHTML=h;
+}
+
+// 事件
+function setView(daily){
+  document.getElementById('btnDaily').classList.toggle('active',daily);
+  document.getElementById('btnMonthly').classList.toggle('active',!daily);
+  document.getElementById('paramPanel').classList.toggle('hidden',daily);
+  if(daily)renderDaily();else{renderMonthly();renderSidebar();}
+}
+document.getElementById('btnMonthly').onclick=()=>setView(false);
+document.getElementById('btnDaily').onclick=()=>setView(true);
+document.getElementById('btnEcon').onclick=e=>{SHOW_ECON=!SHOW_ECON;e.target.textContent='經濟背景層：'+(SHOW_ECON?'開':'關');e.target.classList.toggle('active',SHOW_ECON);renderMonthly();};
+document.getElementById('scriptSel').onchange=loadChartData;
+
+// 啟動
+(async()=>{
+  const r=await fetch('/api/scripts');const list=await r.json();
+  const sel=document.getElementById('scriptSel');
+  list.forEach(s=>{const o=document.createElement('option');o.value=s.id;o.textContent=s.label;sel.appendChild(o);});
+  loadChartData();
+})();
+</script>
+</body>
+</html>
