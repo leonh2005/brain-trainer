@@ -5,7 +5,6 @@
 """
 import json
 import os
-import threading
 import time
 
 from flask import Flask, jsonify, render_template, request
@@ -35,78 +34,46 @@ def _read_secret(filename):
         return f.read().strip()
 
 
-# 持久 Shioaji 連線（不再每次 login/logout，大幅降低登入頻率）
-_shioaji = {"api": None}
-_shioaji_lock = threading.Lock()
+SHIOAJI_GATEWAY = "http://127.0.0.1:5455"
 
 
-def _shioaji_login():
-    import shioaji as sj
-    api_key = os.environ.get("SHIOAJI_API_KEY") or _read_secret("shioaji_api.txt")
-    secret_key = os.environ.get("SHIOAJI_SECRET_KEY") or _read_secret("shioaji_secret.txt")
-    api = sj.Shioaji()
-    api.login(api_key=api_key, secret_key=secret_key)
-    return api
+def _fetch_via_shioaji():
+    """改由 shioaji-gateway(單一共用連線)取報價；gateway 異常時往上拋，交給 yfinance fallback。"""
+    import urllib.request
+    codes = "IX0001," + ",".join(s["code"] for s in STOCKS)
+    with urllib.request.urlopen(f"{SHIOAJI_GATEWAY}/snapshot?codes={codes}", timeout=15) as r:
+        resp = json.loads(r.read())
+    if not resp.get("ok"):
+        raise RuntimeError(resp.get("error", "gateway error"))
+    data = resp["data"]
 
-
-def _shioaji_snapshots(api):
-    index_contract = api.Contracts.Indexs.TSE["IX0001"]
-    idx_snap = api.snapshots([index_contract])[0]
-    index_close = idx_snap.close
-    index_ref = index_close - idx_snap.change_price
-    index_pct = (
-        round(idx_snap.change_rate, 2)
-        if idx_snap.change_rate
-        else round((index_close - index_ref) / index_ref * 100, 2)
+    idx = data["IX0001"]
+    index_close = idx["close"]
+    index_ref = index_close - idx["change_price"]
+    index_pct = idx["change_rate"] if idx["change_rate"] is not None else (
+        round((index_close - index_ref) / index_ref * 100, 2) if index_ref else 0.0
     )
 
     stocks_out = []
-    contracts = [api.Contracts.Stocks[s["code"]] for s in STOCKS]
-    snaps = api.snapshots(contracts)
-    snap_by_code = {s.code: s for s in snaps}
     for s in STOCKS:
-        snap = snap_by_code.get(s["code"])
-        if snap is None:
+        d = data.get(s["code"])
+        if d is None:
             continue
-        ref = snap.close - snap.change_price
-        pct = round(snap.change_rate, 2) if snap.change_rate else (
-            round((snap.close - ref) / ref * 100, 2) if ref else 0.0
+        ref = d["close"] - d["change_price"]
+        pct = d["change_rate"] if d["change_rate"] is not None else (
+            round((d["close"] - ref) / ref * 100, 2) if ref else 0.0
         )
-        stocks_out.append(
-            {"code": s["code"], "name": s["name"], "price": snap.close, "change_pct": pct}
-        )
+        stocks_out.append({"code": s["code"], "name": s["name"], "price": d["close"], "change_pct": pct})
 
     return {
         "index": {
             "price": index_close,
-            "change_pct": index_pct,
-            "change_point": round(idx_snap.change_price, 2),
+            "change_pct": round(index_pct, 2),
+            "change_point": round(idx["change_price"], 2),
         },
         "stocks": stocks_out,
         "source": "shioaji",
     }
-
-
-def _fetch_via_shioaji():
-    """用持久連線取報價；連線失效(如被 ma_monitor 踢掉)時自動重登一次，
-    再失敗才清掉連線並往上拋(交給 yfinance fallback)。以鎖序列化避免並發衝突。"""
-    with _shioaji_lock:
-        try:
-            if _shioaji["api"] is None:
-                _shioaji["api"] = _shioaji_login()
-            return _shioaji_snapshots(_shioaji["api"])
-        except Exception:
-            try:
-                if _shioaji["api"] is not None:
-                    try:
-                        _shioaji["api"].logout()
-                    except Exception:
-                        pass
-                _shioaji["api"] = _shioaji_login()
-                return _shioaji_snapshots(_shioaji["api"])
-            except Exception:
-                _shioaji["api"] = None
-                raise
 
 
 def _fetch_via_yfinance():

@@ -6,16 +6,14 @@
 import os
 
 import json
-from datetime import datetime, date, timedelta, time
+from datetime import datetime, time
 from pathlib import Path
 
 import requests
-import shioaji as sj
 
 TELEGRAM_TOKEN  = open(os.path.expanduser("~/CCProject/.secrets/telegram_token.txt")).read().strip()
 TELEGRAM_CHAT_ID = "7556217543"
-SHIOAJI_API_KEY    = "hj7FsrPYHW9nNiHrcDB2DLHu6LhH3uYvjpR2NdK23E9"
-SHIOAJI_SECRET_KEY = "A8CRXZEvWePQgvdZdmCUjzNWwP4xtLf7AdzYE8Cz3Vig"
+GATEWAY = "http://127.0.0.1:5455"   # shioaji-gateway：共用單一 Shioaji 連線
 STATE_FILE = Path(__file__).parent / "ma_monitor_state.json"
 LOG_FILE   = Path(__file__).parent.parent / "logs" / "ma_monitor.log"
 
@@ -75,56 +73,34 @@ def save_state(state: dict) -> None:
     STATE_FILE.write_text(json.dumps(state, ensure_ascii=False, indent=2))
 
 
-def login_shioaji() -> sj.Shioaji:
-    api = sj.Shioaji(simulation=False)
-    api.login(api_key=SHIOAJI_API_KEY, secret_key=SHIOAJI_SECRET_KEY)
-    return api
-
-
-def get_contract(api: sj.Shioaji, sid: str, exchange: str):
-    store = api.Contracts.Stocks.TSE if exchange == "TSE" else api.Contracts.Stocks.OTC
-    return store.get(sid)
-
-
-def get_daily_closes(api: sj.Shioaji, contract, days: int = 30) -> list[float]:
-    """取最近 days 個交易日收盤價（最多抓 60 天日曆日確保足夠筆數）。"""
-    end   = date.today()
-    start = end - timedelta(days=max(days * 2, 60))
+def gw_closes(sid: str, days: int = 30) -> list[float]:
+    """向 gateway 取收盤序列（等同原 api.kbars(...).Close）。"""
     try:
-        kbars = api.kbars(
-            contract=contract,
-            start=start.strftime("%Y-%m-%d"),
-            end=end.strftime("%Y-%m-%d"),
-        )
-        closes = [float(c) for c in kbars.Close if c]
-        return closes
+        j = requests.get(f"{GATEWAY}/kbars", params={"code": sid, "days": days}, timeout=30).json()
+        return [float(c) for c in j.get("closes", [])] if j.get("ok") else []
     except Exception as e:
-        log(f"kbars 取得失敗 {contract.code}: {e}")
+        log(f"gateway kbars 失敗 {sid}: {e}")
         return []
 
 
-def get_current_price(api: sj.Shioaji, contract) -> float | None:
+def gw_price(sid: str) -> float | None:
+    """向 gateway 取現價(snapshot close)。"""
     try:
-        snaps = api.snapshots([contract])
-        if snaps:
-            return float(snaps[0].close)
+        j = requests.get(f"{GATEWAY}/snapshot", params={"codes": sid}, timeout=15).json()
+        if j.get("ok") and sid in j.get("data", {}):
+            return float(j["data"][sid]["close"])
     except Exception as e:
-        log(f"snapshot 取得失敗 {contract.code}: {e}")
+        log(f"gateway snapshot 失敗 {sid}: {e}")
     return None
 
 
-def analyze(api: sj.Shioaji, sid: str, exchange: str, name: str, state: dict) -> None:
-    contract = get_contract(api, sid, exchange)
-    if contract is None:
-        log(f"{name}({sid}): 找不到合約")
-        return
-
-    closes = get_daily_closes(api, contract, days=25)
+def analyze(sid: str, name: str, state: dict) -> None:
+    closes = gw_closes(sid, days=25)
     if len(closes) < 20:
         log(f"{name}: 歷史資料不足（{len(closes)} 筆）")
         return
 
-    current = get_current_price(api, contract)
+    current = gw_price(sid)
     if current is None:
         current = closes[-1]
 
@@ -164,24 +140,13 @@ def main() -> None:
         log("非交易時間，略過")
         return
 
-    try:
-        api = login_shioaji()
-    except Exception as e:
-        log(f"Shioaji 登入失敗: {e}")
-        return
-
     state = load_state()
     for sid, (exchange, name) in STOCKS.items():
         try:
-            analyze(api, sid, exchange, name, state)
+            analyze(sid, name, state)
         except Exception as e:
             log(f"{name}({sid}) 發生錯誤: {e}")
     save_state(state)
-
-    try:
-        api.logout()
-    except Exception:
-        pass
 
 
 if __name__ == "__main__":
