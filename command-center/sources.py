@@ -243,6 +243,20 @@ def sim_invest():
 
 
 @_wrap
+def daily_stock_analysis():
+    d = _proxy('http://localhost:5650/api/v1/history?limit=5', ttl=300)
+    return d.get('items', []), datetime.now().strftime('%Y-%m-%d %H:%M')
+
+
+@_wrap
+def market_cycle():
+    d = _proxy('http://localhost:5900/api/chart-data', ttl=300)
+    stages = (d.get('position') or {}).get('stages') or {}
+    return {'econ': stages.get('econ', []), 'market': stages.get('market', [])}, \
+        datetime.now().strftime('%Y-%m-%d %H:%M')
+
+
+@_wrap
 def market_analysis():
     analysis = _proxy('http://localhost:5350/api/analysis', ttl=300)
     live = _proxy('http://localhost:5350/api/live', ttl=60)

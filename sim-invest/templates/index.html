@@ -176,20 +176,20 @@ function renderAllocTable(){
   const arrow = allocSortDir === -1 ? ' ▼' : (allocSortDir === 1 ? ' ▲' : '');
   const body = rows.map(r => `<tr>
     <td class="name">${r.ticker}<span class="cat">${r.category}</span></td>
+    <td${r.error ? ` style="color:var(--faint)" title="報價失敗：${String(r.error).replace(/"/g, '&quot;')}"` : ''}>${r.error ? '報價失敗' : (r.native != null ? (r.market === 'US' ? '$' : '') + fmt(r.native, 2) : '—')}</td>
+    <td class="${r.changePct != null ? signClass(r.changePct) : ''}">${r.changePct != null ? sign(r.changePct) + fmt(r.changePct, 2) + '%' : '—'}</td>
     <td>${pct(r.target_pct)}</td>
     <td>${r.actualPct !== null ? pct(r.actualPct) : '—'}</td>
     <td class="${r.drift !== null ? signClass(r.drift) : ''}">${r.drift !== null ? sign(r.drift) + fmt(r.drift, 2) + 'pp' : '—'}</td>
     <td>${fmt(r.shares, r.shares % 1 === 0 ? 0 : 2)}</td>
-    <td${r.error ? ` style="color:var(--faint)" title="報價失敗：${String(r.error).replace(/"/g, '&quot;')}"` : ''}>${r.error ? '報價失敗' : (r.native != null ? (r.market === 'US' ? '$' : '') + fmt(r.native, 2) : '—')}</td>
-    <td class="${r.changePct != null ? signClass(r.changePct) : ''}">${r.changePct != null ? sign(r.changePct) + fmt(r.changePct, 2) + '%' : '—'}</td>
     <td>NT$${fmt(r.cost_twd)}</td>
     <td>NT$${fmt(r.marketValue)}</td>
     <td class="${signClass(r.pnl)}">${sign(r.pnl)}NT$${fmt(r.pnl)}${r.cost_twd > 0 ? `<span style="font-size:11px;font-weight:400;opacity:.8">（${sign(100 * r.pnl / r.cost_twd)}${fmt(100 * r.pnl / r.cost_twd, 2)}%）</span>` : ''}</td>
   </tr>`).join('');
   el.innerHTML = `<table>
     <thead><tr>
-      <th>標的</th><th>目標%</th><th>實際%</th><th>偏離</th>
-      <th>股數</th><th>現價</th><th>當日%</th><th>成本</th><th>現值</th>
+      <th>標的</th><th>現價</th><th>當日%</th><th>目標%</th><th>實際%</th><th>偏離</th>
+      <th>股數</th><th>成本</th><th>現值</th>
       <th id="pnlHead" style="cursor:pointer;user-select:none" title="點擊排序(高→低 / 低→高 / 原順序)">未實現損益${arrow}</th>
     </tr></thead>
     <tbody>${body}</tbody>
@@ -342,7 +342,7 @@ async function loadRebalance(){
 }
 
 function loadAll(){
-  loadAllocation();
+  loadAllocation().then(refreshLive);
   loadNav();
   loadDca();
   loadRebalance();

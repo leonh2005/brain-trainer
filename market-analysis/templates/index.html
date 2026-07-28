@@ -108,6 +108,12 @@ tr.highlight td{background:rgba(217,119,87,.07); font-weight:700}
 .earn-row{display:flex; gap:10px; align-items:baseline; font-size:12.5px; padding:5px 0; border-bottom:1px solid var(--border-soft)}
 .earn-row:last-child{border-bottom:0}
 .earn-row .ed{font-family:var(--mono); color:var(--accent-soft); font-weight:600; min-width:92px}
+.earn-row .ecat{font-size:10.5px; font-weight:600; padding:2px 7px; border-radius:5px; background:var(--bg-soft); color:var(--faint); flex:none}
+.earn-row .ecat.cat-結算日{color:var(--accent-soft)}
+.earn-row .ecat.cat-三巫日{color:var(--down)}
+.earn-row .ecat.cat-Fed會議{color:var(--up)}
+.earn-row .ecat.cat-美國選舉{color:var(--accent)}
+.earn-row .ecat.cat-法說會{color:var(--muted)}
 .sig{display:inline-block; font-size:10.5px; font-weight:700; padding:1px 7px; border-radius:5px; margin-left:6px; vertical-align:middle}
 .sig.bull{background:rgba(193,95,60,.14); color:var(--up)}
 .sig.bear{background:rgba(95,115,70,.16); color:var(--down)}
@@ -235,7 +241,7 @@ tr.highlight td{background:rgba(217,119,87,.07); font-weight:700}
     <div class="econ-stats" id="econ-data"><div class="empty">載入中...</div></div>
   </div>
   <div class="card">
-    <h3>台美龍頭法說會 <span style="font-weight:400;color:var(--faint);font-size:11px">(未來 45 天)</span></h3>
+    <h3>重大事件日曆 <span style="font-weight:400;color:var(--faint);font-size:11px">(即日起至今年年底)</span></h3>
     <div id="econ-earnings"><div class="empty">載入中...</div></div>
   </div>
   <div class="card">
@@ -436,10 +442,10 @@ async function loadEcon(){
     if (tw.rate) stats.push(`<div class="es"><div class="k">台灣 央行重貼現率 ${sigBadge('na')}</div><div class="v">${tw.rate.rate}%</div></div>`);
     document.getElementById('econ-data').innerHTML = stats.join('') || '<div class="empty">無資料</div>';
 
-    const ea = d.earnings || [];
-    const earnHtml = ea.length
-      ? ea.map(e => `<div class="earn-row"><span class="ed">${e.date}</span><span>${e.name}（${e.symbol}）</span></div>`).join('')
-      : '<div class="empty">未來 45 天無美股龍頭法說會</div>';
+    const ev = d.events || [];
+    const earnHtml = ev.length
+      ? ev.map(e => `<div class="earn-row"><span class="ed">${e.date}</span><span class="ecat cat-${e.category}">${e.category}</span><span>${e.title}</span></div>`).join('')
+      : '<div class="empty">即日起至年底無重大事件</div>';
     const enote = tw.earnings_note ? `<div class="note" style="margin-top:9px">${tw.earnings_note}</div>` : '';
     document.getElementById('econ-earnings').innerHTML = earnHtml + enote;
 

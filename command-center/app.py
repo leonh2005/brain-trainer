@@ -29,6 +29,22 @@ def market_dashboard():
     return FileResponse(path)
 
 
+@app.get('/tools/lotto649')
+def tool_lotto649():
+    path = f'{sources.CC}/lotto649/index.html'
+    if not os.path.exists(path):
+        raise HTTPException(404, '找不到 lotto649/index.html')
+    return FileResponse(path)
+
+
+@app.get('/tools/dan-koe-restart')
+def tool_dan_koe_restart():
+    path = f'{sources.CC}/dan-koe-restart/index.html'
+    if not os.path.exists(path):
+        raise HTTPException(404, '找不到 dan-koe-restart/index.html')
+    return FileResponse(path)
+
+
 @app.get('/api/signals/{name}')
 def signals(name: str):
     fn = sources.SIGNALS.get(name)
@@ -70,6 +86,16 @@ def life_sim_invest():
 @app.get('/api/life/market-analysis')
 def life_market_analysis():
     return sources.market_analysis()
+
+
+@app.get('/api/life/daily-stock-analysis')
+def life_daily_stock_analysis():
+    return sources.daily_stock_analysis()
+
+
+@app.get('/api/life/market-cycle')
+def life_market_cycle():
+    return sources.market_cycle()
 
 
 @app.get('/api/jobs')
