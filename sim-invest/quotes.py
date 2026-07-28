@@ -1,4 +1,4 @@
-"""報價層：US→yfinance、TW→Shioaji、匯率→yfinance TWD=X。帶記憶體快取。"""
+"""報價層：US→yfinance、TW→shioaji-gateway(5455)、匯率→yfinance TWD=X。帶記憶體快取。"""
 import time
 
 _cache: dict = {}
@@ -26,36 +26,21 @@ def _yf_close(symbol: str) -> float:
     return float(data["Close"].iloc[-1])
 
 
-_SECRETS_DIR = "/Users/steven/CCProject/.secrets"
+_GATEWAY_URL = "http://localhost:5455/snapshot"
 
 
-def _shioaji_keys():
-    """先讀環境變數，否則讀 .secrets 檔案。"""
-    import os
-    api_key = os.environ.get("SHIOAJI_API_KEY")
-    secret_key = os.environ.get("SHIOAJI_SECRET_KEY")
-    if api_key and secret_key:
-        return api_key, secret_key
-    with open(f"{_SECRETS_DIR}/shioaji_api.txt") as f:
-        api_key = f.read().strip()
-    with open(f"{_SECRETS_DIR}/shioaji_secret.txt") as f:
-        secret_key = f.read().strip()
-    return api_key, secret_key
-
-
-def _shioaji_close(ticker: str) -> float:
-    """以既有 repo 的 Shioaji 登入模式取即時/收盤價。
-    參考 scripts/ma_monitor.py 的 Shioaji 初始化；此處只讀 snapshot.close。"""
-    import shioaji as sj
-    api_key, secret_key = _shioaji_keys()
-    api = sj.Shioaji()
-    api.login(api_key=api_key, secret_key=secret_key)
-    try:
-        contract = api.Contracts.Stocks[ticker]
-        snap = api.snapshots([contract])[0]
-        return float(snap.close)
-    finally:
-        api.logout()
+def _gateway_snapshot(ticker: str) -> dict:
+    """呼叫 shioaji-gateway 的單一持久連線，避免各服務直連 Shioaji 互踢/觸發登入限流。"""
+    import requests
+    resp = requests.get(_GATEWAY_URL, params={"codes": ticker}, timeout=8)
+    resp.raise_for_status()
+    payload = resp.json()
+    if not payload.get("ok"):
+        raise RuntimeError(f"gateway 回應失敗: {payload}")
+    data = payload["data"].get(ticker)
+    if data is None:
+        raise RuntimeError(f"gateway 無此代碼資料: {ticker}")
+    return data
 
 
 def get_quote(ticker: str, market: str) -> float:
@@ -63,7 +48,7 @@ def get_quote(ticker: str, market: str) -> float:
         return _cached(("US", ticker), lambda: _yf_close(ticker))
     if market == "TW":
         try:
-            return _cached(("TW", ticker), lambda: _shioaji_close(ticker))
+            return _cached(("TW", ticker), lambda: _gateway_snapshot(ticker)["close"])
         except Exception:
             try:
                 return _cached(("TW", ticker), lambda: _yf_close(f"{ticker}.TW"))
@@ -83,18 +68,11 @@ def _yf_detail(symbol: str) -> dict:
     return {"last": last, "prev_close": prev, "change_pct": change_pct}
 
 
-def _shioaji_detail(ticker: str) -> dict:
-    import shioaji as sj
-    api_key, secret_key = _shioaji_keys()
-    api = sj.Shioaji()
-    api.login(api_key=api_key, secret_key=secret_key)
-    try:
-        snap = api.snapshots([api.Contracts.Stocks[ticker]])[0]
-        last = float(snap.close)
-        return {"last": last, "prev_close": last - float(snap.change_price),
-                "change_pct": float(snap.change_rate)}
-    finally:
-        api.logout()
+def _gateway_detail(ticker: str) -> dict:
+    d = _gateway_snapshot(ticker)
+    last = float(d["close"])
+    return {"last": last, "prev_close": last - float(d["change_price"]),
+            "change_pct": float(d["change_rate"])}
 
 
 def get_quote_detail(ticker: str, market: str) -> dict:
@@ -103,7 +81,7 @@ def get_quote_detail(ticker: str, market: str) -> dict:
         return _cached(("USD_DET", ticker), lambda: _yf_detail(ticker), ttl=_DETAIL_TTL)
     if market == "TW":
         try:
-            return _cached(("TWD_DET", ticker), lambda: _shioaji_detail(ticker), ttl=_DETAIL_TTL)
+            return _cached(("TWD_DET", ticker), lambda: _gateway_detail(ticker), ttl=_DETAIL_TTL)
         except Exception:
             try:
                 return _cached(("TWD_DET", ticker), lambda: _yf_detail(f"{ticker}.TW"), ttl=_DETAIL_TTL)

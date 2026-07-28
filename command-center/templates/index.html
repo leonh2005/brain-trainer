@@ -304,6 +304,8 @@ const LIFE=[
   {id:'skill',    ic:'🌳', title:'技能樹',   span:'', url:'/api/life/skilltree', render:renderSkill, site:'http://localhost:5500'},
   {id:'sim-invest',ic:'📈', title:'模擬投資', span:'wide', url:'/api/life/sim-invest', render:renderSimInvest, site:'http://localhost:5250'},
   {id:'market-analysis',ic:'📊', title:'市場分析', span:'wide', url:'/api/life/market-analysis', render:renderMarketAnalysis, site:'http://localhost:5350'},
+  {id:'dsa',ic:'🧠', title:'AI選股歷史', span:'wide', url:'/api/life/daily-stock-analysis', render:renderDSA, site:'http://localhost:5650'},
+  {id:'market-cycle',ic:'🌀', title:'景氣週期位置', span:'wide', url:'/api/life/market-cycle', render:renderMarketCycle, site:'http://localhost:5900'},
 ];
 
 function mount(container,defs){
@@ -469,6 +471,30 @@ function renderMarketAnalysis(d){
   box.appendChild(mg);
   return box;
 }
+function renderDSA(d){
+  const arr=Array.isArray(d)?d:[];
+  if(!arr.length)return el('div','empty','尚無分析紀錄');
+  const box=el('div');
+  const adviceCls=a=>a==='买入'?'up':(a==='观望'?'':'down');
+  arr.forEach(r=>{
+    const row=el('div','row');
+    row.innerHTML=`${tkLink(r.stock_name,r.stock_code)}<span class="spacer"></span><span class="mini">情緒 ${fmt(r.sentiment_score)}</span><span class="chg ${adviceCls(r.operation_advice)}" style="margin-left:8px;font-size:11px">${r.operation_advice||'—'}</span>`;
+    box.appendChild(row);
+  });
+  return box;
+}
+function renderMarketCycle(d){
+  if(!d)return el('div','empty','無資料');
+  const box=el('div');
+  const stageCol={'底部':'var(--up)','上升段':'var(--up)','頂部':'var(--down)','下降段':'var(--down)'};
+  (d.market||[]).concat(d.econ||[]).forEach(c=>{
+    const row=el('div','row');
+    const col=stageCol[c.stage]||'var(--muted)';
+    row.innerHTML=`<span class="tk" style="font-weight:500">${esc(c.name)}</span><span class="spacer"></span><span class="chg" style="font-size:11px;color:${col}">${esc(c.stage)}</span>`;
+    box.appendChild(row);
+  });
+  return box;
+}
 function renderRabbit(d){
   if(!d||!d.actions)return el('div','empty','無資料');
   const box=el('div');
@@ -597,6 +623,18 @@ const TOOLS=[
   {ic:'🎬', title:'ComfyUI（AI 影片生成）', desc:'本地 LTX Video 文生／圖生影片，裝在外接硬碟 1TOWC', site:'http://localhost:8188', launch:'comfyui', how:'按「啟動」開服務，約 15 秒後點 ↗ 開介面（需插著 1TOWC 硬碟）'},
   {ic:'🤖', title:'TradingAgents 多Agent分析', desc:'多個 AI Agent 深度分析個股：技術面／基本面／新聞面＋多空辯論', site:'http://localhost:5500', how:'在 stock-screener-ai (5500) 的「多Agent深度分析」分頁使用'},
   {ic:'📚', title:'tw-coverage 台股研究報告', desc:'1735 家台股公司研究報告，wikilink 供應鏈搜尋', path:'~/CCProject/tw-coverage/', how:'用 Obsidian 或編輯器開啟資料夾查閱'},
+  {ic:'🔎', title:'last30days 輿情研究', desc:'跨社群／市場／網路來源，搜尋近 30 天特定主題討論', site:'http://localhost:5750', how:'服務常駐，開網站輸入主題即可查'},
+  {ic:'📡', title:'ai-broadcast 多AI廣播', desc:'同一問題同步發給 ChatGPT／Grok／Gemini／Perplexity 比較回答', site:'http://localhost:5070', how:'服務常駐，開網站輸入問題'},
+  {ic:'🌿', title:'edible-plants-tw 可食植物辨識', desc:'拍照辨識可食植物並存檔備查', site:'http://localhost:5810', how:'服務常駐，開網站上傳照片'},
+  {ic:'🧩', title:'plant-quiz 植物辨識測驗', desc:'依已存植物照片出題的辨識小遊戲', site:'http://localhost:7799', how:'服務常駐，開網站開始測驗'},
+  {ic:'🦁', title:'roar-score 股票咆哮分數', desc:'輸入股票代號評估「咆哮指數」', path:'~/CCProject/roar-score/', how:'需手動啟動：cd 進資料夾 python3 app.py'},
+  {ic:'🎰', title:'大樂透選號產生器', desc:'靜態頁面，隨機產生大樂透號碼', site:'/tools/lotto649', how:'點 ↗ 直接開啟'},
+  {ic:'🌅', title:'一日人生重啟', desc:'靜態自我提醒／重開機儀式頁面', site:'/tools/dan-koe-restart', how:'點 ↗ 直接開啟'},
+  {ic:'🎮', title:'macross7-nes', desc:'Macross 7 主題 NES 遊戲開發（cc65 編譯）', path:'~/CCProject/macross7-nes/', how:'需要 cc65 工具鏈手動編譯，非網頁服務'},
+  {ic:'📖', title:'sl_vn_demo 視覺小說 demo', desc:'視覺小說專案原型，留有錯誤紀錄，可能未完成', path:'~/CCProject/sl_vn_demo/', how:'開發中/實驗性，非網頁服務'},
+  {ic:'📋', title:'banini-tracker', desc:'僅存追蹤報告 JSON，無網頁介面', path:'~/CCProject/banini-tracker/data/', how:'直接開 JSON 檔查看歷史報告'},
+  {ic:'🧵', title:'threads-daily 筆記', desc:'每日 Threads 觀察彙整（markdown）', path:'~/CCProject/threads-daily/', how:'用編輯器或 Obsidian 開資料夾查閱'},
+  {ic:'🍰', title:'AI 投資全景（五層蛋糕）', desc:'AI 產業五層蛋糕框架＋晶片/能源ETF＋應用層7股估值對照，2026-07-27 快照', site:'http://161.33.6.190/reports/ai-investment-outlook.html', how:'已放到 Oracle VM 對外公開，連結可直接分享給別人看'},
 ];
 function mountTools(){
   const wrap=$('#tools');

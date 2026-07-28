@@ -1,29 +1,37 @@
-# Claude Handoff 20260728_0155
-> 自動生成於 2026-07-28 01:55
+# Claude Handoff 20260729_0337
+> 自動生成於 2026-07-29 03:37
 
 ## 未提交的檔案異動
 ```
 ? TradingAgents
- M chip-tracker/chip.db
+ D ai-compare/.env.example
+ D ai-compare/app.py
+ D ai-compare/browser.py
+ D ai-compare/requirements.txt
+ D ai-compare/templates/index.html
+ M command-center/app.py
+ M command-center/sources.py
+ M command-center/templates/index.html
  m daily-stock-analysis
  M gemma_work/latest.md
- M market-cycle-chart/app.py
- M market-cycle-chart/data/wave_scripts.json
- M market-cycle-chart/templates/index.html
+ M logs/log_scan_report.json
+ M market-analysis/econ.py
+ M market-analysis/templates/index.html
  M rabbit-care/rabbit.db
- M sim-invest/app.py
  M sim-invest/quotes.py
+ M sim-invest/requirements.txt
  M sim-invest/templates/index.html
+ M sim-invest/tests/test_quotes.py
  m stock-screener-ai
 ```
 
 ## 近期 Commits
 ```
-53004410 chore: 自動同步 2026-07-27 21:40
-b70a64b4 chore: 自動同步 2026-07-27 16:40
-cc3d265f feat(market-analysis): 經濟總覽每個數值標示對台股利多/利空/中性
-8c9295e4 feat(market-analysis): 經濟總覽補台灣 CPI/央行利率 + 台股法說會說明
-5af7b3c8 feat(market-analysis): 新增「近月經濟總覽」看板(油金匯債VIX + CPI/Fed + 龍頭法說會 + 戰爭新聞)
+45037f31 chore: 自動同步 2026-07-28 22:40
+a3f4d88f chore: 自動同步 2026-07-28 17:40
+ff4b9eac chore: 自動同步 2026-07-28 12:40
+0ddea962 chore: 自動同步 2026-07-28 07:40
+620ff864 chore: 自動同步 2026-07-28 02:40
 ```
 
 ## 給 Hermes 的備註

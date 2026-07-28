@@ -6,8 +6,9 @@ def test_get_quote_us_uses_yf(monkeypatch):
     assert quotes.get_quote("XLP", "US") == 41.23
 
 
-def test_get_quote_tw_uses_shioaji(monkeypatch):
-    monkeypatch.setattr(quotes, "_shioaji_close", lambda t: 48.5 if t == "00864B" else 0.0)
+def test_get_quote_tw_uses_gateway(monkeypatch):
+    monkeypatch.setattr(quotes, "_gateway_snapshot",
+                         lambda t: {"close": 48.5} if t == "00864B" else {"close": 0.0})
     assert quotes.get_quote("00864B", "TW") == 48.5
 
 

@@ -1,6 +1,0 @@
-flask
-pandas
-numpy
-requests
-python-dotenv
-shioaji

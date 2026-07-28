@@ -3,7 +3,7 @@
 來源(皆特定可靠來源,非 LLM):
   市場數值(油/金/美元/殖利率/VIX) -> yfinance
   CPI / Fed 利率                    -> FRED 官方 CSV(免 key)
-  台美龍頭法說會                     -> Finnhub 財報行事曆
+  重大事件日曆(結算日/三巫日/Fed會議/選舉/法說會) -> 規則計算 + Fed 官方公告 + Finnhub 財報行事曆
   戰爭 / 地緣消息                    -> Google News RSS 標題
 
 每個來源各自 try/except,單一來源失敗不影響其他。15 分鐘快取。
@@ -94,21 +94,106 @@ def _fed_rate():
     return {"upper": up[-1][1], "lower": lo[-1][1], "date": up[-1][0], "trend": trend}
 
 
-def _earnings():
-    """台美龍頭法說會(未來 ~45 天),資料來自 Finnhub 財報行事曆。"""
+def _earnings(frm, to):
+    """台美龍頭法說會,資料來自 Finnhub 財報行事曆。"""
     watch = {
         "TSM": "台積電 ADR", "NVDA": "輝達", "AAPL": "蘋果", "MSFT": "微軟",
         "GOOGL": "Google", "AMZN": "亞馬遜", "META": "Meta", "AVGO": "博通",
     }
-    today = date.today()
-    frm, to = today.isoformat(), (today + timedelta(days=45)).isoformat()
     url = (f"https://finnhub.io/api/v1/calendar/earnings?from={frm}&to={to}"
            f"&token={_finnhub_key()}")
     cal = json.loads(_get(url)).get("earningsCalendar", [])
-    ev = [{"symbol": e["symbol"], "name": watch[e["symbol"]], "date": e.get("date")}
-          for e in cal if e.get("symbol") in watch and e.get("date")]
-    ev.sort(key=lambda x: x["date"])
-    return ev
+    return [{"date": e["date"], "category": "法說會",
+              "title": f'{watch[e["symbol"]]}（{e["symbol"]}）法說會'}
+             for e in cal if e.get("symbol") in watch and e.get("date")]
+
+
+_TW_LEADERS = {"2330": "台積電", "2454": "聯發科", "2308": "台達電",
+               "2317": "鴻海", "3711": "日月光", "2382": "廣達"}
+
+
+def _tw_earnings():
+    """台股龍頭法說會,資料來自公開資訊觀測站(MOPS)法人說明會一覽表。
+    公司通常僅提前 1–2 週公告,故月份越遠越可能查無資料(屬正常現象,非錯誤)。"""
+    today = date.today()
+    months = []
+    y, m = today.year, today.month
+    while (y, m) <= (today.year, 12):
+        months.append((y, m))
+        m += 1
+    out = []
+    for y, m in months:
+        body = urllib.parse.urlencode({
+            "encodeURIComponent": "1", "step": "1", "firstin": "1", "off": "1",
+            "TYPEK": "sii", "year": str(y - 1911), "month": f"{m:02d}",
+        }).encode()
+        req = urllib.request.Request(
+            "https://mopsov.twse.com.tw/mops/web/ajax_t100sb02_1", data=body,
+            headers={"User-Agent": "Mozilla/5.0", "Content-Type": "application/x-www-form-urlencoded"})
+        with urllib.request.urlopen(req, timeout=15) as r:
+            html = r.read().decode("utf-8", "replace")
+        rows = re.findall(
+            r"text-align:left !important;'>(\d{3,6})</td><td>([^<]*)</td>\s*"
+            r"<td align='center'>([\d/]*)</td>\s*<td align='center'>([\d:]*)</td>", html)
+        for code, _name, roc_date, _time in rows:
+            if code in _TW_LEADERS and roc_date:
+                ry, rm, rd = roc_date.split("/")
+                out.append({"date": f"{int(ry) + 1911}-{rm}-{rd}", "category": "法說會",
+                            "title": f"{_TW_LEADERS[code]}（{code}）法說會"})
+    return out
+
+
+def _nth_weekday(year, month, weekday, n):
+    """月份中第 n 個指定星期幾(weekday: Monday=0...Sunday=6)。"""
+    import calendar
+    days = [d for d in calendar.Calendar().itermonthdates(year, month)
+            if d.month == month and d.weekday() == weekday]
+    return days[n - 1]
+
+
+# Fed 官方公告之 2026 FOMC 會議日期(政策聲明日=第二日)
+_FOMC_2026 = ["2026-01-28", "2026-03-18", "2026-04-29", "2026-06-17",
+              "2026-07-29", "2026-09-16", "2026-10-28", "2026-12-09"]
+
+
+def _events():
+    """重大市場事件日曆(即日起至今年年底):結算日/三巫日/Fed會議/美國選舉/法說會。"""
+    today = date.today()
+    year_end = date(today.year, 12, 31)
+    events = []
+
+    # 台指期結算日:每月第三個星期三
+    for m in range(1, 13):
+        d = _nth_weekday(today.year, m, 2, 3)
+        if today <= d <= year_end:
+            events.append({"date": d.isoformat(), "category": "結算日", "title": "台指期貨結算日"})
+
+    # 三巫日(美股):3/6/9/12 月第三個星期五
+    for m in (3, 6, 9, 12):
+        d = _nth_weekday(today.year, m, 4, 3)
+        if today <= d <= year_end:
+            events.append({"date": d.isoformat(), "category": "三巫日", "title": "美股三巫日(股指期貨/選擇權到期)"})
+
+    # Fed FOMC 會議(政策聲明日)
+    for d in _FOMC_2026:
+        if today.isoformat() <= d <= year_end.isoformat():
+            events.append({"date": d, "category": "Fed會議", "title": "FOMC 利率決策公布"})
+
+    # 美國期中選舉日:11月第一個星期一後的第一個星期二
+    first_monday = _nth_weekday(today.year, 11, 0, 1)
+    election = first_monday + timedelta(days=1)
+    if today <= election <= year_end:
+        events.append({"date": election.isoformat(), "category": "美國選舉", "title": "美國期中選舉日"})
+
+    # 台美龍頭法說會
+    events += _earnings(today.isoformat(), year_end.isoformat())
+    try:
+        events += [e for e in _tw_earnings() if e["date"] >= today.isoformat()]
+    except Exception:
+        pass  # MOPS 偶爾不穩,不影響其他事件顯示
+
+    events.sort(key=lambda x: x["date"])
+    return events
 
 
 def _war_news():
@@ -139,7 +224,7 @@ def _build():
         ("cpi_us", lambda: _cpi_yoy("CPIAUCSL")),
         ("cpi_core_us", lambda: _cpi_yoy("CPILFESL")),
         ("fed_rate", _fed_rate),
-        ("earnings", _earnings),
+        ("events", _events),
         ("war", _war_news),
         ("tw", _tw_econ),
     ]:
