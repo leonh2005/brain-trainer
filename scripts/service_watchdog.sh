@@ -95,11 +95,6 @@ check_launchagent() {
 
 check_launchagent "command-center" 5950 "com.steven.command-center"
 
-check_and_restart "stock-screener"    5001 \
-  "/opt/homebrew/bin/python3.14 app.py" \
-  "/Users/steven/CCProject/stock-screener" \
-  "/Users/steven/CCProject/logs/stock-screener.log"
-
 check_and_restart "rabbit-care"       5200 \
   "venv/bin/python app.py" \
   "/Users/steven/CCProject/rabbit-care" \
@@ -148,7 +143,7 @@ check_and_restart "dsa-vite"          5173 \
 
 
 # ── 可選服務（目前非必要，掛了不自動重啟，只記 log）──────────────
-for name_port in "ai-compare:5050" "stock_analyzer:5100" "portfolio-analyzer:5800"; do
+for name_port in "ai-compare:5050" "stock_analyzer:5100" "portfolio-analyzer:5800" "stock-screener:5001"; do
   n="${name_port%%:*}"
   p="${name_port##*:}"
   if ! is_port_up "$p"; then
