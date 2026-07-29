@@ -1,30 +1,27 @@
-# Claude Handoff 20260729_0444
-> 自動生成於 2026-07-29 04:44
+# Claude Handoff 20260729_1633
+> 自動生成於 2026-07-29 16:33
 
 ## 未提交的檔案異動
 ```
 ? TradingAgents
- D banini-tracker
- M command-center/templates/index.html
+ M chip-tracker/chip.db
  m daily-stock-analysis
- M gemma_work/latest.md
- M portfolio-analyzer/tdcc_cache.json
- M scripts/hay/hay_monitor.py
- M sim-invest/app.py
- M sim-invest/plans.py
- M sim-invest/store.py
- M sim-invest/templates/index.html
+ M market-dashboard/bb_cache.json
+ M market-dashboard/fg_history.json
+ M market-dashboard/index.html
+ M market-dashboard/margin_cache.json
+ M market-dashboard/sp_state.json
+ M rabbit-care/rabbit.db
  m stock-screener-ai
-?? scripts/hay_restock_dates.json
 ```
 
 ## 近期 Commits
 ```
+e8bbc3e3 chore: 自動同步 2026-07-29 13:40
+afe4d2fe chore: 自動同步 2026-07-29 08:40
 bd5e88c4 chore: 自動同步 2026-07-29 03:40
 45037f31 chore: 自動同步 2026-07-28 22:40
 a3f4d88f chore: 自動同步 2026-07-28 17:40
-ff4b9eac chore: 自動同步 2026-07-28 12:40
-0ddea962 chore: 自動同步 2026-07-28 07:40
 ```
 
 ## 給 Hermes 的備註
