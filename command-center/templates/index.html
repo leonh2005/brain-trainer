@@ -9,8 +9,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#f7f2e4; --bg-soft:#f0e9d6; --card:#fffdf7; --card-hover:#fbf7ec;
-  --border:#ddd4bd; --border-soft:#e8e0cb;
+  --bg:#f7f2e4; --bg-soft:#f0e9d6; --card:#eee5d0; --card-hover:#e8ddc3;
+  --border:#d2c6a8; --border-soft:#ddd0b2;
   --fg:#141413; --muted:#73716a; --faint:#a8a599;
   --up:#c15f3c; --down:#5f7346;         /* 台股：紅漲綠跌（品牌暖調）*/
   --accent:#d97757; --accent-soft:#c15f3c;
@@ -516,14 +516,14 @@ function renderHay(d){
   arr.forEach(it=>{
     const row=el('div','row');
     const stockCol=it.in_stock?'var(--up)':'var(--faint)';
-    const stockTxt=it.in_stock?'有貨':'缺貨';
+    const stockTxt=it.in_stock?(it.since?`有貨 · ${it.since}起`:'有貨'):'缺貨';
     const price=it.price?`$${it.price}`:'';
     row.innerHTML=`<a href="${it.url}" target="_blank" style="text-decoration:none;color:inherit;display:flex;align-items:center;gap:8px;flex:1;min-width:0">`+
       `<span class="badge" style="background:var(--accent)1e;color:var(--accent);flex:none">${it.shop}</span>`+
       `<span class="tk" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${it.variant}</span>`+
       (price?`<span class="mini" style="flex:none">${price}</span>`:'')+
       `<span class="spacer"></span>`+
-      `<span class="chg" style="font-size:12px;flex:none;color:${stockCol}">${stockTxt}</span></a>`;
+      `<span class="chg" style="font-size:11px;flex:none;color:${stockCol}">${stockTxt}</span></a>`;
     box.appendChild(row);
   });
   return box;
@@ -632,7 +632,6 @@ const TOOLS=[
   {ic:'🌅', title:'一日人生重啟', desc:'靜態自我提醒／重開機儀式頁面', site:'/tools/dan-koe-restart', how:'點 ↗ 直接開啟'},
   {ic:'🎮', title:'macross7-nes', desc:'Macross 7 主題 NES 遊戲開發（cc65 編譯）', path:'~/CCProject/macross7-nes/', how:'需要 cc65 工具鏈手動編譯，非網頁服務'},
   {ic:'📖', title:'sl_vn_demo 視覺小說 demo', desc:'視覺小說專案原型，留有錯誤紀錄，可能未完成', path:'~/CCProject/sl_vn_demo/', how:'開發中/實驗性，非網頁服務'},
-  {ic:'📋', title:'banini-tracker', desc:'僅存追蹤報告 JSON，無網頁介面', path:'~/CCProject/banini-tracker/data/', how:'直接開 JSON 檔查看歷史報告'},
   {ic:'🧵', title:'threads-daily 筆記', desc:'每日 Threads 觀察彙整（markdown）', path:'~/CCProject/threads-daily/', how:'用編輯器或 Obsidian 開資料夾查閱'},
   {ic:'🍰', title:'AI 投資全景（五層蛋糕）', desc:'AI 產業五層蛋糕框架＋晶片/能源ETF＋應用層7股估值對照，2026-07-27 快照', site:'http://161.33.6.190/reports/ai-investment-outlook.html', how:'已放到 Oracle VM 對外公開，連結可直接分享給別人看'},
 ];

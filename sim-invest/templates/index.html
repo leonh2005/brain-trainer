@@ -73,6 +73,7 @@ th:first-child, td:first-child{text-align:left}
 td{padding:9px 8px; border-bottom:1px solid var(--border-soft); font-family:var(--mono); text-align:right}
 tr:last-child td{border-bottom:0}
 td.name{font-family:-apple-system,sans-serif; font-weight:600; color:var(--fg)}
+tr.total-row td{font-weight:700; border-top:2px solid var(--border); background:var(--bg-soft)}
 td .cat{display:block; font-size:10px; color:var(--faint); font-weight:400; font-family:-apple-system,sans-serif}
 .up{color:var(--up)} .down{color:var(--down)}
 
@@ -96,6 +97,15 @@ td .cat{display:block; font-size:10px; color:var(--faint); font-weight:400; font
 .dca-note{font-size:11.5px; color:var(--muted); flex:1; min-width:220px}
 
 .err{color:var(--up); font-size:11px; font-family:var(--mono); padding:10px 0}
+
+.edit-ic{background:none; border:none; cursor:pointer; font-size:12px; opacity:.6; padding:2px 4px}
+.edit-ic:hover{opacity:1}
+.cap-edit{display:inline-flex; align-items:center; gap:6px}
+.cap-edit input{width:120px; font-family:var(--mono); font-size:12.5px; padding:4px 6px; border:1px solid var(--border); border-radius:6px}
+.mini-btn{padding:4px 10px; border-radius:6px; border:1px solid var(--border-soft); background:var(--card); font-size:11.5px; cursor:pointer}
+.mini-btn.save{background:var(--accent); border-color:var(--accent); color:#fff}
+td input, td select{font-family:var(--mono); font-size:12px; padding:4px 6px; border:1px solid var(--border); border-radius:6px; width:100%}
+td.actions{white-space:nowrap}
 </style>
 </head>
 <body>
@@ -105,7 +115,7 @@ td .cat{display:block; font-size:10px; color:var(--faint); font-weight:400; font
       <div class="logo">📈</div>
       <div>
         <h1>模擬投資儀表板</h1>
-        <div class="sub" id="acctName">載入中…</div>
+        <div class="sub"><span id="acctName">載入中…</span> <button class="edit-ic" id="editCapBtn" title="修改本金">✏️</button></div>
         <div class="sub" id="acctPnl" style="margin-top:3px;font-weight:600"></div>
       </div>
     </div>
@@ -116,6 +126,12 @@ td .cat{display:block; font-size:10px; color:var(--faint); font-weight:400; font
   <div class="card">
     <div class="card-head"><span class="ic">📊</span><h3>目標 vs 實際配置</h3><span class="meta" id="allocMeta"></span><button id="refreshBtn" class="refresh-btn">🔄 刷新報價</button></div>
     <div class="card-body" id="allocTable"><div class="empty">載入中…</div></div>
+  </div>
+
+  <div class="sec-label">目標管理</div>
+  <div class="card">
+    <div class="card-head"><span class="ic">🎯</span><h3>編輯配置目標</h3><button id="addTargetBtn" class="refresh-btn">+ 新增標的</button></div>
+    <div class="card-body" id="targetMgmtTable"><div class="empty">載入中…</div></div>
   </div>
 
   <div class="sec-label">淨值曲線</div>
@@ -160,6 +176,7 @@ async function loadAccounts(){
   sw.querySelectorAll('.acct-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       currentAid = btn.dataset.aid;
+      editingTargetId = null; editingDraft = null;
       sw.querySelectorAll('.acct-btn').forEach(b => b.classList.toggle('active', b === btn));
       loadAll();
     });
@@ -167,70 +184,142 @@ async function loadAccounts(){
 }
 
 let allocRows = [];
-let allocSortDir = 0;  // 0=依配置順序, -1=損益高→低, 1=損益低→高
+let allocSortKey = null;  // null=依配置順序，否則為 ALLOC_COLS 的 key
+let allocSortDir = -1;    // -1=高→低(或 Z→A), 1=低→高(或 A→Z)
+let currentCapital = null;
+let currentAccountName = '';
+let currentTargets = [];
+let editingTargetId = null;   // 正在編輯中的 target id，null=無，'new'=新增列
+let editingDraft = null;
+
+const ALLOC_COLS = [
+  {key: 'ticker', label: '標的'},
+  {key: 'native', label: '現價'},
+  {key: 'changePct', label: '當日%'},
+  {key: 'target_pct', label: '目標%'},
+  {key: 'actualPct', label: '實際%'},
+  {key: 'drift', label: '偏離'},
+  {key: 'shares', label: '股數'},
+  {key: 'cost_twd', label: '成本'},
+  {key: 'marketValue', label: '現值'},
+  {key: 'pnl', label: '未實現損益'},
+];
+
+function allocCell(r, key){
+  switch (key) {
+    case 'ticker':
+      return `<td class="name">${escHtml(r.ticker)}<span class="cat">${escHtml(r.category)}</span></td>`;
+    case 'native':
+      return `<td${r.error ? ` style="color:var(--faint)" title="報價失敗：${String(r.error).replace(/"/g, '&quot;')}"` : ''}>${r.error ? '報價失敗' : (r.native != null ? (r.market === 'US' ? '$' : '') + fmt(r.native, 2) : '—')}</td>`;
+    case 'changePct':
+      return `<td class="${r.changePct != null ? signClass(r.changePct) : ''}">${r.changePct != null ? sign(r.changePct) + fmt(r.changePct, 2) + '%' : '—'}</td>`;
+    case 'target_pct':
+      return `<td>${pct(r.target_pct)}</td>`;
+    case 'actualPct':
+      return `<td>${r.actualPct !== null ? pct(r.actualPct) : '—'}</td>`;
+    case 'drift':
+      return `<td class="${r.drift !== null ? signClass(r.drift) : ''}">${r.drift !== null ? sign(r.drift) + fmt(r.drift, 2) + 'pp' : '—'}</td>`;
+    case 'shares':
+      return `<td>${fmt(r.shares, r.shares % 1 === 0 ? 0 : 2)}</td>`;
+    case 'cost_twd':
+      return `<td>NT$${fmt(r.cost_twd)}</td>`;
+    case 'marketValue':
+      return `<td>NT$${fmt(r.marketValue)}</td>`;
+    case 'pnl':
+      return `<td class="${signClass(r.pnl)}">${sign(r.pnl)}NT$${fmt(r.pnl)}${r.cost_twd > 0 ? `<span style="font-size:11px;font-weight:400;opacity:.8">（${sign(100 * r.pnl / r.cost_twd)}${fmt(100 * r.pnl / r.cost_twd, 2)}%）</span>` : ''}</td>`;
+  }
+}
+
+function allocSortValue(r, key){
+  return key === 'ticker' ? r.ticker : r[key];
+}
+
+function compareAllocRows(a, b, key, dir){
+  const va = allocSortValue(a, key), vb = allocSortValue(b, key);
+  if (va == null && vb == null) return 0;
+  if (va == null) return 1;
+  if (vb == null) return -1;
+  const natural = typeof va === 'string' ? va.localeCompare(vb) : va - vb;
+  return natural * dir;
+}
+
+function allocTotals(){
+  const sum = (k) => allocRows.reduce((acc, r) => acc + (r[k] || 0), 0);
+  const cost = sum('cost_twd'), mv = sum('marketValue'), pnl = mv - cost;
+  const anyActualNull = allocRows.some(r => r.actualPct === null);
+  return {
+    target_pct: sum('target_pct'),
+    actualPct: anyActualNull ? null : sum('actualPct'),
+    cost_twd: cost, marketValue: mv, pnl,
+  };
+}
 
 function renderAllocTable(){
   const el = document.getElementById('allocTable');
   const rows = allocRows.slice();
-  if (allocSortDir !== 0) rows.sort((a, b) => (a.pnl - b.pnl) * allocSortDir);
-  const arrow = allocSortDir === -1 ? ' ▼' : (allocSortDir === 1 ? ' ▲' : '');
-  const body = rows.map(r => `<tr>
-    <td class="name">${r.ticker}<span class="cat">${r.category}</span></td>
-    <td${r.error ? ` style="color:var(--faint)" title="報價失敗：${String(r.error).replace(/"/g, '&quot;')}"` : ''}>${r.error ? '報價失敗' : (r.native != null ? (r.market === 'US' ? '$' : '') + fmt(r.native, 2) : '—')}</td>
-    <td class="${r.changePct != null ? signClass(r.changePct) : ''}">${r.changePct != null ? sign(r.changePct) + fmt(r.changePct, 2) + '%' : '—'}</td>
-    <td>${pct(r.target_pct)}</td>
-    <td>${r.actualPct !== null ? pct(r.actualPct) : '—'}</td>
-    <td class="${r.drift !== null ? signClass(r.drift) : ''}">${r.drift !== null ? sign(r.drift) + fmt(r.drift, 2) + 'pp' : '—'}</td>
-    <td>${fmt(r.shares, r.shares % 1 === 0 ? 0 : 2)}</td>
-    <td>NT$${fmt(r.cost_twd)}</td>
-    <td>NT$${fmt(r.marketValue)}</td>
-    <td class="${signClass(r.pnl)}">${sign(r.pnl)}NT$${fmt(r.pnl)}${r.cost_twd > 0 ? `<span style="font-size:11px;font-weight:400;opacity:.8">（${sign(100 * r.pnl / r.cost_twd)}${fmt(100 * r.pnl / r.cost_twd, 2)}%）</span>` : ''}</td>
-  </tr>`).join('');
+  if (allocSortKey) rows.sort((a, b) => compareAllocRows(a, b, allocSortKey, allocSortDir));
+
+  const headCells = ALLOC_COLS.map(c => {
+    const arrow = allocSortKey === c.key ? (allocSortDir === -1 ? ' ▼' : ' ▲') : '';
+    return `<th class="alloc-sort-h" data-key="${c.key}" style="cursor:pointer;user-select:none" title="點擊排序(高→低 / 低→高 / 原順序)">${c.label}${arrow}</th>`;
+  }).join('');
+
+  const body = rows.map(r => `<tr>${ALLOC_COLS.map(c => allocCell(r, c.key)).join('')}</tr>`).join('');
+
+  const t = allocTotals();
+  const totalRow = `<tr class="total-row">
+    <td class="name">總計</td>
+    <td>—</td><td>—</td>
+    <td>${pct(t.target_pct)}</td>
+    <td>${t.actualPct !== null ? pct(t.actualPct) : '—'}</td>
+    <td>—</td><td>—</td>
+    <td>NT$${fmt(t.cost_twd)}</td>
+    <td>NT$${fmt(t.marketValue)}</td>
+    <td class="${signClass(t.pnl)}">${sign(t.pnl)}NT$${fmt(t.pnl)}</td>
+  </tr>`;
+
   el.innerHTML = `<table>
-    <thead><tr>
-      <th>標的</th><th>現價</th><th>當日%</th><th>目標%</th><th>實際%</th><th>偏離</th>
-      <th>股數</th><th>成本</th><th>現值</th>
-      <th id="pnlHead" style="cursor:pointer;user-select:none" title="點擊排序(高→低 / 低→高 / 原順序)">未實現損益${arrow}</th>
-    </tr></thead>
-    <tbody>${body}</tbody>
+    <thead><tr>${headCells}</tr></thead>
+    <tbody>${body}${totalRow}</tbody>
   </table>`;
-  const head = document.getElementById('pnlHead');
-  if (head) head.addEventListener('click', () => {
-    allocSortDir = allocSortDir === 0 ? -1 : (allocSortDir === -1 ? 1 : 0);
+
+  el.querySelectorAll('.alloc-sort-h').forEach(th => th.addEventListener('click', () => {
+    const key = th.dataset.key;
+    if (allocSortKey !== key) { allocSortKey = key; allocSortDir = -1; }
+    else if (allocSortDir === -1) { allocSortDir = 1; }
+    else { allocSortKey = null; allocSortDir = -1; }
     renderAllocTable();
-  });
+  }));
 }
 
-async function loadAllocation(){
+function applyAccountPayload(data){
+  currentCapital = data.account.capital_twd;
+  currentAccountName = data.account.name;
+  currentTargets = data.targets;
+  document.getElementById('acctName').textContent = currentAccountName + '（本金 NT$' + fmt(currentCapital) + '）';
+
+  const latest = data.latest;
+  document.getElementById('allocMeta').textContent = latest ? latest.date + ' 收盤' : '尚無快照';
+
+  const holdingsByTicker = {};
+  data.holdings.forEach(h => holdingsByTicker[h.ticker] = h);
+  const total = latest ? latest.total_value_twd : null;
+
+  // 總損益 = 總市值 − 本金
+  const cap = data.account.capital_twd;
+  const totalPnl = total !== null ? (total - cap) : null;
+  const pnlEl = document.getElementById('acctPnl');
+  if (totalPnl !== null) {
+    const pnlPct = 100 * totalPnl / cap;
+    pnlEl.innerHTML = `總損益 <span class="${signClass(totalPnl)}">${sign(totalPnl)}NT$${fmt(totalPnl)}（${sign(pnlPct)}${fmt(pnlPct, 2)}%）</span>`;
+  } else {
+    pnlEl.textContent = '';
+  }
+
   const el = document.getElementById('allocTable');
-  try {
-    const res = await fetch('/api/account/' + currentAid);
-    const data = await res.json();
-    document.getElementById('acctName').textContent = data.account.name + '（本金 NT$' + fmt(data.account.capital_twd) + '）';
-
-    const latest = data.latest;
-    document.getElementById('allocMeta').textContent = latest ? latest.date + ' 收盤' : '尚無快照';
-
-    const holdingsByTicker = {};
-    data.holdings.forEach(h => holdingsByTicker[h.ticker] = h);
-    const total = latest ? latest.total_value_twd : null;
-
-    // 總損益 = 總市值 − 本金
-    const cap = data.account.capital_twd;
-    const totalPnl = total !== null ? (total - cap) : null;
-    const pnlEl = document.getElementById('acctPnl');
-    if (totalPnl !== null) {
-      const pnlPct = 100 * totalPnl / cap;
-      pnlEl.innerHTML = `總損益 <span class="${signClass(totalPnl)}">${sign(totalPnl)}NT$${fmt(totalPnl)}（${sign(pnlPct)}${fmt(pnlPct, 2)}%）</span>`;
-    } else {
-      pnlEl.textContent = '';
-    }
-
-    if (!data.targets.length) {
-      el.innerHTML = '<div class="empty">無配置目標</div>';
-      return;
-    }
-
+  if (!data.targets.length) {
+    el.innerHTML = '<div class="empty">無配置目標</div>';
+  } else {
     allocRows = data.targets.map(t => {
       const h = holdingsByTicker[t.ticker] || {shares: 0, cost_twd: 0, market_value: 0};
       const marketValue = h.market_value !== undefined ? h.market_value : h.cost_twd;
@@ -241,10 +330,143 @@ async function loadAllocation(){
               actualPct, drift, shares: h.shares, cost_twd: h.cost_twd, marketValue, pnl};
     });
     renderAllocTable();
+  }
+  renderTargetMgmt();
+}
+
+async function loadAllocation(){
+  const el = document.getElementById('allocTable');
+  try {
+    const res = await fetch('/api/account/' + currentAid);
+    const data = await res.json();
+    applyAccountPayload(data);
   } catch (e) {
     el.innerHTML = '<div class="err">載入失敗：' + e + '</div>';
   }
 }
+
+function escAttr(s){ return String(s).replace(/"/g, '&quot;'); }
+function escHtml(s){
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function targetRowView(t){
+  return `<tr data-id="${t.id}">
+    <td class="name">${escHtml(t.ticker)}</td>
+    <td>${escHtml(t.market)}</td>
+    <td>${escHtml(t.category)}</td>
+    <td>NT$${fmt(t.target_twd)}</td>
+    <td>${t.build_method === 'lump' ? '一次' : 'DCA'}</td>
+    <td class="actions">
+      <button class="edit-ic edit-t" data-id="${t.id}" title="編輯">✏️</button>
+      <button class="edit-ic del-t" data-id="${t.id}" title="刪除">🗑️</button>
+    </td>
+  </tr>`;
+}
+
+function targetRowEdit(t){
+  const isNew = t.id === null;
+  return `<tr data-id="${isNew ? 'new' : t.id}">
+    <td><input type="text" class="f-ticker" value="${escAttr(t.ticker)}" placeholder="例如 AAPL"></td>
+    <td><select class="f-market">
+      <option value="TW"${t.market === 'TW' ? ' selected' : ''}>TW</option>
+      <option value="US"${t.market === 'US' ? ' selected' : ''}>US</option>
+    </select></td>
+    <td><input type="text" class="f-category" value="${escAttr(t.category)}" placeholder="類別"></td>
+    <td><input type="number" class="f-target_twd" value="${t.target_twd || ''}" placeholder="金額"></td>
+    <td><select class="f-build_method">
+      <option value="lump"${t.build_method === 'lump' ? ' selected' : ''}>一次</option>
+      <option value="dca"${t.build_method === 'dca' ? ' selected' : ''}>DCA</option>
+    </select></td>
+    <td class="actions">
+      <button class="mini-btn save save-t" data-id="${isNew ? 'new' : t.id}">儲存</button>
+      <button class="mini-btn cancel-t">取消</button>
+    </td>
+  </tr>`;
+}
+
+function renderTargetMgmt(){
+  const el = document.getElementById('targetMgmtTable');
+  const rows = currentTargets.map(t =>
+    editingTargetId === t.id ? targetRowEdit(t) : targetRowView(t)
+  ).join('');
+  const newRow = editingTargetId === 'new'
+    ? targetRowEdit(editingDraft || {id: null, ticker: '', market: 'TW', category: '', target_twd: '', build_method: 'lump'})
+    : '';
+  if (!rows && !newRow) {
+    el.innerHTML = '<div class="empty">無配置目標</div>';
+    return;
+  }
+  el.innerHTML = `<table>
+    <thead><tr><th>標的</th><th>市場</th><th>類別</th><th>目標金額</th><th>建倉方式</th><th>操作</th></tr></thead>
+    <tbody>${rows}${newRow}</tbody>
+  </table>`;
+
+  el.querySelectorAll('.edit-t').forEach(btn => btn.addEventListener('click', () => {
+    editingTargetId = Number(btn.dataset.id);
+    renderTargetMgmt();
+  }));
+  el.querySelectorAll('.cancel-t').forEach(btn => btn.addEventListener('click', () => {
+    editingTargetId = null; editingDraft = null;
+    renderTargetMgmt();
+  }));
+  el.querySelectorAll('.del-t').forEach(btn => btn.addEventListener('click', async () => {
+    if (!confirm('確定刪除此標的？')) return;
+    const res = await fetch(`/api/account/${currentAid}/target/${btn.dataset.id}`, {method: 'DELETE'});
+    if (res.ok) { applyAccountPayload(await res.json()); loadAll(); }
+    else alert('刪除失敗：' + (await res.json()).error);
+  }));
+  el.querySelectorAll('.save-t').forEach(btn => btn.addEventListener('click', async () => {
+    const tr = btn.closest('tr');
+    const payload = {
+      ticker: tr.querySelector('.f-ticker').value,
+      market: tr.querySelector('.f-market').value,
+      category: tr.querySelector('.f-category').value,
+      target_twd: tr.querySelector('.f-target_twd').value,
+      build_method: tr.querySelector('.f-build_method').value,
+    };
+    const isNew = btn.dataset.id === 'new';
+    const url = isNew ? `/api/account/${currentAid}/target` : `/api/account/${currentAid}/target/${btn.dataset.id}`;
+    const res = await fetch(url, {
+      method: isNew ? 'POST' : 'PUT',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(payload),
+    });
+    const data = await res.json();
+    if (res.ok) {
+      editingTargetId = null; editingDraft = null;
+      applyAccountPayload(data);
+      loadAll();
+    } else {
+      alert('儲存失敗：' + data.error);
+    }
+  }));
+}
+
+document.getElementById('addTargetBtn').addEventListener('click', () => {
+  editingTargetId = 'new';
+  editingDraft = {id: null, ticker: '', market: 'TW', category: '', target_twd: '', build_method: 'lump'};
+  renderTargetMgmt();
+});
+
+document.getElementById('editCapBtn').addEventListener('click', () => {
+  const nameEl = document.getElementById('acctName');
+  const cur = currentCapital;
+  nameEl.innerHTML = `<span class="cap-edit">本金 NT$ <input type="number" id="capInput" value="${cur}"> <button class="mini-btn save" id="capSaveBtn">儲存</button> <button class="mini-btn" id="capCancelBtn">取消</button></span>`;
+  document.getElementById('capCancelBtn').addEventListener('click', () => {
+    nameEl.textContent = currentAccountName + '（本金 NT$' + fmt(currentCapital) + '）';
+  });
+  document.getElementById('capSaveBtn').addEventListener('click', async () => {
+    const val = document.getElementById('capInput').value;
+    const res = await fetch(`/api/account/${currentAid}/capital`, {
+      method: 'PUT', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({capital_twd: val}),
+    });
+    const data = await res.json();
+    if (res.ok) { applyAccountPayload(data); loadAll(); }
+    else alert('儲存失敗：' + data.error);
+  });
+});
 
 function drawNavSvg(points){
   const w = 640, h = 180, pad = 28;

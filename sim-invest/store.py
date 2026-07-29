@@ -31,6 +31,15 @@ CREATE TABLE IF NOT EXISTS snapshots(
     by_ticker_json TEXT,
     PRIMARY KEY(account_id, date)
 );
+CREATE TABLE IF NOT EXISTS plan_targets(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    plan_id TEXT NOT NULL,
+    ticker TEXT NOT NULL,
+    market TEXT NOT NULL,
+    category TEXT NOT NULL,
+    target_twd REAL NOT NULL,
+    build_method TEXT NOT NULL
+);
 """
 
 
@@ -97,3 +106,49 @@ def latest_snapshot(conn, account_id):
         "SELECT * FROM snapshots WHERE account_id=? ORDER BY date DESC LIMIT 1",
         (account_id,),
     ).fetchone()
+
+
+def update_account_capital(conn, account_id, capital_twd):
+    conn.execute(
+        "UPDATE accounts SET capital_twd=? WHERE account_id=?",
+        (capital_twd, account_id),
+    )
+    conn.commit()
+
+
+def get_targets(conn, plan_id):
+    return conn.execute(
+        "SELECT * FROM plan_targets WHERE plan_id=? ORDER BY id", (plan_id,)
+    ).fetchall()
+
+
+def count_targets(conn, plan_id):
+    return conn.execute(
+        "SELECT COUNT(*) AS n FROM plan_targets WHERE plan_id=?", (plan_id,)
+    ).fetchone()["n"]
+
+
+def add_target(conn, plan_id, ticker, market, category, target_twd, build_method):
+    cur = conn.execute(
+        "INSERT INTO plan_targets(plan_id,ticker,market,category,target_twd,build_method) "
+        "VALUES(?,?,?,?,?,?)",
+        (plan_id, ticker, market, category, target_twd, build_method),
+    )
+    conn.commit()
+    return cur.lastrowid
+
+
+def update_target(conn, target_id, plan_id, ticker, market, category, target_twd, build_method):
+    conn.execute(
+        "UPDATE plan_targets SET ticker=?,market=?,category=?,target_twd=?,build_method=? "
+        "WHERE id=? AND plan_id=?",
+        (ticker, market, category, target_twd, build_method, target_id, plan_id),
+    )
+    conn.commit()
+
+
+def delete_target(conn, target_id, plan_id):
+    conn.execute(
+        "DELETE FROM plan_targets WHERE id=? AND plan_id=?", (target_id, plan_id)
+    )
+    conn.commit()
