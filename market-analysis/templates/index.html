@@ -123,7 +123,7 @@ tr.highlight td{background:rgba(217,119,87,.07); font-weight:700}
 .idx-pct.up{background:rgba(193,95,60,.12); color:var(--up)}
 .idx-pct.down{background:rgba(95,115,70,.14); color:var(--down)}
 .live-head .updated{margin-left:auto; font-size:11px; color:var(--faint); font-family:var(--mono)}
-.live-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:10px}
+.live-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:10px}
 @media(max-width:640px){.live-grid{grid-template-columns:repeat(2,1fr)}}
 .live-tile{
   background:var(--bg-soft); border:1px solid var(--border-soft); border-radius:var(--radius-sm);
@@ -448,7 +448,7 @@ function renderIntradayChart(elId, points, prevClose, size){
   const H = CH + AXIS_H;
   const PAD = mini ? 10 : 16;
   const PADX = mini ? 8 : 12;
-  const FS = mini ? 9 : 10;
+  const FS = mini ? 13 : 10;
   const TOOLTIP_FS = mini ? FS * 2 : FS;  // hover 顯示的「時間　點數」字放大兩倍
   const R = mini ? 2.3 : 3;
   const prices = points.map(p => p.price);

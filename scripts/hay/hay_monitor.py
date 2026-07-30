@@ -17,7 +17,7 @@ SEEN_FILE = os.path.expanduser("~/CCProject/scripts/hay_seen.json")
 CURRENT_FILE = os.path.expanduser("~/CCProject/scripts/hay_current.json")
 RESTOCK_FILE = os.path.expanduser("~/CCProject/scripts/hay_restock_dates.json")
 LOG_FILE = os.path.expanduser("~/CCProject/logs/hay_monitor.log")
-TOKEN_FILE = os.path.expanduser("~/CCProject/.secrets/tgclaude_token.txt")
+TOKEN_FILE = os.path.expanduser("~/CCProject/.secrets/telegram_token.txt")
 CHAT_ID = "7556217543"
 TPE = timezone(timedelta(hours=8))
 
