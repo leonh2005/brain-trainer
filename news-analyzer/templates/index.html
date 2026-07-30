@@ -101,6 +101,12 @@
   </div>
 </div>
 
+<div class="chart-section">
+  <div class="chart-wrap">
+    <canvas id="bullishTrendChart"></canvas>
+  </div>
+</div>
+
 <div class="filters">
   <input type="text" id="searchInput" placeholder="搜尋標題、摘要..." oninput="debounceLoad()">
   <select id="sourceSelect" onchange="loadArticles(1)">
@@ -162,11 +168,44 @@ async function loadTrend(period = 'day') {
   });
 }
 
+let bullishChart = null;
+
+async function loadBullishTrend(period = 'day') {
+  const res = await fetch(`/api/bullish_trend?period=${period}`);
+  const data = await res.json();
+  const ctx = document.getElementById('bullishTrendChart').getContext('2d');
+  if (bullishChart) bullishChart.destroy();
+  bullishChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: data.labels,
+      datasets: [{
+        label: '多方佔比 %',
+        data: data.data,
+        borderColor: '#e53e3e',
+        backgroundColor: '#e53e3e',
+        pointStyle: 'circle',
+        tension: 0.3,
+        spanGaps: true,
+      }],
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      scales: {
+        y: { min: 0, max: 100, ticks: { color: '#94a3b8', callback: v => v + '%' }, grid: { color: '#334155' } },
+        x: { ticks: { color: '#94a3b8' }, grid: { color: '#334155' } }
+      },
+      plugins: { legend: { labels: { color: '#e2e8f0', usePointStyle: true, pointStyle: 'circle', boxWidth: 10, boxHeight: 10 } } }
+    }
+  });
+}
+
 function setPeriod(period, btn) {
   currentPeriod = period;
   document.querySelectorAll('.period-btns button').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   loadTrend(period);
+  loadBullishTrend(period);
   loadStats();
 }
 
@@ -294,6 +333,7 @@ async function toggleIrrelevant(id, btn) {
 
 loadStats();
 loadTrend('day');
+loadBullishTrend('day');
 loadArticles(1);
 </script>
 </body>

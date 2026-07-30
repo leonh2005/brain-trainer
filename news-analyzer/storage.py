@@ -172,3 +172,43 @@ def get_trend_data(period="day", db_path=DB_PATH):
         ).fetchall()
 
     return [dict(r) for r in rows], all_labels
+
+
+def get_bullish_trend_data(period="day", db_path=DB_PATH):
+    """Return 多方(score>=7)佔比 per time bucket，供 Chart.js 畫多方百分比時間線。
+    分桶邏輯與 get_trend_data 相同（day=每小時、week/month=每日），空桶補 null。"""
+    from datetime import datetime, timedelta, timezone
+
+    now_tw = datetime.now(timezone.utc) + timedelta(hours=8)
+    today_tw = now_tw.date()
+
+    if period == "day":
+        time_bucket = "strftime('%H:00', datetime(fetched_at, '+8 hours'))"
+        condition = "DATE(datetime(fetched_at, '+8 hours')) = ?", [str(today_tw)]
+        all_labels = [f"{h:02d}:00" for h in range(now_tw.hour + 1)]
+    elif period == "week":
+        time_bucket = "strftime('%m-%d', datetime(fetched_at, '+8 hours'))"
+        since = str(today_tw - timedelta(days=6))
+        condition = "DATE(datetime(fetched_at, '+8 hours')) >= ?", [since]
+        all_labels = [(today_tw - timedelta(days=i)).strftime("%m-%d") for i in range(6, -1, -1)]
+    else:  # month
+        time_bucket = "strftime('%m-%d', datetime(fetched_at, '+8 hours'))"
+        since = str(today_tw - timedelta(days=29))
+        condition = "DATE(datetime(fetched_at, '+8 hours')) >= ?", [since]
+        all_labels = [(today_tw - timedelta(days=i)).strftime("%m-%d") for i in range(29, -1, -1)]
+
+    cond_sql, cond_params = condition
+
+    with get_conn(db_path) as conn:
+        rows = conn.execute(
+            f"""SELECT {time_bucket} as t,
+                       ROUND(100.0 * SUM(CASE WHEN score >= 7 THEN 1 ELSE 0 END) / COUNT(*), 1) as bullish_pct
+                FROM articles
+                WHERE score IS NOT NULL AND irrelevant = 0 AND {cond_sql}
+                GROUP BY t
+                ORDER BY t""",
+            cond_params,
+        ).fetchall()
+
+    pct_map = {r["t"]: r["bullish_pct"] for r in rows}
+    return [pct_map.get(t) for t in all_labels], all_labels

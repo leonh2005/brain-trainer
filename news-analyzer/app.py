@@ -5,7 +5,7 @@ from flask import Flask, jsonify, render_template, request
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from storage import DB_PATH as _DEFAULT_DB, get_articles, get_trend_data, get_conn, init_db, set_irrelevant
+from storage import DB_PATH as _DEFAULT_DB, get_articles, get_trend_data, get_bullish_trend_data, get_conn, init_db, set_irrelevant
 
 app = Flask(__name__)
 DB_PATH = _DEFAULT_DB
@@ -82,6 +82,13 @@ def api_trend():
         })
 
     return jsonify({"labels": all_labels, "datasets": datasets})
+
+
+@app.route("/api/bullish_trend")
+def api_bullish_trend():
+    period = request.args.get("period", "day")
+    data, labels = get_bullish_trend_data(period=period, db_path=DB_PATH)
+    return jsonify({"labels": labels, "data": data})
 
 
 @app.route("/api/stats")

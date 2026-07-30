@@ -135,6 +135,13 @@ tr.highlight td{background:rgba(217,119,87,.07); font-weight:700}
 .live-tile .pct{font-family:var(--mono); font-size:12.5px; font-weight:700; margin-top:2px}
 .empty{color:var(--faint); font-size:12px; padding:8px 0}
 
+/* 大盤日波圖 */
+.intraday-wrap{border-top:1px solid var(--border-soft); padding-top:4px}
+.intraday-chart-svg{width:100%; height:164px; display:block}
+.intraday-chart-svg.mini{height:104px}
+.live-tile .intraday-meta{font-size:9.5px}
+.intraday-meta{display:flex; justify-content:space-between; font-size:10.5px; color:var(--faint); font-family:var(--mono); margin-top:2px}
+
 @media (prefers-color-scheme: dark){
   :root{
     --bg:#141413; --bg-soft:#1c1b19; --card:#1f1e1b; --card-hover:#252420;
@@ -228,6 +235,14 @@ tr.highlight td{background:rgba(217,119,87,.07); font-weight:700}
     </div>
     <div class="regional-row" id="live-regional"></div>
     <div class="live-grid" id="live-stocks"><div class="empty">暫無即時資料</div></div>
+    <div class="intraday-wrap">
+      <div class="note" style="margin:14px 0 6px">大盤日波圖 <span style="color:var(--faint)">(每 1 分鐘更新 · 三圖同尺度)</span></div>
+      <div id="intraday-chart"><div class="empty">載入中...</div></div>
+      <div class="note" style="margin:14px 0 6px">日經225日波圖</div>
+      <div id="intraday-chart-n225"><div class="empty">載入中...</div></div>
+      <div class="note" style="margin:14px 0 6px">韓股KOSPI日波圖</div>
+      <div id="intraday-chart-kospi"><div class="empty">載入中...</div></div>
+    </div>
   </div>
 
   <!-- 區塊④ 近月經濟總覽 -->
@@ -361,6 +376,9 @@ async function loadAnalysis(){
   }
 }
 
+let _prevClose = null;  // 昨收，供日波圖畫參考線用（從 /api/live 的 index.price - change_point 推得）
+const _stockPrevClose = {};  // 各權值股昨收，key 為代碼（如 '2330'）
+
 async function loadLive(fresh){
   try{
     const res = await fetch('/api/live' + (fresh ? '?fresh=1' : ''));
@@ -377,6 +395,14 @@ async function loadLive(fresh){
     pctEl.textContent = cpTxt ? `${cpTxt} 點（${fmtPct(idx.change_pct)}）` : fmtPct(idx.change_pct);
     pctEl.className = 'idx-pct ' + pctClass(idx.change_pct);
     document.getElementById('live-updated').textContent = `更新於 ${d.updated || '--'} (${d.source || '--'})`;
+    if (idx.price != null && cp != null && !isNaN(cp)) _prevClose = idx.price - cp;
+
+    // 記錄各股昨收（現價 - 漲跌點數），供個股小日波圖畫參考線用
+    (d.stocks || []).forEach(s => {
+      if (s.price != null && s.change_point != null && !isNaN(s.change_point)) {
+        _stockPrevClose[String(s.code).replace('.TW', '')] = s.price - s.change_point;
+      }
+    });
 
     // 日股/韓股大盤（yfinance）
     const reg = d.regional || [];
@@ -392,15 +418,184 @@ async function loadLive(fresh){
       (WEIGHT_RANK[String(a.code).replace('.TW','')] || 99) - (WEIGHT_RANK[String(b.code).replace('.TW','')] || 99));
     document.getElementById('live-stocks').innerHTML = stocks.map(s => {
       const sp = (s.change_point != null && !isNaN(s.change_point)) ? ((s.change_point > 0 ? '+' : '') + s.change_point.toFixed(2)) : '';
+      const code = String(s.code).replace('.TW', '');
       return `
       <div class="live-tile">
         <div><span class="name">${s.name}</span><span class="code">${s.code}</span></div>
         <div class="price">${s.price}</div>
         <div class="pct ${pctClass(s.change_pct)}">${sp ? sp + '（' + fmtPct(s.change_pct) + '）' : fmtPct(s.change_pct)}</div>
+        <div id="stock-chart-${code}" style="margin-top:8px"><div class="empty">載入中...</div></div>
       </div>`;
     }).join('') || '<div class="empty">暫無即時資料</div>';
+    loadStocksIntraday();
   }catch(e){
     document.getElementById('live-updated').textContent = '暫無即時資料';
+  }
+}
+
+// 日波圖：SVG polyline，含昨收參考線、均價線、當日最高/最低標記
+// 供大盤/日經/韓股（size='full'）與六權值股小圖（size='mini'）共用，格式一致、僅尺寸縮放
+function renderIntradayChart(elId, points, prevClose, size){
+  const el = document.getElementById(elId);
+  if (!points || points.length < 2){
+    el.innerHTML = '<div class="empty">暫無日內走勢資料</div>';
+    return;
+  }
+  const mini = size === 'mini';
+  const W = 1000;
+  const CH = mini ? 70 : 130;
+  const AXIS_H = 34;  // mini 版 hover 提示字放大兩倍後跟全尺寸圖共用同一個高度，避免被切到
+  const H = CH + AXIS_H;
+  const PAD = mini ? 10 : 16;
+  const PADX = mini ? 8 : 12;
+  const FS = mini ? 9 : 10;
+  const TOOLTIP_FS = mini ? FS * 2 : FS;  // hover 顯示的「時間　點數」字放大兩倍
+  const R = mini ? 2.3 : 3;
+  const prices = points.map(p => p.price);
+  let lo = Math.min(...prices), hi = Math.max(...prices);
+  if (prevClose != null){ lo = Math.min(lo, prevClose); hi = Math.max(hi, prevClose); }
+  if (hi === lo) hi = lo + 1;  // 避免除以 0
+  const x = i => PADX + (i / (points.length - 1)) * (W - PADX * 2);
+  const y = v => CH - PAD - ((v - lo) / (hi - lo)) * (CH - PAD * 2);
+  const anchorFor = i => {
+    const frac = i / (points.length - 1);
+    return frac < 0.08 ? 'start' : (frac > 0.92 ? 'end' : 'middle');
+  };
+
+  const last = prices[prices.length - 1];
+  const up = prevClose != null ? last >= prevClose : true;
+  const lineColor = up ? 'var(--up)' : 'var(--down)';
+
+  const avg = prices.reduce((a, b) => a + b, 0) / prices.length;
+  let highIdx = 0, lowIdx = 0;
+  prices.forEach((p, i) => { if (p > prices[highIdx]) highIdx = i; if (p < prices[lowIdx]) lowIdx = i; });
+
+  const pathPts = points.map((p, i) => `${x(i).toFixed(1)},${y(p.price).toFixed(1)}`).join(' ');
+
+  const refY = prevClose != null ? y(prevClose).toFixed(1) : null;
+  const refLine = refY != null
+    ? `<line x1="${PADX}" y1="${refY}" x2="${W - PADX}" y2="${refY}" stroke="var(--faint)" stroke-width="1" stroke-dasharray="4,3"/>`
+    : '';
+
+  const avgY = y(avg);
+  const avgLine = `<line x1="${PADX}" y1="${avgY.toFixed(1)}" x2="${W - PADX}" y2="${avgY.toFixed(1)}" stroke="var(--accent)" stroke-width="1" stroke-dasharray="2,3" opacity="0.6"/>`
+    + `<text x="${PADX}" y="${(avgY - 4).toFixed(1)}" font-size="${FS}" fill="var(--accent)">均價 ${avg.toFixed(2)}</text>`;
+
+  const hx = x(highIdx), hy = y(prices[highIdx]);
+  const lx = x(lowIdx), ly = y(prices[lowIdx]);
+  const LABEL_GAP = mini ? 10 : 14;
+  const highLabelY = hy < PAD + LABEL_GAP ? hy + LABEL_GAP : hy - LABEL_GAP;
+  const lowLabelY = ly > CH - PAD - LABEL_GAP ? ly - LABEL_GAP : ly + LABEL_GAP;
+  const markers = `
+    <circle cx="${hx.toFixed(1)}" cy="${hy.toFixed(1)}" r="${R}" fill="var(--up)"/>
+    <text x="${hx.toFixed(1)}" y="${highLabelY.toFixed(1)}" font-size="${FS}" fill="var(--up)" text-anchor="${anchorFor(highIdx)}">最高 ${prices[highIdx].toFixed(2)}</text>
+    <circle cx="${lx.toFixed(1)}" cy="${ly.toFixed(1)}" r="${R}" fill="var(--down)"/>
+    <text x="${lx.toFixed(1)}" y="${lowLabelY.toFixed(1)}" font-size="${FS}" fill="var(--down)" text-anchor="${anchorFor(lowIdx)}">最低 ${prices[lowIdx].toFixed(2)}</text>`;
+
+  // 時間軸：均分取 5 個刻度（小圖取 3 個，太密會擠）
+  const tickCount = Math.min(mini ? 3 : 5, points.length);
+  const tickIdxs = Array.from({length: tickCount}, (_, k) => Math.round(k / (tickCount - 1) * (points.length - 1)));
+  const axisY = CH + (mini ? 12 : 14);
+  const tooltipY = CH + (mini ? 30 : 30);
+  const axisTicks = [...new Set(tickIdxs)].map(i => `
+    <text x="${x(i).toFixed(1)}" y="${axisY}" font-size="${FS}" fill="var(--faint)" text-anchor="${anchorFor(i)}">${points[i].t}</text>`).join('');
+
+  // 滑鼠移到線上：垂直輔助線 + 圓點 + 時間/價格提示（預設隱藏，hover 時顯示，獨立一行避免壓到時間軸刻度）
+  const uid = elId;
+  const hoverLayer = `
+    <line id="${uid}-crosshair" x1="0" y1="0" x2="0" y2="${CH}" stroke="var(--muted)" stroke-width="1" stroke-dasharray="2,2" opacity="0"/>
+    <circle id="${uid}-hoverdot" cx="0" cy="0" r="${R}" fill="var(--fg)" opacity="0"/>
+    <text id="${uid}-tooltip" x="0" y="${tooltipY}" font-size="${TOOLTIP_FS}" font-weight="700" fill="var(--fg)" text-anchor="middle" opacity="0"></text>
+    <rect id="${uid}-hit" x="${PADX}" y="0" width="${W - PADX * 2}" height="${CH}" fill="transparent" style="cursor:crosshair"/>`;
+
+  el.innerHTML = `
+    <svg class="intraday-chart-svg${mini ? ' mini' : ''}" id="${uid}-svg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">
+      ${refLine}
+      ${avgLine}
+      <polyline points="${pathPts}" fill="none" stroke="${lineColor}" stroke-width="2" stroke-linejoin="round"/>
+      ${markers}
+      ${axisTicks}
+      ${hoverLayer}
+    </svg>
+    <div class="intraday-meta">
+      <span>${points[0].t} 開盤 ${prices[0].toFixed(2)}</span>
+      <span>${prevClose != null ? '昨收 ' + prevClose.toFixed(2) : ''}</span>
+      <span>${points[points.length - 1].t} 現價 ${last.toFixed(2)}</span>
+    </div>`;
+
+  const svgEl = document.getElementById(`${uid}-svg`);
+  const hitEl = document.getElementById(`${uid}-hit`);
+  const crosshairEl = document.getElementById(`${uid}-crosshair`);
+  const dotEl = document.getElementById(`${uid}-hoverdot`);
+  const tooltipEl = document.getElementById(`${uid}-tooltip`);
+
+  function updateHover(clientX){
+    const rect = svgEl.getBoundingClientRect();
+    const frac = Math.min(1, Math.max(0, (clientX - rect.left) / rect.width));
+    const idx = Math.round(frac * (points.length - 1));
+    const px = x(idx), py = y(prices[idx]);
+    crosshairEl.setAttribute('x1', px); crosshairEl.setAttribute('x2', px); crosshairEl.setAttribute('opacity', '0.6');
+    dotEl.setAttribute('cx', px); dotEl.setAttribute('cy', py); dotEl.setAttribute('opacity', '1');
+    tooltipEl.setAttribute('x', px);
+    tooltipEl.setAttribute('text-anchor', anchorFor(idx));
+    tooltipEl.textContent = `${points[idx].t}　${prices[idx].toFixed(2)}`;
+    tooltipEl.setAttribute('opacity', '1');
+  }
+  function clearHover(){
+    crosshairEl.setAttribute('opacity', '0');
+    dotEl.setAttribute('opacity', '0');
+    tooltipEl.setAttribute('opacity', '0');
+  }
+  hitEl.addEventListener('mousemove', e => updateHover(e.clientX));
+  hitEl.addEventListener('mouseleave', clearHover);
+  hitEl.addEventListener('touchmove', e => { if (e.touches[0]) updateHover(e.touches[0].clientX); }, {passive: true});
+  hitEl.addEventListener('touchend', clearHover);
+}
+
+async function loadIntraday(fresh){
+  try{
+    const res = await fetch('/api/intraday' + (fresh ? '?fresh=1' : ''));
+    const d = await res.json();
+    if (!d.ok){
+      document.getElementById('intraday-chart').innerHTML = '<div class="empty">暫無日內走勢資料</div>';
+      return;
+    }
+    renderIntradayChart('intraday-chart', d.points || [], _prevClose);
+  }catch(e){
+    document.getElementById('intraday-chart').innerHTML = '<div class="empty">載入失敗</div>';
+  }
+}
+
+async function loadStocksIntraday(fresh){
+  try{
+    const res = await fetch('/api/stocks_intraday' + (fresh ? '?fresh=1' : ''));
+    const d = await res.json();
+    if (!d.ok) throw new Error('no data');
+    (d.stocks || []).forEach(s => {
+      const elId = `stock-chart-${s.code}`;
+      if (document.getElementById(elId)) renderIntradayChart(elId, s.points || [], _stockPrevClose[s.code], 'mini');
+    });
+  }catch(e){
+    document.querySelectorAll('[id^="stock-chart-"]').forEach(el => {
+      el.innerHTML = '<div class="empty">載入失敗</div>';
+    });
+  }
+}
+
+async function loadRegionalIntraday(fresh){
+  try{
+    const res = await fetch('/api/regional_intraday' + (fresh ? '?fresh=1' : ''));
+    const d = await res.json();
+    if (!d.ok) throw new Error('no data');
+    const map = {'N225': 'intraday-chart-n225', 'KOSPI': 'intraday-chart-kospi'};
+    (d.regional || []).forEach(r => {
+      const elId = map[r.code];
+      if (elId) renderIntradayChart(elId, r.points || [], r.prev_close);
+    });
+  }catch(e){
+    ['intraday-chart-n225', 'intraday-chart-kospi'].forEach(id => {
+      document.getElementById(id).innerHTML = '<div class="empty">載入失敗</div>';
+    });
   }
 }
 
@@ -459,16 +654,19 @@ async function loadEcon(){
 }
 
 loadAnalysis();
-loadLive();
+loadLive().then(loadIntraday);
+loadRegionalIntraday();
 loadEcon();
 setInterval(() => loadLive(), 15000);
+setInterval(loadIntraday, 60000);  // 大盤日波圖每 1 分鐘更新
+setInterval(loadRegionalIntraday, 60000);  // 日經/韓股日波圖每 1 分鐘更新
 setInterval(loadEcon, 900000);  // 經濟總覽每 15 分更新
 
 // 手動刷新（🔄 按鈕 / F5）：繞過 30 秒快取抓最新報價
 async function manualRefresh(){
   const btn = document.getElementById('live-refresh');
   if (btn){ btn.disabled = true; btn.textContent = '⏳ 刷新中…'; }
-  try { await loadLive(true); }
+  try { await loadLive(true); await loadIntraday(true); await loadRegionalIntraday(true); }
   finally { if (btn){ btn.disabled = false; btn.textContent = '🔄 手動刷新'; } }
 }
 document.getElementById('live-refresh').addEventListener('click', manualRefresh);
