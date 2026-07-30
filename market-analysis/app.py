@@ -27,6 +27,11 @@ STOCKS = [
 _live_cache = {"data": None, "ts": 0}
 CACHE_TTL = 30
 
+_intraday_cache = {"data": None, "ts": 0}
+_regional_intraday_cache = {"data": None, "ts": 0}
+_stocks_intraday_cache = {"data": None, "ts": 0}
+INTRADAY_CACHE_TTL = 55  # 前端每 60 秒刷新一次，快取略短於刷新間隔
+
 
 def _read_secret(filename):
     path = os.path.join(SECRETS_DIR, filename)
@@ -165,6 +170,71 @@ def _fetch_live(force=False):
     return result
 
 
+def _fetch_intraday(force=False):
+    now = time.time()
+    if not force and _intraday_cache["data"] is not None and now - _intraday_cache["ts"] < INTRADAY_CACHE_TTL:
+        return _intraday_cache["data"]
+
+    import urllib.request
+    try:
+        with urllib.request.urlopen(f"{SHIOAJI_GATEWAY}/intraday?code=IX0001", timeout=15) as r:
+            result = json.loads(r.read())
+    except Exception as e:
+        result = {"ok": False, "error": str(e)}
+
+    _intraday_cache["data"] = result
+    _intraday_cache["ts"] = now
+    return result
+
+
+def _fetch_stocks_intraday(force=False):
+    """六大權值股當日 1 分鐘走勢（走 Shioaji gateway，跟大盤 /intraday 同一支端點）。"""
+    now = time.time()
+    if not force and _stocks_intraday_cache["data"] is not None and now - _stocks_intraday_cache["ts"] < INTRADAY_CACHE_TTL:
+        return _stocks_intraday_cache["data"]
+
+    import urllib.request
+    out = []
+    for s in STOCKS:
+        try:
+            with urllib.request.urlopen(f"{SHIOAJI_GATEWAY}/intraday?code={s['code']}", timeout=15) as r:
+                resp = json.loads(r.read())
+            points = resp.get("points", []) if resp.get("ok") else []
+        except Exception:
+            points = []
+        out.append({"code": s["code"], "name": s["name"], "points": points})
+
+    result = {"ok": True, "stocks": out}
+    _stocks_intraday_cache["data"] = result
+    _stocks_intraday_cache["ts"] = now
+    return result
+
+
+def _fetch_regional_intraday(force=False):
+    """日經225、韓股KOSPI 當日 1 分鐘走勢（yfinance，Shioaji 無海外指數）。"""
+    now = time.time()
+    if not force and _regional_intraday_cache["data"] is not None and now - _regional_intraday_cache["ts"] < INTRADAY_CACHE_TTL:
+        return _regional_intraday_cache["data"]
+
+    import yfinance as yf
+    out = []
+    for code, name, ticker in [("N225", "日經225", "^N225"), ("KOSPI", "韓股KOSPI", "^KS11")]:
+        try:
+            t = yf.Ticker(ticker)
+            intraday = t.history(period="1d", interval="1m")["Close"].dropna()
+            points = [{"t": idx.strftime("%H:%M"), "price": float(v)} for idx, v in intraday.items()]
+            daily = t.history(period="5d")["Close"].dropna()
+            prev_close = float(daily.iloc[-2]) if len(daily) >= 2 else None
+            out.append({"code": code, "name": name, "points": points, "prev_close": prev_close})
+        except Exception:
+            out.append({"code": code, "name": name, "points": [], "prev_close": None})
+
+    result = {"ok": True, "regional": out}
+    _regional_intraday_cache["data"] = result
+    _regional_intraday_cache["ts"] = now
+    return result
+
+
 @app.get("/api/health")
 def health():
     return jsonify({"status": "ok"})
@@ -180,6 +250,30 @@ def analysis():
 def live():
     try:
         return jsonify(_fetch_live(force=request.args.get("fresh") == "1"))
+    except Exception as e:
+        return jsonify({"ok": False, "error": str(e)})
+
+
+@app.get("/api/intraday")
+def intraday_api():
+    try:
+        return jsonify(_fetch_intraday(force=request.args.get("fresh") == "1"))
+    except Exception as e:
+        return jsonify({"ok": False, "error": str(e)})
+
+
+@app.get("/api/stocks_intraday")
+def stocks_intraday_api():
+    try:
+        return jsonify(_fetch_stocks_intraday(force=request.args.get("fresh") == "1"))
+    except Exception as e:
+        return jsonify({"ok": False, "error": str(e)})
+
+
+@app.get("/api/regional_intraday")
+def regional_intraday_api():
+    try:
+        return jsonify(_fetch_regional_intraday(force=request.args.get("fresh") == "1"))
     except Exception as e:
         return jsonify({"ok": False, "error": str(e)})
 

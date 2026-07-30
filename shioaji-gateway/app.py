@@ -7,10 +7,11 @@
   GET /health                              -> {status, logged_in}
   GET /snapshot?codes=IX0001,2330,2454     -> {ok, data:{code:{close,change_price,change_rate}}}
   GET /kbars?code=2330&days=30             -> {ok, closes:[...]}  (與 api.kbars(...).Close 相同)
+  GET /intraday?code=IX0001                -> {ok, points:[{t:"09:01",price:23458.1},...]}  (當日 1 分鐘走勢)
 """
 import os
 import threading
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta, timezone
 
 from flask import Flask, jsonify, request
 
@@ -110,6 +111,30 @@ def kbars():
             )
             return [float(c) for c in kb.Close if c]
         return jsonify({"ok": True, "closes": _run(work)})
+    except Exception as e:
+        return jsonify({"ok": False, "error": str(e)})
+
+
+@app.get("/intraday")
+def intraday():
+    code = request.args.get("code", "")
+    if not code:
+        return jsonify({"ok": False, "error": "no code"}), 400
+    try:
+        def work(api):
+            contract = _resolve_contract(api, code)
+            today = date.today().strftime("%Y-%m-%d")
+            kb = api.kbars(contract=contract, start=today, end=today)
+            points = []
+            for ts, close in zip(kb.ts, kb.Close):
+                if close is None:
+                    continue
+                # kb.ts 是「台灣本地時間」數值但以 epoch 秒編碼（非真正 UTC），
+                # 用 utcfromtimestamp 直接取數值對應的時鐘時間，避免 fromtimestamp 多轉一次時區造成 +8 小時位移
+                t = datetime.fromtimestamp(ts / 1e9, tz=timezone.utc)
+                points.append({"t": t.strftime("%H:%M"), "price": float(close)})
+            return points
+        return jsonify({"ok": True, "points": _run(work)})
     except Exception as e:
         return jsonify({"ok": False, "error": str(e)})
 
