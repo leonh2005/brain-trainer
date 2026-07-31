@@ -40,6 +40,7 @@ VM_LOGS=(
 IGNORE_PATTERNS=(
     "3260.TW.*possibly delisted"
     "Quote not found for symbol: [0-9]*.TW"
+    "\" 404 -$"  # werkzeug access log 的404（機器人亂掃路徑，如 /exception.log、/_layouts/*/error.aspx），不是應用程式錯誤
     "No data found, symbol may be delisted"
     "GET /.env HTTP"
     "UserWarning"
