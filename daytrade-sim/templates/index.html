@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>當沖模擬（即時報價）</title>
+<script src="/static/lightweight-charts.js"></script>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: #0d1117; color: #e6edf3;
+    font-family: -apple-system, "PingFang TC", "Microsoft JhengHei", sans-serif;
+    font-size: 14px;
+  }
+  #toolbar {
+    background: #161b22; border-bottom: 1px solid #30363d;
+    padding: 12px 20px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  }
+  #toolbar h1 { font-size: 16px; margin: 0 16px 0 0; color: #58a6ff; font-weight: 700; }
+  input {
+    background: #21262d; border: 1px solid #30363d; color: #e6edf3;
+    border-radius: 6px; padding: 6px 10px; font-size: 13px;
+  }
+  input:focus { outline: none; border-color: #58a6ff; }
+  input#code { width: 90px; }
+  input#capital { width: 120px; }
+  button {
+    border: 1px solid #30363d; background: #21262d; color: #e6edf3;
+    border-radius: 6px; padding: 6px 14px; font-size: 13px; cursor: pointer;
+  }
+  button:hover { border-color: #58a6ff; }
+  button:disabled { opacity: .4; cursor: not-allowed; }
+  button.primary { background: #1f6feb; border-color: #1f6feb; }
+  button.buy { background: #3fb950; border-color: #3fb950; color: #0d1117; font-weight: 700; }
+  button.sell { background: #f85149; border-color: #f85149; color: #0d1117; font-weight: 700; }
+  button.flat { background: #21262d; }
+  #gw-status { font-size: 12px; color: #8b949e; margin-left: auto; }
+  #gw-status.ok::before { content: "● "; color: #3fb950; }
+  #gw-status.bad::before { content: "● "; color: #f85149; }
+
+  .layout { display: grid; grid-template-columns: 1fr 340px; gap: 16px; padding: 20px; max-width: 1280px; margin: 0 auto; }
+  @media (max-width: 900px) { .layout { grid-template-columns: 1fr; } }
+
+  .card { background: #161b22; border: 1px solid #30363d; border-radius: 10px; padding: 16px; margin-bottom: 16px; }
+  .card h2 { font-size: 13px; color: #8b949e; margin: 0 0 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .04em; }
+
+  #price-head { display: flex; align-items: baseline; gap: 14px; margin-bottom: 10px; }
+  #price-now { font-size: 34px; font-weight: 800; font-variant-numeric: tabular-nums; }
+  #price-change { font-size: 16px; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .pos-up { color: #f85149; }   /* 台股慣例：紅漲 */
+  .pos-down { color: #3fb950; } /* 綠跌 */
+  #price-meta { font-size: 12px; color: #8b949e; }
+  #chart { width: 100%; height: 340px; }
+  #chart-empty { color: #8b949e; text-align: center; padding: 140px 0; }
+
+  .trade-row { display: flex; gap: 8px; margin-bottom: 10px; align-items: center; }
+  .trade-row input { width: 90px; }
+  .trade-row button { flex: 1; }
+  .row2 { display: flex; gap: 8px; }
+
+  .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 16px; }
+  .stat-grid .k { font-size: 12px; color: #8b949e; }
+  .stat-grid .v { font-size: 16px; font-weight: 700; font-variant-numeric: tabular-nums; margin-top: 2px; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+  th { text-align: left; color: #8b949e; font-weight: 600; padding: 6px 8px; border-bottom: 1px solid #30363d; }
+  td { padding: 6px 8px; border-bottom: 1px solid #21262d; font-variant-numeric: tabular-nums; }
+  .empty-row td { color: #8b949e; text-align: center; padding: 20px 0; }
+  #log-wrap { max-height: 300px; overflow-y: auto; overflow-x: auto; }
+</style>
+</head>
+<body>
+
+<div id="toolbar">
+  <h1>當沖模擬</h1>
+  <input id="code" placeholder="股票代號" maxlength="6" autocomplete="off">
+  <input id="capital" placeholder="起始本金" type="number" min="1" step="1000">
+  <button class="primary" id="btn-start">開始模擬</button>
+  <button id="btn-reset">重置</button>
+  <span id="gw-status">連線檢查中…</span>
+</div>
+
+<div class="layout">
+  <div>
+    <div class="card">
+      <div id="price-head">
+        <div id="price-code">—</div>
+        <div id="price-now">--</div>
+        <div id="price-change"></div>
+      </div>
+      <div id="price-meta">尚未開始模擬</div>
+      <div id="chart"><div id="chart-empty">輸入代號並按「開始模擬」查看即時走勢</div></div>
+    </div>
+
+    <div class="card">
+      <h2>交易紀錄</h2>
+      <div id="log-wrap">
+        <table>
+          <thead><tr><th>時間</th><th>動作</th><th>價格</th><th>股數</th><th>已實現損益</th></tr></thead>
+          <tbody id="log-body"><tr class="empty-row"><td colspan="5">尚無交易</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <div class="card">
+      <h2>下單</h2>
+      <div class="trade-row">
+        <input id="qty" type="number" placeholder="股數" min="1" step="1" value="1000">
+      </div>
+      <div class="row2">
+        <button class="buy" id="btn-buy" disabled>買進 ▲</button>
+        <button class="sell" id="btn-sell" disabled>賣出 ▼</button>
+      </div>
+      <div class="row2" style="margin-top:8px">
+        <button class="flat" id="btn-flat" disabled style="width:100%">全部平倉</button>
+      </div>
+      <p style="font-size:11.5px;color:#8b949e;margin:10px 0 0">賣出超過持股會自動視為放空，符合當沖先賣後買邏輯。純模擬，不會真實下單。</p>
+    </div>
+
+    <div class="card">
+      <h2>部位 / 資產</h2>
+      <div class="stat-grid">
+        <div><div class="k">現金</div><div class="v" id="s-cash">--</div></div>
+        <div><div class="k">總資產</div><div class="v" id="s-total">--</div></div>
+        <div><div class="k">持有股數</div><div class="v" id="s-position">--</div></div>
+        <div><div class="k">平均成本</div><div class="v" id="s-avgcost">--</div></div>
+        <div><div class="k">未實現損益</div><div class="v" id="s-unrealized">--</div></div>
+        <div><div class="k">已實現損益</div><div class="v" id="s-realized">--</div></div>
+        <div><div class="k">報酬率</div><div class="v" id="s-return">--</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const STORAGE_KEY = 'daytrade-sim-state';
+let STATE = null;
+let chart = null, priceSeries = null;
+let pollTimer = null;
+
+function freshState(code, capital) {
+  return { code, capital, cash: capital, position: 0, avgCost: 0, realizedPnl: 0, trades: [] };
+}
+
+function saveState() { localStorage.setItem(STORAGE_KEY, JSON.stringify(STATE)); }
+function loadState() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)); } catch (e) { return null; }
+}
+
+function fmtMoney(n) { return (n < 0 ? '-$' : '$') + Math.abs(Math.round(n)).toLocaleString(); }
+function fmtPct(n) { return (n >= 0 ? '+' : '') + n.toFixed(2) + '%'; }
+function upDownClass(n) { return n > 0 ? 'pos-up' : (n < 0 ? 'pos-down' : ''); }
+
+function initChart() {
+  const el = document.getElementById('chart');
+  el.innerHTML = '';
+  chart = LightweightCharts.createChart(el, {
+    localization: { locale: 'zh-TW' }, // 避免依賴 navigator.language（某些無頭瀏覽器環境下該值是 undefined，會讓內部 Intl 格式化拋錯）
+    layout: { background: { color: '#161b22' }, textColor: '#8b949e' },
+    grid: { vertLines: { color: '#21262d' }, horzLines: { color: '#21262d' } },
+    timeScale: { timeVisible: true, secondsVisible: true, borderColor: '#30363d' },
+    rightPriceScale: { borderColor: '#30363d' },
+    width: el.clientWidth, height: 340,
+  });
+  priceSeries = chart.addLineSeries({ color: '#58a6ff', lineWidth: 2 });
+  window.addEventListener('resize', () => chart && chart.applyOptions({ width: el.clientWidth }));
+}
+
+async function loadIntraday(code) {
+  try {
+    const r = await fetch(`/api/intraday?code=${encodeURIComponent(code)}`);
+    const d = await r.json();
+    if (!d.ok || !d.points || !d.points.length) return;
+    // 用台北當地日期（而非瀏覽器所在時區的今天）組出正確的分K時間戳
+    const nowTaipei = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Taipei' }));
+    const today = `${nowTaipei.getFullYear()}-${String(nowTaipei.getMonth() + 1).padStart(2, '0')}-${String(nowTaipei.getDate()).padStart(2, '0')}`;
+    const data = d.points
+      .map(p => ({ time: Math.floor(new Date(`${today}T${p.t}:00+08:00`).getTime() / 1000), value: p.price }))
+      .filter(pt => pt.time > 0)
+      .sort((a, b) => a.time - b.time);
+    if (!data.length) return;
+    priceSeries.setData(data);
+    lastChartTs = data[data.length - 1].time;
+  } catch (e) { /* 沒有歷史資料就從即時報價開始畫 */ }
+}
+
+let lastChartTs = 0;
+function appendTick(price) {
+  const ts = Math.floor(Date.now() / 1000);
+  if (ts <= lastChartTs) return; // 圖表時間必須嚴格遞增，同一秒內的重複輪詢直接略過
+  lastChartTs = ts;
+  priceSeries.update({ time: ts, value: price });
+}
+
+let lastPrice = null;
+
+async function pollQuote() {
+  if (!STATE) return;
+  try {
+    const r = await fetch(`/api/quote?code=${encodeURIComponent(STATE.code)}`);
+    const d = await r.json();
+    setGwStatus(true);
+    if (!d.ok) {
+      document.getElementById('price-meta').textContent = d.error || '無法取得報價';
+      return;
+    }
+    lastPrice = d.price;
+    appendTick(d.price);
+    renderPrice(d);
+    renderPortfolio();
+  } catch (e) {
+    setGwStatus(false);
+    document.getElementById('price-meta').textContent = '無法連線後端服務';
+  }
+}
+
+function setGwStatus(ok) {
+  const el = document.getElementById('gw-status');
+  el.className = ok ? 'ok' : 'bad';
+  el.textContent = ok ? 'shioaji-gateway 連線正常' : 'shioaji-gateway 連線異常';
+}
+
+function renderPrice(d) {
+  document.getElementById('price-code').textContent = d.code;
+  document.getElementById('price-now').textContent = d.price.toFixed(2);
+  document.getElementById('price-now').className = upDownClass(d.change_price);
+  const chg = document.getElementById('price-change');
+  chg.textContent = `${d.change_price >= 0 ? '+' : ''}${d.change_price.toFixed(2)} (${fmtPct(d.change_rate || 0)})`;
+  chg.className = upDownClass(d.change_price);
+  document.getElementById('price-meta').textContent = '更新於 ' + new Date().toLocaleTimeString('zh-TW');
+}
+
+function renderPortfolio() {
+  const price = lastPrice || 0;
+  const unrealized = (price - STATE.avgCost) * STATE.position;
+  const total = STATE.cash + STATE.position * price;
+  const ret = ((total - STATE.capital) / STATE.capital) * 100;
+
+  document.getElementById('s-cash').textContent = fmtMoney(STATE.cash);
+  document.getElementById('s-total').textContent = fmtMoney(total);
+  document.getElementById('s-position').textContent = STATE.position.toLocaleString();
+  document.getElementById('s-avgcost').textContent = STATE.position !== 0 ? STATE.avgCost.toFixed(2) : '--';
+
+  const uEl = document.getElementById('s-unrealized');
+  uEl.textContent = fmtMoney(unrealized); uEl.className = 'v ' + upDownClass(unrealized);
+  const rEl = document.getElementById('s-realized');
+  rEl.textContent = fmtMoney(STATE.realizedPnl); rEl.className = 'v ' + upDownClass(STATE.realizedPnl);
+  const retEl = document.getElementById('s-return');
+  retEl.textContent = fmtPct(ret); retEl.className = 'v ' + upDownClass(ret);
+
+  document.getElementById('btn-flat').disabled = STATE.position === 0;
+}
+
+function renderLog() {
+  const body = document.getElementById('log-body');
+  if (!STATE.trades.length) {
+    body.innerHTML = '<tr class="empty-row"><td colspan="5">尚無交易</td></tr>';
+    return;
+  }
+  body.innerHTML = STATE.trades.slice().reverse().map(t => `
+    <tr>
+      <td>${t.time}</td>
+      <td class="${t.action === '買進' ? 'pos-up' : 'pos-down'}">${t.action}</td>
+      <td>${t.price.toFixed(2)}</td>
+      <td>${t.qty.toLocaleString()}</td>
+      <td class="${upDownClass(t.realized)}">${t.realized ? fmtMoney(t.realized) : '--'}</td>
+    </tr>`).join('');
+}
+
+// direction: +1 買進, -1 賣出。用「部位(可正可負)+加權平均成本」單一模型統一處理多空與反手。
+function applyTrade(direction, qty, price) {
+  const pos = STATE.position, avg = STATE.avgCost;
+  const signed = direction * qty;
+  let realized = 0;
+
+  if (pos === 0 || pos * signed >= 0) {
+    const newPos = pos + signed;
+    STATE.avgCost = newPos !== 0 ? (Math.abs(pos) * avg + qty * price) / Math.abs(newPos) : 0;
+    STATE.position = newPos;
+  } else {
+    const closingQty = Math.min(qty, Math.abs(pos));
+    realized = pos > 0 ? (price - avg) * closingQty : (avg - price) * closingQty;
+    STATE.realizedPnl += realized;
+    const remainder = qty - closingQty;
+    if (remainder > 0) {
+      STATE.position = direction * remainder;
+      STATE.avgCost = price;
+    } else {
+      STATE.position = pos + signed;
+      if (STATE.position === 0) STATE.avgCost = 0;
+    }
+  }
+  STATE.cash -= signed * price;
+
+  STATE.trades.push({
+    time: new Date().toLocaleTimeString('zh-TW'),
+    action: direction > 0 ? '買進' : '賣出',
+    price, qty, realized,
+  });
+  saveState();
+  renderPortfolio();
+  renderLog();
+}
+
+async function startSim() {
+  const code = document.getElementById('code').value.trim();
+  const capital = parseFloat(document.getElementById('capital').value);
+  if (!code) { alert('請輸入股票代號'); return; }
+  if (!capital || capital <= 0) { alert('請輸入有效的起始本金'); return; }
+
+  STATE = freshState(code, capital);
+  saveState();
+  lastPrice = null;
+  lastChartTs = 0;
+  document.getElementById('btn-buy').disabled = false;
+  document.getElementById('btn-sell').disabled = false;
+  initChart();
+  await loadIntraday(code); // 先把歷史分K畫完，避免跟第一次即時報價的 update() 搶時間軸順序
+  renderPortfolio();
+  renderLog();
+  if (pollTimer) clearInterval(pollTimer);
+  pollQuote();
+  pollTimer = setInterval(pollQuote, 1500);
+}
+
+function resetSim() {
+  if (!STATE) return;
+  const capital = STATE.capital;
+  const code = STATE.code;
+  STATE = freshState(code, capital);
+  saveState();
+  renderPortfolio();
+  renderLog();
+}
+
+document.getElementById('btn-start').addEventListener('click', startSim);
+document.getElementById('btn-reset').addEventListener('click', resetSim);
+document.getElementById('btn-buy').addEventListener('click', () => {
+  const qty = parseInt(document.getElementById('qty').value, 10);
+  if (!qty || qty <= 0 || lastPrice == null) return;
+  applyTrade(1, qty, lastPrice);
+});
+document.getElementById('btn-sell').addEventListener('click', () => {
+  const qty = parseInt(document.getElementById('qty').value, 10);
+  if (!qty || qty <= 0 || lastPrice == null) return;
+  applyTrade(-1, qty, lastPrice);
+});
+document.getElementById('btn-flat').addEventListener('click', () => {
+  if (!STATE || STATE.position === 0 || lastPrice == null) return;
+  const qty = Math.abs(STATE.position);
+  applyTrade(STATE.position > 0 ? -1 : 1, qty, lastPrice);
+});
+
+async function checkHealth() {
+  try {
+    const r = await fetch('/api/health');
+    const d = await r.json();
+    setGwStatus(!!d.ok);
+  } catch (e) { setGwStatus(false); }
+}
+
+(async function boot() {
+  checkHealth();
+  const saved = loadState();
+  if (saved && saved.code) {
+    STATE = saved;
+    document.getElementById('code').value = STATE.code;
+    document.getElementById('capital').value = STATE.capital;
+    document.getElementById('btn-buy').disabled = false;
+    document.getElementById('btn-sell').disabled = false;
+    initChart();
+    await loadIntraday(STATE.code);
+    renderPortfolio();
+    renderLog();
+    pollQuote();
+    pollTimer = setInterval(pollQuote, 1500);
+  } else {
+    document.getElementById('capital').value = 100000;
+  }
+})();
+</script>
+</body>
+</html>
