@@ -739,6 +739,16 @@
       "lows_pct": 1.0,
       "spx_above_ma50": false,
       "triggered": false
+    },
+    {
+      "date": "2026-07-30",
+      "highs": 33,
+      "lows": 6,
+      "total": 500,
+      "highs_pct": 6.6,
+      "lows_pct": 1.2,
+      "spx_above_ma50": false,
+      "triggered": false
     }
   ]
 }
