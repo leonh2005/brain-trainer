@@ -11,6 +11,7 @@
 """
 import os
 import threading
+import time
 from datetime import date, datetime, timedelta, timezone
 
 from flask import Flask, jsonify, request
@@ -21,10 +22,33 @@ SECRETS_DIR = "/Users/steven/CCProject/.secrets"
 _conn = {"api": None}
 _lock = threading.Lock()
 
+_bidask_cache = {}        # code -> {"ts": float, "bids": [...], "asks": [...]}
+_bidask_subscribed = {}   # code -> 最後被 /bidask 查詢的時間
+BIDASK_IDLE_TIMEOUT = 90  # 超過這麼久沒人查詢就自動退訂
+BIDASK_SWEEP_INTERVAL = 60
+
 
 def _read_secret(filename):
     with open(os.path.join(SECRETS_DIR, filename), "r", encoding="utf-8") as f:
         return f.read().strip()
+
+
+def _on_bidask(exchange, bidask):
+    """Shioaji 五檔即時回呼，純寫入快取，不做其他事。"""
+    try:
+        _bidask_cache[bidask.code] = {
+            "ts": time.time(),
+            "bids": [
+                {"price": float(p), "volume": int(v)}
+                for p, v in zip(bidask.bid_price, bidask.bid_volume)
+            ],
+            "asks": [
+                {"price": float(p), "volume": int(v)}
+                for p, v in zip(bidask.ask_price, bidask.ask_volume)
+            ],
+        }
+    except Exception:
+        pass
 
 
 def _login():
@@ -33,6 +57,7 @@ def _login():
     secret_key = os.environ.get("SHIOAJI_SECRET_KEY") or _read_secret("shioaji_secret.txt")
     api = sj.Shioaji(simulation=False)
     api.login(api_key=api_key, secret_key=secret_key)
+    api.quote.set_on_bidask_stk_v1_callback(_on_bidask)
     return api
 
 
@@ -139,5 +164,63 @@ def intraday():
         return jsonify({"ok": False, "error": str(e)})
 
 
+@app.get("/bidask")
+def bidask():
+    """五檔即時報價。按需訂閱：第一次查詢某代號會觸發訂閱，資料透過 callback 非同步送達，
+    所以第一次查詢通常還沒有資料，前端下一次輪詢（1.5秒後）就會有了。"""
+    code = request.args.get("code", "")
+    if not code:
+        return jsonify({"ok": False, "error": "no code"}), 400
+
+    is_new = code not in _bidask_subscribed
+    _bidask_subscribed[code] = time.time()
+
+    if is_new:
+        try:
+            def work(api):
+                import shioaji as sj
+                contract = _resolve_contract(api, code)
+                api.quote.subscribe(
+                    contract,
+                    quote_type=sj.constant.QuoteType.BidAsk,
+                    version=sj.constant.QuoteVersion.v1,
+                )
+            _run(work)
+        except Exception as e:
+            _bidask_subscribed.pop(code, None)
+            return jsonify({"ok": False, "error": f"訂閱失敗: {e}"})
+        return jsonify({"ok": False, "error": "訂閱中，請稍後重新查詢"})
+
+    cached = _bidask_cache.get(code)
+    if not cached:
+        return jsonify({"ok": False, "error": "訂閱中，請稍後重新查詢"})
+    return jsonify({"ok": True, "code": code, **cached})
+
+
+def _bidask_sweep_worker():
+    """背景執行緒：定期退訂太久沒人查詢的五檔訂閱，避免佔用 Shioaji 連線資源。"""
+    import shioaji as sj
+    while True:
+        time.sleep(BIDASK_SWEEP_INTERVAL)
+        now = time.time()
+        stale = [c for c, last in _bidask_subscribed.items() if now - last > BIDASK_IDLE_TIMEOUT]
+        for code in stale:
+            try:
+                def work(api, code=code):
+                    contract = _resolve_contract(api, code)
+                    api.quote.unsubscribe(
+                        contract,
+                        quote_type=sj.constant.QuoteType.BidAsk,
+                        version=sj.constant.QuoteVersion.v1,
+                    )
+                _run(work)
+                print(f"[bidask] 閒置退訂 {code}")
+            except Exception as e:
+                print(f"[bidask] 退訂 {code} 失敗（忽略）: {e}")
+            _bidask_subscribed.pop(code, None)
+            _bidask_cache.pop(code, None)
+
+
 if __name__ == "__main__":
+    threading.Thread(target=_bidask_sweep_worker, daemon=True, name="bidask-sweep").start()
     app.run(host="127.0.0.1", port=5455)

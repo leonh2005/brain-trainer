@@ -67,6 +67,32 @@
   td { padding: 6px 8px; border-bottom: 1px solid #21262d; font-variant-numeric: tabular-nums; }
   .empty-row td { color: #8b949e; text-align: center; padding: 20px 0; }
   #log-wrap { max-height: 300px; overflow-y: auto; overflow-x: auto; }
+
+  .movers-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 10px; }
+  .movers-note { font-size: 11.5px; color: #8b949e; }
+  .movers-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 640px) { .movers-grid { grid-template-columns: 1fr; } }
+  .movers-col h3 { font-size: 12px; margin: 0 0 8px; font-weight: 700; }
+  .movers-col.up h3 { color: #f85149; }
+  .movers-col.down h3 { color: #3fb950; }
+  .mover-row {
+    display: flex; align-items: center; gap: 8px; padding: 7px 8px; border-radius: 6px;
+    cursor: pointer; font-size: 12.5px;
+  }
+  .mover-row:hover { background: #21262d; }
+  .mover-row .m-code { font-family: ui-monospace, monospace; color: #8b949e; width: 40px; flex: none; }
+  .mover-row .m-name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .mover-row .m-rate { font-weight: 700; font-variant-numeric: tabular-nums; width: 58px; text-align: right; flex: none; }
+  .mover-row .m-vol { font-size: 11px; color: #8b949e; width: 60px; text-align: right; flex: none; font-variant-numeric: tabular-nums; }
+  .movers-wrap { max-width: 1280px; margin: 0 auto; padding: 20px 20px 0; }
+
+  #bidask-body { font-variant-numeric: tabular-nums; }
+  .ba-row { display: flex; align-items: center; gap: 8px; padding: 4px 6px; font-size: 13px; }
+  .ba-row .ba-label { width: 28px; flex: none; color: #8b949e; font-size: 11px; }
+  .ba-row .ba-price { width: 70px; flex: none; font-weight: 700; }
+  .ba-row .ba-vol { flex: 1; text-align: right; color: #8b949e; }
+  .ba-divider { border-top: 1px dashed #30363d; margin: 4px 0; }
+  #bidask-empty { color: #8b949e; text-align: center; padding: 20px 0; font-size: 12.5px; }
 </style>
 </head>
 <body>
@@ -80,6 +106,28 @@
   <span id="gw-status">連線檢查中…</span>
 </div>
 
+<div class="movers-wrap">
+  <div class="card" style="margin-bottom:0">
+    <div class="movers-head">
+      <h2 style="margin:0">今日強勢／弱勢股（漲跌幅≥3% 且成交量>15,000張）</h2>
+      <span style="display:flex;align-items:center;gap:8px">
+        <span class="movers-note" id="movers-updated">載入中…</span>
+        <button id="movers-refresh" title="立即刷新" style="font-size:11px;padding:3px 9px">🔄 手動刷新</button>
+      </span>
+    </div>
+    <div class="movers-grid">
+      <div class="movers-col up">
+        <h3>▲ 漲幅 ≥3%</h3>
+        <div id="movers-up"><div class="empty-row" style="padding:12px 0;color:#8b949e">載入中…</div></div>
+      </div>
+      <div class="movers-col down">
+        <h3>▼ 跌幅 ≥3%</h3>
+        <div id="movers-down"><div class="empty-row" style="padding:12px 0;color:#8b949e">載入中…</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="layout">
   <div>
     <div class="card">
@@ -90,6 +138,13 @@
       </div>
       <div id="price-meta">尚未開始模擬</div>
       <div id="chart"><div id="chart-empty">輸入代號並按「開始模擬」查看即時走勢</div></div>
+    </div>
+
+    <div class="card">
+      <h2>最佳五檔</h2>
+      <div id="bidask-body">
+        <div id="bidask-empty">尚未開始模擬</div>
+      </div>
     </div>
 
     <div class="card">
@@ -216,6 +271,35 @@ async function pollQuote() {
   }
 }
 
+function renderBidAsk(d) {
+  const body = document.getElementById('bidask-body');
+  if (!d.ok) {
+    body.innerHTML = `<div id="bidask-empty">${d.error || '無法取得五檔'}</div>`;
+    return;
+  }
+  const askRows = d.asks.slice().reverse().map((a, i) => `
+    <div class="ba-row"><span class="ba-label pos-down">賣${d.asks.length - i}</span><span class="ba-price pos-down">${a.price.toFixed(2)}</span><span class="ba-vol">${a.volume.toLocaleString()}</span></div>`).join('');
+  const bidRows = d.bids.map((b, i) => `
+    <div class="ba-row"><span class="ba-label pos-up">買${i + 1}</span><span class="ba-price pos-up">${b.price.toFixed(2)}</span><span class="ba-vol">${b.volume.toLocaleString()}</span></div>`).join('');
+  body.innerHTML = askRows + '<div class="ba-divider"></div>' + bidRows;
+}
+
+async function pollBidAsk() {
+  if (!STATE) return;
+  try {
+    const r = await fetch(`/api/bidask?code=${encodeURIComponent(STATE.code)}`);
+    const d = await r.json();
+    renderBidAsk(d);
+  } catch (e) {
+    renderBidAsk({ ok: false, error: '無法連線後端服務' });
+  }
+}
+
+function pollTick() {
+  pollQuote();   // 兩個各自 try/catch、不互相等待，一邊失敗不影響另一邊
+  pollBidAsk();
+}
+
 function setGwStatus(ok) {
   const el = document.getElementById('gw-status');
   el.className = ok ? 'ok' : 'bad';
@@ -321,8 +405,8 @@ async function startSim() {
   renderPortfolio();
   renderLog();
   if (pollTimer) clearInterval(pollTimer);
-  pollQuote();
-  pollTimer = setInterval(pollQuote, 1500);
+  pollTick();
+  pollTimer = setInterval(pollTick, 1500);
 }
 
 function resetSim() {
@@ -353,6 +437,53 @@ document.getElementById('btn-flat').addEventListener('click', () => {
   applyTrade(STATE.position > 0 ? -1 : 1, qty, lastPrice);
 });
 
+function moverRow(r, cls) {
+  const div = document.createElement('div');
+  div.className = 'mover-row';
+  div.innerHTML = `
+    <span class="m-code">${r.code}</span>
+    <span class="m-name">${r.name}</span>
+    <span class="m-rate ${cls}">${r.change_rate >= 0 ? '+' : ''}${r.change_rate.toFixed(2)}%</span>
+    <span class="m-vol">${r.volume.toLocaleString()}張</span>`;
+  div.addEventListener('click', () => {
+    document.getElementById('code').value = r.code;
+    if (!document.getElementById('capital').value) document.getElementById('capital').value = 100000;
+    startSim();
+    window.scrollTo({ top: document.querySelector('.layout').offsetTop - 10, behavior: 'smooth' });
+  });
+  return div;
+}
+
+async function loadMovers(fresh) {
+  const btn = document.getElementById('movers-refresh');
+  if (fresh) btn.disabled = true;
+  try {
+    const r = await fetch('/api/movers' + (fresh ? '?fresh=1' : ''));
+    const d = await r.json();
+    const upEl = document.getElementById('movers-up');
+    const downEl = document.getElementById('movers-down');
+    if (!d.ok) {
+      document.getElementById('movers-updated').textContent = d.error || '載入失敗';
+      upEl.innerHTML = downEl.innerHTML = '<div class="empty-row" style="padding:12px 0;color:#8b949e">無資料</div>';
+      return;
+    }
+    document.getElementById('movers-updated').textContent =
+      `成交量排行更新於 ${new Date(d.updated_at).toLocaleTimeString('zh-TW')}`;
+
+    upEl.innerHTML = '';
+    if (!d.gainers.length) upEl.innerHTML = '<div class="empty-row" style="padding:12px 0;color:#8b949e">目前無符合條件個股</div>';
+    else d.gainers.forEach(row => upEl.appendChild(moverRow(row, 'pos-up')));
+
+    downEl.innerHTML = '';
+    if (!d.losers.length) downEl.innerHTML = '<div class="empty-row" style="padding:12px 0;color:#8b949e">目前無符合條件個股</div>';
+    else d.losers.forEach(row => downEl.appendChild(moverRow(row, 'pos-down')));
+  } catch (e) {
+    document.getElementById('movers-updated').textContent = '無法連線後端服務';
+  } finally {
+    if (fresh) btn.disabled = false;
+  }
+}
+
 async function checkHealth() {
   try {
     const r = await fetch('/api/health');
@@ -361,8 +492,12 @@ async function checkHealth() {
   } catch (e) { setGwStatus(false); }
 }
 
+document.getElementById('movers-refresh').addEventListener('click', () => loadMovers(true));
+
 (async function boot() {
   checkHealth();
+  loadMovers();
+  setInterval(loadMovers, 30000);
   const saved = loadState();
   if (saved && saved.code) {
     STATE = saved;
@@ -374,8 +509,8 @@ async function checkHealth() {
     await loadIntraday(STATE.code);
     renderPortfolio();
     renderLog();
-    pollQuote();
-    pollTimer = setInterval(pollQuote, 1500);
+    pollTick();
+    pollTimer = setInterval(pollTick, 1500);
   } else {
     document.getElementById('capital').value = 100000;
   }
