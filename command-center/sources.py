@@ -250,7 +250,7 @@ def daily_stock_analysis():
 
 @_wrap
 def market_cycle():
-    d = _proxy('http://localhost:5900/api/chart-data', ttl=300)
+    d = _proxy('http://localhost:5905/api/chart-data', ttl=300)
     stages = (d.get('position') or {}).get('stages') or {}
     return {'econ': stages.get('econ', []), 'market': stages.get('market', [])}, \
         datetime.now().strftime('%Y-%m-%d %H:%M')
