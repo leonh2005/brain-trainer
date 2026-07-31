@@ -19,7 +19,9 @@ CREATE TABLE IF NOT EXISTS trades(
     price_native REAL NOT NULL,
     fx_rate REAL NOT NULL,
     cost_twd REAL NOT NULL,
-    tranche_no INTEGER NOT NULL
+    tranche_no INTEGER NOT NULL,
+    trade_type TEXT NOT NULL DEFAULT 'buy',
+    realized_pnl_twd REAL NOT NULL DEFAULT 0
 );
 CREATE TABLE IF NOT EXISTS snapshots(
     account_id TEXT NOT NULL,
@@ -51,6 +53,13 @@ def connect(path: str) -> sqlite3.Connection:
     if "by_ticker_json" not in cols:
         conn.execute("ALTER TABLE snapshots ADD COLUMN by_ticker_json TEXT")
         conn.commit()
+    trade_cols = {r["name"] for r in conn.execute("PRAGMA table_info(trades)")}
+    if "trade_type" not in trade_cols:
+        conn.execute("ALTER TABLE trades ADD COLUMN trade_type TEXT NOT NULL DEFAULT 'buy'")
+        conn.commit()
+    if "realized_pnl_twd" not in trade_cols:
+        conn.execute("ALTER TABLE trades ADD COLUMN realized_pnl_twd REAL NOT NULL DEFAULT 0")
+        conn.commit()
     return conn
 
 
@@ -69,12 +78,13 @@ def get_account(conn, account_id):
 
 
 def add_trade(conn, account_id, date, ticker, market, shares,
-              price_native, fx_rate, cost_twd, tranche_no):
+              price_native, fx_rate, cost_twd, tranche_no,
+              trade_type="buy", realized_pnl_twd=0.0):
     conn.execute(
         "INSERT INTO trades(account_id,date,ticker,market,shares,price_native,"
-        "fx_rate,cost_twd,tranche_no) VALUES(?,?,?,?,?,?,?,?,?)",
+        "fx_rate,cost_twd,tranche_no,trade_type,realized_pnl_twd) VALUES(?,?,?,?,?,?,?,?,?,?,?)",
         (account_id, date, ticker, market, shares, price_native,
-         fx_rate, cost_twd, tranche_no),
+         fx_rate, cost_twd, tranche_no, trade_type, realized_pnl_twd),
     )
     conn.commit()
 

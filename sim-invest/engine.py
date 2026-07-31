@@ -40,10 +40,45 @@ def holdings(conn, account_id) -> dict:
     for tr in store.get_trades(conn, account_id):
         h = agg.setdefault(tr["ticker"], {
             "shares": 0.0, "market": tr["market"], "cost_twd": 0.0,
+            "realized_pnl_twd": 0.0,
         })
         h["shares"] += tr["shares"]
         h["cost_twd"] += tr["cost_twd"]
+        h["realized_pnl_twd"] += tr["realized_pnl_twd"]
     return agg
+
+
+def add_position(conn, account_id, date, ticker, market, amount_twd, quote_fn, fx_fn) -> dict:
+    """加倉：用現價把 amount_twd 換算成股數買入。"""
+    import store
+    native = quote_fn(ticker, market)
+    fx = fx_fn() if market == "US" else 1.0
+    ptwd = native * fx
+    shares = amount_twd / ptwd
+    store.add_trade(conn, account_id, date, ticker, market, shares, native, fx, amount_twd, 0)
+    return {"ticker": ticker, "shares": shares, "price_native": native}
+
+
+def close_position(conn, account_id, date, ticker, market, shares=None, amount_twd=None,
+                   quote_fn=None, fx_fn=None) -> dict:
+    """平倉：依股數或金額（擇一）賣出，用均價成本法算已實現損益。"""
+    import store
+    h = holdings(conn, account_id).get(ticker)
+    if not h or h["shares"] <= 0:
+        raise ValueError(f"目前無 {ticker} 持股")
+    native = quote_fn(ticker, market)
+    fx = fx_fn() if market == "US" else 1.0
+    ptwd = native * fx
+    sell_shares = shares if shares is not None else amount_twd / ptwd
+    sell_shares = min(sell_shares, h["shares"])  # 不可超賣
+    avg_cost_per_share = h["cost_twd"] / h["shares"]
+    cost_removed = avg_cost_per_share * sell_shares
+    proceeds = sell_shares * ptwd
+    realized_pnl = proceeds - cost_removed
+    store.add_trade(conn, account_id, date, ticker, market, -sell_shares, native, fx,
+                    -cost_removed, 0, trade_type="sell", realized_pnl_twd=realized_pnl)
+    return {"ticker": ticker, "shares_sold": sell_shares, "proceeds_twd": proceeds,
+            "realized_pnl_twd": realized_pnl}
 
 
 def _category_of(plan, ticker):
