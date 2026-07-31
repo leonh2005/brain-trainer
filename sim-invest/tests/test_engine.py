@@ -127,3 +127,49 @@ def test_daily_snapshot_persists_by_ticker_json():
     by_ticker = json.loads(row["by_ticker_json"])
     assert "BE" in by_ticker
     assert "market_value" in by_ticker["BE"]
+
+def test_add_position_converts_amount_to_shares():
+    conn, plan = _fresh("A")
+    result = engine.add_position(conn, "A", "2026-07-24", "AAPL", "US", 1000.0, q, fx)
+    # 現價 $10 * fx 32 = 320/股 → 1000/320 = 3.125 股
+    assert abs(result["shares"] - 3.125) < 1e-6
+    hs = engine.holdings(conn, "A")
+    assert abs(hs["AAPL"]["shares"] - 3.125) < 1e-6
+    assert abs(hs["AAPL"]["cost_twd"] - 1000.0) < 1e-6
+
+def test_close_position_by_shares_realizes_pnl():
+    conn, plan = _fresh("A")
+    engine.add_position(conn, "A", "2026-07-24", "AAPL", "US", 3200.0, q, fx)  # 10股 @ $10*32=320
+    # 漲一倍賣出 5 股
+    up = lambda tk, m: 20.0
+    result = engine.close_position(conn, "A", "2026-07-25", "AAPL", "US",
+                                   shares=5.0, quote_fn=up, fx_fn=fx)
+    assert abs(result["shares_sold"] - 5.0) < 1e-6
+    assert abs(result["proceeds_twd"] - 5.0 * 20.0 * 32.0) < 1e-6
+    assert abs(result["realized_pnl_twd"] - 5.0 * 320.0) < 1e-6  # 均價320漲到640，賺320/股*5
+    hs = engine.holdings(conn, "A")
+    assert abs(hs["AAPL"]["shares"] - 5.0) < 1e-6
+    assert abs(hs["AAPL"]["realized_pnl_twd"] - 5.0 * 320.0) < 1e-6
+
+def test_close_position_caps_at_held_shares():
+    conn, plan = _fresh("A")
+    engine.add_position(conn, "A", "2026-07-24", "AAPL", "US", 3200.0, q, fx)  # 10股
+    result = engine.close_position(conn, "A", "2026-07-25", "AAPL", "US",
+                                   shares=999.0, quote_fn=q, fx_fn=fx)
+    assert abs(result["shares_sold"] - 10.0) < 1e-6
+    hs = engine.holdings(conn, "A")
+    assert abs(hs["AAPL"]["shares"]) < 1e-6
+
+def test_close_position_by_amount():
+    conn, plan = _fresh("A")
+    engine.add_position(conn, "A", "2026-07-24", "AAPL", "US", 3200.0, q, fx)  # 10股 @320
+    result = engine.close_position(conn, "A", "2026-07-25", "AAPL", "US",
+                                   amount_twd=1600.0, quote_fn=q, fx_fn=fx)  # 1600/320=5股
+    assert abs(result["shares_sold"] - 5.0) < 1e-6
+
+def test_close_position_no_holding_raises():
+    conn, plan = _fresh("A")
+    import pytest
+    with pytest.raises(ValueError):
+        engine.close_position(conn, "A", "2026-07-25", "AAPL", "US",
+                              shares=1.0, quote_fn=q, fx_fn=fx)

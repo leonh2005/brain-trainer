@@ -117,6 +117,7 @@ td.actions{white-space:nowrap}
         <h1>模擬投資儀表板</h1>
         <div class="sub"><span id="acctName">載入中…</span> <button class="edit-ic" id="editCapBtn" title="修改本金">✏️</button></div>
         <div class="sub" id="acctPnl" style="margin-top:3px;font-weight:600"></div>
+        <div class="sub" id="acctRealizedPnl" style="margin-top:2px"></div>
       </div>
     </div>
     <div class="acct-switch" id="acctSwitch"></div>
@@ -191,6 +192,9 @@ let currentAccountName = '';
 let currentTargets = [];
 let editingTargetId = null;   // 正在編輯中的 target id，null=無，'new'=新增列
 let editingDraft = null;
+let allocEditingTicker = null;   // 正在加倉/平倉編輯中的 ticker，null=無
+let allocEditingMode = null;     // 'buy' | 'sell'
+let allocSellBy = 'shares';      // 'shares' | 'amount'
 
 const ALLOC_COLS = [
   {key: 'ticker', label: '標的'},
@@ -254,6 +258,57 @@ function allocTotals(){
   };
 }
 
+function allocActionsCell(r){
+  if (allocEditingTicker === r.ticker && allocEditingMode === 'buy') {
+    return `<td class="actions">
+      <input type="number" class="alloc-buy-amount" placeholder="金額 NT$" style="width:100px">
+      <button class="mini-btn save alloc-confirm-buy" data-ticker="${escAttr(r.ticker)}" data-market="${escAttr(r.market)}">確認</button>
+      <button class="mini-btn alloc-cancel">取消</button>
+    </td>`;
+  }
+  if (allocEditingTicker === r.ticker && allocEditingMode === 'sell') {
+    return `<td class="actions">
+      <select class="alloc-sell-by">
+        <option value="shares"${allocSellBy === 'shares' ? ' selected' : ''}>股數</option>
+        <option value="amount"${allocSellBy === 'amount' ? ' selected' : ''}>金額 NT$</option>
+      </select>
+      <input type="number" class="alloc-sell-value" placeholder="${allocSellBy === 'shares' ? '股數' : '金額 NT$'}" style="width:90px">
+      <button class="mini-btn save alloc-confirm-sell" data-ticker="${escAttr(r.ticker)}" data-market="${escAttr(r.market)}">確認</button>
+      <button class="mini-btn alloc-cancel">取消</button>
+    </td>`;
+  }
+  return `<td class="actions">
+    <button class="edit-ic alloc-add-btn" data-ticker="${escAttr(r.ticker)}" title="加倉">➕</button>
+    <button class="edit-ic alloc-close-btn" data-ticker="${escAttr(r.ticker)}" title="平倉"${r.shares > 0 ? '' : ' disabled'}>➖</button>
+  </td>`;
+}
+
+async function submitBuy(ticker, market, amount){
+  const res = await fetch('/api/account/' + currentAid + '/buy', {
+    method: 'POST', headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({ticker, market, amount_twd: amount}),
+  });
+  const data = await res.json();
+  if (!res.ok) { alert('加倉失敗：' + data.error); return; }
+  allocEditingTicker = null; allocEditingMode = null;
+  applyAccountPayload(data);
+  refreshLive();
+}
+
+async function submitSell(ticker, market, by, value){
+  const body = {ticker, market};
+  if (by === 'shares') body.shares = value; else body.amount_twd = value;
+  const res = await fetch('/api/account/' + currentAid + '/sell', {
+    method: 'POST', headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(body),
+  });
+  const data = await res.json();
+  if (!res.ok) { alert('平倉失敗：' + data.error); return; }
+  allocEditingTicker = null; allocEditingMode = null;
+  applyAccountPayload(data);
+  refreshLive();
+}
+
 function renderAllocTable(){
   const el = document.getElementById('allocTable');
   const rows = allocRows.slice();
@@ -262,9 +317,9 @@ function renderAllocTable(){
   const headCells = ALLOC_COLS.map(c => {
     const arrow = allocSortKey === c.key ? (allocSortDir === -1 ? ' ▼' : ' ▲') : '';
     return `<th class="alloc-sort-h" data-key="${c.key}" style="cursor:pointer;user-select:none" title="點擊排序(高→低 / 低→高 / 原順序)">${c.label}${arrow}</th>`;
-  }).join('');
+  }).join('') + '<th>操作</th>';
 
-  const body = rows.map(r => `<tr>${ALLOC_COLS.map(c => allocCell(r, c.key)).join('')}</tr>`).join('');
+  const body = rows.map(r => `<tr>${ALLOC_COLS.map(c => allocCell(r, c.key)).join('')}${allocActionsCell(r)}</tr>`).join('');
 
   const t = allocTotals();
   const totalRow = `<tr class="total-row">
@@ -276,6 +331,7 @@ function renderAllocTable(){
     <td>NT$${fmt(t.cost_twd)}</td>
     <td>NT$${fmt(t.marketValue)}</td>
     <td class="${signClass(t.pnl)}">${sign(t.pnl)}NT$${fmt(t.pnl)}</td>
+    <td>—</td>
   </tr>`;
 
   el.innerHTML = `<table>
@@ -289,6 +345,35 @@ function renderAllocTable(){
     else if (allocSortDir === -1) { allocSortDir = 1; }
     else { allocSortKey = null; allocSortDir = -1; }
     renderAllocTable();
+  }));
+
+  el.querySelectorAll('.alloc-add-btn').forEach(btn => btn.addEventListener('click', () => {
+    allocEditingTicker = btn.dataset.ticker; allocEditingMode = 'buy';
+    renderAllocTable();
+  }));
+  el.querySelectorAll('.alloc-close-btn').forEach(btn => btn.addEventListener('click', () => {
+    allocEditingTicker = btn.dataset.ticker; allocEditingMode = 'sell';
+    renderAllocTable();
+  }));
+  el.querySelectorAll('.alloc-cancel').forEach(btn => btn.addEventListener('click', () => {
+    allocEditingTicker = null; allocEditingMode = null;
+    renderAllocTable();
+  }));
+  el.querySelectorAll('.alloc-sell-by').forEach(sel => sel.addEventListener('change', () => {
+    allocSellBy = sel.value;
+    renderAllocTable();
+  }));
+  el.querySelectorAll('.alloc-confirm-buy').forEach(btn => btn.addEventListener('click', () => {
+    const tr = btn.closest('tr');
+    const amount = parseFloat(tr.querySelector('.alloc-buy-amount').value);
+    if (!amount || amount <= 0) { alert('請輸入金額'); return; }
+    submitBuy(btn.dataset.ticker, btn.dataset.market, amount);
+  }));
+  el.querySelectorAll('.alloc-confirm-sell').forEach(btn => btn.addEventListener('click', () => {
+    const tr = btn.closest('tr');
+    const value = parseFloat(tr.querySelector('.alloc-sell-value').value);
+    if (!value || value <= 0) { alert('請輸入' + (allocSellBy === 'shares' ? '股數' : '金額')); return; }
+    submitSell(btn.dataset.ticker, btn.dataset.market, allocSellBy, value);
   }));
 }
 
@@ -315,6 +400,9 @@ function applyAccountPayload(data){
   } else {
     pnlEl.textContent = '';
   }
+  const realizedPnl = data.account.realized_pnl_twd || 0;
+  document.getElementById('acctRealizedPnl').innerHTML =
+    `已實現損益 <span class="${signClass(realizedPnl)}">${sign(realizedPnl)}NT$${fmt(realizedPnl)}</span>`;
 
   const el = document.getElementById('allocTable');
   if (!data.targets.length) {
@@ -326,7 +414,7 @@ function applyAccountPayload(data){
       const actualPct = total ? (100 * marketValue / total) : null;
       const drift = actualPct !== null ? (actualPct - t.target_pct) : null;
       const pnl = marketValue - h.cost_twd;
-      return {ticker: t.ticker, category: t.category, target_pct: t.target_pct,
+      return {ticker: t.ticker, market: t.market, category: t.category, target_pct: t.target_pct,
               actualPct, drift, shares: h.shares, cost_twd: h.cost_twd, marketValue, pnl};
     });
     renderAllocTable();

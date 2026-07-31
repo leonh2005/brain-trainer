@@ -1,6 +1,7 @@
 """模擬投資 Flask 服務（port 5250，唯讀報價，絕不真實下單）。"""
 import json
 import os
+from datetime import date
 from flask import Flask, g, jsonify, render_template, request
 
 import store
@@ -43,8 +44,10 @@ def _account_payload(aid, conn):
     for k, v in hs.items():
         market_value = by_ticker.get(k, {}).get("market_value", v["cost_twd"])
         holdings.append({"ticker": k, **v, "market_value": market_value})
+    realized_pnl_twd = sum(v["realized_pnl_twd"] for v in hs.values())
     return dict(
-        account={"id": aid, "name": plan.name, "capital_twd": plan.capital_twd},
+        account={"id": aid, "name": plan.name, "capital_twd": plan.capital_twd,
+                 "realized_pnl_twd": realized_pnl_twd},
         holdings=holdings,
         targets=[{"id": t.id, "ticker": t.ticker, "market": t.market,
                   "category": t.category, "target_twd": t.target_twd,
@@ -126,21 +129,24 @@ def live(aid):
     rows = []
     total_mv = 0.0
     total_cost = 0.0
-    for ticker, h in hs.items():
+    tickers = {t.ticker: t.market for t in plan.targets}
+    tickers.update({k: h["market"] for k, h in hs.items()})
+    for ticker, market in tickers.items():
+        h = hs.get(ticker, {"shares": 0.0, "cost_twd": 0.0})
         cost = h["cost_twd"]
         total_cost += cost
         try:
-            d = quotes.get_quote_detail(ticker, h["market"])
-            ptwd = d["last"] * fx if h["market"] == "US" else d["last"]
+            d = quotes.get_quote_detail(ticker, market)
+            ptwd = d["last"] * fx if market == "US" else d["last"]
             mv = h["shares"] * ptwd
             total_mv += mv
-            rows.append({"ticker": ticker, "market": h["market"], "shares": h["shares"],
+            rows.append({"ticker": ticker, "market": market, "shares": h["shares"],
                          "cost_twd": cost, "last_native": d["last"],
                          "change_pct": round(d["change_pct"], 2),
                          "market_value": mv, "pnl": mv - cost})
         except Exception as e:
             total_mv += cost  # 報價失敗以成本占位，維持 total_value 基準與逐檔一致
-            rows.append({"ticker": ticker, "market": h["market"], "shares": h["shares"],
+            rows.append({"ticker": ticker, "market": market, "shares": h["shares"],
                          "cost_twd": cost, "last_native": None, "change_pct": None,
                          "market_value": cost, "pnl": 0.0, "error": str(e)})
     cash = plan.capital_twd - total_cost
@@ -200,6 +206,73 @@ def remove_target(aid, tid):
         return jsonify(error="unknown account"), 404
     conn = _conn()
     store.delete_target(conn, tid, aid)
+    return jsonify(_account_payload(aid, conn))
+
+
+@app.post("/api/account/<aid>/buy")
+def buy(aid):
+    """加倉：用 NT$ 金額依現價買入。"""
+    if aid not in PLANS:
+        return jsonify(error="unknown account"), 404
+    data = request.get_json(force=True) or {}
+    ticker = str(data.get("ticker", "")).strip().upper()
+    market = data.get("market")
+    if not ticker:
+        return jsonify(error="ticker 不可為空"), 400
+    if market not in ("TW", "US"):
+        return jsonify(error="market 必須為 TW 或 US"), 400
+    try:
+        amount_twd = float(data.get("amount_twd"))
+    except (TypeError, ValueError):
+        return jsonify(error="amount_twd 必須為數字"), 400
+    if amount_twd <= 0:
+        return jsonify(error="amount_twd 必須大於 0"), 400
+    conn = _conn()
+    plan = plans_mod.load_plan(conn, aid)
+    hs = engine.holdings(conn, aid)
+    total_cost = sum(h["cost_twd"] for h in hs.values())
+    if amount_twd > plan.capital_twd - total_cost:
+        return jsonify(error="超過可用現金"), 400
+    try:
+        engine.add_position(conn, aid, date.today().isoformat(), ticker, market,
+                            amount_twd, quotes.get_quote, quotes.get_fx)
+    except Exception as e:
+        return jsonify(error=f"報價取得失敗: {e}"), 502
+    return jsonify(_account_payload(aid, conn))
+
+
+@app.post("/api/account/<aid>/sell")
+def sell(aid):
+    """平倉：依股數或金額（擇一）賣出。"""
+    if aid not in PLANS:
+        return jsonify(error="unknown account"), 404
+    data = request.get_json(force=True) or {}
+    ticker = str(data.get("ticker", "")).strip().upper()
+    market = data.get("market")
+    if not ticker:
+        return jsonify(error="ticker 不可為空"), 400
+    if market not in ("TW", "US"):
+        return jsonify(error="market 必須為 TW 或 US"), 400
+    shares = data.get("shares")
+    amount_twd = data.get("amount_twd")
+    if shares is None and amount_twd is None:
+        return jsonify(error="shares 或 amount_twd 需擇一提供"), 400
+    try:
+        shares = float(shares) if shares is not None else None
+        amount_twd = float(amount_twd) if amount_twd is not None else None
+    except (TypeError, ValueError):
+        return jsonify(error="shares/amount_twd 必須為數字"), 400
+    if (shares is not None and shares <= 0) or (amount_twd is not None and amount_twd <= 0):
+        return jsonify(error="shares/amount_twd 必須大於 0"), 400
+    conn = _conn()
+    try:
+        engine.close_position(conn, aid, date.today().isoformat(), ticker, market,
+                              shares=shares, amount_twd=amount_twd,
+                              quote_fn=quotes.get_quote, fx_fn=quotes.get_fx)
+    except ValueError as e:
+        return jsonify(error=str(e)), 400
+    except Exception as e:
+        return jsonify(error=f"報價取得失敗: {e}"), 502
     return jsonify(_account_payload(aid, conn))
 
 
