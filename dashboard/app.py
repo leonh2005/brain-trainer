@@ -26,7 +26,6 @@ LOCAL_SERVICES = [
     {"name": "stock-screener-ai",   "port": 5500, "url": "http://localhost:5500", "watchdog": True},
     {"name": "dashboard",           "port": 5600, "url": "http://localhost:5600", "watchdog": True},
     {"name": "dsa-webui",           "port": 5650, "url": "http://localhost:5650", "watchdog": True},
-    {"name": "kelly-fibonacci",     "port": 5700, "url": "http://localhost:5700", "watchdog": True},
     {"name": "portfolio-analyzer",  "port": 5800, "url": "http://localhost:5800", "watchdog": False},
     {"name": "dsa-backend",         "port": 8000, "url": "http://localhost:8000", "watchdog": True},
 ]

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="utf-8">
+<title>陽台盆栽紀錄</title>
+<style>
+:root{
+  --bg:#f7f2e4; --card:#fffdf7; --border:#ddd4bd;
+  --fg:#141413; --muted:#73716a; --accent:#5f7346;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  background:var(--bg); color:var(--fg);
+  font-family:-apple-system,"PingFang TC","Segoe UI",sans-serif;
+  font-size:14px; line-height:1.6; padding:24px;
+}
+.wrap{max-width:1100px;margin:0 auto}
+h1{font-size:22px;margin-bottom:4px}
+.sub{color:var(--muted);font-size:12.5px;margin-bottom:24px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:18px}
+.card{
+  background:var(--card);border:1px solid var(--border);border-radius:14px;
+  overflow:hidden;box-shadow:0 2px 8px -4px rgba(0,0,0,.08);
+}
+.card img{width:100%;height:200px;object-fit:cover;display:block}
+.card-body{padding:14px 16px}
+.card h2{font-size:16px;margin-bottom:2px}
+.cat{
+  display:inline-block;font-size:11px;color:var(--accent);
+  background:rgba(95,115,70,.12);padding:2px 8px;border-radius:6px;margin-bottom:8px;
+}
+.field{margin-top:8px}
+.field .label{font-size:11px;color:var(--muted);font-weight:600;letter-spacing:.03em}
+.field .val{font-size:13px}
+.sec-title{font-size:15px;font-weight:700;margin:28px 0 12px;display:flex;align-items:center;gap:8px}
+.sec-title:first-of-type{margin-top:8px}
+.sec-title .n{font-size:12px;font-weight:400;color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>🌿 陽台盆栽紀錄</h1>
+  <div class="sub" id="meta"></div>
+  <div id="sections"></div>
+</div>
+<script id="plant-data" type="application/json">
+[
+  {
+    "water_type": "moist",
+    "id": "catgrass",
+    "name": "貓草（燕麥草）",
+    "photo": "photos/01_catgrass.jpg",
+    "category": "貓咪保健",
+    "traits": "禾本科燕麥/小麥草，細長葉片叢生，生長快、生命週期短（約2-3週後開始老化）。",
+    "light": "半日照~全日照皆可，光線越足葉片越挺。",
+    "water": "保持土壤微濕，忌積水，噴霧或少量澆灌即可。",
+    "notes": "給貓咪啃食用，葉片老化變黃後建議重新播種，不用刻意留種。"
+  },
+  {
+    "water_type": "dry",
+    "id": "pomegranate",
+    "name": "石榴",
+    "photo": "photos/02_pomegranate.jpg",
+    "category": "果樹",
+    "traits": "落葉灌木，橘紅色皺褶花朵、圓形小果，耐旱耐修剪。",
+    "light": "全日照，日照不足會少花少果。",
+    "water": "耐旱，等表土乾了再澆透，忌長期潮濕爛根。",
+    "notes": "開花期需授粉才易結果（可人工授粉輔助）；冬季落葉正常，春天會重新發芽開花；每年可修剪整枝促進分枝開花。"
+  },
+  {
+    "water_type": "dry",
+    "id": "goji",
+    "name": "枸杞",
+    "photo": "photos/03_goji.jpg",
+    "category": "藥用/食用",
+    "traits": "枝條細瘦帶小刺，橢圓形葉互生，生長快、易木質化。",
+    "light": "全日照為佳，耐半日照但開花結果會變少。",
+    "water": "耐旱，土乾再澆，怕積水。",
+    "notes": "嫩葉可摘採煮湯（枸杞葉），過密的枝條可修剪促進分枝；開花後可結紅色枸杞果實但室內外盆栽產量通常不多。"
+  },
+  {
+    "water_type": "moist",
+    "id": "canna",
+    "name": "蓮蕉（美人蕉）",
+    "photo": "photos/04_canna.jpg",
+    "category": "觀葉/觀花",
+    "traits": "根莖類，寬大長橢圓葉片、中肋明顯，葉鞘包莖生長，會開豔麗花朵（紅/橙/黃）。",
+    "light": "全日照，日照不足葉片會徒長變薄。",
+    "water": "喜濕，生長季需水量大，土壤保持濕潤但避免根部長期泡水。",
+    "notes": "地下根莖會擴散，盆栽建議每1-2年分株換盆；花謝後剪除殘花可促進二次開花；冬季地上部可能枯萎，根莖會休眠等春天重新萌芽。"
+  },
+  {
+    "water_type": "dry",
+    "id": "adenium",
+    "name": "沙漠玫瑰",
+    "photo": "photos/05_adenium_graptopetalum.jpg",
+    "category": "多肉/塊根植物",
+    "traits": "莖基部肥厚呈塊根狀，橢圓肥厚葉片，開漏斗狀豔麗花朵（粉/紅/白）。原產非洲，怕冷怕濕。",
+    "light": "全日照，日照不足不易開花且徒長。",
+    "water": "極耐旱，澆水原則「乾透澆透」，冬季休眠期大幅減少澆水（甚至斷水）。",
+    "notes": "**全株有毒（乳汁）**，修剪或換盆時要戴手套，避免小孩寵物誤食；台灣冬天低溫（<10°C）要移到室內避免凍傷落葉；土壤必須排水良好（建議用多肉專用介質），忌用一般培養土久濕不乾。"
+  },
+  {
+    "water_type": "dry",
+    "id": "graptopetalum",
+    "name": "石蓮花",
+    "photo": "photos/05_adenium_graptopetalum.jpg",
+    "category": "多肉植物",
+    "traits": "灰綠色扁平肥厚葉片呈蓮座狀排列，生長緩慢，容易側芽群生。",
+    "light": "全日照，光線不足葉片會鬆散徒長、顏色變淡。",
+    "water": "耐旱，乾透澆透，忌葉片積水（易腐爛），澆水建議澆土不澆葉。",
+    "notes": "可食用（涼拌石蓮花是台灣常見料理），扦插繁殖容易（摘葉插土即可長根）；夏季悶熱潮濕要特別注意通風防爛葉。"
+  },
+  {
+    "water_type": "moist",
+    "id": "gynura",
+    "name": "紅鳳菜（血皮菜）",
+    "photo": "photos/06_gynura.jpg",
+    "category": "蔬菜",
+    "traits": "葉片正面綠色、背面紫紅色，卵形葉緣有鋸齒，莖略帶肉質，生長快速。",
+    "light": "半日照~全日照皆可，全日照顏色更豔麗但夏天強光易曬傷。",
+    "water": "喜濕潤，土壤不可太乾，缺水葉片易軟垂。",
+    "notes": "可食用嫩葉嫩莖（炒食、煮湯，帶天然黏液），適合連續採收（採頂端促側芽萌發）；扦插繁殖非常容易，剪一段插土即可存活；夏季高溫期生長最旺盛。"
+  },
+  {
+    "water_type": "moist",
+    "id": "lemonbalm",
+    "name": "香蜂草",
+    "photo": "photos/07_lemonbalm_dracaena.jpg",
+    "category": "香草",
+    "traits": "唇形科，葉片鋸齒緣、皺褶明顯，搓揉有濃郁檸檬香氣，莖略呈匍匐/攀爬狀。",
+    "light": "半日照為佳，忌夏季正午強烈直射（葉片易曬傷變黑）。",
+    "water": "喜濕潤，忌乾旱缺水（會迅速萎蔫），但也怕根部長期積水。",
+    "notes": "可泡茶、入菜，具舒緩助眠效果；台灣夏季悶熱潮濕環境容易因悶熱徒長、莖基部易爛，建議通風處栽培並適度修剪摘心促分枝；生命力強，扦插易活。"
+  },
+  {
+    "water_type": "dry",
+    "id": "dracaena",
+    "name": "巴西鐵樹（香龍血樹）",
+    "photo": "photos/07_lemonbalm_dracaena.jpg",
+    "category": "觀葉植物",
+    "traits": "木質莖幹（常見市售為切段木樁），頂端叢生劍形寬葉，生長緩慢。",
+    "light": "耐陰，適合半日照~室內明亮處，忌強烈直射陽光（葉片易曬傷）。",
+    "water": "耐旱怕積水，等土表乾了再澆，冬季減少澆水頻率。",
+    "notes": "對氟化物敏感，若用自來水澆灌葉尖易出現褐化（建議放置一天後的水或雨水澆灌）；不需常施肥，生長慢，過度潮濕悶熱環境根部易腐爛。"
+  },
+  {
+    "water_type": "dry",
+    "id": "plantain",
+    "name": "車前草",
+    "photo": "photos/08_lychee.jpg",
+    "category": "藥用野草",
+    "traits": "低矮蓮座狀貼地生長，葉片圓潤呈卵形、平行葉脈明顯，生命力強、易繁殖。",
+    "light": "半日照~全日照皆可，適應力強。",
+    "water": "耐濕耐旱皆可，土乾再澆即可，不太挑水分。",
+    "notes": "全草可入藥（清熱利尿），常見於路邊/盆栽自生的野草，種子細小易隨風或澆水散播到其他盆栽；生命力強，幾乎不太需要特別照顧。"
+  }
+]
+</script>
+<script>
+const plants = JSON.parse(document.getElementById('plant-data').textContent);
+document.getElementById('meta').textContent = plants.length + ' 種植物';
+
+function cardHtml(p){
+  return `
+  <div class="card">
+    <img src="${p.photo}" alt="${p.name}">
+    <div class="card-body">
+      <h2>${p.name}</h2>
+      <span class="cat">${p.category}</span>
+      <div class="field"><div class="label">特性</div><div class="val">${p.traits}</div></div>
+      <div class="field"><div class="label">日照</div><div class="val">${p.light}</div></div>
+      <div class="field"><div class="label">澆水</div><div class="val">${p.water}</div></div>
+      <div class="field"><div class="label">備註</div><div class="val">${p.notes}</div></div>
+    </div>
+  </div>`;
+}
+
+const GROUPS = [
+  {key: 'dry', label: '🌵 耐旱型（乾透澆透，忌積水）'},
+  {key: 'moist', label: '💧 喜濕型（保持土壤濕潤）'},
+];
+
+const sections = document.getElementById('sections');
+sections.innerHTML = GROUPS.map(g => {
+  const items = plants.filter(p => p.water_type === g.key);
+  return `
+    <div class="sec-title">${g.label} <span class="n">（${items.length}）</span></div>
+    <div class="grid">${items.map(cardHtml).join('')}</div>
+  `;
+}).join('');
+</script>
+</body>
+</html>
