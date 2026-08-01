@@ -2,7 +2,7 @@
 # 一次性補跑：把 Raw/ 裡累積的舊 Google Keep 筆記全部 ingest 完（迴圈直到沒有新文章為止）
 # 由 crontab 一次性排程於 2026-08-02 00:00 觸發，執行完會自我移除該筆 crontab
 
-export PATH="/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/usr/bin:/bin:$PATH"
+export PATH="$HOME/.local/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/usr/bin:/bin:$PATH"
 
 VAULT="/Volumes/1TOWC/Obsidian"
 TELEGRAM_TOKEN="$(cat "$HOME/CCProject/.secrets/telegram_token.txt")"
