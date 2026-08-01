@@ -1,6 +1,6 @@
 {
-  "scanned_at": "2026-08-01 03:00:16",
-  "since": "2026-07-31 03:00:01",
+  "scanned_at": "2026-08-02 03:00:18",
+  "since": "2026-08-01 03:00:01",
   "results": {
     "市場儀表板": {
       "exists": true,
@@ -16,8 +16,8 @@
     },
     "motion-watcher": {
       "exists": true,
-      "errors": 5814,
-      "last_error": "[h264 @ 0xca28bed80] error while decoding MB 152 74, bytestream 55824",
+      "errors": 5858,
+      "last_error": "[h264 @ 0xca28be300] error while decoding MB 46 52, bytestream 1579",
       "fix": "尚無對應建議，需人工判斷"
     },
     "Cloudflare Tunnel": {
@@ -28,8 +28,8 @@
     },
     "財經新聞分析": {
       "exists": true,
-      "errors": 142,
-      "last_error": "2026-08-01 02:45:39,220 [WARNING] fetcher.reddit_fetcher: Reddit fetch failed for r/investing: 429 Client Error: Too Many Requests for url: https://www.reddit.com/r/investing/hot/.rss",
+      "errors": 152,
+      "last_error": "2026-08-02 03:00:07,851 [WARNING] fetcher.ptt_fetcher: PTT index fetch failed: ('Connection aborted.', ConnectionResetError(54, 'Connection reset by peer'))",
       "fix": "尚無對應建議，需人工判斷"
     },
     "川普監測": {
