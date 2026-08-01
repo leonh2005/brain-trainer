@@ -126,11 +126,6 @@ check_and_restart "dsa-webui"         5650 \
   "/Users/steven/CCProject/daily-stock-analysis" \
   "/Users/steven/CCProject/logs/dsa-webui.log"
 
-check_and_restart "kelly-fibonacci"   5700 \
-  "venv/bin/python app.py" \
-  "/Users/steven/CCProject/kelly-fibonacci" \
-  "/Users/steven/CCProject/logs/kelly-fibonacci.log"
-
 check_and_restart "dsa-backend"       8000 \
   "venv/bin/python main.py --serve" \
   "/Users/steven/CCProject/daily-stock-analysis" \

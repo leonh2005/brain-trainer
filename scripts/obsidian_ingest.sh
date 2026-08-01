@@ -38,7 +38,7 @@ prompt="請照這個 vault 根目錄的 claude.md 說明操作。掃描 Raw/ 資
 
 完成後用繁體中文簡短總結（3行內）：處理了幾篇文章、新增了哪些 Wiki 頁面；如果 Raw 裡沒有新文章要 ingest，就直接說「今天沒有新文章」。"
 
-result=$(cd "$VAULT" && timeout --kill-after=10 900 claude -p "$prompt" \
+result=$(cd "$VAULT" && timeout --kill-after=10 3600 claude -p "$prompt" \
   --permission-mode acceptEdits \
   --allowedTools "Read,Write,Edit,Bash,Grep,Glob" \
   --disallowedTools "Agent,Workflow" \
