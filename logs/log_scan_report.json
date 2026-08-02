@@ -1,6 +1,6 @@
 {
-  "scanned_at": "2026-08-02 03:00:18",
-  "since": "2026-08-01 03:00:01",
+  "scanned_at": "2026-08-03 03:00:19",
+  "since": "2026-08-02 03:00:00",
   "results": {
     "市場儀表板": {
       "exists": true,
@@ -16,8 +16,8 @@
     },
     "motion-watcher": {
       "exists": true,
-      "errors": 5858,
-      "last_error": "[h264 @ 0xca28be300] error while decoding MB 46 52, bytestream 1579",
+      "errors": 5883,
+      "last_error": "[h264 @ 0xca28bca80] error while decoding MB 0 75, bytestream 60566",
       "fix": "尚無對應建議，需人工判斷"
     },
     "Cloudflare Tunnel": {
@@ -28,8 +28,8 @@
     },
     "財經新聞分析": {
       "exists": true,
-      "errors": 152,
-      "last_error": "2026-08-02 03:00:07,851 [WARNING] fetcher.ptt_fetcher: PTT index fetch failed: ('Connection aborted.', ConnectionResetError(54, 'Connection reset by peer'))",
+      "errors": 153,
+      "last_error": "2026-08-03 03:00:07,964 [WARNING] fetcher.ptt_fetcher: PTT index fetch failed: ('Connection aborted.', ConnectionResetError(54, 'Connection reset by peer'))",
       "fix": "尚無對應建議，需人工判斷"
     },
     "川普監測": {
