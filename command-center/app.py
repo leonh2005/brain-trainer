@@ -93,6 +93,11 @@ def life_daily_stock_analysis():
     return sources.daily_stock_analysis()
 
 
+@app.get('/api/life/guru-tracker')
+def life_guru_tracker():
+    return sources.guru_tracker()
+
+
 @app.get('/api/life/market-cycle')
 def life_market_cycle():
     return sources.market_cycle()

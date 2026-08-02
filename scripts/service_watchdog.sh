@@ -136,6 +136,11 @@ check_and_restart "dsa-vite"          5173 \
   "/Users/steven/CCProject/daily-stock-analysis/apps/dsa-web" \
   "/Users/steven/CCProject/logs/dsa_vite.log"
 
+check_and_restart "guru-tracker"      5910 \
+  "venv/bin/python3 app.py" \
+  "/Users/steven/CCProject/guru-tracker" \
+  "/Users/steven/CCProject/logs/guru-tracker.log"
+
 
 # ── 可選服務（目前非必要，掛了不自動重啟，只記 log）──────────────
 for name_port in "stock_analyzer:5100" "portfolio-analyzer:5800"; do
