@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<title>持股明細</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+<style>
+  :root {
+    --bg: #0a0e14; --card: #111722; --border: #1e2a3a;
+    --text: #e6e9ef; --text-dim: #7d8798; --green: #26c281; --red: #ff4757;
+    --font-mono: "SF Mono", Menlo, monospace;
+  }
+  * { box-sizing: border-box; }
+  body { background: var(--bg); color: var(--text); font-family: -apple-system, "PingFang TC", sans-serif; margin: 0; padding: 1.5rem; }
+  a.back { color: var(--text-dim); text-decoration: none; font-size: 0.85rem; }
+  h1 { font-size: 1.4rem; margin: 0.4rem 0 0.2rem; }
+  .sub { color: var(--text-dim); font-size: 0.8rem; margin-bottom: 1.2rem; }
+  .layout { display: grid; grid-template-columns: 20rem 1fr; gap: 1.2rem; align-items: start; }
+  @media (max-width: 60rem) { .layout { grid-template-columns: 1fr; } }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 1rem; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+  th, td { text-align: left; padding: 0.45rem 0.5rem; border-bottom: 1px solid var(--border); }
+  th { color: var(--text-dim); font-weight: 500; font-size: 0.75rem; }
+  td.num, th.num { text-align: right; font-family: var(--font-mono); }
+  .up { color: var(--green); } .down { color: var(--red); }
+  .badge { font-size: 0.65rem; border-radius: 4px; padding: 1px 5px; margin-left: 4px; }
+  .badge.new { background: var(--green); color: #06210f; }
+  .badge.exit { background: var(--red); color: #fff; }
+  .exited-box { margin-top: 1rem; font-size: 0.8rem; color: var(--text-dim); }
+  .empty { color: var(--text-dim); font-size: 0.8rem; padding: 2rem; text-align: center; }
+</style>
+</head>
+<body>
+<a class="back" href="/">← 回總覽</a>
+<h1 id="title">載入中...</h1>
+<div class="sub" id="sub"></div>
+<div class="layout">
+  <div class="card"><canvas id="sectorChart"></canvas></div>
+  <div class="card">
+    <table>
+      <thead><tr><th>Ticker</th><th>族群</th><th class="num">占比</th><th class="num">變動</th></tr></thead>
+      <tbody id="holdingsBody"><tr><td colspan="4" class="empty">載入中...</td></tr></tbody>
+    </table>
+    <div class="exited-box" id="exitedBox"></div>
+  </div>
+</div>
+
+<script>
+const holderId = {{ holder_id | tojson }};
+
+async function load() {
+  const res = await fetch(`/api/holder/${holderId}`);
+  if (!res.ok) { document.getElementById('title').textContent = '查無此人物'; return; }
+  const d = await res.json();
+
+  document.getElementById('title').textContent = `${d.name_zh}（${d.name}）`;
+  document.getElementById('sub').textContent =
+    `資料來源：${d.source} ｜ 資料期別：${d.latest_period || '—'}` +
+    (d.prev_period ? ` ｜ 對比上期：${d.prev_period}` : '') +
+    (d.updated_at ? ` ｜ 更新於 ${d.updated_at.slice(0,16).replace('T',' ')}` : '');
+
+  const body = document.getElementById('holdingsBody');
+  if (!d.holdings.length) {
+    body.innerHTML = '<tr><td colspan="4" class="empty">尚無持股資料</td></tr>';
+  } else {
+    body.innerHTML = d.holdings.map(h => {
+      const changeTxt = h.status === 'new' ? '<span class="badge new">新進</span>'
+        : (h.change_pct === null ? '—' : `<span class="${h.change_pct >= 0 ? 'up' : 'down'}">${h.change_pct >= 0 ? '+' : ''}${h.change_pct}%</span>`);
+      return `<tr>
+        <td>${h.ticker}</td>
+        <td>${h.sector}</td>
+        <td class="num">${h.weight_pct}%</td>
+        <td class="num">${changeTxt}</td>
+      </tr>`;
+    }).join('');
+  }
+
+  if (d.exited && d.exited.length) {
+    document.getElementById('exitedBox').textContent = `本期已出清：${d.exited.join('、')}`;
+  }
+
+  if (d.sector_breakdown.length) {
+    new Chart(document.getElementById('sectorChart'), {
+      type: 'doughnut',
+      data: {
+        labels: d.sector_breakdown.map(s => s.sector),
+        datasets: [{
+          data: d.sector_breakdown.map(s => s.weight_pct),
+          backgroundColor: ['#26c281','#ff4757','#4a90d9','#a37bff','#f5a623','#50e3c2','#e35a8f','#7d8798','#c9a227','#5f9ea0','#d16ba5','#8fb339'],
+          borderColor: '#0a0e14', borderWidth: 2,
+        }]
+      },
+      options: {
+        plugins: { legend: { position: 'bottom', labels: { color: '#e6e9ef', font: { size: 11 } } } }
+      }
+    });
+  }
+}
+load();
+</script>
+</body>
+</html>

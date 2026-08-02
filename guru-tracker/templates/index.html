@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<title>投資大老持股追蹤</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root {
+    --bg: #0a0e14; --card: #111722; --border: #1e2a3a;
+    --text: #e6e9ef; --text-dim: #7d8798; --green: #26c281; --red: #ff4757;
+    --font-mono: "SF Mono", Menlo, monospace;
+  }
+  * { box-sizing: border-box; }
+  body { background: var(--bg); color: var(--text); font-family: -apple-system, "PingFang TC", sans-serif; margin: 0; padding: 1.5rem; }
+  h1 { font-size: 1.3rem; margin: 0 0 0.3rem; }
+  .sub { color: var(--text-dim); font-size: 0.85rem; margin-bottom: 1.2rem; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(19rem, 1fr)); gap: 1rem; }
+  a.card { display: block; background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 1rem 1.1rem;
+           text-decoration: none; color: var(--text); transition: border-color 0.15s; }
+  a.card:hover { border-color: #3a4a5f; }
+  .card.virtual { border-color: #a37bff; }
+  .name { font-size: 1.05rem; font-weight: 600; }
+  .name-en { color: var(--text-dim); font-size: 0.75rem; margin-left: 0.3rem; }
+  .meta { color: var(--text-dim); font-size: 0.75rem; font-family: var(--font-mono); margin: 0.3rem 0 0.6rem; }
+  .top3 { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+  .chip { background: rgba(255,255,255,0.06); border-radius: 5px; padding: 2px 7px; font-size: 0.78rem; font-family: var(--font-mono); }
+  .empty { color: var(--text-dim); font-size: 0.8rem; padding: 2rem; text-align: center; }
+</style>
+</head>
+<body>
+<h1>📊 投資大老持股追蹤</h1>
+<div class="sub">13F 申報資料落後（季度結束後最長45天+），木頭姐(ARK)為每日資料。點卡片看詳細持股與族群分類。</div>
+<div id="grid" class="grid"><div class="empty">載入中...</div></div>
+
+<script>
+async function load() {
+  const res = await fetch('/api/holders');
+  const data = await res.json();
+  const all = [...data.holders, ...data.steven_zhou];
+  const grid = document.getElementById('grid');
+  if (!all.length) { grid.innerHTML = '<div class="empty">尚無資料，updater 可能還沒跑過</div>'; return; }
+  grid.innerHTML = all.map(h => `
+    <a class="card ${h.type === 'virtual' ? 'virtual' : ''}" href="/holder/${h.id}">
+      <div class="name">${h.name_zh}<span class="name-en">${h.name}</span></div>
+      <div class="meta">${h.latest_period ? '資料期別 ' + h.latest_period : '無資料'} · 共 ${h.holding_count} 檔</div>
+      <div class="top3">
+        ${h.top3.map(t => `<span class="chip">${t.ticker} ${t.weight_pct}%</span>`).join('') || '<span class="chip">—</span>'}
+      </div>
+    </a>
+  `).join('');
+}
+load();
+</script>
+</body>
+</html>
