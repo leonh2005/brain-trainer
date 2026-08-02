@@ -277,6 +277,19 @@ def market_analysis():
     }, datetime.now().strftime('%Y-%m-%d %H:%M')
 
 
+@_wrap
+def guru_tracker():
+    data = _proxy('http://localhost:5910/api/holders', ttl=300)
+    holders = data.get('holders') or []
+    steven = (data.get('steven_zhou') or [{}])[0]
+    top3 = steven.get('top3') or []
+    return {
+        'holder_count': len(holders),
+        'steven_zhou_count': steven.get('holding_count'),
+        'steven_zhou_top': top3[0]['ticker'] if top3 else None,
+    }, datetime.now().strftime('%Y-%m-%d %H:%M')
+
+
 SIGNALS = {
     'daytrade': daytrade, 'swing': swing, 'intraday': intraday, 'ma': ma,
     'chips': chips, 'news': news, 'market-fear': market_fear,
