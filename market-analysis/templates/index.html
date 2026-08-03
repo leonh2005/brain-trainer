@@ -403,9 +403,11 @@ async function loadLive(fresh){
     const vol = idx.volume;
     if (idx.volume_label && vol && vol.vol_ratio != null) {
       const dir = vol.vol_ratio >= 1.1 ? 'vol-up' : (vol.vol_ratio <= 0.9 ? 'vol-down' : '');
+      const diffTxt = (vol.vol_diff_100m > 0 ? '+' : '') + vol.vol_diff_100m
+        + '億（' + (vol.vol_diff_pct > 0 ? '+' : '') + vol.vol_diff_pct + '%）';
       volEl.className = 'vol-sig ' + dir;
-      volEl.textContent = idx.volume_label;
-      volEl.title = `估算全日成交金額 ${vol.est_full_day_100m} 億元（依 ${vol.as_of} 已成交量按時間比例外推）\n近5日均量 ${vol.avg5_100m} 億元\n量比 ${vol.vol_ratio}x`;
+      volEl.textContent = `${idx.volume_label} ${diffTxt}`;
+      volEl.title = `估算全日成交金額 ${vol.est_full_day_100m} 億元（依 ${vol.as_of} 已成交量按時間比例外推）\n近5日均量 ${vol.avg5_100m} 億元\n較均量 ${diffTxt}（量比 ${vol.vol_ratio}x）`;
     } else {
       volEl.className = 'vol-sig';
       volEl.textContent = '';
