@@ -20,7 +20,6 @@ import math
 DEFAULT_CYCLES = [
     {"key": "bull_bear", "name": "台股多空大循環(杜金龍89月)", "period_months": 89, "trough_ym": "2022-10"},
     {"key": "silicon", "name": "半導體/科技庫存循環", "period_months": 42, "trough_ym": "2020-04"},
-    {"key": "seasonal", "name": "季節性/月份效應", "period_months": 12, "trough_ym": "2020-08"},
 ]
 
 
