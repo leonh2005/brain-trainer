@@ -34,7 +34,6 @@ BOT_TOKEN = open(os.path.expanduser("~/CCProject/.secrets/telegram_token.txt")).
 CHAT_ID   = "7556217543"
 TOKEN     = open('/Users/steven/CCProject/.secrets/finmind_token.txt').read().strip()
 TODAY     = datetime.today().strftime('%Y-%m-%d')
-D10 = trading_days_ago(15)
 D5  = trading_days_ago(7)
 
 WATCHLIST = {
@@ -152,26 +151,74 @@ def get_fi_yesterday(stock_id):
         fi = df[df['name']=='Foreign_Investor']
         last = fi.iloc[-1]
         return int((last['buy'] - last['sell']) / 1000), str(last['date'])[:10]
-    except:
+    except Exception as e:
+        print(f'[finmind] fi_yesterday {stock_id} 失敗: {e}')
         return 0, ''
 
 
-def get_avg5_vol(stock_id):
-    """近5日均量（張）—— Shioaji kbars；失敗時 fallback FinMind"""
-    df = get_sj_daily_kbars(stock_id, days=20)
-    # 排除今日（盤中 K 棒不完整，會拉偏均值）
-    if len(df) >= 2:
-        df = df.iloc[:-1]
-    if len(df) >= 5:
-        return round(df['volume'].tail(5).mean(), 0)
-    # Fallback: FinMind
+def get_trust_yesterday(stock_id):
+    """投信昨日買賣超（張）—— FinMind"""
     try:
-        h = finmind.taiwan_stock_daily(stock_id=stock_id, start_date=D10)
-        if len(h) >= 5:
-            return round(h['Trading_Volume'].tail(5).mean() / 1000, 0)
-    except Exception:
-        pass
-    return 0
+        df = finmind.taiwan_stock_institutional_investors(stock_id=stock_id, start_date=D5)
+        it = df[df['name']=='Investment_Trust']
+        last = it.iloc[-1]
+        return int((last['buy'] - last['sell']) / 1000)
+    except Exception as e:
+        print(f'[finmind] trust_yesterday {stock_id} 失敗: {e}')
+        return 0
+
+
+def compute_score(kbars: pd.DataFrame, chg_pct: float, close_pos: float, fi_net: int, trust_net: int) -> dict:
+    """隔日沖7條件評分（2026-08-03 策略更新）。kbars 需含今日，按日期升冪排列。
+
+    回傳 dict：score(0-7)、grade(A/B/C)、excluded(bool，位階排除)、reasons(list)
+    """
+    if len(kbars) < 21:
+        return {'score': 0, 'grade': 'C', 'excluded': True, 'reasons': ['歷史K棒不足'], 'avg5_vol': 0}
+
+    today = kbars.iloc[-1]
+    hist = kbars.iloc[:-1]  # 不含今日
+
+    avg5_vol = hist['volume'].tail(5).mean()
+    avg20_vol = hist['volume'].tail(20).mean()
+    ma5 = hist['close'].tail(5).mean()
+    ma20 = hist['close'].tail(20).mean()
+    prev_high = hist.iloc[-1]['high']
+
+    # 連漲根數（含今日，往回數收盤價遞增的天數）
+    closes = list(hist['close'].tail(5)) + [today['close']]
+    streak = 0
+    for i in range(len(closes) - 1, 0, -1):
+        if closes[i] > closes[i - 1]:
+            streak += 1
+        else:
+            break
+
+    conditions = {
+        '量能2倍+':   bool(avg20_vol > 0 and today['volume'] >= avg20_vol * 2),
+        '站上5日線':  bool(today['close'] > ma5),
+        '站上月線':   bool(today['close'] > ma20),
+        '突破前高':   bool(today['close'] > prev_high),
+        '收盤近高':   bool(close_pos >= 75),
+        '漲幅甜蜜區': bool(3 <= chg_pct <= 8),
+        '法人買超':   bool(fi_net > 0 or trust_net > 0),
+    }
+    score = sum(conditions.values())
+
+    # 位階排除（不計分，直接不列入候選）
+    deviated = bool(ma20 > 0 and abs(today['close'] - ma20) / ma20 > 0.15)
+    over_streak = streak >= 4
+    excluded = deviated or over_streak
+
+    grade = 'A' if score >= 6 else ('B' if score == 5 else 'C')
+    reasons = [k for k, v in conditions.items() if not v]
+    if deviated:
+        reasons.append('偏離月線>15%')
+    if over_streak:
+        reasons.append(f'已連漲{streak}根')
+
+    return {'score': score, 'grade': grade, 'excluded': excluded, 'reasons': reasons, 'avg5_vol': round(avg5_vol, 0)}
+
 
 
 def vol_signal(vol_k, avg5, chg_pct, close_pos):
@@ -214,17 +261,25 @@ if df.empty:
     send_telegram(f"⚠️ {TODAY} 隔日沖掃描失敗：Shioaji 快照無法取得，請確認 API 連線")
     exit(1)
 
+# 粗篩（快照即可判斷，避免對全市場逐檔抓K棒）：漲幅3-8%甜蜜區 + 收盤在當日區間前25% + 基本量能門檻
 pool = df[
-    (df['vol_k'] >= 5000) &
-    (df['chg_pct'] >= 2.0) &
-    (df['close_pos'] >= 70)
-].nlargest(20, 'vol_k')
+    (df['vol_k'] >= 3000) &
+    (df['chg_pct'] >= 3.0) & (df['chg_pct'] <= 8.0) &
+    (df['close_pos'] >= 75)
+].nlargest(40, 'vol_k')
 
 candidates = []
 for _, row in pool.iterrows():
     code = row['Code']
+    kbars = get_sj_daily_kbars(code, days=35)  # 含今日，至少需21筆才能算月線
+    if kbars.empty:
+        continue
     fi_net, fi_date = get_fi_yesterday(code)
-    avg5 = get_avg5_vol(code)
+    trust_net = get_trust_yesterday(code)
+    result = compute_score(kbars, row['chg_pct'], row['close_pos'], fi_net, trust_net)
+    if result['excluded'] or result['score'] < 5:  # 7條件評分制：<5分（C級）不列入
+        continue
+    avg5 = result['avg5_vol']  # compute_score 已從同一份 kbars 算好，不重打 Shioaji API
     signal = vol_signal(row['vol_k'], avg5, row['chg_pct'], row['close_pos'])
 
     candidates.append({
@@ -237,9 +292,15 @@ for _, row in pool.iterrows():
         'avg5':      int(avg5),
         'close_pos': row['close_pos'],
         'fi_net':    fi_net,
+        'trust_net': trust_net,
         'fi_date':   fi_date,
         'signal':    signal,
+        'reasons':   result['reasons'],
+        'score':     result['score'],
+        'grade':     result['grade'],
     })
+
+candidates.sort(key=lambda c: (c['score'], c['vol_k']), reverse=True)
 
 # 自選股量價訊號
 watchlist_data = []
@@ -276,30 +337,37 @@ mkt_dir = "偏多 ↑" if fut_diff > 0 else "偏空 ↓"
 
 lines = [f"🌙 <b>隔日沖候選</b>｜{TODAY} 12:30\n"]
 lines.append(f"🌐 大盤外資期貨（{fut_date}）：{mkt_dir}（{fut_diff:+,} 口）\n")
-lines.append("📋 <b>篩選條件</b>")
-lines.append("量&gt;5000張 ＋ 漲&gt;2% ＋ 收高70%+\n")
+lines.append("📋 <b>篩選條件（7條件評分制，2026-08-03更新）</b>")
+lines.append("量能2倍+均量 / 站上5日線 / 站上月線 / 突破前高 / 收盤近高 / 漲幅3-8% / 法人買超")
+lines.append("≥6分A級 ≥5分B級，且排除連漲4根以上或偏離月線15%以上者\n")
 
 if candidates:
     lines.append(f"✅ 符合 {len(candidates)} 檔：\n")
     for c in candidates[:8]:
         fi_icon = "🟢外資買超" if c['fi_net'] > 0 else ("🔴外資賣超" if c['fi_net'] < 0 else "⚪外資持平")
+        trust_icon = "🟢投信買超" if c['trust_net'] > 0 else ("🔴投信賣超" if c['trust_net'] < 0 else "⚪投信持平")
+        grade_emoji = "🅰️" if c['grade'] == 'A' else "🅱️"
         ai = analyze_stock(
             code=c['code'], name=c['name'], close=c['close'],
             chg_pct=c['chg_pct'], amp_pct=c['amp_pct'],
             vol_k=c['vol_k'], avg5=c['avg5'], close_pos=c['close_pos'],
             fi_net=c['fi_net'], signal=c['signal'], strategy="隔日沖"
         )
+        reasons_txt = f"   未達：{'、'.join(c['reasons'])}\n" if c['reasons'] else ""
         lines.append(
-            f"📈 <b>{c['code']} {c['name']}</b>\n"
+            f"{grade_emoji} <b>{c['code']} {c['name']}</b>（{c['score']}/7分）\n"
             f"   收:{c['close']:.1f}  漲:{c['chg_pct']:+.1f}%  收盤位:{c['close_pos']:.0f}%\n"
-            f"   量:{c['vol_k']:,}張（均{c['avg5']:,}）  {fi_icon} {c['fi_net']:+,}張\n"
+            f"   量:{c['vol_k']:,}張（均{c['avg5']:,}）  {fi_icon} {c['fi_net']:+,}張  {trust_icon} {c['trust_net']:+,}張\n"
             f"   {c['signal']}\n"
+            f"{reasons_txt}"
             f"{format_ai_block(ai)}\n"
         )
-    lines.append("⚡ 進場：收盤前30分鐘（14:00~14:30）確認量增收高再買")
-    lines.append("🛑 出場：隔日開盤漲2~4%賣，開盤跳空綠立刻出\n")
+    lines.append("⚡ 進場：9:05~9:15回踩不破前高/平盤再進；尾盤(14:00~14:30)確認量增收高可提前佈局")
+    lines.append(
+        "🛑 出場：開高&gt;3%分批賣 ／ 開高續強看5分K跌破再出 ／ 平開看是否突破昨高 ／ 開低&gt;2%直接出場\n"
+    )
 else:
-    lines.append("❌ 今日無符合隔日沖條件標的（量/漲幅/收盤位不足）\n")
+    lines.append("❌ 今日無符合隔日沖條件標的（7條件評分不足5分，或位階排除）\n")
 
 if watchlist_data:
     lines.append("👀 <b>自選股狀況</b>")
