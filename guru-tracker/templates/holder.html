@@ -24,6 +24,8 @@
   th { color: var(--text-dim); font-weight: 500; font-size: 0.75rem; }
   td.num, th.num { text-align: right; font-family: var(--font-mono); }
   .up { color: var(--red); } .down { color: var(--green); }
+  a.ticker-link { color: var(--text); text-decoration: none; border-bottom: 1px dotted var(--text-dim); }
+  a.ticker-link:hover { color: #4a90d9; border-bottom-color: #4a90d9; }
   .badge { font-size: 0.65rem; border-radius: 4px; padding: 1px 5px; margin-left: 4px; }
   .badge.new { background: var(--green); color: #06210f; }
   .badge.exit { background: var(--red); color: #fff; }
@@ -68,6 +70,8 @@ async function load() {
   const fmtShares = n => (n === null || n === undefined) ? '—' : Math.round(n).toLocaleString();
   const fmtPct = (n, withSign) => (n === null || n === undefined) ? '—'
     : `${withSign && n >= 0 ? '+' : ''}${n}%`;
+  const yahooUrl = ticker => `https://finance.yahoo.com/quote/${encodeURIComponent(ticker.replace(/\//g, '-'))}`;
+  const tickerLink = ticker => `<a class="ticker-link" href="${yahooUrl(ticker)}" target="_blank" rel="noopener">${ticker}</a>`;
 
   const body = document.getElementById('holdingsBody');
   if (!d.holdings.length) {
@@ -81,7 +85,7 @@ async function load() {
         : `<span class="${h.shares_change_pct >= 0 ? 'up' : 'down'}">${fmtPct(h.shares_change_pct, true)}</span>`;
       const canvasId = `spark-${h.ticker.replace(/[^A-Za-z0-9]/g, '_')}`;
       return `<tr>
-        <td>${h.ticker}${newBadge}</td>
+        <td>${tickerLink(h.ticker)}${newBadge}</td>
         <td>${h.sector}</td>
         <td class="num">${fmtShares(h.shares)}</td>
         <td class="num">${sharesChangeTxt}</td>
@@ -132,9 +136,9 @@ async function load() {
 
   if (d.exited && d.exited.length) {
     const rows = d.exited.map(e =>
-      `${e.ticker}（原持股 ${fmtShares(e.shares)} 股，占比 ${e.weight_pct}%，資料日期 ${e.filed_date || '—'}）`
+      `${tickerLink(e.ticker)}（原持股 ${fmtShares(e.shares)} 股，占比 ${e.weight_pct}%，資料日期 ${e.filed_date || '—'}）`
     ).join('、');
-    document.getElementById('exitedBox').textContent =
+    document.getElementById('exitedBox').innerHTML =
       `本期已出清（相較上期 ${d.prev_period || '—'}）：${rows}`;
   }
 
