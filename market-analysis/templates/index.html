@@ -604,7 +604,7 @@ function sigBadge(sig){
   const label = sig === 'bull' ? '利多' : (sig === 'bear' ? '利空' : '中性');
   return `<span class="sig ${sig}">${label}</span>`;
 }
-// 油/金/美元/殖利率/VIX：近月上升=利空、下降=利多（|變動|<1% 視為中性）
+// 油/金/美元/殖利率/VIX：當日上升=利空、下降=利多（|變動|<1% 視為中性）
 function mktSig(v){ if (v == null || isNaN(v) || Math.abs(v) < 1) return 'na'; return v > 0 ? 'bear' : 'bull'; }
 // CPI：>3% 通膨高=利空、<2% 溫和=利多、其間中性
 function cpiSig(y){ return y > 3 ? 'bear' : (y < 2 ? 'bull' : 'na'); }
@@ -623,7 +623,7 @@ async function loadEcon(){
         <div class="ev">${val}</div>
         <div class="ec ${pctClass(m.chg_pct)}">當日 ${fmtPct(m.chg_pct)}</div>
         <div class="em">近月 <span class="${pctClass(m.mo_pct)}">${fmtPct(m.mo_pct)}</span></div>
-        <div>${sigBadge(mktSig(m.mo_pct))}</div>
+        <div>${sigBadge(mktSig(m.chg_pct))}</div>
       </div>`;
     }).join('') || '<div class="empty">無資料</div>';
 
