@@ -32,7 +32,7 @@ HOLDERS = [
 
 STEVEN_ZHOU_ID = "steven_zhou"
 STEVEN_ZHOU_NAME_ZH = "Steven周"
-STEVEN_ZHOU_THRESHOLD_DEFAULT = 3  # 至少N人同時持有才算進Steven周的交集
+STEVEN_ZHOU_THRESHOLD_DEFAULT = 5  # 至少N人同時持有才算進Steven周的交集
 
 ARK_HOLDINGS_URLS = {
     "ARKK": "https://assets.ark-funds.com/fund-documents/funds-etf-csv/ARK_INNOVATION_ETF_ARKK_HOLDINGS.csv",

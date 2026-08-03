@@ -154,6 +154,16 @@ def get_snapshot(conn: sqlite3.Connection, holder_id: str, period: str) -> list:
     return [dict(r) for r in rows]
 
 
+def get_ticker_history(conn: sqlite3.Connection, holder_id: str, ticker: str) -> list:
+    """單一標的在該 holder 名下的歷史持倉，依期別由舊到新排序（供走勢圖使用）。"""
+    rows = conn.execute(
+        "SELECT period, shares, value_usd, weight_pct, filed_date FROM holdings_snapshot "
+        "WHERE holder_id = ? AND ticker = ? ORDER BY period ASC",
+        (holder_id, ticker),
+    ).fetchall()
+    return [dict(r) for r in rows]
+
+
 def latest_snapshot_all_holders(conn: sqlite3.Connection, holder_ids: list) -> dict:
     """回傳 {holder_id: [snapshot rows...]}，各自取自己最新一期。"""
     result = {}

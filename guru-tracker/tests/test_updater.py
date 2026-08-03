@@ -51,6 +51,22 @@ def test_report_period_maps_quarter_correctly():
     assert updater._report_period("2026-12-31") == "2026-Q4"
 
 
+def test_detect_value_scale_flags_legacy_thousands_convention():
+    # 舊制(千美元)：value=13926 對應 1,545,610股，隱含股價僅$0.009 -> 應偵測為需要x1000校正
+    rows = [{"value_usd": 13926, "shares": 1545610}, {"value_usd": 99057, "shares": 1493390}]
+    assert updater.detect_value_scale(rows) == 1000.0
+
+
+def test_detect_value_scale_leaves_new_convention_unchanged():
+    # 新制(整數美元)：隱含股價正常(數十美元) -> 不校正
+    rows = [{"value_usd": 57843260493.0, "shares": 227917808.0}]
+    assert updater.detect_value_scale(rows) == 1.0
+
+
+def test_detect_value_scale_empty_rows_defaults_to_no_scale():
+    assert updater.detect_value_scale([]) == 1.0
+
+
 def test_compute_weight_pct_basic():
     assert updater.compute_weight_pct(250.0, 1000.0) == 25.0
 

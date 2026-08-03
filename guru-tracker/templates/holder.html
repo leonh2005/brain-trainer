@@ -42,9 +42,9 @@
       <thead><tr>
         <th>Ticker</th><th>族群</th>
         <th class="num">股數</th><th class="num">股數變動</th><th class="num">變動%</th>
-        <th class="num">占比</th><th>資料日期</th>
+        <th class="num">占比</th><th>資料日期</th><th>近兩年持倉走勢</th>
       </tr></thead>
-      <tbody id="holdingsBody"><tr><td colspan="7" class="empty">載入中...</td></tr></tbody>
+      <tbody id="holdingsBody"><tr><td colspan="8" class="empty">載入中...</td></tr></tbody>
     </table>
     <div class="exited-box" id="exitedBox"></div>
   </div>
@@ -62,7 +62,8 @@ async function load() {
   document.getElementById('sub').textContent =
     `資料來源：${d.source} ｜ 資料期別：${d.latest_period || '—'}` +
     (d.prev_period ? ` ｜ 對比上期：${d.prev_period}` : '') +
-    (d.updated_at ? ` ｜ 更新於 ${d.updated_at.slice(0,16).replace('T',' ')}` : '');
+    (d.updated_at ? ` ｜ 更新於 ${d.updated_at.slice(0,16).replace('T',' ')}` : '') +
+    ` ｜ 顯示前10大（共 ${d.total_holding_count ?? d.holdings.length} 檔）`;
 
   const fmtShares = n => (n === null || n === undefined) ? '—' : Math.round(n).toLocaleString();
   const fmtPct = (n, withSign) => (n === null || n === undefined) ? '—'
@@ -70,7 +71,7 @@ async function load() {
 
   const body = document.getElementById('holdingsBody');
   if (!d.holdings.length) {
-    body.innerHTML = '<tr><td colspan="7" class="empty">尚無持股資料</td></tr>';
+    body.innerHTML = '<tr><td colspan="8" class="empty">尚無持股資料</td></tr>';
   } else {
     body.innerHTML = d.holdings.map(h => {
       const newBadge = h.status === 'new' ? '<span class="badge new">新進</span>' : '';
@@ -78,6 +79,7 @@ async function load() {
         : `<span class="${h.shares_change >= 0 ? 'up' : 'down'}">${h.shares_change >= 0 ? '+' : ''}${fmtShares(h.shares_change)}</span>`;
       const pctChangeTxt = h.shares_change_pct === null ? '—'
         : `<span class="${h.shares_change_pct >= 0 ? 'up' : 'down'}">${fmtPct(h.shares_change_pct, true)}</span>`;
+      const canvasId = `spark-${h.ticker.replace(/[^A-Za-z0-9]/g, '_')}`;
       return `<tr>
         <td>${h.ticker}${newBadge}</td>
         <td>${h.sector}</td>
@@ -86,8 +88,46 @@ async function load() {
         <td class="num">${pctChangeTxt}</td>
         <td class="num">${h.weight_pct}%</td>
         <td>${h.filed_date || '—'}</td>
+        <td><canvas id="${canvasId}" width="130" height="34"></canvas></td>
       </tr>`;
     }).join('');
+
+    // 每檔標的各自抓近兩年歷史，畫占比走勢小圖（sparkline）
+    d.holdings.forEach(h => {
+      const canvasId = `spark-${h.ticker.replace(/[^A-Za-z0-9]/g, '_')}`;
+      const canvas = document.getElementById(canvasId);
+      fetch(`/api/holder/${holderId}/history/${encodeURIComponent(h.ticker)}`)
+        .then(r => r.json())
+        .then(res => {
+          const hist = res.history || [];
+          if (hist.length < 2) {
+            canvas.replaceWith(document.createTextNode(hist.length === 1 ? '僅1期資料' : '無資料'));
+            return;
+          }
+          const rising = hist[hist.length - 1].weight_pct >= hist[0].weight_pct;
+          new Chart(canvas, {
+            type: 'line',
+            data: {
+              labels: hist.map(p => p.period),
+              datasets: [{
+                data: hist.map(p => p.weight_pct),
+                borderColor: rising ? '#26c281' : '#ff4757',
+                backgroundColor: 'transparent',
+                borderWidth: 1.5, pointRadius: 0, tension: 0.25,
+              }],
+            },
+            options: {
+              responsive: false, animation: false,
+              plugins: { legend: { display: false }, tooltip: { enabled: true,
+                callbacks: { title: (items) => hist[items[0].dataIndex].period,
+                             label: (item) => `占比 ${item.formattedValue}%` } } },
+              scales: { x: { display: false }, y: { display: false } },
+              elements: { point: { hoverRadius: 3 } },
+            },
+          });
+        })
+        .catch(() => { canvas.replaceWith(document.createTextNode('—')); });
+    });
   }
 
   if (d.exited && d.exited.length) {

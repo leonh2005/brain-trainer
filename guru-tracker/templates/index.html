@@ -15,10 +15,14 @@
   h1 { font-size: 1.3rem; margin: 0 0 0.3rem; }
   .sub { color: var(--text-dim); font-size: 0.85rem; margin-bottom: 1.2rem; }
   .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(19rem, 1fr)); gap: 1rem; }
-  a.card { display: block; background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 1rem 1.1rem;
-           text-decoration: none; color: var(--text); transition: border-color 0.15s; }
-  a.card:hover { border-color: #3a4a5f; }
-  .card.virtual { border-color: #a37bff; }
+  a.card {
+    display: block; border: 1px solid var(--border); border-left: 4px solid var(--accent, var(--border));
+    border-radius: 10px; padding: 1rem 1.1rem; text-decoration: none; color: var(--text);
+    transition: border-color 0.15s, transform 0.15s;
+    background: linear-gradient(135deg, color-mix(in srgb, var(--accent, var(--border)) 16%, var(--card)), var(--card) 65%);
+  }
+  a.card:hover { border-color: #3a4a5f; border-left-color: var(--accent, #3a4a5f); transform: translateY(-1px); }
+  .card.virtual { border-left-width: 4px; }
   .name { font-size: 1.05rem; font-weight: 600; }
   .name-en { color: var(--text-dim); font-size: 0.75rem; margin-left: 0.3rem; }
   .meta { color: var(--text-dim); font-size: 0.75rem; font-family: var(--font-mono); margin: 0.3rem 0 0.6rem; }
@@ -33,16 +37,40 @@
 <div id="grid" class="grid"><div class="empty">載入中...</div></div>
 
 <script>
+// 每位人物固定一種底色，方便一眼區分卡片
+const ACCENTS = {
+  buffett:        '#4a90d9',
+  cathie_wood:    '#ff6b6b',
+  dalio:          '#f5a623',
+  ackman:         '#26c281',
+  druckenmiller:  '#ff9f43',
+  soros:          '#50e3c2',
+  aschenbrenner:  '#e35a8f',
+  icahn:          '#c9a227',
+  tepper:         '#5f9ea0',
+  klarman:        '#8fb339',
+  li_lu:          '#d16ba5',
+  gates:          '#6c8ee0',
+  steven_zhou:    '#a37bff',
+};
+
 async function load() {
   const res = await fetch('/api/holders');
   const data = await res.json();
   const all = [...data.holders, ...data.steven_zhou];
   const grid = document.getElementById('grid');
   if (!all.length) { grid.innerHTML = '<div class="empty">尚無資料，updater 可能還沒跑過</div>'; return; }
+  const fmtAssets = v => {
+    if (!v) return null;
+    if (v >= 1e9) return `$${(v/1e9).toFixed(1)}B`;
+    if (v >= 1e6) return `$${(v/1e6).toFixed(0)}M`;
+    return `$${v.toLocaleString()}`;
+  };
+
   grid.innerHTML = all.map(h => `
-    <a class="card ${h.type === 'virtual' ? 'virtual' : ''}" href="/holder/${h.id}">
+    <a class="card ${h.type === 'virtual' ? 'virtual' : ''}" href="/holder/${h.id}" style="--accent:${ACCENTS[h.id] || '#7d8798'}">
       <div class="name">${h.name_zh}<span class="name-en">${h.name}</span></div>
-      <div class="meta">${h.latest_period ? '資料期別 ' + h.latest_period : '無資料'} · 共 ${h.holding_count} 檔</div>
+      <div class="meta">${h.latest_period ? '資料期別 ' + h.latest_period : '無資料'} · 共 ${h.holding_count} 檔${fmtAssets(h.total_value_usd) ? ' · 總資產 ' + fmtAssets(h.total_value_usd) : ''}</div>
       <div class="top3">
         ${h.top3.map(t => `<span class="chip">${t.ticker} ${t.weight_pct}%</span>`).join('') || '<span class="chip">—</span>'}
       </div>
