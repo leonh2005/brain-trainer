@@ -122,6 +122,9 @@ tr.highlight td{background:rgba(217,119,87,.07); font-weight:700}
 .live-head .idx-pct{font-family:var(--mono); font-size:16px; font-weight:700; padding:3px 10px; border-radius:999px}
 .idx-pct.up{background:rgba(193,95,60,.12); color:var(--up)}
 .idx-pct.down{background:rgba(95,115,70,.14); color:var(--down)}
+.live-head .vol-sig{font-size:11.5px; font-weight:600; padding:3px 9px; border-radius:999px; background:var(--bg-soft); color:var(--muted); cursor:help}
+.live-head .vol-sig.vol-up{color:var(--up); background:rgba(193,95,60,.10)}
+.live-head .vol-sig.vol-down{color:var(--down); background:rgba(95,115,70,.12)}
 .live-head .updated{margin-left:auto; font-size:11px; color:var(--faint); font-family:var(--mono)}
 .live-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:10px}
 @media(max-width:640px){.live-grid{grid-template-columns:repeat(2,1fr)}}
@@ -231,6 +234,7 @@ tr.highlight td{background:rgba(217,119,87,.07); font-weight:700}
     <div class="live-head">
       <div>大盤 <span class="idx-price" id="live-idx-price">--</span></div>
       <div class="idx-pct" id="live-idx-pct">--</div>
+      <span class="vol-sig" id="live-idx-vol"></span>
       <div class="updated" id="live-updated">尚無資料</div>
     </div>
     <div class="regional-row" id="live-regional"></div>
@@ -394,6 +398,20 @@ async function loadLive(fresh){
     const cpTxt = (cp == null || isNaN(cp)) ? '' : ((cp > 0 ? '+' : '') + cp.toFixed(2));
     pctEl.textContent = cpTxt ? `${cpTxt} 點（${fmtPct(idx.change_pct)}）` : fmtPct(idx.change_pct);
     pctEl.className = 'idx-pct ' + pctClass(idx.change_pct);
+
+    const volEl = document.getElementById('live-idx-vol');
+    const vol = idx.volume;
+    if (idx.volume_label && vol && vol.vol_ratio != null) {
+      const dir = vol.vol_ratio >= 1.1 ? 'vol-up' : (vol.vol_ratio <= 0.9 ? 'vol-down' : '');
+      volEl.className = 'vol-sig ' + dir;
+      volEl.textContent = idx.volume_label;
+      volEl.title = `估算全日成交金額 ${vol.est_full_day_100m} 億元（依 ${vol.as_of} 已成交量按時間比例外推）\n近5日均量 ${vol.avg5_100m} 億元\n量比 ${vol.vol_ratio}x`;
+    } else {
+      volEl.className = 'vol-sig';
+      volEl.textContent = '';
+      volEl.title = '';
+    }
+
     document.getElementById('live-updated').textContent = `更新於 ${d.updated || '--'} (${d.source || '--'})`;
     if (idx.price != null && cp != null && !isNaN(cp)) _prevClose = idx.price - cp;
 
