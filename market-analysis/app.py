@@ -32,6 +32,9 @@ _regional_intraday_cache = {"data": None, "ts": 0}
 _stocks_intraday_cache = {"data": None, "ts": 0}
 INTRADAY_CACHE_TTL = 55  # 前端每 60 秒刷新一次，快取略短於刷新間隔
 
+_volume_cache = {"data": None, "ts": 0}
+VOLUME_CACHE_TTL = 60  # 大盤量能只需分鐘級更新，快取久一點減少 TWSE 呼叫次數
+
 
 def _read_secret(filename):
     path = os.path.join(SECRETS_DIR, filename)
@@ -143,6 +146,77 @@ def _regional_indices():
     return out
 
 
+def _fetch_volume_stats(force=False):
+    """大盤量能：用 TWSE 5 分鐘累計成交值(交易時間內即時更新) 依「已過交易時間比例」
+    外推估算全日成交金額，跟近5個交易日均量比較，判斷量增/量縮。
+
+    這是估算值，非官方公布的全日數字——收盤前的估算會隨時間推移持續修正。
+    """
+    now = time.time()
+    if not force and _volume_cache["data"] is not None and now - _volume_cache["ts"] < VOLUME_CACHE_TTL:
+        return _volume_cache["data"]
+
+    import urllib.request
+
+    result = {"est_full_day_100m": None, "avg5_100m": None, "vol_ratio": None,
+              "as_of": None, "error": None}
+    try:
+        req = urllib.request.Request(
+            "https://openapi.twse.com.tw/v1/exchangeReport/MI_5MINS",
+            headers={"User-Agent": "Mozilla/5.0"})
+        with urllib.request.urlopen(req, timeout=15) as r:
+            rows = json.loads(r.read())
+        latest = next((row for row in reversed(rows) if row.get("AccTradeValue")), None)
+        if latest is None:
+            result["error"] = "今日尚無成交資料（開盤前或資料未更新）"
+        else:
+            acc_value_100m = float(latest["AccTradeValue"]) / 100  # 百萬元 -> 億元
+            hhmmss = latest["Time"]
+            elapsed_min = (int(hhmmss[:2]) * 60 + int(hhmmss[2:4])) - 9 * 60  # 09:00 開盤
+            elapsed_min = max(1, min(elapsed_min, 270))  # 09:00–13:30 共 270 分鐘
+            result["est_full_day_100m"] = round(acc_value_100m / elapsed_min * 270, 1)
+            result["as_of"] = f"{hhmmss[:2]}:{hhmmss[2:4]}"
+
+        req2 = urllib.request.Request(
+            "https://www.twse.com.tw/rwd/zh/afterTrading/FMTQIK?response=json",
+            headers={"User-Agent": "Mozilla/5.0"})
+        with urllib.request.urlopen(req2, timeout=15) as r:
+            fm = json.loads(r.read())
+        daily_rows = (fm.get("data") or [])[-6:-1]  # 排除今天（若已在列），取前5個交易日
+        if daily_rows:
+            values = [float(row[2].replace(",", "")) / 1e8 for row in daily_rows]  # 元 -> 億元
+            result["avg5_100m"] = round(sum(values) / len(values), 1)
+
+        if result["est_full_day_100m"] and result["avg5_100m"]:
+            result["vol_ratio"] = round(result["est_full_day_100m"] / result["avg5_100m"], 2)
+    except Exception as e:
+        result["error"] = str(e)
+
+    _volume_cache["data"] = result
+    _volume_cache["ts"] = now
+    return result
+
+
+def _price_volume_label(change_pct, vol_ratio):
+    """經典量價四象限判斷：價漲量增/價漲量縮/價跌量增/價跌量縮。"""
+    if change_pct is None or vol_ratio is None:
+        return None
+    price_dir = "up" if change_pct > 0.05 else ("down" if change_pct < -0.05 else "flat")
+    vol_dir = "up" if vol_ratio >= 1.1 else ("down" if vol_ratio <= 0.9 else "flat")
+    labels = {
+        ("up", "up"): "價漲量增（多方認同，趨勢延續機率較高）",
+        ("up", "down"): "價漲量縮（上漲乏力，慎防假突破）",
+        ("up", "flat"): "價漲量平",
+        ("down", "up"): "價跌量增（賣壓沉重，留意主跌段）",
+        ("down", "down"): "價跌量縮（惜售，賣壓降低，留意止跌訊號）",
+        ("down", "flat"): "價跌量平",
+        ("flat", "up"): "價平量增（方向未明，觀察後續）",
+        ("flat", "down"): "價平量縮",
+        ("flat", "flat"): "價量平淡",
+    }
+    return labels.get((price_dir, vol_dir), "量價關係不明")
+
+
 def _fetch_live(force=False):
     now = time.time()
     if not force and _live_cache["data"] is not None and now - _live_cache["ts"] < CACHE_TTL:
@@ -163,6 +237,16 @@ def _fetch_live(force=False):
         result["regional"] = _regional_indices()
     except Exception:
         result["regional"] = []
+
+    try:
+        vol_stats = _fetch_volume_stats()
+        result["index"]["volume"] = vol_stats
+        result["index"]["volume_label"] = _price_volume_label(
+            result["index"].get("change_pct"), vol_stats.get("vol_ratio"))
+    except Exception:
+        result["index"]["volume"] = None
+        result["index"]["volume_label"] = None
+
     result["ok"] = True
     result["updated"] = time.strftime("%H:%M:%S")
     _live_cache["data"] = result
