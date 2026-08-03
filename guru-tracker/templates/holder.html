@@ -23,7 +23,7 @@
   th, td { text-align: left; padding: 0.45rem 0.5rem; border-bottom: 1px solid var(--border); }
   th { color: var(--text-dim); font-weight: 500; font-size: 0.75rem; }
   td.num, th.num { text-align: right; font-family: var(--font-mono); }
-  .up { color: var(--green); } .down { color: var(--red); }
+  .up { color: var(--red); } .down { color: var(--green); }
   .badge { font-size: 0.65rem; border-radius: 4px; padding: 1px 5px; margin-left: 4px; }
   .badge.new { background: var(--green); color: #06210f; }
   .badge.exit { background: var(--red); color: #fff; }
@@ -111,7 +111,7 @@ async function load() {
               labels: hist.map(p => p.period),
               datasets: [{
                 data: hist.map(p => p.weight_pct),
-                borderColor: rising ? '#26c281' : '#ff4757',
+                borderColor: rising ? '#ff4757' : '#26c281',
                 backgroundColor: 'transparent',
                 borderWidth: 1.5, pointRadius: 0, tension: 0.25,
               }],
