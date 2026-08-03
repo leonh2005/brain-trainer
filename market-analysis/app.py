@@ -159,7 +159,7 @@ def _fetch_volume_stats(force=False):
     import urllib.request
 
     result = {"est_full_day_100m": None, "avg5_100m": None, "vol_ratio": None,
-              "as_of": None, "error": None}
+              "vol_diff_100m": None, "vol_diff_pct": None, "as_of": None, "error": None}
     try:
         req = urllib.request.Request(
             "https://openapi.twse.com.tw/v1/exchangeReport/MI_5MINS",
@@ -189,6 +189,9 @@ def _fetch_volume_stats(force=False):
 
         if result["est_full_day_100m"] and result["avg5_100m"]:
             result["vol_ratio"] = round(result["est_full_day_100m"] / result["avg5_100m"], 2)
+            result["vol_diff_100m"] = round(result["est_full_day_100m"] - result["avg5_100m"], 1)
+            result["vol_diff_pct"] = round(
+                (result["est_full_day_100m"] - result["avg5_100m"]) / result["avg5_100m"] * 100, 1)
     except Exception as e:
         result["error"] = str(e)
 
