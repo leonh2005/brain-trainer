@@ -204,9 +204,16 @@ def _war_news():
     for it in re.findall(r"<item>(.*?)</item>", xml, re.S)[:6]:
         t = re.search(r"<title>(.*?)</title>", it, re.S)
         l = re.search(r"<link>(.*?)</link>", it, re.S)
+        p = re.search(r"<pubDate>(.*?)</pubDate>", it, re.S)
         if t:
             title = re.sub(r"<!\[CDATA\[|\]\]>", "", t.group(1)).strip()
-            news.append({"title": title, "link": l.group(1).strip() if l else ""})
+            date = ""
+            if p:
+                try:
+                    date = time.strftime("%m/%d", time.strptime(p.group(1).strip(), "%a, %d %b %Y %H:%M:%S %Z"))
+                except ValueError:
+                    date = ""
+            news.append({"title": title, "link": l.group(1).strip() if l else "", "date": date})
     return news
 
 

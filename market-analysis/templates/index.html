@@ -666,7 +666,7 @@ async function loadEcon(){
 
     const war = d.war || [];
     document.getElementById('econ-war').innerHTML = war.length
-      ? '<div class="econ-list">' + war.map(n => `<a href="${n.link}" target="_blank" rel="noopener">· ${n.title}</a>`).join('') + '</div>'
+      ? '<div class="econ-list">' + war.map(n => `<a href="${n.link}" target="_blank" rel="noopener">· ${n.title}${n.date ? ` (${n.date})` : ''}</a>`).join('') + '</div>'
       : '<div class="empty">無相關新聞</div>';
   }catch(e){
     document.getElementById('econ-market').innerHTML = '<div class="empty">載入失敗</div>';
