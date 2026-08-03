@@ -328,7 +328,7 @@ function mount(container,defs){
 /* ── renderers ── */
 function renderSwing(d){
   const rs=(d&&d.results)||[];
-  if(!rs.length)return el('div','empty','今日無符合條件標的（漲3-7%＋收高70%＋MA5>MA10＋量比>1）');
+  if(!rs.length)return el('div','empty','今日無符合條件標的（7條件評分制，≥5分才列入）');
   const box=el('div');
   rs.slice(0,8).forEach(r=>{
     const row=el('div','row');

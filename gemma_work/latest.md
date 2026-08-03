@@ -1,22 +1,26 @@
-# Claude Handoff 20260803_0350
-> 自動生成於 2026-08-03 03:50
+# Claude Handoff 20260803_1326
+> 自動生成於 2026-08-03 13:26
 
 ## 未提交的檔案異動
 ```
 ? TradingAgents
+ M chip-tracker/chip.db
+ M command-center/templates/index.html
  m daily-stock-analysis
  M gemma_work/latest.md
- M news-analyzer/pipeline_state.json
+ M news-analyzer/trump_seen.json
+ M rabbit-care/rabbit.db
+ M scripts/auto_investigate_state.json
  m stock-screener-ai
 ```
 
 ## 近期 Commits
 ```
-60c70ddd chore: 自動同步 2026-08-03 03:40
-a12ec196 feat: 新增投資大老持股追蹤網站 guru-tracker (port 5910)
-9b73252c chore: 每晚同步 2026-08-02 23:50
-464534a6 chore: 自動同步 2026-08-02 22:40
-3016f0c3 chore: 自動同步 2026-08-02 17:40
+eb09d507 feat: 大盤量能顯示增減金額與百分比，不只藏在tooltip
+676e345c feat: 市場分析大盤指數加上價量關係估算
+563e12d5 chore: 刪除 finmind/swing_alert.py（未排程的孤兒腳本，誤植新策略後確認無用）
+5baf380d feat: guru-tracker 持股標的名稱連結到Yahoo Finance頁面
+6ba07b39 fix: 市場週期曲線hover補上數值，原本只顯示名稱
 ```
 
 ## 給 Hermes 的備註
