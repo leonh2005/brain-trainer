@@ -143,14 +143,14 @@ function renderMonthly(){
   d.market_cycles.forEach(cy=>{
     const p=cycleParam(cy);
     traces.push({x:tl,y:sineSeries(tl,p.period,p.trough),name:cy.name,type:'scatter',mode:'lines',
-      line:{color:COLORS[cy.key],width:1.5},yaxis:'y2',hoverinfo:'name'});
+      line:{color:COLORS[cy.key],width:1.5},yaxis:'y2',hovertemplate:'%{fullData.name}<br>位置 %{y:.2f}<extra></extra>'});
   });
   // 經濟背景層(次 y 軸，可開關)
   if(SHOW_ECON){
     d.econ_cycles.forEach(cy=>{
       const p=cycleParam(cy);
       traces.push({x:tl,y:sineSeries(tl,p.period,p.trough),name:cy.name,type:'scatter',mode:'lines',
-        line:{color:COLORS[cy.key],width:1,dash:'dot'},yaxis:'y2',hoverinfo:'name'});
+        line:{color:COLORS[cy.key],width:1,dash:'dot'},yaxis:'y2',hovertemplate:'%{fullData.name}<br>位置 %{y:.2f}<extra></extra>'});
     });
   }
 
