@@ -37,7 +37,8 @@ def _holder_detail(conn, holder: dict) -> dict:
     periods = db.latest_periods(conn, holder["id"], limit=2)
     latest = db.get_snapshot(conn, holder["id"], periods[0]) if periods else []
     prev = db.get_snapshot(conn, holder["id"], periods[1]) if len(periods) >= 2 else []
-    prev_map = {r["ticker"]: r["weight_pct"] for r in prev}
+    prev_map = {r["ticker"]: r for r in prev}
+    prev_filed_date = prev[0]["filed_date"] if prev else None
 
     sector_totals: dict = {}
     holdings = []
@@ -47,24 +48,44 @@ def _holder_detail(conn, holder: dict) -> dict:
         weight = r["weight_pct"] or 0
         sector_totals[sector] = sector_totals.get(sector, 0) + weight
 
-        prev_weight = prev_map.get(r["ticker"])
-        if prev_weight is None:
-            change = None
+        prev_row = prev_map.get(r["ticker"])
+        shares = r["shares"]
+        shares_change = None
+        shares_change_pct = None
+        if prev_row is None:
+            weight_change = None
             status = "new"  # 上一期沒有，本期新進
         else:
-            change = round(weight - prev_weight, 2)
+            weight_change = round(weight - (prev_row["weight_pct"] or 0), 2)
             status = "changed"
+            prev_shares = prev_row["shares"]
+            if shares is not None and prev_shares:
+                shares_change = shares - prev_shares
+                shares_change_pct = round(shares_change / prev_shares * 100, 2)
         holdings.append({
             "ticker": r["ticker"],
             "weight_pct": round(weight, 2),
             "value_usd": r["value_usd"],
-            "shares": r["shares"],
+            "shares": shares,
+            "shares_change": shares_change,
+            "shares_change_pct": shares_change_pct,
             "sector": sector,
-            "change_pct": change,
+            "change_pct": weight_change,
             "status": status,
+            "filed_date": r["filed_date"],
         })
 
-    exited = [t for t in prev_map if t not in {h["ticker"] for h in holdings}]
+    exited = []
+    latest_tickers = {h["ticker"] for h in holdings}
+    for ticker, prev_row in prev_map.items():
+        if ticker in latest_tickers:
+            continue
+        exited.append({
+            "ticker": ticker,
+            "shares": prev_row["shares"],
+            "weight_pct": round(prev_row["weight_pct"] or 0, 2),
+            "filed_date": prev_row["filed_date"],
+        })
 
     return {
         "id": holder["id"],
@@ -76,6 +97,7 @@ def _holder_detail(conn, holder: dict) -> dict:
         "updated_at": holder["updated_at"],
         "latest_period": periods[0] if periods else None,
         "prev_period": periods[1] if len(periods) >= 2 else None,
+        "prev_filed_date": prev_filed_date,
         "holdings": holdings,
         "exited": exited,
         "sector_breakdown": [{"sector": s, "weight_pct": round(w, 2)} for s, w in

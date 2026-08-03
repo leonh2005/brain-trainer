@@ -39,8 +39,12 @@
   <div class="card"><canvas id="sectorChart"></canvas></div>
   <div class="card">
     <table>
-      <thead><tr><th>Ticker</th><th>族群</th><th class="num">占比</th><th class="num">變動</th></tr></thead>
-      <tbody id="holdingsBody"><tr><td colspan="4" class="empty">載入中...</td></tr></tbody>
+      <thead><tr>
+        <th>Ticker</th><th>族群</th>
+        <th class="num">股數</th><th class="num">股數變動</th><th class="num">變動%</th>
+        <th class="num">占比</th><th>資料日期</th>
+      </tr></thead>
+      <tbody id="holdingsBody"><tr><td colspan="7" class="empty">載入中...</td></tr></tbody>
     </table>
     <div class="exited-box" id="exitedBox"></div>
   </div>
@@ -60,24 +64,38 @@ async function load() {
     (d.prev_period ? ` ｜ 對比上期：${d.prev_period}` : '') +
     (d.updated_at ? ` ｜ 更新於 ${d.updated_at.slice(0,16).replace('T',' ')}` : '');
 
+  const fmtShares = n => (n === null || n === undefined) ? '—' : Math.round(n).toLocaleString();
+  const fmtPct = (n, withSign) => (n === null || n === undefined) ? '—'
+    : `${withSign && n >= 0 ? '+' : ''}${n}%`;
+
   const body = document.getElementById('holdingsBody');
   if (!d.holdings.length) {
-    body.innerHTML = '<tr><td colspan="4" class="empty">尚無持股資料</td></tr>';
+    body.innerHTML = '<tr><td colspan="7" class="empty">尚無持股資料</td></tr>';
   } else {
     body.innerHTML = d.holdings.map(h => {
-      const changeTxt = h.status === 'new' ? '<span class="badge new">新進</span>'
-        : (h.change_pct === null ? '—' : `<span class="${h.change_pct >= 0 ? 'up' : 'down'}">${h.change_pct >= 0 ? '+' : ''}${h.change_pct}%</span>`);
+      const newBadge = h.status === 'new' ? '<span class="badge new">新進</span>' : '';
+      const sharesChangeTxt = h.shares_change === null ? '—'
+        : `<span class="${h.shares_change >= 0 ? 'up' : 'down'}">${h.shares_change >= 0 ? '+' : ''}${fmtShares(h.shares_change)}</span>`;
+      const pctChangeTxt = h.shares_change_pct === null ? '—'
+        : `<span class="${h.shares_change_pct >= 0 ? 'up' : 'down'}">${fmtPct(h.shares_change_pct, true)}</span>`;
       return `<tr>
-        <td>${h.ticker}</td>
+        <td>${h.ticker}${newBadge}</td>
         <td>${h.sector}</td>
+        <td class="num">${fmtShares(h.shares)}</td>
+        <td class="num">${sharesChangeTxt}</td>
+        <td class="num">${pctChangeTxt}</td>
         <td class="num">${h.weight_pct}%</td>
-        <td class="num">${changeTxt}</td>
+        <td>${h.filed_date || '—'}</td>
       </tr>`;
     }).join('');
   }
 
   if (d.exited && d.exited.length) {
-    document.getElementById('exitedBox').textContent = `本期已出清：${d.exited.join('、')}`;
+    const rows = d.exited.map(e =>
+      `${e.ticker}（原持股 ${fmtShares(e.shares)} 股，占比 ${e.weight_pct}%，資料日期 ${e.filed_date || '—'}）`
+    ).join('、');
+    document.getElementById('exitedBox').textContent =
+      `本期已出清（相較上期 ${d.prev_period || '—'}）：${rows}`;
   }
 
   if (d.sector_breakdown.length) {
