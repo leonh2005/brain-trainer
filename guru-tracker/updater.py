@@ -115,7 +115,29 @@ def fetch_13f_holdings(cik: str, accession: str) -> list:
                                               "value_usd": 0.0, "shares": 0.0})
         m["value_usd"] += row["value_usd"]
         m["shares"] += row["shares"]
-    return list(merged.values())
+    result = list(merged.values())
+
+    scale = detect_value_scale(result)
+    if scale != 1.0:
+        log.warning(f"CIK {cik} 該筆申報疑似仍用舊制(金額以千美元計)，value_usd 全數 ×{scale:.0f} 校正")
+        for m in result:
+            m["value_usd"] *= scale
+    return result
+
+
+def detect_value_scale(rows: list) -> float:
+    """部分 13F 申報仍用舊制(金額以千美元為單位)而非 2023 年新制的整數美元。
+
+    用「隱含股價中位數」偵測：中位數低於 $1 代表金額其實是千位單位，需乘以1000校正。
+    （機構級持股極少會出現中位數股價真的低於$1的情況，這個閾值足以區分兩種制式。）
+    """
+    implied_prices = sorted(
+        r["value_usd"] / r["shares"] for r in rows if r["shares"] > 0 and r["value_usd"] > 0
+    )
+    if not implied_prices:
+        return 1.0
+    median = implied_prices[len(implied_prices) // 2]
+    return 1000.0 if median < 1.0 else 1.0
 
 
 def resolve_cusips(conn, cusips: list) -> dict:

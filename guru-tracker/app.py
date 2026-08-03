@@ -20,6 +20,7 @@ def _holder_summary(conn, holder: dict) -> dict:
     latest_period = periods[0] if periods else None
     snapshot = db.get_snapshot(conn, holder["id"], latest_period) if latest_period else []
     top3 = snapshot[:3]
+    total_value_usd = sum(r["value_usd"] for r in snapshot if r["value_usd"]) or None
     return {
         "id": holder["id"],
         "name": holder["name"],
@@ -29,6 +30,7 @@ def _holder_summary(conn, holder: dict) -> dict:
         "updated_at": holder["updated_at"],
         "latest_period": latest_period,
         "holding_count": len(snapshot),
+        "total_value_usd": total_value_usd,
         "top3": [{"ticker": r["ticker"], "weight_pct": round(r["weight_pct"] or 0, 2)} for r in top3],
     }
 
@@ -87,6 +89,8 @@ def _holder_detail(conn, holder: dict) -> dict:
             "filed_date": prev_row["filed_date"],
         })
 
+    total_holding_count = len(holdings)  # db.get_snapshot 已依 weight_pct DESC 排序，直接截前10大即可
+
     return {
         "id": holder["id"],
         "name": holder["name"],
@@ -98,7 +102,8 @@ def _holder_detail(conn, holder: dict) -> dict:
         "latest_period": periods[0] if periods else None,
         "prev_period": periods[1] if len(periods) >= 2 else None,
         "prev_filed_date": prev_filed_date,
-        "holdings": holdings,
+        "holdings": holdings[:10],
+        "total_holding_count": total_holding_count,
         "exited": exited,
         "sector_breakdown": [{"sector": s, "weight_pct": round(w, 2)} for s, w in
                              sorted(sector_totals.items(), key=lambda x: -x[1])],
@@ -121,8 +126,10 @@ def api_holders():
     try:
         holders = [h for h in db.list_holders(conn) if h["type"] != "virtual"]
         virtual = [h for h in db.list_holders(conn) if h["type"] == "virtual"]
+        holder_summaries = [_holder_summary(conn, h) for h in holders]
+        holder_summaries.sort(key=lambda s: s["total_value_usd"] or 0, reverse=True)  # 總資產由大到小
         return jsonify({
-            "holders": [_holder_summary(conn, h) for h in holders],
+            "holders": holder_summaries,
             "steven_zhou": [_holder_summary(conn, h) for h in virtual],
         })
     finally:
@@ -137,6 +144,28 @@ def api_holder_detail(holder_id):
         if not holder:
             return jsonify({"ok": False, "error": "查無此人物"}), 404
         return jsonify(_holder_detail(conn, holder))
+    finally:
+        conn.close()
+
+
+@app.get("/api/holder/<holder_id>/history/<ticker>")
+def api_ticker_history(holder_id, ticker):
+    conn = db.get_conn()
+    try:
+        holder = db.get_holder(conn, holder_id)
+        if not holder:
+            return jsonify({"ok": False, "error": "查無此人物"}), 404
+        rows = db.get_ticker_history(conn, holder_id, ticker)
+        return jsonify({
+            "ok": True,
+            "ticker": ticker,
+            "history": [{
+                "period": r["period"],
+                "weight_pct": round(r["weight_pct"] or 0, 2),
+                "shares": r["shares"],
+                "filed_date": r["filed_date"],
+            } for r in rows],
+        })
     finally:
         conn.close()
 
