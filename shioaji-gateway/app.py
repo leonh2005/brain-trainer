@@ -111,6 +111,7 @@ def snapshot():
                     "close": float(sn.close),
                     "change_price": float(sn.change_price),
                     "change_rate": float(sn.change_rate) if sn.change_rate is not None else None,
+                    "total_amount": float(sn.total_amount) if sn.total_amount is not None else None,
                 }
             return out
         return jsonify({"ok": True, "data": _run(work)})

@@ -234,17 +234,18 @@ tr.highlight td{background:rgba(217,119,87,.07); font-weight:700}
     <div class="live-head">
       <div>大盤 <span class="idx-price" id="live-idx-price">--</span></div>
       <div class="idx-pct" id="live-idx-pct">--</div>
+      <span class="reg-item" id="live-oil" style="margin-left:10px"></span>
       <span class="vol-sig" id="live-idx-vol"></span>
       <div class="updated" id="live-updated">尚無資料</div>
     </div>
     <div class="regional-row" id="live-regional"></div>
     <div class="live-grid" id="live-stocks"><div class="empty">暫無即時資料</div></div>
     <div class="intraday-wrap">
-      <div class="note" style="margin:14px 0 6px">大盤日波圖 <span style="color:var(--faint)">(每 1 分鐘更新 · 三圖同尺度)</span></div>
+      <div class="note" style="margin:14px 0 6px"><span style="color:var(--fg)">大盤日波圖</span><span id="chart-pt-index" class="mono"></span> <span style="color:var(--faint)">(每 1 分鐘更新 · 三圖同尺度)</span></div>
       <div id="intraday-chart"><div class="empty">載入中...</div></div>
-      <div class="note" style="margin:14px 0 6px">日經225日波圖</div>
+      <div class="note" style="margin:14px 0 6px"><span style="color:var(--fg)">日經225日波圖</span><span id="chart-pt-n225" class="mono"></span></div>
       <div id="intraday-chart-n225"><div class="empty">載入中...</div></div>
-      <div class="note" style="margin:14px 0 6px">韓股KOSPI日波圖</div>
+      <div class="note" style="margin:14px 0 6px"><span style="color:var(--fg)">韓股KOSPI日波圖</span><span id="chart-pt-kospi" class="mono"></span></div>
       <div id="intraday-chart-kospi"><div class="empty">載入中...</div></div>
     </div>
   </div>
@@ -278,6 +279,12 @@ function fmtPct(v){
 function pctClass(v){
   if (v === null || v === undefined || isNaN(v)) return '';
   return v >= 0 ? 'up' : 'down';
+}
+// 「現價 +漲跌點（+漲跌%）」文字，供日波圖標題等處共用
+function fmtPriceChg(price, cp, pct){
+  if (price == null) return '';
+  const cpTxt = (cp == null || isNaN(cp)) ? '' : ((cp > 0 ? '+' : '') + cp.toFixed(2));
+  return cpTxt ? ` ${price} ${cpTxt}（${fmtPct(pct)}）` : ` ${price}`;
 }
 
 // 依類型名稱關鍵字回傳一個小型日內走勢示意圖（SVG polyline）
@@ -393,6 +400,9 @@ async function loadLive(fresh){
     }
     const idx = d.index || {};
     document.getElementById('live-idx-price').textContent = idx.price != null ? idx.price : '--';
+    const chartPtIndex = document.getElementById('chart-pt-index');
+    chartPtIndex.textContent = fmtPriceChg(idx.price, idx.change_point, idx.change_pct);
+    chartPtIndex.className = 'mono ' + pctClass(idx.change_pct);
     const pctEl = document.getElementById('live-idx-pct');
     const cp = idx.change_point;
     const cpTxt = (cp == null || isNaN(cp)) ? '' : ((cp > 0 ? '+' : '') + cp.toFixed(2));
@@ -424,6 +434,17 @@ async function loadLive(fresh){
       }
     });
 
+    // WTI 原油（yfinance）
+    const oil = d.oil;
+    const oilEl = document.getElementById('live-oil');
+    if (oil && oil.price != null) {
+      const op = (oil.change_point != null && !isNaN(oil.change_point)) ? ((oil.change_point > 0 ? '+' : '') + oil.change_point.toFixed(2)) : '--';
+      oilEl.innerHTML = `<span class="reg-name">${oil.name}</span><span class="reg-price">$${oil.price}</span>`
+        + `<span class="reg-chg ${pctClass(oil.change_pct)}">${op}（${fmtPct(oil.change_pct)}）</span>`;
+    } else {
+      oilEl.innerHTML = '';
+    }
+
     // 日股/韓股大盤（yfinance）
     const reg = d.regional || [];
     document.getElementById('live-regional').innerHTML = reg.map(r => {
@@ -431,6 +452,14 @@ async function loadLive(fresh){
       return `<span class="reg-item"><span class="reg-name">${r.name}</span><span class="reg-price">${r.price != null ? r.price : '--'}</span>`
            + `<span class="reg-chg ${pctClass(r.change_pct)}">${rp}（${fmtPct(r.change_pct)}）</span></span>`;
     }).join('');
+    const n225 = reg.find(r => r.code === 'N225');
+    const kospi = reg.find(r => r.code === 'KOSPI');
+    const chartPtN225 = document.getElementById('chart-pt-n225');
+    chartPtN225.textContent = n225 ? fmtPriceChg(n225.price, n225.change_point, n225.change_pct) : '';
+    chartPtN225.className = 'mono ' + pctClass(n225 && n225.change_pct);
+    const chartPtKospi = document.getElementById('chart-pt-kospi');
+    chartPtKospi.textContent = kospi ? fmtPriceChg(kospi.price, kospi.change_point, kospi.change_pct) : '';
+    chartPtKospi.className = 'mono ' + pctClass(kospi && kospi.change_pct);
 
     const stocks = d.stocks || [];
     // 依大盤權重(市值/影響指數點數)由高到低排序

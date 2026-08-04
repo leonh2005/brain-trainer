@@ -33,7 +33,7 @@ _stocks_intraday_cache = {"data": None, "ts": 0}
 INTRADAY_CACHE_TTL = 55  # 前端每 60 秒刷新一次，快取略短於刷新間隔
 
 _volume_cache = {"data": None, "ts": 0}
-VOLUME_CACHE_TTL = 60  # 大盤量能只需分鐘級更新，快取久一點減少 TWSE 呼叫次數
+VOLUME_CACHE_TTL = 300  # 盤中每 5 分鐘更新一次估算值
 
 
 def _read_secret(filename):
@@ -79,6 +79,7 @@ def _fetch_via_shioaji():
             "price": index_close,
             "change_pct": round(index_pct, 2),
             "change_point": round(idx["change_price"], 2),
+            "_total_amount": idx.get("total_amount"),
         },
         "stocks": stocks_out,
         "source": "shioaji",
@@ -146,46 +147,82 @@ def _regional_indices():
     return out
 
 
-def _fetch_volume_stats(force=False):
-    """大盤量能：用 TWSE 5 分鐘累計成交值(交易時間內即時更新) 依「已過交易時間比例」
-    外推估算全日成交金額，跟近5個交易日均量比較，判斷量增/量縮。
+def _oil_price():
+    """WTI 原油現價，走 yfinance。"""
+    import yfinance as yf
+    try:
+        closes = yf.Ticker("CL=F").history(period="5d")["Close"].dropna()
+        if len(closes) < 2:
+            return None
+        close, prev = float(closes.iloc[-1]), float(closes.iloc[-2])
+        return {
+            "name": "WTI原油", "price": round(close, 2),
+            "change_pct": round((close - prev) / prev * 100, 2),
+            "change_point": round(close - prev, 2),
+        }
+    except Exception:
+        return None
 
+
+def _fetch_fmtqik(date_str=None):
+    """抓 TWSE 單月成交金額列表（date_str 格式 YYYYMMDD，代表該月）。"""
+    import urllib.request
+
+    url = "https://www.twse.com.tw/rwd/zh/afterTrading/FMTQIK?response=json"
+    if date_str:
+        url += f"&date={date_str}"
+    req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+    with urllib.request.urlopen(req, timeout=15) as r:
+        fm = json.loads(r.read())
+    return fm.get("data") or []
+
+
+def _recent_closed_days_avg(n=5):
+    """取最近 n 個「已收盤」交易日的成交金額均值（億元），自動跨月補齊，排除今天。"""
+    import datetime
+
+    today = datetime.date.today()
+    today_roc = f"{today.year - 1911}/{today.month:02d}/{today.day:02d}"
+
+    rows = _fetch_fmtqik()
+    if rows and rows[-1][0] == today_roc:
+        rows = rows[:-1]  # 今天尚未收盤，排除
+    if len(rows) < n:
+        prev_month_last_day = today.replace(day=1) - datetime.timedelta(days=1)
+        rows = _fetch_fmtqik(prev_month_last_day.strftime("%Y%m01")) + rows
+
+    tail = rows[-n:]
+    if not tail:
+        return None
+    values = [float(row[2].replace(",", "")) / 1e8 for row in tail]  # 元 -> 億元
+    return round(sum(values) / len(values), 1)
+
+
+def _fetch_volume_stats(today_amount=None, force=False):
+    """大盤量能：用當下即時累計成交金額（Shioaji total_amount，交易時間內持續更新）
+    依「已過交易時間比例」外推估算全日成交金額，跟近5個交易日均量比較，判斷量增/量縮。
+
+    today_amount: 今日截至目前累計成交金額（元），由呼叫端從即時報價（Shioaji）帶入。
     這是估算值，非官方公布的全日數字——收盤前的估算會隨時間推移持續修正。
     """
     now = time.time()
     if not force and _volume_cache["data"] is not None and now - _volume_cache["ts"] < VOLUME_CACHE_TTL:
         return _volume_cache["data"]
 
-    import urllib.request
-
     result = {"est_full_day_100m": None, "avg5_100m": None, "vol_ratio": None,
               "vol_diff_100m": None, "vol_diff_pct": None, "as_of": None, "error": None}
     try:
-        req = urllib.request.Request(
-            "https://openapi.twse.com.tw/v1/exchangeReport/MI_5MINS",
-            headers={"User-Agent": "Mozilla/5.0"})
-        with urllib.request.urlopen(req, timeout=15) as r:
-            rows = json.loads(r.read())
-        latest = next((row for row in reversed(rows) if row.get("AccTradeValue")), None)
-        if latest is None:
-            result["error"] = "今日尚無成交資料（開盤前或資料未更新）"
-        else:
-            acc_value_100m = float(latest["AccTradeValue"]) / 100  # 百萬元 -> 億元
-            hhmmss = latest["Time"]
-            elapsed_min = (int(hhmmss[:2]) * 60 + int(hhmmss[2:4])) - 9 * 60  # 09:00 開盤
+        if today_amount:
+            acc_value_100m = float(today_amount) / 1e8  # 元 -> 億元
+            now_local = time.localtime()
+            elapsed_min = (now_local.tm_hour * 60 + now_local.tm_min) - 9 * 60  # 09:00 開盤
             elapsed_min = max(1, min(elapsed_min, 270))  # 09:00–13:30 共 270 分鐘
             result["est_full_day_100m"] = round(acc_value_100m / elapsed_min * 270, 1)
-            result["as_of"] = f"{hhmmss[:2]}:{hhmmss[2:4]}"
+            result["as_of"] = time.strftime("%H:%M")
+        else:
+            result["error"] = "今日尚無成交資料（開盤前或即時來源不可用）"
 
-        req2 = urllib.request.Request(
-            "https://www.twse.com.tw/rwd/zh/afterTrading/FMTQIK?response=json",
-            headers={"User-Agent": "Mozilla/5.0"})
-        with urllib.request.urlopen(req2, timeout=15) as r:
-            fm = json.loads(r.read())
-        daily_rows = (fm.get("data") or [])[-6:-1]  # 排除今天（若已在列），取前5個交易日
-        if daily_rows:
-            values = [float(row[2].replace(",", "")) / 1e8 for row in daily_rows]  # 元 -> 億元
-            result["avg5_100m"] = round(sum(values) / len(values), 1)
+        result["avg5_100m"] = _recent_closed_days_avg(5)
 
         if result["est_full_day_100m"] and result["avg5_100m"]:
             result["vol_ratio"] = round(result["est_full_day_100m"] / result["avg5_100m"], 2)
@@ -242,7 +279,13 @@ def _fetch_live(force=False):
         result["regional"] = []
 
     try:
-        vol_stats = _fetch_volume_stats()
+        result["oil"] = _oil_price()
+    except Exception:
+        result["oil"] = None
+
+    try:
+        today_amount = result["index"].pop("_total_amount", None)
+        vol_stats = _fetch_volume_stats(today_amount=today_amount)
         result["index"]["volume"] = vol_stats
         result["index"]["volume_label"] = _price_volume_label(
             result["index"].get("change_pct"), vol_stats.get("vol_ratio"))

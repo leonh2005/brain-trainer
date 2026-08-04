@@ -279,29 +279,52 @@ def update_sectors(conn) -> None:
         conn.commit()
 
 
+STEVEN_ZHOU_EXCLUDED = {"GOOGL"}  # GOOGL 較多是Alphabet自己買回庫藏股撐出的部位，非大老主動選股意願，排除後遞補下一名
+
+
 def compute_steven_zhou(conn) -> None:
+    """交集權重 = 持有人數 × 平均持股比重（人多且大老都重倉的檔權重最高），再正規化到100%。
+    STEVEN_ZHOU_EXCLUDED 裡的標的手動排除，並依同一套評分從候補名單遞補，維持原本應有的檔數。"""
     real_holder_ids = [h["id"] for h in config.HOLDERS]
     threshold = int(db.get_config(conn, "steven_zhou_threshold", str(config.STEVEN_ZHOU_THRESHOLD_DEFAULT)))
 
     snapshot_by_holder = db.latest_snapshot_all_holders(conn, real_holder_ids)
-    ticker_holders: dict = {}
+    ticker_weights: dict = {}  # ticker -> [weight_pct, ...]（各持有人自己組合中的比重）
     for hid, rows in snapshot_by_holder.items():
         for row in rows:
-            ticker_holders.setdefault(row["ticker"], set()).add(hid)
+            ticker_weights.setdefault(row["ticker"], []).append(row["weight_pct"] or 0)
 
-    qualified = {t: holders for t, holders in ticker_holders.items() if len(holders) >= threshold}
+    target_count = sum(1 for ws in ticker_weights.values() if len(ws) >= threshold)  # 排除前應有的檔數，維持不變
+
+    def _score(ws):
+        return len(ws) * (sum(ws) / len(ws))
+
+    base = {t: ws for t, ws in ticker_weights.items() if t not in STEVEN_ZHOU_EXCLUDED and len(ws) >= threshold}
+    candidates = sorted(
+        ((t, ws) for t, ws in ticker_weights.items() if t not in STEVEN_ZHOU_EXCLUDED and t not in base),
+        key=lambda kv: -_score(kv[1]),
+    )
+    qualified = dict(base)
+    for t, ws in candidates:
+        if len(qualified) >= target_count:
+            break
+        qualified[t] = ws
     if not qualified:
         log.warning(f"Steven周：門檻 >={threshold} 人同時持有下無任何交集股票，維持空持股")
+
+    scores = {t: len(ws) * (sum(ws) / len(ws)) for t, ws in qualified.items()}
+    total_score = sum(scores.values())
 
     period = date.today().isoformat()
     db.clear_snapshot_period(conn, config.STEVEN_ZHOU_ID, period)
     if qualified:
-        weight = 100.0 / len(qualified)
-        for ticker in qualified:
+        for ticker, score in scores.items():
+            weight = score / total_score * 100.0
             db.upsert_snapshot(conn, config.STEVEN_ZHOU_ID, ticker, period, None, None, weight, period)
     db.touch_holder(conn, config.STEVEN_ZHOU_ID, datetime.now().isoformat())
     conn.commit()
-    log.info(f"Steven周：門檻>={threshold}人，交集 {len(qualified)} 檔，均分權重 {100.0/len(qualified) if qualified else 0:.2f}%")
+    log.info(f"Steven周：門檻>={threshold}人，交集 {len(qualified)} 檔，"
+             f"綜合權重（人數×平均持股比重，正規化至100%）")
 
 
 def main():
@@ -319,7 +342,7 @@ def main():
             db.upsert_holder(conn, holder["id"], holder["name"], holder["name_zh"],
                               holder["type"], holder["cik"], holder["source"])
         db.upsert_holder(conn, config.STEVEN_ZHOU_ID, "Steven Zhou", config.STEVEN_ZHOU_NAME_ZH,
-                          "virtual", None, "12位大老持股交集（均分權重）")
+                          "virtual", None, "12位大老持股交集（權重=持有人數×平均持股比重，正規化）")
         if db.get_config(conn, "steven_zhou_threshold") is None:
             db.set_config(conn, "steven_zhou_threshold", str(config.STEVEN_ZHOU_THRESHOLD_DEFAULT))
 

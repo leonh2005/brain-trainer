@@ -18,8 +18,8 @@ HOLDERS = [
      "type": "13f", "cik": "0001029160", "source": "Soros Fund Management LLC 13F-HR"},
     {"id": "aschenbrenner", "name": "Leopold Aschenbrenner", "name_zh": "阿申布倫納（24歲AI股神）",
      "type": "13f", "cik": "0002038540", "source": "Situational Awareness Partners LP 13F-HR"},
-    {"id": "icahn", "name": "Carl Icahn", "name_zh": "伊坎",
-     "type": "13f", "cik": "0000921669", "source": "Icahn Carl C 13F-HR（個人申報主體，非 Icahn Enterprises 集團其他關聯體）"},
+    {"id": "griffin", "name": "Ken Griffin", "name_zh": "肯·格里芬",
+     "type": "13f", "cik": "0001423053", "source": "Citadel Advisors LLC 13F-HR"},
     {"id": "tepper", "name": "David Tepper", "name_zh": "泰珀",
      "type": "13f", "cik": "0001656456", "source": "Appaloosa LP 13F-HR"},
     {"id": "klarman", "name": "Seth Klarman", "name_zh": "克拉爾曼",
@@ -32,7 +32,7 @@ HOLDERS = [
 
 STEVEN_ZHOU_ID = "steven_zhou"
 STEVEN_ZHOU_NAME_ZH = "Steven周"
-STEVEN_ZHOU_THRESHOLD_DEFAULT = 5  # 至少N人同時持有才算進Steven周的交集
+STEVEN_ZHOU_THRESHOLD_DEFAULT = 6  # 至少N人同時持有才算進Steven周的交集
 
 ARK_HOLDINGS_URLS = {
     "ARKK": "https://assets.ark-funds.com/fund-documents/funds-etf-csv/ARK_INNOVATION_ETF_ARKK_HOLDINGS.csv",
