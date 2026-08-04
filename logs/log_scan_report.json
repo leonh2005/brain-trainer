@@ -1,6 +1,6 @@
 {
-  "scanned_at": "2026-08-03 03:00:19",
-  "since": "2026-08-02 03:00:00",
+  "scanned_at": "2026-08-04 03:00:20",
+  "since": "2026-08-03 03:00:00",
   "results": {
     "市場儀表板": {
       "exists": true,
@@ -16,8 +16,8 @@
     },
     "motion-watcher": {
       "exists": true,
-      "errors": 5883,
-      "last_error": "[h264 @ 0xca28bca80] error while decoding MB 0 75, bytestream 60566",
+      "errors": 5913,
+      "last_error": "[h264 @ 0xca28bea00] error while decoding MB 0 84, bytestream 12895",
       "fix": "尚無對應建議，需人工判斷"
     },
     "Cloudflare Tunnel": {
@@ -29,7 +29,7 @@
     "財經新聞分析": {
       "exists": true,
       "errors": 153,
-      "last_error": "2026-08-03 03:00:07,964 [WARNING] fetcher.ptt_fetcher: PTT index fetch failed: ('Connection aborted.', ConnectionResetError(54, 'Connection reset by peer'))",
+      "last_error": "2026-08-04 03:00:12,697 [WARNING] fetcher.ptt_fetcher: PTT index fetch failed: ('Connection aborted.', ConnectionResetError(54, 'Connection reset by peer'))",
       "fix": "尚無對應建議，需人工判斷"
     },
     "川普監測": {
@@ -40,9 +40,9 @@
     },
     "持倉新聞(台股)": {
       "exists": true,
-      "errors": 0,
-      "last_error": null,
-      "fix": null
+      "errors": 4,
+      "last_error": "2026-08-03 08:30:19,566 WARNING 集保大戶資料失敗 2317：HTTPSConnectionPool(host='www.tdcc.com.tw', port=443): Max retries exceeded with url: /smWeb/QryStockAjax.do (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Missing Subject Key Identifier (_ssl",
+      "fix": "Port 被佔用或服務未啟動 → 檢查 LaunchAgent 是否正常載入"
     },
     "持倉新聞(美股)": {
       "exists": true,
@@ -88,8 +88,8 @@
     },
     "盤中監控": {
       "exists": true,
-      "errors": 204,
-      "last_error": "[backfill] 2408 失敗: Topic: api/v1/data/ticks, Corr: c21, Client: PYAPI/N124711691/0731/010002/680683/220.141.33.182, payload: {'token': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYmYiOjE3ODU0NTk2MDIsImV4cCI6MTc4NTU0NjAwMiwic2ltdWxhdGlvbiI6ZmFsc2UsInBlcnNvbl9pZCI6Ik4xMjQ3MTE2OTEiLCJ2ZXJzaW9uIjoiMS4zLj",
+      "errors": 205,
+      "last_error": "[backfill] 2408 失敗: Topic: api/v1/data/ticks, Corr: c21, Client: PYAPI/N124711691/0803/010002/977577/220.141.47.239, payload: {'token': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYmYiOjE3ODU3MTg4MDMsImV4cCI6MTc4NTgwNTIwMywic2ltdWxhdGlvbiI6ZmFsc2UsInBlcnNvbl9pZCI6Ik4xMjQ3MTE2OTEiLCJ2ZXJzaW9uIjoiMS4zLj",
       "fix": "尚無對應建議，需人工判斷"
     },
     "蝦皮軟纖監測": {

@@ -31,6 +31,15 @@
   .badge.exit { background: var(--red); color: #fff; }
   .exited-box { margin-top: 1rem; font-size: 0.8rem; color: var(--text-dim); }
   .empty { color: var(--text-dim); font-size: 0.8rem; padding: 2rem; text-align: center; }
+  .entries-section { margin-top: 1.4rem; }
+  .entries-section h2 { font-size: 1.05rem; margin: 0 0 0.3rem; }
+  .entries-note { color: var(--text-dim); font-size: 0.78rem; margin-bottom: 0.9rem; max-width: 60rem; }
+  .entries-note b { color: var(--text); }
+  .entry-block { background: var(--card); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 0.8rem; overflow: hidden; }
+  .entry-head { display: flex; align-items: baseline; gap: 0.7rem; padding: 0.7rem 0.9rem; border-bottom: 1px solid var(--border); }
+  .entry-head .sym { font-weight: 700; font-size: 1rem; }
+  .entry-head .weight { font-family: var(--font-mono); font-size: 0.75rem; color: #f5a623; background: rgba(245,166,35,0.12); padding: 1px 8px; border-radius: 10px; }
+  .uncertain-flag { color: #f5a623; font-size: 0.7rem; margin-left: 3px; cursor: help; }
 </style>
 </head>
 <body>
@@ -50,6 +59,15 @@
     </table>
     <div class="exited-box" id="exitedBox"></div>
   </div>
+</div>
+
+<div class="entries-section" id="entriesSection" style="display:none">
+  <h2>建倉時間點與隱含均價</h2>
+  <div class="entries-note">
+    13F 只揭露季末持股股數與市值，不揭露實際成交價，<b>隱含均價</b>是「季末申報市值 ÷ 股數」的推算，非真實成本均價。
+    <b>首見季度</b>指該大老第一次出現在我方追蹤資料庫的季度——標 <span class="uncertain-flag">‡</span> 代表我方歷史資料剛好從那一季開始，更早是否已持有無法確認。
+  </div>
+  <div id="entriesBlocks"></div>
 </div>
 
 <script>
@@ -142,6 +160,10 @@ async function load() {
       `本期已出清（相較上期 ${d.prev_period || '—'}）：${rows}`;
   }
 
+  if (holderId === 'steven_zhou') {
+    loadEntries();
+  }
+
   if (d.sector_breakdown.length) {
     new Chart(document.getElementById('sectorChart'), {
       type: 'doughnut',
@@ -159,6 +181,47 @@ async function load() {
     });
   }
 }
+async function loadEntries() {
+  const res = await fetch(`/api/holder/steven_zhou/entries`);
+  if (!res.ok) return;
+  const d = await res.json();
+  if (!d.ok || !d.blocks.length) return;
+
+  const fmtShares = n => (n === null || n === undefined) ? '—' : Math.round(n).toLocaleString();
+  const fmtValue = n => {
+    if (n === null || n === undefined) return '—';
+    if (n >= 1e9) return '$' + (n / 1e9).toFixed(2) + 'B';
+    if (n >= 1e6) return '$' + (n / 1e6).toFixed(1) + 'M';
+    return '$' + Math.round(n).toLocaleString();
+  };
+  const fmtPrice = n => (n === null || n === undefined) ? '—' : '$' + n.toFixed(2);
+  const yahooUrl = ticker => `https://finance.yahoo.com/quote/${encodeURIComponent(ticker.replace(/\//g, '-'))}`;
+
+  document.getElementById('entriesBlocks').innerHTML = d.blocks.map(b => `
+    <div class="entry-block">
+      <div class="entry-head">
+        <span class="sym"><a class="ticker-link" href="${yahooUrl(b.ticker)}" target="_blank" rel="noopener">${b.ticker}</a></span>
+        <span class="weight">交集權重 ${b.weight_pct}%</span>
+      </div>
+      <table>
+        <thead><tr>
+          <th>大老</th><th>首見申報季度</th><th class="num">股數</th><th class="num">當季市值</th><th class="num">隱含均價</th>
+        </tr></thead>
+        <tbody>
+          ${b.entries.map(e => `<tr>
+            <td>${e.holder_zh}</td>
+            <td>${e.first_period}${e.uncertain ? '<span class="uncertain-flag" title="我方追蹤資料剛好從此季開始，更早是否已持有無法確認">‡</span>' : ''}</td>
+            <td class="num">${fmtShares(e.shares)}</td>
+            <td class="num">${fmtValue(e.value_usd)}</td>
+            <td class="num">${fmtPrice(e.implied_price)}</td>
+          </tr>`).join('')}
+        </tbody>
+      </table>
+    </div>
+  `).join('');
+  document.getElementById('entriesSection').style.display = 'block';
+}
+
 load();
 </script>
 </body>

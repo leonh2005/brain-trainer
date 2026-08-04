@@ -1,9 +1,17 @@
 """AI 指揮中心 — 統一入口儀表板（port 5950，對既有服務全唯讀）"""
+import ipaddress
+import re
+import secrets
+
+import httpx
 from fastapi import FastAPI, HTTPException
-from fastapi.responses import HTMLResponse, StreamingResponse, FileResponse
+from fastapi.responses import HTMLResponse, StreamingResponse, FileResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from fastapi import Request
+from fastapi.security import HTTPBasic, HTTPBasicCredentials
 from pydantic import BaseModel
+from starlette.middleware.base import BaseHTTPMiddleware
+from starlette.responses import Response
 import uvicorn
 import os
 
@@ -11,8 +19,81 @@ import agent as agent_mod
 import jobs as jobs_mod
 import sources
 
+# 卡片連結透過 /svc/<port>/... 走反向代理，讓外網（Cloudflare Tunnel）也連得到
+# 各服務的本機頁面，不必各自對外開洞。僅白名單內的 port 可被代理。
+PROXY_PORTS = {5070, 5100, 5200, 5250, 5300, 5350, 5400, 5460, 5500,
+               5650, 5750, 5800, 5810, 5850, 5905, 5910, 7799, 8188}
+_PROXY_HOP_HEADERS = {
+    'connection', 'keep-alive', 'proxy-authenticate', 'proxy-authorization',
+    'te', 'trailers', 'transfer-encoding', 'upgrade', 'content-encoding', 'content-length',
+}
+
 app = FastAPI(title='command-center')
 templates = Jinja2Templates(directory='templates')
+
+_AUTH_USER, _AUTH_PASS = open(
+    f'{sources.CC}/.secrets/command_center_auth.txt', encoding='utf-8'
+).read().strip().split(':', 1)
+
+
+class BasicAuthMiddleware(BaseHTTPMiddleware):
+    """經 Cloudflare Tunnel 暴露到外網時的最低限度保護（外流網址也連不進去）。"""
+
+    async def dispatch(self, request: Request, call_next):
+        if request.url.path == '/api/health':
+            return await call_next(request)
+        # 內網直連（非經 Cloudflare Tunnel 轉發）免登入，Tunnel 對外流量仍要密碼
+        if 'cf-connecting-ip' not in request.headers:
+            try:
+                if ipaddress.ip_address(request.client.host).is_private:
+                    return await call_next(request)
+            except ValueError:
+                pass
+        creds = await HTTPBasic(auto_error=False)(request)
+        if not (isinstance(creds, HTTPBasicCredentials)
+                and secrets.compare_digest(creds.username, _AUTH_USER)
+                and secrets.compare_digest(creds.password, _AUTH_PASS)):
+            return Response(status_code=401, headers={'WWW-Authenticate': 'Basic'})
+        return await call_next(request)
+
+
+app.add_middleware(BasicAuthMiddleware)
+
+
+async def _proxy_to(port: int, path: str, request: Request) -> Response:
+    if port not in PROXY_PORTS:
+        raise HTTPException(404, '未知的服務 port')
+    url = f'http://127.0.0.1:{port}/{path}'
+    headers = {k: v for k, v in request.headers.items() if k.lower() not in ('host', 'authorization')}
+    body = await request.body()
+    try:
+        async with httpx.AsyncClient(timeout=30, follow_redirects=False) as client:
+            resp = await client.request(
+                request.method, url, params=request.query_params,
+                headers=headers, content=body,
+            )
+    except httpx.RequestError as e:
+        raise HTTPException(502, f'轉發到 :{port} 失敗：{e}')
+
+    resp_headers = {k: v for k, v in resp.headers.items() if k.lower() not in _PROXY_HOP_HEADERS}
+    location = resp_headers.get('location')
+    if location:
+        # 把後端服務自己的絕對網址改寫回 /svc/<port>/... ，避免瀏覽器直接連去 localhost（外網連不到）
+        location = re.sub(rf'^https?://(127\.0\.0\.1|localhost):{port}', f'/svc/{port}', location)
+        if location.startswith('/') and not location.startswith(f'/svc/{port}'):
+            location = f'/svc/{port}{location}'
+        resp_headers['location'] = location
+    return Response(content=resp.content, status_code=resp.status_code, headers=resp_headers)
+
+
+@app.api_route('/svc/{port}/{path:path}', methods=['GET', 'POST', 'PUT', 'DELETE', 'PATCH'])
+async def svc_proxy(port: int, path: str, request: Request):
+    return await _proxy_to(port, path, request)
+
+
+@app.api_route('/svc/{port}', methods=['GET', 'POST', 'PUT', 'DELETE', 'PATCH'])
+async def svc_proxy_root(port: int, request: Request):
+    return await _proxy_to(port, '', request)
 
 
 @app.get('/api/health')
@@ -148,5 +229,19 @@ def index(request: Request):
     return templates.TemplateResponse(request, 'index.html')
 
 
+@app.api_route('/{full_path:path}', methods=['GET', 'POST', 'PUT', 'DELETE', 'PATCH'])
+async def svc_proxy_fallback(full_path: str, request: Request):
+    """被代理頁面裡的根相對連結／資源路徑（如 /rabbit、/static/x.css）不會帶 /svc/<port> 前綴，
+    靠 Referer 找出它是從哪個服務頁面來的。用 307 導回 /svc/<port>/... ，讓網址列與後續
+    Referer 都留在代理路徑下，下一層連結才不會跟丟。找不到來源就照常 404。"""
+    m = re.search(r'/svc/(\d+)(?:/|$|\?)', request.headers.get('referer', ''))
+    if m and int(m.group(1)) in PROXY_PORTS:
+        target = f"/svc/{m.group(1)}/{full_path}"
+        if request.url.query:
+            target += f"?{request.url.query}"
+        return RedirectResponse(target, status_code=307)
+    raise HTTPException(404, 'not found')
+
+
 if __name__ == '__main__':
-    uvicorn.run(app, host='127.0.0.1', port=5950)
+    uvicorn.run(app, host='0.0.0.0', port=5950)

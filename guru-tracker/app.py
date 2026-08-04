@@ -7,6 +7,7 @@ import sys
 
 from flask import Flask, jsonify, render_template
 
+import config
 import db
 
 app = Flask(__name__)
@@ -108,6 +109,92 @@ def _holder_detail(conn, holder: dict) -> dict:
         "sector_breakdown": [{"sector": s, "weight_pct": round(w, 2)} for s, w in
                              sorted(sector_totals.items(), key=lambda x: -x[1])],
     }
+
+
+def _position_history(conn, since_period: str = "2025-Q1") -> dict:
+    """每位大老「總持股市值」隨季度變化，以自己歷史最高值為滿倉基準(100%)正規化，
+    用來看誰現在是重倉／誰在減碼。木頭姐(ARK)資料是逐日更新非季度，不納入此季線比較。"""
+    lines = []
+    all_periods: set = set()
+    for h in config.HOLDERS:
+        if h["type"] != "13f":
+            continue
+        hid = h["id"]
+        periods = sorted(db.latest_periods(conn, hid, limit=50))
+        series = []
+        for p in periods:
+            snap = db.get_snapshot(conn, hid, p)
+            total = sum(r["value_usd"] for r in snap if r["value_usd"]) or None
+            if total:
+                series.append((p, total))
+        if not series:
+            continue
+        peak = max(v for _, v in series)
+        shown = [(p, v) for p, v in series if p >= since_period]
+        if not shown:
+            continue
+        all_periods.update(p for p, _ in shown)
+        lines.append({
+            "id": hid, "name_zh": h["name_zh"],
+            "points": [{"period": p, "pct_of_peak": round(v / peak * 100, 1), "value_usd": v} for p, v in shown],
+            "single_point": len(series) < 2,
+        })
+    return {"ok": True, "periods": sorted(all_periods), "lines": lines}
+
+
+@app.get("/api/position-history")
+def api_position_history():
+    conn = db.get_conn()
+    try:
+        return jsonify(_position_history(conn))
+    finally:
+        conn.close()
+
+
+def _steven_zhou_entries(conn) -> dict:
+    """Steven周交集持股：每位大老「首見於我方追蹤資料庫」的季度，
+    以及當季申報市值÷股數換算的隱含均價（13F 不揭露實際成交價，這是推算值）。"""
+    real_holders = {h["id"]: h["name_zh"] for h in config.HOLDERS}
+
+    period = db.latest_periods(conn, config.STEVEN_ZHOU_ID, limit=1)
+    sz_rows = db.get_snapshot(conn, config.STEVEN_ZHOU_ID, period[0]) if period else []
+    sz_rows = sorted(sz_rows, key=lambda r: -(r["weight_pct"] or 0))
+
+    blocks = []
+    for sr in sz_rows:
+        ticker = sr["ticker"]
+        entries = []
+        for hid in real_holders:
+            periods = sorted(db.latest_periods(conn, hid, limit=50))
+            if not periods:
+                continue
+            history_start = periods[0]
+            first = None
+            for p in periods:
+                row = next((r for r in db.get_snapshot(conn, hid, p) if r["ticker"] == ticker), None)
+                if row:
+                    first = (p, row["shares"], row["value_usd"])
+                    break
+            if first:
+                p, shares, value = first
+                implied_price = (value / shares) if (shares and value) else None
+                entries.append({
+                    "holder": hid, "holder_zh": real_holders[hid], "first_period": p,
+                    "shares": shares, "value_usd": value, "implied_price": implied_price,
+                    "uncertain": p == history_start,
+                })
+        entries.sort(key=lambda e: e["first_period"])
+        blocks.append({"ticker": ticker, "weight_pct": round(sr["weight_pct"] or 0, 2), "entries": entries})
+    return {"ok": True, "blocks": blocks}
+
+
+@app.get("/api/holder/steven_zhou/entries")
+def api_steven_zhou_entries():
+    conn = db.get_conn()
+    try:
+        return jsonify(_steven_zhou_entries(conn))
+    finally:
+        conn.close()
 
 
 @app.route("/")

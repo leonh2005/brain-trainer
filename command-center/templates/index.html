@@ -9,12 +9,12 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#f7f2e4; --bg-soft:#f0e9d6; --card:#eee5d0; --card-hover:#e8ddc3;
-  --border:#d2c6a8; --border-soft:#ddd0b2;
-  --fg:#141413; --muted:#73716a; --faint:#a8a599;
-  --up:#c15f3c; --down:#5f7346;         /* 台股：紅漲綠跌（品牌暖調）*/
-  --accent:#d97757; --accent-soft:#c15f3c;
-  --amber:#b0803a; --sky:#6a9bcc;
+  --bg:#15130f; --bg-soft:#1c1a15; --card:#211f19; --card-hover:#2a2721;
+  --border:#3a3428; --border-soft:#2e2a22;
+  --fg:#f0ece1; --muted:#a9a290; --faint:#726b5a;
+  --up:#e08363; --down:#8bab6e;         /* 台股：紅漲綠跌（品牌暖調，暗色提亮）*/
+  --accent:#e08363; --accent-soft:#d97757;
+  --amber:#d1a256; --sky:#8ab4dd;
   --radius:14px; --radius-sm:9px;
   --mono:'JetBrains Mono',ui-monospace,monospace;
 }
@@ -289,31 +289,31 @@ let tmr; function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('
 
 /* ── 訊號卡片定義 ── */
 const CARDS=[
-  {id:'swing',   ic:'🌙', title:'隔日沖候選', span:'', url:'/api/signals/swing', render:renderSwing, site:'http://localhost:5500'},
-  {id:'daytrade',ic:'⚡', title:'當沖候選',   span:'', url:'/api/signals/daytrade', render:renderDaytrade, site:'http://localhost:5400'},
-  {id:'intraday',ic:'🎯', title:'盤中主力訊號', span:'wide', url:'/api/signals/intraday', render:renderIntraday, site:'http://localhost:5400'},
-  {id:'news',    ic:'📰', title:'新聞情緒',   span:'', url:'/api/signals/news', render:renderNews, site:'http://localhost:5300'},
+  {id:'swing',   ic:'🌙', title:'隔日沖候選', span:'', url:'/api/signals/swing', render:renderSwing, site:'/svc/5500/'},
+  {id:'daytrade',ic:'⚡', title:'當沖候選',   span:'', url:'/api/signals/daytrade', render:renderDaytrade, site:'/svc/5400/'},
+  {id:'intraday',ic:'🎯', title:'盤中主力訊號', span:'wide', url:'/api/signals/intraday', render:renderIntraday, site:'/svc/5400/'},
+  {id:'news',    ic:'📰', title:'新聞情緒',   span:'', url:'/api/signals/news', render:renderNews, site:'/svc/5300/'},
   {id:'market',  ic:'🌡️', title:'市場恐慌指標', span:'wide', url:'/api/signals/market-fear', render:renderMarket, site:'/market-dashboard'},
-  {id:'chips',   ic:'📊', title:'籌碼追蹤',   span:'wide', url:'/api/signals/chips', render:renderChips, site:'http://localhost:5850'},
+  {id:'chips',   ic:'📊', title:'籌碼追蹤',   span:'wide', url:'/api/signals/chips', render:renderChips, site:'/svc/5850/'},
   {id:'ma',      ic:'📈', title:'均線警報',   span:'', url:'/api/signals/ma', render:renderMA},
 ];
 const LIFE=[
-  {id:'portfolio',ic:'💼', title:'投資組合', span:'wide', url:'/api/portfolio', render:renderPortfolio, site:'http://localhost:5800'},
+  {id:'portfolio',ic:'💼', title:'投資組合', span:'wide', url:'/api/portfolio', render:renderPortfolio, site:'/svc/5800/'},
   {id:'hay',      ic:'🌾', title:'RHH 軟纖補貨', span:'wide', url:'/api/hay', render:renderHay},
-  {id:'rabbit',   ic:'🐰', title:'兔子照護', span:'', url:'/api/life/rabbit', render:renderRabbit, site:'http://localhost:5200'},
-  {id:'skill',    ic:'🌳', title:'技能樹',   span:'', url:'/api/life/skilltree', render:renderSkill, site:'http://localhost:5500'},
-  {id:'sim-invest',ic:'📈', title:'模擬投資', span:'wide', url:'/api/life/sim-invest', render:renderSimInvest, site:'http://localhost:5250'},
-  {id:'market-analysis',ic:'📊', title:'市場分析', span:'wide', url:'/api/life/market-analysis', render:renderMarketAnalysis, site:'http://localhost:5350'},
-  {id:'dsa',ic:'🧠', title:'AI選股歷史', span:'wide', url:'/api/life/daily-stock-analysis', render:renderDSA, site:'http://localhost:5650'},
-  {id:'market-cycle',ic:'🌀', title:'景氣週期位置', span:'wide', url:'/api/life/market-cycle', render:renderMarketCycle, site:'http://localhost:5905'},
-  {id:'guru-tracker',ic:'👴', title:'投資大老持股', span:'wide', url:'/api/life/guru-tracker', render:renderGuruTracker, site:'http://localhost:5910'},
+  {id:'rabbit',   ic:'🐰', title:'兔子照護', span:'', url:'/api/life/rabbit', render:renderRabbit, site:'/svc/5200/'},
+  {id:'skill',    ic:'🌳', title:'技能樹',   span:'', url:'/api/life/skilltree', render:renderSkill, site:'/svc/5500/'},
+  {id:'sim-invest',ic:'📈', title:'模擬投資', span:'wide', url:'/api/life/sim-invest', render:renderSimInvest, site:'/svc/5250/'},
+  {id:'market-analysis',ic:'📊', title:'市場分析', span:'wide', url:'/api/life/market-analysis', render:renderMarketAnalysis, site:'/svc/5350/'},
+  {id:'dsa',ic:'🧠', title:'AI選股歷史', span:'wide', url:'/api/life/daily-stock-analysis', render:renderDSA, site:'/svc/5650/'},
+  {id:'market-cycle',ic:'🌀', title:'景氣週期位置', span:'wide', url:'/api/life/market-cycle', render:renderMarketCycle, site:'/svc/5905/'},
+  {id:'guru-tracker',ic:'👴', title:'投資大老持股', span:'wide', url:'/api/life/guru-tracker', render:renderGuruTracker, site:'/svc/5910/'},
 ];
 
 function mount(container,defs){
   const wrap=$(container);
   defs.forEach(d=>{
     const c=el('div','card fade-in'+(d.span?' '+d.span:''));
-    c.innerHTML=`<div class="card-head"><span class="ic">${d.ic}</span><h3>${d.title}</h3><span class="ts" id="ts-${d.id}"></span>${d.site?`<a class="site-btn" href="${d.site}" target="_blank" title="開啟服務網站">↗</a>`:''}</div><div class="card-body" id="cb-${d.id}"><div class="skel" style="width:70%"></div><div class="skel" style="width:45%"></div></div>`;
+    c.innerHTML=`<div class="card-head"><span class="ic">${d.ic}</span><h3>${d.title}</h3><span class="ts" id="ts-${d.id}"></span>${d.site?`<a class="site-btn" href="${d.site}" title="開啟服務網站">↗</a>`:''}</div><div class="card-body" id="cb-${d.id}"><div class="skel" style="width:70%"></div><div class="skel" style="width:45%"></div></div>`;
     wrap.appendChild(c);
     fetch(d.url).then(r=>r.json()).then(res=>{
       $('#ts-'+d.id).textContent=res.updated||'';
@@ -327,14 +327,38 @@ function mount(container,defs){
 
 /* ── renderers ── */
 function renderSwing(d){
-  const rs=(d&&d.results)||[];
-  if(!rs.length)return el('div','empty','今日無符合條件標的（7條件評分制，≥5分才列入）');
+  const all=(d&&d.results)||[];
+  const rs=all.filter(r=>r.grade==='A');
   const box=el('div');
-  rs.slice(0,8).forEach(r=>{
-    const row=el('div','row');
-    row.innerHTML=`${tkLink(r.name,r.code)}<span class="spacer"></span><span class="chg ${chgCls(r.pct_change)}">${arrow(r.pct_change)} ${fmt(r.pct_change)}%</span>`;
-    box.appendChild(row);
-  });
+  if(!rs.length){
+    box.appendChild(el('div','empty','今日無A級隔日沖候選（7條件評分制）'));
+  } else {
+    rs.forEach(r=>{
+      const changePt=r.close*r.pct_change/(100+r.pct_change);
+      const row=el('div','row');
+      row.innerHTML=`${tkLink(r.name,r.code)}<span class="spacer"></span>`
+        +`<span style="font-family:var(--mono);margin-right:8px">${fmt(r.close)}</span>`
+        +`<span class="chg ${chgCls(r.pct_change)}">${arrow(r.pct_change)} ${fmt(changePt)}（${fmt(r.pct_change)}%）</span>`;
+      box.appendChild(row);
+    });
+  }
+
+  const track=d&&d.track;
+  if(track&&track.results&&track.results.length){
+    const head=el('div','mini');
+    head.style.cssText='margin-top:10px;padding-top:8px;border-top:1px solid var(--border);color:var(--text-dim);font-size:11px';
+    const hit=track.results.filter(r=>r.up).length;
+    head.textContent=`${track.date} 候選隔天10點命中：${hit}/${track.results.length}`;
+    box.appendChild(head);
+    track.results.forEach(r=>{
+      const row=el('div','row');
+      const mark=r.up?'✅':'❌';
+      const pct=(r.check_price!=null&&r.baseline)?((r.check_price-r.baseline)/r.baseline*100):null;
+      row.innerHTML=`<span>${mark} ${tkLink(r.name,r.code)}</span><span class="spacer"></span>`
+        +`<span class="chg ${r.up?'up':'down'}">${pct!=null?fmt(pct)+'%':'—'}</span>`;
+      box.appendChild(row);
+    });
+  }
   return box;
 }
 function renderDaytrade(d){
@@ -634,13 +658,13 @@ function askChat(prompt){
 }
 
 const TOOLS=[
-  {ic:'🎬', title:'ComfyUI（AI 影片生成）', desc:'本地 LTX Video 文生／圖生影片，裝在外接硬碟 1TOWC', site:'http://localhost:8188', launch:'comfyui', how:'按「啟動」開服務，約 15 秒後點 ↗ 開介面（需插著 1TOWC 硬碟）'},
-  {ic:'🤖', title:'TradingAgents 多Agent分析', desc:'多個 AI Agent 深度分析個股：技術面／基本面／新聞面＋多空辯論', site:'http://localhost:5500', how:'在 stock-screener-ai (5500) 的「多Agent深度分析」分頁使用'},
+  {ic:'🎬', title:'ComfyUI（AI 影片生成）', desc:'本地 LTX Video 文生／圖生影片，裝在外接硬碟 1TOWC', site:'/svc/8188/', launch:'comfyui', how:'按「啟動」開服務，約 15 秒後點 ↗ 開介面（需插著 1TOWC 硬碟）'},
+  {ic:'🤖', title:'TradingAgents 多Agent分析', desc:'多個 AI Agent 深度分析個股：技術面／基本面／新聞面＋多空辯論', site:'/svc/5500/', how:'在 stock-screener-ai (5500) 的「多Agent深度分析」分頁使用'},
   {ic:'📚', title:'tw-coverage 台股研究報告', desc:'1735 家台股公司研究報告，wikilink 供應鏈搜尋', path:'~/CCProject/tw-coverage/', how:'用 Obsidian 或編輯器開啟資料夾查閱'},
-  {ic:'🔎', title:'last30days 輿情研究', desc:'跨社群／市場／網路來源，搜尋近 30 天特定主題討論', site:'http://localhost:5750', how:'服務常駐，開網站輸入主題即可查'},
-  {ic:'📡', title:'ai-broadcast 多AI廣播', desc:'同一問題同步發給 ChatGPT／Grok／Gemini／Perplexity 比較回答', site:'http://localhost:5070', how:'服務常駐，開網站輸入問題'},
-  {ic:'🌿', title:'edible-plants-tw 可食植物辨識', desc:'拍照辨識可食植物並存檔備查', site:'http://localhost:5810', how:'服務常駐，開網站上傳照片'},
-  {ic:'🧩', title:'plant-quiz 植物辨識測驗', desc:'依已存植物照片出題的辨識小遊戲', site:'http://localhost:7799', how:'服務常駐，開網站開始測驗'},
+  {ic:'🔎', title:'last30days 輿情研究', desc:'跨社群／市場／網路來源，搜尋近 30 天特定主題討論', site:'/svc/5750/', how:'服務常駐，開網站輸入主題即可查'},
+  {ic:'📡', title:'ai-broadcast 多AI廣播', desc:'同一問題同步發給 ChatGPT／Grok／Gemini／Perplexity 比較回答', site:'/svc/5070/', how:'服務常駐，開網站輸入問題'},
+  {ic:'🌿', title:'edible-plants-tw 可食植物辨識', desc:'拍照辨識可食植物並存檔備查', site:'/svc/5810/', how:'服務常駐，開網站上傳照片'},
+  {ic:'🧩', title:'plant-quiz 植物辨識測驗', desc:'依已存植物照片出題的辨識小遊戲', site:'/svc/7799/', how:'服務常駐，開網站開始測驗'},
   {ic:'🦁', title:'roar-score 股票咆哮分數', desc:'輸入股票代號評估「咆哮指數」', path:'~/CCProject/roar-score/', how:'需手動啟動：cd 進資料夾 python3 app.py'},
   {ic:'🎰', title:'大樂透選號產生器', desc:'靜態頁面，隨機產生大樂透號碼', site:'/tools/lotto649', how:'點 ↗ 直接開啟'},
   {ic:'🌅', title:'一日人生重啟', desc:'靜態自我提醒／重開機儀式頁面', site:'/tools/dan-koe-restart', how:'點 ↗ 直接開啟'},
@@ -649,15 +673,15 @@ const TOOLS=[
   {ic:'🧵', title:'threads-daily 筆記', desc:'每日 Threads 觀察彙整（markdown）', path:'~/CCProject/threads-daily/', how:'用編輯器或 Obsidian 開資料夾查閱'},
   {ic:'🍰', title:'AI 投資全景（五層蛋糕）', desc:'AI 產業五層蛋糕框架＋晶片/能源ETF＋應用層7股估值對照，2026-07-27 快照', site:'http://161.33.6.190/reports/ai-investment-outlook.html', how:'已放到 Oracle VM 對外公開，連結可直接分享給別人看'},
   {ic:'🌱', title:'陽台盆栽紀錄', desc:'陽台盆栽照片＋特性／日照／澆水／備註，依耐旱型/喜濕型分類', path:'~/CCProject/balcony-plants/index.html', how:'靜態頁面，Finder 雙擊 index.html 或瀏覽器開 file:// 路徑查看'},
-  {ic:'📉', title:'台股個股評估', desc:'輸入代號查個股綜合評估', site:'http://localhost:5100', how:'服務常駐，開網站輸入股票代號'},
-  {ic:'💹', title:'當沖模擬（即時報價）', desc:'當沖情境模擬練習，即時報價', site:'http://localhost:5460', how:'服務常駐，開網站直接操作'},
+  {ic:'📉', title:'台股個股評估', desc:'輸入代號查個股綜合評估', site:'/svc/5100/', how:'服務常駐，開網站輸入股票代號'},
+  {ic:'💹', title:'當沖模擬（即時報價）', desc:'當沖情境模擬練習，即時報價', site:'/svc/5460/', how:'服務常駐，開網站直接操作'},
   {ic:'🧮', title:'hola-quant 個人量化交易系統', desc:'HolaOS + 現有工具整合，Phase 0 開發中，無網頁介面', path:'~/CCProject/hola-quant/', how:'LaunchAgent 常駐跑後端邏輯，進度見 PLAN.md'},
 ];
 function mountTools(){
   const wrap=$('#tools');
   TOOLS.forEach(t=>{
     const c=el('div','card fade-in');
-    c.innerHTML=`<div class="card-head"><span class="ic">${t.ic}</span><h3>${t.title}</h3>${t.site?`<a class="site-btn" href="${t.site}" target="_blank" title="開啟服務網站">↗</a>`:''}</div><div class="card-body"><div class="mini" style="line-height:1.7;color:var(--muted)">${t.desc}</div>${t.path?`<div class="mini" style="margin-top:8px">📁 ${t.path}</div>`:''}<div class="mini" style="margin-top:6px;color:var(--accent-soft)">▸ ${t.how}</div>${t.launch?`<button class="btn" data-tool-job="${t.launch}" style="margin-top:11px"><span class="k">▶</span>啟動</button>`:''}</div>`;
+    c.innerHTML=`<div class="card-head"><span class="ic">${t.ic}</span><h3>${t.title}</h3>${t.site?`<a class="site-btn" href="${t.site}" title="開啟服務網站">↗</a>`:''}</div><div class="card-body"><div class="mini" style="line-height:1.7;color:var(--muted)">${t.desc}</div>${t.path?`<div class="mini" style="margin-top:8px">📁 ${t.path}</div>`:''}<div class="mini" style="margin-top:6px;color:var(--accent-soft)">▸ ${t.how}</div>${t.launch?`<button class="btn" data-tool-job="${t.launch}" style="margin-top:11px"><span class="k">▶</span>啟動</button>`:''}</div>`;
     wrap.appendChild(c);
   });
   wrap.querySelectorAll('.btn[data-tool-job]').forEach(b=>b.addEventListener('click',()=>runJob(b, b.dataset.toolJob)));

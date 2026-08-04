@@ -64,6 +64,14 @@ def daytrade():
 def swing():
     p = '/tmp/swing_candidates.json'
     d = _read_json(p)
+    track_path = f'{CC}/telebot/data/swing_track.json'
+    if os.path.exists(track_path):
+        with open(track_path, encoding='utf-8') as f:
+            track = json.load(f)
+        checked_dates = sorted(dt for dt, v in track.items() if v.get('checked'))
+        if checked_dates:
+            latest = track[checked_dates[-1]]
+            d['track'] = {'date': checked_dates[-1], 'results': latest.get('track_results', [])}
     return d, d.get('date', _mtime(p))
 
 
