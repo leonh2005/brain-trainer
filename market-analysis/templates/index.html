@@ -253,7 +253,9 @@ tr.highlight td{background:rgba(217,119,87,.07); font-weight:700}
   <!-- 區塊④ 近月經濟總覽 -->
   <div class="sec-label">④ 近月經濟總覽 <span style="font-weight:400;color:var(--faint);font-size:11px" id="econ-updated"></span></div>
   <div class="card">
-    <h3>市場數值 <span style="font-weight:400;color:var(--faint);font-size:11px">(現價 · 當日 · 近一月)</span></h3>
+    <h3>市場數值 <span style="font-weight:400;color:var(--faint);font-size:11px">(現價 · 當日 · 近一月)</span>
+      <button id="econ-refresh" title="立即刷新市場數值" style="margin-left:8px;font-size:11px;padding:2px 9px;border:1px solid var(--border-soft);background:var(--bg-soft);border-radius:6px;cursor:pointer;color:var(--muted)">🔄 手動刷新</button>
+    </h3>
     <div class="econ-grid" id="econ-market"><div class="empty">載入中...</div></div>
   </div>
   <div class="card">
@@ -434,13 +436,15 @@ async function loadLive(fresh){
       }
     });
 
-    // WTI 原油（yfinance）
-    const oil = d.oil;
+    // 原油（WTI / UKOIL，yfinance）
+    const oils = d.oil;
     const oilEl = document.getElementById('live-oil');
-    if (oil && oil.price != null) {
-      const op = (oil.change_point != null && !isNaN(oil.change_point)) ? ((oil.change_point > 0 ? '+' : '') + oil.change_point.toFixed(2)) : '--';
-      oilEl.innerHTML = `<span class="reg-name">${oil.name}</span><span class="reg-price">$${oil.price}</span>`
-        + `<span class="reg-chg ${pctClass(oil.change_pct)}">${op}（${fmtPct(oil.change_pct)}）</span>`;
+    if (Array.isArray(oils) && oils.length) {
+      oilEl.innerHTML = oils.map(oil => {
+        const op = (oil.change_point != null && !isNaN(oil.change_point)) ? ((oil.change_point > 0 ? '+' : '') + oil.change_point.toFixed(2)) : '--';
+        return `<span class="reg-name">${oil.name}</span><span class="reg-price">$${oil.price}</span>`
+          + `<span class="reg-chg ${pctClass(oil.change_pct)}">${op}（${fmtPct(oil.change_pct)}）</span>`;
+      }).join('<span style="margin:0 8px;color:var(--faint)">·</span>');
     } else {
       oilEl.innerHTML = '';
     }
@@ -658,9 +662,9 @@ function mktSig(v){ if (v == null || isNaN(v) || Math.abs(v) < 1) return 'na'; r
 // CPI：>3% 通膨高=利空、<2% 溫和=利多、其間中性
 function cpiSig(y){ return y > 3 ? 'bear' : (y < 2 ? 'bull' : 'na'); }
 
-async function loadEcon(){
+async function loadEcon(force){
   try{
-    const j = await (await fetch('/api/econ')).json();
+    const j = await (await fetch('/api/econ' + (force ? '?fresh=1' : ''))).json();
     if(!j.ok){ document.getElementById('econ-market').innerHTML='<div class="empty">載入失敗</div>'; return; }
     const d = j.data;
     document.getElementById('econ-updated').textContent = '更新於 ' + (d.updated || '--');
@@ -722,6 +726,14 @@ document.getElementById('live-refresh').addEventListener('click', manualRefresh)
 document.addEventListener('keydown', e => {
   if (e.key === 'F5'){ e.preventDefault(); manualRefresh(); }
 });
+
+async function manualEconRefresh(){
+  const btn = document.getElementById('econ-refresh');
+  if (btn){ btn.disabled = true; btn.textContent = '⏳ 刷新中…'; }
+  try { await loadEcon(true); }
+  finally { if (btn){ btn.disabled = false; btn.textContent = '🔄 手動刷新'; } }
+}
+document.getElementById('econ-refresh').addEventListener('click', manualEconRefresh);
 </script>
 </body>
 </html>

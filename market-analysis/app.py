@@ -148,20 +148,24 @@ def _regional_indices():
 
 
 def _oil_price():
-    """WTI 原油現價，走 yfinance。"""
+    """WTI + UKOIL(布蘭特原油) 現價，走 yfinance。"""
     import yfinance as yf
-    try:
-        closes = yf.Ticker("CL=F").history(period="5d")["Close"].dropna()
-        if len(closes) < 2:
-            return None
-        close, prev = float(closes.iloc[-1]), float(closes.iloc[-2])
-        return {
-            "name": "WTI原油", "price": round(close, 2),
-            "change_pct": round((close - prev) / prev * 100, 2),
-            "change_point": round(close - prev, 2),
-        }
-    except Exception:
-        return None
+
+    out = []
+    for ticker, name in (("CL=F", "WTI原油"), ("BZ=F", "UKOIL布蘭特")):
+        try:
+            closes = yf.Ticker(ticker).history(period="5d")["Close"].dropna()
+            if len(closes) < 2:
+                continue
+            close, prev = float(closes.iloc[-1]), float(closes.iloc[-2])
+            out.append({
+                "name": name, "price": round(close, 2),
+                "change_pct": round((close - prev) / prev * 100, 2),
+                "change_point": round(close - prev, 2),
+            })
+        except Exception:
+            continue
+    return out or None
 
 
 def _fetch_fmtqik(date_str=None):

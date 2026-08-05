@@ -22,6 +22,19 @@ def _holder_summary(conn, holder: dict) -> dict:
     snapshot = db.get_snapshot(conn, holder["id"], latest_period) if latest_period else []
     top3 = snapshot[:3]
     total_value_usd = sum(r["value_usd"] for r in snapshot if r["value_usd"]) or None
+
+    fullness_pct = None
+    if holder["type"] == "ark" and total_value_usd:
+        all_periods = db.latest_periods(conn, holder["id"], limit=365)
+        peak = 0.0
+        for p in all_periods:
+            snap = db.get_snapshot(conn, holder["id"], p)
+            total = sum(r["value_usd"] for r in snap if r["value_usd"]) or 0.0
+            if total > peak:
+                peak = total
+        if peak:
+            fullness_pct = round(total_value_usd / peak * 100, 1)
+
     return {
         "id": holder["id"],
         "name": holder["name"],
@@ -32,6 +45,7 @@ def _holder_summary(conn, holder: dict) -> dict:
         "latest_period": latest_period,
         "holding_count": len(snapshot),
         "total_value_usd": total_value_usd,
+        "fullness_pct": fullness_pct,
         "top3": [{"ticker": r["ticker"], "weight_pct": round(r["weight_pct"] or 0, 2)} for r in top3],
     }
 
@@ -139,7 +153,34 @@ def _position_history(conn, since_period: str = "2025-Q1") -> dict:
             "points": [{"period": p, "pct_of_peak": round(v / peak * 100, 1), "value_usd": v} for p, v in shown],
             "single_point": len(series) < 2,
         })
-    return {"ok": True, "periods": sorted(all_periods), "lines": lines}
+    # ARK 每日資料：取樣 ~25 點供卡片 sparkline
+    ark_line = None
+    for h in config.HOLDERS:
+        if h["type"] != "ark":
+            continue
+        hid = h["id"]
+        daily_periods = sorted(db.latest_periods(conn, hid, limit=365))
+        series = []
+        for p in daily_periods:
+            snap = db.get_snapshot(conn, hid, p)
+            total = sum(r["value_usd"] for r in snap if r["value_usd"]) or None
+            if total:
+                series.append((p, total))
+        if not series:
+            continue
+        peak = max(v for _, v in series)
+        step = max(1, len(series) // 25)
+        sampled = series[::step]
+        if sampled[-1] != series[-1]:
+            sampled.append(series[-1])
+        ark_line = {
+            "id": hid, "name_zh": h["name_zh"],
+            "points": [{"date": p, "pct_of_peak": round(v / peak * 100, 1), "value_usd": v}
+                       for p, v in sampled],
+        }
+        break  # 只有一個 ARK holder
+
+    return {"ok": True, "periods": sorted(all_periods), "lines": lines, "ark_line": ark_line}
 
 
 @app.get("/api/position-history")

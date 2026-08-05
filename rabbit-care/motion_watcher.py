@@ -10,11 +10,25 @@ import json
 import time
 import logging
 import base64
+import sqlite3
 import requests
 from datetime import datetime
 from dotenv import load_dotenv
 
 load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
+
+DB_PATH = os.path.join(os.path.dirname(__file__), 'rabbit.db')
+
+
+def is_enabled() -> bool:
+    """從 rabbit-care 共用的 settings 表讀取開關，讓網頁可即時控制是否執行狀態判斷。"""
+    try:
+        conn = sqlite3.connect(DB_PATH)
+        row = conn.execute("SELECT value FROM settings WHERE key='motion_watcher_enabled'").fetchone()
+        conn.close()
+        return bool(row and row[0] == '1')
+    except Exception:
+        return False
 
 logging.basicConfig(
     filename=os.path.join(os.path.dirname(__file__), 'motion-watcher.log'),
@@ -358,6 +372,10 @@ def run():
                 if not ret:
                     logger.warning('讀取影格失敗，重新連線')
                     break
+
+                if not is_enabled():
+                    time.sleep(2)
+                    continue
 
                 time.sleep(0.2)  # 每秒約 5 幀，降低 CPU 消耗
 

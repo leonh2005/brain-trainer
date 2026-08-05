@@ -45,7 +45,9 @@ SERVICES = {
     "夜間健康檢查":    [HOME / "CCProject/logs/nightly_check.log"],
     "Claude週期監測":  [HOME / "CCProject/claude_cycle_monitor.log"],
     "Threads每日":     [HOME / "CCProject/threads-daily/cron.log"],
-    "daily-stock-analysis": [HOME / "CCProject/daily-stock-analysis/logs/app.log"],
+    # 服務已改成 stock_analysis_YYYYMMDD.log（檔名在啟動時固定，靠檔案大小輪替非跨日），
+    # app.log 是舊命名、5/22後已不再寫入，改用 glob 抓最新修改時間的檔案
+    "daily-stock-analysis": [HOME / "CCProject/daily-stock-analysis/logs/stock_analysis_*.log"],
 }
 
 # 沒有 log 的服務（僅標記）
@@ -55,6 +57,9 @@ ERROR_PATTERNS = re.compile(
     r"(ERROR|Traceback|Exception|FAILED|失敗|錯誤|error|critical|CRITICAL|abort)",
     re.IGNORECASE,
 )
+
+# ctime 風格＋時區縮寫（如 Cloudflare Tunnel 的 [Sat May 23 09:13:13 CST 2026]）
+CTIME_TZ_RE = re.compile(r"\w{3} (\w{3} +\d{1,2} \d{2}:\d{2}:\d{2}) \w+ (\d{4})")
 
 # 已知錯誤 → 建議解法
 KNOWN_FIXES = [
@@ -88,6 +93,7 @@ def scan_log(path: Path, since: datetime) -> dict:
     except Exception as e:
         return {"exists": True, "errors": 0, "last_error": f"無法讀取：{e}", "fix": None}
 
+    last_ts = None  # 延續上一筆解析成功的時間戳，供無時間戳的接續行（如 Traceback 內文）使用
     for line in lines:
         # 嘗試從行首取時間戳（多種格式）
         ts = None
@@ -98,7 +104,22 @@ def scan_log(path: Path, since: datetime) -> dict:
             except ValueError:
                 pass
 
-        if ts and ts < since:
+        if ts is None:
+            m = CTIME_TZ_RE.search(line)
+            if m:
+                try:
+                    ts = datetime.strptime(f"{m.group(1)} {m.group(2)}", "%b %d %H:%M:%S %Y")
+                except ValueError:
+                    pass
+
+        if ts is not None:
+            last_ts = ts
+        else:
+            ts = last_ts  # 沒有自己的時間戳，沿用上一筆有時間戳的行（同一段輸出視為同時間）
+
+        if ts is None:
+            continue  # 從檔案開頭到第一個有效時間戳之間，無從判斷新舊，一律不計入
+        if ts < since:
             continue  # 24 小時以外的忽略
 
         if ERROR_PATTERNS.search(line):
@@ -115,13 +136,22 @@ def scan_log(path: Path, since: datetime) -> dict:
     return {"exists": True, "errors": len(errors), "last_error": last, "fix": fix}
 
 
+def _resolve_path(p: Path) -> Path:
+    """路徑含 * 視為 glob pattern，回傳最新修改時間的檔案；否則原樣回傳"""
+    s = str(p)
+    if "*" not in s:
+        return p
+    matches = sorted(Path(s).parent.glob(Path(s).name), key=lambda f: f.stat().st_mtime, reverse=True)
+    return matches[0] if matches else Path(s)
+
+
 def scan_all() -> dict:
     since = datetime.now() - timedelta(hours=24)
     results = {}
     for service, paths in SERVICES.items():
         merged = {"exists": False, "errors": 0, "last_error": None, "fix": None}
         for p in paths:
-            r = scan_log(p, since)
+            r = scan_log(_resolve_path(p), since)
             if r["exists"]:
                 merged["exists"] = True
                 merged["errors"] += r["errors"]

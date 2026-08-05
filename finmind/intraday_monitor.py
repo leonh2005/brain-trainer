@@ -1,10 +1,15 @@
 #!/usr/bin/env python3
 """
-盤中主力發動偵測器（雙向）— 每 60 秒執行（09:05–13:30 交易時段）
+盤中主力發動偵測器（雙向）（09:05–13:30 交易時段）
 
 資料層（2026-07-14 改訂閱制）：啟動時對監控股訂閱即時 tick 並本地累積，
 1 分鐘 K 棒由本地 tick 重算；中途重啟以一次 api.ticks 回補當日。
 （舊版每 60 秒重抓全日 ticks，一天吃掉 Shioaji ~400MB 流量配額）
+
+雙軌更新（2026-08-05 改）：
+  - 技術指標（VWAP/OBV/KD/MACD/RSI/MACD背離）每 60 秒隨K棒收盤重算一次
+  - 量能/委買賣指標（預估量爆增/外盤內盤比/掛單失衡/昨量單K/均量倍數/超越開盤量/量爆）
+    每 5 秒用當前累積中的K棒即時重算，跟上一根收盤K棒的技術指標合併判斷推播
 偵測 13 項指標，多方/空方均觸發推播：
   - 需同時滿足：訊號數 ≥ SIGNAL_THRESHOLD 且含至少 1 個量能訊號
 
@@ -307,8 +312,11 @@ def calc_rsi(series: pd.Series, period: int) -> pd.Series:
 
 # ── 訊號偵測（雙向）─────────────────────────────────────────────────────────
 
-def detect_signals(df: pd.DataFrame, snap: dict, avg5: int, yday_vol: int = 0) -> tuple:
-    """回傳 (多方訊號清單, 空方訊號清單)"""
+def detect_technical_signals(df: pd.DataFrame) -> tuple:
+    """技術指標訊號（VWAP/OBV/KD/MACD/RSI/MACD背離），只在K棒收盤時算一次。
+
+    回傳 (多方訊號清單, 空方訊號清單)
+    """
     long_sigs  = []
     short_sigs = []
     if len(df) < 30:
@@ -361,6 +369,33 @@ def detect_signals(df: pd.DataFrame, snap: dict, avg5: int, yday_vol: int = 0) -
         long_sigs.append('RSI5穿RSI10↑')
     if rsi_diff_prev > 2 and rsi_diff_now < -2:
         short_sigs.append('RSI5穿RSI10↓')
+
+    # 13. MACD 底背離 / 頂背離
+    lk = min(20, len(close) - 1)
+    if lk >= 5:
+        p_min = close.iloc[-lk-1:-1].min()
+        p_max = close.iloc[-lk-1:-1].max()
+        d_min = dif.iloc[-lk-1:-1].min()
+        d_max = dif.iloc[-lk-1:-1].max()
+        if close.iloc[last] <= p_min * 1.002 and dif.iloc[last] > d_min:
+            long_sigs.append('MACD底背離')
+        if close.iloc[last] >= p_max * 0.998 and dif.iloc[last] < d_max:
+            short_sigs.append('MACD頂背離')
+
+    return long_sigs, short_sigs
+
+
+def detect_volume_signals(df: pd.DataFrame, snap: dict, avg5: int, yday_vol: int = 0) -> tuple:
+    """量能/委買賣訊號，讀當前累積中的K棒，可高頻呼叫（不用等K棒收盤）。
+
+    回傳 (多方訊號清單, 空方訊號清單)
+    """
+    long_sigs  = []
+    short_sigs = []
+    if len(df) < 30:
+        return long_sigs, short_sigs
+
+    last = -1
 
     # 6. 預估量爆增（中性，多空共用）
     if avg5 > 0 and len(df) >= 1:
@@ -424,18 +459,6 @@ def detect_signals(df: pd.DataFrame, snap: dict, avg5: int, yday_vol: int = 0) -
         sig = f'量爆{cur_bar_vol/prev5_avg:.1f}x前5均'
         long_sigs.append(sig)
         short_sigs.append(sig)
-
-    # 13. MACD 底背離 / 頂背離
-    lk = min(20, len(close) - 1)
-    if lk >= 5:
-        p_min = close.iloc[-lk-1:-1].min()
-        p_max = close.iloc[-lk-1:-1].max()
-        d_min = dif.iloc[-lk-1:-1].min()
-        d_max = dif.iloc[-lk-1:-1].max()
-        if close.iloc[last] <= p_min * 1.002 and dif.iloc[last] > d_min:
-            long_sigs.append('MACD底背離')
-        if close.iloc[last] >= p_max * 0.998 and dif.iloc[last] < d_max:
-            short_sigs.append('MACD頂背離')
 
     return long_sigs, short_sigs
 
@@ -522,7 +545,8 @@ def send_telegram(text: str):
     )
 
 
-def build_message(code: str, signals: list, snap: dict, avg5: int, sector_txt: str, direction: str) -> str:
+def build_message(code: str, signals: list, snap: dict, avg5: int, sector_txt: str, direction: str,
+                   tick_triggered: bool = False) -> str:
     now_str    = datetime.now().strftime('%H:%M')
     name       = snap.get('name') or WATCHLIST.get(code, code)
     close      = snap.get('close', 0)
@@ -542,59 +566,87 @@ def build_message(code: str, signals: list, snap: dict, avg5: int, sector_txt: s
 
     sig_lines   = '\n'.join(f"  ✅ {s}" for s in signals)
     sector_line = f"\n🔗 族群：{sector_txt}" if sector_txt else ''
+    tick_line   = "\n⚡ tick即時觸發" if tick_triggered else ''
 
     return (
         f"{header}\n"
         f"💰 {close:.1f}（{chg_pct:+.1f}%）  量 {vol_k:,}張  均量 {avg5:,}張\n"
         f"{conf_line}\n"
         f"\n觸發 {len(signals)} 項訊號：\n{sig_lines}"
-        f"{sector_line}\n"
+        f"{sector_line}"
+        f"{tick_line}\n"
         f"\n⚠️ 數據參考，非投資建議"
     )
 
 
 # ── 主程式 ─────────────────────────────────────────────────────────────────
 
-def main():
+# {code: {'long': [...], 'short': [...]}}，每分鐘K棒收盤時更新一次
+_last_bar_signals: dict = {}
+
+# 5日均量快取，程式啟動時載入一次，之後常駐記憶體共用（避免每5秒重複讀寫檔案）
+_avg5_cache: dict = _load_avg5_cache()
+
+
+def _in_trading_hours(now: datetime) -> bool:
+    return (9 <= now.hour <= 12) or (now.hour == 13 and now.minute <= 30)
+
+
+def recompute_technical_cache():
+    """每分鐘K棒收盤時呼叫一次：重算技術指標訊號並存快取，供 volume_check() 合併使用。"""
     now = datetime.now()
     print(f"[{now.strftime('%H:%M:%S')}] intraday_monitor 開始執行")
 
-    if not (now.hour == 13 and now.minute <= 30) and not (9 <= now.hour <= 12):
+    if not _in_trading_hours(now):
         print('非交易時段，略過')
+        return
+
+    for code in WATCHLIST:
+        get_avg5_vol(code, _avg5_cache)  # 補齊缺漏的5日均量（首次呼叫才會打API）
+        df = get_1min_kbars(code)
+        if df.empty:
+            continue
+        long_sigs, short_sigs = detect_technical_signals(df)
+        _last_bar_signals[code] = {'long': long_sigs, 'short': short_sigs}
+
+    _save_avg5_cache(_avg5_cache)
+
+
+def volume_check():
+    """高頻（約5秒）呼叫：用當前累積中的K棒算量能訊號，跟上一根收盤K棒的技術訊號合併判斷是否推播。"""
+    now = datetime.now()
+    if not _in_trading_hours(now):
         return
 
     codes     = list(WATCHLIST.keys())
     all_snaps = get_snapshot(codes)
     if not all_snaps:
-        print('無法取得快照，略過')
         return
 
-    cooldown   = load_cooldown()
-    avg5_cache = _load_avg5_cache()
+    cooldown    = load_cooldown()
+    tick_triggered = now.second >= 5  # 緊接在整分收盤重算之後才算「收盤觸發」
+    pushed = False
 
     for code in codes:
-        name = WATCHLIST.get(code, code)
-        print(f"  檢查 {code} {name} ...", end=' ')
-
         if is_in_cooldown(code, cooldown):
-            print('冷卻中，跳過')
             continue
 
         snap = all_snaps.get(code)
         if not snap:
-            print('無快照資料')
             continue
 
-        avg5     = get_avg5_vol(code, avg5_cache)
+        # 只讀快取，不呼叫 get_avg5_vol()：避免抓取失敗時的重試 sleep 拖慢 5 秒熱迴圈
+        # （快取由 recompute_technical_cache() 每分鐘負責補齊，那裡才會真的打 API）
+        avg5     = _avg5_cache.get(code, 0)
         yday_vol = snap.get('yday_vol', 0)
         df       = get_1min_kbars(code)
-
         if df.empty:
-            print('無 K 棒資料')
             continue
 
-        long_sigs, short_sigs = detect_signals(df, snap, avg5, yday_vol)
-        print(f'多方:{len(long_sigs)} 空方:{len(short_sigs)}')
+        vol_long, vol_short = detect_volume_signals(df, snap, avg5, yday_vol)
+        tech = _last_bar_signals.get(code, {'long': [], 'short': []})
+        long_sigs  = tech['long'] + vol_long
+        short_sigs = tech['short'] + vol_short
 
         # 優先推強方，同分推多方
         candidates = []
@@ -609,15 +661,17 @@ def main():
         # 取信心分數較高的方向
         direction, signals = max(candidates, key=lambda x: calc_confidence(x[1]))
         sector_txt = get_sector_status(code, all_snaps)
-        msg = build_message(code, signals, snap, avg5, sector_txt, direction)
+        msg = build_message(code, signals, snap, avg5, sector_txt, direction, tick_triggered)
         send_telegram(msg)
         cooldown[code] = datetime.now().isoformat()
+        pushed = True
+        name      = WATCHLIST.get(code, code)
         dir_label = '多方' if direction == 'long' else '空方'
+        print(f"  檢查 {code} {name} ... 多方:{len(long_sigs)} 空方:{len(short_sigs)}")
         print(f'  → {dir_label}推播已送出（信心 {calc_confidence(signals)}%）')
 
-    save_cooldown(cooldown)
-    _save_avg5_cache(avg5_cache)
-    print('完成')
+    if pushed:
+        save_cooldown(cooldown)
 
 
 if __name__ == '__main__':
@@ -638,10 +692,14 @@ if __name__ == '__main__':
     _setup_tick_stream(_api)      # 先訂閱（即刻開始累積）
     _backfill_today_ticks(_api)   # 再回補訂閱前的當日 ticks（僅此一次 api.ticks）
 
+    recompute_technical_cache()   # 開盤暖機：先算一次技術指標，避免 volume_check() 空等到整分邊界
+
     while True:
         _now = datetime.now()
         if _now.hour > 13 or (_now.hour == 13 and _now.minute > 35):
             print(f'[{_now.strftime("%H:%M:%S")}] 盤後，監控結束')
             break
-        main()
-        _time.sleep(60)
+        if _now.second < 5:
+            recompute_technical_cache()
+        volume_check()
+        _time.sleep(5)

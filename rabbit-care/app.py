@@ -83,6 +83,21 @@ def get_db():
         conn.close()
 
 
+def get_setting(key: str, default: str = '') -> str:
+    with get_db() as conn:
+        row = conn.execute('SELECT value FROM settings WHERE key=?', (key,)).fetchone()
+        return row['value'] if row else default
+
+
+def set_setting(key: str, value: str) -> None:
+    with get_db() as conn:
+        conn.execute(
+            'INSERT INTO settings (key, value) VALUES (?, ?) '
+            'ON CONFLICT(key) DO UPDATE SET value=excluded.value',
+            (key, value)
+        )
+
+
 def init_db():
     with get_db() as conn:
         conn.executescript('''
@@ -150,7 +165,15 @@ def init_db():
                 note TEXT,
                 created_at TEXT DEFAULT (datetime('now','localtime'))
             );
+
+            CREATE TABLE IF NOT EXISTS settings (
+                key TEXT PRIMARY KEY,
+                value TEXT
+            );
         ''')
+        conn.execute(
+            "INSERT OR IGNORE INTO settings (key, value) VALUES ('motion_watcher_enabled', '0')"
+        )
         # 補欄位（舊資料庫升級）
         try:
             conn.execute('ALTER TABLE rabbit ADD COLUMN photo TEXT')
@@ -357,7 +380,15 @@ def index():
         reminders=reminders,
         today_action_summary=today_action_summary,
         today_action_list=today_action_list,
+        motion_watcher_enabled=get_setting('motion_watcher_enabled', '0') == '1',
     )
+
+
+@app.route('/api/settings/motion-watcher', methods=['POST'])
+def toggle_motion_watcher():
+    enabled = bool(request.get_json(silent=True, force=True).get('enabled'))
+    set_setting('motion_watcher_enabled', '1' if enabled else '0')
+    return jsonify({'status': 'ok', 'enabled': enabled})
 
 
 # ── 路由：兔子資料 ───────────────────────────────────────────
