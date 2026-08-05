@@ -327,11 +327,10 @@ function mount(container,defs){
 
 /* ── renderers ── */
 function renderSwing(d){
-  const all=(d&&d.results)||[];
-  const rs=all.filter(r=>r.grade==='A');
+  const rs=(d&&d.results)||[];
   const box=el('div');
   if(!rs.length){
-    box.appendChild(el('div','empty','今日無A級隔日沖候選（7條件評分制）'));
+    box.appendChild(el('div','empty','今日無符合4大條件的隔日沖候選'));
   } else {
     rs.forEach(r=>{
       const changePt=r.close*r.pct_change/(100+r.pct_change);
@@ -658,6 +657,7 @@ function askChat(prompt){
 }
 
 const TOOLS=[
+  {ic:'📈', title:'回後買上漲選股', desc:'一鍵掃描全市場：多頭趨勢＋量縮回檔不破前低＋長紅突破昨高', site:'/svc/5960/', how:'開網站選掃描範圍，按「開始掃描」等進度跑完'},
   {ic:'🎬', title:'ComfyUI（AI 影片生成）', desc:'本地 LTX Video 文生／圖生影片，裝在外接硬碟 1TOWC', site:'/svc/8188/', launch:'comfyui', how:'按「啟動」開服務，約 15 秒後點 ↗ 開介面（需插著 1TOWC 硬碟）'},
   {ic:'🤖', title:'TradingAgents 多Agent分析', desc:'多個 AI Agent 深度分析個股：技術面／基本面／新聞面＋多空辯論', site:'/svc/5500/', how:'在 stock-screener-ai (5500) 的「多Agent深度分析」分頁使用'},
   {ic:'📚', title:'tw-coverage 台股研究報告', desc:'1735 家台股公司研究報告，wikilink 供應鏈搜尋', path:'~/CCProject/tw-coverage/', how:'用 Obsidian 或編輯器開啟資料夾查閱'},

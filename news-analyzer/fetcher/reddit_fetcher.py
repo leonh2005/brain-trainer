@@ -31,6 +31,15 @@ def fetch_reddit(subreddits=None, limit=20):
                 f"https://www.reddit.com/r/{name}/hot/.rss",
                 headers=HEADERS, timeout=15,
             )
+            if resp.status_code == 429:
+                # 特定 subreddit 偶爾會被額外限流，多等一下重試一次（2026-08-05 實測 r/investing 常見）
+                retry_after = int(resp.headers.get("Retry-After", 60))
+                logger.warning(f"Reddit 429 for r/{name}，{retry_after}秒後重試一次")
+                time.sleep(retry_after)
+                resp = requests.get(
+                    f"https://www.reddit.com/r/{name}/hot/.rss",
+                    headers=HEADERS, timeout=15,
+                )
             resp.raise_for_status()
             feed = feedparser.parse(resp.text)
             for entry in feed.entries[:limit]:

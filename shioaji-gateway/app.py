@@ -141,6 +141,45 @@ def kbars():
         return jsonify({"ok": False, "error": str(e)})
 
 
+@app.get("/daily_ohlcv")
+def daily_ohlcv():
+    """日K聚合（由分K依日期分組彙整），供需要開高低收量的策略計算使用。
+    GET /daily_ohlcv?code=2330&days=90 -> {ok, bars:[{date,open,high,low,close,volume}, ...]}（舊到新）"""
+    code = request.args.get("code", "")
+    days = int(request.args.get("days", "90"))
+    if not code:
+        return jsonify({"ok": False, "error": "no code"}), 400
+    try:
+        def work(api):
+            contract = _resolve_contract(api, code)
+            end = date.today()
+            start = end - timedelta(days=max(days * 2, 60))
+            kb = api.kbars(
+                contract=contract,
+                start=start.strftime("%Y-%m-%d"),
+                end=end.strftime("%Y-%m-%d"),
+            )
+            daily = {}
+            for ts, o, h, l, c, v in zip(kb.ts, kb.Open, kb.High, kb.Low, kb.Close, kb.Volume):
+                if c is None:
+                    continue
+                d = datetime.fromtimestamp(ts / 1e9, tz=timezone.utc).date().isoformat()
+                bar = daily.get(d)
+                if bar is None:
+                    daily[d] = {"date": d, "open": float(o), "high": float(h),
+                                "low": float(l), "close": float(c), "volume": int(v)}
+                else:
+                    bar["high"] = max(bar["high"], float(h))
+                    bar["low"] = min(bar["low"], float(l))
+                    bar["close"] = float(c)
+                    bar["volume"] += int(v)
+            bars = [daily[d] for d in sorted(daily.keys())]
+            return bars[-days:]
+        return jsonify({"ok": True, "bars": _run(work)})
+    except Exception as e:
+        return jsonify({"ok": False, "error": str(e)})
+
+
 @app.get("/intraday")
 def intraday():
     code = request.args.get("code", "")
