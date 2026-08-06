@@ -1,42 +1,42 @@
 {
-  "scanned_at": "2026-08-05 03:00:22",
-  "since": "2026-08-04 03:00:00",
+  "scanned_at": "2026-08-06 03:00:19",
+  "since": "2026-08-05 03:00:00",
   "results": {
     "市場儀表板": {
       "exists": true,
-      "errors": 52,
-      "last_error": "CAPE 抓取失敗: HTTPSConnectionPool(host='www.multpl.com', port=443): Read timed out. (read timeout=15)",
-      "fix": "網路逾時 → 確認目標服務可達，或增加 timeout 設定"
+      "errors": 0,
+      "last_error": null,
+      "fix": null
     },
     "兔子照護": {
       "exists": true,
-      "errors": 175,
-      "last_error": "127.0.0.1 - - [13/Jul/2026 14:07:57] \"\u001b[33mGET /_layouts/15/error.aspx HTTP/1.0\u001b[0m\" 404 -",
-      "fix": "尚無對應建議，需人工判斷"
+      "errors": 0,
+      "last_error": null,
+      "fix": null
     },
     "motion-watcher": {
       "exists": true,
-      "errors": 5950,
-      "last_error": "[h264 @ 0xca28bca80] error while decoding MB 134 52, bytestream 64427",
+      "errors": 180,
+      "last_error": "2026-08-06 02:58:15,460 WARNING 讀取影格失敗，重新連線",
       "fix": "尚無對應建議，需人工判斷"
     },
     "Cloudflare Tunnel": {
       "exists": true,
-      "errors": 299,
-      "last_error": "[Sat May 23 09:13:13 CST 2026] 2026-05-23T01:13:13Z ERR Serve tunnel error error=\"accept stream listener encountered a failure while serving\" connIndex=0 event=0 ip=198.41.200.193",
-      "fix": "尚無對應建議，需人工判斷"
+      "errors": 0,
+      "last_error": null,
+      "fix": null
     },
     "財經新聞分析": {
       "exists": true,
-      "errors": 152,
-      "last_error": "2026-08-05 02:45:37,958 [WARNING] fetcher.reddit_fetcher: Reddit fetch failed for r/investing: 429 Client Error: Too Many Requests for url: https://www.reddit.com/r/investing/hot/.rss",
+      "errors": 80,
+      "last_error": "2026-08-06 02:30:04,474 [WARNING] fetcher.ptt_fetcher: PTT index fetch failed: ('Connection aborted.', ConnectionResetError(54, 'Connection reset by peer'))",
       "fix": "尚無對應建議，需人工判斷"
     },
     "川普監測": {
       "exists": true,
-      "errors": 903,
-      "last_error": "ModuleNotFoundError: No module named 'google'",
-      "fix": "檔案或套件遺失 → 確認路徑或重新安裝 pip 套件"
+      "errors": 0,
+      "last_error": null,
+      "fix": null
     },
     "持倉新聞(台股)": {
       "exists": true,
@@ -64,9 +64,9 @@
     },
     "選股AI": {
       "exists": true,
-      "errors": 88,
-      "last_error": "--- Logging error ---",
-      "fix": "尚無對應建議，需人工判斷"
+      "errors": 0,
+      "last_error": null,
+      "fix": null
     },
     "當沖回測": {
       "exists": true,
@@ -76,57 +76,57 @@
     },
     "當沖推播": {
       "exists": true,
-      "errors": 256,
-      "last_error": "[AI] 6505 API 錯誤 402: Error code: 402 - {'error': {'message': 'Insufficient Balance', 'type': 'unknown_error', 'param': None, 'code': 'invalid_request_error'}}",
-      "fix": "尚無對應建議，需人工判斷"
+      "errors": 0,
+      "last_error": null,
+      "fix": null
     },
     "隔日沖推播": {
       "exists": true,
-      "errors": 9,
-      "last_error": "[error] Shioaji 快照失敗，無法取得今日即時資料，結束執行",
-      "fix": "尚無對應建議，需人工判斷"
+      "errors": 0,
+      "last_error": null,
+      "fix": null
     },
     "盤中監控": {
       "exists": true,
-      "errors": 206,
-      "last_error": "[backfill] 2408 失敗: Topic: api/v1/data/ticks, Corr: c21, Client: PYAPI/N124711691/0804/010002/918263/220.141.15.135, payload: {'token': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYmYiOjE3ODU4MDUyMDUsImV4cCI6MTc4NTg5MTYwNSwic2ltdWxhdGlvbiI6ZmFsc2UsInBlcnNvbl9pZCI6Ik4xMjQ3MTE2OTEiLCJ2ZXJzaW9uIjoiMS4zLj",
+      "errors": 1,
+      "last_error": "[backfill] 2408 失敗: Topic: api/v1/data/ticks, Corr: c21, Client: PYAPI/N124711691/0805/010002/695651/220.141.15.135, payload: {'token': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYmYiOjE3ODU4OTE2MDIsImV4cCI6MTc4NTk3ODAwMiwic2ltdWxhdGlvbiI6ZmFsc2UsInBlcnNvbl9pZCI6Ik4xMjQ3MTE2OTEiLCJ2ZXJzaW9uIjoiMS4zLj",
       "fix": "尚無對應建議，需人工判斷"
     },
     "蝦皮軟纖監測": {
       "exists": true,
-      "errors": 6233,
-      "last_error": "urllib3.exceptions.MaxRetryError: HTTPConnectionPool(host='localhost', port=50327): Max retries exceeded with url: /session/8930c716-4b8e-4d06-a564-da732f0256c6/element/6414cf32-5ba4-43f3-8f75-ae4c3f9a99a6/text (Caused by ReadTimeoutError(\"HTTPConnectionPool(host='localhost', port=50327): Read timed",
-      "fix": "Port 被佔用或服務未啟動 → 檢查 LaunchAgent 是否正常載入"
+      "errors": 0,
+      "last_error": null,
+      "fix": null
     },
     "自動簽到": {
       "exists": true,
-      "errors": 34,
-      "last_error": "requests.exceptions.ConnectionError: HTTPSConnectionPool(host='api-web.pressplay.cc', port=443): Max retries exceeded with url: /member/week_checkin (Caused by NameResolutionError(\"HTTPSConnection(host='api-web.pressplay.cc', port=443): Failed to resolve 'api-web.pressplay.cc' ([Errno 8] nodename no",
-      "fix": "Port 被佔用或服務未啟動 → 檢查 LaunchAgent 是否正常載入"
+      "errors": 0,
+      "last_error": null,
+      "fix": null
     },
     "夜間健康檢查": {
       "exists": true,
-      "errors": 10,
-      "last_error": "❌ 連線失敗",
-      "fix": "尚無對應建議，需人工判斷"
+      "errors": 0,
+      "last_error": null,
+      "fix": null
     },
     "Claude週期監測": {
       "exists": true,
-      "errors": 979,
-      "last_error": "google.genai.errors.ClientError: 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reason': 'API_KEY_INVALID', 'domain': 'googleapis.com', 'metad",
-      "fix": "尚無對應建議，需人工判斷"
+      "errors": 0,
+      "last_error": null,
+      "fix": null
     },
     "Threads每日": {
       "exists": true,
-      "errors": 21,
-      "last_error": "requests.exceptions.ConnectionError: ('Connection aborted.', ConnectionResetError(54, 'Connection reset by peer'))",
-      "fix": "尚無對應建議，需人工判斷"
+      "errors": 0,
+      "last_error": null,
+      "fix": null
     },
     "daily-stock-analysis": {
       "exists": true,
-      "errors": 67,
-      "last_error": "ResourceWarning: Enable tracemalloc to get the object allocation traceback",
-      "fix": "尚無對應建議，需人工判斷"
+      "errors": 0,
+      "last_error": null,
+      "fix": null
     }
   },
   "no_log": [

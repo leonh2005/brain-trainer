@@ -1,9 +1,13 @@
 """當沖模擬（即時報價版，port 5460）
 
 透過 shioaji-gateway (port 5455) 取得即時報價，不自己開 Shioaji 連線。
-買賣/損益/部位狀態全部存在瀏覽器 localStorage，這裡只負責報價代理。
+即時買賣/部位狀態存在瀏覽器 localStorage（換代號、重置都只動這份）；
+每一筆成交跟每日損益彙總另外寫進 daytrade.db（SQLite），永久保存、
+不受瀏覽器資料被清掉或「重置」按鈕影響。
 """
 import json
+import os
+import sqlite3
 import time
 import urllib.error
 import urllib.parse
@@ -13,11 +17,46 @@ from flask import Flask, jsonify, render_template, request
 
 app = Flask(__name__)
 
+DB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "daytrade.db")
+
+
+def _get_db():
+    conn = sqlite3.connect(DB_PATH)
+    conn.row_factory = sqlite3.Row
+    return conn
+
+
+def _init_db():
+    conn = _get_db()
+    conn.execute("""
+        CREATE TABLE IF NOT EXISTS trades (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            date TEXT NOT NULL,
+            time TEXT NOT NULL,
+            code TEXT NOT NULL,
+            name TEXT,
+            action TEXT NOT NULL,
+            price REAL NOT NULL,
+            qty INTEGER NOT NULL,
+            fee REAL NOT NULL DEFAULT 0,
+            tax REAL NOT NULL DEFAULT 0,
+            realized REAL NOT NULL DEFAULT 0,
+            created_at REAL NOT NULL
+        )
+    """)
+    conn.commit()
+    conn.close()
+
+
+_init_db()
+
 SHIOAJI_GATEWAY = "http://127.0.0.1:5455"
+TWSE_ALL_URL = "https://openapi.twse.com.tw/v1/exchangeReport/STOCK_DAY_ALL"
 QUOTE_CACHE_TTL = 1
 INTRADAY_CACHE_TTL = 30
 MOVERS_CACHE_TTL = 20
 BIDASK_CACHE_TTL = 1
+NAME_CACHE_TTL = 86400
 
 VOL_RANK_CACHE_FILE = "/tmp/intraday_vol_rank_cache.json"
 VOLUME_THRESHOLD = 15000  # 張
@@ -27,6 +66,23 @@ _quote_cache = {}
 _intraday_cache = {}
 _movers_cache = {"ts": 0, "data": None}
 _bidask_cache = {}
+_name_cache = {"ts": 0, "map": {}}
+_gates_cache = {}
+GATES_CACHE_TTL = 3600  # 三關價依前一交易日高低算出，一小時內不會變，快取久一點省 gateway 查詢
+
+
+def _get_name(code):
+    """代號 → 股名。上市股票表每天快取一次，查不到就回代號本身。"""
+    if time.time() - _name_cache["ts"] > NAME_CACHE_TTL:
+        try:
+            req = urllib.request.Request(TWSE_ALL_URL, headers={"User-Agent": "Mozilla/5.0"})
+            with urllib.request.urlopen(req, timeout=15) as resp:
+                rows = json.loads(resp.read())
+            _name_cache["map"] = {r["Code"]: r["Name"] for r in rows if r.get("Code")}
+            _name_cache["ts"] = time.time()
+        except Exception:
+            pass
+    return _name_cache["map"].get(code, code)
 
 
 def _fetch_gateway(path):
@@ -67,6 +123,7 @@ def quote():
             data = {
                 "ok": True,
                 "code": code,
+                "name": _get_name(code),
                 "price": d["close"],
                 "change_price": d["change_price"],
                 "change_rate": d["change_rate"],
@@ -94,6 +151,84 @@ def intraday():
         gw = _fetch_gateway(f"/intraday?code={urllib.parse.quote(code)}")
         data = gw if gw.get("ok") else {"ok": False, "error": "查無日內走勢"}
         _intraday_cache[code] = {"ts": time.time(), "data": data}
+        return jsonify(data)
+    except (urllib.error.URLError, TimeoutError) as e:
+        return jsonify({"ok": False, "error": f"無法連線 shioaji-gateway：{e}"})
+    except Exception as e:
+        return jsonify({"ok": False, "error": str(e)})
+
+
+@app.post("/api/trade_log")
+def log_trade():
+    """把一筆成交永久寫進 SQLite，跟瀏覽器 localStorage 的即時狀態分開，重置/清瀏覽器資料都不會動到。"""
+    d = request.get_json(silent=True) or {}
+    required = ["date", "time", "code", "action", "price", "qty"]
+    if not all(k in d for k in required):
+        return jsonify({"ok": False, "error": "缺少必要欄位"}), 400
+    try:
+        conn = _get_db()
+        conn.execute(
+            "INSERT INTO trades (date, time, code, name, action, price, qty, fee, tax, realized, created_at) "
+            "VALUES (?,?,?,?,?,?,?,?,?,?,?)",
+            (d["date"], d["time"], d["code"], d.get("name") or d["code"], d["action"],
+             d["price"], d["qty"], d.get("fee", 0), d.get("tax", 0), d.get("realized", 0), time.time()),
+        )
+        conn.commit()
+        conn.close()
+        return jsonify({"ok": True})
+    except Exception as e:
+        return jsonify({"ok": False, "error": str(e)})
+
+
+@app.get("/api/daily_pnl")
+def daily_pnl():
+    """依日期彙總已實現損益，realized 已經是扣完手續費/證交稅的淨額（見前端 applyTradeFor）。"""
+    try:
+        conn = _get_db()
+        rows = conn.execute("""
+            SELECT date,
+                   SUM(realized) AS realized_pnl,
+                   SUM(fee) AS fee_total,
+                   SUM(tax) AS tax_total,
+                   COUNT(*) AS trade_count
+            FROM trades
+            GROUP BY date
+            ORDER BY date DESC
+        """).fetchall()
+        conn.close()
+        return jsonify({"ok": True, "days": [dict(r) for r in rows]})
+    except Exception as e:
+        return jsonify({"ok": False, "error": str(e)})
+
+
+@app.get("/api/three_gates")
+def three_gates():
+    """三關價：用前一交易日高低算出上關/中關/下關，公式 MID=(H+L)/2，UP=H+(H-L)*0.382，DN=L-(H-L)*0.382。"""
+    code = request.args.get("code", "").strip()
+    if not code:
+        return jsonify({"ok": False, "error": "no code"}), 400
+
+    cached = _gates_cache.get(code)
+    if cached and time.time() - cached["ts"] < GATES_CACHE_TTL:
+        return jsonify(cached["data"])
+
+    try:
+        gw = _fetch_gateway(f"/daily_ohlcv?code={urllib.parse.quote(code)}&days=5")
+        bars = gw.get("bars", []) if gw.get("ok") else []
+        if len(bars) < 2:
+            data = {"ok": False, "error": "無足夠日K資料"}
+        else:
+            prev = bars[-2]  # 最後一筆可能是今天（盤中），前一筆才是完整的前一交易日
+            high, low = prev["high"], prev["low"]
+            rng = high - low
+            data = {
+                "ok": True,
+                "date": prev["date"],
+                "up": round(high + rng * 0.382, 2),
+                "mid": round((high + low) / 2, 2),
+                "dn": round(low - rng * 0.382, 2),
+            }
+        _gates_cache[code] = {"ts": time.time(), "data": data}
         return jsonify(data)
     except (urllib.error.URLError, TimeoutError) as e:
         return jsonify({"ok": False, "error": f"無法連線 shioaji-gateway：{e}"})
@@ -162,6 +297,7 @@ def movers():
             "code": code,
             "name": candidates[code]["name"],
             "price": snap["close"],
+            "change_price": snap.get("change_price"),
             "change_rate": rate,
             "volume": candidates[code]["total_vol"],
         }

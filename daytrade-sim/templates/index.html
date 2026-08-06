@@ -24,6 +24,8 @@
   input:focus { outline: none; border-color: #58a6ff; }
   input#code { width: 90px; }
   input#capital { width: 120px; }
+  input#capital::-webkit-inner-spin-button, input#capital::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+  input#capital { -moz-appearance: textfield; }
   button {
     border: 1px solid #30363d; background: #21262d; color: #e6edf3;
     border-radius: 6px; padding: 6px 14px; font-size: 13px; cursor: pointer;
@@ -82,17 +84,41 @@
   .mover-row:hover { background: #21262d; }
   .mover-row .m-code { font-family: ui-monospace, monospace; color: #8b949e; width: 40px; flex: none; }
   .mover-row .m-name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .mover-row .m-rate { font-weight: 700; font-variant-numeric: tabular-nums; width: 58px; text-align: right; flex: none; }
+  .mover-row .m-price { font-weight: 700; font-variant-numeric: tabular-nums; width: 58px; text-align: right; flex: none; }
+  .mover-row .m-rate { font-weight: 700; font-variant-numeric: tabular-nums; width: 118px; text-align: right; flex: none; font-size: 12.5px; }
   .mover-row .m-vol { font-size: 11px; color: #8b949e; width: 60px; text-align: right; flex: none; font-variant-numeric: tabular-nums; }
   .movers-wrap { max-width: 1280px; margin: 0 auto; padding: 20px 20px 0; }
 
   #bidask-body { font-variant-numeric: tabular-nums; }
-  .ba-row { display: flex; align-items: center; gap: 8px; padding: 4px 6px; font-size: 13px; }
-  .ba-row .ba-label { width: 28px; flex: none; color: #8b949e; font-size: 11px; }
-  .ba-row .ba-price { width: 70px; flex: none; font-weight: 700; }
-  .ba-row .ba-vol { flex: 1; text-align: right; color: #8b949e; }
-  .ba-divider { border-top: 1px dashed #30363d; margin: 4px 0; }
+  .ba-ratio { display: flex; align-items: center; gap: 8px; font-size: 11px; margin-bottom: 10px; }
+  .ba-ratio-track { flex: 1; display: flex; height: 8px; border-radius: 4px; overflow: hidden; }
+  .ba-ratio-bid { background: #f85149; height: 100%; }
+  .ba-ratio-ask { background: #3fb950; height: 100%; }
+  .ba-cols { display: flex; gap: 8px; }
+  .ba-cols .ba-col { flex: 1; min-width: 0; }
+  .ba-cols .ba-col-head { font-size: 10.5px; color: #8b949e; padding: 0 4px 5px; font-weight: 600; }
+  .ba-row { display: flex; align-items: center; gap: 4px; padding: 2px 4px; font-size: 11px; }
+  .ba-row .ba-price { width: 44px; flex: none; font-weight: 700; cursor: pointer; border-radius: 3px; }
+  .ba-row .ba-price:hover { background: #21262d; text-decoration: underline; }
+  .ba-row .ba-vol { width: 34px; flex: none; text-align: right; color: #8b949e; font-size: 10px; }
+  .ba-row .ba-vol:first-child { text-align: left; }
+  .ba-bar { flex: 1; height: 7px; background: #21262d; border-radius: 2px; overflow: hidden; }
+  .ba-bar-fill { height: 100%; }
+  .ba-bar.buy { display: flex; justify-content: flex-end; }
+  .ba-bar.buy .ba-bar-fill { background: #f85149; }
+  .ba-bar.sell .ba-bar-fill { background: #3fb950; }
   #bidask-empty { color: #8b949e; text-align: center; padding: 20px 0; font-size: 12.5px; }
+
+  .holdings-wrap { max-width: 1280px; margin: 0 auto; padding: 0 20px; }
+  .holdings-label { padding: 16px 0 8px; color: #8b949e; font-size: 12px; letter-spacing: .04em; text-transform: uppercase; }
+  .holdings-grid { display: flex; gap: 14px; flex-wrap: wrap; }
+  .hcard { background: #161b22; border: 1px solid #30363d; border-radius: 10px; padding: 12px; width: 220px; cursor: pointer; }
+  .hcard:hover { border-color: #58a6ff; }
+  .hcard-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; margin-bottom: 8px; }
+  .hcard-name { font-size: 13.5px; font-weight: 700; }
+  .hcard-pos { font-size: 11.5px; color: #8b949e; margin-top: 2px; }
+  .hcard-chart { width: 100%; height: 70px; }
+  .hcard-pnl { font-size: 15px; font-weight: 800; font-variant-numeric: tabular-nums; margin-top: 6px; }
 </style>
 </head>
 <body>
@@ -128,6 +154,11 @@
   </div>
 </div>
 
+<div class="holdings-wrap" id="holdings-wrap" style="display:none">
+  <div class="holdings-label">持有部位</div>
+  <div class="holdings-grid" id="holdings-grid"></div>
+</div>
+
 <div class="layout">
   <div>
     <div class="card">
@@ -141,18 +172,22 @@
     </div>
 
     <div class="card">
-      <h2>最佳五檔</h2>
-      <div id="bidask-body">
-        <div id="bidask-empty">尚未開始模擬</div>
+      <h2>交易紀錄</h2>
+      <div id="log-wrap">
+        <table>
+          <thead><tr><th>時間</th><th>標的</th><th>動作</th><th>價格</th><th>股數</th><th>手續費/稅</th><th>已實現損益</th></tr></thead>
+          <tbody id="log-body"><tr class="empty-row"><td colspan="7">尚無交易</td></tr></tbody>
+        </table>
       </div>
     </div>
 
     <div class="card">
-      <h2>交易紀錄</h2>
-      <div id="log-wrap">
+      <h2>每日損益紀錄</h2>
+      <p style="font-size:11.5px;color:#8b949e;margin:0 0 10px">永久存在後端資料庫，跟瀏覽器資料分開，重置模擬或清瀏覽器資料都不會遺失。</p>
+      <div id="daily-pnl-wrap">
         <table>
-          <thead><tr><th>時間</th><th>動作</th><th>價格</th><th>股數</th><th>已實現損益</th></tr></thead>
-          <tbody id="log-body"><tr class="empty-row"><td colspan="5">尚無交易</td></tr></tbody>
+          <thead><tr><th>日期</th><th>交易次數</th><th>手續費+稅</th><th>已實現損益（淨）</th></tr></thead>
+          <tbody id="daily-pnl-body"><tr class="empty-row"><td colspan="4">載入中…</td></tr></tbody>
         </table>
       </div>
     </div>
@@ -162,7 +197,11 @@
     <div class="card">
       <h2>下單</h2>
       <div class="trade-row">
-        <input id="qty" type="number" placeholder="股數" min="1" step="1" value="1000">
+        <input id="order-price" type="number" step="0.05" placeholder="市價" style="flex:1">
+        <button type="button" id="btn-clear-price" style="flex:none;font-size:12px;padding:6px 10px">市價</button>
+      </div>
+      <div class="trade-row">
+        <input id="qty" type="number" placeholder="張數" min="1" step="1" value="1"> 張
       </div>
       <div class="row2">
         <button class="buy" id="btn-buy" disabled>買進 ▲</button>
@@ -175,12 +214,30 @@
     </div>
 
     <div class="card">
+      <h2>最佳五檔</h2>
+      <div id="bidask-body">
+        <div id="bidask-empty">尚未開始模擬</div>
+      </div>
+    </div>
+
+    <div class="card">
       <h2>部位 / 資產</h2>
+      <div id="s-holding-wrap" style="display:none; margin-bottom:14px; padding-bottom:14px; border-bottom:1px solid #30363d; justify-content:space-between; align-items:baseline;">
+        <div>
+          <div style="font-size:11px;color:#8b949e">持有標的</div>
+          <div id="s-holding" style="font-size:16px;font-weight:700">--</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:11px;color:#8b949e">未實現損益</div>
+          <div id="s-unrealized-big" style="font-size:18px;font-weight:800">--</div>
+        </div>
+      </div>
       <div class="stat-grid">
         <div><div class="k">現金</div><div class="v" id="s-cash">--</div></div>
         <div><div class="k">總資產</div><div class="v" id="s-total">--</div></div>
         <div><div class="k">持有股數</div><div class="v" id="s-position">--</div></div>
         <div><div class="k">平均成本</div><div class="v" id="s-avgcost">--</div></div>
+        <div><div class="k">損益兩平價</div><div class="v" id="s-breakeven">--</div></div>
         <div><div class="k">未實現損益</div><div class="v" id="s-unrealized">--</div></div>
         <div><div class="k">已實現損益</div><div class="v" id="s-realized">--</div></div>
         <div><div class="k">報酬率</div><div class="v" id="s-return">--</div></div>
@@ -192,16 +249,26 @@
 <script>
 const STORAGE_KEY = 'daytrade-sim-state';
 let STATE = null;
-let chart = null, priceSeries = null;
+let chart = null, priceSeries = null, vwapSeries = null;
 let pollTimer = null;
+const holdingCharts = {}; // 非 active 的庫存：code -> { chart, series, lastTs, price, pollTimer }
 
-function freshState(code, capital) {
-  return { code, capital, cash: capital, position: 0, avgCost: 0, realizedPnl: 0, trades: [] };
+function freshState(capital) {
+  return { capital, cash: capital, active: null, positions: {}, trades: [] };
+}
+
+function ensurePosition(code) {
+  if (!STATE.positions[code]) STATE.positions[code] = { name: null, position: 0, avgCost: 0, realizedPnl: 0 };
+  return STATE.positions[code];
 }
 
 function saveState() { localStorage.setItem(STORAGE_KEY, JSON.stringify(STATE)); }
 function loadState() {
-  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)); } catch (e) { return null; }
+  // 舊版單一部位格式沒有 positions 欄位，直接視為空狀態（模擬工具、資料不值錢，不寫遷移邏輯）
+  try {
+    const s = JSON.parse(localStorage.getItem(STORAGE_KEY));
+    return (s && s.positions) ? s : null;
+  } catch (e) { return null; }
 }
 
 function fmtMoney(n) { return (n < 0 ? '-$' : '$') + Math.abs(Math.round(n)).toLocaleString(); }
@@ -215,46 +282,104 @@ function initChart() {
     localization: { locale: 'zh-TW' }, // 避免依賴 navigator.language（某些無頭瀏覽器環境下該值是 undefined，會讓內部 Intl 格式化拋錯）
     layout: { background: { color: '#161b22' }, textColor: '#8b949e' },
     grid: { vertLines: { color: '#21262d' }, horzLines: { color: '#21262d' } },
-    timeScale: { timeVisible: true, secondsVisible: true, borderColor: '#30363d' },
+    timeScale: { timeVisible: true, secondsVisible: false, borderColor: '#30363d' },
     rightPriceScale: { borderColor: '#30363d' },
     width: el.clientWidth, height: 340,
   });
   priceSeries = chart.addLineSeries({ color: '#58a6ff', lineWidth: 2 });
+  vwapSeries = chart.addLineSeries({ color: '#e3b341', lineWidth: 1, priceLineVisible: false, lastValueVisible: false });
   window.addEventListener('resize', () => chart && chart.applyOptions({ width: el.clientWidth }));
+}
+
+// Lightweight Charts 內部一律用 UTC 曆面畫刻度標籤，不會轉換成瀏覽器時區，
+// 所以刻意把「台北時間的時鐘數字」當成 UTC 餵進去，圖表顯示出來的刻度才會是 09:01
+// 而不是被減 8 小時變成 01:01。分鐘級別的秒數固定歸零，同一分鐘內反覆 update() 同一點，
+// 分鐘真的變了才前進到下一格（一分鐘動一格，不會每次輪詢就新增一格）。
+function taipeiMinuteTs(date) {
+  const t = new Date(date.toLocaleString('en-US', { timeZone: 'Asia/Taipei' }));
+  return Math.floor(Date.UTC(t.getFullYear(), t.getMonth(), t.getDate(), t.getHours(), t.getMinutes(), 0) / 1000);
+}
+function taipeiDateStr(date) {
+  const t = new Date(date.toLocaleString('en-US', { timeZone: 'Asia/Taipei' }));
+  return `${t.getFullYear()}-${String(t.getMonth() + 1).padStart(2, '0')}-${String(t.getDate()).padStart(2, '0')}`;
+}
+
+async function fetchIntradaySeries(code) {
+  const r = await fetch(`/api/intraday?code=${encodeURIComponent(code)}`);
+  const d = await r.json();
+  if (!d.ok || !d.points || !d.points.length) return [];
+  const nowTaipei = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Taipei' }));
+  const today = `${nowTaipei.getFullYear()}-${String(nowTaipei.getMonth() + 1).padStart(2, '0')}-${String(nowTaipei.getDate()).padStart(2, '0')}`;
+  return d.points
+    .map(p => ({ time: Math.floor(new Date(`${today}T${p.t}:00Z`).getTime() / 1000), value: p.price, volume: p.volume || 0 }))
+    .filter(pt => pt.time > 0)
+    .sort((a, b) => a.time - b.time);
+}
+
+// 三關價：只在落於「今天走勢圖的價格尺度」附近才畫線，離太遠（超出今日高低±50%的振幅）就不畫，
+// 避免關卡價跟今天實際走勢差太多時，把圖表 Y 軸硬拉開變得沒意義。
+function renderGates(gates, data) {
+  if (!data.length) return;
+  const values = data.map(p => p.value);
+  const lo = Math.min(...values), hi = Math.max(...values);
+  const range = (hi - lo) || hi * 0.02 || 1;
+  const margin = range * 0.5;
+  const within = v => v >= lo - margin && v <= hi + margin;
+  const specs = [
+    { key: 'up', label: '上關', color: '#f85149' },
+    { key: 'mid', label: '中關', color: '#8b949e' },
+    { key: 'dn', label: '下關', color: '#3fb950' },
+  ];
+  specs.forEach(s => {
+    const v = gates[s.key];
+    if (v == null || !within(v)) return;
+    priceSeries.createPriceLine({
+      price: v, color: s.color, lineWidth: 1,
+      lineStyle: LightweightCharts.LineStyle.Dashed,
+      axisLabelVisible: true, title: s.label,
+    });
+  });
 }
 
 async function loadIntraday(code) {
   try {
-    const r = await fetch(`/api/intraday?code=${encodeURIComponent(code)}`);
-    const d = await r.json();
-    if (!d.ok || !d.points || !d.points.length) return;
-    // 用台北當地日期（而非瀏覽器所在時區的今天）組出正確的分K時間戳
-    const nowTaipei = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Taipei' }));
-    const today = `${nowTaipei.getFullYear()}-${String(nowTaipei.getMonth() + 1).padStart(2, '0')}-${String(nowTaipei.getDate()).padStart(2, '0')}`;
-    const data = d.points
-      .map(p => ({ time: Math.floor(new Date(`${today}T${p.t}:00+08:00`).getTime() / 1000), value: p.price }))
-      .filter(pt => pt.time > 0)
-      .sort((a, b) => a.time - b.time);
+    const data = await fetchIntradaySeries(code);
     if (!data.length) return;
     priceSeries.setData(data);
     lastChartTs = data[data.length - 1].time;
+
+    // 當日均價線（VWAP）：用分K的量價累積算出來，跟主線疊在一起
+    let cumPV = 0, cumVol = 0;
+    const vwapData = data.map(pt => {
+      cumPV += pt.value * pt.volume;
+      cumVol += pt.volume;
+      return { time: pt.time, value: cumVol > 0 ? +(cumPV / cumVol).toFixed(2) : pt.value };
+    });
+    vwapSeries.setData(vwapData);
+
+    try {
+      const r = await fetch(`/api/three_gates?code=${encodeURIComponent(code)}`);
+      const g = await r.json();
+      if (g.ok) renderGates(g, data);
+    } catch (e) { /* 三關價拿不到就不畫，不影響主圖顯示 */ }
   } catch (e) { /* 沒有歷史資料就從即時報價開始畫 */ }
 }
 
 let lastChartTs = 0;
 function appendTick(price) {
-  const ts = Math.floor(Date.now() / 1000);
-  if (ts <= lastChartTs) return; // 圖表時間必須嚴格遞增，同一秒內的重複輪詢直接略過
+  const ts = taipeiMinuteTs(new Date());
+  if (ts < lastChartTs) return; // 圖表時間必須非遞減；同分鐘內用 update() 覆蓋原點即可
   lastChartTs = ts;
   priceSeries.update({ time: ts, value: price });
 }
 
 let lastPrice = null;
+let lastName = null;
 
 async function pollQuote() {
-  if (!STATE) return;
+  if (!STATE || !STATE.active) return;
   try {
-    const r = await fetch(`/api/quote?code=${encodeURIComponent(STATE.code)}`);
+    const r = await fetch(`/api/quote?code=${encodeURIComponent(STATE.active)}`);
     const d = await r.json();
     setGwStatus(true);
     if (!d.ok) {
@@ -262,6 +387,8 @@ async function pollQuote() {
       return;
     }
     lastPrice = d.price;
+    lastName = d.name;
+    if (d.name) ensurePosition(STATE.active).name = d.name;
     appendTick(d.price);
     renderPrice(d);
     renderPortfolio();
@@ -277,17 +404,52 @@ function renderBidAsk(d) {
     body.innerHTML = `<div id="bidask-empty">${d.error || '無法取得五檔'}</div>`;
     return;
   }
-  const askRows = d.asks.slice().reverse().map((a, i) => `
-    <div class="ba-row"><span class="ba-label pos-down">賣${d.asks.length - i}</span><span class="ba-price pos-down">${a.price.toFixed(2)}</span><span class="ba-vol">${a.volume.toLocaleString()}</span></div>`).join('');
-  const bidRows = d.bids.map((b, i) => `
-    <div class="ba-row"><span class="ba-label pos-up">買${i + 1}</span><span class="ba-price pos-up">${b.price.toFixed(2)}</span><span class="ba-vol">${b.volume.toLocaleString()}</span></div>`).join('');
-  body.innerHTML = askRows + '<div class="ba-divider"></div>' + bidRows;
+  const maxVol = Math.max(1, ...d.bids.map(b => b.volume), ...d.asks.map(a => a.volume));
+  const barPct = v => Math.max(3, Math.round(v / maxVol * 100));
+  const bidTotal = d.bids.reduce((s, b) => s + b.volume, 0);
+  const askTotal = d.asks.reduce((s, a) => s + a.volume, 0);
+  const sumTotal = bidTotal + askTotal || 1;
+  const bidPct = Math.round(bidTotal / sumTotal * 1000) / 10;
+  const askPct = Math.round(askTotal / sumTotal * 1000) / 10;
+
+  const bidRows = d.bids.map(b => `
+    <div class="ba-row">
+      <span class="ba-vol">${b.volume.toLocaleString()}</span>
+      <div class="ba-bar buy"><div class="ba-bar-fill" style="width:${barPct(b.volume)}%"></div></div>
+      <span class="ba-price pos-up" data-price="${b.price.toFixed(2)}">${b.price.toFixed(2)}</span>
+    </div>`).join('');
+  const askRows = d.asks.map(a => `
+    <div class="ba-row">
+      <span class="ba-price pos-down" data-price="${a.price.toFixed(2)}">${a.price.toFixed(2)}</span>
+      <div class="ba-bar sell"><div class="ba-bar-fill" style="width:${barPct(a.volume)}%"></div></div>
+      <span class="ba-vol">${a.volume.toLocaleString()}</span>
+    </div>`).join('');
+
+  body.innerHTML = `
+    <div class="ba-ratio">
+      <span class="pos-up">委買 ${bidPct}%</span>
+      <div class="ba-ratio-track">
+        <div class="ba-ratio-bid" style="width:${bidPct}%"></div>
+        <div class="ba-ratio-ask" style="width:${askPct}%"></div>
+      </div>
+      <span class="pos-down">${askPct}% 委賣</span>
+    </div>
+    <div class="ba-cols">
+      <div class="ba-col">
+        <div class="ba-col-head">(${bidTotal.toLocaleString()})</div>
+        ${bidRows}
+      </div>
+      <div class="ba-col">
+        <div class="ba-col-head" style="text-align:right">(${askTotal.toLocaleString()})</div>
+        ${askRows}
+      </div>
+    </div>`;
 }
 
 async function pollBidAsk() {
-  if (!STATE) return;
+  if (!STATE || !STATE.active) return;
   try {
-    const r = await fetch(`/api/bidask?code=${encodeURIComponent(STATE.code)}`);
+    const r = await fetch(`/api/bidask?code=${encodeURIComponent(STATE.active)}`);
     const d = await r.json();
     renderBidAsk(d);
   } catch (e) {
@@ -307,7 +469,7 @@ function setGwStatus(ok) {
 }
 
 function renderPrice(d) {
-  document.getElementById('price-code').textContent = d.code;
+  document.getElementById('price-code').textContent = d.name ? `${d.code} ${d.name}` : d.code;
   document.getElementById('price-now').textContent = d.price.toFixed(2);
   document.getElementById('price-now').className = upDownClass(d.change_price);
   const chg = document.getElementById('price-change');
@@ -316,87 +478,307 @@ function renderPrice(d) {
   document.getElementById('price-meta').textContent = '更新於 ' + new Date().toLocaleTimeString('zh-TW');
 }
 
+function currentPriceFor(code) {
+  if (code === STATE.active) return lastPrice;
+  const h = holdingCharts[code];
+  return h ? h.price : null;
+}
+
 function renderPortfolio() {
+  if (!STATE) return;
+  const activeCode = STATE.active;
+  const activePos = activeCode ? ensurePosition(activeCode) : null;
   const price = lastPrice || 0;
-  const unrealized = (price - STATE.avgCost) * STATE.position;
-  const total = STATE.cash + STATE.position * price;
+  const unrealizedActive = activePos ? (price - activePos.avgCost) * activePos.position : 0;
+
+  let marketValue = 0, realizedSum = 0;
+  for (const [code, p] of Object.entries(STATE.positions)) {
+    realizedSum += p.realizedPnl;
+    if (p.position !== 0) {
+      const cp = currentPriceFor(code);
+      marketValue += p.position * (cp != null ? cp : p.avgCost);
+    }
+  }
+  const total = STATE.cash + marketValue;
   const ret = ((total - STATE.capital) / STATE.capital) * 100;
 
   document.getElementById('s-cash').textContent = fmtMoney(STATE.cash);
   document.getElementById('s-total').textContent = fmtMoney(total);
-  document.getElementById('s-position').textContent = STATE.position.toLocaleString();
-  document.getElementById('s-avgcost').textContent = STATE.position !== 0 ? STATE.avgCost.toFixed(2) : '--';
+  document.getElementById('s-position').textContent = activePos ? activePos.position.toLocaleString() : '0';
+  document.getElementById('s-avgcost').textContent = activePos && activePos.position !== 0 ? activePos.avgCost.toFixed(2) : '--';
+  const breakeven = activePos ? breakevenPrice(activePos) : null;
+  document.getElementById('s-breakeven').textContent = breakeven != null ? breakeven.toFixed(2) : '--';
+
+  const holdWrap = document.getElementById('s-holding-wrap');
+  if (activePos && activePos.position !== 0) {
+    holdWrap.style.display = 'flex';
+    const dir = activePos.position > 0 ? '多' : '空';
+    document.getElementById('s-holding').textContent =
+      `${activeCode}${lastName ? ' ' + lastName : ''}（${dir} ${Math.abs(activePos.position).toLocaleString()}股）`;
+    const bigEl = document.getElementById('s-unrealized-big');
+    bigEl.textContent = fmtMoney(unrealizedActive);
+    bigEl.className = upDownClass(unrealizedActive);
+  } else {
+    holdWrap.style.display = 'none';
+  }
 
   const uEl = document.getElementById('s-unrealized');
-  uEl.textContent = fmtMoney(unrealized); uEl.className = 'v ' + upDownClass(unrealized);
+  uEl.textContent = fmtMoney(unrealizedActive); uEl.className = 'v ' + upDownClass(unrealizedActive);
   const rEl = document.getElementById('s-realized');
-  rEl.textContent = fmtMoney(STATE.realizedPnl); rEl.className = 'v ' + upDownClass(STATE.realizedPnl);
+  rEl.textContent = fmtMoney(realizedSum); rEl.className = 'v ' + upDownClass(realizedSum);
   const retEl = document.getElementById('s-return');
   retEl.textContent = fmtPct(ret); retEl.className = 'v ' + upDownClass(ret);
 
-  document.getElementById('btn-flat').disabled = STATE.position === 0;
+  document.getElementById('btn-flat').disabled = !activePos || activePos.position === 0;
 }
 
 function renderLog() {
   const body = document.getElementById('log-body');
   if (!STATE.trades.length) {
-    body.innerHTML = '<tr class="empty-row"><td colspan="5">尚無交易</td></tr>';
+    body.innerHTML = '<tr class="empty-row"><td colspan="7">尚無交易</td></tr>';
     return;
   }
   body.innerHTML = STATE.trades.slice().reverse().map(t => `
     <tr>
       <td>${t.time}</td>
+      <td>${t.code}${t.name && t.name !== t.code ? ' ' + t.name : ''}</td>
       <td class="${t.action === '買進' ? 'pos-up' : 'pos-down'}">${t.action}</td>
       <td>${t.price.toFixed(2)}</td>
       <td>${t.qty.toLocaleString()}</td>
+      <td>${fmtMoney(-((t.fee || 0) + (t.tax || 0)))}</td>
       <td class="${upDownClass(t.realized)}">${t.realized ? fmtMoney(t.realized) : '--'}</td>
     </tr>`).join('');
 }
 
 // direction: +1 買進, -1 賣出。用「部位(可正可負)+加權平均成本」單一模型統一處理多空與反手。
-function applyTrade(direction, qty, price) {
-  const pos = STATE.position, avg = STATE.avgCost;
+// code 可以是任何有部位的標的，不限於目前 active 顯示大圖的那一檔。
+// 永豐證券大戶投 APP 電子交易costs：手續費 0.1425% × 2折（每筆最低1元），
+// 當沖現股賣出證交稅減半 0.15%（買進不課稅）。
+const FEE_RATE = 0.001425;
+const FEE_DISCOUNT = 0.2;
+const FEE_MIN = 1;
+const TAX_RATE = 0.0015;
+function calcFee(price, qty) { return Math.max(Math.round(price * qty * FEE_RATE * FEE_DISCOUNT), FEE_MIN); }
+
+// 損益兩平價：多單要賣到哪個價位，扣掉賣出手續費+證交稅後淨損益才會打平（忽略每筆最低1元手續費，
+// 一般張數下手續費本來就遠高於1元，這個近似值誤差可忽略）；空單則是買回要壓到哪個價位（買進沒有證交稅）。
+function breakevenPrice(posObj) {
+  if (!posObj || posObj.position === 0) return null;
+  const feePct = FEE_RATE * FEE_DISCOUNT;
+  return posObj.position > 0
+    ? posObj.avgCost / (1 - feePct - TAX_RATE)
+    : posObj.avgCost / (1 + feePct);
+}
+
+function applyTradeFor(code, direction, qty, price) {
+  const posObj = ensurePosition(code);
+  const pos = posObj.position, avg = posObj.avgCost;
   const signed = direction * qty;
+  const fee = calcFee(price, qty);
+  const tax = direction < 0 ? Math.round(price * qty * TAX_RATE) : 0; // 只有賣出課證交稅
   let realized = 0;
 
   if (pos === 0 || pos * signed >= 0) {
+    // 加碼同方向部位：手續費併入成本，平均成本才反映真實持有成本
     const newPos = pos + signed;
-    STATE.avgCost = newPos !== 0 ? (Math.abs(pos) * avg + qty * price) / Math.abs(newPos) : 0;
-    STATE.position = newPos;
+    const costBasis = Math.abs(pos) * avg + qty * price + fee;
+    posObj.avgCost = newPos !== 0 ? costBasis / Math.abs(newPos) : 0;
+    posObj.position = newPos;
   } else {
     const closingQty = Math.min(qty, Math.abs(pos));
-    realized = pos > 0 ? (price - avg) * closingQty : (avg - price) * closingQty;
-    STATE.realizedPnl += realized;
+    const grossPnl = pos > 0 ? (price - avg) * closingQty : (avg - price) * closingQty;
+    // 平倉部分按比例分攤這筆交易的手續費＋證交稅，已實現損益才是真正落袋的淨額
+    const closeCost = (fee + tax) * (closingQty / qty);
+    realized = grossPnl - closeCost;
+    posObj.realizedPnl += realized;
     const remainder = qty - closingQty;
     if (remainder > 0) {
-      STATE.position = direction * remainder;
-      STATE.avgCost = price;
+      const openFee = fee * (remainder / qty);
+      posObj.position = direction * remainder;
+      posObj.avgCost = price + openFee / remainder;
     } else {
-      STATE.position = pos + signed;
-      if (STATE.position === 0) STATE.avgCost = 0;
+      posObj.position = pos + signed;
+      if (posObj.position === 0) posObj.avgCost = 0;
     }
   }
   STATE.cash -= signed * price;
+  STATE.cash -= fee;
+  STATE.cash -= tax;
 
-  STATE.trades.push({
+  const tradeRecord = {
+    date: taipeiDateStr(new Date()),
     time: new Date().toLocaleTimeString('zh-TW'),
+    code,
+    name: posObj.name || code,
     action: direction > 0 ? '買進' : '賣出',
-    price, qty, realized,
-  });
+    price, qty, fee, tax, realized,
+  };
+  STATE.trades.push(tradeRecord);
   saveState();
   renderPortfolio();
   renderLog();
+  syncHoldingCards();
+  logTradeToServer(tradeRecord);
 }
 
-async function startSim() {
-  const code = document.getElementById('code').value.trim();
-  const capital = parseFloat(document.getElementById('capital').value);
-  if (!code) { alert('請輸入股票代號'); return; }
-  if (!capital || capital <= 0) { alert('請輸入有效的起始本金'); return; }
+// 每一筆成交都永久寫進後端 SQLite，不放進 localStorage（那份只是瀏覽器端的即時工作狀態，
+// 重置模擬或清瀏覽器資料都會清掉）。這裡失敗不影響下單流程本身，只是這筆記錄暫時沒同步成功。
+async function logTradeToServer(trade) {
+  try {
+    const r = await fetch('/api/trade_log', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(trade),
+    });
+    const d = await r.json();
+    if (d.ok) loadDailyPnl();
+  } catch (e) { /* 網路問題：這筆損益紀錄同步失敗，但下單本身已經成功，不擋流程 */ }
+}
 
-  STATE = freshState(code, capital);
+async function loadDailyPnl() {
+  const body = document.getElementById('daily-pnl-body');
+  try {
+    const r = await fetch('/api/daily_pnl');
+    const d = await r.json();
+    if (!d.ok || !d.days.length) {
+      body.innerHTML = '<tr class="empty-row"><td colspan="4">尚無紀錄</td></tr>';
+      return;
+    }
+    body.innerHTML = d.days.map(row => `
+      <tr>
+        <td>${row.date}</td>
+        <td>${row.trade_count}</td>
+        <td>${fmtMoney(-(row.fee_total + row.tax_total))}</td>
+        <td class="${upDownClass(row.realized_pnl)}">${fmtMoney(row.realized_pnl)}</td>
+      </tr>`).join('');
+  } catch (e) {
+    body.innerHTML = '<tr class="empty-row"><td colspan="4">無法連線後端服務</td></tr>';
+  }
+}
+
+async function flattenPosition(code) {
+  const posObj = STATE.positions[code];
+  if (!posObj || posObj.position === 0) return;
+  let price = currentPriceFor(code);
+  if (price == null) {
+    try {
+      const r = await fetch(`/api/quote?code=${encodeURIComponent(code)}`);
+      const d = await r.json();
+      if (d.ok) price = d.price;
+    } catch (e) { /* 下面統一處理失敗 */ }
+  }
+  if (price == null) { alert('無法取得現價，平倉失敗，請稍後再試'); return; }
+  applyTradeFor(code, posObj.position > 0 ? -1 : 1, Math.abs(posObj.position), price);
+}
+
+function destroyHoldingCard(code) {
+  const h = holdingCharts[code];
+  if (!h) return;
+  clearInterval(h.pollTimer);
+  const el = document.getElementById(`hcard-${code}`);
+  if (el) el.remove();
+  delete holdingCharts[code];
+}
+
+function updateHoldingCardStats(code) {
+  const posObj = STATE.positions[code];
+  const h = holdingCharts[code];
+  if (!posObj || !h) return;
+  const nameEl = document.querySelector(`#hcard-${code} .hcard-name`);
+  if (nameEl) nameEl.textContent = `${code}${posObj.name ? ' ' + posObj.name : ''}`;
+  const posEl = document.getElementById(`hcard-pos-${code}`);
+  if (posEl) {
+    const dir = posObj.position > 0 ? '多' : '空';
+    posEl.textContent = `${dir} ${Math.abs(posObj.position).toLocaleString()}股`;
+  }
+  const pnlEl = document.getElementById(`hcard-pnl-${code}`);
+  if (pnlEl && h.price != null) {
+    const unrealized = (h.price - posObj.avgCost) * posObj.position;
+    pnlEl.textContent = fmtMoney(unrealized);
+    pnlEl.className = 'hcard-pnl ' + upDownClass(unrealized);
+  }
+}
+
+function createHoldingCard(code) {
+  const posObj = ensurePosition(code);
+  const card = document.createElement('div');
+  card.className = 'hcard';
+  card.id = `hcard-${code}`;
+  card.innerHTML = `
+    <div class="hcard-head">
+      <div>
+        <div class="hcard-name">${code}${posObj.name ? ' ' + posObj.name : ''}</div>
+        <div class="hcard-pos" id="hcard-pos-${code}"></div>
+      </div>
+      <button class="flat" style="font-size:11px;padding:3px 8px">平倉</button>
+    </div>
+    <div class="hcard-chart" id="hchart-${code}"></div>
+    <div class="hcard-pnl" id="hcard-pnl-${code}">--</div>`;
+  card.querySelector('button').addEventListener('click', (e) => { e.stopPropagation(); flattenPosition(code); });
+  card.addEventListener('click', () => {
+    document.getElementById('code').value = code;
+    switchActive(code);
+    window.scrollTo({ top: document.querySelector('.layout').offsetTop - 10, behavior: 'smooth' });
+  });
+  document.getElementById('holdings-grid').appendChild(card);
+
+  const chartEl = document.getElementById(`hchart-${code}`);
+  const miniChart = LightweightCharts.createChart(chartEl, {
+    localization: { locale: 'zh-TW' },
+    layout: { background: { color: '#161b22' }, textColor: '#8b949e' },
+    grid: { vertLines: { visible: false }, horzLines: { visible: false } },
+    timeScale: { visible: false },
+    rightPriceScale: { visible: false },
+    handleScroll: false, handleScale: false,
+    width: chartEl.clientWidth, height: 70,
+  });
+  const series = miniChart.addLineSeries({ color: '#58a6ff', lineWidth: 2 });
+  holdingCharts[code] = { chart: miniChart, series, lastTs: 0, price: null, pollTimer: null };
+
+  fetchIntradaySeries(code).then(data => {
+    const h = holdingCharts[code];
+    if (!h || !data.length) return;
+    series.setData(data);
+    h.lastTs = data[data.length - 1].time;
+  }).catch(() => {});
+
+  const poll = async () => {
+    const h = holdingCharts[code];
+    if (!h) return; // 卡片可能已經在等待這次 fetch 期間被平倉移除
+    try {
+      const r = await fetch(`/api/quote?code=${encodeURIComponent(code)}`);
+      const d = await r.json();
+      if (!d.ok || !holdingCharts[code]) return;
+      h.price = d.price;
+      if (d.name) posObj.name = d.name;
+      const ts = taipeiMinuteTs(new Date());
+      if (ts >= h.lastTs) { h.lastTs = ts; h.series.update({ time: ts, value: d.price }); }
+      updateHoldingCardStats(code);
+      renderPortfolio();
+    } catch (e) { /* 忽略單次輪詢失敗 */ }
+  };
+  poll();
+  holdingCharts[code].pollTimer = setInterval(poll, 3000);
+}
+
+function syncHoldingCards() {
+  const heldCodes = Object.keys(STATE.positions).filter(c => STATE.positions[c].position !== 0 && c !== STATE.active);
+  Object.keys(holdingCharts).forEach(code => { if (!heldCodes.includes(code)) destroyHoldingCard(code); });
+  // 容器要先變成看得見的 display:block，卡片裡的 LightweightCharts 才能量到非 0 寬度；
+  // 順序反過來的話 chartEl.clientWidth 會是 0，圖表畫布建出來寬度也是 0，線就完全不會顯示。
+  document.getElementById('holdings-wrap').style.display = heldCodes.length ? 'block' : 'none';
+  heldCodes.forEach(code => { if (!holdingCharts[code]) createHoldingCard(code); });
+}
+
+// 切換「作用中」標的：換掉大圖／五檔／下單面板的目標，但不動其他已持有部位。
+async function switchActive(code) {
+  destroyHoldingCard(code); // 如果這檔原本是庫存小卡，現在要升級成大圖，先拆掉小卡避免重複輪詢
+  STATE.active = code;
+  ensurePosition(code);
   saveState();
+  document.getElementById('order-price').value = ''; // 換標的，之前選的價位不該沿用，改回市價
   lastPrice = null;
+  lastName = null;
   lastChartTs = 0;
   document.getElementById('btn-buy').disabled = false;
   document.getElementById('btn-sell').disabled = false;
@@ -404,46 +786,99 @@ async function startSim() {
   await loadIntraday(code); // 先把歷史分K畫完，避免跟第一次即時報價的 update() 搶時間軸順序
   renderPortfolio();
   renderLog();
+  syncHoldingCards();
   if (pollTimer) clearInterval(pollTimer);
   pollTick();
   pollTimer = setInterval(pollTick, 1500);
 }
 
-function resetSim() {
-  if (!STATE) return;
-  const capital = STATE.capital;
-  const code = STATE.code;
-  STATE = freshState(code, capital);
-  saveState();
-  renderPortfolio();
-  renderLog();
+async function startSim() {
+  const code = document.getElementById('code').value.trim();
+  if (!code) { alert('請輸入股票代號'); return; }
+
+  if (!STATE) {
+    const capital = parseFloat(document.getElementById('capital').value);
+    if (!capital || capital <= 0) { alert('請輸入有效的起始本金'); return; }
+    STATE = freshState(capital);
+    saveState();
+  }
+  await switchActive(code);
 }
+
+function resetSim() {
+  Object.keys(holdingCharts).forEach(destroyHoldingCard);
+  if (pollTimer) clearInterval(pollTimer);
+  pollTimer = null;
+  STATE = null;
+  localStorage.removeItem(STORAGE_KEY);
+  lastPrice = null; lastName = null; lastChartTs = 0;
+
+  document.getElementById('code').value = '';
+  document.getElementById('capital').value = 100000;
+  document.getElementById('order-price').value = '';
+  document.getElementById('btn-buy').disabled = true;
+  document.getElementById('btn-sell').disabled = true;
+  document.getElementById('btn-flat').disabled = true;
+  document.getElementById('price-code').textContent = '—';
+  document.getElementById('price-now').textContent = '--';
+  document.getElementById('price-change').textContent = '';
+  document.getElementById('price-meta').textContent = '尚未開始模擬';
+  document.getElementById('chart').innerHTML = '<div id="chart-empty">輸入代號並按「開始模擬」查看即時走勢</div>';
+  document.getElementById('bidask-body').innerHTML = '<div id="bidask-empty">尚未開始模擬</div>';
+  document.getElementById('holdings-wrap').style.display = 'none';
+  document.getElementById('holdings-grid').innerHTML = '';
+  document.getElementById('log-body').innerHTML = '<tr class="empty-row"><td colspan="7">尚無交易</td></tr>';
+  document.getElementById('s-holding-wrap').style.display = 'none';
+  ['s-cash', 's-total', 's-position', 's-avgcost', 's-breakeven', 's-unrealized', 's-realized', 's-return'].forEach(id => {
+    document.getElementById(id).textContent = '--';
+  });
+}
+
+// 下單價格：預設用市價（lastPrice）；使用者點五檔某個價位或自己輸入後改用那個價格下單，
+// 按「市價」按鈕或把欄位清空可以改回用市價。
+function getOrderPrice() {
+  const v = parseFloat(document.getElementById('order-price').value);
+  return (v && v > 0) ? v : lastPrice;
+}
+
+document.getElementById('bidask-body').addEventListener('click', (e) => {
+  const el = e.target.closest('.ba-price');
+  if (!el || !el.dataset.price) return;
+  document.getElementById('order-price').value = el.dataset.price;
+});
+document.getElementById('btn-clear-price').addEventListener('click', () => {
+  document.getElementById('order-price').value = '';
+});
 
 document.getElementById('btn-start').addEventListener('click', startSim);
 document.getElementById('btn-reset').addEventListener('click', resetSim);
 document.getElementById('btn-buy').addEventListener('click', () => {
-  const qty = parseInt(document.getElementById('qty').value, 10);
-  if (!qty || qty <= 0 || lastPrice == null) return;
-  applyTrade(1, qty, lastPrice);
+  const lots = parseFloat(document.getElementById('qty').value);
+  const price = getOrderPrice();
+  if (!lots || lots <= 0 || price == null || !STATE || !STATE.active) return;
+  applyTradeFor(STATE.active, 1, Math.round(lots * 1000), price);
 });
 document.getElementById('btn-sell').addEventListener('click', () => {
-  const qty = parseInt(document.getElementById('qty').value, 10);
-  if (!qty || qty <= 0 || lastPrice == null) return;
-  applyTrade(-1, qty, lastPrice);
+  const lots = parseFloat(document.getElementById('qty').value);
+  const price = getOrderPrice();
+  if (!lots || lots <= 0 || price == null || !STATE || !STATE.active) return;
+  applyTradeFor(STATE.active, -1, Math.round(lots * 1000), price);
 });
 document.getElementById('btn-flat').addEventListener('click', () => {
-  if (!STATE || STATE.position === 0 || lastPrice == null) return;
-  const qty = Math.abs(STATE.position);
-  applyTrade(STATE.position > 0 ? -1 : 1, qty, lastPrice);
+  if (!STATE || !STATE.active) return;
+  flattenPosition(STATE.active);
 });
 
 function moverRow(r, cls) {
   const div = document.createElement('div');
   div.className = 'mover-row';
+  const chgTxt = r.change_price == null ? ''
+    : `${r.change_price >= 0 ? '+' : ''}${r.change_price.toFixed(2)} `;
   div.innerHTML = `
     <span class="m-code">${r.code}</span>
     <span class="m-name">${r.name}</span>
-    <span class="m-rate ${cls}">${r.change_rate >= 0 ? '+' : ''}${r.change_rate.toFixed(2)}%</span>
+    <span class="m-price ${cls}">${r.price.toFixed(2)}</span>
+    <span class="m-rate ${cls}">${chgTxt}(${r.change_rate >= 0 ? '+' : ''}${r.change_rate.toFixed(2)}%)</span>
     <span class="m-vol">${r.volume.toLocaleString()}張</span>`;
   div.addEventListener('click', () => {
     document.getElementById('code').value = r.code;
@@ -497,20 +932,24 @@ document.getElementById('movers-refresh').addEventListener('click', () => loadMo
 (async function boot() {
   checkHealth();
   loadMovers();
+  loadDailyPnl();
   setInterval(loadMovers, 30000);
   const saved = loadState();
-  if (saved && saved.code) {
+  if (saved) {
     STATE = saved;
-    document.getElementById('code').value = STATE.code;
     document.getElementById('capital').value = STATE.capital;
-    document.getElementById('btn-buy').disabled = false;
-    document.getElementById('btn-sell').disabled = false;
-    initChart();
-    await loadIntraday(STATE.code);
+    if (STATE.active) {
+      document.getElementById('code').value = STATE.active;
+      document.getElementById('btn-buy').disabled = false;
+      document.getElementById('btn-sell').disabled = false;
+      initChart();
+      await loadIntraday(STATE.active);
+      pollTick();
+      pollTimer = setInterval(pollTick, 1500);
+    }
     renderPortfolio();
     renderLog();
-    pollTick();
-    pollTimer = setInterval(pollTick, 1500);
+    syncHoldingCards();
   } else {
     document.getElementById('capital').value = 100000;
   }
