@@ -191,13 +191,13 @@ def intraday():
             today = date.today().strftime("%Y-%m-%d")
             kb = api.kbars(contract=contract, start=today, end=today)
             points = []
-            for ts, close in zip(kb.ts, kb.Close):
+            for ts, close, volume in zip(kb.ts, kb.Close, kb.Volume):
                 if close is None:
                     continue
                 # kb.ts 是「台灣本地時間」數值但以 epoch 秒編碼（非真正 UTC），
                 # 用 utcfromtimestamp 直接取數值對應的時鐘時間，避免 fromtimestamp 多轉一次時區造成 +8 小時位移
                 t = datetime.fromtimestamp(ts / 1e9, tz=timezone.utc)
-                points.append({"t": t.strftime("%H:%M"), "price": float(close)})
+                points.append({"t": t.strftime("%H:%M"), "price": float(close), "volume": int(volume)})
             return points
         return jsonify({"ok": True, "points": _run(work)})
     except Exception as e:
