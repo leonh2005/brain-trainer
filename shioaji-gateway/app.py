@@ -119,6 +119,31 @@ def snapshot():
         return jsonify({"ok": False, "error": str(e)})
 
 
+@app.get("/stock_search")
+def stock_search():
+    """模糊搜尋股票代碼或中文名稱，回傳最多 10 筆 [{code, name}]。"""
+    q = request.args.get("q", "").strip()
+    if not q:
+        return jsonify({"ok": True, "results": []})
+    try:
+        def work(api):
+            results = []
+            for market in (api.Contracts.Stocks.TSE, api.Contracts.Stocks.OTC):
+                for contract in market:
+                    code = getattr(contract, "code", "")
+                    name = getattr(contract, "name", "")
+                    if not (len(code) == 4 and code.isdigit()):
+                        continue
+                    if q in code or q in name:
+                        results.append({"code": code, "name": name})
+                    if len(results) >= 10:
+                        return results
+            return results
+        return jsonify({"ok": True, "results": _run(work)})
+    except Exception as e:
+        return jsonify({"ok": False, "error": str(e)})
+
+
 @app.get("/kbars")
 def kbars():
     code = request.args.get("code", "")

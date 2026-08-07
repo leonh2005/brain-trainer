@@ -22,10 +22,19 @@
     border-radius: 6px; padding: 6px 10px; font-size: 13px;
   }
   input:focus { outline: none; border-color: #58a6ff; }
-  input#code { width: 90px; }
-  input#capital { width: 120px; }
-  input#capital::-webkit-inner-spin-button, input#capital::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
-  input#capital { -moz-appearance: textfield; }
+  input#code { width: 120px; }
+  #code-wrap { position: relative; }
+  #code-suggest {
+    display: none; position: absolute; top: calc(100% + 4px); left: 0; z-index: 20;
+    background: #21262d; border: 1px solid #30363d; border-radius: 6px;
+    min-width: 180px; max-height: 240px; overflow-y: auto;
+  }
+  #code-suggest.show { display: block; }
+  #code-suggest div {
+    padding: 6px 10px; cursor: pointer; font-size: 13px; white-space: nowrap;
+  }
+  #code-suggest div:hover { background: #30363d; }
+  #code-suggest .sg-code { color: #8b949e; margin-right: 6px; }
   button {
     border: 1px solid #30363d; background: #21262d; color: #e6edf3;
     border-radius: 6px; padding: 6px 14px; font-size: 13px; cursor: pointer;
@@ -42,6 +51,10 @@
 
   .layout { display: grid; grid-template-columns: 1fr 340px; gap: 16px; padding: 20px; max-width: 1280px; margin: 0 auto; }
   @media (max-width: 900px) { .layout { grid-template-columns: 1fr; } }
+  .card[draggable="true"] { cursor: grab; }
+  .card[draggable="true"]:active { cursor: grabbing; }
+  .card.dragging { opacity: .4; }
+  .card.drag-over { border-color: #58a6ff; }
 
   .card { background: #161b22; border: 1px solid #30363d; border-radius: 10px; padding: 16px; margin-bottom: 16px; }
   .card h2 { font-size: 13px; color: #8b949e; margin: 0 0 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .04em; }
@@ -49,10 +62,18 @@
   #price-head { display: flex; align-items: baseline; gap: 14px; margin-bottom: 10px; }
   #price-now { font-size: 34px; font-weight: 800; font-variant-numeric: tabular-nums; }
   #price-change { font-size: 16px; font-weight: 700; font-variant-numeric: tabular-nums; }
-  .pos-up { color: #f85149; }   /* 台股慣例：紅漲 */
-  .pos-down { color: #3fb950; } /* 綠跌 */
   #price-meta { font-size: 12px; color: #8b949e; }
-  #chart { width: 100%; height: 340px; }
+  #price-hilo { font-size: 12px; color: #8b949e; margin-top: 2px; margin-bottom: 8px; }
+  #chart-price-wrap { position: relative; }
+  #chart-price { width: 100%; height: 300px; }
+  #chart-tooltip {
+    display: none; position: absolute; z-index: 10; pointer-events: none;
+    background: #21262d; border: 1px solid #30363d; border-radius: 6px;
+    padding: 4px 8px; font-size: 12px; font-variant-numeric: tabular-nums;
+    color: #e6edf3; white-space: nowrap;
+  }
+  #chart-volume { width: 100%; height: 210px; margin-top: 4px; border-top: 1px solid #21262d; }
+  #chart-macd { width: 100%; height: 270px; margin-top: 4px; border-top: 1px solid #21262d; }
   #chart-empty { color: #8b949e; text-align: center; padding: 140px 0; }
 
   .trade-row { display: flex; gap: 8px; margin-bottom: 10px; align-items: center; }
@@ -60,9 +81,15 @@
   .trade-row button { flex: 1; }
   .row2 { display: flex; gap: 8px; }
 
-  .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 16px; }
-  .stat-grid .k { font-size: 12px; color: #8b949e; }
-  .stat-grid .v { font-size: 16px; font-weight: 700; font-variant-numeric: tabular-nums; margin-top: 2px; }
+  .po-dir-btn, .po-type-btn { flex: 1; opacity: .4; }
+  .po-dir-btn.active, .po-type-btn.active { opacity: 1; }
+  .po-type-btn { min-width: 70px; }
+  .po-row {
+    display: flex; align-items: center; justify-content: space-between; gap: 8px;
+    padding: 8px 0; border-top: 1px solid #30363d; font-size: 12.5px;
+  }
+  .po-row .po-cancel { flex: none; font-size: 11px; padding: 3px 8px; }
+  .po-list-head { font-size: 11.5px; color: #8b949e; font-weight: 700; padding-top: 4px; }
 
   table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
   th { text-align: left; color: #8b949e; font-weight: 600; padding: 6px 8px; border-bottom: 1px solid #30363d; }
@@ -88,12 +115,15 @@
   .mover-row .m-rate { font-weight: 700; font-variant-numeric: tabular-nums; width: 118px; text-align: right; flex: none; font-size: 12.5px; }
   .mover-row .m-vol { font-size: 11px; color: #8b949e; width: 60px; text-align: right; flex: none; font-variant-numeric: tabular-nums; }
   .movers-wrap { max-width: 1280px; margin: 0 auto; padding: 20px 20px 0; }
+  .index-wrap { max-width: 1280px; margin: 0 auto; padding: 14px 20px 0; }
+  #index-price { font-size: 20px; font-weight: 800; font-variant-numeric: tabular-nums; }
+  #index-chart { width: 100%; height: 140px; margin-top: 8px; }
 
   #bidask-body { font-variant-numeric: tabular-nums; }
   .ba-ratio { display: flex; align-items: center; gap: 8px; font-size: 11px; margin-bottom: 10px; }
   .ba-ratio-track { flex: 1; display: flex; height: 8px; border-radius: 4px; overflow: hidden; }
-  .ba-ratio-bid { background: #f85149; height: 100%; }
-  .ba-ratio-ask { background: #3fb950; height: 100%; }
+  .ba-ratio-bid { background: #3fb950; height: 100%; }
+  .ba-ratio-ask { background: #f85149; height: 100%; }
   .ba-cols { display: flex; gap: 8px; }
   .ba-cols .ba-col { flex: 1; min-width: 0; }
   .ba-cols .ba-col-head { font-size: 10.5px; color: #8b949e; padding: 0 4px 5px; font-weight: 600; }
@@ -105,8 +135,8 @@
   .ba-bar { flex: 1; height: 7px; background: #21262d; border-radius: 2px; overflow: hidden; }
   .ba-bar-fill { height: 100%; }
   .ba-bar.buy { display: flex; justify-content: flex-end; }
-  .ba-bar.buy .ba-bar-fill { background: #f85149; }
-  .ba-bar.sell .ba-bar-fill { background: #3fb950; }
+  .ba-bar.buy .ba-bar-fill { background: #3fb950; }
+  .ba-bar.sell .ba-bar-fill { background: #f85149; }
   #bidask-empty { color: #8b949e; text-align: center; padding: 20px 0; font-size: 12.5px; }
 
   .holdings-wrap { max-width: 1280px; margin: 0 auto; padding: 0 20px; }
@@ -117,7 +147,10 @@
   .hcard-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; margin-bottom: 8px; }
   .hcard-name { font-size: 13.5px; font-weight: 700; }
   .hcard-pos { font-size: 11.5px; color: #8b949e; margin-top: 2px; }
-  .hcard-chart { width: 100%; height: 70px; }
+  .hcard-price { font-size: 13px; font-weight: 700; font-variant-numeric: tabular-nums; margin-top: 2px; }
+  .pos-up { color: #f85149; }   /* 台股慣例：紅漲 */
+  .pos-down { color: #3fb950; } /* 綠跌 */
+  .hcard-chart { width: 100%; height: 100px; }
   .hcard-pnl { font-size: 15px; font-weight: 800; font-variant-numeric: tabular-nums; margin-top: 6px; }
 </style>
 </head>
@@ -125,8 +158,10 @@
 
 <div id="toolbar">
   <h1>當沖模擬</h1>
-  <input id="code" placeholder="股票代號" maxlength="6" autocomplete="off">
-  <input id="capital" placeholder="起始本金" type="number" min="1" step="1000">
+  <div id="code-wrap">
+    <input id="code" placeholder="股票代號或名稱" maxlength="10" autocomplete="off">
+    <div id="code-suggest"></div>
+  </div>
   <button class="primary" id="btn-start">開始模擬</button>
   <button id="btn-reset">重置</button>
   <span id="gw-status">連線檢查中…</span>
@@ -154,24 +189,46 @@
   </div>
 </div>
 
+<div class="index-wrap">
+  <div class="card" style="margin-bottom:0">
+    <div class="hcard-head" style="margin-bottom:0">
+      <div>
+        <div class="hcard-name">加權指數</div>
+        <div style="display:flex;align-items:baseline;gap:8px">
+          <div id="index-price">--</div>
+          <span id="index-change" class="hcard-pos"></span>
+        </div>
+      </div>
+    </div>
+    <div id="index-chart"></div>
+  </div>
+</div>
+
 <div class="holdings-wrap" id="holdings-wrap" style="display:none">
   <div class="holdings-label">持有部位</div>
   <div class="holdings-grid" id="holdings-grid"></div>
 </div>
 
 <div class="layout">
-  <div>
-    <div class="card">
+  <div class="card-col" id="col-left">
+    <div class="card" draggable="true" data-card-id="chart">
       <div id="price-head">
         <div id="price-code">—</div>
         <div id="price-now">--</div>
         <div id="price-change"></div>
       </div>
       <div id="price-meta">尚未開始模擬</div>
-      <div id="chart"><div id="chart-empty">輸入代號並按「開始模擬」查看即時走勢</div></div>
+      <div id="price-hilo"></div>
+      <div id="chart-empty">輸入代號並按「開始模擬」查看即時走勢</div>
+      <div id="chart-price-wrap">
+        <div id="chart-price"></div>
+        <div id="chart-tooltip"></div>
+      </div>
+      <div id="chart-volume"></div>
+      <div id="chart-macd"></div>
     </div>
 
-    <div class="card">
+    <div class="card" draggable="true" data-card-id="log">
       <h2>交易紀錄</h2>
       <div id="log-wrap">
         <table>
@@ -181,20 +238,20 @@
       </div>
     </div>
 
-    <div class="card">
+    <div class="card" draggable="true" data-card-id="daily-pnl">
       <h2>每日損益紀錄</h2>
       <p style="font-size:11.5px;color:#8b949e;margin:0 0 10px">永久存在後端資料庫，跟瀏覽器資料分開，重置模擬或清瀏覽器資料都不會遺失。</p>
       <div id="daily-pnl-wrap">
         <table>
-          <thead><tr><th>日期</th><th>交易次數</th><th>手續費+稅</th><th>已實現損益（淨）</th></tr></thead>
-          <tbody id="daily-pnl-body"><tr class="empty-row"><td colspan="4">載入中…</td></tr></tbody>
+          <thead><tr><th>日期</th><th>交易次數</th><th>手續費+稅</th><th>已實現損益（淨）</th><th>報酬率</th></tr></thead>
+          <tbody id="daily-pnl-body"><tr class="empty-row"><td colspan="5">載入中…</td></tr></tbody>
         </table>
       </div>
     </div>
   </div>
 
-  <div>
-    <div class="card">
+  <div class="card-col" id="col-right">
+    <div class="card" draggable="true" data-card-id="order">
       <h2>下單</h2>
       <div class="trade-row">
         <input id="order-price" type="number" step="0.05" placeholder="市價" style="flex:1">
@@ -213,48 +270,51 @@
       <p style="font-size:11.5px;color:#8b949e;margin:10px 0 0">賣出超過持股會自動視為放空，符合當沖先賣後買邏輯。純模擬，不會真實下單。</p>
     </div>
 
-    <div class="card">
+    <div class="card" draggable="true" data-card-id="bidask">
       <h2>最佳五檔</h2>
       <div id="bidask-body">
         <div id="bidask-empty">尚未開始模擬</div>
       </div>
     </div>
 
-    <div class="card">
-      <h2>部位 / 資產</h2>
-      <div id="s-holding-wrap" style="display:none; margin-bottom:14px; padding-bottom:14px; border-bottom:1px solid #30363d; justify-content:space-between; align-items:baseline;">
-        <div>
-          <div style="font-size:11px;color:#8b949e">持有標的</div>
-          <div id="s-holding" style="font-size:16px;font-weight:700">--</div>
-        </div>
-        <div style="text-align:right">
-          <div style="font-size:11px;color:#8b949e">未實現損益</div>
-          <div id="s-unrealized-big" style="font-size:18px;font-weight:800">--</div>
-        </div>
+    <div class="card" draggable="true" data-card-id="pending">
+      <h2>預約單</h2>
+      <div class="row2">
+        <button type="button" class="buy po-dir-btn active" id="po-dir-buy" data-dir="1">買進</button>
+        <button type="button" class="sell po-dir-btn" id="po-dir-sell" data-dir="-1">賣出</button>
       </div>
-      <div class="stat-grid">
-        <div><div class="k">現金</div><div class="v" id="s-cash">--</div></div>
-        <div><div class="k">總資產</div><div class="v" id="s-total">--</div></div>
-        <div><div class="k">持有股數</div><div class="v" id="s-position">--</div></div>
-        <div><div class="k">平均成本</div><div class="v" id="s-avgcost">--</div></div>
-        <div><div class="k">損益兩平價</div><div class="v" id="s-breakeven">--</div></div>
-        <div><div class="k">未實現損益</div><div class="v" id="s-unrealized">--</div></div>
-        <div><div class="k">已實現損益</div><div class="v" id="s-realized">--</div></div>
-        <div><div class="k">報酬率</div><div class="v" id="s-return">--</div></div>
+      <div class="trade-row" style="margin-top:8px">
+        <input id="po-qty" type="number" placeholder="張數" min="1" step="1" value="1"> 張
       </div>
+      <div class="row2" style="flex-wrap:wrap">
+        <button type="button" class="po-type-btn active" data-type="market">市價</button>
+        <button type="button" class="po-type-btn" data-type="limitUp">漲停</button>
+        <button type="button" class="po-type-btn" data-type="limitDown">跌停</button>
+        <button type="button" class="po-type-btn" data-type="custom">自訂價</button>
+      </div>
+      <div class="trade-row" id="po-custom-wrap" style="display:none;margin-top:8px">
+        <input id="po-custom-price" type="number" step="0.05" placeholder="目標價" style="flex:1">
+      </div>
+      <button type="button" id="btn-po-submit" disabled style="width:100%;margin-top:8px">送出預約</button>
+      <p style="font-size:11.5px;color:#8b949e;margin:10px 0 0">價格觸碰目標價（買進：現價≤目標價／賣出：現價≥目標價）即自動成交；市價則下一次報價就直接成交。只對目前作用中標的有效。</p>
+      <div id="po-list" style="margin-top:10px"></div>
     </div>
+
   </div>
 </div>
 
 <script>
 const STORAGE_KEY = 'daytrade-sim-state';
 let STATE = null;
-let chart = null, priceSeries = null, vwapSeries = null;
+let priceChart = null, volumeChart = null, macdChart = null;
+let priceSeries = null, vwapSeries = null, volumeSeries = null;
+let macdSeries = null, macdSignalSeries = null, macdHistSeries = null;
 let pollTimer = null;
 const holdingCharts = {}; // 非 active 的庫存：code -> { chart, series, lastTs, price, pollTimer }
 
+const DEFAULT_CAPITAL = 100000; // 本金只是內部現金流的起始值，不再顯示也不影響報酬率算法，固定用一個數字即可
 function freshState(capital) {
-  return { capital, cash: capital, active: null, positions: {}, trades: [] };
+  return { capital, cash: capital, active: null, positions: {}, trades: [], pendingOrders: [] };
 }
 
 function ensurePosition(code) {
@@ -267,7 +327,9 @@ function loadState() {
   // 舊版單一部位格式沒有 positions 欄位，直接視為空狀態（模擬工具、資料不值錢，不寫遷移邏輯）
   try {
     const s = JSON.parse(localStorage.getItem(STORAGE_KEY));
-    return (s && s.positions) ? s : null;
+    if (!s || !s.positions) return null;
+    if (!s.pendingOrders) s.pendingOrders = []; // 舊資料沒有這個欄位，補空陣列
+    return s;
   } catch (e) { return null; }
 }
 
@@ -275,20 +337,216 @@ function fmtMoney(n) { return (n < 0 ? '-$' : '$') + Math.abs(Math.round(n)).toL
 function fmtPct(n) { return (n >= 0 ? '+' : '') + n.toFixed(2) + '%'; }
 function upDownClass(n) { return n > 0 ? 'pos-up' : (n < 0 ? 'pos-down' : ''); }
 
+// 三張圖表各自獨立（真正分開的附圖，不是共用一個 pane 硬切 scaleMargins），
+// 三關價這種掛在價格軸上的水平線才不會被成交量/MACD 的自動縮放拖著跑位。
+// 靠同步 visible logical range 讓三張圖的時間軸對得起來（一張拉動、其他兩張跟著動）。
+function syncTimeScales(charts) {
+  let syncing = false;
+  charts.forEach(c => {
+    c.timeScale().subscribeVisibleLogicalRangeChange(range => {
+      if (syncing || !range) return;
+      syncing = true;
+      charts.forEach(other => { if (other !== c) other.timeScale().setVisibleLogicalRange(range); });
+      syncing = false;
+    });
+  });
+}
+
 function initChart() {
-  const el = document.getElementById('chart');
-  el.innerHTML = '';
-  chart = LightweightCharts.createChart(el, {
+  const priceEl = document.getElementById('chart-price');
+  const volumeEl = document.getElementById('chart-volume');
+  const macdEl = document.getElementById('chart-macd');
+  priceEl.innerHTML = ''; volumeEl.innerHTML = ''; macdEl.innerHTML = '';
+  document.getElementById('chart-empty').style.display = 'none';
+  gateLines = []; maLines = []; hiLoLines = { high: null, low: null }; openLimitLines = []; // 舊 priceSeries 已經整個丟棄，殘留的線物件參照也一併清掉
+
+  const common = {
     localization: { locale: 'zh-TW' }, // 避免依賴 navigator.language（某些無頭瀏覽器環境下該值是 undefined，會讓內部 Intl 格式化拋錯）
     layout: { background: { color: '#161b22' }, textColor: '#8b949e' },
     grid: { vertLines: { color: '#21262d' }, horzLines: { color: '#21262d' } },
-    timeScale: { timeVisible: true, secondsVisible: false, borderColor: '#30363d' },
     rightPriceScale: { borderColor: '#30363d' },
-    width: el.clientWidth, height: 340,
+  };
+  priceChart = LightweightCharts.createChart(priceEl, {
+    ...common,
+    timeScale: { timeVisible: true, secondsVisible: false, borderColor: '#30363d', visible: false },
+    width: priceEl.clientWidth, height: 300,
   });
-  priceSeries = chart.addLineSeries({ color: '#58a6ff', lineWidth: 2 });
-  vwapSeries = chart.addLineSeries({ color: '#e3b341', lineWidth: 1, priceLineVisible: false, lastValueVisible: false });
-  window.addEventListener('resize', () => chart && chart.applyOptions({ width: el.clientWidth }));
+  volumeChart = LightweightCharts.createChart(volumeEl, {
+    ...common,
+    timeScale: { timeVisible: true, secondsVisible: false, borderColor: '#30363d', visible: false },
+    width: volumeEl.clientWidth, height: 210,
+  });
+  macdChart = LightweightCharts.createChart(macdEl, {
+    ...common,
+    timeScale: { timeVisible: true, secondsVisible: false, borderColor: '#30363d' },
+    width: macdEl.clientWidth, height: 270,
+  });
+
+  priceSeries = priceChart.addLineSeries({ color: '#58a6ff', lineWidth: 2 });
+  padAutoscale(priceSeries);
+  vwapSeries = priceChart.addLineSeries({ color: '#e3b341', lineWidth: 1, priceLineVisible: false, lastValueVisible: false });
+
+  volumeSeries = volumeChart.addHistogramSeries({ priceFormat: { type: 'volume' } });
+
+  macdSeries = macdChart.addLineSeries({ color: '#58a6ff', lineWidth: 1, priceLineVisible: false, lastValueVisible: false });
+  macdSignalSeries = macdChart.addLineSeries({ color: '#e3b341', lineWidth: 1, priceLineVisible: false, lastValueVisible: false });
+  macdHistSeries = macdChart.addHistogramSeries({ priceLineVisible: false, lastValueVisible: false });
+
+  syncTimeScales([priceChart, volumeChart, macdChart]);
+
+  // 滑鼠移到任一張圖（價格/成交量/MACD）上時，垂直虛線要貫通三張圖，並用浮動 tooltip
+  // 顯示那個時間點的價格、成交量、MACD——右側軸上的即時價標籤只會跟著最新一筆跑，
+  // 過去的點完全看不到數字，所以另外做一個跟著游標走的提示框。
+  const tooltip = document.getElementById('chart-tooltip');
+  let crosshairSyncing = false;
+  const crosshairCharts = [
+    { chart: priceChart, series: priceSeries },
+    { chart: volumeChart, series: volumeSeries },
+    { chart: macdChart, series: macdSeries },
+  ];
+  crosshairCharts.forEach(({ chart: sourceChart }) => {
+    sourceChart.subscribeCrosshairMove(param => {
+      if (crosshairSyncing) return;
+      if (!param.time) {
+        tooltip.style.display = 'none';
+        crosshairSyncing = true;
+        crosshairCharts.forEach(({ chart: c }) => c.clearCrosshairPosition());
+        crosshairSyncing = false;
+        return;
+      }
+      const bar = barsByTime.get(param.time);
+      if (!bar) { tooltip.style.display = 'none'; return; }
+
+      crosshairSyncing = true;
+      crosshairCharts.forEach(({ chart: c, series: s }) => {
+        if (c !== sourceChart) c.setCrosshairPosition(0, param.time, s);
+      });
+      crosshairSyncing = false;
+
+      const t = new Date(param.time * 1000);
+      const hh = String(t.getUTCHours()).padStart(2, '0');
+      const mm = String(t.getUTCMinutes()).padStart(2, '0');
+      tooltip.innerHTML =
+        `${hh}:${mm}　價 ${bar.price.toFixed(2)}<br>` +
+        `量 ${bar.volume.toLocaleString()}<br>` +
+        `MACD ${bar.macd.toFixed(3)}　訊號 ${bar.signal.toFixed(3)}`;
+      tooltip.style.display = 'block';
+      const point = param.point || { x: 0, y: 0 };
+      let left = point.x + 12;
+      if (left + tooltip.offsetWidth + 8 > priceEl.clientWidth) left = point.x - tooltip.offsetWidth - 12;
+      tooltip.style.left = `${left}px`;
+      tooltip.style.top = '4px';
+    });
+  });
+
+  window.addEventListener('resize', () => {
+    if (!priceChart) return;
+    priceChart.applyOptions({ width: priceEl.clientWidth });
+    volumeChart.applyOptions({ width: volumeEl.clientWidth });
+    macdChart.applyOptions({ width: macdEl.clientWidth });
+  });
+}
+
+// MACD(5,35,5)：快線 EMA5、慢線 EMA35 之差為 MACD 線，MACD 線再取 EMA5 為訊號線，兩者之差畫成柱狀圖
+function ema(values, period) {
+  const k = 2 / (period + 1);
+  const out = new Array(values.length);
+  out[0] = values[0];
+  for (let i = 1; i < values.length; i++) out[i] = values[i] * k + out[i - 1] * (1 - k);
+  return out;
+}
+function computeMACD(data, fast = 5, slow = 35, signalPeriod = 5) {
+  const closes = data.map(d => d.value);
+  const emaFast = ema(closes, fast);
+  const emaSlow = ema(closes, slow);
+  const macdLine = closes.map((_, i) => emaFast[i] - emaSlow[i]);
+  const signalLine = ema(macdLine, signalPeriod);
+  return data.map((d, i) => ({
+    time: d.time, macd: macdLine[i], signal: signalLine[i], hist: macdLine[i] - signalLine[i],
+  }));
+}
+
+const INDEX_CODE = 'IX0001';
+let indexChart = null, indexSeries = null, indexVwapSeries = null, indexVolumeSeries = null, indexLastTs = 0;
+let indexHigh = null, indexLow = null, indexHiLoLines = { high: null, low: null };
+
+// 固定時間軸 09:00~13:30：不管現在幾點、資料有多少，最左邊永遠是開盤，線只會往右畫，
+// 不會因為資料變多就整條跟著重新縮放。
+// 固定時間軸 09:00~13:30：不管現在幾點、資料有多少，最左邊永遠是開盤，線只會往右畫，
+// 不會因為資料變多就整條跟著重新縮放。所有走勢圖（大卡片、加權指數、庫存迷你卡）共用。
+function lockChartRange(chart) {
+  chart.timeScale().setVisibleRange({ from: taipeiFixedTs(9, 0), to: taipeiFixedTs(13, 30) });
+}
+function lockIndexRange() { lockChartRange(indexChart); }
+
+function renderIndexSeries(data) {
+  if (!data.length) return;
+  indexSeries.setData(data);
+  indexLastTs = data[data.length - 1].time;
+
+  let cumPV = 0, cumVol = 0;
+  indexVwapSeries.setData(data.map(pt => {
+    cumPV += pt.value * pt.volume;
+    cumVol += pt.volume;
+    return { time: pt.time, value: cumVol > 0 ? +(cumPV / cumVol).toFixed(2) : pt.value };
+  }));
+
+  indexVolumeSeries.setData(data.map((pt, i) => ({
+    time: pt.time, value: pt.volume,
+    color: i > 0 && pt.value < data[i - 1].value ? '#3fb950' : '#f85149', // 台股慣例：紅漲綠跌
+  })));
+
+  indexHigh = Math.max(...data.map(p => p.value));
+  indexLow = Math.min(...data.map(p => p.value));
+  upsertHiLoLines(indexSeries, indexHiLoLines, indexHigh, indexLow);
+  lockIndexRange();
+}
+
+function initIndexChart() {
+  const el = document.getElementById('index-chart');
+  indexChart = LightweightCharts.createChart(el, {
+    localization: { locale: 'zh-TW' },
+    layout: { background: { color: '#161b22' }, textColor: '#8b949e' },
+    grid: { vertLines: { visible: false }, horzLines: { visible: false } },
+    timeScale: { visible: false },
+    rightPriceScale: { visible: false },
+    handleScroll: false, handleScale: false,
+    width: el.clientWidth, height: 140,
+  });
+  indexSeries = indexChart.addLineSeries({ color: '#58a6ff', lineWidth: 2, priceLineVisible: false });
+  indexVwapSeries = indexChart.addLineSeries({ color: '#e3b341', lineWidth: 1, priceLineVisible: false, lastValueVisible: false });
+  // scaleMargins 一定要在至少一個 series 掛上這個 price scale「之後」設定才會生效，
+  // 掛之前呼叫會被第一個 series 綁定時重新初始化蓋掉（今高/今低剛好貼在資料極值上，
+  // margins 沒吃到的話那兩條線會整個貼齊畫布邊緣，實際上看不到）。
+  indexSeries.priceScale().applyOptions({ scaleMargins: { top: 0.1, bottom: 0.3 } });
+  padAutoscale(indexSeries);
+  indexVolumeSeries = indexChart.addHistogramSeries({ priceFormat: { type: 'volume' }, priceScaleId: 'volume' });
+  indexChart.priceScale('volume').applyOptions({ scaleMargins: { top: 0.75, bottom: 0 } });
+  window.addEventListener('resize', () => { if (!indexChart) return; indexChart.applyOptions({ width: el.clientWidth }); lockIndexRange(); });
+
+  fetchIntradaySeries(INDEX_CODE).then(renderIndexSeries).catch(() => {});
+  setInterval(() => fetchIntradaySeries(INDEX_CODE).then(renderIndexSeries).catch(() => {}), 30000);
+
+  const poll = async () => {
+    try {
+      const r = await fetch(`/api/quote?code=${encodeURIComponent(INDEX_CODE)}`);
+      const d = await r.json();
+      if (!d.ok) return;
+      document.getElementById('index-price').textContent = d.price.toFixed(2);
+      document.getElementById('index-price').className = upDownClass(d.change_price);
+      const chg = document.getElementById('index-change');
+      chg.textContent = `${d.change_price >= 0 ? '+' : ''}${d.change_price.toFixed(2)} (${fmtPct(d.change_rate || 0)})`;
+      chg.className = 'hcard-pos ' + upDownClass(d.change_price);
+      const ts = taipeiMinuteTs(new Date());
+      if (ts >= indexLastTs) { indexLastTs = ts; indexSeries.update({ time: ts, value: d.price }); }
+      if (indexHigh == null || d.price > indexHigh) indexHigh = d.price;
+      if (indexLow == null || d.price < indexLow) indexLow = d.price;
+      upsertHiLoLines(indexSeries, indexHiLoLines, indexHigh, indexLow);
+      lockIndexRange();
+    } catch (e) { /* 忽略單次輪詢失敗 */ }
+  };
+  poll();
+  setInterval(poll, 3000);
 }
 
 // Lightweight Charts 內部一律用 UTC 曆面畫刻度標籤，不會轉換成瀏覽器時區，
@@ -298,6 +556,11 @@ function initChart() {
 function taipeiMinuteTs(date) {
   const t = new Date(date.toLocaleString('en-US', { timeZone: 'Asia/Taipei' }));
   return Math.floor(Date.UTC(t.getFullYear(), t.getMonth(), t.getDate(), t.getHours(), t.getMinutes(), 0) / 1000);
+}
+// 今天固定某個台北時刻的 timestamp，算法跟 taipeiMinuteTs 同一套「假 UTC」規則。
+function taipeiFixedTs(hour, minute) {
+  const t = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Taipei' }));
+  return Math.floor(Date.UTC(t.getFullYear(), t.getMonth(), t.getDate(), hour, minute, 0) / 1000);
 }
 function taipeiDateStr(date) {
   const t = new Date(date.toLocaleString('en-US', { timeZone: 'Asia/Taipei' }));
@@ -318,7 +581,11 @@ async function fetchIntradaySeries(code) {
 
 // 三關價：只在落於「今天走勢圖的價格尺度」附近才畫線，離太遠（超出今日高低±50%的振幅）就不畫，
 // 避免關卡價跟今天實際走勢差太多時，把圖表 Y 軸硬拉開變得沒意義。
+let barsByTime = new Map(); // time -> {price, volume, macd, signal, hist}，給三張圖共用的 crosshair tooltip 查值用
+let gateLines = [];
 function renderGates(gates, data) {
+  gateLines.forEach(line => priceSeries.removePriceLine(line));
+  gateLines = [];
   if (!data.length) return;
   const values = data.map(p => p.value);
   const lo = Math.min(...values), hi = Math.max(...values);
@@ -333,11 +600,68 @@ function renderGates(gates, data) {
   specs.forEach(s => {
     const v = gates[s.key];
     if (v == null || !within(v)) return;
-    priceSeries.createPriceLine({
+    gateLines.push(priceSeries.createPriceLine({
       price: v, color: s.color, lineWidth: 1,
       lineStyle: LightweightCharts.LineStyle.Dashed,
       axisLabelVisible: true, title: s.label,
-    });
+    }));
+  });
+}
+
+// 開盤價/漲停價/跌停價/最低價：跟三關價同一套邏輯畫成水平線。漲跌停用 three_gates 回傳的
+// 前一交易日收盤價（prev_close）算 ±10%，開盤價用今天第一筆分K，最低價沿用 todayLow。
+let openLimitLines = [];
+function renderOpenLimits(gates, data) {
+  openLimitLines.forEach(line => priceSeries.removePriceLine(line));
+  openLimitLines = [];
+  if (!data.length) return;
+  const values = data.map(p => p.value);
+  const lo = Math.min(...values), hi = Math.max(...values);
+  const range = (hi - lo) || hi * 0.02 || 1;
+  const margin = range * 0.5;
+  const within = v => v >= lo - margin && v <= hi + margin;
+  const prevClose = gates && gates.prev_close;
+  const specs = [
+    { v: data[0].value, label: '開盤', color: '#79c0ff' },
+    { v: prevClose != null ? +(prevClose * 1.1).toFixed(2) : null, label: '漲停', color: '#f85149' },
+    { v: prevClose != null ? +(prevClose * 0.9).toFixed(2) : null, label: '跌停', color: '#3fb950' },
+    { v: todayLow, label: '最低', color: '#8b949e' },
+  ];
+  specs.forEach(s => {
+    if (s.v == null || !within(s.v)) return;
+    openLimitLines.push(priceSeries.createPriceLine({
+      price: s.v, color: s.color, lineWidth: 1,
+      lineStyle: LightweightCharts.LineStyle.Dotted,
+      axisLabelVisible: true, title: s.label,
+    }));
+  });
+}
+
+// 5日/10日/月線(20日)均線，跟三關價同一套邏輯：畫成水平線，超出今日走勢範圍太多就不畫，
+// 不去動價格軸的自動縮放範圍。
+let maLines = [];
+function renderDailyMA(ma, data) {
+  maLines.forEach(line => priceSeries.removePriceLine(line));
+  maLines = [];
+  if (!data.length) return;
+  const values = data.map(p => p.value);
+  const lo = Math.min(...values), hi = Math.max(...values);
+  const range = (hi - lo) || hi * 0.02 || 1;
+  const margin = range * 0.5;
+  const within = v => v >= lo - margin && v <= hi + margin;
+  const specs = [
+    { key: 'ma5', label: 'MA5', color: '#a371f7' },
+    { key: 'ma10', label: 'MA10', color: '#79c0ff' },
+    { key: 'ma20', label: 'MA20', color: '#ffa657' },
+  ];
+  specs.forEach(s => {
+    const v = ma[s.key];
+    if (v == null || !within(v)) return;
+    maLines.push(priceSeries.createPriceLine({
+      price: v, color: s.color, lineWidth: 1,
+      lineStyle: LightweightCharts.LineStyle.Dotted,
+      axisLabelVisible: true, title: s.label,
+    }));
   });
 }
 
@@ -348,6 +672,10 @@ async function loadIntraday(code) {
     priceSeries.setData(data);
     lastChartTs = data[data.length - 1].time;
 
+    todayHigh = Math.max(...data.map(p => p.value));
+    todayLow = Math.min(...data.map(p => p.value));
+    renderHiLo();
+
     // 當日均價線（VWAP）：用分K的量價累積算出來，跟主線疊在一起
     let cumPV = 0, cumVol = 0;
     const vwapData = data.map(pt => {
@@ -357,24 +685,199 @@ async function loadIntraday(code) {
     });
     vwapSeries.setData(vwapData);
 
+    // 成交量柱：跟前一分鐘比價漲跌決定紅綠（台股慣例：紅漲綠跌）
+    volumeSeries.setData(data.map((pt, i) => ({
+      time: pt.time, value: pt.volume,
+      color: i > 0 && pt.value < data[i - 1].value ? '#3fb950' : '#f85149',
+    })));
+
+    // MACD(5,35,5)
+    const macdData = computeMACD(data, 5, 35, 5);
+    macdSeries.setData(macdData.map(m => ({ time: m.time, value: +m.macd.toFixed(3) })));
+    macdSignalSeries.setData(macdData.map(m => ({ time: m.time, value: +m.signal.toFixed(3) })));
+    macdHistSeries.setData(macdData.map(m => ({
+      time: m.time, value: +m.hist.toFixed(3),
+      color: m.hist >= 0 ? '#f85149' : '#3fb950',
+    })));
+
+    barsByTime = new Map();
+    data.forEach((pt, i) => {
+      barsByTime.set(pt.time, {
+        price: pt.value, volume: pt.volume,
+        macd: macdData[i].macd, signal: macdData[i].signal, hist: macdData[i].hist,
+      });
+    });
+
+    lockChartRange(priceChart);
+
     try {
       const r = await fetch(`/api/three_gates?code=${encodeURIComponent(code)}`);
       const g = await r.json();
-      if (g.ok) renderGates(g, data);
+      if (g.ok) { renderGates(g, data); renderOpenLimits(g, data); }
     } catch (e) { /* 三關價拿不到就不畫，不影響主圖顯示 */ }
+
+    try {
+      const r = await fetch(`/api/daily_ma?code=${encodeURIComponent(code)}`);
+      const m = await r.json();
+      if (m.ok) renderDailyMA(m, data);
+    } catch (e) { /* 均線拿不到就不畫，不影響主圖顯示 */ }
   } catch (e) { /* 沒有歷史資料就從即時報價開始畫 */ }
 }
 
 let lastChartTs = 0;
+let todayHigh = null, todayLow = null;
+let hiLoLines = { high: null, low: null };
+// 今日最高/最低：直接畫成固定水平線疊在價格圖上（跟三關價、均線同一套視覺語言），
+// 不是只放在文字說明裡容易被忽略；價格線物件建過一次後用 applyOptions 更新，不用整條重畫。
+// 今高/今低剛好等於資料本身的最大最小值，autoscale 算出來的可視範圍上下界會跟這兩個值完全疊在一起，
+// 線就貼死在畫布邊緣被裁掉、實際上看不到。用 autoscaleInfoProvider 讓可視範圍主動多留 8% 緩衝，
+// 之後不管 scaleMargins 怎麼設，今高/今低都保證落在可視範圍「內側」，不會再貼邊不見。
+function padAutoscale(series) {
+  series.applyOptions({
+    autoscaleInfoProvider: original => {
+      const res = original();
+      if (res && res.priceRange) {
+        const { minValue, maxValue } = res.priceRange;
+        const pad = (maxValue - minValue) * 0.08 || Math.abs(maxValue) * 0.01 || 1;
+        res.priceRange = { minValue: minValue - pad, maxValue: maxValue + pad };
+      }
+      return res;
+    },
+  });
+}
+
+// 共用：在任一 series 上畫（或更新）「今高/今低」兩條固定水平線。lines 是呼叫端自己保管的
+// { high, low } 物件，第一次建線後靠 applyOptions 更新價位，不用整條重畫。
+function upsertHiLoLines(series, lines, high, low) {
+  if (!lines.high) {
+    lines.high = series.createPriceLine({
+      price: high, color: '#f85149', lineWidth: 2,
+      lineStyle: LightweightCharts.LineStyle.Dashed,
+      axisLabelVisible: true, title: '今高',
+    });
+  } else {
+    lines.high.applyOptions({ price: high });
+  }
+  if (!lines.low) {
+    lines.low = series.createPriceLine({
+      price: low, color: '#3fb950', lineWidth: 2,
+      lineStyle: LightweightCharts.LineStyle.Dashed,
+      axisLabelVisible: true, title: '今低',
+    });
+  } else {
+    lines.low.applyOptions({ price: low });
+  }
+}
+function renderHiLo() {
+  document.getElementById('price-hilo').textContent =
+    `今日最高 ${todayHigh.toFixed(2)}　最低 ${todayLow.toFixed(2)}`;
+  upsertHiLoLines(priceSeries, hiLoLines, todayHigh, todayLow);
+}
 function appendTick(price) {
   const ts = taipeiMinuteTs(new Date());
   if (ts < lastChartTs) return; // 圖表時間必須非遞減；同分鐘內用 update() 覆蓋原點即可
   lastChartTs = ts;
   priceSeries.update({ time: ts, value: price });
+  if (todayHigh == null || price > todayHigh) todayHigh = price;
+  if (todayLow == null || price < todayLow) todayLow = price;
+  renderHiLo();
+  lockChartRange(priceChart);
 }
 
 let lastPrice = null;
 let lastName = null;
+
+let lastChangePrice = null;
+
+// 預約單：只對目前作用中標的有效。市價單下一次報價就成交；漲停/跌停/自訂價則等現價「觸碰」
+// 目標價（買進：現價≤目標價／賣出：現價≥目標價）才成交，觸發時用當下報價當成交價，跟真實限價單邏輯一致。
+function poPrevClose() {
+  if (lastPrice == null || lastChangePrice == null) return null;
+  return lastPrice - lastChangePrice;
+}
+function resolvePendingTargetPrice(priceType, customVal) {
+  if (priceType === 'market') return null; // null 代表市價，不用比價，下一次報價直接成交
+  if (priceType === 'custom') return customVal;
+  const prevClose = poPrevClose();
+  if (prevClose == null) return null;
+  return +(priceType === 'limitUp' ? prevClose * 1.1 : prevClose * 0.9).toFixed(2);
+}
+function createPendingOrder(direction, qty, priceType, customVal) {
+  if (!STATE || !STATE.active) return;
+  const target = resolvePendingTargetPrice(priceType, customVal);
+  if (priceType !== 'market' && target == null) { alert('目前還沒有報價，無法算出漲停/跌停價'); return; }
+  STATE.pendingOrders.push({
+    id: `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+    code: STATE.active, direction, qty, priceType, target,
+  });
+  saveState();
+  renderPendingOrders();
+}
+function cancelPendingOrder(id) {
+  STATE.pendingOrders = STATE.pendingOrders.filter(o => o.id !== id);
+  saveState();
+  renderPendingOrders();
+}
+function poLabel(o) {
+  if (o.priceType === 'market') return '市價';
+  const t = { limitUp: '漲停', limitDown: '跌停', custom: '自訂' }[o.priceType] || o.priceType;
+  return `${t} ${o.target.toFixed(2)}`;
+}
+function renderPendingOrders() {
+  const box = document.getElementById('po-list');
+  if (!STATE) { box.innerHTML = ''; return; }
+  const orders = STATE.pendingOrders.filter(o => o.code === STATE.active);
+  if (!orders.length) { box.innerHTML = ''; return; }
+  const posObj = STATE.active ? STATE.positions[STATE.active] : null;
+  const label = STATE.active ? `${STATE.active}${posObj && posObj.name ? ' ' + posObj.name : ''}` : '';
+  box.innerHTML = `<div class="po-list-head">${label} 的預約單</div>` + orders.map(o => `
+    <div class="po-row">
+      <span class="${o.direction > 0 ? 'pos-up' : 'pos-down'}">${o.direction > 0 ? '買進' : '賣出'} ${o.qty}張 @ ${poLabel(o)}</span>
+      <button type="button" class="po-cancel" data-id="${o.id}">取消</button>
+    </div>`).join('');
+}
+function checkPendingOrders(currentPrice) {
+  if (!STATE || !STATE.active || !STATE.pendingOrders.length) return;
+  const due = STATE.pendingOrders.filter(o => o.code === STATE.active && (
+    o.priceType === 'market'
+      || (o.direction > 0 && currentPrice <= o.target)
+      || (o.direction < 0 && currentPrice >= o.target)
+  ));
+  if (!due.length) return;
+  STATE.pendingOrders = STATE.pendingOrders.filter(o => !due.includes(o));
+  due.forEach(o => applyTradeFor(o.code, o.direction, o.qty * 1000, currentPrice));
+  saveState();
+  renderPendingOrders();
+}
+
+document.getElementById('po-dir-buy').addEventListener('click', () => {
+  document.getElementById('po-dir-buy').classList.add('active');
+  document.getElementById('po-dir-sell').classList.remove('active');
+});
+document.getElementById('po-dir-sell').addEventListener('click', () => {
+  document.getElementById('po-dir-sell').classList.add('active');
+  document.getElementById('po-dir-buy').classList.remove('active');
+});
+document.querySelectorAll('.po-type-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.po-type-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('po-custom-wrap').style.display = btn.dataset.type === 'custom' ? 'flex' : 'none';
+  });
+});
+document.getElementById('btn-po-submit').addEventListener('click', () => {
+  const direction = parseFloat(document.getElementById('po-dir-buy').classList.contains('active') ? '1' : '-1');
+  const qty = parseFloat(document.getElementById('po-qty').value);
+  const priceType = document.querySelector('.po-type-btn.active').dataset.type;
+  const customVal = parseFloat(document.getElementById('po-custom-price').value);
+  if (!qty || qty <= 0) { alert('請輸入張數'); return; }
+  if (priceType === 'custom' && !(customVal > 0)) { alert('請輸入自訂價格'); return; }
+  createPendingOrder(direction, qty, priceType, customVal);
+});
+document.getElementById('po-list').addEventListener('click', (e) => {
+  const btn = e.target.closest('.po-cancel');
+  if (btn) cancelPendingOrder(btn.dataset.id);
+});
 
 async function pollQuote() {
   if (!STATE || !STATE.active) return;
@@ -388,9 +891,11 @@ async function pollQuote() {
     }
     lastPrice = d.price;
     lastName = d.name;
+    lastChangePrice = d.change_price;
     if (d.name) ensurePosition(STATE.active).name = d.name;
     appendTick(d.price);
     renderPrice(d);
+    checkPendingOrders(d.price);
     renderPortfolio();
   } catch (e) {
     setGwStatus(false);
@@ -416,23 +921,23 @@ function renderBidAsk(d) {
     <div class="ba-row">
       <span class="ba-vol">${b.volume.toLocaleString()}</span>
       <div class="ba-bar buy"><div class="ba-bar-fill" style="width:${barPct(b.volume)}%"></div></div>
-      <span class="ba-price pos-up" data-price="${b.price.toFixed(2)}">${b.price.toFixed(2)}</span>
+      <span class="ba-price pos-down" data-price="${b.price.toFixed(2)}">${b.price.toFixed(2)}</span>
     </div>`).join('');
   const askRows = d.asks.map(a => `
     <div class="ba-row">
-      <span class="ba-price pos-down" data-price="${a.price.toFixed(2)}">${a.price.toFixed(2)}</span>
+      <span class="ba-price pos-up" data-price="${a.price.toFixed(2)}">${a.price.toFixed(2)}</span>
       <div class="ba-bar sell"><div class="ba-bar-fill" style="width:${barPct(a.volume)}%"></div></div>
       <span class="ba-vol">${a.volume.toLocaleString()}</span>
     </div>`).join('');
 
   body.innerHTML = `
     <div class="ba-ratio">
-      <span class="pos-up">委買 ${bidPct}%</span>
+      <span class="pos-down">委買 ${bidPct}%</span>
       <div class="ba-ratio-track">
         <div class="ba-ratio-bid" style="width:${bidPct}%"></div>
         <div class="ba-ratio-ask" style="width:${askPct}%"></div>
       </div>
-      <span class="pos-down">${askPct}% 委賣</span>
+      <span class="pos-up">${askPct}% 委賣</span>
     </div>
     <div class="ba-cols">
       <div class="ba-col">
@@ -484,51 +989,10 @@ function currentPriceFor(code) {
   return h ? h.price : null;
 }
 
+// 「部位/資產」卡片已移除，這裡只保留還在用的功能性副作用：依目前作用中部位是否有庫存決定「全部平倉」能不能按。
 function renderPortfolio() {
   if (!STATE) return;
-  const activeCode = STATE.active;
-  const activePos = activeCode ? ensurePosition(activeCode) : null;
-  const price = lastPrice || 0;
-  const unrealizedActive = activePos ? (price - activePos.avgCost) * activePos.position : 0;
-
-  let marketValue = 0, realizedSum = 0;
-  for (const [code, p] of Object.entries(STATE.positions)) {
-    realizedSum += p.realizedPnl;
-    if (p.position !== 0) {
-      const cp = currentPriceFor(code);
-      marketValue += p.position * (cp != null ? cp : p.avgCost);
-    }
-  }
-  const total = STATE.cash + marketValue;
-  const ret = ((total - STATE.capital) / STATE.capital) * 100;
-
-  document.getElementById('s-cash').textContent = fmtMoney(STATE.cash);
-  document.getElementById('s-total').textContent = fmtMoney(total);
-  document.getElementById('s-position').textContent = activePos ? activePos.position.toLocaleString() : '0';
-  document.getElementById('s-avgcost').textContent = activePos && activePos.position !== 0 ? activePos.avgCost.toFixed(2) : '--';
-  const breakeven = activePos ? breakevenPrice(activePos) : null;
-  document.getElementById('s-breakeven').textContent = breakeven != null ? breakeven.toFixed(2) : '--';
-
-  const holdWrap = document.getElementById('s-holding-wrap');
-  if (activePos && activePos.position !== 0) {
-    holdWrap.style.display = 'flex';
-    const dir = activePos.position > 0 ? '多' : '空';
-    document.getElementById('s-holding').textContent =
-      `${activeCode}${lastName ? ' ' + lastName : ''}（${dir} ${Math.abs(activePos.position).toLocaleString()}股）`;
-    const bigEl = document.getElementById('s-unrealized-big');
-    bigEl.textContent = fmtMoney(unrealizedActive);
-    bigEl.className = upDownClass(unrealizedActive);
-  } else {
-    holdWrap.style.display = 'none';
-  }
-
-  const uEl = document.getElementById('s-unrealized');
-  uEl.textContent = fmtMoney(unrealizedActive); uEl.className = 'v ' + upDownClass(unrealizedActive);
-  const rEl = document.getElementById('s-realized');
-  rEl.textContent = fmtMoney(realizedSum); rEl.className = 'v ' + upDownClass(realizedSum);
-  const retEl = document.getElementById('s-return');
-  retEl.textContent = fmtPct(ret); retEl.className = 'v ' + upDownClass(ret);
-
+  const activePos = STATE.active ? ensurePosition(STATE.active) : null;
   document.getElementById('btn-flat').disabled = !activePos || activePos.position === 0;
 }
 
@@ -559,16 +1023,6 @@ const FEE_DISCOUNT = 0.2;
 const FEE_MIN = 1;
 const TAX_RATE = 0.0015;
 function calcFee(price, qty) { return Math.max(Math.round(price * qty * FEE_RATE * FEE_DISCOUNT), FEE_MIN); }
-
-// 損益兩平價：多單要賣到哪個價位，扣掉賣出手續費+證交稅後淨損益才會打平（忽略每筆最低1元手續費，
-// 一般張數下手續費本來就遠高於1元，這個近似值誤差可忽略）；空單則是買回要壓到哪個價位（買進沒有證交稅）。
-function breakevenPrice(posObj) {
-  if (!posObj || posObj.position === 0) return null;
-  const feePct = FEE_RATE * FEE_DISCOUNT;
-  return posObj.position > 0
-    ? posObj.avgCost / (1 - feePct - TAX_RATE)
-    : posObj.avgCost / (1 + feePct);
-}
 
 function applyTradeFor(code, direction, qty, price) {
   const posObj = ensurePosition(code);
@@ -641,18 +1095,23 @@ async function loadDailyPnl() {
     const r = await fetch('/api/daily_pnl');
     const d = await r.json();
     if (!d.ok || !d.days.length) {
-      body.innerHTML = '<tr class="empty-row"><td colspan="4">尚無紀錄</td></tr>';
+      body.innerHTML = '<tr class="empty-row"><td colspan="5">尚無紀錄</td></tr>';
       return;
     }
-    body.innerHTML = d.days.map(row => `
+    const capital = STATE && STATE.capital ? STATE.capital : DEFAULT_CAPITAL;
+    body.innerHTML = d.days.map(row => {
+      const pct = capital ? (row.realized_pnl / capital * 100).toFixed(2) + '%' : '--';
+      return `
       <tr>
         <td>${row.date}</td>
         <td>${row.trade_count}</td>
         <td>${fmtMoney(-(row.fee_total + row.tax_total))}</td>
         <td class="${upDownClass(row.realized_pnl)}">${fmtMoney(row.realized_pnl)}</td>
-      </tr>`).join('');
+        <td class="${upDownClass(row.realized_pnl)}">${pct}</td>
+      </tr>`;
+    }).join('');
   } catch (e) {
-    body.innerHTML = '<tr class="empty-row"><td colspan="4">無法連線後端服務</td></tr>';
+    body.innerHTML = '<tr class="empty-row"><td colspan="5">無法連線後端服務</td></tr>';
   }
 }
 
@@ -689,12 +1148,22 @@ function updateHoldingCardStats(code) {
   const posEl = document.getElementById(`hcard-pos-${code}`);
   if (posEl) {
     const dir = posObj.position > 0 ? '多' : '空';
-    posEl.textContent = `${dir} ${Math.abs(posObj.position).toLocaleString()}股`;
+    posEl.textContent = `${dir} ${Math.abs(posObj.position).toLocaleString()}股 · 均價 ${posObj.avgCost.toFixed(2)}`;
+    posEl.className = 'hcard-pos ' + upDownClass(posObj.position);
+  }
+  const priceEl = document.getElementById(`hcard-price-${code}`);
+  if (priceEl && h.price != null) {
+    const chg = h.changePrice;
+    const chgTxt = chg == null ? '' : ` ${chg >= 0 ? '+' : ''}${chg.toFixed(2)} (${fmtPct(h.changeRate || 0)})`;
+    priceEl.textContent = `${h.price.toFixed(2)}${chgTxt}`;
+    priceEl.className = 'hcard-price ' + upDownClass(chg);
   }
   const pnlEl = document.getElementById(`hcard-pnl-${code}`);
   if (pnlEl && h.price != null) {
     const unrealized = (h.price - posObj.avgCost) * posObj.position;
-    pnlEl.textContent = fmtMoney(unrealized);
+    const cost = posObj.avgCost * Math.abs(posObj.position);
+    const pct = cost ? (unrealized / cost * 100).toFixed(2) + '%' : '--';
+    pnlEl.textContent = `${fmtMoney(unrealized)}（${pct}）`;
     pnlEl.className = 'hcard-pnl ' + upDownClass(unrealized);
   }
 }
@@ -709,6 +1178,7 @@ function createHoldingCard(code) {
       <div>
         <div class="hcard-name">${code}${posObj.name ? ' ' + posObj.name : ''}</div>
         <div class="hcard-pos" id="hcard-pos-${code}"></div>
+        <div class="hcard-price" id="hcard-price-${code}">--</div>
       </div>
       <button class="flat" style="font-size:11px;padding:3px 8px">平倉</button>
     </div>
@@ -730,16 +1200,35 @@ function createHoldingCard(code) {
     timeScale: { visible: false },
     rightPriceScale: { visible: false },
     handleScroll: false, handleScale: false,
-    width: chartEl.clientWidth, height: 70,
+    width: chartEl.clientWidth, height: 100,
   });
-  const series = miniChart.addLineSeries({ color: '#58a6ff', lineWidth: 2 });
-  holdingCharts[code] = { chart: miniChart, series, lastTs: 0, price: null, pollTimer: null };
+  const series = miniChart.addLineSeries({ color: '#58a6ff', lineWidth: 2, priceLineVisible: false });
+  const vwapSeries = miniChart.addLineSeries({ color: '#e3b341', lineWidth: 1, priceLineVisible: false, lastValueVisible: false });
+  // scaleMargins 一定要在至少一個 series 掛上這個 price scale「之後」設定才會生效，
+  // 掛之前呼叫會被第一個 series 綁定時重新初始化蓋掉（今高/今低剛好貼在資料極值上，
+  // margins 沒吃到的話那兩條線會整個貼齊畫布邊緣，實際上看不到）。
+  series.priceScale().applyOptions({ scaleMargins: { top: 0.2, bottom: 0.2 } });
+  padAutoscale(series);
+  holdingCharts[code] = {
+    chart: miniChart, series, vwapSeries, lastTs: 0, price: null, pollTimer: null,
+    high: null, low: null, hiLoLines: { high: null, low: null },
+  };
 
   fetchIntradaySeries(code).then(data => {
     const h = holdingCharts[code];
     if (!h || !data.length) return;
     series.setData(data);
     h.lastTs = data[data.length - 1].time;
+    h.high = Math.max(...data.map(p => p.value));
+    h.low = Math.min(...data.map(p => p.value));
+    upsertHiLoLines(series, h.hiLoLines, h.high, h.low);
+    let cumPV = 0, cumVol = 0;
+    vwapSeries.setData(data.map(pt => {
+      cumPV += pt.value * pt.volume;
+      cumVol += pt.volume;
+      return { time: pt.time, value: cumVol > 0 ? +(cumPV / cumVol).toFixed(2) : pt.value };
+    }));
+    lockChartRange(miniChart);
   }).catch(() => {});
 
   const poll = async () => {
@@ -750,9 +1239,15 @@ function createHoldingCard(code) {
       const d = await r.json();
       if (!d.ok || !holdingCharts[code]) return;
       h.price = d.price;
+      h.changePrice = d.change_price;
+      h.changeRate = d.change_rate;
       if (d.name) posObj.name = d.name;
       const ts = taipeiMinuteTs(new Date());
       if (ts >= h.lastTs) { h.lastTs = ts; h.series.update({ time: ts, value: d.price }); }
+      if (h.high == null || d.price > h.high) h.high = d.price;
+      if (h.low == null || d.price < h.low) h.low = d.price;
+      upsertHiLoLines(h.series, h.hiLoLines, h.high, h.low);
+      lockChartRange(h.chart);
       updateHoldingCardStats(code);
       renderPortfolio();
     } catch (e) { /* 忽略單次輪詢失敗 */ }
@@ -762,7 +1257,7 @@ function createHoldingCard(code) {
 }
 
 function syncHoldingCards() {
-  const heldCodes = Object.keys(STATE.positions).filter(c => STATE.positions[c].position !== 0 && c !== STATE.active);
+  const heldCodes = Object.keys(STATE.positions).filter(c => STATE.positions[c].position !== 0);
   Object.keys(holdingCharts).forEach(code => { if (!heldCodes.includes(code)) destroyHoldingCard(code); });
   // 容器要先變成看得見的 display:block，卡片裡的 LightweightCharts 才能量到非 0 寬度；
   // 順序反過來的話 chartEl.clientWidth 會是 0，圖表畫布建出來寬度也是 0，線就完全不會顯示。
@@ -780,26 +1275,72 @@ async function switchActive(code) {
   lastPrice = null;
   lastName = null;
   lastChartTs = 0;
+  todayHigh = null; todayLow = null;
+  document.getElementById('price-hilo').textContent = '';
   document.getElementById('btn-buy').disabled = false;
   document.getElementById('btn-sell').disabled = false;
+  document.getElementById('btn-po-submit').disabled = false;
   initChart();
   await loadIntraday(code); // 先把歷史分K畫完，避免跟第一次即時報價的 update() 搶時間軸順序
   renderPortfolio();
   renderLog();
   syncHoldingCards();
+  renderPendingOrders();
   if (pollTimer) clearInterval(pollTimer);
   pollTick();
   pollTimer = setInterval(pollTick, 1500);
 }
 
+async function resolveCode(input) {
+  if (/^\d{4}$/.test(input)) return input;
+  try {
+    const r = await fetch(`/api/stock_search?q=${encodeURIComponent(input)}`);
+    const d = await r.json();
+    if (d.ok && d.results.length) return d.results[0].code;
+  } catch (e) { /* 查不到就照原字串走，讓後面的報價 API 自然回錯誤訊息 */ }
+  return input;
+}
+
+let searchDebounce = null;
+function initCodeSearch() {
+  const input = document.getElementById('code');
+  const box = document.getElementById('code-suggest');
+  input.addEventListener('input', () => {
+    clearTimeout(searchDebounce);
+    const q = input.value.trim();
+    if (!q || /^\d{4}$/.test(q)) { box.classList.remove('show'); return; }
+    searchDebounce = setTimeout(async () => {
+      try {
+        const r = await fetch(`/api/stock_search?q=${encodeURIComponent(q)}`);
+        const d = await r.json();
+        if (!d.ok || !d.results.length) { box.classList.remove('show'); return; }
+        box.innerHTML = d.results.map(s =>
+          `<div data-code="${s.code}"><span class="sg-code">${s.code}</span>${s.name}</div>`
+        ).join('');
+        box.classList.add('show');
+      } catch (e) { box.classList.remove('show'); }
+    }, 250);
+  });
+  box.addEventListener('click', (e) => {
+    const row = e.target.closest('[data-code]');
+    if (!row) return;
+    input.value = row.dataset.code;
+    box.classList.remove('show');
+  });
+  document.addEventListener('click', (e) => {
+    if (e.target !== input && !box.contains(e.target)) box.classList.remove('show');
+  });
+}
+
 async function startSim() {
-  const code = document.getElementById('code').value.trim();
-  if (!code) { alert('請輸入股票代號'); return; }
+  const raw = document.getElementById('code').value.trim();
+  if (!raw) { alert('請輸入股票代號'); return; }
+  const code = await resolveCode(raw);
+  document.getElementById('code').value = code;
+  document.getElementById('code-suggest').classList.remove('show');
 
   if (!STATE) {
-    const capital = parseFloat(document.getElementById('capital').value);
-    if (!capital || capital <= 0) { alert('請輸入有效的起始本金'); return; }
-    STATE = freshState(capital);
+    STATE = freshState(DEFAULT_CAPITAL);
     saveState();
   }
   await switchActive(code);
@@ -812,26 +1353,28 @@ function resetSim() {
   STATE = null;
   localStorage.removeItem(STORAGE_KEY);
   lastPrice = null; lastName = null; lastChartTs = 0;
+  todayHigh = null; todayLow = null;
+  document.getElementById('price-hilo').textContent = '';
 
   document.getElementById('code').value = '';
-  document.getElementById('capital').value = 100000;
   document.getElementById('order-price').value = '';
   document.getElementById('btn-buy').disabled = true;
   document.getElementById('btn-sell').disabled = true;
   document.getElementById('btn-flat').disabled = true;
+  document.getElementById('btn-po-submit').disabled = true;
   document.getElementById('price-code').textContent = '—';
   document.getElementById('price-now').textContent = '--';
   document.getElementById('price-change').textContent = '';
   document.getElementById('price-meta').textContent = '尚未開始模擬';
-  document.getElementById('chart').innerHTML = '<div id="chart-empty">輸入代號並按「開始模擬」查看即時走勢</div>';
+  document.getElementById('chart-price').innerHTML = '';
+  document.getElementById('chart-volume').innerHTML = '';
+  document.getElementById('chart-macd').innerHTML = '';
+  document.getElementById('chart-empty').style.display = 'block';
   document.getElementById('bidask-body').innerHTML = '<div id="bidask-empty">尚未開始模擬</div>';
   document.getElementById('holdings-wrap').style.display = 'none';
   document.getElementById('holdings-grid').innerHTML = '';
+  document.getElementById('po-list').innerHTML = '';
   document.getElementById('log-body').innerHTML = '<tr class="empty-row"><td colspan="7">尚無交易</td></tr>';
-  document.getElementById('s-holding-wrap').style.display = 'none';
-  ['s-cash', 's-total', 's-position', 's-avgcost', 's-breakeven', 's-unrealized', 's-realized', 's-return'].forEach(id => {
-    document.getElementById(id).textContent = '--';
-  });
 }
 
 // 下單價格：預設用市價（lastPrice）；使用者點五檔某個價位或自己輸入後改用那個價格下單，
@@ -882,7 +1425,6 @@ function moverRow(r, cls) {
     <span class="m-vol">${r.volume.toLocaleString()}張</span>`;
   div.addEventListener('click', () => {
     document.getElementById('code').value = r.code;
-    if (!document.getElementById('capital').value) document.getElementById('capital').value = 100000;
     startSim();
     window.scrollTo({ top: document.querySelector('.layout').offsetTop - 10, behavior: 'smooth' });
   });
@@ -927,21 +1469,74 @@ async function checkHealth() {
   } catch (e) { setGwStatus(false); }
 }
 
+// 卡片可以自由拖曳排序，順序存在 localStorage（跟每個欄位分開存），重新整理後還在。
+const CARD_ORDER_KEY = 'daytrade-sim-card-order';
+function initCardDragReorder() {
+  let dragged = null;
+  document.querySelectorAll('.card-col').forEach(col => {
+    col.querySelectorAll('.card[draggable="true"]').forEach(card => {
+      card.addEventListener('dragstart', () => {
+        dragged = card;
+        card.classList.add('dragging');
+      });
+      card.addEventListener('dragend', () => {
+        card.classList.remove('dragging');
+        col.querySelectorAll('.card').forEach(c => c.classList.remove('drag-over'));
+        saveCardOrder();
+      });
+      card.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        if (!dragged || dragged === card) return;
+        const rect = card.getBoundingClientRect();
+        const before = e.clientY < rect.top + rect.height / 2;
+        col.insertBefore(dragged, before ? card : card.nextSibling);
+      });
+      card.addEventListener('dragenter', () => { if (dragged !== card) card.classList.add('drag-over'); });
+      card.addEventListener('dragleave', () => card.classList.remove('drag-over'));
+    });
+  });
+}
+function saveCardOrder() {
+  const order = {};
+  document.querySelectorAll('.card-col').forEach(col => {
+    order[col.id] = [...col.querySelectorAll('.card[data-card-id]')].map(c => c.dataset.cardId);
+  });
+  localStorage.setItem(CARD_ORDER_KEY, JSON.stringify(order));
+}
+function restoreCardOrder() {
+  let order;
+  try { order = JSON.parse(localStorage.getItem(CARD_ORDER_KEY)); } catch (e) { return; }
+  if (!order) return;
+  document.querySelectorAll('.card-col').forEach(col => {
+    const ids = order[col.id];
+    if (!ids) return;
+    ids.forEach(id => {
+      const card = col.querySelector(`.card[data-card-id="${id}"]`);
+      if (card) col.appendChild(card);
+    });
+  });
+}
+
 document.getElementById('movers-refresh').addEventListener('click', () => loadMovers(true));
 
 (async function boot() {
   checkHealth();
   loadMovers();
   loadDailyPnl();
+  initCodeSearch();
+  restoreCardOrder();
+  initCardDragReorder();
+  initIndexChart();
   setInterval(loadMovers, 30000);
+  setInterval(() => { if (STATE && STATE.active) loadIntraday(STATE.active); }, 30000); // 補上最新分K的成交量柱
   const saved = loadState();
   if (saved) {
     STATE = saved;
-    document.getElementById('capital').value = STATE.capital;
     if (STATE.active) {
       document.getElementById('code').value = STATE.active;
       document.getElementById('btn-buy').disabled = false;
       document.getElementById('btn-sell').disabled = false;
+      document.getElementById('btn-po-submit').disabled = false;
       initChart();
       await loadIntraday(STATE.active);
       pollTick();
@@ -950,8 +1545,7 @@ document.getElementById('movers-refresh').addEventListener('click', () => loadMo
     renderPortfolio();
     renderLog();
     syncHoldingCards();
-  } else {
-    document.getElementById('capital').value = 100000;
+    renderPendingOrders();
   }
 })();
 </script>

@@ -97,8 +97,20 @@ async def svc_proxy_root(port: int, request: Request):
 
 
 @app.get('/api/health')
-def health():
+def health(request: Request):
+    """外部監控（Cloudflare Tunnel）直接打這支，回自己的狀態。但被代理頁面裡的前端
+    也會用相對路徑打 /api/health，這時 Referer 帶 /svc/<port>/，要轉給該服務自己的
+    health，不然畫面會一直顯示 command-center 的假結果，誤判成服務異常。"""
+    m = re.search(r'/svc/(\d+)(?:/|$|\?)', request.headers.get('referer', ''))
+    if m and int(m.group(1)) in PROXY_PORTS:
+        return RedirectResponse(f'/svc/{m.group(1)}/api/health', status_code=307)
     return {'status': 'ok', 'service': 'command-center'}
+
+
+@app.get('/swing-history', response_class=HTMLResponse)
+def swing_history(request: Request):
+    """隔日沖候選歷史命中率複查頁。"""
+    return templates.TemplateResponse(request, 'swing_history.html', sources.swing_history())
 
 
 @app.get('/market-dashboard')

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-當沖候選推播 — 週間 09:30 執行
+當沖候選推播 — 週間 09:19 執行
 資料來源：永豐金 Shioaji snapshots（主，即時）+ TWSE 公開 API（輔）+ FinMind（期貨法人）
 """
 
@@ -175,7 +175,7 @@ mkt_dir = "偏多 ↑" if fut_diff > 0 else "偏空 ↓"
 
 # ── 組訊息 ────────────────────────────────────────
 
-lines = [f"📊 <b>當沖候選</b>｜{TODAY} 09:30\n"]
+lines = [f"📊 <b>當沖候選</b>｜{TODAY} 09:19\n"]
 lines.append(f"🌐 大盤外資期貨（{fut_date}）：{mkt_dir}（多空差 {fut_diff:+,} 口）\n")
 lines.append("📋 <b>篩選條件</b>")
 lines.append("今日量前20（Shioaji即時）＋ 振幅&gt;3% ＋ 近5均量&gt;3000張 ＋ 漲幅&gt;1.5%\n")
