@@ -69,6 +69,8 @@ _bidask_cache = {}
 _name_cache = {"ts": 0, "map": {}}
 _gates_cache = {}
 GATES_CACHE_TTL = 3600  # 三關價依前一交易日高低算出，一小時內不會變，快取久一點省 gateway 查詢
+_ma_cache = {}
+MA_CACHE_TTL = 3600  # 日均線也是用前一交易日以前的收盤算，一小時內不會變
 
 
 def _get_name(code):
@@ -131,6 +133,20 @@ def quote():
             }
         _quote_cache[code] = {"ts": time.time(), "data": data}
         return jsonify(data)
+    except (urllib.error.URLError, TimeoutError) as e:
+        return jsonify({"ok": False, "error": f"無法連線 shioaji-gateway：{e}"})
+    except Exception as e:
+        return jsonify({"ok": False, "error": str(e)})
+
+
+@app.get("/api/stock_search")
+def stock_search():
+    q = request.args.get("q", "").strip()
+    if not q:
+        return jsonify({"ok": True, "results": []})
+    try:
+        gw = _fetch_gateway(f"/stock_search?q={urllib.parse.quote(q)}")
+        return jsonify(gw)
     except (urllib.error.URLError, TimeoutError) as e:
         return jsonify({"ok": False, "error": f"無法連線 shioaji-gateway：{e}"})
     except Exception as e:
@@ -227,8 +243,38 @@ def three_gates():
                 "up": round(high + rng * 0.382, 2),
                 "mid": round((high + low) / 2, 2),
                 "dn": round(low - rng * 0.382, 2),
+                "prev_close": prev["close"],
             }
         _gates_cache[code] = {"ts": time.time(), "data": data}
+        return jsonify(data)
+    except (urllib.error.URLError, TimeoutError) as e:
+        return jsonify({"ok": False, "error": f"無法連線 shioaji-gateway：{e}"})
+    except Exception as e:
+        return jsonify({"ok": False, "error": str(e)})
+
+
+@app.get("/api/daily_ma")
+def daily_ma():
+    """5日/10日/月線(20日)均線，用前一交易日以前的日收盤算，不含今天盤中這筆。"""
+    code = request.args.get("code", "").strip()
+    if not code:
+        return jsonify({"ok": False, "error": "no code"}), 400
+
+    cached = _ma_cache.get(code)
+    if cached and time.time() - cached["ts"] < MA_CACHE_TTL:
+        return jsonify(cached["data"])
+
+    try:
+        gw = _fetch_gateway(f"/daily_ohlcv?code={urllib.parse.quote(code)}&days=40")
+        bars = gw.get("bars", []) if gw.get("ok") else []
+        closes = [b["close"] for b in bars[:-1]]  # 最後一筆可能是今天（盤中），排除掉
+        if len(closes) < 5:
+            data = {"ok": False, "error": "無足夠日K資料"}
+        else:
+            def ma(period):
+                return round(sum(closes[-period:]) / period, 2) if len(closes) >= period else None
+            data = {"ok": True, "ma5": ma(5), "ma10": ma(10), "ma20": ma(20)}
+        _ma_cache[code] = {"ts": time.time(), "data": data}
         return jsonify(data)
     except (urllib.error.URLError, TimeoutError) as e:
         return jsonify({"ok": False, "error": f"無法連線 shioaji-gateway：{e}"})

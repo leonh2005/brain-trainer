@@ -75,14 +75,49 @@ def swing():
     return d, d.get('date', _mtime(p))
 
 
+def swing_history():
+    """隔日沖候選歷史命中紀錄，供 /swing-history 頁面複查用。回傳依日期新到舊排序的清單 + 整體命中率。"""
+    track_path = f'{CC}/telebot/data/swing_track.json'
+    if not os.path.exists(track_path):
+        return {'days': [], 'total_hits': 0, 'total_picks': 0}
+    with open(track_path, encoding='utf-8') as f:
+        track = json.load(f)
+
+    days = []
+    total_hits = total_picks = 0
+    for dt in sorted(track, reverse=True):
+        entry = track[dt]
+        results = entry.get('track_results', [])
+        hits = sum(1 for r in results if r.get('up'))
+        days.append({
+            'date': dt, 'checked': entry.get('checked', False),
+            'candidates': entry.get('candidates', []), 'results': results,
+            'hits': hits, 'picks': len(results),
+        })
+        if entry.get('checked'):
+            total_hits += hits
+            total_picks += len(results)
+    hit_rate = round(total_hits / total_picks * 100, 1) if total_picks else None
+    return {'days': days, 'total_hits': total_hits, 'total_picks': total_picks, 'hit_rate': hit_rate}
+
+
 @_wrap
 def intraday():
     """解析 intraday_monitor.log 今日訊號（格式：檢查 CODE NAME ... → 多方/空方推播已送出（信心 N%））"""
     p = f'{CC}/logs/intraday_monitor.log'
+    with open(p, errors='replace') as f:
+        lines = f.readlines()[-20000:]
+    # 每次啟動時 FinMind/shioaji 都會印出帶完整日期的 log（如 "2026-08-07 09:00:03..."），
+    # 用今天最後一次這種行當分界，避免昨天殘留在同一份 log 裡的舊訊號被當成還沒更新。
+    today_str = str(date.today())
+    start_idx = 0
+    for i, line in enumerate(lines):
+        if line.startswith(today_str):
+            start_idx = i
+    lines = lines[start_idx:]
+
     signals = []
     last_check = ''
-    with open(p, errors='replace') as f:
-        lines = f.readlines()[-3000:]
     pending = None
     for line in lines:
         m = re.match(r'\[(\d{2}:\d{2}:\d{2})\] intraday_monitor 開始執行', line)
@@ -98,9 +133,7 @@ def intraday():
             signals.append({**pending, 'side': m.group(1), 'confidence': int(m.group(2)),
                             'at': last_check})
             pending = None
-    # 只留今日最後 20 筆（log 無日期戳，以檔案 mtime 是否今日判斷）
-    is_today = _mtime(p).startswith(str(date.today()))
-    return {'signals': signals[-20:] if is_today else [], 'last_check': last_check}, _mtime(p)
+    return {'signals': signals[-20:], 'last_check': last_check}, _mtime(p)
 
 
 _ma_names_cache = None

@@ -344,10 +344,11 @@ function renderSwing(d){
 
   const track=d&&d.track;
   if(track&&track.results&&track.results.length){
-    const head=el('div','mini');
-    head.style.cssText='margin-top:10px;padding-top:8px;border-top:1px solid var(--border);color:var(--text-dim);font-size:11px';
+    const head=el('a','mini');
+    head.href='/swing-history';
+    head.style.cssText='display:block;margin-top:10px;padding-top:8px;border-top:1px solid var(--border);color:var(--text-dim);font-size:11px;text-decoration:underline';
     const hit=track.results.filter(r=>r.up).length;
-    head.textContent=`${track.date} 候選隔天10點命中：${hit}/${track.results.length}`;
+    head.textContent=`${track.date} 候選隔天10點命中：${hit}/${track.results.length}（看歷史紀錄）`;
     box.appendChild(head);
     track.results.forEach(r=>{
       const row=el('div','row');
