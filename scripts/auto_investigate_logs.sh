@@ -1,8 +1,8 @@
 #!/bin/bash
 # 自動監控本機服務 log，發現新錯誤時無人值守呼叫 Claude 診斷修復
-# 每小時由 crontab 執行（17 * * * *）
+# 每小時由 LaunchAgent 執行（分鐘 17）
 
-export PATH="/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/usr/bin:/bin:$PATH"
+export PATH="$HOME/.local/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/usr/bin:/bin:$PATH"
 
 TELEGRAM_TOKEN="$(cat "$HOME/CCProject/.secrets/telegram_token.txt")"
 TELEGRAM_CHAT_ID="7556217543"

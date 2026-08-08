@@ -1,6 +1,6 @@
 #!/bin/bash
 # 每天早上 7 點掃 Obsidian Vault 的 Raw/，把新文章 ingest 進 Wiki（Karpathy 免 RAG 筆記法）
-# 由 crontab 執行（0 7 * * *）
+# 由 LaunchAgent 執行（每天 07:00）
 
 export PATH="$HOME/.local/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/usr/bin:/bin:$PATH"
 

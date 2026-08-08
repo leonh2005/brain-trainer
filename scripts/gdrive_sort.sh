@@ -1,9 +1,9 @@
 #!/bin/bash
 # 每天巡邏 Google 雲端硬碟根目錄，把誤放在最外層的散檔歸位到既有6大分類資料夾，
 # 判斷不出來的丟進「待整理」（Steven 既有的人工暫存慣例）
-# 由 crontab 執行（每天早上，跟 obsidian_ingest.sh 錯開）
+# 由 LaunchAgent 執行（每天早上，跟 obsidian_ingest.sh 錯開）
 
-export PATH="/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/usr/bin:/bin:$PATH"
+export PATH="$HOME/.local/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/usr/bin:/bin:$PATH"
 
 DRIVE="$HOME/我的雲端硬碟"
 TELEGRAM_TOKEN="$(cat "$HOME/CCProject/.secrets/telegram_token.txt")"

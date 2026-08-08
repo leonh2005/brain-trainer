@@ -1,6 +1,6 @@
 {
-  "scanned_at": "2026-08-07 03:00:20",
-  "since": "2026-08-06 03:00:01",
+  "scanned_at": "2026-08-08 03:00:20",
+  "since": "2026-08-07 03:00:00",
   "results": {
     "市場儀表板": {
       "exists": true,
@@ -16,8 +16,8 @@
     },
     "motion-watcher": {
       "exists": true,
-      "errors": 629,
-      "last_error": "2026-08-07 02:57:57,780 WARNING 讀取影格失敗，重新連線",
+      "errors": 648,
+      "last_error": "2026-08-08 02:57:43,015 WARNING 讀取影格失敗，重新連線",
       "fix": "尚無對應建議，需人工判斷"
     },
     "Cloudflare Tunnel": {
@@ -28,14 +28,14 @@
     },
     "財經新聞分析": {
       "exists": true,
-      "errors": 38,
-      "last_error": "2026-08-07 02:30:03,956 [WARNING] fetcher.ptt_fetcher: PTT index fetch failed: ('Connection aborted.', ConnectionResetError(54, 'Connection reset by peer'))",
+      "errors": 14,
+      "last_error": "2026-08-07 12:00:08,940 [WARNING] fetcher.ptt_fetcher: PTT index fetch failed: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))",
       "fix": "尚無對應建議，需人工判斷"
     },
     "川普監測": {
       "exists": true,
-      "errors": 3,
-      "last_error": "2026-08-06 08:45:03,121 WARNING 分析失敗：Warren Questions UAE-Trump Crypto Ties, Seeks Expl — 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reaso",
+      "errors": 2,
+      "last_error": "2026-08-07 10:30:04,317 WARNING 分析失敗：Analysis: As US and China throw up tit-for-tat san — 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reaso",
       "fix": "尚無對應建議，需人工判斷"
     },
     "持倉新聞(台股)": {
@@ -88,9 +88,9 @@
     },
     "盤中監控": {
       "exists": true,
-      "errors": 1,
-      "last_error": "[backfill] 2408 失敗: Topic: api/v1/data/ticks, Corr: c21, Client: PYAPI/N124711691/0806/010003/063312/220.141.15.135, payload: {'token': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYmYiOjE3ODU5NzgwMDMsImV4cCI6MTc4NjA2NDQwMywic2ltdWxhdGlvbiI6ZmFsc2UsInBlcnNvbl9pZCI6Ik4xMjQ3MTE2OTEiLCJ2ZXJzaW9uIjoiMS4zLj",
-      "fix": "尚無對應建議，需人工判斷"
+      "errors": 0,
+      "last_error": null,
+      "fix": null
     },
     "蝦皮軟纖監測": {
       "exists": true,
