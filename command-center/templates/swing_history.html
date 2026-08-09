@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>隔日沖候選命中歷史</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: #0d1117; color: #e6edf3;
+    font-family: -apple-system, "PingFang TC", "Microsoft JhengHei", sans-serif;
+    font-size: 14px; padding: 20px;
+  }
+  .wrap { max-width: 900px; margin: 0 auto; }
+  h1 { font-size: 18px; margin: 0 0 4px; }
+  .sub { color: #8b949e; font-size: 12.5px; margin-bottom: 20px; }
+  .summary {
+    background: #161b22; border: 1px solid #30363d; border-radius: 10px;
+    padding: 16px; margin-bottom: 20px; display: flex; gap: 32px;
+  }
+  .summary .k { font-size: 12px; color: #8b949e; }
+  .summary .v { font-size: 22px; font-weight: 800; margin-top: 2px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th { text-align: left; color: #8b949e; font-weight: 600; padding: 8px; border-bottom: 1px solid #30363d; }
+  td { padding: 8px; border-bottom: 1px solid #21262d; vertical-align: top; }
+  .pos-up { color: #f85149; }
+  .pos-down { color: #3fb950; }
+  .pending { color: #8b949e; font-style: italic; }
+  .empty { color: #8b949e; text-align: center; padding: 24px 0; }
+  .stock-row { display: flex; justify-content: space-between; gap: 12px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>隔日沖候選命中歷史</h1>
+  <div class="sub">telebot/screener.py 每天選出的候選股，隔天 10:00 自動比對是否上漲（check_swing_track.py）</div>
+
+  <div class="summary">
+    <div><div class="k">累積命中</div><div class="v">{{ total_hits }} / {{ total_picks }}</div></div>
+    <div><div class="k">命中率</div><div class="v">{{ hit_rate if hit_rate is not none else '--' }}{{ '%' if hit_rate is not none else '' }}</div></div>
+    <div><div class="k">追蹤天數</div><div class="v">{{ days|length }}</div></div>
+  </div>
+
+  {% if not days %}
+  <div class="empty">尚無紀錄</div>
+  {% else %}
+  <table>
+    <thead><tr><th>日期</th><th>候選股</th><th>結果</th></tr></thead>
+    <tbody>
+      {% for d in days %}
+      <tr>
+        <td>{{ d.date }}</td>
+        <td>
+          {% if not d.candidates %}<span class="pending">（無候選）</span>{% endif %}
+          {% for c in d.candidates %}<div>{{ c.code }} {{ c.name }} @ {{ c.close }}</div>{% endfor %}
+        </td>
+        <td>
+          {% if not d.checked %}<span class="pending">尚未比對</span>
+          {% elif not d.results %}<span class="pending">--</span>
+          {% else %}
+            {% for r in d.results %}
+            <div class="stock-row">
+              <span>{{ r.code }} {{ r.name }}</span>
+              <span class="{{ 'pos-up' if r.up else 'pos-down' }}">{{ r.baseline }} → {{ r.check_price }}（{{ '✅ 漲' if r.up else '❌ 跌' }}）</span>
+            </div>
+            {% endfor %}
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% endif %}
+</div>
+</body>
+</html>
