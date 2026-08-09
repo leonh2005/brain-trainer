@@ -104,6 +104,32 @@ def test_is_bash_command_safe_whitelist():
     assert is_bash_command_safe("curl -X POST http://x") is False
 
 
+def test_is_bash_command_safe_false_positive_multi_segment():
+    assert is_bash_command_safe("ls -la && git status") is True
+
+
+def test_is_bash_command_safe_blocks_redirection():
+    assert is_bash_command_safe("echo bad > file") is False
+    assert is_bash_command_safe("echo hi >> ~/.zshrc") is False
+
+
+def test_is_bash_command_safe_blocks_multiline():
+    assert is_bash_command_safe("ls\nrm -rf /tmp/x") is False
+
+
+def test_is_bash_command_safe_blocks_command_substitution():
+    assert is_bash_command_safe("echo `rm -rf /tmp/x`") is False
+    assert is_bash_command_safe("echo $(rm -rf /tmp/x)") is False
+
+
+def test_is_bash_command_safe_blocks_background():
+    assert is_bash_command_safe("ls & rm -rf /tmp/x") is False
+
+
+def test_is_bash_command_safe_blocks_extended_find_write_flags():
+    assert is_bash_command_safe("find . -fprintf /etc/passwd %p") is False
+
+
 def test_extract_tasks_from_paths_merges_multiple_files(tmp_path):
     p1 = tmp_path / "a.jsonl"
     p2 = tmp_path / "b.jsonl"

@@ -23,12 +23,17 @@ SAFE_BASH_PREFIXES = [
     re.compile(r"^find\b"),
 ]
 
-UNSAFE_FIND_FLAGS = re.compile(r"-delete|-exec")
+UNSAFE_FIND_FLAGS = re.compile(r"-delete|-exec|-fprintf|-fprint0?|-fls|-okdir|-ok")
+
+UNSAFE_PATTERNS = re.compile(r">|`|\$\(")
 
 
 def is_bash_command_safe(command: str) -> bool:
-    """白名單制：每個以 &&/;/| 分隔的片段都必須命中安全前綴，且 find 不可帶 -delete/-exec。"""
-    segments = [seg.strip() for seg in re.split(r"&&|;|\|", command) if seg.strip()]
+    """白名單制：每個以 &&/;/|/&/換行 分隔的片段都必須命中安全前綴，且 find 不可帶 -delete/-exec 等寫入旗標。
+    整條指令若含重導向、反引號、指令替換，一律直接排除（不論位於哪個片段）。"""
+    if UNSAFE_PATTERNS.search(command):
+        return False
+    segments = [seg.strip() for seg in re.split(r"&&|;|\||&|\n", command) if seg.strip()]
     if not segments:
         return False
     for seg in segments:

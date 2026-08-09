@@ -53,6 +53,8 @@ def _build_hourly_report_task() -> list:
         report = get_hourly_report()
     except Exception:
         return []
+    if not report:
+        return []
     return [{"prompt": "現在的每小時追蹤報告是什麼？", "claude_answer": report}]
 
 

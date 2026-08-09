@@ -39,3 +39,8 @@ scripts/hay_seen.json
 sim-invest/sim.db
 sim-invest/.coverage
 shioaji-gateway/venv/
+
+# Hermes 夜間訓練：內含 Steven 私人對話節錄，不可進公開 repo
+hermes-training/tasks_*.json
+hermes-training/scheduled_tasks_*.json
+hermes-training/logs/

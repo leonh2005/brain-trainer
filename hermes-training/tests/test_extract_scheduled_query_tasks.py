@@ -48,6 +48,14 @@ def test_hourly_report_task_uses_report_text_verbatim():
     assert hourly["claude_answer"] == "報告內容"
 
 
+def test_hourly_report_task_omitted_when_report_is_empty():
+    with patch("extract_scheduled_query_tasks.get_jackpots", return_value={}), \
+         patch("extract_scheduled_query_tasks.fetch_free_games", return_value=[]), \
+         patch("extract_scheduled_query_tasks.get_hourly_report", return_value=""):
+        tasks = build_scheduled_query_tasks()
+    assert not any("每小時" in t["prompt"] for t in tasks)
+
+
 def test_food_expiry_and_vm_health_have_no_reference_answer():
     with patch("extract_scheduled_query_tasks.get_jackpots", return_value={}), \
          patch("extract_scheduled_query_tasks.fetch_free_games", return_value=[]), \

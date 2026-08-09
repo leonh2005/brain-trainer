@@ -45,6 +45,20 @@ def test_sync_learnings_is_idempotent(tmp_path):
     assert zhtw.count("永遠用繁體中文回覆。") == 1
 
 
+def test_sync_learnings_creates_backup_of_original_config(tmp_path):
+    config_path = tmp_path / "config.yaml"
+    learnings_path = tmp_path / "learnings.md"
+    _write_config(config_path, "永遠用繁體中文回覆。")
+    original_content = config_path.read_text(encoding="utf-8")
+    learnings_path.write_text("## 2026-08-09\n\n教材A\n", encoding="utf-8")
+
+    sync_learnings(config_path, learnings_path)
+
+    backup_path = tmp_path / "config.yaml.bak"
+    assert backup_path.exists()
+    assert backup_path.read_text(encoding="utf-8") == original_content
+
+
 def test_sync_learnings_with_no_learnings_file_keeps_base_only(tmp_path):
     config_path = tmp_path / "config.yaml"
     learnings_path = tmp_path / "learnings.md"  # 不存在
