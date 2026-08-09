@@ -6,14 +6,14 @@
 
 **Architecture:** 一組獨立可測試的 Python 小工具（擷取任務、呼叫 Hermes、寫教材、寫 log、同步 config）+ 一份給 headless `claude -p` 的訓練指令模板，由 shell script 在 LaunchAgent 觸發下串接起來。判斷「差距多大、怎麼教」的推理工作交給當晚跑的 headless Claude 本身完成，其餘皆為確定性程式碼。
 
-**Tech Stack:** Python 3（PyYAML、pytest 已確認可用）、Bash、LaunchAgent（launchd）、既有 Telegram bot（`curl` + token file，沿用 `scripts/gdrive_sort.sh` 慣例）、Claude Code CLI headless 模式。
+**Tech Stack:** Python 3（PyYAML、pytest 已確認可用）、Bash、LaunchAgent（launchd）、Claude Code CLI headless 模式。所有結果只寫本機摘要檔，不推播 Telegram（沿用 `scripts/gdrive_sort.sh` 的 headless `claude -p` 呼叫慣例，但拿掉推播部分）。
 
 ## Global Constraints
 
 - 安全紅線：任何任務只要出現 `Edit`／`Write`／`NotebookEdit` 工具呼叫，或 Bash 指令不在明確安全白名單內，整條任務排除，不進訓練集（寧可少教，不可教錯）
 - Hermes 完全不執行寫入/修改/搬移類任務，訓練全程只做文字問答比對
 - 教材用「累加進 `~/.hermes/learnings.md`，同步進 `config.yaml` 的 `zhtw` personality」方式生效，不做 RAG
-- 沿用既有 `scripts/gdrive_sort.sh` 的 Telegram 推播與 headless `claude -p` 呼叫慣例（token 讀 `~/CCProject/.secrets/telegram_token.txt`，chat_id `7556217543`）
+- 沿用既有 `scripts/gdrive_sort.sh` 的 headless `claude -p` 呼叫慣例（`--permission-mode acceptEdits --allowedTools "Read,Bash,Grep,Glob" --disallowedTools "Agent,Workflow,Write,Edit"`），但不推播 Telegram，所有結果只寫本機摘要檔
 - 沿用 spec：`docs/superpowers/specs/2026-08-09-hermes-nightly-training-design.md`
 
 ---
@@ -509,8 +509,9 @@ git commit -m "feat: append_learning.py 累加 Hermes 教材"
 - Test: `hermes-training/tests/test_write_log.py`
 
 **Interfaces:**
-- Produces: `write_log_entry(date_str: str, prompt: str, hermes_initial: str, lesson: str | None, hermes_revised: str | None, log_dir) -> None`
-- Produces: CLI，從 stdin 讀取 JSON `{"date", "prompt", "hermes_initial", "lesson", "hermes_revised"}`（`lesson`/`hermes_revised` 可省略），寫入 `hermes-training/logs/<date>.md`
+- Produces: `write_log_entry(date_str: str, prompt: str, hermes_initial: str, lesson: str | None, hermes_revised: str | None, log_dir, clarify_rounds: list | None = None) -> None`
+- Produces: CLI，從 stdin 讀取 JSON `{"date", "prompt", "hermes_initial", "lesson", "hermes_revised", "clarify_rounds"}`（`lesson`/`hermes_revised`/`clarify_rounds` 可省略），寫入 `hermes-training/logs/<date>.md`
+- `clarify_rounds`（若有）是一份 list，每個元素為 `{"hermes_question": str, "trainer_answer": str}`，代表 Hermes 問不懂、訓練者回答教它的每一輪來回（最多 4 輪，見 Task 6）
 
 - [ ] **Step 1: 寫失敗測試**
 
@@ -547,6 +548,25 @@ def test_write_log_entry_with_lesson_appends_to_same_file(tmp_path):
     assert "教材二" in content
     assert "修正後二" in content
     assert content.index("問題一") < content.index("問題二")
+
+
+def test_write_log_entry_with_clarify_rounds(tmp_path):
+    write_log_entry(
+        date_str="2026-08-09",
+        prompt="問題三",
+        hermes_initial="最終答案",
+        lesson=None,
+        hermes_revised=None,
+        log_dir=tmp_path,
+        clarify_rounds=[
+            {"hermes_question": "你說的是哪個？", "trainer_answer": "我說的是 X"},
+        ],
+    )
+    content = (tmp_path / "2026-08-09.md").read_text(encoding="utf-8")
+    assert "互動釐清" in content
+    assert "你說的是哪個？" in content
+    assert "我說的是 X" in content
+    assert content.index("互動釐清") < content.index("Hermes 初答")
 ```
 
 - [ ] **Step 2: 執行測試確認失敗**
@@ -567,15 +587,22 @@ DEFAULT_LOG_DIR = Path(__file__).resolve().parent / "logs"
 
 
 def write_log_entry(date_str: str, prompt: str, hermes_initial: str,
-                     lesson, hermes_revised, log_dir: Path = DEFAULT_LOG_DIR) -> None:
+                     lesson, hermes_revised, log_dir: Path = DEFAULT_LOG_DIR,
+                     clarify_rounds: list | None = None) -> None:
     log_dir = Path(log_dir)
     log_dir.mkdir(parents=True, exist_ok=True)
     path = log_dir / f"{date_str}.md"
 
-    lines = [
-        "## 任務",
-        prompt.strip(),
-        "",
+    lines = ["## 任務", prompt.strip(), ""]
+    if clarify_rounds:
+        lines.append("### 互動釐清")
+        for i, round_ in enumerate(clarify_rounds, 1):
+            lines += [
+                f"{i}. Hermes 問：{round_['hermes_question']}",
+                f"   訓練者答：{round_['trainer_answer']}",
+            ]
+        lines.append("")
+    lines += [
         "### Hermes 初答",
         hermes_initial.strip(),
         "",
@@ -610,7 +637,9 @@ def main():
         sys.exit(1)
     lesson = payload.get("lesson")
     hermes_revised = payload.get("hermes_revised")
-    write_log_entry(date_str, prompt, hermes_initial, lesson, hermes_revised)
+    clarify_rounds = payload.get("clarify_rounds")
+    write_log_entry(date_str, prompt, hermes_initial, lesson, hermes_revised,
+                     clarify_rounds=clarify_rounds)
     print("已寫入 log")
 
 
@@ -802,7 +831,16 @@ git commit -m "feat: sync_learnings.py 同步教材進 Hermes config"
 請依序對清單中的每一條任務執行：
 
 1. 用 Bash 呼叫：`echo "<prompt>" | python3 hermes-training/call_hermes.py`，取得 Hermes 對這條 prompt 的初始回答
-2. 比較 Hermes 初答跟 claude_answer 的差距。語意/建議方向大致一致就跳過這條，不用寫教材，直接記 log（教材欄位留空）
+
+1.5. **互動釐清迴圈（最多 4 輪）**：Hermes 是一次性呼叫、不會記得上次對話，所以每一輪都要自己把完整對話記錄組進新的 prompt 裡送出去。
+   如果 Hermes 的回答是在反問你問題、或明確表示看不懂/無法回答，就把這輪視為「需要澄清」：
+   - 用繁體中文寫下你的回答/教學，記錄成 `{"hermes_question": "<Hermes 問的>", "trainer_answer": "<你教它的>"}`（累積進這條任務的 `clarify_rounds` 清單）
+   - 組一個新 prompt，格式：「以下是這條任務目前為止的完整對話記錄：\n[原始問題]：<prompt>\n[Hermes]：<上一輪回答>\n[訓練者]：<你的回答/教學>\n\n請根據以上脈絡，重新回答原始問題。」
+   - 用 Bash 呼叫 `echo "<新 prompt>" | python3 hermes-training/call_hermes.py` 取得下一輪回答
+   - 重複以上，最多 4 輪。4 輪後 Hermes 仍答不出來就放棄，直接把最後一輪的回答當作這條任務的初答，正常往下走（不要卡住整條訓練管線）
+   - 如果 Hermes 一開始就正常回答（不是反問、不是表示無法回答），這個迴圈直接跳過，`clarify_rounds` 留空
+
+2. 比較 Hermes 最終初答（若有經過 1.5 的迴圈，取迴圈結束後的最後一輪回答）跟 claude_answer 的差距。語意/建議方向大致一致就跳過這條，不用寫教材，直接記 log（教材欄位留空）
 3. 差距明顯的，用繁體中文寫一條教材，具體說明「Hermes 少了什麼、為什麼你當時會那樣答」。用 Bash 呼叫（用 heredoc 避免轉義問題）：
    ```
    python3 hermes-training/append_learning.py <<'EOF'
@@ -813,14 +851,14 @@ git commit -m "feat: sync_learnings.py 同步教材進 Hermes config"
 5. 用 Bash 呼叫（heredoc）把這條任務的完整記錄寫進當天 log：
    ```
    python3 hermes-training/write_log.py <<'EOF'
-   {"date": "{{DATE_STR}}", "prompt": "<原提問>", "hermes_initial": "<初答>", "lesson": "<教材或省略>", "hermes_revised": "<修正後回答或省略>"}
+   {"date": "{{DATE_STR}}", "prompt": "<原提問>", "hermes_initial": "<初答>", "lesson": "<教材或省略>", "hermes_revised": "<修正後回答或省略>", "clarify_rounds": [<1.5 迴圈累積的紀錄，若無則省略此欄位>]}
    EOF
    ```
 
 全部任務跑完後：
 
 6. 用 Bash 執行：`python3 hermes-training/sync_learnings.py`
-7. 最後只輸出一段繁體中文簡短總結（會直接推播給 Steven 的 Telegram，不要有其他內容）：今晚比對了幾條任務、學了幾條新規則、差距最大的是哪一條任務及原因
+7. 最後只輸出一段繁體中文簡短總結（不要有其他內容）：今晚比對了幾條任務、學了幾條新規則、差距最大的是哪一條任務及原因。這段總結只會被寫進本機的摘要檔案供 Steven 事後查看，不會推播出去
 
 安全規則（不可違反）：
 - 只能用 Bash 呼叫上述 hermes-training/ 目錄裡已經存在的 python 腳本，不准自己寫新腳本、不准使用 Edit 或 Write 工具
@@ -833,30 +871,46 @@ git commit -m "feat: sync_learnings.py 同步教材進 Hermes config"
 #!/bin/bash
 # Hermes 夜間訓練管線 — 每晚 01:00 由 LaunchAgent 觸發
 # 把當天純問答任務重跑給 Hermes，比對差距、寫教材、同步進 Hermes system prompt
+# 不推播 Telegram — 全部結果只寫進本機摘要檔，供 Steven 自行查看品質後再決定要不要開推播
 
 export PATH="$HOME/.local/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/usr/bin:/bin:$PATH"
 
 PROJECT_DIR="$HOME/CCProject"
 WORK_DIR="$PROJECT_DIR/hermes-training"
-TELEGRAM_TOKEN="$(cat "$PROJECT_DIR/.secrets/telegram_token.txt")"
-TELEGRAM_CHAT_ID="7556217543"
 LOG="$PROJECT_DIR/logs/hermes_nightly_training.log"
 DATE_STR="$(date '+%Y-%m-%d')"
 TRANSCRIPT_DIR="$HOME/.claude/projects/-Users-steven-CCProject"
 TASKS_FILE="$WORK_DIR/tasks_${DATE_STR}.json"
+SUMMARY_FILE="$WORK_DIR/logs/summary_${DATE_STR}.md"
+DAILY_LOG_FILE="$WORK_DIR/logs/${DATE_STR}.md"
+VAULT_DIR="$HOME/我的雲端硬碟/📚 學習 & 筆記/from Google keep/Projects/Hermes 夜間訓練日誌"
 
 log() { echo "[$(date '+%Y-%m-%d %H:%M:%S')] $1" >> "$LOG"; }
-send_telegram() {
-  curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage" \
-    --data-urlencode "chat_id=${TELEGRAM_CHAT_ID}" \
-    --data-urlencode "text=$1" > /dev/null 2>&1
+write_summary() {
+  mkdir -p "$WORK_DIR/logs"
+  echo "$1" >> "$SUMMARY_FILE"
+}
+copy_logs_to_obsidian() {
+  # Google Drive 桌面版沒在跑的話，vault 資料夾可能是舊快照；啟動它再複製，
+  # 複製失敗也不能讓整條訓練管線失敗，只記警告
+  if ! pgrep -f "Google Drive.app" > /dev/null 2>&1; then
+    open -a "Google Drive" 2>>"$LOG"
+    sleep 5
+  fi
+  if [ -d "$VAULT_DIR" ]; then
+    [ -f "$DAILY_LOG_FILE" ] && cp "$DAILY_LOG_FILE" "$VAULT_DIR/${DATE_STR}.md" 2>>"$LOG"
+    [ -f "$SUMMARY_FILE" ] && cp "$SUMMARY_FILE" "$VAULT_DIR/summary_${DATE_STR}.md" 2>>"$LOG"
+    log "已複製當天 log 進 Obsidian vault"
+  else
+    log "警告：Obsidian vault 資料夾不存在，跳過複製（$VAULT_DIR）"
+  fi
 }
 
 mapfile -t TRANSCRIPTS < <(find "$TRANSCRIPT_DIR" -maxdepth 1 -name "*.jsonl" -newermt "$DATE_STR 00:00:00" ! -newermt "$DATE_STR 23:59:59" 2>/dev/null)
 
 if [ ${#TRANSCRIPTS[@]} -eq 0 ]; then
   log "今天沒有 session transcript，跳過"
-  send_telegram "🌙 Hermes 夜間訓練：今晚沒有可訓練的任務"
+  write_summary "🌙 Hermes 夜間訓練：今晚沒有可訓練的任務"
   exit 0
 fi
 
@@ -866,7 +920,7 @@ TASK_COUNT=$(python3 -c "import json; print(len(json.load(open('$TASKS_FILE'))))
 
 if [ -z "$TASK_COUNT" ] || [ "$TASK_COUNT" -eq 0 ]; then
   log "過濾後沒有可訓練任務"
-  send_telegram "🌙 Hermes 夜間訓練：今晚 0 條可訓練任務（可能都涉及寫入/修改操作）"
+  write_summary "🌙 Hermes 夜間訓練：今晚 0 條可訓練任務（可能都涉及寫入/修改操作）"
   exit 0
 fi
 
@@ -884,21 +938,29 @@ exit_code=$?
 log "結果 (exit=$exit_code)：$result"
 
 if [ "$exit_code" -eq 0 ] && [ -n "$result" ]; then
-  send_telegram "🌙 Hermes 夜間訓練完成
+  write_summary "🌙 Hermes 夜間訓練完成 ($DATE_STR)
+
 ${result}"
 else
-  send_telegram "⚠️ Hermes 夜間訓練失敗（exit=$exit_code），詳見 log：$LOG"
+  write_summary "⚠️ Hermes 夜間訓練失敗（exit=$exit_code），詳見 log：$LOG"
 fi
+
+copy_logs_to_obsidian
 ```
 
-- [ ] **Step 3: 賦予執行權限並手動 dry-run 驗證**
+- [ ] **Step 3: 賦予執行權限**
 
 ```bash
 chmod +x ~/CCProject/hermes-training/run_nightly.sh
-bash ~/CCProject/hermes-training/run_nightly.sh
 ```
 
-Expected: 腳本能找到今天的 transcript、`extract_tasks.py` 產出非空 JSON、headless claude 執行完成並收到 Telegram 訊息（「今晚沒有可訓練的任務」也算正常，取決於今天對話內容）。若失敗，檢查 `~/CCProject/logs/hermes_nightly_training.log` 的錯誤訊息並修正。
+**⚠️ 不要在這一步手動執行 `run_nightly.sh` 做 dry-run。** 這支腳本會實際多次呼叫本機 Hermes（Ollama 模型），跑起來會吃滿 CPU/記憶體、拖慢整台 Mac。只確認語法正確即可：
+
+```bash
+bash -n ~/CCProject/hermes-training/run_nightly.sh
+```
+
+Expected: 沒有輸出（語法正確）。真正的端到端驗證留到 Task 7 的 LaunchAgent 在 01:00 自動觸發時進行，或由 Steven 決定何時手動在方便的時間點跑一次。
 
 - [ ] **Step 4: Commit**
 
@@ -977,9 +1039,238 @@ git commit -m "chore: 新增 Hermes 夜間訓練 LaunchAgent 排程"
 
 ---
 
+### Task 8: extract_scheduled_query_tasks.py — 併入既有排程查詢工作
+
+**背景：** Steven 在 `telebot/scheduler.py`（跑在 Oracle VM 上）另外排程了幾個純程式碼查詢工作（樂透、Steam 限時免費遊戲、每小時報告、食物效期、VM 健康檢查），這些工作完全沒有 AI 介入，只是抓資料+格式化文字。Steven 要求把它們也併入 Hermes 的夜間訓練集。
+
+**兩種類型：**
+- **有正確答案可比對**（樂透×2、Steam、每小時報告）：這 4 個都是純 HTTP 查詢，Mac 本機可以直接呼叫對應函式取得即時資料當「正確答案」，走跟一般任務一樣的比對+教學流程
+- **無正確答案，只記錄**（食物效期、VM 健康檢查）：這兩個需要 VM 上的即時資料（本機 sqlite/`/proc/meminfo`），Mac 本機拿不到。直接把問題丟給 Hermes、記錄它的回答，不比對、不寫教材，供 Steven 事後自行判斷回答品質
+
+**Files:**
+- Create: `hermes-training/extract_scheduled_query_tasks.py`
+- Test: `hermes-training/tests/test_extract_scheduled_query_tasks.py`
+
+**Interfaces:**
+- Produces: `build_scheduled_query_tasks() -> list[dict]`，每個 dict 為 `{"prompt": str, "claude_answer": str}`（有正確答案的 4 項）或 `{"prompt": str}`（無正確答案的 2 項，故意不含 `claude_answer` key）
+- Produces: CLI，`python3 extract_scheduled_query_tasks.py`，stdout 輸出 JSON array
+- Consumes：從 `telebot` 目錄 import：
+  - `lottery_monitor.get_jackpots() -> dict[int, float]`（gameCode 5118=大樂透、5134=威力彩，回傳億元）
+  - `steam_monitor.fetch_free_games() -> list`（每個元素預期有 `name` 欄位；純查詢，不呼叫 `check_and_notify`，不會誤標記已讀、不會重複推播）
+  - `hourly_monitor.get_hourly_report() -> str`（已經是格式化好的完整報告文字）
+
+**安全規則：** 只呼叫上述三個純查詢函式，絕對不呼叫 `check_and_notify`、`save_seen`、或任何會發送 Telegram/LINE 訊息或寫入狀態檔的函式——這些函式有副作用，會影響 Steven 正式收到的通知。
+
+- [ ] **Step 1: 寫失敗測試（mock telebot 模組函式）**
+
+```python
+# hermes-training/tests/test_extract_scheduled_query_tasks.py
+import sys
+from pathlib import Path
+from unittest.mock import patch
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from extract_scheduled_query_tasks import build_scheduled_query_tasks
+
+
+def test_lottery_tasks_have_reference_answer():
+    with patch("extract_scheduled_query_tasks.get_jackpots", return_value={5118: 5.2, 5134: 2.1}), \
+         patch("extract_scheduled_query_tasks.fetch_free_games", return_value=[]), \
+         patch("extract_scheduled_query_tasks.get_hourly_report", return_value="報告內容"):
+        tasks = build_scheduled_query_tasks()
+    lotto649 = next(t for t in tasks if "大樂透" in t["prompt"])
+    assert "5.2" in lotto649["claude_answer"]
+    assert "會" in lotto649["claude_answer"]  # 5.2 億 >= 4 億門檻，會推播
+    lotto638 = next(t for t in tasks if "威力彩" in t["prompt"])
+    assert "2.1" in lotto638["claude_answer"]
+    assert "不會" in lotto638["claude_answer"]  # 2.1 億 < 4 億門檻
+
+
+def test_steam_task_with_no_free_games():
+    with patch("extract_scheduled_query_tasks.get_jackpots", return_value={}), \
+         patch("extract_scheduled_query_tasks.fetch_free_games", return_value=[]), \
+         patch("extract_scheduled_query_tasks.get_hourly_report", return_value=""):
+        tasks = build_scheduled_query_tasks()
+    steam = next(t for t in tasks if "Steam" in t["prompt"])
+    assert "沒有" in steam["claude_answer"]
+
+
+def test_steam_task_with_free_games():
+    games = [{"name": "遊戲A"}, {"name": "遊戲B"}]
+    with patch("extract_scheduled_query_tasks.get_jackpots", return_value={}), \
+         patch("extract_scheduled_query_tasks.fetch_free_games", return_value=games), \
+         patch("extract_scheduled_query_tasks.get_hourly_report", return_value=""):
+        tasks = build_scheduled_query_tasks()
+    steam = next(t for t in tasks if "Steam" in t["prompt"])
+    assert "遊戲A" in steam["claude_answer"]
+    assert "遊戲B" in steam["claude_answer"]
+
+
+def test_hourly_report_task_uses_report_text_verbatim():
+    with patch("extract_scheduled_query_tasks.get_jackpots", return_value={}), \
+         patch("extract_scheduled_query_tasks.fetch_free_games", return_value=[]), \
+         patch("extract_scheduled_query_tasks.get_hourly_report", return_value="報告內容"):
+        tasks = build_scheduled_query_tasks()
+    hourly = next(t for t in tasks if "每小時" in t["prompt"])
+    assert hourly["claude_answer"] == "報告內容"
+
+
+def test_food_expiry_and_vm_health_have_no_reference_answer():
+    with patch("extract_scheduled_query_tasks.get_jackpots", return_value={}), \
+         patch("extract_scheduled_query_tasks.fetch_free_games", return_value=[]), \
+         patch("extract_scheduled_query_tasks.get_hourly_report", return_value=""):
+        tasks = build_scheduled_query_tasks()
+    food = next(t for t in tasks if "食物" in t["prompt"])
+    vm = next(t for t in tasks if "VM" in t["prompt"])
+    assert "claude_answer" not in food
+    assert "claude_answer" not in vm
+
+
+def test_fetch_failure_skips_that_task_only():
+    with patch("extract_scheduled_query_tasks.get_jackpots", side_effect=RuntimeError("API 失敗")), \
+         patch("extract_scheduled_query_tasks.fetch_free_games", return_value=[]), \
+         patch("extract_scheduled_query_tasks.get_hourly_report", return_value="報告內容"):
+        tasks = build_scheduled_query_tasks()
+    prompts = [t["prompt"] for t in tasks]
+    assert not any("大樂透" in p or "威力彩" in p for p in prompts)
+    assert any("每小時" in p for p in prompts)  # 其他項目不受影響
+```
+
+- [ ] **Step 2: 執行測試確認失敗**
+
+Run: `cd ~/CCProject/hermes-training && python3 -m pytest tests/test_extract_scheduled_query_tasks.py -v`
+Expected: FAIL，`ModuleNotFoundError: No module named 'extract_scheduled_query_tasks'`
+
+- [ ] **Step 3: 實作 extract_scheduled_query_tasks.py**
+
+```python
+# hermes-training/extract_scheduled_query_tasks.py
+"""把既有排程查詢工作（樂透、Steam、每小時報告、食物效期、VM 健康檢查）併入 Hermes 夜間訓練集。
+
+只呼叫這些工作裡「純查詢」的函式，絕不呼叫會推播/寫入狀態的函式（如 check_and_notify），
+避免干擾 Steven 正式收到的通知或誤標記狀態。
+"""
+import json
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path.home() / "CCProject" / "telebot"))
+
+from lottery_monitor import get_jackpots
+from steam_monitor import fetch_free_games
+from hourly_monitor import get_hourly_report
+
+LOTTO_THRESHOLD_YI = 4.0
+LOTTO_GAMES = [(5118, "大樂透"), (5134, "威力彩")]
+
+
+def _build_lottery_tasks() -> list:
+    tasks = []
+    try:
+        jackpots = get_jackpots()
+    except Exception:
+        return tasks
+    for code, name in LOTTO_GAMES:
+        yi = jackpots.get(code)
+        if yi is None:
+            continue
+        notify = "會" if yi >= LOTTO_THRESHOLD_YI else "不會"
+        tasks.append({
+            "prompt": f"{name}目前上看頭獎多少億？會不會推播通知？（門檻 {LOTTO_THRESHOLD_YI} 億）",
+            "claude_answer": f"{name}目前上看頭獎 {yi:.1f} 億，{notify}推播（門檻 {LOTTO_THRESHOLD_YI} 億）",
+        })
+    return tasks
+
+
+def _build_steam_task() -> list:
+    try:
+        games = fetch_free_games()
+    except Exception:
+        return []
+    if games:
+        names = "、".join(g["name"] for g in games)
+        answer = f"目前 Steam 限時免費遊戲：{names}"
+    else:
+        answer = "目前沒有限時免費遊戲"
+    return [{"prompt": "現在 Steam 有什麼限時免費遊戲？", "claude_answer": answer}]
+
+
+def _build_hourly_report_task() -> list:
+    try:
+        report = get_hourly_report()
+    except Exception:
+        return []
+    return [{"prompt": "現在的每小時追蹤報告是什麼？", "claude_answer": report}]
+
+
+def build_scheduled_query_tasks() -> list:
+    tasks = []
+    tasks += _build_lottery_tasks()
+    tasks += _build_steam_task()
+    tasks += _build_hourly_report_task()
+    # 這兩項需要 VM 上的即時資料，本機拿不到正確答案；
+    # 直接把問題丟給 Hermes、記錄回答，不比對、不寫教材，供 Steven 事後自行判讀
+    tasks.append({"prompt": "有哪些食物快過期了？"})
+    tasks.append({"prompt": "Oracle VM 現在健康狀況如何？"})
+    return tasks
+
+
+def main():
+    json.dump(build_scheduled_query_tasks(), sys.stdout, ensure_ascii=False, indent=2)
+
+
+if __name__ == "__main__":
+    main()
+```
+
+- [ ] **Step 4: 執行測試確認通過**
+
+Run: `cd ~/CCProject/hermes-training && python3 -m pytest tests/test_extract_scheduled_query_tasks.py -v`
+Expected: 全部 PASS
+
+- [ ] **Step 5: 把輸出併入 run_nightly.sh 的任務清單**
+
+修改 `hermes-training/run_nightly.sh`，在 `extract_tasks.py` 產出 `$TASKS_FILE` 之後，合併 `extract_scheduled_query_tasks.py` 的輸出：
+
+在這一行之後：
+```bash
+python3 "$WORK_DIR/extract_tasks.py" "${TRANSCRIPTS[@]}" > "$TASKS_FILE" 2>>"$LOG"
+```
+插入：
+```bash
+python3 "$WORK_DIR/extract_scheduled_query_tasks.py" > "$WORK_DIR/scheduled_tasks_${DATE_STR}.json" 2>>"$LOG"
+python3 -c "
+import json
+a = json.load(open('$TASKS_FILE'))
+b = json.load(open('$WORK_DIR/scheduled_tasks_${DATE_STR}.json'))
+json.dump(a + b, open('$TASKS_FILE', 'w'), ensure_ascii=False, indent=2)
+" 2>>"$LOG"
+```
+
+同時更新 `hermes-training/nightly_prompt_template.txt` 開頭的清單格式說明，加一句：「部分任務可能沒有 `claude_answer` 欄位（代表這條沒有正確答案可比對）——這種任務只需要正常呼叫 call_hermes.py 取得回答、走 1.5 的互動釐清迴圈（如適用），然後直接記 log（跳過步驟 2-4 的比對與教學，`lesson`/`hermes_revised` 留空）」。
+
+- [ ] **Step 6: 執行測試確認通過（含修改後的 shell 語法檢查）**
+
+```bash
+cd ~/CCProject/hermes-training && python3 -m pytest tests/test_extract_scheduled_query_tasks.py -v
+bash -n ~/CCProject/hermes-training/run_nightly.sh
+```
+Expected: pytest 全部 PASS；`bash -n` 沒有輸出（語法正確）
+
+- [ ] **Step 7: Commit**
+
+```bash
+cd ~/CCProject
+git add hermes-training/extract_scheduled_query_tasks.py hermes-training/tests/test_extract_scheduled_query_tasks.py hermes-training/run_nightly.sh hermes-training/nightly_prompt_template.txt
+git commit -m "feat: 把既有排程查詢工作併入 Hermes 夜間訓練集"
+```
+
+---
+
 ## 完成後的手動確認清單
 
-- [ ] 隔天早上收到 Telegram 早報（不論有沒有可訓練任務）
+- [ ] 隔天早上 `hermes-training/logs/summary_<日期>.md` 有內容（不論有沒有可訓練任務）
+- [ ] Obsidian vault 的 `Projects/Hermes 夜間訓練日誌/` 有當天的 `<日期>.md` 與 `summary_<日期>.md`
 - [ ] `~/CCProject/hermes-training/logs/<今天日期>.md` 有內容
 - [ ] `~/.hermes/learnings.md` 有新增內容（若當晚有差距明顯的任務）
 - [ ] `~/.hermes/config.yaml` 的 `agent.personalities.zhtw` 已包含教材區塊
