@@ -98,6 +98,7 @@
       "pct": 4.15
     }
   ],
+  "range_p30": 68.1796875,
   "correlations": {
     "full": {
       "twii_sox": 0.1746619859544139,

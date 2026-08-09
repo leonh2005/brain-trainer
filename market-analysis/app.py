@@ -13,6 +13,7 @@ app = Flask(__name__)
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 ANALYSIS_JSON = os.path.join(BASE_DIR, "analysis_data.json")
+HITS_JSON = os.path.join(BASE_DIR, "hit_counts.json")
 SECRETS_DIR = "/Users/steven/CCProject/.secrets"
 
 STOCKS = [
@@ -377,7 +378,13 @@ def health():
 @app.get("/api/analysis")
 def analysis():
     with open(ANALYSIS_JSON, "r", encoding="utf-8") as f:
-        return jsonify(json.load(f))
+        data = json.load(f)
+    if os.path.exists(HITS_JSON):
+        with open(HITS_JSON, "r", encoding="utf-8") as f:
+            data["hits"] = json.load(f).get("hits", {})
+    else:
+        data["hits"] = {}
+    return jsonify(data)
 
 
 @app.get("/api/live")

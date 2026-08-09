@@ -94,7 +94,7 @@ def analysis_one(twii):
     result = pd.DataFrame({"次數": counts, "百分比(%)": pct}).sort_values(
         "次數", ascending=False
     )
-    return result, len(labels)
+    return result, len(labels), range_p30
 
 
 # ---------------------------------------------------------------
@@ -271,7 +271,7 @@ def main():
     # ---- 分析一 ----
     lines.append("\n## 分析一: 大盤(^TWII) 日內走勢十大類型統計\n")
     if twii is not None:
-        result1, n_days = analysis_one(twii)
+        result1, n_days, range_p30 = analysis_one(twii)
         lines.append(f"樣本天數: {n_days}\n")
         lines.append(df_to_md(result1))
         lines.append("\n")
@@ -279,6 +279,7 @@ def main():
             {"name": name, "count": int(row["次數"]), "pct": float(row["百分比(%)"])}
             for name, row in result1.iterrows()
         ]
+        json_data["range_p30"] = float(range_p30)
     else:
         lines.append("無法取得 ^TWII 資料，略過。\n")
         json_data["intraday_types"] = []
