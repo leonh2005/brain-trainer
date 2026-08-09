@@ -1,6 +1,6 @@
 {
-  "scanned_at": "2026-08-08 03:00:20",
-  "since": "2026-08-07 03:00:00",
+  "scanned_at": "2026-08-09 03:00:20",
+  "since": "2026-08-08 03:00:00",
   "results": {
     "市場儀表板": {
       "exists": true,
@@ -16,8 +16,8 @@
     },
     "motion-watcher": {
       "exists": true,
-      "errors": 648,
-      "last_error": "2026-08-08 02:57:43,015 WARNING 讀取影格失敗，重新連線",
+      "errors": 695,
+      "last_error": "2026-08-09 02:55:24,607 WARNING 讀取影格失敗，重新連線",
       "fix": "尚無對應建議，需人工判斷"
     },
     "Cloudflare Tunnel": {
@@ -28,15 +28,15 @@
     },
     "財經新聞分析": {
       "exists": true,
-      "errors": 14,
-      "last_error": "2026-08-07 12:00:08,940 [WARNING] fetcher.ptt_fetcher: PTT index fetch failed: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))",
+      "errors": 62,
+      "last_error": "2026-08-09 02:30:03,955 [WARNING] fetcher.ptt_fetcher: PTT index fetch failed: ('Connection aborted.', ConnectionResetError(54, 'Connection reset by peer'))",
       "fix": "尚無對應建議，需人工判斷"
     },
     "川普監測": {
       "exists": true,
-      "errors": 2,
-      "last_error": "2026-08-07 10:30:04,317 WARNING 分析失敗：Analysis: As US and China throw up tit-for-tat san — 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reaso",
-      "fix": "尚無對應建議，需人工判斷"
+      "errors": 0,
+      "last_error": null,
+      "fix": null
     },
     "持倉新聞(台股)": {
       "exists": true,

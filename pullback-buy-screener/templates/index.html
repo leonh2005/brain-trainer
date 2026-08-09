@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>回後買上漲選股</title>
+<style>
+:root {
+  --bg: #0a0e14; --card: #111722; --border: #1e2a3a;
+  --text: #e8edf4; --text-dim: #5a6a7e; --font-mono: "SF Mono", Menlo, monospace;
+  --red: #ff4757; --green: #00d68f; --amber: #ffaa00; --blue: #3b82f6;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: var(--bg); color: var(--text); font-family: -apple-system, "PingFang TC", sans-serif; }
+header { display: flex; align-items: center; gap: 1rem; padding: 1.5rem 2rem; border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+h1 { font-size: 1.3rem; } h1 span { color: var(--red); }
+.sub { color: var(--text-dim); font-size: 0.78rem; }
+.bar { display: flex; gap: 0.7rem; padding: 1rem 2rem; align-items: center; flex-wrap: wrap; border-bottom: 1px solid var(--border); }
+select, button { background: var(--card); color: var(--text); border: 1px solid var(--border); border-radius: 6px; padding: 0.45rem 0.9rem; cursor: pointer; font-size: 0.85rem; }
+button:hover { border-color: var(--blue); }
+button:disabled { opacity: 0.5; cursor: not-allowed; }
+.progress { font-family: var(--font-mono); font-size: 0.82rem; color: var(--text-dim); }
+.msg { font-size: 0.8rem; color: var(--amber); }
+.wrap { padding: 1rem 2rem 2rem; overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+th, td { padding: 0.6rem 0.8rem; text-align: right; border-bottom: 1px solid var(--border); white-space: nowrap; }
+th:first-child, td:first-child { text-align: left; }
+th { color: var(--text-dim); font-size: 0.72rem; letter-spacing: 0.05em; text-transform: uppercase; user-select: none; }
+th.sortable { cursor: pointer; }
+th.sortable:hover { color: var(--text); }
+th.active { color: var(--blue); }
+td { font-family: var(--font-mono); }
+td.name-cell { font-family: -apple-system, "PingFang TC", sans-serif; }
+a.stock-link { color: var(--text); text-decoration: none; }
+a.stock-link:hover { color: var(--blue); text-decoration: underline; }
+.code { color: var(--text-dim); font-size: 0.75rem; margin-right: 0.4rem; }
+.up { color: var(--red); } .down { color: var(--green); } .flat { color: var(--text-dim); }
+.empty { color: var(--text-dim); font-size: 0.9rem; padding: 2rem; text-align: center; }
+</style>
+</head>
+<body>
+<header>
+  <h1>回後買<span>上漲</span>選股</h1>
+  <div class="sub">多頭趨勢 → 量縮回檔不破前低 → 長紅突破昨高</div>
+</header>
+
+<div class="bar">
+  <select id="universe">
+    <option value="100">前 100 檔（依成交量）</option>
+    <option value="200" selected>前 200 檔（依成交量）</option>
+    <option value="400">前 400 檔（依成交量）</option>
+  </select>
+  <button id="scanBtn">開始掃描</button>
+  <span class="progress" id="progress"></span>
+  <span class="msg" id="msg"></span>
+</div>
+
+<div class="wrap">
+  <table id="resultTable" style="display:none">
+    <thead>
+      <tr>
+        <th>股票</th>
+        <th class="sortable" data-key="close">股價</th>
+        <th>漲跌幅</th>
+        <th class="sortable" data-key="volume">成交量(張)</th>
+        <th>實體漲幅%</th>
+        <th>距月線%</th>
+        <th>回檔起漲高點</th>
+      </tr>
+    </thead>
+    <tbody id="resultBody"></tbody>
+  </table>
+  <div class="empty" id="empty">按上方「開始掃描」找符合條件的標的</div>
+</div>
+
+<script>
+const esc = s => s == null ? "" : String(s).replace(/[&<>"']/g,
+  c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const cls = v => v == null ? "flat" : v > 0 ? "up" : v < 0 ? "down" : "flat";
+const fmtPct = v => v == null ? "—" : (v > 0 ? "+" : "") + v.toFixed(2) + "%";
+
+let results = [];
+let sortKey = "volume";
+let sortDir = -1;
+let pollTimer = null;
+
+const scanBtn = document.getElementById("scanBtn");
+const progressEl = document.getElementById("progress");
+const msgEl = document.getElementById("msg");
+const table = document.getElementById("resultTable");
+const emptyEl = document.getElementById("empty");
+const tbody = document.getElementById("resultBody");
+
+function rowHtml(s) {
+  const changeHtml = `<span class="${cls(s.change_pct)}">${fmtPct(s.change_pct)}</span>`;
+  return `<tr>
+    <td class="name-cell"><span class="code">${esc(s.code)}</span>
+      <a class="stock-link" href="https://tw.stock.yahoo.com/quote/${esc(s.code)}.TW" target="_blank" rel="noopener">${esc(s.name)}</a></td>
+    <td>${s.close.toFixed(2)}</td>
+    <td>${changeHtml}</td>
+    <td>${s.volume.toLocaleString()}</td>
+    <td>${s.body_pct.toFixed(2)}%</td>
+    <td>${fmtPct(s.ma20_dist_pct)}</td>
+    <td>${esc(s.peak_date)}</td>
+  </tr>`;
+}
+
+function render() {
+  if (!results.length) {
+    table.style.display = "none";
+    emptyEl.style.display = "block";
+    emptyEl.textContent = "沒有符合條件的標的";
+    return;
+  }
+  const sorted = [...results].sort((a, b) => (a[sortKey] - b[sortKey]) * sortDir);
+  tbody.innerHTML = sorted.map(rowHtml).join("");
+  table.style.display = "table";
+  emptyEl.style.display = "none";
+  document.querySelectorAll("th.sortable").forEach(th => {
+    th.classList.toggle("active", th.dataset.key === sortKey);
+  });
+}
+
+document.querySelectorAll("th.sortable").forEach(th => {
+  th.addEventListener("click", () => {
+    const key = th.dataset.key;
+    sortDir = (sortKey === key) ? -sortDir : -1;
+    sortKey = key;
+    render();
+  });
+});
+
+async function poll(jobId) {
+  const resp = await fetch("/api/scan/status");
+  const j = await resp.json();
+  if (j.status === "running") {
+    progressEl.textContent = `已掃描 ${j.done}/${j.total}`;
+    pollTimer = setTimeout(() => poll(jobId), 2000);
+  } else if (j.status === "done") {
+    progressEl.textContent = `完成，共掃描 ${j.total} 檔，符合 ${j.results.length} 檔`;
+    results = j.results;
+    render();
+    scanBtn.disabled = false;
+  } else if (j.status === "error") {
+    msgEl.textContent = "掃描失敗：" + (j.error || "未知錯誤");
+    scanBtn.disabled = false;
+  }
+}
+
+scanBtn.addEventListener("click", async () => {
+  clearTimeout(pollTimer);
+  msgEl.textContent = "";
+  scanBtn.disabled = true;
+  progressEl.textContent = "啟動中…";
+  const universe = document.getElementById("universe").value;
+  const resp = await fetch("/api/scan", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ universe: Number(universe) }),
+  });
+  const j = await resp.json();
+  poll(j.job_id);
+});
+</script>
+</body>
+</html>
