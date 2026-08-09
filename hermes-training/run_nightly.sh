@@ -36,7 +36,10 @@ copy_logs_to_obsidian() {
   fi
 }
 
-mapfile -t TRANSCRIPTS < <(find "$TRANSCRIPT_DIR" -maxdepth 1 -name "*.jsonl" -newermt "$DATE_STR 00:00:00" ! -newermt "$DATE_STR 23:59:59" 2>/dev/null)
+TRANSCRIPTS=()
+while IFS= read -r f; do
+  TRANSCRIPTS+=("$f")
+done < <(find "$TRANSCRIPT_DIR" -maxdepth 1 -name "*.jsonl" -newermt "$DATE_STR 00:00:00" ! -newermt "$DATE_STR 23:59:59" 2>/dev/null)
 
 if [ ${#TRANSCRIPTS[@]} -eq 0 ]; then
   log "今天沒有 session transcript，跳過"
@@ -56,7 +59,13 @@ json.dump(a + b, open('$TASKS_FILE', 'w'), ensure_ascii=False, indent=2)
 
 TASK_COUNT=$(python3 -c "import json; print(len(json.load(open('$TASKS_FILE'))))" 2>>"$LOG")
 
-if [ -z "$TASK_COUNT" ] || [ "$TASK_COUNT" -eq 0 ]; then
+if [ -z "$TASK_COUNT" ]; then
+  log "任務擷取失敗，TASK_COUNT 無法解析"
+  write_summary "⚠️ Hermes 夜間訓練：任務擷取失敗，詳見 log：$LOG"
+  exit 0
+fi
+
+if [ "$TASK_COUNT" -eq 0 ]; then
   log "過濾後沒有可訓練任務"
   write_summary "🌙 Hermes 夜間訓練：今晚 0 條可訓練任務（可能都涉及寫入/修改操作）"
   exit 0
@@ -67,7 +76,7 @@ log "今晚可訓練任務數：$TASK_COUNT"
 PROMPT="$(sed "s|{{TASKS_FILE}}|$TASKS_FILE|g; s|{{DATE_STR}}|$DATE_STR|g" "$WORK_DIR/nightly_prompt_template.txt")"
 
 result=$(cd "$PROJECT_DIR" && timeout --kill-after=30 7200 claude -p "$PROMPT" \
-  --permission-mode acceptEdits \
+  --permission-mode default \
   --allowedTools "Read,Bash,Grep,Glob" \
   --disallowedTools "Agent,Workflow,Write,Edit" \
   --output-format text 2>>"$LOG")
@@ -84,3 +93,7 @@ else
 fi
 
 copy_logs_to_obsidian
+
+# 清掉超過 7 天的中間檔案，避免無限累積
+find "$WORK_DIR" -maxdepth 1 -name "scheduled_tasks_*.json" -mtime +7 -delete
+find "$WORK_DIR" -maxdepth 1 -name "tasks_*.json" -mtime +7 -delete

@@ -9,13 +9,25 @@
 
 請依序對清單中的每一條任務執行：
 
-1. 用 Bash 呼叫：`echo "<prompt>" | python3 hermes-training/call_hermes.py`，取得 Hermes 對這條 prompt 的初始回答
+1. 用 Bash 呼叫（用 heredoc 避免 prompt 內含反引號/`$()` 造成 shell 誤執行）：
+   ```
+   python3 hermes-training/call_hermes.py <<'EOF'
+   <prompt>
+   EOF
+   ```
+   取得 Hermes 對這條 prompt 的初始回答
 
 1.5. **互動釐清迴圈（最多 4 輪）**：Hermes 是一次性呼叫、不會記得上次對話，所以每一輪都要自己把完整對話記錄組進新的 prompt 裡送出去。
    如果 Hermes 的回答是在反問你問題、或明確表示看不懂/無法回答，就把這輪視為「需要澄清」：
    - 用繁體中文寫下你的回答/教學，記錄成 `{"hermes_question": "<Hermes 問的>", "trainer_answer": "<你教它的>"}`（累積進這條任務的 `clarify_rounds` 清單）
    - 組一個新 prompt，格式：「以下是這條任務目前為止的完整對話記錄：\n[原始問題]：<prompt>\n[Hermes]：<上一輪回答>\n[訓練者]：<你的回答/教學>\n\n請根據以上脈絡，重新回答原始問題。」
-   - 用 Bash 呼叫 `echo "<新 prompt>" | python3 hermes-training/call_hermes.py` 取得下一輪回答
+   - 同樣用 heredoc 呼叫：
+     ```
+     python3 hermes-training/call_hermes.py <<'EOF'
+     <新 prompt>
+     EOF
+     ```
+     取得下一輪回答
    - 重複以上，最多 4 輪。4 輪後 Hermes 仍答不出來就放棄，直接把最後一輪的回答當作這條任務的初答，正常往下走（不要卡住整條訓練管線）
    - 如果 Hermes 一開始就正常回答（不是反問、不是表示無法回答），這個迴圈直接跳過，`clarify_rounds` 留空
 

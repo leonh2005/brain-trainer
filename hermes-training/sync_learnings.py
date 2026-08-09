@@ -1,5 +1,7 @@
 """把累積的 Hermes 教材（learnings.md）同步進 config.yaml 的 zhtw personality，
 讓 Hermes 每次對話都會帶著這些教材。"""
+import os
+import shutil
 from pathlib import Path
 import yaml
 
@@ -28,8 +30,13 @@ def sync_learnings(config_path: Path = DEFAULT_CONFIG_PATH,
 
     config.setdefault("agent", {}).setdefault("personalities", {})["zhtw"] = new_value
 
-    with open(config_path, "w", encoding="utf-8") as f:
+    if config_path.exists():
+        shutil.copy2(config_path, config_path.with_suffix(config_path.suffix + ".bak"))
+
+    tmp_path = config_path.with_suffix(config_path.suffix + ".tmp")
+    with open(tmp_path, "w", encoding="utf-8") as f:
         yaml.safe_dump(config, f, allow_unicode=True, sort_keys=False)
+    os.replace(tmp_path, config_path)
 
 
 def main():
