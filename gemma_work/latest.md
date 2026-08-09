@@ -1,5 +1,5 @@
-# Claude Handoff 20260810_0038
-> 自動生成於 2026-08-10 00:38
+# Claude Handoff 20260810_0135
+> 自動生成於 2026-08-10 01:35
 
 ## 未提交的檔案異動
 ```
@@ -8,17 +8,15 @@
  M gemma_work/latest.md
  M scripts/auto_investigate_state.json
  m stock-screener-ai
-?? market-analysis/daily_classify.py
-?? market-analysis/hit_counts.json
 ```
 
 ## 近期 Commits
 ```
-446a6004 chore: 每晚同步 2026-08-09 23:50
-10cb9ccb docs: Hermes 夜間訓練管線 implementation plan
-87bc74c5 docs: Hermes 夜間訓練管線 design spec
-03e753ae chore: 自動同步 2026-08-09 19:40
-eb85fa98 chore: 自動同步 2026-08-09 14:40
+56ce1b16 Merge branch 'worktree-hermes-nightly-training'
+55d13b5d fix: 修正最終審查發現的 critical/important 問題（bash相容性、指令過濾漏洞、injection風險、gitignore、原子寫入等）
+0ffc0cfe feat: 把既有排程查詢工作併入 Hermes 夜間訓練集
+7f86521c feat: run_nightly.sh 串接 Hermes 夜間訓練管線
+fee9c405 feat: sync_learnings.py 同步教材進 Hermes config
 ```
 
 ## 給 Hermes 的備註
