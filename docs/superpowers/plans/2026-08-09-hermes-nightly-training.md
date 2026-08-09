@@ -882,11 +882,28 @@ DATE_STR="$(date '+%Y-%m-%d')"
 TRANSCRIPT_DIR="$HOME/.claude/projects/-Users-steven-CCProject"
 TASKS_FILE="$WORK_DIR/tasks_${DATE_STR}.json"
 SUMMARY_FILE="$WORK_DIR/logs/summary_${DATE_STR}.md"
+DAILY_LOG_FILE="$WORK_DIR/logs/${DATE_STR}.md"
+VAULT_DIR="$HOME/我的雲端硬碟/📚 學習 & 筆記/from Google keep/Projects/Hermes 夜間訓練日誌"
 
 log() { echo "[$(date '+%Y-%m-%d %H:%M:%S')] $1" >> "$LOG"; }
 write_summary() {
   mkdir -p "$WORK_DIR/logs"
   echo "$1" >> "$SUMMARY_FILE"
+}
+copy_logs_to_obsidian() {
+  # Google Drive 桌面版沒在跑的話，vault 資料夾可能是舊快照；啟動它再複製，
+  # 複製失敗也不能讓整條訓練管線失敗，只記警告
+  if ! pgrep -f "Google Drive.app" > /dev/null 2>&1; then
+    open -a "Google Drive" 2>>"$LOG"
+    sleep 5
+  fi
+  if [ -d "$VAULT_DIR" ]; then
+    [ -f "$DAILY_LOG_FILE" ] && cp "$DAILY_LOG_FILE" "$VAULT_DIR/${DATE_STR}.md" 2>>"$LOG"
+    [ -f "$SUMMARY_FILE" ] && cp "$SUMMARY_FILE" "$VAULT_DIR/summary_${DATE_STR}.md" 2>>"$LOG"
+    log "已複製當天 log 進 Obsidian vault"
+  else
+    log "警告：Obsidian vault 資料夾不存在，跳過複製（$VAULT_DIR）"
+  fi
 }
 
 mapfile -t TRANSCRIPTS < <(find "$TRANSCRIPT_DIR" -maxdepth 1 -name "*.jsonl" -newermt "$DATE_STR 00:00:00" ! -newermt "$DATE_STR 23:59:59" 2>/dev/null)
@@ -927,6 +944,8 @@ ${result}"
 else
   write_summary "⚠️ Hermes 夜間訓練失敗（exit=$exit_code），詳見 log：$LOG"
 fi
+
+copy_logs_to_obsidian
 ```
 
 - [ ] **Step 3: 賦予執行權限**
@@ -1250,7 +1269,8 @@ git commit -m "feat: 把既有排程查詢工作併入 Hermes 夜間訓練集"
 
 ## 完成後的手動確認清單
 
-- [ ] 隔天早上收到 Telegram 早報（不論有沒有可訓練任務）
+- [ ] 隔天早上 `hermes-training/logs/summary_<日期>.md` 有內容（不論有沒有可訓練任務）
+- [ ] Obsidian vault 的 `Projects/Hermes 夜間訓練日誌/` 有當天的 `<日期>.md` 與 `summary_<日期>.md`
 - [ ] `~/CCProject/hermes-training/logs/<今天日期>.md` 有內容
 - [ ] `~/.hermes/learnings.md` 有新增內容（若當晚有差距明顯的任務）
 - [ ] `~/.hermes/config.yaml` 的 `agent.personalities.zhtw` 已包含教材區塊
