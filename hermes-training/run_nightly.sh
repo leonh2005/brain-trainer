@@ -46,6 +46,14 @@ fi
 
 python3 "$WORK_DIR/extract_tasks.py" "${TRANSCRIPTS[@]}" > "$TASKS_FILE" 2>>"$LOG"
 
+python3 "$WORK_DIR/extract_scheduled_query_tasks.py" > "$WORK_DIR/scheduled_tasks_${DATE_STR}.json" 2>>"$LOG"
+python3 -c "
+import json
+a = json.load(open('$TASKS_FILE'))
+b = json.load(open('$WORK_DIR/scheduled_tasks_${DATE_STR}.json'))
+json.dump(a + b, open('$TASKS_FILE', 'w'), ensure_ascii=False, indent=2)
+" 2>>"$LOG"
+
 TASK_COUNT=$(python3 -c "import json; print(len(json.load(open('$TASKS_FILE'))))" 2>>"$LOG")
 
 if [ -z "$TASK_COUNT" ] || [ "$TASK_COUNT" -eq 0 ]; then

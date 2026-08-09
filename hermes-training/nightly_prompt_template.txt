@@ -3,6 +3,7 @@
 背景：Hermes 是 Steven 本機的 Ollama agent，目標是讓它逐漸學會像你一樣理解 Steven 並回答問題。
 今天 Steven 交給你的純問答任務已經整理成一份 JSON 清單，存在：{{TASKS_FILE}}
 清單格式：[{"prompt": "原始提問", "claude_answer": "你當時的回答"}, ...]
+注意：部分任務可能沒有 `claude_answer` 欄位（代表這條沒有正確答案可比對）——這種任務只需要正常呼叫 call_hermes.py 取得回答、走 1.5 的互動釐清迴圈（如適用），然後直接記 log（跳過步驟 2-4 的比對與教學，`lesson`/`hermes_revised` 留空）。
 
 工作目錄：hermes-training/（相對於你目前 cwd）
 
