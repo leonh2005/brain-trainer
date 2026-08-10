@@ -37,7 +37,8 @@ def get_universe(n: int) -> list[dict]:
 def get_daily_bars(code: str, days: int = 95) -> list[dict]:
     """取單檔日K（舊到新）。失敗回傳空 list。"""
     try:
-        resp = requests.get(f"{GATEWAY}/daily_ohlcv", params={"code": code, "days": days}, timeout=30)
+        resp = requests.get(f"{GATEWAY}/daily_ohlcv",
+                             params={"code": code, "days": days, "priority": "high"}, timeout=30)
         j = resp.json()
         return j.get("bars", []) if j.get("ok") else []
     except Exception:

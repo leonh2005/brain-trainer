@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """回後買上漲策略：多頭趨勢 → 正常回檔（量縮不破前低）→ 進場K棒（大量長紅、站上5日線、破昨高）。"""
 
+from datetime import date
 from typing import Callable, Optional
 
 import data_fetcher
@@ -10,6 +11,7 @@ TREND_LOOKBACK = 5      # 月線向上比較基準（5 個交易日前）
 PEAK_WINDOW = 15        # 找波段高點的回看天數
 SUPPORT_WINDOW = 20     # 高點前找支撐低點的回看天數
 BODY_PCT_MIN = 2.0      # 實體漲幅門檻
+STALE_DAYS_MAX = 7      # 最新K棒與今天的日曆天差距上限，超過視為資料不完整（Shioaji 大量請求下偶爾回傳截斷資料）
 
 
 def _sma(closes: list[float], window: int, end_idx: int) -> float:
@@ -20,6 +22,8 @@ def evaluate(bars: list[dict]) -> Optional[dict]:
     """輸入單檔日K（舊到新），符合「回後買上漲」條件則回傳診斷欄位，否則 None。"""
     n = len(bars)
     if n < MIN_BARS:
+        return None
+    if (date.today() - date.fromisoformat(bars[-1]["date"])).days > STALE_DAYS_MAX:
         return None
 
     opens = [b["open"] for b in bars]
@@ -44,8 +48,8 @@ def evaluate(bars: list[dict]) -> Optional[dict]:
     lookback_end = n - 2  # 不含今天
     if lookback_end < lookback_start:
         return None
-    window_highs = highs[lookback_start:lookback_end + 1]
-    peak_idx = lookback_start + window_highs.index(max(window_highs))
+    window_closes = closes[lookback_start:lookback_end + 1]
+    peak_idx = lookback_start + window_closes.index(max(window_closes))
 
     if peak_idx > n - 3:  # 高點跟今天之間至少要有 1 天回檔
         return None

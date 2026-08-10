@@ -9,6 +9,8 @@
   GET /kbars?code=2330&days=30             -> {ok, closes:[...]}  (與 api.kbars(...).Close 相同)
   GET /intraday?code=IX0001                -> {ok, points:[{t:"09:01",price:23458.1},...]}  (當日 1 分鐘走勢)
 """
+import heapq
+import itertools
 import os
 import threading
 import time
@@ -20,7 +22,35 @@ app = Flask(__name__)
 SECRETS_DIR = "/Users/steven/CCProject/.secrets"
 
 _conn = {"api": None}
-_lock = threading.Lock()
+
+
+class _PriorityLock:
+    """等待佇列依 priority 排序（數字越小越優先），同 priority 內先到先服務。
+    無法中斷已在執行中的呼叫，只影響「下一個輪到誰」。"""
+
+    def __init__(self):
+        self._cv = threading.Condition()
+        self._busy = False
+        self._waiting = []
+        self._counter = itertools.count()
+
+    def acquire(self, priority=0):
+        ticket = next(self._counter)
+        entry = (priority, ticket)
+        with self._cv:
+            heapq.heappush(self._waiting, entry)
+            while self._busy or self._waiting[0] != entry:
+                self._cv.wait()
+            heapq.heappop(self._waiting)
+            self._busy = True
+
+    def release(self):
+        with self._cv:
+            self._busy = False
+            self._cv.notify_all()
+
+
+_lock = _PriorityLock()
 
 _bidask_cache = {}        # code -> {"ts": float, "bids": [...], "asks": [...]}
 _bidask_subscribed = {}   # code -> 最後被 /bidask 查詢的時間
@@ -61,9 +91,11 @@ def _login():
     return api
 
 
-def _run(fn):
-    """在鎖內用持久連線執行 fn(api)；連線失效時自動重登一次再試。"""
-    with _lock:
+def _run(fn, priority=0):
+    """在鎖內用持久連線執行 fn(api)；連線失效時自動重登一次再試。
+    priority 數字越小越優先（預設0），供大量背景批次請求插隊用。"""
+    _lock.acquire(priority)
+    try:
         try:
             if _conn["api"] is None:
                 _conn["api"] = _login()
@@ -80,6 +112,8 @@ def _run(fn):
             except Exception:
                 _conn["api"] = None
                 raise
+    finally:
+        _lock.release()
 
 
 def _resolve_contract(api, code):
@@ -172,6 +206,7 @@ def daily_ohlcv():
     GET /daily_ohlcv?code=2330&days=90 -> {ok, bars:[{date,open,high,low,close,volume}, ...]}（舊到新）"""
     code = request.args.get("code", "")
     days = int(request.args.get("days", "90"))
+    priority = -1 if request.args.get("priority") == "high" else 0
     if not code:
         return jsonify({"ok": False, "error": "no code"}), 400
     try:
@@ -200,9 +235,40 @@ def daily_ohlcv():
                     bar["volume"] += int(v)
             bars = [daily[d] for d in sorted(daily.keys())]
             return bars[-days:]
-        return jsonify({"ok": True, "bars": _run(work)})
+        bars = _run(work, priority=priority)
+        bars = _append_today_via_yfinance(code, bars)
+        return jsonify({"ok": True, "bars": bars})
     except Exception as e:
         return jsonify({"ok": False, "error": str(e)})
+
+
+def _append_today_via_yfinance(code, bars):
+    """Shioaji 配額耗盡或今日資料尚未入庫時，缺當天日K就改用 yfinance 補一根延遲收盤（fail-open，補不到就原樣回傳）。
+    yfinance volume 單位是股，除以1000換算成張以跟 Shioaji 資料一致。"""
+    today_str = date.today().isoformat()
+    if bars and bars[-1]["date"] == today_str:
+        return bars
+    try:
+        import yfinance as yf
+        for suffix in (".TW", ".TWO"):
+            try:
+                fi = yf.Ticker(f"{code}{suffix}").fast_info
+                price = fi.last_price
+                if not price:
+                    continue
+                return bars + [{
+                    "date": today_str,
+                    "open": float(fi.open) if fi.open else float(price),
+                    "high": float(fi.day_high) if fi.day_high else float(price),
+                    "low": float(fi.day_low) if fi.day_low else float(price),
+                    "close": float(price),
+                    "volume": int(fi.last_volume / 1000) if fi.last_volume else 0,
+                }]
+            except Exception:
+                continue
+    except Exception:
+        pass
+    return bars
 
 
 @app.get("/intraday")
