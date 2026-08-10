@@ -41,7 +41,7 @@ def index():
 
 @app.route("/api/scan", methods=["POST"])
 def start_scan():
-    n_universe = int((request.get_json(silent=True) or {}).get("universe", 200))
+    n_universe = min(600, int((request.get_json(silent=True) or {}).get("universe", 200)))
     with _lock:
         if _job["status"] == "running":
             return jsonify({"job_id": _job["id"]})
