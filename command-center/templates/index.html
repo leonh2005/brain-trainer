@@ -309,20 +309,28 @@ const LIFE=[
   {id:'guru-tracker',ic:'👴', title:'投資大老持股', span:'wide', url:'/api/life/guru-tracker', render:renderGuruTracker, site:'/svc/5910/'},
 ];
 
+const CARD_POLL_MS=60000;
+const cardLastUpdated={};
+function loadCard(d){
+  fetch(d.url).then(r=>r.json()).then(res=>{
+    if(cardLastUpdated[d.id]===res.updated)return;
+    cardLastUpdated[d.id]=res.updated;
+    $('#ts-'+d.id).textContent=res.updated||'';
+    const body=$('#cb-'+d.id);
+    if(!res.ok){body.innerHTML=`<div class="err">${res.error||'讀取失敗'}</div>`;return}
+    try{ body.innerHTML=''; body.appendChild(d.render(res.data)); }
+    catch(e){ body.innerHTML=`<div class="err">render: ${e.message}</div>`; }
+  }).catch(e=>{$('#cb-'+d.id).innerHTML=`<div class="err">${e.message}</div>`});
+}
 function mount(container,defs){
   const wrap=$(container);
   defs.forEach(d=>{
     const c=el('div','card fade-in'+(d.span?' '+d.span:''));
     c.innerHTML=`<div class="card-head"><span class="ic">${d.ic}</span><h3>${d.title}</h3><span class="ts" id="ts-${d.id}"></span>${d.site?`<a class="site-btn" href="${d.site}" title="開啟服務網站">↗</a>`:''}</div><div class="card-body" id="cb-${d.id}"><div class="skel" style="width:70%"></div><div class="skel" style="width:45%"></div></div>`;
     wrap.appendChild(c);
-    fetch(d.url).then(r=>r.json()).then(res=>{
-      $('#ts-'+d.id).textContent=res.updated||'';
-      const body=$('#cb-'+d.id);
-      if(!res.ok){body.innerHTML=`<div class="err">${res.error||'讀取失敗'}</div>`;return}
-      try{ body.innerHTML=''; body.appendChild(d.render(res.data)); }
-      catch(e){ body.innerHTML=`<div class="err">render: ${e.message}</div>`; }
-    }).catch(e=>{$('#cb-'+d.id).innerHTML=`<div class="err">${e.message}</div>`});
+    loadCard(d);
   });
+  setInterval(()=>defs.forEach(loadCard),CARD_POLL_MS);
 }
 
 /* ── renderers ── */
