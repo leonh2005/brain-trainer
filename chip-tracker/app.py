@@ -221,7 +221,8 @@ def api_quotes():
                 result[snap.code] = {
                     "price": price,
                     "change_pct": round(float(snap.change_price) / prev * 100, 2) if prev else None,
-                    "ts": int(snap.ts // 1_000_000_000),
+                    # Shioaji snap.ts 內部以台灣本地時間編碼、未做 UTC 轉換，換算後會超前真實 UTC 8 小時，需扣回
+                    "ts": int(snap.ts // 1_000_000_000) - 8 * 3600,
                     "delayed": False,
                 }
             break
