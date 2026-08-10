@@ -7,7 +7,7 @@ class HermesCallError(RuntimeError):
     pass
 
 
-def call_hermes(prompt: str, timeout: int = 120) -> str:
+def call_hermes(prompt: str, timeout: int = 240) -> str:
     result = subprocess.run(
         ["hermes", "-z", prompt],
         capture_output=True,

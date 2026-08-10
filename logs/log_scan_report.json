@@ -1,6 +1,6 @@
 {
-  "scanned_at": "2026-08-10 03:00:21",
-  "since": "2026-08-09 03:00:00",
+  "scanned_at": "2026-08-11 03:00:21",
+  "since": "2026-08-10 03:00:00",
   "results": {
     "市場儀表板": {
       "exists": true,
@@ -16,8 +16,8 @@
     },
     "motion-watcher": {
       "exists": true,
-      "errors": 665,
-      "last_error": "2026-08-10 02:58:56,122 WARNING 讀取影格失敗，重新連線",
+      "errors": 685,
+      "last_error": "2026-08-11 02:55:11,417 WARNING 讀取影格失敗，重新連線",
       "fix": "尚無對應建議，需人工判斷"
     },
     "Cloudflare Tunnel": {
@@ -28,9 +28,9 @@
     },
     "財經新聞分析": {
       "exists": true,
-      "errors": 28,
-      "last_error": "2026-08-09 21:00:06,824 [WARNING] fetcher.reddit_fetcher: Reddit fetch failed for r/stocks: 500 Server Error: Internal Server Error for url: https://www.reddit.com/r/stocks/hot/.rss",
-      "fix": "尚無對應建議，需人工判斷"
+      "errors": 1,
+      "last_error": "2026-08-10 03:30:04,775 [WARNING] fetcher.ptt_fetcher: PTT index fetch failed: HTTPSConnectionPool(host='www.ptt.cc', port=443): Max retries exceeded with url: /bbs/Stock/index.html (Caused by NewConnectionError(\"HTTPSConnection(host='www.ptt.cc', port=443): Failed to establish a new connection: [Er",
+      "fix": "Port 被佔用或服務未啟動 → 檢查 LaunchAgent 是否正常載入"
     },
     "川普監測": {
       "exists": true,
@@ -40,9 +40,9 @@
     },
     "持倉新聞(台股)": {
       "exists": true,
-      "errors": 0,
-      "last_error": null,
-      "fix": null
+      "errors": 4,
+      "last_error": "2026-08-10 08:30:19,518 WARNING 集保大戶資料失敗 2317：HTTPSConnectionPool(host='www.tdcc.com.tw', port=443): Max retries exceeded with url: /smWeb/QryStockAjax.do (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Missing Subject Key Identifier (_ssl",
+      "fix": "Port 被佔用或服務未啟動 → 檢查 LaunchAgent 是否正常載入"
     },
     "持倉新聞(美股)": {
       "exists": true,
