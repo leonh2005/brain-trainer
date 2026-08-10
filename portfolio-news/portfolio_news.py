@@ -91,51 +91,104 @@ TW_HOLDINGS = [
 
 US_HOLDINGS = [
     {
-        "code": "VWRA",
-        "name": "先鋒全球股票",
-        "queries": [
-            "global stock market Fed interest rate",
-            "S&P 500 world equities",
-        ],
+        "code": "NOW",
+        "name": "ServiceNow",
+        "queries": ["ServiceNow NOW stock earnings AI"],
     },
     {
-        "code": "GRID",
-        "name": "全球電力基建",
-        "queries": [
-            "power grid infrastructure AI data center electricity",
-            "global power utilities investment",
-        ],
+        "code": "CRM",
+        "name": "Salesforce",
+        "queries": ["Salesforce CRM stock earnings AI"],
+    },
+    {
+        "code": "NVDA",
+        "name": "NVIDIA",
+        "queries": ["NVIDIA NVDA stock AI chip earnings"],
+    },
+    {
+        "code": "ADBE",
+        "name": "Adobe",
+        "queries": ["Adobe ADBE stock earnings AI"],
+    },
+    {
+        "code": "AMZN",
+        "name": "Amazon",
+        "queries": ["Amazon AMZN stock earnings AWS"],
+    },
+    {
+        "code": "MSFT",
+        "name": "Microsoft",
+        "queries": ["Microsoft MSFT stock earnings AI cloud"],
+    },
+    {
+        "code": "MU",
+        "name": "美光",
+        "queries": ["Micron MU stock memory chip earnings"],
+    },
+    {
+        "code": "GOOG",
+        "name": "Alphabet",
+        "queries": ["Google Alphabet GOOG stock earnings"],
+    },
+    {
+        "code": "SNDK",
+        "name": "SanDisk",
+        "queries": ["SanDisk SNDK stock NAND flash memory"],
+    },
+    {
+        "code": "UKOIL",
+        "name": "布蘭特原油",
+        "queries": ["Brent crude oil price OPEC", "原油 布蘭特"],
+    },
+    {
+        "code": "GOLD",
+        "name": "黃金",
+        "queries": ["gold price XAU safe haven", "黃金 避險"],
+    },
+    {
+        "code": "XOVR",
+        "name": "XOVR ETF",
+        "queries": ["XOVR ETF"],
+    },
+    {
+        "code": "AGIX",
+        "name": "AGIX ETF",
+        "queries": ["AGIX ETF AI"],
+    },
+    {
+        "code": "EWJ",
+        "name": "日本股市（EWJ）",
+        "queries": ["Japan stock market Nikkei EWJ"],
+    },
+    {
+        "code": "AIPO",
+        "name": "AIPO ETF",
+        "queries": ["AIPO ETF"],
+    },
+    {
+        "code": "VWO",
+        "name": "新興市場（VWO）",
+        "queries": ["emerging markets VWO stock"],
+    },
+    {
+        "code": "EFV",
+        "name": "國際價值股（EFV）",
+        "queries": ["EAFE value stocks EFV international"],
     },
     {
         "code": "XLU",
         "name": "美國公用事業",
-        "queries": [
-            "US utilities sector XLU energy regulation",
-        ],
+        "queries": ["US utilities sector XLU energy regulation"],
     },
     {
-        "code": "00864B",
-        "name": "中信美債0-1年",
-        "queries": [
-            "US treasury yield Fed rate cut hike",
-            "short term bond market",
-        ],
+        "code": "XLP",
+        "name": "美國必需消費（XLP）",
+        "queries": ["US consumer staples sector XLP"],
     },
     {
-        "code": "DXYZ",
-        "name": "Destiny Tech100",
-        "queries": [
-            "Destiny Tech100 DXYZ SpaceX pre-IPO",
-            "SpaceX Starship launch valuation",
-        ],
-    },
-    {
-        "code": "00635U",
-        "name": "元大黃金",
-        "queries": [
-            "gold price XAU safe haven",
-            "黃金 避險",
-        ],
+        "code": "SLVP",
+        "name": "白銀礦業（SLVP）",
+        "queries": ["silver mining SLVP silver price"],
     },
 ]
 

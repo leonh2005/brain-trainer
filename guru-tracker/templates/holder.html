@@ -30,6 +30,9 @@
   .badge.new { background: var(--green); color: #06210f; }
   .badge.exit { background: var(--red); color: #fff; }
   .exited-box { margin-top: 1rem; font-size: 0.8rem; color: var(--text-dim); }
+  th.sortable { cursor: pointer; user-select: none; }
+  th.sortable:hover { color: var(--text); }
+  th.sortable .arrow { display: inline-block; width: 0.8em; opacity: 0.6; }
   .empty { color: var(--text-dim); font-size: 0.8rem; padding: 2rem; text-align: center; }
   .entries-section { margin-top: 1.4rem; }
   .entries-section h2 { font-size: 1.05rem; margin: 0 0 0.3rem; }
@@ -53,7 +56,7 @@
       <thead><tr>
         <th>Ticker</th><th>族群</th>
         <th class="num">股數</th><th class="num">股數變動</th><th class="num">變動%</th>
-        <th class="num">占比</th><th>資料日期</th><th>近兩年持倉走勢</th>
+        <th class="num sortable" id="thWeight">占比 <span class="arrow"></span></th><th>資料日期</th><th>近兩年持倉走勢</th>
       </tr></thead>
       <tbody id="holdingsBody"><tr><td colspan="8" class="empty">載入中...</td></tr></tbody>
     </table>
@@ -72,6 +75,7 @@
 
 <script>
 const holderId = {{ holder_id | tojson }};
+let weightSortDir = 'desc';  // 占比預設由大到小（與 API 回傳順序一致）
 
 async function load() {
   const res = await fetch(`/api/holder/${holderId}`);
@@ -85,17 +89,61 @@ async function load() {
     (d.updated_at ? ` ｜ 更新於 ${d.updated_at.slice(0,16).replace('T',' ')}` : '') +
     ` ｜ 顯示前10大（共 ${d.total_holding_count ?? d.holdings.length} 檔）`;
 
-  const fmtShares = n => (n === null || n === undefined) ? '—' : Math.round(n).toLocaleString();
-  const fmtPct = (n, withSign) => (n === null || n === undefined) ? '—'
-    : `${withSign && n >= 0 ? '+' : ''}${n}%`;
-  const yahooUrl = ticker => `https://finance.yahoo.com/quote/${encodeURIComponent(ticker.replace(/\//g, '-'))}`;
-  const tickerLink = ticker => `<a class="ticker-link" href="${yahooUrl(ticker)}" target="_blank" rel="noopener">${ticker}</a>`;
+  document.getElementById('thWeight').onclick = () => {
+    weightSortDir = weightSortDir === 'desc' ? 'asc' : 'desc';
+    renderHoldings(d.holdings);
+  };
+
+  renderHoldings(d.holdings);
+
+  if (holderId === 'steven_zhou') {
+    loadEntries();
+  }
+
+  if (d.sector_breakdown.length) {
+    new Chart(document.getElementById('sectorChart'), {
+      type: 'doughnut',
+      data: {
+        labels: d.sector_breakdown.map(s => s.sector),
+        datasets: [{
+          data: d.sector_breakdown.map(s => s.weight_pct),
+          backgroundColor: ['#26c281','#ff4757','#4a90d9','#a37bff','#f5a623','#50e3c2','#e35a8f','#7d8798','#c9a227','#5f9ea0','#d16ba5','#8fb339'],
+          borderColor: '#0a0e14', borderWidth: 2,
+        }]
+      },
+      options: {
+        plugins: { legend: { position: 'bottom', labels: { color: '#e6e9ef', font: { size: 11 } } } }
+      }
+    });
+  }
+
+  if (d.exited && d.exited.length) {
+    const rows = d.exited.map(e =>
+      `${tickerLink(e.ticker)}（原持股 ${fmtShares(e.shares)} 股，占比 ${e.weight_pct}%，資料日期 ${e.filed_date || '—'}）`
+    ).join('、');
+    document.getElementById('exitedBox').innerHTML =
+      `本期已出清（相較上期 ${d.prev_period || '—'}）：${rows}`;
+  }
+}
+
+const fmtShares = n => (n === null || n === undefined) ? '—' : Math.round(n).toLocaleString();
+const fmtPct = (n, withSign) => (n === null || n === undefined) ? '—'
+  : `${withSign && n >= 0 ? '+' : ''}${n}%`;
+const yahooUrl = ticker => `https://finance.yahoo.com/quote/${encodeURIComponent(ticker.replace(/\//g, '-'))}`;
+const tickerLink = ticker => `<a class="ticker-link" href="${yahooUrl(ticker)}" target="_blank" rel="noopener">${ticker}</a>`;
+
+function renderHoldings(holdings) {
+  document.getElementById('thWeight').querySelector('.arrow').textContent = weightSortDir === 'desc' ? '▼' : '▲';
+
+  const sorted = [...holdings].sort((a, b) =>
+    weightSortDir === 'desc' ? b.weight_pct - a.weight_pct : a.weight_pct - b.weight_pct
+  );
 
   const body = document.getElementById('holdingsBody');
-  if (!d.holdings.length) {
+  if (!sorted.length) {
     body.innerHTML = '<tr><td colspan="8" class="empty">尚無持股資料</td></tr>';
   } else {
-    body.innerHTML = d.holdings.map(h => {
+    body.innerHTML = sorted.map(h => {
       const newBadge = h.status === 'new' ? '<span class="badge new">新進</span>' : '';
       const sharesChangeTxt = h.shares_change === null ? '—'
         : `<span class="${h.shares_change >= 0 ? 'up' : 'down'}">${h.shares_change >= 0 ? '+' : ''}${fmtShares(h.shares_change)}</span>`;
@@ -115,7 +163,7 @@ async function load() {
     }).join('');
 
     // 每檔標的各自抓近兩年歷史，畫占比走勢小圖（sparkline）
-    d.holdings.forEach(h => {
+    sorted.forEach(h => {
       const canvasId = `spark-${h.ticker.replace(/[^A-Za-z0-9]/g, '_')}`;
       const canvas = document.getElementById(canvasId);
       fetch(`/api/holder/${holderId}/history/${encodeURIComponent(h.ticker)}`)
@@ -149,35 +197,6 @@ async function load() {
           });
         })
         .catch(() => { canvas.replaceWith(document.createTextNode('—')); });
-    });
-  }
-
-  if (d.exited && d.exited.length) {
-    const rows = d.exited.map(e =>
-      `${tickerLink(e.ticker)}（原持股 ${fmtShares(e.shares)} 股，占比 ${e.weight_pct}%，資料日期 ${e.filed_date || '—'}）`
-    ).join('、');
-    document.getElementById('exitedBox').innerHTML =
-      `本期已出清（相較上期 ${d.prev_period || '—'}）：${rows}`;
-  }
-
-  if (holderId === 'steven_zhou') {
-    loadEntries();
-  }
-
-  if (d.sector_breakdown.length) {
-    new Chart(document.getElementById('sectorChart'), {
-      type: 'doughnut',
-      data: {
-        labels: d.sector_breakdown.map(s => s.sector),
-        datasets: [{
-          data: d.sector_breakdown.map(s => s.weight_pct),
-          backgroundColor: ['#26c281','#ff4757','#4a90d9','#a37bff','#f5a623','#50e3c2','#e35a8f','#7d8798','#c9a227','#5f9ea0','#d16ba5','#8fb339'],
-          borderColor: '#0a0e14', borderWidth: 2,
-        }]
-      },
-      options: {
-        plugins: { legend: { position: 'bottom', labels: { color: '#e6e9ef', font: { size: 11 } } } }
-      }
     });
   }
 }
