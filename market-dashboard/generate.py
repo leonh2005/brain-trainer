@@ -1328,7 +1328,7 @@ def generate_html(vix_data, sp_data, ma_data, sp_hist_high, fg_data, tw_data, tw
     <div class="card-sub">
       {'<b>極度恐慌 &gt;30</b>' if vix_current > 30 else ('<b>警戒 20–30</b>' if vix_current > 20 else '<b>低波動 &lt;20</b>')}
       &nbsp;·&nbsp; 標普 500 30日隱含波動率
-      <br><span style="opacity:0.5">{vix_date}</span>
+      <br><span style="opacity:0.5">{vix_date} · 每日更新</span>
     </div>
   </div>
 
@@ -1338,7 +1338,58 @@ def generate_html(vix_data, sp_data, ma_data, sp_hist_high, fg_data, tw_data, tw
     <div class="card-sub">
       <b>{fg_label}</b>
       &nbsp;·&nbsp; 0=極恐 / 100=極貪
-      <br><span style="opacity:0.5">{fg_date}</span>
+      <br><span style="opacity:0.5">{fg_date} · 每日更新</span>
+    </div>
+  </div>
+
+  <div class="card {sp_alert}" style="--accent: {sp_color}">
+    <div class="card-label"><span class="pulse"></span>S&P 500 vs 200MA</div>
+    <div class="card-value" style="font-size:2.2rem">{sp_current:,.0f}</div>
+    <div class="card-sub">
+      200MA：{ma_current:,.0f}
+      &nbsp;·&nbsp; <b>{'▲' if sp_vs_ma > 0 else '▼'} {abs(sp_vs_ma)}%</b>
+      <br><span style="font-size:0.7rem;opacity:0.6">距高點 <b style="opacity:1">{sp_vs_high:.1f}%</b>&nbsp;&nbsp;{sp_date} · 每日更新</span>
+    </div>
+  </div>
+
+  <div class="card {tw_alert}" style="--accent: {tw_color}">
+    <div class="card-label"><span class="pulse"></span>台股加權指數 vs 200MA</div>
+    <div class="card-value" style="font-size:2.2rem">{tw_current:,.0f}</div>
+    <div class="card-sub">
+      200MA：{tw_ma_current:,.0f}
+      &nbsp;·&nbsp; <b style="color:{'#ff4757' if tw_vs_ma > 0 else '#00d68f'}">{'▲' if tw_vs_ma > 0 else '▼'} {abs(tw_vs_ma)}%</b>
+      <br><span style="font-size:0.7rem;opacity:0.6">距高點 <b style="opacity:1">{tw_vs_high:.1f}%</b>&nbsp;&nbsp;{tw_date} · 每日更新</span>
+    </div>
+  </div>
+
+  <div class="card {mg_alert}" style="--accent: {mg_color}">
+    <div class="card-label"><span class="pulse"></span>融資市值比</div>
+    <div class="card-value">{mg_ratio:.2f}<span style="font-size:1.2rem">%</span></div>
+    <div class="card-sub">
+      <b>{mg_label}</b>
+      <br>融資餘額：<b>{mg_margin:,.0f}</b> 億元
+      <br>總市值：<b>{mg_mktcap:,.0f}</b> 億元
+      <br><span style="opacity:0.5">{mg_date} · 每日更新</span>
+    </div>
+  </div>
+
+  <div class="card {ho_alert}" style="--accent: {ho_color}">
+    <div class="card-label"><span class="pulse"></span>Hindenburg 崩盤預警</div>
+    <div class="card-value">{ho_cluster}</div>
+    <div class="card-sub">
+      <b>{ho_status}</b>
+      &nbsp;·&nbsp; 近36天觸發次數
+      <br><span style="opacity:0.5">最近訊號：{ho_last_date} · 每日更新</span>
+    </div>
+  </div>
+
+  <div class="card {bb_alert}" style="--accent: {bb_color}">
+    <div class="card-label"><span class="pulse"></span>美銀牛熊指標</div>
+    <div class="card-value">{bb_display}</div>
+    <div class="card-sub">
+      <b>{bb_label}</b>
+      &nbsp;·&nbsp; 0–10 分
+      <br><span style="opacity:0.5">{bb_date} · 每週更新</span>
     </div>
   </div>
 
@@ -1349,27 +1400,7 @@ def generate_html(vix_data, sp_data, ma_data, sp_hist_high, fg_data, tw_data, tw
       歷史均值：{cape_hist_avg}
       &nbsp;·&nbsp; <b>{'▲' if cape_vs_avg > 0 else '▼'} {abs(cape_vs_avg):.0f}%</b>
       &nbsp;·&nbsp; {'<b>高估警戒 &gt;35</b>' if cape_current > 35 else ('<b>偏高 25–35</b>' if cape_current > 25 else '<b>合理 &lt;25</b>')}
-      <br><span style="opacity:0.5">{cape_date}</span>
-    </div>
-  </div>
-
-  <div class="card {sp_alert}" style="--accent: {sp_color}">
-    <div class="card-label"><span class="pulse"></span>S&P 500 vs 200MA</div>
-    <div class="card-value" style="font-size:2.2rem">{sp_current:,.0f}</div>
-    <div class="card-sub">
-      200MA：{ma_current:,.0f}
-      &nbsp;·&nbsp; <b>{'▲' if sp_vs_ma > 0 else '▼'} {abs(sp_vs_ma)}%</b>
-      <br><span style="font-size:0.7rem;opacity:0.6">距高點 <b style="opacity:1">{sp_vs_high:.1f}%</b>&nbsp;&nbsp;{sp_date}</span>
-    </div>
-  </div>
-
-  <div class="card {tw_alert}" style="--accent: {tw_color}">
-    <div class="card-label"><span class="pulse"></span>台股加權指數 vs 200MA</div>
-    <div class="card-value" style="font-size:2.2rem">{tw_current:,.0f}</div>
-    <div class="card-sub">
-      200MA：{tw_ma_current:,.0f}
-      &nbsp;·&nbsp; <b style="color:{'#ff4757' if tw_vs_ma > 0 else '#00d68f'}">{'▲' if tw_vs_ma > 0 else '▼'} {abs(tw_vs_ma)}%</b>
-      <br><span style="font-size:0.7rem;opacity:0.6">距高點 <b style="opacity:1">{tw_vs_high:.1f}%</b>&nbsp;&nbsp;{tw_date}</span>
+      <br><span style="opacity:0.5">{cape_date} · 每月更新</span>
     </div>
   </div>
 
@@ -1381,28 +1412,7 @@ def generate_html(vix_data, sp_data, ma_data, sp_hist_high, fg_data, tw_data, tw
       <br>當日：<b>{trade_current:,.0f}</b> &nbsp;前日：<b>{trade_prev:,.0f}</b> 億元
       <br>當月累計：<b>{trade_month_total:,.0f}</b> 億元
       <br>M1B（{m1b_date}期底）：<b>{m1b_current:,.0f}</b> 億元
-      <br><span style="opacity:0.5">{trade_date}</span>
-    </div>
-  </div>
-
-  <div class="card {mg_alert}" style="--accent: {mg_color}">
-    <div class="card-label"><span class="pulse"></span>融資市值比</div>
-    <div class="card-value">{mg_ratio:.2f}<span style="font-size:1.2rem">%</span></div>
-    <div class="card-sub">
-      <b>{mg_label}</b>
-      <br>融資餘額：<b>{mg_margin:,.0f}</b> 億元
-      <br>總市值：<b>{mg_mktcap:,.0f}</b> 億元
-      <br><span style="opacity:0.5">{mg_date}</span>
-    </div>
-  </div>
-
-  <div class="card {bb_alert}" style="--accent: {bb_color}">
-    <div class="card-label"><span class="pulse"></span>美銀牛熊指標</div>
-    <div class="card-value">{bb_display}</div>
-    <div class="card-sub">
-      <b>{bb_label}</b>
-      &nbsp;·&nbsp; 0–10 分
-      <br><span style="opacity:0.5">{bb_date}</span>
+      <br><span style="opacity:0.5">{trade_date} · 成交量每日、M1B每月更新</span>
     </div>
   </div>
 
@@ -1412,17 +1422,7 @@ def generate_html(vix_data, sp_data, ma_data, sp_hist_high, fg_data, tw_data, tw
     <div class="card-sub">
       <b>{bf_label}</b>
       &nbsp;·&nbsp; 現金 {bf_display_cash}
-      <br><span style="opacity:0.5">{bf_date}</span>
-    </div>
-  </div>
-
-  <div class="card {ho_alert}" style="--accent: {ho_color}">
-    <div class="card-label"><span class="pulse"></span>Hindenburg 崩盤預警</div>
-    <div class="card-value">{ho_cluster}</div>
-    <div class="card-sub">
-      <b>{ho_status}</b>
-      &nbsp;·&nbsp; 近36天觸發次數
-      <br><span style="opacity:0.5">最近訊號：{ho_last_date}</span>
+      <br><span style="opacity:0.5">{bf_date} · 每季更新</span>
     </div>
   </div>
 

@@ -155,6 +155,22 @@ def _nth_weekday(year, month, weekday, n):
 _FOMC_2026 = ["2026-01-28", "2026-03-18", "2026-04-29", "2026-06-17",
               "2026-07-29", "2026-09-16", "2026-10-28", "2026-12-09"]
 
+# BLS 官方公告之 2026 CPI 公布日期(美東時間 8:30 AM)
+_CPI_RELEASE_2026 = ["2026-02-13", "2026-03-11", "2026-04-10", "2026-05-12",
+                      "2026-06-10", "2026-07-14", "2026-08-12", "2026-09-11",
+                      "2026-10-14", "2026-11-10", "2026-12-10"]
+
+# BLS 官方公告之 2026 非農就業報告(Employment Situation)公布日期(美東時間 8:30 AM)
+_NFP_RELEASE_2026 = ["2026-09-04", "2026-10-02", "2026-11-06", "2026-12-04"]
+
+# BLS 官方公告之 2026 PPI 公布日期(美東時間 8:30 AM)
+_PPI_RELEASE_2026 = ["2026-01-14", "2026-01-30", "2026-02-27", "2026-03-18",
+                      "2026-04-14", "2026-06-11", "2026-07-15", "2026-08-13",
+                      "2026-09-10", "2026-10-15", "2026-11-13", "2026-12-15"]
+
+# BEA 官方公告之 2026 核心PCE物價指數(Personal Income and Outlays)公布日期(美東時間 8:30 AM)
+_PCE_RELEASE_2026 = ["2026-08-26", "2026-09-30", "2026-11-25", "2026-12-23"]
+
 
 def _events():
     """重大市場事件日曆(即日起至今年年底):結算日/三巫日/Fed會議/美國選舉/法說會。"""
@@ -178,6 +194,26 @@ def _events():
     for d in _FOMC_2026:
         if today.isoformat() <= d <= year_end.isoformat():
             events.append({"date": d, "category": "Fed會議", "title": "FOMC 利率決策公布"})
+
+    # 美國 CPI 公布日
+    for d in _CPI_RELEASE_2026:
+        if today.isoformat() <= d <= year_end.isoformat():
+            events.append({"date": d, "category": "CPI", "title": "美國 CPI 公布"})
+
+    # 美國非農就業報告公布日
+    for d in _NFP_RELEASE_2026:
+        if today.isoformat() <= d <= year_end.isoformat():
+            events.append({"date": d, "category": "非農", "title": "美國非農就業報告公布"})
+
+    # 美國 PPI 公布日
+    for d in _PPI_RELEASE_2026:
+        if today.isoformat() <= d <= year_end.isoformat():
+            events.append({"date": d, "category": "PPI", "title": "美國 PPI 公布"})
+
+    # 美國核心 PCE 物價指數公布日
+    for d in _PCE_RELEASE_2026:
+        if today.isoformat() <= d <= year_end.isoformat():
+            events.append({"date": d, "category": "PCE", "title": "美國核心 PCE 物價指數公布"})
 
     # 美國期中選舉日:11月第一個星期一後的第一個星期二
     first_monday = _nth_weekday(today.year, 11, 0, 1)
