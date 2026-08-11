@@ -36,6 +36,11 @@ a.stock-link:hover { color: var(--blue); text-decoration: underline; }
 .code { color: var(--text-dim); font-size: 0.75rem; margin-right: 0.4rem; }
 .up { color: var(--red); } .down { color: var(--green); } .flat { color: var(--text-dim); }
 .empty { color: var(--text-dim); font-size: 0.9rem; padding: 2rem; text-align: center; }
+.tabs { display: flex; gap: 0.5rem; padding: 0 2rem; border-bottom: 1px solid var(--border); }
+.tab { background: none; border: none; color: var(--text-dim); padding: 0.8rem 1rem; cursor: pointer; font-size: 0.9rem; border-bottom: 2px solid transparent; }
+.tab.active { color: var(--text); border-bottom-color: var(--blue); }
+.panel { display: none; }
+.panel.active { display: block; }
 </style>
 </head>
 <body>
@@ -44,6 +49,12 @@ a.stock-link:hover { color: var(--blue); text-decoration: underline; }
   <div class="sub">多頭趨勢 → 量縮回檔不破前低 → 長紅突破昨高</div>
 </header>
 
+<div class="tabs">
+  <button class="tab active" data-panel="pullback">回後買上漲</button>
+  <button class="tab" data-panel="consolidation">盤整突破</button>
+</div>
+
+<div class="panel active" id="panel-pullback">
 <div class="bar">
   <select id="universe">
     <option value="100">前 100 檔（依成交量）</option>
@@ -72,6 +83,42 @@ a.stock-link:hover { color: var(--blue); text-decoration: underline; }
     <tbody id="resultBody"></tbody>
   </table>
   <div class="empty" id="empty">按上方「開始掃描」找符合條件的標的</div>
+</div>
+</div>
+
+<div class="panel" id="panel-consolidation">
+<div class="bar">
+  <select id="universe2">
+    <option value="100">前 100 檔（依成交量）</option>
+    <option value="200">前 200 檔（依成交量）</option>
+    <option value="400" selected>前 400 檔（依成交量）</option>
+    <option value="600">前 600 檔（依成交量）</option>
+  </select>
+  <button id="scanBtn2">開始掃描</button>
+  <span class="progress" id="progress2"></span>
+  <span class="msg" id="msg2"></span>
+</div>
+
+<div class="wrap">
+  <table id="resultTable2" style="display:none">
+    <thead>
+      <tr>
+        <th>股票</th>
+        <th class="sortable2" data-key="close">股價</th>
+        <th>方向</th>
+        <th>分類</th>
+        <th class="sortable2" data-key="volume">成交量(張)</th>
+        <th>實體漲跌幅%</th>
+        <th>上頸線</th>
+        <th>下頸線</th>
+        <th>盤整天數</th>
+        <th>ADX</th>
+      </tr>
+    </thead>
+    <tbody id="resultBody2"></tbody>
+  </table>
+  <div class="empty" id="empty2">按上方「開始掃描」找盤整突破/跌破的標的</div>
+</div>
 </div>
 
 <script>
@@ -161,6 +208,104 @@ scanBtn.addEventListener("click", async () => {
   });
   const j = await resp.json();
   poll(j.job_id);
+});
+
+// 分頁切換
+document.querySelectorAll(".tab").forEach(tab => {
+  tab.addEventListener("click", () => {
+    document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+    document.querySelectorAll(".panel").forEach(p => p.classList.remove("active"));
+    tab.classList.add("active");
+    document.getElementById("panel-" + tab.dataset.panel).classList.add("active");
+  });
+});
+
+// 盤整突破分頁
+let results2 = [];
+let sortKey2 = "volume";
+let sortDir2 = -1;
+let pollTimer2 = null;
+
+const scanBtn2 = document.getElementById("scanBtn2");
+const progressEl2 = document.getElementById("progress2");
+const msgEl2 = document.getElementById("msg2");
+const table2 = document.getElementById("resultTable2");
+const emptyEl2 = document.getElementById("empty2");
+const tbody2 = document.getElementById("resultBody2");
+
+function rowHtml2(s) {
+  const dirLabel = s.direction === "up" ? "突破↑" : "跌破↓";
+  const dirCls = s.direction === "up" ? "up" : "down";
+  return `<tr>
+    <td class="name-cell"><span class="code">${esc(s.code)}</span>
+      <a class="stock-link" href="https://tw.stock.yahoo.com/quote/${esc(s.code)}.TW" target="_blank" rel="noopener">${esc(s.name)}</a></td>
+    <td>${s.close.toFixed(2)}</td>
+    <td class="${dirCls}">${dirLabel}</td>
+    <td>${esc(s.classify)}</td>
+    <td>${s.volume.toLocaleString()}</td>
+    <td class="${cls(s.body_pct)}">${fmtPct(s.body_pct)}</td>
+    <td>${s.upper_neckline.toFixed(2)}</td>
+    <td>${s.lower_neckline.toFixed(2)}</td>
+    <td>${s.consolidation_days}</td>
+    <td>${s.adx_today != null ? s.adx_today.toFixed(1) : "—"}</td>
+  </tr>`;
+}
+
+function render2() {
+  if (!results2.length) {
+    table2.style.display = "none";
+    emptyEl2.style.display = "block";
+    emptyEl2.textContent = "沒有符合條件的標的（這是稀有訊號，0 檔是正常情況）";
+    return;
+  }
+  const sorted = [...results2].sort((a, b) => (a[sortKey2] - b[sortKey2]) * sortDir2);
+  tbody2.innerHTML = sorted.map(rowHtml2).join("");
+  table2.style.display = "table";
+  emptyEl2.style.display = "none";
+  document.querySelectorAll("th.sortable2").forEach(th => {
+    th.classList.toggle("active", th.dataset.key === sortKey2);
+  });
+}
+
+document.querySelectorAll("th.sortable2").forEach(th => {
+  th.addEventListener("click", () => {
+    const key = th.dataset.key;
+    sortDir2 = (sortKey2 === key) ? -sortDir2 : -1;
+    sortKey2 = key;
+    render2();
+  });
+});
+
+async function poll2(jobId) {
+  const resp = await fetch("/api/scan_consolidation/status");
+  const j = await resp.json();
+  if (j.status === "running") {
+    progressEl2.textContent = `已掃描 ${j.done}/${j.total}`;
+    pollTimer2 = setTimeout(() => poll2(jobId), 2000);
+  } else if (j.status === "done") {
+    progressEl2.textContent = `完成，共掃描 ${j.total} 檔，符合 ${j.results.length} 檔`;
+    results2 = j.results;
+    render2();
+    scanBtn2.disabled = false;
+  } else if (j.status === "error") {
+    msgEl2.textContent = "掃描失敗：" + (j.error || "未知錯誤");
+    scanBtn2.disabled = false;
+  }
+}
+
+scanBtn2.addEventListener("click", async () => {
+  clearTimeout(pollTimer2);
+  msgEl2.textContent = "";
+  scanBtn2.disabled = true;
+  progressEl2.textContent = "啟動中…";
+  const universe = document.getElementById("universe2").value;
+  const resp = await fetch("/api/scan_consolidation", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ universe: Number(universe) }),
+  });
+  const j = await resp.json();
+  poll2(j.job_id);
 });
 </script>
 </body>

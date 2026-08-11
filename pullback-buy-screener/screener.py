@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
-"""回後買上漲策略：多頭趨勢 → 正常回檔（量縮不破前低）→ 進場K棒（大量長紅、站上5日線、破昨高）。"""
+"""回後買上漲策略：多頭趨勢 → 正常回檔（量縮不破前低、不破月線、幅度不超前波漲幅一半、
+區間內無爆量黑K）→ 進場K棒（大量長紅、站上5日線、破昨高、無長上影線）。
+2026-08-11 依課程影片補強：回檔不破月線、黃金分割回檔幅度、進場棒無長上影線、回檔區間無爆量黑K。"""
 
 from datetime import date
 from typing import Callable, Optional
@@ -65,6 +67,15 @@ def evaluate(bars: list[dict]) -> Optional[dict]:
         return None
     if pullback_low <= min(support_window):  # 跌破前低
         return None
+    if pullback_low <= ma20:  # 跌破月線
+        return None
+
+    peak_close = closes[peak_idx]
+    rally_start_low = min(support_window)
+    rally_range = peak_close - rally_start_low
+    retrace = peak_close - pullback_low
+    if rally_range <= 0 or retrace > rally_range * 0.5:  # 回檔超過前波漲幅一半（黃金分割）
+        return None
 
     pre_peak_vols = volumes[max(0, peak_idx - 5):peak_idx]
     if not pre_peak_vols:
@@ -73,6 +84,10 @@ def evaluate(bars: list[dict]) -> Optional[dict]:
     pre_peak_avg_vol = sum(pre_peak_vols) / len(pre_peak_vols)
     if pullback_avg_vol >= pre_peak_avg_vol:  # 回檔沒量縮
         return None
+
+    for i in range(peak_idx + 1, n - 1):  # 回檔區間內不可有爆量黑K
+        if closes[i] < opens[i] and volumes[i] > pre_peak_avg_vol:
+            return None
 
     today_open, today_close, today_vol = opens[-1], closes[-1], volumes[-1]
     if today_open <= 0:
@@ -83,6 +98,11 @@ def evaluate(bars: list[dict]) -> Optional[dict]:
     if today_close <= ma5:
         return None
     if today_close <= highs[-2]:  # 沒突破昨天最高點
+        return None
+
+    upper_shadow = highs[-1] - today_close
+    body = today_close - today_open
+    if upper_shadow > body:  # 長上影線
         return None
 
     recent5_vol = volumes[-6:-1]
