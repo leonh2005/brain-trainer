@@ -35,40 +35,39 @@ SIMILAR_THR = 0.6  # 標題相似度閾值（超過視為重複）
 
 TW_HOLDINGS = [
     {
-        "code": "2327",
-        "name": "國巨",
+        "code": "2330",
+        "name": "台積電",
         "individual": True,
         "queries": [
-            "國巨 MLCC",
-            "Yageo passive components",
+            "台積電 TSMC",
+            "TSMC semiconductor earnings",
         ],
     },
     {
-        "code": "2408",
-        "name": "南亞科",
+        "code": "6770",
+        "name": "力積電",
         "individual": True,
         "queries": [
-            "南亞科 DRAM",
-            "Nanya Technology memory",
-            "Micron MU DRAM memory chip",
+            "力積電 PSMC",
+            "Powerchip semiconductor",
         ],
     },
     {
-        "code": "1785",
-        "name": "光洋科",
+        "code": "3189",
+        "name": "景碩",
         "individual": True,
         "queries": [
-            "光洋科",
-            "Koway precious metal recycling",
+            "景碩 ABF載板",
+            "Kinsus IC substrate",
         ],
     },
     {
-        "code": "2317",
-        "name": "鴻海",
+        "code": "00635U",
+        "name": "元大S&P黃金",
         "individual": True,
         "queries": [
-            "鴻海 AI伺服器",
-            "Foxconn Hon Hai server",
+            "黃金價格 金價",
+            "gold price COMEX",
         ],
     },
     {
@@ -568,7 +567,7 @@ if __name__ == "__main__":
             run_session(US_HOLDINGS, "美股盤前")
         elif sys.argv[1] == "test":
             # 測試單一標的
-            h = TW_HOLDINGS[3]  # 鴻海
+            h = TW_HOLDINGS[3]  # 黃金
             arts = fetch_news(h["queries"])
             deduped = deduplicate(arts)
             print(f"抓到 {len(arts)} 則，去重後 {len(deduped)} 則")
