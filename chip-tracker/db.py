@@ -25,6 +25,7 @@ CREATE TABLE IF NOT EXISTS daily (
     short_balance  INTEGER,
     close          REAL,
     change_pct     REAL,
+    change_point   REAL,
     foreign_ratio  REAL,
     UNIQUE(code, date)
 );
@@ -41,7 +42,7 @@ CREATE TABLE IF NOT EXISTS meta (key TEXT PRIMARY KEY, value TEXT);
 
 _DAILY_COLS = (
     "foreign_net", "trust_net", "dealer_net", "total_net",
-    "margin_balance", "short_balance", "close", "change_pct",
+    "margin_balance", "short_balance", "close", "change_pct", "change_point",
     "foreign_ratio",
 )
 
@@ -56,6 +57,10 @@ def get_conn(db_path: str = None) -> sqlite3.Connection:
     # 既有 DB 遷移：舊表補 foreign_ratio 欄（新表已含於 DDL）
     try:
         conn.execute("ALTER TABLE daily ADD COLUMN foreign_ratio REAL")
+    except sqlite3.OperationalError:
+        pass  # duplicate column
+    try:
+        conn.execute("ALTER TABLE daily ADD COLUMN change_point REAL")
     except sqlite3.OperationalError:
         pass  # duplicate column
     return conn

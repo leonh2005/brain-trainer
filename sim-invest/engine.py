@@ -40,7 +40,7 @@ def holdings(conn, account_id) -> dict:
     for tr in store.get_trades(conn, account_id):
         h = agg.setdefault(tr["ticker"], {
             "shares": 0.0, "market": tr["market"], "cost_twd": 0.0,
-            "realized_pnl_twd": 0.0,
+            "realized_pnl_twd": 0.0, "entry_date": tr["date"],
         })
         h["shares"] += tr["shares"]
         h["cost_twd"] += tr["cost_twd"]
@@ -105,7 +105,7 @@ def valuate(conn, account_id, plan, quote_fn, fx_fn) -> dict:
         cat = _category_of(plan, ticker)
         by_cat[cat] = by_cat.get(cat, 0.0) + mv
         by_ticker[ticker] = {"market_value": mv, "cost_twd": h["cost_twd"],
-                             "shares": h["shares"]}
+                             "shares": h["shares"], "entry_date": h["entry_date"]}
     cash = plan.capital_twd - invested
     total = cash + market_value
     pnl = market_value - invested
