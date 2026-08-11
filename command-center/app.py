@@ -66,13 +66,19 @@ async def _proxy_to(port: int, path: str, request: Request) -> Response:
     url = f'http://127.0.0.1:{port}/{path}'
     headers = {k: v for k, v in request.headers.items() if k.lower() not in ('host', 'authorization')}
     body = await request.body()
+
+    # 用 stream=True 邊收邊轉發，不整包緩衝在記憶體裡才回傳。
+    # SSE（如 daily-stock-analysis 的 tasks/stream）等長連線用 client.request()
+    # 整包等待會卡到逾時才吐資料，前端永遠看不到即時進度。
+    client = httpx.AsyncClient(timeout=None, follow_redirects=False)
     try:
-        async with httpx.AsyncClient(timeout=30, follow_redirects=False) as client:
-            resp = await client.request(
-                request.method, url, params=request.query_params,
-                headers=headers, content=body,
-            )
+        req = client.build_request(
+            request.method, url, params=request.query_params,
+            headers=headers, content=body,
+        )
+        resp = await client.send(req, stream=True)
     except httpx.RequestError as e:
+        await client.aclose()
         raise HTTPException(502, f'轉發到 :{port} 失敗：{e}')
 
     resp_headers = {k: v for k, v in resp.headers.items() if k.lower() not in _PROXY_HOP_HEADERS}
@@ -83,7 +89,16 @@ async def _proxy_to(port: int, path: str, request: Request) -> Response:
         if location.startswith('/') and not location.startswith(f'/svc/{port}'):
             location = f'/svc/{port}{location}'
         resp_headers['location'] = location
-    return Response(content=resp.content, status_code=resp.status_code, headers=resp_headers)
+
+    async def _body_iterator():
+        try:
+            async for chunk in resp.aiter_bytes():
+                yield chunk
+        finally:
+            await resp.aclose()
+            await client.aclose()
+
+    return StreamingResponse(_body_iterator(), status_code=resp.status_code, headers=resp_headers)
 
 
 @app.api_route('/svc/{port}/{path:path}', methods=['GET', 'POST', 'PUT', 'DELETE', 'PATCH'])

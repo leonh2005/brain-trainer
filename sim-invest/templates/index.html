@@ -198,6 +198,7 @@ let allocSellBy = 'shares';      // 'shares' | 'amount'
 
 const ALLOC_COLS = [
   {key: 'ticker', label: '標的'},
+  {key: 'entry_date', label: '建倉日期'},
   {key: 'native', label: '現價'},
   {key: 'changePct', label: '當日%'},
   {key: 'target_pct', label: '目標%'},
@@ -213,6 +214,8 @@ function allocCell(r, key){
   switch (key) {
     case 'ticker':
       return `<td class="name">${escHtml(r.ticker)}<span class="cat">${escHtml(r.category)}</span></td>`;
+    case 'entry_date':
+      return `<td>${r.entry_date ? escHtml(r.entry_date) : '—'}</td>`;
     case 'native':
       return `<td${r.error ? ` style="color:var(--faint)" title="報價失敗：${String(r.error).replace(/"/g, '&quot;')}"` : ''}>${r.error ? '報價失敗' : (r.native != null ? (r.market === 'US' ? '$' : '') + fmt(r.native, 2) : '—')}</td>`;
     case 'changePct':
@@ -409,13 +412,14 @@ function applyAccountPayload(data){
     el.innerHTML = '<div class="empty">無配置目標</div>';
   } else {
     allocRows = data.targets.map(t => {
-      const h = holdingsByTicker[t.ticker] || {shares: 0, cost_twd: 0, market_value: 0};
+      const h = holdingsByTicker[t.ticker] || {shares: 0, cost_twd: 0, market_value: 0, entry_date: null};
       const marketValue = h.market_value !== undefined ? h.market_value : h.cost_twd;
       const actualPct = total ? (100 * marketValue / total) : null;
       const drift = actualPct !== null ? (actualPct - t.target_pct) : null;
       const pnl = marketValue - h.cost_twd;
       return {ticker: t.ticker, market: t.market, category: t.category, target_pct: t.target_pct,
-              actualPct, drift, shares: h.shares, cost_twd: h.cost_twd, marketValue, pnl};
+              actualPct, drift, shares: h.shares, cost_twd: h.cost_twd, marketValue, pnl,
+              entry_date: h.entry_date};
     });
     renderAllocTable();
   }

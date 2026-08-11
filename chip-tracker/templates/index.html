@@ -80,7 +80,7 @@ function metricHtml(label, valueHtml) {
 
 function stockHtml(s) {
   const chg = s.change_pct == null ? "" :
-    `<span class="${cls(s.change_pct)}">${s.change_pct > 0 ? "+" : ""}${s.change_pct}%</span>`;
+    `<span class="${cls(s.change_pct)}">${s.change_point == null ? "" : (s.change_point > 0 ? "+" : "") + s.change_point + " "}${s.change_pct > 0 ? "+" : ""}${s.change_pct}%</span>`;
   const price = s.close == null ? "—" : s.close.toLocaleString();
   const streakF = s.foreign_streak >= 2 ? `<span class="badge ${s.foreign_streak >= 3 ? "hot" : ""}">連${s.foreign_streak}買</span>` : "";
   const streakT = s.trust_streak >= 2 ? `<span class="badge ${s.trust_streak >= 3 ? "hot" : ""}">連${s.trust_streak}買</span>` : "";
@@ -116,6 +116,10 @@ function stockHtml(s) {
         <div class="spark-box"><canvas id="spark-big-${s.code}"></canvas></div>
       </div>
       <div class="spark-wrap">
+        <div class="k">散戶% 週趨勢</div>
+        <div class="spark-box"><canvas id="spark-retail-${s.code}"></canvas></div>
+      </div>
+      <div class="spark-wrap">
         <div class="k">融資餘額 30日</div>
         <div class="spark-box"><canvas id="spark-margin-${s.code}"></canvas></div>
       </div>
@@ -148,6 +152,8 @@ function drawOneSpark(canvasId, series, color, unit) {
 function drawSpark(s) {
   drawOneSpark(`spark-big-${s.code}`,
     (s.big400_series || []).map(p => ({date: p.date, v: p.pct})), "#3b82f6", "%");
+  drawOneSpark(`spark-retail-${s.code}`,
+    (s.retail_series || []).map(p => ({date: p.date, v: p.pct})), "#ff4757", "%");
   drawOneSpark(`spark-margin-${s.code}`, s.margin_series, "#ffaa00", "張");
   drawOneSpark(`spark-foreign-${s.code}`, s.foreign_ratio_series, "#00d68f", "%");
 }
@@ -161,7 +167,7 @@ async function loadQuotes() {
       const el = document.getElementById(`price-${code}`);
       if (!el || q.price == null) continue;
       const chg = q.change_pct == null ? "" :
-        `<span class="${cls(q.change_pct)}">${q.change_pct > 0 ? "+" : ""}${q.change_pct}%</span>`;
+        `<span class="${cls(q.change_pct)}">${q.change_point == null ? "" : (q.change_point > 0 ? "+" : "") + q.change_point + " "}${q.change_pct > 0 ? "+" : ""}${q.change_pct}%</span>`;
       const t = new Date(q.ts * 1000);
       const hhmm = `${String(t.getHours()).padStart(2,"0")}:${String(t.getMinutes()).padStart(2,"0")}`;
       el.innerHTML = `${q.price.toLocaleString()} ${chg} <span style="font-size:0.65rem;color:var(--text-dim)">${q.delayed ? "延遲" : "即時"} ${hhmm}</span>`;

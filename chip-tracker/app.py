@@ -61,6 +61,7 @@ def _stock_payload(conn, s: dict) -> dict:
         "date": price_row.get("date"),
         "close": price_row.get("close"),
         "change_pct": price_row.get("change_pct"),
+        "change_point": price_row.get("change_point"),
         "inst_date": inst_row.get("date"),
         "foreign_net": inst_row.get("foreign_net"),
         "trust_net": inst_row.get("trust_net"),
@@ -84,6 +85,9 @@ def _stock_payload(conn, s: dict) -> dict:
         "tdcc_prev_date": w_prev.get("date"),
         "big400_series": [
             {"date": w["date"], "pct": w["big400_pct"]} for w in reversed(weekly)
+        ],
+        "retail_series": [
+            {"date": w["date"], "pct": w["retail_pct"]} for w in reversed(weekly)
         ],
         "margin_series": [
             {"date": d["date"], "v": d["margin_balance"]}
@@ -221,6 +225,7 @@ def api_quotes():
                 result[snap.code] = {
                     "price": price,
                     "change_pct": round(float(snap.change_price) / prev * 100, 2) if prev else None,
+                    "change_point": round(float(snap.change_price), 2),
                     # Shioaji snap.ts 內部以台灣本地時間編碼、未做 UTC 轉換，換算後會超前真實 UTC 8 小時，需扣回
                     "ts": int(snap.ts // 1_000_000_000) - 8 * 3600,
                     "delayed": False,
@@ -247,6 +252,7 @@ def api_quotes():
                         result[c] = {
                             "price": round(float(price), 2),
                             "change_pct": round((price - prev) / prev * 100, 2) if prev else None,
+                            "change_point": round(price - prev, 2) if prev else None,
                             "ts": int(now),
                             "delayed": True,
                         }

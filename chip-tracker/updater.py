@@ -358,7 +358,7 @@ def update_daily(conn, code: str, start: str, end: str) -> None:
             spread = r.get("spread", 0) or 0
             prev = (close - spread) if close is not None else None
             change_pct = round(spread / prev * 100, 2) if prev else None
-            db.upsert_daily(conn, code, r["date"], close=close, change_pct=change_pct)
+            db.upsert_daily(conn, code, r["date"], close=close, change_pct=change_pct, change_point=round(spread, 2))
     except Exception as e:
         logger.warning("%s 價格資料失敗: %s", code, e)
 

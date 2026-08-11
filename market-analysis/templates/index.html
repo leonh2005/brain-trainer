@@ -721,6 +721,13 @@ setInterval(loadIntraday, 60000);  // 大盤日波圖每 1 分鐘更新
 setInterval(loadRegionalIntraday, 60000);  // 日經/韓股日波圖每 1 分鐘更新
 setInterval(loadEcon, 900000);  // 經濟總覽每 15 分更新
 
+// 分頁長時間留在背景時，瀏覽器會把 setInterval 節流到幾乎不執行，
+// 導致回到分頁時看到的還是很久以前的資料（例如戰爭地緣消息）。
+// 切回分頁時強制刷新一次，確保看到的一定是最新的。
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible') loadEcon();
+});
+
 // 手動刷新（🔄 按鈕 / F5）：繞過 30 秒快取抓最新報價
 async function manualRefresh(){
   const btn = document.getElementById('live-refresh');
