@@ -175,7 +175,7 @@ mkt_dir = "偏多 ↑" if fut_diff > 0 else "偏空 ↓"
 
 # ── 組訊息 ────────────────────────────────────────
 
-lines = [f"📊 <b>當沖候選</b>｜{TODAY} 09:19\n"]
+lines = [f"📊 <b>當沖候選</b>｜{TODAY} 09:10\n"]
 lines.append(f"🌐 大盤外資期貨（{fut_date}）：{mkt_dir}（多空差 {fut_diff:+,} 口）\n")
 lines.append("📋 <b>篩選條件</b>")
 lines.append("今日量前20（Shioaji即時）＋ 振幅&gt;3% ＋ 近5均量&gt;3000張 ＋ 漲幅&gt;1.5%\n")
@@ -184,18 +184,22 @@ if candidates:
     lines.append(f"✅ 符合 {len(candidates)} 檔：\n")
     for c in candidates:
         pos_emoji = "🔴" if c['close_pos'] >= 80 else "🟡" if c['close_pos'] >= 50 else "🟢"
+        in_price_band = 100 <= c['close'] <= 150
         ai = analyze_stock(
             code=c['code'], name=c['name'], close=c['close'],
             chg_pct=c['chg_pct'], amp_pct=c['amp_pct'],
             vol_k=c['vol_k'], avg5=c['avg5'], close_pos=c['close_pos'],
             fi_net=0, signal="", strategy="當沖"
         )
-        lines.append(
+        entry = (
             f"{pos_emoji} <b>{c['code']} {c['name']}</b>\n"
             f"   收:{c['close']:.1f}  漲:{c['chg_pct']:+.1f}%  振:{c['amp_pct']:.1f}%\n"
             f"   量:{c['vol_k']:,}張  近5均:{c['avg5']:,}張  收盤位:{c['close_pos']:.0f}%\n"
-            f"{format_ai_block(ai)}\n"
+            f"{format_ai_block(ai)}"
         )
+        if in_price_band:
+            entry = f"💰 <b>100-150價格帶</b>\n<blockquote>{entry}</blockquote>"
+        lines.append(entry + "\n")
     lines.append("⚡ 進場參考：開盤後5~15分鐘確認方向再進")
     lines.append("🛑 停損：跌破進場價 -1.5% 出清")
 else:
@@ -209,7 +213,7 @@ print(msg)
 
 # 儲存候選清單供盤中監控腳本使用
 import json
-candidate_list = [{'code': c['code'], 'name': c['name']} for c in candidates]
+candidate_list = [{'code': c['code'], 'name': c['name'], 'close': c['close']} for c in candidates]
 with open('/tmp/daytrade_candidates.json', 'w') as f:
     json.dump(candidate_list, f, ensure_ascii=False)
 print(f'[daytrade] 候選清單已寫入 /tmp/daytrade_candidates.json: {[c["code"] for c in candidate_list]}')

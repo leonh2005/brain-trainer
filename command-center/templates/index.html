@@ -60,6 +60,9 @@ header{display:flex; align-items:center; gap:16px; margin-bottom:22px}
   background:var(--bg-soft); border:1px solid var(--border-soft);
   border-radius:999px; font-size:11px; color:var(--muted);
 }
+.price-band-wrap{display:flex; flex-direction:column; align-items:flex-start; gap:3px; padding:6px 8px 7px; border:1.5px solid #e8b93b; border-radius:10px; background:rgba(232,185,59,.1)}
+.price-band-label{font-size:9px; font-weight:700; color:#e8b93b; letter-spacing:.04em}
+.pill.price-band{border-color:#e8b93b; color:#e8b93b; font-weight:700}
 .dot{width:6px; height:6px; border-radius:50%; background:var(--faint); flex:none}
 .dot.up{background:var(--down); box-shadow:0 0 7px var(--down)}
 .dot.down{background:var(--up); box-shadow:0 0 7px var(--up)}
@@ -377,9 +380,19 @@ function renderDaytrade(d){
   arr.forEach(item=>{
     const code=typeof item==='string'?item:(item.code||'');
     const name=typeof item==='string'?'':(item.name||'');
-    const b=el('span','pill');
+    const close=typeof item==='object'?item.close:null;
+    const inBand=close!=null&&close>=100&&close<=150;
+    const b=el('span','pill'+(inBand?' price-band':''));
     b.innerHTML=tkLink(name,code,' style="font-size:12px"');
-    box.appendChild(b);
+    if(inBand){
+      const wrap=el('div','price-band-wrap');
+      const label=el('div','price-band-label','💰 100-150價格帶');
+      wrap.appendChild(label);
+      wrap.appendChild(b);
+      box.appendChild(wrap);
+    }else{
+      box.appendChild(b);
+    }
   });
   return box;
 }
