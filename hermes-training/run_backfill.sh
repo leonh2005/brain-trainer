@@ -4,6 +4,8 @@
 # 用法：bash run_backfill.sh
 
 export PATH="$HOME/.local/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/usr/bin:/bin:$PATH"
+export LANG="en_US.UTF-8"
+export LC_ALL="en_US.UTF-8"
 
 PROJECT_DIR="$HOME/CCProject"
 WORK_DIR="$PROJECT_DIR/hermes-training"

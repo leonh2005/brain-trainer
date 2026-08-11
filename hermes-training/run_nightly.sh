@@ -4,6 +4,8 @@
 # 不推播 Telegram — 全部結果只寫進本機摘要檔，供 Steven 自行查看品質後再決定要不要開推播
 
 export PATH="$HOME/.local/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/usr/bin:/bin:$PATH"
+export LANG="en_US.UTF-8"
+export LC_ALL="en_US.UTF-8"
 
 PROJECT_DIR="$HOME/CCProject"
 WORK_DIR="$PROJECT_DIR/hermes-training"
