@@ -51,11 +51,6 @@
 
   .layout { display: grid; grid-template-columns: 1fr 340px; gap: 16px; padding: 20px; max-width: 1280px; margin: 0 auto; }
   @media (max-width: 900px) { .layout { grid-template-columns: 1fr; } }
-  .card[draggable="true"] { cursor: grab; }
-  .card[draggable="true"]:active { cursor: grabbing; }
-  .card.dragging { opacity: .4; }
-  .card.drag-over { border-color: #58a6ff; }
-
   .card { background: #161b22; border: 1px solid #30363d; border-radius: 10px; padding: 16px; margin-bottom: 16px; }
   .card h2 { font-size: 13px; color: #8b949e; margin: 0 0 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .04em; }
 
@@ -81,15 +76,17 @@
   .trade-row button { flex: 1; }
   .row2 { display: flex; gap: 8px; }
 
-  .po-dir-btn, .po-type-btn { flex: 1; opacity: .4; }
-  .po-dir-btn.active, .po-type-btn.active { opacity: 1; }
-  .po-type-btn { min-width: 70px; }
+  .po-dir-btn { flex: 1; opacity: .4; }
+  .po-dir-btn.active { opacity: 1; }
+  .period-row { display: flex; gap: 8px; margin: 8px 0; }
+  .period-btn { flex: none; font-size: 12px; padding: 4px 12px; opacity: .5; }
+  .period-btn.active { opacity: 1; background: #1f6feb; border-color: #1f6feb; }
   .po-row {
     display: flex; align-items: center; justify-content: space-between; gap: 8px;
     padding: 8px 0; border-top: 1px solid #30363d; font-size: 12.5px;
   }
   .po-row .po-cancel { flex: none; font-size: 11px; padding: 3px 8px; }
-  .po-list-head { font-size: 11.5px; color: #8b949e; font-weight: 700; padding-top: 4px; }
+  .log-delete { font-size: 11px; padding: 2px 7px; }
 
   table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
   th { text-align: left; color: #8b949e; font-weight: 600; padding: 6px 8px; border-bottom: 1px solid #30363d; }
@@ -152,6 +149,17 @@
   .pos-down { color: #3fb950; } /* 綠跌 */
   .hcard-chart { width: 100%; height: 100px; }
   .hcard-pnl { font-size: 15px; font-weight: 800; font-variant-numeric: tabular-nums; margin-top: 6px; }
+  .hcard-buys { margin-top: 8px; }
+  .hcard-buys-label { font-size: 11px; color: #8b949e; font-weight: 700; margin-bottom: 4px; }
+  .hcard-buys-row { font-size: 11.5px; color: #8b949e; }
+  .hcard-po { margin-top: 10px; padding-top: 10px; border-top: 1px solid #30363d; cursor: default; }
+  .hcard-po-label { font-size: 11px; color: #8b949e; font-weight: 700; margin-bottom: 6px; }
+  .hcard-po-row { display: flex; gap: 6px; margin-bottom: 6px; }
+  .hcard-po-row:last-child { margin-bottom: 0; }
+  .hcard-po-row input, .hcard-po-row select { flex: 1; min-width: 0; font-size: 12px; padding: 4px 6px; }
+  .hcard-po .po-submit { width: 100%; font-size: 12px; padding: 5px; }
+  .hcard-po-list { margin-top: 6px; }
+  .hcard-po-list .po-row { padding: 5px 0; font-size: 11.5px; border-top: 1px solid #21262d; }
 </style>
 </head>
 <body>
@@ -211,7 +219,7 @@
 
 <div class="layout">
   <div class="card-col" id="col-left">
-    <div class="card" draggable="true" data-card-id="chart">
+    <div class="card" data-card-id="chart">
       <div id="price-head">
         <div id="price-code">—</div>
         <div id="price-now">--</div>
@@ -219,6 +227,11 @@
       </div>
       <div id="price-meta">尚未開始模擬</div>
       <div id="price-hilo"></div>
+      <div class="period-row" id="period-row">
+        <button type="button" class="period-btn active" data-period="1m">1分K</button>
+        <button type="button" class="period-btn" data-period="5m">5分K</button>
+        <button type="button" class="period-btn" data-period="1d">日K</button>
+      </div>
       <div id="chart-empty">輸入代號並按「開始模擬」查看即時走勢</div>
       <div id="chart-price-wrap">
         <div id="chart-price"></div>
@@ -228,17 +241,17 @@
       <div id="chart-macd"></div>
     </div>
 
-    <div class="card" draggable="true" data-card-id="log">
+    <div class="card" data-card-id="log">
       <h2>交易紀錄</h2>
       <div id="log-wrap">
         <table>
-          <thead><tr><th>時間</th><th>標的</th><th>動作</th><th>價格</th><th>股數</th><th>手續費/稅</th><th>已實現損益</th></tr></thead>
-          <tbody id="log-body"><tr class="empty-row"><td colspan="7">尚無交易</td></tr></tbody>
+          <thead><tr><th>時間</th><th>標的</th><th>動作</th><th>價格</th><th>股數</th><th>手續費/稅</th><th>已實現損益</th><th></th></tr></thead>
+          <tbody id="log-body"><tr class="empty-row"><td colspan="8">尚無交易</td></tr></tbody>
         </table>
       </div>
     </div>
 
-    <div class="card" draggable="true" data-card-id="daily-pnl">
+    <div class="card" data-card-id="daily-pnl">
       <h2>每日損益紀錄</h2>
       <p style="font-size:11.5px;color:#8b949e;margin:0 0 10px">永久存在後端資料庫，跟瀏覽器資料分開，重置模擬或清瀏覽器資料都不會遺失。</p>
       <div id="daily-pnl-wrap">
@@ -251,7 +264,7 @@
   </div>
 
   <div class="card-col" id="col-right">
-    <div class="card" draggable="true" data-card-id="order">
+    <div class="card" data-card-id="order">
       <h2>下單</h2>
       <div class="trade-row">
         <input id="order-price" type="number" step="0.05" placeholder="市價" style="flex:1">
@@ -270,34 +283,11 @@
       <p style="font-size:11.5px;color:#8b949e;margin:10px 0 0">賣出超過持股會自動視為放空，符合當沖先賣後買邏輯。純模擬，不會真實下單。</p>
     </div>
 
-    <div class="card" draggable="true" data-card-id="bidask">
+    <div class="card" data-card-id="bidask">
       <h2>最佳五檔</h2>
       <div id="bidask-body">
         <div id="bidask-empty">尚未開始模擬</div>
       </div>
-    </div>
-
-    <div class="card" draggable="true" data-card-id="pending">
-      <h2>預約單</h2>
-      <div class="row2">
-        <button type="button" class="buy po-dir-btn active" id="po-dir-buy" data-dir="1">買進</button>
-        <button type="button" class="sell po-dir-btn" id="po-dir-sell" data-dir="-1">賣出</button>
-      </div>
-      <div class="trade-row" style="margin-top:8px">
-        <input id="po-qty" type="number" placeholder="張數" min="1" step="1" value="1"> 張
-      </div>
-      <div class="row2" style="flex-wrap:wrap">
-        <button type="button" class="po-type-btn active" data-type="market">市價</button>
-        <button type="button" class="po-type-btn" data-type="limitUp">漲停</button>
-        <button type="button" class="po-type-btn" data-type="limitDown">跌停</button>
-        <button type="button" class="po-type-btn" data-type="custom">自訂價</button>
-      </div>
-      <div class="trade-row" id="po-custom-wrap" style="display:none;margin-top:8px">
-        <input id="po-custom-price" type="number" step="0.05" placeholder="目標價" style="flex:1">
-      </div>
-      <button type="button" id="btn-po-submit" disabled style="width:100%;margin-top:8px">送出預約</button>
-      <p style="font-size:11.5px;color:#8b949e;margin:10px 0 0">價格觸碰目標價（買進：現價≤目標價／賣出：現價≥目標價）即自動成交；市價則下一次報價就直接成交。只對目前作用中標的有效。</p>
-      <div id="po-list" style="margin-top:10px"></div>
     </div>
 
   </div>
@@ -310,6 +300,7 @@ let priceChart = null, volumeChart = null, macdChart = null;
 let priceSeries = null, vwapSeries = null, volumeSeries = null;
 let macdSeries = null, macdSignalSeries = null, macdHistSeries = null;
 let pollTimer = null;
+let chartPeriod = '1m'; // '1m' | '5m' | '1d'：只有 1m 有即時逐筆更新，5m/1d 用固定資料重畫（見 loadIntraday）
 const holdingCharts = {}; // 非 active 的庫存：code -> { chart, series, lastTs, price, pollTimer }
 
 const DEFAULT_CAPITAL = 100000; // 本金只是內部現金流的起始值，不再顯示也不影響報酬率算法，固定用一個數字即可
@@ -329,6 +320,8 @@ function loadState() {
     const s = JSON.parse(localStorage.getItem(STORAGE_KEY));
     if (!s || !s.positions) return null;
     if (!s.pendingOrders) s.pendingOrders = []; // 舊資料沒有這個欄位，補空陣列
+    // 舊交易紀錄沒有 id，補上才能用刪除功能定位到該筆
+    s.trades.forEach(t => { if (!t.id) t.id = `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`; });
     return s;
   } catch (e) { return null; }
 }
@@ -382,9 +375,18 @@ function initChart() {
     width: macdEl.clientWidth, height: 270,
   });
 
-  priceSeries = priceChart.addLineSeries({ color: '#58a6ff', lineWidth: 2 });
+  if (chartPeriod === '1m') {
+    priceSeries = priceChart.addLineSeries({ color: '#58a6ff', lineWidth: 2 });
+    vwapSeries = priceChart.addLineSeries({ color: '#e3b341', lineWidth: 1, priceLineVisible: false, lastValueVisible: false });
+  } else {
+    // 5分K/日K：改蠟燭圖，台股慣例紅漲綠跌；VWAP、三關價、當日均線都是單日盤中概念，跨K棒週期不畫
+    priceSeries = priceChart.addCandlestickSeries({
+      upColor: '#f85149', downColor: '#3fb950', borderVisible: false,
+      wickUpColor: '#f85149', wickDownColor: '#3fb950',
+    });
+    vwapSeries = null;
+  }
   padAutoscale(priceSeries);
-  vwapSeries = priceChart.addLineSeries({ color: '#e3b341', lineWidth: 1, priceLineVisible: false, lastValueVisible: false });
 
   volumeSeries = volumeChart.addHistogramSeries({ priceFormat: { type: 'volume' } });
 
@@ -424,10 +426,11 @@ function initChart() {
       crosshairSyncing = false;
 
       const t = new Date(param.time * 1000);
-      const hh = String(t.getUTCHours()).padStart(2, '0');
-      const mm = String(t.getUTCMinutes()).padStart(2, '0');
+      const label = chartPeriod === '1d'
+        ? `${t.getUTCFullYear()}-${String(t.getUTCMonth() + 1).padStart(2, '0')}-${String(t.getUTCDate()).padStart(2, '0')}`
+        : `${String(t.getUTCHours()).padStart(2, '0')}:${String(t.getUTCMinutes()).padStart(2, '0')}`;
       tooltip.innerHTML =
-        `${hh}:${mm}　價 ${bar.price.toFixed(2)}<br>` +
+        `${label}　價 ${bar.price.toFixed(2)}<br>` +
         `量 ${bar.volume.toLocaleString()}<br>` +
         `MACD ${bar.macd.toFixed(3)}　訊號 ${bar.signal.toFixed(3)}`;
       tooltip.style.display = 'block';
@@ -665,7 +668,15 @@ function renderDailyMA(ma, data) {
   });
 }
 
+// 主圖表週期切換：1分K 是原本的即時折線＋VWAP／三關價／均線（單日盤中概念，只有這個週期畫）；
+// 5分K／日K 改蠟燭圖，用固定資料重畫，不逐筆 update（見 appendTick）。
 async function loadIntraday(code) {
+  if (chartPeriod === '1d') return loadDailyCandles(code);
+  if (chartPeriod === '5m') return loadFiveMinCandles(code);
+  return loadOneMinLine(code);
+}
+
+async function loadOneMinLine(code) {
   try {
     const data = await fetchIntradaySeries(code);
     if (!data.length) return;
@@ -724,6 +735,76 @@ async function loadIntraday(code) {
   } catch (e) { /* 沒有歷史資料就從即時報價開始畫 */ }
 }
 
+// 把分K資料依固定秒數桶（例如5分K=300秒）聚合成 OHLCV 蠟燭
+function aggregateToCandles(points, bucketSeconds) {
+  const buckets = new Map();
+  points.forEach(pt => {
+    const bucketTime = Math.floor(pt.time / bucketSeconds) * bucketSeconds;
+    let b = buckets.get(bucketTime);
+    if (!b) {
+      b = { time: bucketTime, open: pt.value, high: pt.value, low: pt.value, close: pt.value, volume: 0 };
+      buckets.set(bucketTime, b);
+    }
+    b.high = Math.max(b.high, pt.value);
+    b.low = Math.min(b.low, pt.value);
+    b.close = pt.value;
+    b.volume += pt.volume;
+  });
+  return [...buckets.values()].sort((a, b) => a.time - b.time);
+}
+
+// 蠟燭圖＋成交量＋MACD 共用的重畫邏輯，5分K／日K 都走這裡
+function renderCandleSeries(bars, isDaily) {
+  priceSeries.setData(bars.map(b => ({ time: b.time, open: b.open, high: b.high, low: b.low, close: b.close })));
+  volumeSeries.setData(bars.map((b, i) => ({
+    time: b.time, value: b.volume,
+    color: i > 0 && b.close < bars[i - 1].close ? '#3fb950' : '#f85149', // 台股慣例：紅漲綠跌
+  })));
+
+  const macdData = computeMACD(bars.map(b => ({ time: b.time, value: b.close })), 5, 35, 5);
+  macdSeries.setData(macdData.map(m => ({ time: m.time, value: +m.macd.toFixed(3) })));
+  macdSignalSeries.setData(macdData.map(m => ({ time: m.time, value: +m.signal.toFixed(3) })));
+  macdHistSeries.setData(macdData.map(m => ({
+    time: m.time, value: +m.hist.toFixed(3),
+    color: m.hist >= 0 ? '#f85149' : '#3fb950',
+  })));
+
+  barsByTime = new Map();
+  bars.forEach((b, i) => {
+    barsByTime.set(b.time, {
+      price: b.close, volume: b.volume,
+      macd: macdData[i].macd, signal: macdData[i].signal, hist: macdData[i].hist,
+    });
+  });
+
+  if (isDaily) {
+    priceChart.timeScale().fitContent(); // 跨天資料，讓圖表自己抓範圍，volume/macd 靠 syncTimeScales 跟著動
+  } else {
+    lockChartRange(priceChart); // 5分K還是當天盤中，維持固定 09:00-13:30 時間軸
+  }
+}
+
+async function loadFiveMinCandles(code) {
+  try {
+    const data = await fetchIntradaySeries(code);
+    if (!data.length) return;
+    renderCandleSeries(aggregateToCandles(data, 5 * 60), false);
+  } catch (e) { /* 沒有歷史資料就先空著 */ }
+}
+
+async function loadDailyCandles(code) {
+  try {
+    const r = await fetch(`/api/daily_ohlcv?code=${encodeURIComponent(code)}&days=60`);
+    const d = await r.json();
+    if (!d.ok || !d.bars || !d.bars.length) return;
+    const bars = d.bars.map(b => ({
+      time: Math.floor(new Date(`${b.date}T00:00:00Z`).getTime() / 1000),
+      open: b.open, high: b.high, low: b.low, close: b.close, volume: b.volume,
+    }));
+    renderCandleSeries(bars, true);
+  } catch (e) { /* 拿不到日K資料就先空著 */ }
+}
+
 let lastChartTs = 0;
 let todayHigh = null, todayLow = null;
 let hiLoLines = { high: null, low: null };
@@ -774,6 +855,7 @@ function renderHiLo() {
   upsertHiLoLines(priceSeries, hiLoLines, todayHigh, todayLow);
 }
 function appendTick(price) {
+  if (chartPeriod !== '1m') return; // 5分K/日K不是逐筆折線，用固定資料重畫（見 loadIntraday），不能直接 update()
   const ts = taipeiMinuteTs(new Date());
   if (ts < lastChartTs) return; // 圖表時間必須非遞減；同分鐘內用 update() 覆蓋原點即可
   lastChartTs = ts;
@@ -789,94 +871,84 @@ let lastName = null;
 
 let lastChangePrice = null;
 
-// 預約單：只對目前作用中標的有效。市價單下一次報價就成交；漲停/跌停/自訂價則等現價「觸碰」
-// 目標價（買進：現價≤目標價／賣出：現價≥目標價）才成交，觸發時用當下報價當成交價，跟真實限價單邏輯一致。
-function poPrevClose() {
-  if (lastPrice == null || lastChangePrice == null) return null;
-  return lastPrice - lastChangePrice;
+// 預約單：只有目前有持倉的標的能設（顯示在該標的的持倉卡片底部）。市價單下一次報價就成交；
+// 漲停/跌停/自訂價則等現價「觸碰」目標價才成交（下單當下目標價在現價之下就等跌到才觸發，
+// 之上就等漲到才觸發，跟買賣方向無關），觸發時用當下報價當成交價，跟真實限價/停損單邏輯一致。
+// 持倉平倉、卡片消失時，該標的還沒觸發的預約單一併作廢（見 destroyHoldingCard）。
+function poPrevClose(code) {
+  const h = holdingCharts[code];
+  if (!h || h.price == null || h.changePrice == null) return null;
+  return h.price - h.changePrice;
 }
-function resolvePendingTargetPrice(priceType, customVal) {
+function resolvePendingTargetPrice(code, priceType, customVal) {
   if (priceType === 'market') return null; // null 代表市價，不用比價，下一次報價直接成交
   if (priceType === 'custom') return customVal;
-  const prevClose = poPrevClose();
+  const prevClose = poPrevClose(code);
   if (prevClose == null) return null;
   return +(priceType === 'limitUp' ? prevClose * 1.1 : prevClose * 0.9).toFixed(2);
 }
-function createPendingOrder(direction, qty, priceType, customVal) {
-  if (!STATE || !STATE.active) return;
-  const target = resolvePendingTargetPrice(priceType, customVal);
+async function createPendingOrder(code, direction, qty, priceType, customVal) {
+  const target = resolvePendingTargetPrice(code, priceType, customVal);
   if (priceType !== 'market' && target == null) { alert('目前還沒有報價，無法算出漲停/跌停價'); return; }
+  let triggerDir = null;
+  if (priceType !== 'market') {
+    // 觸發方向要用「下單當下最新現價」判斷，不能吃 hcard 卡片的舊快取（最多可能是3秒前的價格，
+    // 快市時足以讓漲跌判斷反過來，變成一送出就立刻成交）：這裡即時重抓一次報價再算。
+    let currentPrice;
+    try {
+      const r = await fetch(`/api/quote?code=${encodeURIComponent(code)}`);
+      const d = await r.json();
+      if (!d.ok) throw new Error(d.error || '無法取得報價');
+      currentPrice = d.price;
+    } catch (e) { alert('目前還沒有報價，請稍後再試'); return; }
+    // 目標價在現價之下 → 等現價跌到目標價才觸發；目標價在現價之上 → 等現價漲到目標價才觸發。
+    triggerDir = target <= currentPrice ? 'down' : 'up';
+  }
   STATE.pendingOrders.push({
     id: `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
-    code: STATE.active, direction, qty, priceType, target,
+    code, direction, qty, priceType, target, triggerDir,
   });
   saveState();
-  renderPendingOrders();
+  renderPendingOrdersFor(code);
 }
 function cancelPendingOrder(id) {
+  const order = STATE.pendingOrders.find(o => o.id === id);
   STATE.pendingOrders = STATE.pendingOrders.filter(o => o.id !== id);
   saveState();
-  renderPendingOrders();
+  if (order) renderPendingOrdersFor(order.code);
 }
 function poLabel(o) {
   if (o.priceType === 'market') return '市價';
   const t = { limitUp: '漲停', limitDown: '跌停', custom: '自訂' }[o.priceType] || o.priceType;
   return `${t} ${o.target.toFixed(2)}`;
 }
-function renderPendingOrders() {
-  const box = document.getElementById('po-list');
-  if (!STATE) { box.innerHTML = ''; return; }
-  const orders = STATE.pendingOrders.filter(o => o.code === STATE.active);
-  if (!orders.length) { box.innerHTML = ''; return; }
-  const posObj = STATE.active ? STATE.positions[STATE.active] : null;
-  const label = STATE.active ? `${STATE.active}${posObj && posObj.name ? ' ' + posObj.name : ''}` : '';
-  box.innerHTML = `<div class="po-list-head">${label} 的預約單</div>` + orders.map(o => `
+function renderPendingOrdersFor(code) {
+  const box = document.querySelector(`#hcard-${code} .hcard-po-list`);
+  if (!box) return;
+  const orders = STATE.pendingOrders.filter(o => o.code === code);
+  box.innerHTML = orders.map(o => `
     <div class="po-row">
       <span class="${o.direction > 0 ? 'pos-up' : 'pos-down'}">${o.direction > 0 ? '買進' : '賣出'} ${o.qty}張 @ ${poLabel(o)}</span>
       <button type="button" class="po-cancel" data-id="${o.id}">取消</button>
     </div>`).join('');
 }
-function checkPendingOrders(currentPrice) {
-  if (!STATE || !STATE.active || !STATE.pendingOrders.length) return;
-  const due = STATE.pendingOrders.filter(o => o.code === STATE.active && (
+function checkPendingOrders(code, currentPrice) {
+  if (!STATE.pendingOrders.length) return;
+  const due = STATE.pendingOrders.filter(o => o.code === code && (
     o.priceType === 'market'
-      || (o.direction > 0 && currentPrice <= o.target)
-      || (o.direction < 0 && currentPrice >= o.target)
+      || (o.triggerDir === 'down' && currentPrice <= o.target)
+      || (o.triggerDir === 'up' && currentPrice >= o.target)
   ));
   if (!due.length) return;
   STATE.pendingOrders = STATE.pendingOrders.filter(o => !due.includes(o));
   due.forEach(o => applyTradeFor(o.code, o.direction, o.qty * 1000, currentPrice));
   saveState();
-  renderPendingOrders();
+  renderPendingOrdersFor(code);
 }
 
-document.getElementById('po-dir-buy').addEventListener('click', () => {
-  document.getElementById('po-dir-buy').classList.add('active');
-  document.getElementById('po-dir-sell').classList.remove('active');
-});
-document.getElementById('po-dir-sell').addEventListener('click', () => {
-  document.getElementById('po-dir-sell').classList.add('active');
-  document.getElementById('po-dir-buy').classList.remove('active');
-});
-document.querySelectorAll('.po-type-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.po-type-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    document.getElementById('po-custom-wrap').style.display = btn.dataset.type === 'custom' ? 'flex' : 'none';
-  });
-});
-document.getElementById('btn-po-submit').addEventListener('click', () => {
-  const direction = parseFloat(document.getElementById('po-dir-buy').classList.contains('active') ? '1' : '-1');
-  const qty = parseFloat(document.getElementById('po-qty').value);
-  const priceType = document.querySelector('.po-type-btn.active').dataset.type;
-  const customVal = parseFloat(document.getElementById('po-custom-price').value);
-  if (!qty || qty <= 0) { alert('請輸入張數'); return; }
-  if (priceType === 'custom' && !(customVal > 0)) { alert('請輸入自訂價格'); return; }
-  createPendingOrder(direction, qty, priceType, customVal);
-});
-document.getElementById('po-list').addEventListener('click', (e) => {
-  const btn = e.target.closest('.po-cancel');
-  if (btn) cancelPendingOrder(btn.dataset.id);
+document.getElementById('log-body').addEventListener('click', (e) => {
+  const btn = e.target.closest('.log-delete');
+  if (btn) deleteTrade(btn.dataset.id);
 });
 
 async function pollQuote() {
@@ -895,7 +967,6 @@ async function pollQuote() {
     if (d.name) ensurePosition(STATE.active).name = d.name;
     appendTick(d.price);
     renderPrice(d);
-    checkPendingOrders(d.price);
     renderPortfolio();
   } catch (e) {
     setGwStatus(false);
@@ -999,7 +1070,7 @@ function renderPortfolio() {
 function renderLog() {
   const body = document.getElementById('log-body');
   if (!STATE.trades.length) {
-    body.innerHTML = '<tr class="empty-row"><td colspan="7">尚無交易</td></tr>';
+    body.innerHTML = '<tr class="empty-row"><td colspan="8">尚無交易</td></tr>';
     return;
   }
   body.innerHTML = STATE.trades.slice().reverse().map(t => `
@@ -1011,6 +1082,7 @@ function renderLog() {
       <td>${t.qty.toLocaleString()}</td>
       <td>${fmtMoney(-((t.fee || 0) + (t.tax || 0)))}</td>
       <td class="${upDownClass(t.realized)}">${t.realized ? fmtMoney(t.realized) : '--'}</td>
+      <td><button type="button" class="log-delete" data-id="${t.id}">刪除</button></td>
     </tr>`).join('');
 }
 
@@ -1024,7 +1096,8 @@ const FEE_MIN = 1;
 const TAX_RATE = 0.0015;
 function calcFee(price, qty) { return Math.max(Math.round(price * qty * FEE_RATE * FEE_DISCOUNT), FEE_MIN); }
 
-function applyTradeFor(code, direction, qty, price) {
+// 純部位/現金運算，不建立交易紀錄，重播歷史（刪單後重建帳面）跟正常下單共用同一套算法。
+function applyTradePosition(code, direction, qty, price) {
   const posObj = ensurePosition(code);
   const pos = posObj.position, avg = posObj.avgCost;
   const signed = direction * qty;
@@ -1058,8 +1131,13 @@ function applyTradeFor(code, direction, qty, price) {
   STATE.cash -= signed * price;
   STATE.cash -= fee;
   STATE.cash -= tax;
+  return { posObj, fee, tax, realized };
+}
 
+function applyTradeFor(code, direction, qty, price) {
+  const { posObj, fee, tax, realized } = applyTradePosition(code, direction, qty, price);
   const tradeRecord = {
+    id: `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
     date: taipeiDateStr(new Date()),
     time: new Date().toLocaleTimeString('zh-TW'),
     code,
@@ -1072,7 +1150,44 @@ function applyTradeFor(code, direction, qty, price) {
   renderPortfolio();
   renderLog();
   syncHoldingCards();
-  logTradeToServer(tradeRecord);
+  pendingTradeSync.set(tradeRecord.id, logTradeToServer(tradeRecord));
+}
+
+// trade.id -> 該筆成交同步到後端 SQLite 的 Promise，deleteTrade 要先等它跑完才知道 dbId，
+// 不然剛下單就馬上刪的話 dbId 還沒回來，後端那筆會變孤兒資料，每日損益就對不起來。
+const pendingTradeSync = new Map();
+
+// 用剩下的交易紀錄由頭重播，重建現金與所有部位，跟刪掉那筆紀錄前後帳面完全一致。
+function recomputeCashAndPositions() {
+  STATE.cash = STATE.capital;
+  STATE.positions = {};
+  for (const t of STATE.trades) {
+    const direction = t.action === '買進' ? 1 : -1;
+    const { posObj } = applyTradePosition(t.code, direction, t.qty, t.price);
+    posObj.name = t.name || t.code;
+  }
+}
+
+async function deleteTrade(id) {
+  const trade = STATE.trades.find(t => t.id === id);
+  if (!trade) return;
+  if (!confirm(`確定要刪除這筆紀錄？\n${trade.time} ${trade.code} ${trade.action} ${trade.qty}張 @ ${trade.price}\n現金/持倉/損益會還原到這筆交易發生前的狀態。`)) return;
+  const pending = pendingTradeSync.get(id);
+  if (pending) { await pending; pendingTradeSync.delete(id); } // 等後端同步完成，dbId 才會確定
+  STATE.trades = STATE.trades.filter(t => t.id !== id);
+  recomputeCashAndPositions();
+  saveState();
+  renderPortfolio();
+  renderLog();
+  syncHoldingCards();
+  if (trade.dbId != null) deleteTradeFromServer(trade.dbId);
+}
+
+async function deleteTradeFromServer(dbId) {
+  try {
+    await fetch(`/api/trade_log/${dbId}`, { method: 'DELETE' });
+    loadDailyPnl();
+  } catch (e) { /* 後端同步失敗不影響本機帳面，下次補寫即可 */ }
 }
 
 // 每一筆成交都永久寫進後端 SQLite，不放進 localStorage（那份只是瀏覽器端的即時工作狀態，
@@ -1085,7 +1200,11 @@ async function logTradeToServer(trade) {
       body: JSON.stringify(trade),
     });
     const d = await r.json();
-    if (d.ok) loadDailyPnl();
+    if (d.ok) {
+      trade.dbId = d.id; // 記住後端 row id，之後刪這筆紀錄才能一併刪掉後端資料
+      saveState();
+      loadDailyPnl();
+    }
   } catch (e) { /* 網路問題：這筆損益紀錄同步失敗，但下單本身已經成功，不擋流程 */ }
 }
 
@@ -1137,6 +1256,36 @@ function destroyHoldingCard(code) {
   const el = document.getElementById(`hcard-${code}`);
   if (el) el.remove();
   delete holdingCharts[code];
+  // switchActive() 也會呼叫這裡把卡片拆掉重建（升級成大圖），這時部位還在，不能清單；
+  // 只有真的平倉（position 歸零）才把還沒觸發的預約單作廢，避免變孤兒資料。
+  const posObj = STATE.positions[code];
+  const stillHeld = posObj && posObj.position !== 0;
+  if (!stillHeld && STATE.pendingOrders.some(o => o.code === code)) {
+    STATE.pendingOrders = STATE.pendingOrders.filter(o => o.code !== code);
+    saveState();
+  }
+}
+
+// 從交易紀錄回推「目前這個部位」是哪幾筆買進累積出來的：部位歸零就代表前面的買進已經跟現在無關，
+// 重新開始算，這樣多空反手、分批加碼都不會混到已經平倉的舊紀錄。
+function buyLotsForCode(code) {
+  let pos = 0, lots = [];
+  for (const t of STATE.trades) {
+    if (t.code !== code) continue;
+    if (pos === 0) lots = [];
+    if (t.action === '買進') lots.push({ time: t.time, qty: t.qty });
+    pos += (t.action === '買進' ? 1 : -1) * t.qty;
+  }
+  return lots;
+}
+function renderBuyLots(code) {
+  const box = document.getElementById(`hcard-buys-${code}`);
+  if (!box) return;
+  const lots = buyLotsForCode(code);
+  if (!lots.length) { box.innerHTML = ''; return; }
+  box.innerHTML = `<div class="hcard-buys-label">買進紀錄</div>` + lots.map(l =>
+    `<div class="hcard-buys-row">${l.time}　${(l.qty / 1000).toLocaleString()}張</div>`
+  ).join('');
 }
 
 function updateHoldingCardStats(code) {
@@ -1166,6 +1315,7 @@ function updateHoldingCardStats(code) {
     pnlEl.textContent = `${fmtMoney(unrealized)}（${pct}）`;
     pnlEl.className = 'hcard-pnl ' + upDownClass(unrealized);
   }
+  renderBuyLots(code);
 }
 
 function createHoldingCard(code) {
@@ -1183,12 +1333,58 @@ function createHoldingCard(code) {
       <button class="flat" style="font-size:11px;padding:3px 8px">平倉</button>
     </div>
     <div class="hcard-chart" id="hchart-${code}"></div>
-    <div class="hcard-pnl" id="hcard-pnl-${code}">--</div>`;
-  card.querySelector('button').addEventListener('click', (e) => { e.stopPropagation(); flattenPosition(code); });
+    <div class="hcard-pnl" id="hcard-pnl-${code}">--</div>
+    <div class="hcard-buys" id="hcard-buys-${code}"></div>
+    <div class="hcard-po">
+      <div class="hcard-po-label">預約單</div>
+      <div class="hcard-po-row">
+        <button type="button" class="po-dir-btn buy active" data-dir="1">買進</button>
+        <button type="button" class="po-dir-btn sell" data-dir="-1">賣出</button>
+      </div>
+      <div class="hcard-po-row">
+        <input class="po-qty" type="number" placeholder="張數" min="1" step="1" value="1">
+        <select class="po-type-select">
+          <option value="market">市價</option>
+          <option value="limitUp">漲停</option>
+          <option value="limitDown">跌停</option>
+          <option value="custom">自訂價</option>
+        </select>
+      </div>
+      <div class="hcard-po-row">
+        <input class="po-custom-price" type="number" step="0.05" placeholder="目標價" style="display:none">
+      </div>
+      <button type="button" class="po-submit">送出預約</button>
+      <div class="hcard-po-list"></div>
+    </div>`;
+  card.querySelector('.flat').addEventListener('click', (e) => { e.stopPropagation(); flattenPosition(code); });
   card.addEventListener('click', () => {
     document.getElementById('code').value = code;
     switchActive(code);
     window.scrollTo({ top: document.querySelector('.layout').offsetTop - 10, behavior: 'smooth' });
+  });
+  const poWrap = card.querySelector('.hcard-po');
+  poWrap.addEventListener('click', e => e.stopPropagation()); // 卡片本身點擊會切換作用中標的，預約單區塊要擋掉冒泡
+  const dirBuy = poWrap.querySelector('.po-dir-btn[data-dir="1"]');
+  const dirSell = poWrap.querySelector('.po-dir-btn[data-dir="-1"]');
+  dirBuy.addEventListener('click', () => { dirBuy.classList.add('active'); dirSell.classList.remove('active'); });
+  dirSell.addEventListener('click', () => { dirSell.classList.add('active'); dirBuy.classList.remove('active'); });
+  const typeSelect = poWrap.querySelector('.po-type-select');
+  const customInput = poWrap.querySelector('.po-custom-price');
+  typeSelect.addEventListener('change', () => {
+    customInput.style.display = typeSelect.value === 'custom' ? 'inline-block' : 'none';
+  });
+  poWrap.querySelector('.po-submit').addEventListener('click', () => {
+    const direction = dirBuy.classList.contains('active') ? 1 : -1;
+    const qty = parseFloat(poWrap.querySelector('.po-qty').value);
+    const priceType = typeSelect.value;
+    const customVal = parseFloat(customInput.value);
+    if (!qty || qty <= 0) { alert('請輸入張數'); return; }
+    if (priceType === 'custom' && !(customVal > 0)) { alert('請輸入自訂價格'); return; }
+    createPendingOrder(code, direction, qty, priceType, customVal);
+  });
+  poWrap.querySelector('.hcard-po-list').addEventListener('click', (e) => {
+    const btn = e.target.closest('.po-cancel');
+    if (btn) cancelPendingOrder(btn.dataset.id);
   });
   document.getElementById('holdings-grid').appendChild(card);
 
@@ -1250,10 +1446,13 @@ function createHoldingCard(code) {
       lockChartRange(h.chart);
       updateHoldingCardStats(code);
       renderPortfolio();
+      checkPendingOrders(code, d.price);
     } catch (e) { /* 忽略單次輪詢失敗 */ }
   };
   poll();
   holdingCharts[code].pollTimer = setInterval(poll, 3000);
+  renderPendingOrdersFor(code); // 卡片剛建立時，把已經存在的預約單（例如重新整理後還原）先畫出來
+  renderBuyLots(code);
 }
 
 function syncHoldingCards() {
@@ -1279,13 +1478,11 @@ async function switchActive(code) {
   document.getElementById('price-hilo').textContent = '';
   document.getElementById('btn-buy').disabled = false;
   document.getElementById('btn-sell').disabled = false;
-  document.getElementById('btn-po-submit').disabled = false;
   initChart();
   await loadIntraday(code); // 先把歷史分K畫完，避免跟第一次即時報價的 update() 搶時間軸順序
   renderPortfolio();
   renderLog();
   syncHoldingCards();
-  renderPendingOrders();
   if (pollTimer) clearInterval(pollTimer);
   pollTick();
   pollTimer = setInterval(pollTick, 1500);
@@ -1361,7 +1558,6 @@ function resetSim() {
   document.getElementById('btn-buy').disabled = true;
   document.getElementById('btn-sell').disabled = true;
   document.getElementById('btn-flat').disabled = true;
-  document.getElementById('btn-po-submit').disabled = true;
   document.getElementById('price-code').textContent = '—';
   document.getElementById('price-now').textContent = '--';
   document.getElementById('price-change').textContent = '';
@@ -1373,8 +1569,7 @@ function resetSim() {
   document.getElementById('bidask-body').innerHTML = '<div id="bidask-empty">尚未開始模擬</div>';
   document.getElementById('holdings-wrap').style.display = 'none';
   document.getElementById('holdings-grid').innerHTML = '';
-  document.getElementById('po-list').innerHTML = '';
-  document.getElementById('log-body').innerHTML = '<tr class="empty-row"><td colspan="7">尚無交易</td></tr>';
+  document.getElementById('log-body').innerHTML = '<tr class="empty-row"><td colspan="8">尚無交易</td></tr>';
 }
 
 // 下單價格：預設用市價（lastPrice）；使用者點五檔某個價位或自己輸入後改用那個價格下單，
@@ -1469,66 +1664,27 @@ async function checkHealth() {
   } catch (e) { setGwStatus(false); }
 }
 
-// 卡片可以自由拖曳排序，順序存在 localStorage（跟每個欄位分開存），重新整理後還在。
-const CARD_ORDER_KEY = 'daytrade-sim-card-order';
-function initCardDragReorder() {
-  let dragged = null;
-  document.querySelectorAll('.card-col').forEach(col => {
-    col.querySelectorAll('.card[draggable="true"]').forEach(card => {
-      card.addEventListener('dragstart', () => {
-        dragged = card;
-        card.classList.add('dragging');
-      });
-      card.addEventListener('dragend', () => {
-        card.classList.remove('dragging');
-        col.querySelectorAll('.card').forEach(c => c.classList.remove('drag-over'));
-        saveCardOrder();
-      });
-      card.addEventListener('dragover', (e) => {
-        e.preventDefault();
-        if (!dragged || dragged === card) return;
-        const rect = card.getBoundingClientRect();
-        const before = e.clientY < rect.top + rect.height / 2;
-        col.insertBefore(dragged, before ? card : card.nextSibling);
-      });
-      card.addEventListener('dragenter', () => { if (dragged !== card) card.classList.add('drag-over'); });
-      card.addEventListener('dragleave', () => card.classList.remove('drag-over'));
-    });
-  });
-}
-function saveCardOrder() {
-  const order = {};
-  document.querySelectorAll('.card-col').forEach(col => {
-    order[col.id] = [...col.querySelectorAll('.card[data-card-id]')].map(c => c.dataset.cardId);
-  });
-  localStorage.setItem(CARD_ORDER_KEY, JSON.stringify(order));
-}
-function restoreCardOrder() {
-  let order;
-  try { order = JSON.parse(localStorage.getItem(CARD_ORDER_KEY)); } catch (e) { return; }
-  if (!order) return;
-  document.querySelectorAll('.card-col').forEach(col => {
-    const ids = order[col.id];
-    if (!ids) return;
-    ids.forEach(id => {
-      const card = col.querySelector(`.card[data-card-id="${id}"]`);
-      if (card) col.appendChild(card);
-    });
-  });
-}
-
 document.getElementById('movers-refresh').addEventListener('click', () => loadMovers(true));
+
+document.querySelectorAll('.period-btn').forEach(btn => {
+  btn.addEventListener('click', async () => {
+    if (btn.dataset.period === chartPeriod || !STATE || !STATE.active) return;
+    document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    chartPeriod = btn.dataset.period;
+    initChart();
+    await loadIntraday(STATE.active);
+  });
+});
 
 (async function boot() {
   checkHealth();
   loadMovers();
   loadDailyPnl();
   initCodeSearch();
-  restoreCardOrder();
-  initCardDragReorder();
   initIndexChart();
   setInterval(loadMovers, 30000);
-  setInterval(() => { if (STATE && STATE.active) loadIntraday(STATE.active); }, 30000); // 補上最新分K的成交量柱
+  setInterval(() => { if (STATE && STATE.active) loadIntraday(STATE.active); }, 30000); // 依目前週期補上最新K棒（分K成交量／5分K／日K）
   const saved = loadState();
   if (saved) {
     STATE = saved;
@@ -1536,7 +1692,6 @@ document.getElementById('movers-refresh').addEventListener('click', () => loadMo
       document.getElementById('code').value = STATE.active;
       document.getElementById('btn-buy').disabled = false;
       document.getElementById('btn-sell').disabled = false;
-      document.getElementById('btn-po-submit').disabled = false;
       initChart();
       await loadIntraday(STATE.active);
       pollTick();
@@ -1545,7 +1700,6 @@ document.getElementById('movers-refresh').addEventListener('click', () => loadMo
     renderPortfolio();
     renderLog();
     syncHoldingCards();
-    renderPendingOrders();
   }
 })();
 </script>
