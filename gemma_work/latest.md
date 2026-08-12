@@ -1,28 +1,22 @@
-# Claude Handoff 20260812_2048
-> 自動生成於 2026-08-12 20:48
+# Claude Handoff 20260813_0220
+> 自動生成於 2026-08-13 02:20
 
 ## 未提交的檔案異動
 ```
 ? TradingAgents
  m daily-stock-analysis
- M finmind/intraday_monitor.py
  M gemma_work/latest.md
- M guru-tracker/config.py
- M guru-tracker/guru_tracker.db
- M guru-tracker/templates/index.html
- M hermes-training/nightly_prompt_template.txt
- M hermes-training/run_nightly.sh
  M scripts/auto_investigate_state.json
  m stock-screener-ai
 ```
 
 ## 近期 Commits
 ```
+493172d2 chore: 每晚同步 2026-08-12 23:50
+1a6de77c chore: 自動同步 2026-08-12 22:40
 63f0e3a2 chore: 自動同步 2026-08-12 17:40
 aeff8bf9 chore: 自動同步 2026-08-12 12:40
 f6d62543 chore: 自動同步 2026-08-12 07:40
-695621db chore: 自動同步 2026-08-12 02:40
-bb98f5cc chore: 每晚同步 2026-08-11 23:50
 ```
 
 ## 給 Hermes 的備註
