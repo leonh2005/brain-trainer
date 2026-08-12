@@ -71,6 +71,8 @@ _gates_cache = {}
 GATES_CACHE_TTL = 3600  # 三關價依前一交易日高低算出，一小時內不會變，快取久一點省 gateway 查詢
 _ma_cache = {}
 MA_CACHE_TTL = 3600  # 日均線也是用前一交易日以前的收盤算，一小時內不會變
+_daily_ohlcv_cache = {}
+DAILY_OHLCV_CACHE_TTL = 60  # 日K圖用，含當天盤中資料，不能快取太久
 
 
 def _get_name(code):
@@ -183,12 +185,26 @@ def log_trade():
         return jsonify({"ok": False, "error": "缺少必要欄位"}), 400
     try:
         conn = _get_db()
-        conn.execute(
+        cur = conn.execute(
             "INSERT INTO trades (date, time, code, name, action, price, qty, fee, tax, realized, created_at) "
             "VALUES (?,?,?,?,?,?,?,?,?,?,?)",
             (d["date"], d["time"], d["code"], d.get("name") or d["code"], d["action"],
              d["price"], d["qty"], d.get("fee", 0), d.get("tax", 0), d.get("realized", 0), time.time()),
         )
+        conn.commit()
+        row_id = cur.lastrowid
+        conn.close()
+        return jsonify({"ok": True, "id": row_id})
+    except Exception as e:
+        return jsonify({"ok": False, "error": str(e)})
+
+
+@app.delete("/api/trade_log/<int:trade_id>")
+def delete_trade_log(trade_id: int):
+    """刪除前端交易紀錄時，一併把後端 SQLite 對應那筆刪掉，每日損益紀錄才不會跟畫面對不起來。"""
+    try:
+        conn = _get_db()
+        conn.execute("DELETE FROM trades WHERE id = ?", (trade_id,))
         conn.commit()
         conn.close()
         return jsonify({"ok": True})
@@ -275,6 +291,30 @@ def daily_ma():
                 return round(sum(closes[-period:]) / period, 2) if len(closes) >= period else None
             data = {"ok": True, "ma5": ma(5), "ma10": ma(10), "ma20": ma(20)}
         _ma_cache[code] = {"ts": time.time(), "data": data}
+        return jsonify(data)
+    except (urllib.error.URLError, TimeoutError) as e:
+        return jsonify({"ok": False, "error": f"無法連線 shioaji-gateway：{e}"})
+    except Exception as e:
+        return jsonify({"ok": False, "error": str(e)})
+
+
+@app.get("/api/daily_ohlcv")
+def daily_ohlcv():
+    """日K蠟燭圖用的開高低收量，直接轉發 shioaji-gateway 已經聚合好的資料。"""
+    code = request.args.get("code", "").strip()
+    days = request.args.get("days", "60")
+    if not code:
+        return jsonify({"ok": False, "error": "no code"}), 400
+
+    cache_key = f"{code}:{days}"
+    cached = _daily_ohlcv_cache.get(cache_key)
+    if cached and time.time() - cached["ts"] < DAILY_OHLCV_CACHE_TTL:
+        return jsonify(cached["data"])
+
+    try:
+        gw = _fetch_gateway(f"/daily_ohlcv?code={urllib.parse.quote(code)}&days={urllib.parse.quote(days)}")
+        data = gw if gw.get("ok") else {"ok": False, "error": "查無日K資料"}
+        _daily_ohlcv_cache[cache_key] = {"ts": time.time(), "data": data}
         return jsonify(data)
     except (urllib.error.URLError, TimeoutError) as e:
         return jsonify({"ok": False, "error": f"無法連線 shioaji-gateway：{e}"})
