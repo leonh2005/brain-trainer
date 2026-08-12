@@ -47,6 +47,7 @@ warnings.filterwarnings('ignore')
 BOT_TOKEN        = open(os.path.expanduser("~/CCProject/.secrets/telegram_token.txt")).read().strip()
 CHAT_ID          = "7556217543"
 SIGNAL_THRESHOLD = 4                    # 觸發推播的最低訊號數
+SIGNAL_MARGIN    = 2                    # 多空訊號數差距要達到這個門檻才推播，太接近視為方向不明
 VOL_SIGNAL_KEYS  = ['昨量', '單K', '超越開盤量']  # 必要量能訊號（至少 1 個）
 COOLDOWN_MINUTES = 30
 COOLDOWN_FILE    = '/tmp/intraday_cooldown.json'
@@ -648,7 +649,6 @@ def volume_check():
         long_sigs  = tech['long'] + vol_long
         short_sigs = tech['short'] + vol_short
 
-        # 優先推強方，同分推多方
         candidates = []
         if len(long_sigs) >= SIGNAL_THRESHOLD and has_vol_signal(long_sigs):
             candidates.append(('long', long_sigs))
@@ -656,6 +656,11 @@ def volume_check():
             candidates.append(('short', short_sigs))
 
         if not candidates:
+            continue
+
+        # 多空訊號數差距不夠代表方向不明（實測log：36.7%的推播差距只有0~1個訊號），
+        # 硬選信心較高的一邊推播容易誤判成反方向；差距太小就跳過，不推播。
+        if abs(len(long_sigs) - len(short_sigs)) < SIGNAL_MARGIN:
             continue
 
         # 取信心分數較高的方向

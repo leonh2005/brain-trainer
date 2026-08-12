@@ -1,32 +1,28 @@
-# Claude Handoff 20260812_1738
-> 自動生成於 2026-08-12 17:38
+# Claude Handoff 20260812_2048
+> 自動生成於 2026-08-12 20:48
 
 ## 未提交的檔案異動
 ```
 ? TradingAgents
- M chip-tracker/chip.db
  m daily-stock-analysis
- M daytrade-sim/daytrade.db
- M daytrade-sim/templates/index.html
+ M finmind/intraday_monitor.py
  M gemma_work/latest.md
- M market-analysis/hit_counts.json
- M market-dashboard/fg_history.json
- M market-dashboard/index.html
- M market-dashboard/margin_cache.json
- M market-dashboard/sp_state.json
- M news-analyzer/trump_seen.json
+ M guru-tracker/config.py
+ M guru-tracker/guru_tracker.db
+ M guru-tracker/templates/index.html
+ M hermes-training/nightly_prompt_template.txt
+ M hermes-training/run_nightly.sh
  M scripts/auto_investigate_state.json
- M scripts/hay_restock_dates.json
  m stock-screener-ai
 ```
 
 ## 近期 Commits
 ```
+63f0e3a2 chore: 自動同步 2026-08-12 17:40
 aeff8bf9 chore: 自動同步 2026-08-12 12:40
 f6d62543 chore: 自動同步 2026-08-12 07:40
 695621db chore: 自動同步 2026-08-12 02:40
 bb98f5cc chore: 每晚同步 2026-08-11 23:50
-0f0726f3 chore: 自動同步 2026-08-11 21:40
 ```
 
 ## 給 Hermes 的備註
