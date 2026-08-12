@@ -1,6 +1,6 @@
 {
-  "scanned_at": "2026-08-12 03:00:23",
-  "since": "2026-08-11 03:00:01",
+  "scanned_at": "2026-08-13 03:00:25",
+  "since": "2026-08-12 03:00:01",
   "results": {
     "市場儀表板": {
       "exists": true,
@@ -16,8 +16,8 @@
     },
     "motion-watcher": {
       "exists": true,
-      "errors": 663,
-      "last_error": "2026-08-12 02:58:19,420 WARNING 讀取影格失敗，重新連線",
+      "errors": 611,
+      "last_error": "2026-08-13 02:54:45,950 WARNING 讀取影格失敗，重新連線",
       "fix": "尚無對應建議，需人工判斷"
     },
     "Cloudflare Tunnel": {
@@ -29,13 +29,13 @@
     "財經新聞分析": {
       "exists": true,
       "errors": 2,
-      "last_error": "2026-08-11 23:02:24,895 [WARNING] analyzer: Batch parse failed, falling back to single analyze for all",
+      "last_error": "2026-08-12 19:15:05,879 [WARNING] fetcher.ptt_fetcher: PTT article fetch failed https://www.ptt.cc/bbs/Stock/M.1786530640.A.07E.html: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))",
       "fix": "尚無對應建議，需人工判斷"
     },
     "川普監測": {
       "exists": true,
-      "errors": 2,
-      "last_error": "2026-08-11 12:50:04,121 WARNING 分析失敗：China hits US pecans with 54% levies before Xi-Tru — 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reaso",
+      "errors": 1,
+      "last_error": "2026-08-12 12:35:04,274 WARNING 分析失敗：How the EU can face down Trump's tech aggression - — 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reaso",
       "fix": "尚無對應建議，需人工判斷"
     },
     "持倉新聞(台股)": {
@@ -89,7 +89,7 @@
     "盤中監控": {
       "exists": true,
       "errors": 1,
-      "last_error": "[backfill] 2408 失敗: Topic: api/v1/data/ticks, Corr: c21, Client: PYAPI/N124711691/0811/010003/367136/220.141.1.154, payload: {'token': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYmYiOjE3ODY0MTAwMDMsImV4cCI6MTc4NjQ5NjQwMywic2ltdWxhdGlvbiI6ZmFsc2UsInBlcnNvbl9pZCI6Ik4xMjQ3MTE2OTEiLCJ2ZXJzaW9uIjoiMS4zLjI",
+      "last_error": "[backfill] 2408 失敗: Topic: api/v1/data/ticks, Corr: c21, Client: PYAPI/N124711691/0812/010003/658495/220.141.1.154, payload: {'token': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYmYiOjE3ODY0OTY0MDQsImV4cCI6MTc4NjU4MjgwNCwic2ltdWxhdGlvbiI6ZmFsc2UsInBlcnNvbl9pZCI6Ik4xMjQ3MTE2OTEiLCJ2ZXJzaW9uIjoiMS4zLjI",
       "fix": "尚無對應建議，需人工判斷"
     },
     "蝦皮軟纖監測": {
@@ -124,9 +124,9 @@
     },
     "daily-stock-analysis": {
       "exists": true,
-      "errors": 7,
-      "last_error": "2026-08-11 16:38:19 | DEBUG    | venv/lib/python3.14/site-packages/httpcore/_trace.py:47 | receive_response_body.failed exception=GeneratorExit()",
-      "fix": "尚無對應建議，需人工判斷"
+      "errors": 0,
+      "last_error": null,
+      "fix": null
     }
   },
   "no_log": [
