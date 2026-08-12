@@ -254,6 +254,7 @@
     <div class="card" data-card-id="daily-pnl">
       <h2>每日損益紀錄</h2>
       <p style="font-size:11.5px;color:#8b949e;margin:0 0 10px">永久存在後端資料庫，跟瀏覽器資料分開，重置模擬或清瀏覽器資料都不會遺失。</p>
+      <div id="daily-winrate" style="font-size:13px;font-weight:700;margin-bottom:10px"></div>
       <div id="daily-pnl-wrap">
         <table>
           <thead><tr><th>日期</th><th>交易次數</th><th>手續費+稅</th><th>已實現損益（淨）</th><th>報酬率</th></tr></thead>
@@ -1208,6 +1209,17 @@ async function logTradeToServer(trade) {
   } catch (e) { /* 網路問題：這筆損益紀錄同步失敗，但下單本身已經成功，不擋流程 */ }
 }
 
+// 以天結算的勝率：當天已實現損益（淨）> 0 算贏，< 0 算輸，剛好 0（有交易但沒賺沒賠）不計入分母。
+function renderWinRate(days) {
+  const el = document.getElementById('daily-winrate');
+  const wins = days.filter(d => d.realized_pnl > 0).length;
+  const losses = days.filter(d => d.realized_pnl < 0).length;
+  const decided = wins + losses;
+  el.textContent = decided
+    ? `勝率 ${(wins / decided * 100).toFixed(1)}%（${wins}勝 ${losses}敗，共${days.length}天）`
+    : '';
+}
+
 async function loadDailyPnl() {
   const body = document.getElementById('daily-pnl-body');
   try {
@@ -1215,8 +1227,10 @@ async function loadDailyPnl() {
     const d = await r.json();
     if (!d.ok || !d.days.length) {
       body.innerHTML = '<tr class="empty-row"><td colspan="5">尚無紀錄</td></tr>';
+      document.getElementById('daily-winrate').textContent = '';
       return;
     }
+    renderWinRate(d.days);
     const capital = STATE && STATE.capital ? STATE.capital : DEFAULT_CAPITAL;
     body.innerHTML = d.days.map(row => {
       const pct = capital ? (row.realized_pnl / capital * 100).toFixed(2) + '%' : '--';
@@ -1230,6 +1244,7 @@ async function loadDailyPnl() {
       </tr>`;
     }).join('');
   } catch (e) {
+    document.getElementById('daily-winrate').textContent = '';
     body.innerHTML = '<tr class="empty-row"><td colspan="5">無法連線後端服務</td></tr>';
   }
 }
