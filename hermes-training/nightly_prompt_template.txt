@@ -24,13 +24,16 @@
 
 ## 對「處理後任務清單」裡的每一條任務執行：
 
-1. 用 Bash 呼叫（用 heredoc 避免 prompt 內含反引號/`$()` 造成 shell 誤執行）：
+1. 用 Bash 呼叫（用 heredoc 避免 prompt 內含反引號/`$()` 造成 shell 誤執行，並用 `timeout 110` 包住，確保這個指令一定在 Bash 工具 120 秒前景上限之前結束，不會被丟到背景）：
    ```
-   python3 hermes-training/call_hermes.py <<'EOF'
+   timeout 110 python3 hermes-training/call_hermes.py <<'EOF'
    <prompt>
    EOF
    ```
-   取得 Hermes 對這條 prompt 的初始回答
+   取得 Hermes 對這條 prompt 的初始回答。
+
+   **重要（絕對禁止）**：這個 Bash 呼叫必須永遠在同一次前景執行內拿到結果。如果看到「Command did not complete within its 120s timeout and was moved to the background」，代表上面的 `timeout 110` 沒被正確帶上——絕對不可以回覆「等待通知」或任何形式的暫停等待就結束你的回應，這是無互動一次性執行（`claude -p`），一旦你的回應不再呼叫工具，整個 process 就會直接終止，背景通知永遠不會有機會送達，會導致整晚任務全部沒有實際跑到。正確做法：立刻在同一輪重新用 `timeout 110 ...` 呼叫一次。
+   若指令因為 `timeout 110` 被殺掉（exit code 124），視為這條任務逾時失敗，記錄放棄、正常進入下一條任務，不要卡住整條訓練管線。
 
 1.5. **互動釐清迴圈（最多 4 輪）**：Hermes 是一次性呼叫、不會記得上次對話，所以每一輪都要自己把完整對話記錄組進新的 prompt 裡送出去。
    如果 Hermes 的回答是在反問你問題、或明確表示看不懂/無法回答，就把這輪視為「需要澄清」：

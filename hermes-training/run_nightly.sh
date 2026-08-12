@@ -99,3 +99,10 @@ copy_logs_to_obsidian
 # 清掉超過 7 天的中間檔案，避免無限累積
 find "$WORK_DIR" -maxdepth 1 -name "scheduled_tasks_*.json" -mtime +7 -delete
 find "$WORK_DIR" -maxdepth 1 -name "tasks_*.json" -mtime +7 -delete
+
+# 只有沒帶日期參數（代表這是今晚 01:00 的正常排程呼叫）才接著補訓過去未訓練的日子；
+# 若是被 run_backfill.sh 帶著特定日期呼叫來補訓，這裡不再觸發一次，避免無限遞迴。
+# run_backfill.sh 自己有 07:00 硬停與「已訓練過就跳過」邏輯，補到沒有為止。
+if [ -z "$1" ]; then
+  bash "$WORK_DIR/run_backfill.sh"
+fi

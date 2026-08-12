@@ -24,8 +24,8 @@ HOLDERS = [
      "type": "13f", "cik": "0001656456", "source": "Appaloosa LP 13F-HR"},
     {"id": "klarman", "name": "Seth Klarman", "name_zh": "克拉爾曼",
      "type": "13f", "cik": "0001061768", "source": "Baupost Group LLC/MA 13F-HR"},
-    {"id": "li_lu", "name": "Li Lu", "name_zh": "李錄",
-     "type": "13f", "cik": "0001709323", "source": "Himalaya Capital Management LLC 13F-HR"},
+    {"id": "norges_bank", "name": "Norges Bank", "name_zh": "挪威主權基金",
+     "type": "13f", "cik": "0001374170", "source": "Norges Bank 13F-HR"},
     {"id": "gates", "name": "Bill Gates", "name_zh": "比爾蓋茲",
      "type": "13f", "cik": "0001166559", "source": "Gates Foundation Trust 13F-HR"},
 ]
