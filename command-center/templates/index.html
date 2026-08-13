@@ -296,6 +296,7 @@ let tmr; function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('
 const CARDS=[
   {id:'swing',   ic:'🌙', title:'隔日沖候選', span:'', url:'/api/signals/swing', render:renderSwing, site:'/svc/5500/'},
   {id:'daytrade',ic:'⚡', title:'當沖候選',   span:'', url:'/api/signals/daytrade', render:renderDaytrade, site:'/svc/5400/'},
+  {id:'disposition', ic:'🚧', title:'處置股警示', span:'', url:'/api/signals/disposition', render:renderDisposition},
   {id:'intraday',ic:'🎯', title:'盤中主力訊號', span:'wide', url:'/api/signals/intraday', render:renderIntraday, site:'/svc/5400/'},
   {id:'news',    ic:'📰', title:'新聞情緒',   span:'', url:'/api/signals/news', render:renderNews, site:'/svc/5300/'},
   {id:'market',  ic:'🌡️', title:'市場恐慌指標', span:'wide', url:'/api/signals/market-fear', render:renderMarket, site:'/market-dashboard'},
@@ -480,6 +481,38 @@ function renderChips(d){
     row.innerHTML=`${tkLink(h.name,h.code)}<span class="mini" style="margin-left:8px;font-weight:600;color:var(--fg)">${h.close!=null?fmt(h.close):'—'}</span><span class="chg ${chgCls(h.change_pct)}" style="margin-left:6px;font-size:11px">${arrow(h.change_pct)}${fmt(h.change_pct)}%</span><span class="spacer"></span><span class="mini">外資 <b style="color:${fn>0?'var(--up)':'var(--down)'}">${fn>0?'+':''}${fmt(fn)}</b></span>`;
     box.appendChild(row);
   });
+  return box;
+}
+function renderDisposition(d){
+  const exit=(d&&d.tomorrow_exit)||[];
+  const recent=(d&&d.recent)||[];
+  const box=el('div');
+  if(!exit.length&&!recent.length){
+    box.appendChild(el('div','empty','近7天無處置股'));
+    return box;
+  }
+  if(exit.length){
+    const head=el('div','mini');
+    head.style.cssText='font-weight:600;color:var(--fg);margin-bottom:4px';
+    head.textContent=`🔓 明日出關（${exit.length}）`;
+    box.appendChild(head);
+    exit.slice(0,8).forEach(x=>{
+      const row=el('div','row');
+      row.innerHTML=`${tkLink(x.name,x.code)}<span class="mini" style="margin-left:6px">${x.market}</span><span class="spacer"></span><span class="mini">${esc(x.reason||'')}</span>`;
+      box.appendChild(row);
+    });
+  }
+  if(recent.length){
+    const head2=el('div','mini');
+    head2.style.cssText=`font-weight:600;color:var(--fg);margin:${exit.length?10:0}px 0 4px;${exit.length?'padding-top:8px;border-top:1px solid var(--border)':''}`;
+    head2.textContent=`⚠️ 未來7天仍處置中（${recent.length}）`;
+    box.appendChild(head2);
+    recent.slice(0,8).forEach(r=>{
+      const row=el('div','row');
+      row.innerHTML=`${tkLink(r.name,r.code)}<span class="mini" style="margin-left:6px">${r.market}</span><span class="spacer"></span><span class="mini">出關${r.end.slice(5)}</span>`;
+      box.appendChild(row);
+    });
+  }
   return box;
 }
 function renderMA(d){
