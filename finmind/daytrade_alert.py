@@ -35,8 +35,21 @@ TOKEN     = open('/Users/steven/CCProject/.secrets/finmind_token.txt').read().st
 TODAY     = datetime.today().strftime('%Y-%m-%d')
 D5        = trading_days_ago(7)
 
-finmind = DataLoader()
-finmind.login_by_token(api_token=TOKEN)
+def send_telegram(text: str):
+    requests.post(
+        f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage",
+        json={"chat_id": CHAT_ID, "text": text, "parse_mode": "HTML"},
+        timeout=10
+    )
+
+
+try:
+    finmind = DataLoader()
+    finmind.login_by_token(api_token=TOKEN)
+except Exception as e:
+    print(f'[finmind] 登入失敗，改用降級模式: {e}')
+    send_telegram(f"⚠️ {TODAY} 當沖掃描：FinMind 連線失敗（{type(e).__name__}），改用降級模式繼續（無期貨方向/FinMind均量備援）")
+    finmind = None
 
 # ── Shioaji 連線（singleton）─────────────────────
 _sj_api = None
@@ -121,14 +134,6 @@ def get_avg5_finmind(stock_id: str) -> int:
     except Exception:
         pass
     return 0
-
-
-def send_telegram(text: str):
-    requests.post(
-        f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage",
-        json={"chat_id": CHAT_ID, "text": text, "parse_mode": "HTML"},
-        timeout=10
-    )
 
 
 def get_futures_direction():
@@ -217,6 +222,25 @@ candidate_list = [{'code': c['code'], 'name': c['name'], 'close': c['close']} fo
 with open('/tmp/daytrade_candidates.json', 'w') as f:
     json.dump(candidate_list, f, ensure_ascii=False)
 print(f'[daytrade] 候選清單已寫入 /tmp/daytrade_candidates.json: {[c["code"] for c in candidate_list]}')
+
+# 存進當沖 10:30 追蹤紀錄（供 check_daytrade_track.py 比對是否仍上漲）
+try:
+    track_path = os.path.join(os.path.dirname(__file__), '..', 'telebot', 'data', 'daytrade_track.json')
+    track = {}
+    if os.path.exists(track_path):
+        with open(track_path, encoding='utf-8') as f:
+            track = json.load(f)
+    track[TODAY] = {
+        'candidates': [
+            {'code': c['code'], 'name': c['name'], 'baseline': round(c['close'] / (1 + c['chg_pct'] / 100), 2)}
+            for c in candidates
+        ],
+        'checked': False, 'checked_at': None, 'track_results': [],
+    }
+    with open(track_path, 'w', encoding='utf-8') as f:
+        json.dump(track, f, ensure_ascii=False, indent=2)
+except Exception as e:
+    print(f'[daytrade_track] 寫入失敗: {e}')
 
 if _sj_api is not None:
     _sj_api.logout()

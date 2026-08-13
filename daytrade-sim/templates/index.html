@@ -67,7 +67,6 @@
     padding: 4px 8px; font-size: 12px; font-variant-numeric: tabular-nums;
     color: #e6edf3; white-space: nowrap;
   }
-  #chart-volume { width: 100%; height: 210px; margin-top: 4px; border-top: 1px solid #21262d; }
   #chart-macd { width: 100%; height: 270px; margin-top: 4px; border-top: 1px solid #21262d; }
   #chart-empty { color: #8b949e; text-align: center; padding: 140px 0; }
 
@@ -231,13 +230,14 @@
         <button type="button" class="period-btn active" data-period="1m">1分K</button>
         <button type="button" class="period-btn" data-period="5m">5分K</button>
         <button type="button" class="period-btn" data-period="1d">日K</button>
+        <button type="button" class="period-btn" data-period="wave">日波圖</button>
+        <button type="button" class="period-btn" id="ma-toggle-btn">均線 開</button>
       </div>
       <div id="chart-empty">輸入代號並按「開始模擬」查看即時走勢</div>
       <div id="chart-price-wrap">
         <div id="chart-price"></div>
         <div id="chart-tooltip"></div>
       </div>
-      <div id="chart-volume"></div>
       <div id="chart-macd"></div>
     </div>
 
@@ -297,11 +297,12 @@
 <script>
 const STORAGE_KEY = 'daytrade-sim-state';
 let STATE = null;
-let priceChart = null, volumeChart = null, macdChart = null;
+let priceChart = null, macdChart = null;
 let priceSeries = null, vwapSeries = null, volumeSeries = null;
 let macdSeries = null, macdSignalSeries = null, macdHistSeries = null;
+let ma5Series = null, ma10Series = null, ma20Series = null;
 let pollTimer = null;
-let chartPeriod = '1m'; // '1m' | '5m' | '1d'：只有 1m 有即時逐筆更新，5m/1d 用固定資料重畫（見 loadIntraday）
+let chartPeriod = '1m'; // '1m' | '5m' | '1d' | 'wave'：只有 1m 有即時逐筆更新，其餘用固定資料重畫（見 loadIntraday）
 const holdingCharts = {}; // 非 active 的庫存：code -> { chart, series, lastTs, price, pollTimer }
 
 const DEFAULT_CAPITAL = 100000; // 本金只是內部現金流的起始值，不再顯示也不影響報酬率算法，固定用一個數字即可
@@ -348,9 +349,8 @@ function syncTimeScales(charts) {
 
 function initChart() {
   const priceEl = document.getElementById('chart-price');
-  const volumeEl = document.getElementById('chart-volume');
   const macdEl = document.getElementById('chart-macd');
-  priceEl.innerHTML = ''; volumeEl.innerHTML = ''; macdEl.innerHTML = '';
+  priceEl.innerHTML = ''; macdEl.innerHTML = '';
   document.getElementById('chart-empty').style.display = 'none';
   gateLines = []; maLines = []; hiLoLines = { high: null, low: null }; openLimitLines = []; // 舊 priceSeries 已經整個丟棄，殘留的線物件參照也一併清掉
 
@@ -365,11 +365,6 @@ function initChart() {
     timeScale: { timeVisible: true, secondsVisible: false, borderColor: '#30363d', visible: false },
     width: priceEl.clientWidth, height: 300,
   });
-  volumeChart = LightweightCharts.createChart(volumeEl, {
-    ...common,
-    timeScale: { timeVisible: true, secondsVisible: false, borderColor: '#30363d', visible: false },
-    width: volumeEl.clientWidth, height: 210,
-  });
   macdChart = LightweightCharts.createChart(macdEl, {
     ...common,
     timeScale: { timeVisible: true, secondsVisible: false, borderColor: '#30363d' },
@@ -379,6 +374,13 @@ function initChart() {
   if (chartPeriod === '1m') {
     priceSeries = priceChart.addLineSeries({ color: '#58a6ff', lineWidth: 2 });
     vwapSeries = priceChart.addLineSeries({ color: '#e3b341', lineWidth: 1, priceLineVisible: false, lastValueVisible: false });
+  } else if (chartPeriod === 'wave') {
+    // 日波圖：柱體=當天每5分鐘桶的high~low振幅，統一顏色（不分紅綠），只看幅度大小
+    priceSeries = priceChart.addCandlestickSeries({
+      upColor: '#79c0ff', downColor: '#79c0ff', borderVisible: false,
+      wickUpColor: '#79c0ff', wickDownColor: '#79c0ff',
+    });
+    vwapSeries = null;
   } else {
     // 5分K/日K：改蠟燭圖，台股慣例紅漲綠跌；VWAP、三關價、當日均線都是單日盤中概念，跨K棒週期不畫
     priceSeries = priceChart.addCandlestickSeries({
@@ -387,15 +389,27 @@ function initChart() {
     });
     vwapSeries = null;
   }
+  // 主圖價格軸底部留白給成交量疊圖用，不然K棒/折線會整個貼滿畫布，蓋住底下那層量柱
+  priceSeries.priceScale().applyOptions({ scaleMargins: { top: 0.05, bottom: 0.22 } });
   padAutoscale(priceSeries);
 
-  volumeSeries = volumeChart.addHistogramSeries({ priceFormat: { type: 'volume' } });
+  // 主圖疊加的移動平均線（MA5/10/20，隨K棒逐點計算，跟 renderDailyMA 的固定水平當日均線是不同概念）
+  // 1分K／日波圖不畫均線（renderMA 不會被呼叫），5分K/日K 依 maEnabled 開關決定初始顯示
+  const maVisible = (chartPeriod === '5m' || chartPeriod === '1d') && maEnabled;
+  ma5Series = priceChart.addLineSeries({ color: '#a371f7', lineWidth: 1, priceLineVisible: false, lastValueVisible: false, visible: maVisible });
+  ma10Series = priceChart.addLineSeries({ color: '#79c0ff', lineWidth: 1, priceLineVisible: false, lastValueVisible: false, visible: maVisible });
+  ma20Series = priceChart.addLineSeries({ color: '#ffa657', lineWidth: 1, priceLineVisible: false, lastValueVisible: false, visible: maVisible });
+  updateMAToggleBtn();
+
+  // 成交量併入主圖，用獨立 price scale 疊在下方一層（暗色柱，不佔用主圖右軸的價格刻度）
+  volumeSeries = priceChart.addHistogramSeries({ priceFormat: { type: 'volume' }, priceScaleId: 'volume-overlay' });
+  priceChart.priceScale('volume-overlay').applyOptions({ scaleMargins: { top: 0.8, bottom: 0 } });
 
   macdSeries = macdChart.addLineSeries({ color: '#58a6ff', lineWidth: 1, priceLineVisible: false, lastValueVisible: false });
   macdSignalSeries = macdChart.addLineSeries({ color: '#e3b341', lineWidth: 1, priceLineVisible: false, lastValueVisible: false });
   macdHistSeries = macdChart.addHistogramSeries({ priceLineVisible: false, lastValueVisible: false });
 
-  syncTimeScales([priceChart, volumeChart, macdChart]);
+  syncTimeScales([priceChart, macdChart]);
 
   // 滑鼠移到任一張圖（價格/成交量/MACD）上時，垂直虛線要貫通三張圖，並用浮動 tooltip
   // 顯示那個時間點的價格、成交量、MACD——右側軸上的即時價標籤只會跟著最新一筆跑，
@@ -404,7 +418,6 @@ function initChart() {
   let crosshairSyncing = false;
   const crosshairCharts = [
     { chart: priceChart, series: priceSeries },
-    { chart: volumeChart, series: volumeSeries },
     { chart: macdChart, series: macdSeries },
   ];
   crosshairCharts.forEach(({ chart: sourceChart }) => {
@@ -446,9 +459,25 @@ function initChart() {
   window.addEventListener('resize', () => {
     if (!priceChart) return;
     priceChart.applyOptions({ width: priceEl.clientWidth });
-    volumeChart.applyOptions({ width: volumeEl.clientWidth });
     macdChart.applyOptions({ width: macdEl.clientWidth });
   });
+}
+
+// 簡單移動平均線，points 為 {time, value}[]，資料筆數不足 period 的開頭直接不產出該點（讓線從足量處開始畫）
+function computeSMA(points, period) {
+  const out = [];
+  let sum = 0;
+  for (let i = 0; i < points.length; i++) {
+    sum += points[i].value;
+    if (i >= period) sum -= points[i - period].value;
+    if (i >= period - 1) out.push({ time: points[i].time, value: +(sum / period).toFixed(2) });
+  }
+  return out;
+}
+function renderMA(points) {
+  ma5Series.setData(computeSMA(points, 5));
+  ma10Series.setData(computeSMA(points, 10));
+  ma20Series.setData(computeSMA(points, 20));
 }
 
 // MACD(5,35,5)：快線 EMA5、慢線 EMA35 之差為 MACD 線，MACD 線再取 EMA5 為訊號線，兩者之差畫成柱狀圖
@@ -674,6 +703,7 @@ function renderDailyMA(ma, data) {
 async function loadIntraday(code) {
   if (chartPeriod === '1d') return loadDailyCandles(code);
   if (chartPeriod === '5m') return loadFiveMinCandles(code);
+  if (chartPeriod === 'wave') return loadWaveChart(code);
   return loadOneMinLine(code);
 }
 
@@ -696,11 +726,12 @@ async function loadOneMinLine(code) {
       return { time: pt.time, value: cumVol > 0 ? +(cumPV / cumVol).toFixed(2) : pt.value };
     });
     vwapSeries.setData(vwapData);
+    // 1分K是即時逐筆折線，均線交由5分K/日K顯示，這裡不畫
 
     // 成交量柱：跟前一分鐘比價漲跌決定紅綠（台股慣例：紅漲綠跌）
     volumeSeries.setData(data.map((pt, i) => ({
       time: pt.time, value: pt.volume,
-      color: i > 0 && pt.value < data[i - 1].value ? '#3fb950' : '#f85149',
+      color: i > 0 && pt.value < data[i - 1].value ? 'rgba(63,185,80,0.35)' : 'rgba(248,81,73,0.35)',
     })));
 
     // MACD(5,35,5)
@@ -754,12 +785,14 @@ function aggregateToCandles(points, bucketSeconds) {
   return [...buckets.values()].sort((a, b) => a.time - b.time);
 }
 
-// 蠟燭圖＋成交量＋MACD 共用的重畫邏輯，5分K／日K 都走這裡
-function renderCandleSeries(bars, isDaily) {
+// 蠟燭圖＋成交量＋MACD 共用的重畫邏輯，5分K／日K／日波圖 都走這裡
+function renderCandleSeries(bars, isDaily, drawMA = true) {
   priceSeries.setData(bars.map(b => ({ time: b.time, open: b.open, high: b.high, low: b.low, close: b.close })));
+  if (drawMA) renderMA(bars.map(b => ({ time: b.time, value: b.close })));
+  else [ma5Series, ma10Series, ma20Series].forEach(s => s.setData([])); // 日波圖的body是振幅不是真實價格，均線沒意義
   volumeSeries.setData(bars.map((b, i) => ({
     time: b.time, value: b.volume,
-    color: i > 0 && b.close < bars[i - 1].close ? '#3fb950' : '#f85149', // 台股慣例：紅漲綠跌
+    color: i > 0 && b.close < bars[i - 1].close ? 'rgba(63,185,80,0.35)' : 'rgba(248,81,73,0.35)', // 台股慣例：紅漲綠跌，併入主圖後調暗
   })));
 
   const macdData = computeMACD(bars.map(b => ({ time: b.time, value: b.close })), 5, 35, 5);
@@ -790,6 +823,17 @@ async function loadFiveMinCandles(code) {
     const data = await fetchIntradaySeries(code);
     if (!data.length) return;
     renderCandleSeries(aggregateToCandles(data, 5 * 60), false);
+  } catch (e) { /* 沒有歷史資料就先空著 */ }
+}
+
+// 日波圖：跟5分K同一份「今天」的分K資料，但柱體改成open=當日該5分鐘桶的low、close=high，
+// 顏色也統一（不分紅綠），凸顯的是當天盤中每個時段的振幅大小，不是漲跌方向。
+async function loadWaveChart(code) {
+  try {
+    const data = await fetchIntradaySeries(code);
+    if (!data.length) return;
+    const bars = aggregateToCandles(data, 5 * 60).map(b => ({ ...b, open: b.low, close: b.high }));
+    renderCandleSeries(bars, false, false);
   } catch (e) { /* 沒有歷史資料就先空著 */ }
 }
 
@@ -1578,7 +1622,6 @@ function resetSim() {
   document.getElementById('price-change').textContent = '';
   document.getElementById('price-meta').textContent = '尚未開始模擬';
   document.getElementById('chart-price').innerHTML = '';
-  document.getElementById('chart-volume').innerHTML = '';
   document.getElementById('chart-macd').innerHTML = '';
   document.getElementById('chart-empty').style.display = 'block';
   document.getElementById('bidask-body').innerHTML = '<div id="bidask-empty">尚未開始模擬</div>';
@@ -1681,15 +1724,32 @@ async function checkHealth() {
 
 document.getElementById('movers-refresh').addEventListener('click', () => loadMovers(true));
 
-document.querySelectorAll('.period-btn').forEach(btn => {
+document.querySelectorAll('.period-btn[data-period]').forEach(btn => {
   btn.addEventListener('click', async () => {
     if (btn.dataset.period === chartPeriod || !STATE || !STATE.active) return;
-    document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.period-btn[data-period]').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     chartPeriod = btn.dataset.period;
     initChart();
     await loadIntraday(STATE.active);
   });
+});
+
+// 均線開關：1分K本來就不畫均線，按鈕停用；5分K/日K可切換三條MA線的顯示/隱藏
+let maEnabled = true;
+function updateMAToggleBtn() {
+  const btn = document.getElementById('ma-toggle-btn');
+  const disabled = chartPeriod === '1m' || chartPeriod === 'wave';
+  btn.textContent = maEnabled ? '均線 開' : '均線 關';
+  btn.classList.toggle('active', !disabled && maEnabled);
+  btn.style.opacity = disabled ? 0.3 : (maEnabled ? 1 : 0.5);
+  btn.style.pointerEvents = disabled ? 'none' : 'auto';
+}
+document.getElementById('ma-toggle-btn').addEventListener('click', () => {
+  if (chartPeriod === '1m' || chartPeriod === 'wave') return;
+  maEnabled = !maEnabled;
+  [ma5Series, ma10Series, ma20Series].forEach(s => s && s.applyOptions({ visible: maEnabled }));
+  updateMAToggleBtn();
 });
 
 (async function boot() {
