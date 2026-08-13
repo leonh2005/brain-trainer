@@ -5,7 +5,7 @@ import re
 import sqlite3
 import time
 import urllib.request
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 
 CC = '/Users/steven/CCProject'
 
@@ -179,6 +179,90 @@ def chips():
     return d, datetime.now().strftime('%Y-%m-%d %H:%M')
 
 
+def _roc_to_iso(d: str) -> str:
+    """民國年字串（如 1150811）轉西元 ISO 日期（2026-08-11）"""
+    d = str(d)
+    return f"{int(d[:-4]) + 1911}-{d[-4:-2]}-{d[-2:]}"
+
+
+_STOCK_CODE_RE = re.compile(r'^\d{4}[A-Z]?$')  # 一般股票代碼（含特別股），排除權證/可轉債等衍生代碼
+
+
+def _disposition_period(period: str, sep: str) -> tuple:
+    parts = [p.strip().replace('/', '') for p in period.split(sep)]
+    return _roc_to_iso(parts[0]), _roc_to_iso(parts[-1])
+
+
+def _twse_punish_rows(url: str) -> list:
+    d = _proxy(url, ttl=1800)
+    return (d or {}).get('data', [])
+
+
+@_wrap
+def disposition():
+    """未來7天內仍處置中股票 + 明日真出關股（TWSE + TPEx 官方資料，30分鐘快取）
+
+    同一檔股票違規次數多的話會有多筆處置公告（第一次/第二次/第三次處置…），
+    取「結束日期最晚」的那筆代表目前實際狀態——避免把「出關又緊接著入關」的股票誤判為已出關。
+    只看一般股票代碼（4碼數字，可含特別股字母），排除權證/可轉債等衍生證券。
+
+    TWSE 資料源用 www.twse.com.tw 的 RWD 端點而非 openapi.twse.com.tw：後者只列「目前已生效」的處置，
+    當天剛公布、尚未開始生效的新一輪處置（例如處置起始日是明天）不會出現，會漏抓「出關又入關」的情況。
+    RWD 端點不帶日期參數時才會包含當天最新公布（帶日期區間查歷史反而還沒建檔進去），
+    所以這裡「不帶參數」+「查過去30天」兩次都抓，合併起來才完整。
+    """
+    # 45天：處置期間通常在1個月內結束，抓寬一點避免漏掉公布較早、但期間仍在延續的處置
+    history_start = (date.today() - timedelta(days=45)).strftime('%Y%m%d')
+    today_str = date.today().strftime('%Y%m%d')
+    twse_latest = _twse_punish_rows('https://www.twse.com.tw/rwd/zh/announcement/punish?response=json')
+    twse_history = _twse_punish_rows(
+        f'https://www.twse.com.tw/rwd/zh/announcement/punish?startDate={history_start}&endDate={today_str}&response=json'
+    )
+
+    tpex = _proxy('https://www.tpex.org.tw/openapi/v1/tpex_disposal_information', ttl=1800)
+
+    items = []
+    for row in twse_latest + twse_history:
+        try:
+            code = str(row[2])
+            if not _STOCK_CODE_RE.match(code):
+                continue
+            start, end = _disposition_period(row[6], '～')
+            items.append({'code': code, 'name': row[3], 'market': 'TWSE',
+                           'start': start, 'end': end, 'reason': row[5]})
+        except (ValueError, IndexError, TypeError):
+            continue
+    for r in (tpex or []):
+        code = r.get('SecuritiesCompanyCode', '')
+        if not _STOCK_CODE_RE.match(code):
+            continue
+        try:
+            start, end = _disposition_period(r.get('DispositionPeriod', ''), '~')
+            items.append({'code': code, 'name': r.get('CompanyName'), 'market': 'TPEx',
+                           'start': start, 'end': end, 'reason': r.get('DispositionReasons', '')})
+        except (ValueError, IndexError):
+            continue
+
+    # 同一代碼取結束日期最晚的那筆，代表目前真實處置狀態
+    current = {}
+    for it in items:
+        prev = current.get(it['code'])
+        if prev is None or it['end'] > prev['end']:
+            current[it['code']] = it
+
+    today_iso = date.today().isoformat()
+    window_end = (date.today() + timedelta(days=7)).isoformat()
+    tomorrow_iso = (date.today() + timedelta(days=1)).isoformat()
+
+    still_in = sorted(
+        [v for v in current.values() if v['end'] >= today_iso and v['start'] <= window_end],
+        key=lambda v: v['end']
+    )
+    tomorrow_exit = [v for v in current.values() if v['end'] == tomorrow_iso]
+
+    return {'recent': still_in, 'tomorrow_exit': tomorrow_exit}, datetime.now().strftime('%Y-%m-%d %H:%M')
+
+
 @_wrap
 def news():
     stats = _proxy('http://localhost:5300/api/stats', ttl=300)
@@ -346,4 +430,5 @@ def guru_tracker():
 SIGNALS = {
     'daytrade': daytrade, 'swing': swing, 'intraday': intraday, 'ma': ma,
     'chips': chips, 'news': news, 'market-fear': market_fear,
+    'disposition': disposition,
 }

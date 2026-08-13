@@ -163,3 +163,16 @@ def streak(values: list) -> int:
             break
         count += 1
     return count
+
+
+def price_streak(values: list) -> int:
+    """連漲跌天數：正數＝連漲天數，負數＝連跌天數，0＝平盤或無資料（values 依日期新到舊）。"""
+    if not values or values[0] is None or values[0] == 0:
+        return 0
+    up = values[0] > 0
+    count = 0
+    for v in values:
+        if v is None or v == 0 or (v > 0) != up:
+            break
+        count += 1
+    return count if up else -count
