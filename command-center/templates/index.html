@@ -232,6 +232,8 @@ a.tk:hover .code{color:var(--accent-soft)}
     <div class="actions" id="actions">
       <button class="btn" data-job="swing-rerun"><span class="k">🌙</span>重跑隔日沖</button>
       <button class="btn" data-job="daytrade-rerun"><span class="k">⚡</span>重跑當沖</button>
+      <button class="btn" data-job="swing-track-check"><span class="k">✅</span>手動比對隔日沖</button>
+      <button class="btn" data-job="daytrade-track-check"><span class="k">✅</span>手動比對當沖</button>
       <button class="btn" data-job="chip-update"><span class="k">📊</span>更新籌碼</button>
       <button class="btn" data-job="market-rebuild"><span class="k">🌡️</span>重建市場儀表板</button>
       <span class="stock-in"><input id="stock-q" placeholder="股票代碼" maxlength="6"><button class="btn" id="stock-go"><span class="k">🔍</span>查個股</button></span>
@@ -373,27 +375,50 @@ function renderSwing(d){
   return box;
 }
 function renderDaytrade(d){
-  const arr=Array.isArray(d)?d:[];
-  if(!arr.length)return el('div','empty','今日無當沖候選');
-  const box=el('div','', '');
-  box.style.cssText='display:flex;flex-wrap:wrap;gap:7px';
-  arr.forEach(item=>{
-    const code=typeof item==='string'?item:(item.code||'');
-    const name=typeof item==='string'?'':(item.name||'');
-    const close=typeof item==='object'?item.close:null;
-    const inBand=close!=null&&close>=100&&close<=150;
-    const b=el('span','pill'+(inBand?' price-band':''));
-    b.innerHTML=tkLink(name,code,' style="font-size:12px"');
-    if(inBand){
-      const wrap=el('div','price-band-wrap');
-      const label=el('div','price-band-label','💰 100-150價格帶');
-      wrap.appendChild(label);
-      wrap.appendChild(b);
-      box.appendChild(wrap);
-    }else{
-      box.appendChild(b);
-    }
-  });
+  const arr=Array.isArray(d)?d:((d&&d.candidates)||[]);
+  const box=el('div');
+  if(!arr.length){
+    box.appendChild(el('div','empty','今日無當沖候選'));
+  } else {
+    const pills=el('div');
+    pills.style.cssText='display:flex;flex-wrap:wrap;gap:7px';
+    arr.forEach(item=>{
+      const code=typeof item==='string'?item:(item.code||'');
+      const name=typeof item==='string'?'':(item.name||'');
+      const close=typeof item==='object'?item.close:null;
+      const inBand=close!=null&&close>=100&&close<=150;
+      const b=el('span','pill'+(inBand?' price-band':''));
+      b.innerHTML=tkLink(name,code,' style="font-size:12px"');
+      if(inBand){
+        const wrap=el('div','price-band-wrap');
+        const label=el('div','price-band-label','💰 100-150價格帶');
+        wrap.appendChild(label);
+        wrap.appendChild(b);
+        pills.appendChild(wrap);
+      }else{
+        pills.appendChild(b);
+      }
+    });
+    box.appendChild(pills);
+  }
+
+  const track=!Array.isArray(d)&&d&&d.track;
+  if(track&&track.results&&track.results.length){
+    const head=el('div','mini');
+    head.style.cssText='display:block;margin-top:10px;padding-top:8px;border-top:1px solid var(--border);color:var(--text-dim);font-size:11px';
+    const hit=track.results.filter(r=>r.up).length;
+    const checkedTime=track.checked_at?track.checked_at.slice(11,16):'?';
+    head.textContent=`${track.date} 候選（${checkedTime}比對）上漲：${hit}/${track.results.length}`;
+    box.appendChild(head);
+    track.results.forEach(r=>{
+      const row=el('div','row');
+      const mark=r.up?'✅':'❌';
+      const pct=(r.check_price!=null&&r.baseline)?((r.check_price-r.baseline)/r.baseline*100):null;
+      row.innerHTML=`<span>${mark} ${tkLink(r.name,r.code)}</span><span class="spacer"></span>`
+        +`<span class="chg ${r.up?'up':'down'}">${pct!=null?fmt(pct)+'%':'—'}</span>`;
+      box.appendChild(row);
+    });
+  }
   return box;
 }
 function renderIntraday(d){

@@ -28,6 +28,18 @@ JOBS = {
         'cwd': f'{CC}/finmind',
         'log': f'{CC}/logs/daytrade.log',
     },
+    'swing-track-check': {
+        'name': '手動比對隔日沖',
+        'cmd': [FINMIND_PY, f'{CC}/telebot/check_swing_track.py'],
+        'cwd': f'{CC}/telebot',
+        'log': f'{CC}/logs/swing_track.log',
+    },
+    'daytrade-track-check': {
+        'name': '手動比對當沖',
+        'cmd': [FINMIND_PY, f'{CC}/telebot/check_daytrade_track.py'],
+        'cwd': f'{CC}/telebot',
+        'log': f'{CC}/logs/daytrade_track.log',
+    },
     'chip-update': {
         'name': '更新籌碼資料',
         'label': 'com.steven.chip-tracker-updater',

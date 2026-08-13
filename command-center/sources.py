@@ -57,7 +57,19 @@ def _wrap(fn):
 @_wrap
 def daytrade():
     p = '/tmp/daytrade_candidates.json'
-    return _read_json(p), _mtime(p)
+    d = _read_json(p)
+    track_path = f'{CC}/telebot/data/daytrade_track.json'
+    if os.path.exists(track_path):
+        with open(track_path, encoding='utf-8') as f:
+            track = json.load(f)
+        today = date.today().strftime('%Y-%m-%d')
+        entry = track.get(today)
+        if entry and entry.get('checked'):
+            d = {'candidates': d, 'track': {
+                'date': today, 'checked_at': entry.get('checked_at'),
+                'results': entry.get('track_results', []),
+            }}
+    return d, _mtime(p)
 
 
 @_wrap
