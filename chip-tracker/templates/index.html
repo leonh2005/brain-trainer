@@ -89,7 +89,7 @@ function stockHtml(s) {
   const streakF = s.foreign_streak >= 2 ? `<span class="badge ${s.foreign_streak >= 3 ? "hot" : ""}">連${s.foreign_streak}買</span>` : "";
   const streakT = s.trust_streak >= 2 ? `<span class="badge ${s.trust_streak >= 3 ? "hot" : ""}">連${s.trust_streak}買</span>` : "";
   const streakP = Math.abs(s.price_streak || 0) >= 2
-    ? `<span class="badge price-${s.price_streak > 0 ? "up" : "down"} ${Math.abs(s.price_streak) >= 3 ? "hot" : ""}">連${Math.abs(s.price_streak)}${s.price_streak > 0 ? "漲" : "跌"}</span>`
+    ? `<span class="badge price-${s.price_streak > 0 ? "up" : "down"} ${Math.abs(s.price_streak) >= 3 ? "hot" : ""}">連${Math.abs(s.price_streak)}${s.price_streak > 0 ? "漲" : "跌"}${s.price_streak_pct == null ? "" : ` ${s.price_streak_pct > 0 ? "+" : ""}${s.price_streak_pct}%`}</span>`
     : "";
   const md = d => d ? d.slice(5).replace("-", "/") : "";
   const big400delta = (s.big400_pct != null && s.big400_prev != null)
@@ -198,9 +198,16 @@ async function load() {
 }
 
 async function removeStock(code) {
-  if (!confirm(`移除 ${code}？（歷史資料保留）`)) return;
-  await fetch("/api/stocks/remove", { method: "POST", headers: {"Content-Type": "application/json"},
-    body: JSON.stringify({ code }) });
+  if (!confirm(`移除 ${code}？（庫存會自動改列觀察，觀察則直接移除；歷史資料保留）`)) return;
+  const msg = document.getElementById("msg");
+  try {
+    const r = await fetch("/api/stocks/remove", { method: "POST", headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({ code }) });
+    const res = await r.json();
+    if (msg) msg.textContent = res.moved_to_watch ? `${code} 已從庫存改列觀察` : `${code} 已移除`;
+  } catch (e) {
+    if (msg) msg.textContent = "移除失敗：" + e;
+  }
   load();
 }
 
