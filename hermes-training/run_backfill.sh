@@ -11,7 +11,7 @@ PROJECT_DIR="$HOME/CCProject"
 WORK_DIR="$PROJECT_DIR/hermes-training"
 TRANSCRIPT_DIR="$HOME/.claude/projects/-Users-steven-CCProject"
 LOG="$PROJECT_DIR/logs/hermes_backfill.log"
-CUTOFF_HOUR=7
+CUTOFF_HOUR="${HERMES_BACKFILL_CUTOFF_HOUR:-7}"
 TODAY="$(date '+%Y-%m-%d')"
 
 log() { echo "[$(date '+%Y-%m-%d %H:%M:%S')] $1" >> "$LOG"; }
@@ -32,7 +32,7 @@ log "候選日期（含今天）：${DATES[*]}"
 
 for d in "${DATES[@]}"; do
   if past_cutoff; then
-    log "已到早上 07:00，停止補訓"
+    log "已到設定的 ${CUTOFF_HOUR}:00 截止時間，停止補訓"
     break
   fi
 
