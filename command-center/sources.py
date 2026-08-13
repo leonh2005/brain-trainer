@@ -254,11 +254,13 @@ def disposition():
     window_end = (date.today() + timedelta(days=7)).isoformat()
     tomorrow_iso = (date.today() + timedelta(days=1)).isoformat()
 
+    tomorrow_exit = [v for v in current.values() if v['end'] == tomorrow_iso]
+    # 明日已出關的不重複列在「未來7天仍處置中」，兩份清單互斥
     still_in = sorted(
-        [v for v in current.values() if v['end'] >= today_iso and v['start'] <= window_end],
+        [v for v in current.values()
+         if v['end'] >= today_iso and v['start'] <= window_end and v['end'] != tomorrow_iso],
         key=lambda v: v['end']
     )
-    tomorrow_exit = [v for v in current.values() if v['end'] == tomorrow_iso]
 
     return {'recent': still_in, 'tomorrow_exit': tomorrow_exit}, datetime.now().strftime('%Y-%m-%d %H:%M')
 
