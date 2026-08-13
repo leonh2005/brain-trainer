@@ -176,3 +176,14 @@ def price_streak(values: list) -> int:
             break
         count += 1
     return count if up else -count
+
+
+def price_streak_pct(values: list, streak: int) -> float | None:
+    """連漲跌期間累計漲跌幅（複利），streak 為 price_streak() 的結果。"""
+    n = abs(streak)
+    if n == 0:
+        return None
+    cum = 1.0
+    for v in values[:n]:
+        cum *= 1 + v / 100
+    return round((cum - 1) * 100, 2)

@@ -483,6 +483,26 @@ function renderChips(d){
   });
   return box;
 }
+function appendExpandableRows(box, items, limit, rowFn){
+  items.slice(0, limit).forEach(item => box.appendChild(rowFn(item)));
+  if(items.length <= limit) return;
+  const rest = items.slice(limit);
+  const restBox = el('div');
+  restBox.style.display = 'none';
+  rest.forEach(item => restBox.appendChild(rowFn(item)));
+  box.appendChild(restBox);
+  const toggle = el('div','mini');
+  toggle.style.cssText = 'cursor:pointer;color:var(--fg);text-decoration:underline;margin-top:4px';
+  let open = false;
+  const label = () => open ? '收合 ▴' : `展開其餘 ${rest.length} 檔 ▾`;
+  toggle.textContent = label();
+  toggle.addEventListener('click', () => {
+    open = !open;
+    restBox.style.display = open ? '' : 'none';
+    toggle.textContent = label();
+  });
+  box.appendChild(toggle);
+}
 function renderDisposition(d){
   const exit=(d&&d.tomorrow_exit)||[];
   const recent=(d&&d.recent)||[];
@@ -496,10 +516,10 @@ function renderDisposition(d){
     head.style.cssText='font-weight:600;color:var(--fg);margin-bottom:4px';
     head.textContent=`🔓 明日出關（${exit.length}）`;
     box.appendChild(head);
-    exit.slice(0,8).forEach(x=>{
+    appendExpandableRows(box, exit, 8, x=>{
       const row=el('div','row');
       row.innerHTML=`${tkLink(x.name,x.code)}<span class="mini" style="margin-left:6px">${x.market}</span><span class="spacer"></span><span class="mini">${esc(x.reason||'')}</span>`;
-      box.appendChild(row);
+      return row;
     });
   }
   if(recent.length){
@@ -507,10 +527,10 @@ function renderDisposition(d){
     head2.style.cssText=`font-weight:600;color:var(--fg);margin:${exit.length?10:0}px 0 4px;${exit.length?'padding-top:8px;border-top:1px solid var(--border)':''}`;
     head2.textContent=`⚠️ 未來7天仍處置中（${recent.length}）`;
     box.appendChild(head2);
-    recent.slice(0,8).forEach(r=>{
+    appendExpandableRows(box, recent, 8, r=>{
       const row=el('div','row');
       row.innerHTML=`${tkLink(r.name,r.code)}<span class="mini" style="margin-left:6px">${r.market}</span><span class="spacer"></span><span class="mini">出關${r.end.slice(5)}</span>`;
-      box.appendChild(row);
+      return row;
     });
   }
   return box;

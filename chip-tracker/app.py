@@ -34,6 +34,7 @@ def _stock_payload(conn, s: dict) -> dict:
     inst_row = _latest("total_net")
     price_rows = [d for d in daily if d.get("change_pct") is not None]
     price_streak = db.price_streak([d["change_pct"] for d in price_rows])
+    price_streak_pct = db.price_streak_pct([d["change_pct"] for d in price_rows], price_streak)
     # 連買天數只看已公布法人的交易日，略過今日尚未公布的空列
     inst_days = [d for d in daily if d.get("total_net") is not None]
     foreign_series = [d["foreign_net"] for d in inst_days]
@@ -65,6 +66,7 @@ def _stock_payload(conn, s: dict) -> dict:
         "change_pct": price_row.get("change_pct"),
         "change_point": price_row.get("change_point"),
         "price_streak": price_streak,
+        "price_streak_pct": price_streak_pct,
         "inst_date": inst_row.get("date"),
         "foreign_net": inst_row.get("foreign_net"),
         "trust_net": inst_row.get("trust_net"),
@@ -157,12 +159,17 @@ def api_add_stock():
 
 @app.post("/api/stocks/remove")
 def api_remove_stock():
+    """移除股票：庫存刪除時自動改列觀察（保留追蹤），觀察刪除才是真的移除。"""
     data = request.get_json(force=True)
     code = str(data.get("code", "")).strip().upper()
     conn = db.get_conn()
     try:
+        row = conn.execute("SELECT name, list_type FROM stocks WHERE code = ?", (code,)).fetchone()
+        if row and row["list_type"] == "holding":
+            db.add_stock(conn, code, row["name"], "watch")
+            return jsonify({"ok": True, "moved_to_watch": True})
         db.remove_stock(conn, code)
-        return jsonify({"ok": True})
+        return jsonify({"ok": True, "moved_to_watch": False})
     finally:
         conn.close()
 
