@@ -375,11 +375,9 @@ function initChart() {
     priceSeries = priceChart.addLineSeries({ color: '#58a6ff', lineWidth: 2 });
     vwapSeries = priceChart.addLineSeries({ color: '#e3b341', lineWidth: 1, priceLineVisible: false, lastValueVisible: false });
   } else if (chartPeriod === 'wave') {
-    // 日波圖：柱體=當天每5分鐘桶的high~low振幅，統一顏色（不分紅綠），只看幅度大小
-    priceSeries = priceChart.addCandlestickSeries({
-      upColor: '#79c0ff', downColor: '#79c0ff', borderVisible: false,
-      wickUpColor: '#79c0ff', wickDownColor: '#79c0ff',
-    });
+    // 日波圖：當天逐分成交價連成一條乾淨的連續曲線，不做OHLC濃縮所以沒有K棒，
+    // 也不疊VWAP／三關價／今高今低／均線，單純看價格波形（跟江波圖的傳統定義一致）
+    priceSeries = priceChart.addLineSeries({ color: '#58a6ff', lineWidth: 2 });
     vwapSeries = null;
   } else {
     // 5分K/日K：改蠟燭圖，台股慣例紅漲綠跌；VWAP、三關價、當日均線都是單日盤中概念，跨K棒週期不畫
@@ -698,7 +696,8 @@ function renderDailyMA(ma, data) {
   });
 }
 
-// 主圖表週期切換：1分K 是原本的即時折線＋VWAP／三關價／均線（單日盤中概念，只有這個週期畫）；
+// 主圖表週期切換：1分K 是即時折線＋VWAP／三關價／均線（單日盤中概念，只有這個週期畫）；
+// 日波圖跟1分K同一份資料但畫成乾淨折線（不逐筆 update，固定資料重畫）；
 // 5分K／日K 改蠟燭圖，用固定資料重畫，不逐筆 update（見 appendTick）。
 async function loadIntraday(code) {
   if (chartPeriod === '1d') return loadDailyCandles(code);
@@ -707,11 +706,38 @@ async function loadIntraday(code) {
   return loadOneMinLine(code);
 }
 
+// 1分K／日波圖共用：把當天逐分資料畫成折線＋成交量＋MACD，並更新barsByTime供crosshair tooltip查值
+function renderLineSeries(data) {
+  priceSeries.setData(data);
+
+  volumeSeries.setData(data.map((pt, i) => ({
+    time: pt.time, value: pt.volume,
+    color: i > 0 && pt.value < data[i - 1].value ? 'rgba(63,185,80,0.35)' : 'rgba(248,81,73,0.35)',
+  })));
+
+  const macdData = computeMACD(data, 5, 35, 5);
+  macdSeries.setData(macdData.map(m => ({ time: m.time, value: +m.macd.toFixed(3) })));
+  macdSignalSeries.setData(macdData.map(m => ({ time: m.time, value: +m.signal.toFixed(3) })));
+  macdHistSeries.setData(macdData.map(m => ({
+    time: m.time, value: +m.hist.toFixed(3),
+    color: m.hist >= 0 ? '#f85149' : '#3fb950',
+  })));
+
+  barsByTime = new Map();
+  data.forEach((pt, i) => {
+    barsByTime.set(pt.time, {
+      price: pt.value, volume: pt.volume,
+      macd: macdData[i].macd, signal: macdData[i].signal, hist: macdData[i].hist,
+    });
+  });
+
+  lockChartRange(priceChart);
+}
+
 async function loadOneMinLine(code) {
   try {
     const data = await fetchIntradaySeries(code);
     if (!data.length) return;
-    priceSeries.setData(data);
     lastChartTs = data[data.length - 1].time;
 
     todayHigh = Math.max(...data.map(p => p.value));
@@ -726,32 +752,8 @@ async function loadOneMinLine(code) {
       return { time: pt.time, value: cumVol > 0 ? +(cumPV / cumVol).toFixed(2) : pt.value };
     });
     vwapSeries.setData(vwapData);
-    // 1分K是即時逐筆折線，均線交由5分K/日K顯示，這裡不畫
 
-    // 成交量柱：跟前一分鐘比價漲跌決定紅綠（台股慣例：紅漲綠跌）
-    volumeSeries.setData(data.map((pt, i) => ({
-      time: pt.time, value: pt.volume,
-      color: i > 0 && pt.value < data[i - 1].value ? 'rgba(63,185,80,0.35)' : 'rgba(248,81,73,0.35)',
-    })));
-
-    // MACD(5,35,5)
-    const macdData = computeMACD(data, 5, 35, 5);
-    macdSeries.setData(macdData.map(m => ({ time: m.time, value: +m.macd.toFixed(3) })));
-    macdSignalSeries.setData(macdData.map(m => ({ time: m.time, value: +m.signal.toFixed(3) })));
-    macdHistSeries.setData(macdData.map(m => ({
-      time: m.time, value: +m.hist.toFixed(3),
-      color: m.hist >= 0 ? '#f85149' : '#3fb950',
-    })));
-
-    barsByTime = new Map();
-    data.forEach((pt, i) => {
-      barsByTime.set(pt.time, {
-        price: pt.value, volume: pt.volume,
-        macd: macdData[i].macd, signal: macdData[i].signal, hist: macdData[i].hist,
-      });
-    });
-
-    lockChartRange(priceChart);
+    renderLineSeries(data);
 
     try {
       const r = await fetch(`/api/three_gates?code=${encodeURIComponent(code)}`);
@@ -785,11 +787,10 @@ function aggregateToCandles(points, bucketSeconds) {
   return [...buckets.values()].sort((a, b) => a.time - b.time);
 }
 
-// 蠟燭圖＋成交量＋MACD 共用的重畫邏輯，5分K／日K／日波圖 都走這裡
-function renderCandleSeries(bars, isDaily, drawMA = true) {
+// 蠟燭圖＋成交量＋MACD 共用的重畫邏輯，5分K／日K 都走這裡
+function renderCandleSeries(bars, isDaily) {
   priceSeries.setData(bars.map(b => ({ time: b.time, open: b.open, high: b.high, low: b.low, close: b.close })));
-  if (drawMA) renderMA(bars.map(b => ({ time: b.time, value: b.close })));
-  else [ma5Series, ma10Series, ma20Series].forEach(s => s.setData([])); // 日波圖的body是振幅不是真實價格，均線沒意義
+  renderMA(bars.map(b => ({ time: b.time, value: b.close })));
   volumeSeries.setData(bars.map((b, i) => ({
     time: b.time, value: b.volume,
     color: i > 0 && b.close < bars[i - 1].close ? 'rgba(63,185,80,0.35)' : 'rgba(248,81,73,0.35)', // 台股慣例：紅漲綠跌，併入主圖後調暗
@@ -826,14 +827,13 @@ async function loadFiveMinCandles(code) {
   } catch (e) { /* 沒有歷史資料就先空著 */ }
 }
 
-// 日波圖：跟5分K同一份「今天」的分K資料，但柱體改成open=當日該5分鐘桶的low、close=high，
-// 顏色也統一（不分紅綠），凸顯的是當天盤中每個時段的振幅大小，不是漲跌方向。
+// 日波圖：跟1分K同一份「今天」逐分資料，畫成乾淨的連續曲線（沒有K棒），
+// 不疊VWAP／三關價／今高今低／均線，單純看當天價格波形。
 async function loadWaveChart(code) {
   try {
     const data = await fetchIntradaySeries(code);
     if (!data.length) return;
-    const bars = aggregateToCandles(data, 5 * 60).map(b => ({ ...b, open: b.low, close: b.high }));
-    renderCandleSeries(bars, false, false);
+    renderLineSeries(data);
   } catch (e) { /* 沒有歷史資料就先空著 */ }
 }
 
