@@ -26,11 +26,17 @@ button:hover { border-color: var(--blue); }
 .stock-list { padding: 0 2rem 1rem; display: grid; gap: 0.7rem; }
 .stock { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 0.9rem 1.1rem; display: grid; grid-template-columns: 10rem 1fr 24rem 2rem; gap: 1rem; align-items: center; }
 .stock .head .code { font-family: var(--font-mono); color: var(--text-dim); font-size: 0.75rem; }
+.stock .head .streak-line { margin: 2px 0; }
 .stock .head .name { font-size: 1.05rem; font-weight: 600; }
 .stock .head .price { font-family: var(--font-mono); font-size: 0.9rem; margin-top: 2px; }
-.metrics { display: flex; gap: 1.4rem; flex-wrap: wrap; }
-.metric .k { font-size: 0.68rem; color: var(--text-dim); }
+.metrics { display: flex; flex-direction: column; gap: 0.6rem; }
+.metrics-row { display: grid; gap: 0.6rem 1.4rem; }
+.metrics-row.inst { grid-template-columns: repeat(4, auto); gap: 0.6rem 1.2rem; justify-content: start; }
+.metrics-row.other { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.metric { min-width: 0; }
+.metric .k { font-size: 0.68rem; color: var(--text-dim); white-space: nowrap; }
 .metric .v { font-family: var(--font-mono); font-size: 0.95rem; }
+.metric .hint { font-size: 0.65rem; color: var(--text-dim); font-family: -apple-system, "PingFang TC", sans-serif; }
 .badge { display: inline-block; font-size: 0.65rem; border-radius: 4px; padding: 1px 5px; margin-left: 4px; background: rgba(255,71,87,0.18); color: var(--red); }
 .badge.hot { background: var(--red); color: #fff; }
 .badge.price-up { background: rgba(255,71,87,0.18); color: var(--red); }
@@ -78,8 +84,8 @@ const fmtLots = v => v == null ? "—" : (v > 0 ? "+" : "") + v.toLocaleString()
 const cls = v => v == null ? "flat" : v > 0 ? "up" : v < 0 ? "down" : "flat";
 const fmtPct = v => v == null ? "—" : v.toFixed(2) + "%";
 
-function metricHtml(label, valueHtml) {
-  return `<div class="metric"><div class="k">${label}</div><div class="v">${valueHtml}</div></div>`;
+function metricHtml(label, valueHtml, extraClass = "") {
+  return `<div class="metric ${extraClass}"><div class="k">${label}</div><div class="v">${valueHtml}</div></div>`;
 }
 
 function stockHtml(s) {
@@ -95,27 +101,34 @@ function stockHtml(s) {
   const big400delta = (s.big400_pct != null && s.big400_prev != null)
     ? ` <span class="${cls(s.big400_pct - s.big400_prev)}">(${(s.big400_pct - s.big400_prev) >= 0 ? "▲" : "▼"}${Math.abs(s.big400_pct - s.big400_prev).toFixed(2)}% vs ${md(s.tdcc_prev_date)})</span>` : "";
   const whaleDelta = s.whale_change == null ? "" :
-    ` <span class="${cls(s.whale_change)}">(${s.whale_change > 0 ? "+" : ""}${s.whale_change})</span>`;
+    ` <span class="${cls(s.whale_change)}">(${s.whale_change > 0 ? "+" : ""}${s.whale_change}${s.whale_change_pct == null ? "" : ` ${s.whale_change_pct > 0 ? "+" : ""}${s.whale_change_pct}%`})</span>`;
   const marginDelta = s.margin_change == null ? "" :
     ` <span class="${cls(s.margin_change)}">(${s.margin_change > 0 ? "+" : ""}${s.margin_change.toLocaleString()})</span>`;
 
   return `<div class="stock" data-code="${s.code}">
     <div class="head">
       <div class="code">${s.code} · ${esc(s.date)}</div>
-      <div class="name"><a href="https://tw.stock.yahoo.com/quote/${esc(s.code)}.TW" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;">${esc(s.name)}</a>${streakP}</div>
+      ${streakP ? `<div class="streak-line">${streakP}</div>` : ""}
+      <div class="name"><a href="https://tw.stock.yahoo.com/quote/${esc(s.code)}.TW" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;">${esc(s.name)}</a></div>
       <div class="price" id="price-${s.code}">${price} ${chg}</div>
     </div>
     <div class="metrics">
-      ${metricHtml(`外資(張) ${esc(md(s.inst_date))}`, `<span class="${cls(s.foreign_net)}">${fmtLots(s.foreign_net)}</span>${streakF}`)}
-      ${metricHtml("投信(張)", `<span class="${cls(s.trust_net)}">${fmtLots(s.trust_net)}</span>${streakT}`)}
-      ${metricHtml("自營(張)", `<span class="${cls(s.dealer_net)}">${fmtLots(s.dealer_net)}</span>`)}
-      ${metricHtml("合計(張)", `<span class="${cls(s.total_net)}">${fmtLots(s.total_net)}</span>`)}
-      ${metricHtml("融資餘額(張)", `${s.margin_balance == null ? "—" : s.margin_balance.toLocaleString()}${marginDelta}`)}
-      ${metricHtml(`外資持股 ${esc(md(s.foreign_ratio_date))}`, `${fmtPct(s.foreign_ratio)}${s.foreign_ratio_change == null ? "" : ` <span class="${cls(s.foreign_ratio_change)}">(${s.foreign_ratio_change >= 0 ? "▲" : "▼"}${Math.abs(s.foreign_ratio_change).toFixed(2)}% vs ${md(s.foreign_ratio_prev_date)})</span>`}`)}
-      ${metricHtml(`大戶400張+ 週${esc(md(s.tdcc_date))}`, `${fmtPct(s.big400_pct)}${big400delta}`)}
-      ${metricHtml(`千張大戶 週${esc(md(s.tdcc_date))}`, `${s.whale_holders == null ? "—" : s.whale_holders.toLocaleString() + "人"}${whaleDelta}`)}
-      ${metricHtml(`散戶 週${esc(md(s.tdcc_date))}`, `${fmtPct(s.retail_pct)}${(s.retail_pct != null && s.retail_prev != null)
-        ? ` <span class="${cls(s.retail_pct - s.retail_prev)}">(${(s.retail_pct - s.retail_prev) >= 0 ? "▲" : "▼"}${Math.abs(s.retail_pct - s.retail_prev).toFixed(2)}% vs ${md(s.tdcc_prev_date)})</span>` : ""}`)}
+      <div class="metrics-row inst">
+        ${metricHtml(`外資(張) ${esc(md(s.inst_date))}`, `<span class="${cls(s.foreign_net)}">${fmtLots(s.foreign_net)}</span>${streakF}`)}
+        ${metricHtml("投信(張)", `<span class="${cls(s.trust_net)}">${fmtLots(s.trust_net)}</span>${streakT}`)}
+        ${metricHtml("自營(張)", `<span class="${cls(s.dealer_net)}">${fmtLots(s.dealer_net)}</span>`)}
+        ${metricHtml("合計(張)", `<span class="${cls(s.total_net)}">${fmtLots(s.total_net)}</span>`)}
+      </div>
+      <div class="metrics-row other">
+        ${metricHtml("融資餘額(張)", `${s.margin_balance == null ? "—" : s.margin_balance.toLocaleString()}${marginDelta}`)}
+        ${metricHtml(`外資持股 ${esc(md(s.foreign_ratio_date))}`, `${fmtPct(s.foreign_ratio)}${s.foreign_ratio_change == null
+          ? (s.foreign_ratio != null ? ` <span class="hint">尚無比較基準，明日起可比較</span>` : "")
+          : ` <span class="${cls(s.foreign_ratio_change)}">(${s.foreign_ratio_change >= 0 ? "▲" : "▼"}${Math.abs(s.foreign_ratio_change).toFixed(2)}% vs ${md(s.foreign_ratio_prev_date)})</span>`}`)}
+        ${metricHtml(`大戶400張+ 週${esc(md(s.tdcc_date))}`, `${fmtPct(s.big400_pct)}${big400delta}`)}
+        ${metricHtml(`千張大戶 週${esc(md(s.tdcc_date))}`, `${s.whale_holders == null ? "—" : s.whale_holders.toLocaleString() + "人"}${whaleDelta}`)}
+        ${metricHtml(`散戶 週${esc(md(s.tdcc_date))}`, `${fmtPct(s.retail_pct)}${(s.retail_pct != null && s.retail_prev != null)
+          ? ` <span class="${cls(s.retail_pct - s.retail_prev)}">(${(s.retail_pct - s.retail_prev) >= 0 ? "▲" : "▼"}${Math.abs(s.retail_pct - s.retail_prev).toFixed(2)}% vs ${md(s.tdcc_prev_date)})</span>` : ""}`)}
+      </div>
     </div>
     <div class="spark-group">
       <div class="spark-wrap">

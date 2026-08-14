@@ -55,8 +55,11 @@ def _stock_payload(conn, s: dict) -> dict:
     w_latest = weekly[0] if weekly else {}
     w_prev = weekly[1] if len(weekly) >= 2 else {}
     whale_change = None
+    whale_change_pct = None
     if w_latest.get("whale_holders") is not None and w_prev.get("whale_holders") is not None:
         whale_change = w_latest["whale_holders"] - w_prev["whale_holders"]
+        if w_prev["whale_holders"]:
+            whale_change_pct = round(whale_change / w_prev["whale_holders"] * 100, 2)
 
     return {
         "code": code,
@@ -84,6 +87,7 @@ def _stock_payload(conn, s: dict) -> dict:
         "big400_prev": w_prev.get("big400_pct"),
         "whale_holders": w_latest.get("whale_holders"),
         "whale_change": whale_change,
+        "whale_change_pct": whale_change_pct,
         "retail_pct": w_latest.get("retail_pct"),
         "retail_prev": w_prev.get("retail_pct"),
         "tdcc_date": w_latest.get("date"),
