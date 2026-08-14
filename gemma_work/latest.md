@@ -1,22 +1,25 @@
-# Claude Handoff 20260814_1926
-> 自動生成於 2026-08-14 19:26
+# Claude Handoff 20260814_2349
+> 自動生成於 2026-08-14 23:49
 
 ## 未提交的檔案異動
 ```
 ? TradingAgents
  M chip-tracker/chip.db
+ M command-center/templates/index.html
  m daily-stock-analysis
+ M gemma_work/latest.md
+ M rabbit-care/rabbit.db
  M scripts/auto_investigate_state.json
  m stock-screener-ai
 ```
 
 ## 近期 Commits
 ```
+bce76f33 chore: 自動同步 2026-08-14 19:40
 d52e2ecc chore: 自動同步 2026-08-14 14:40
 89cef9c2 chore: 自動同步 2026-08-14 09:40
 535df595 chore: 自動同步 2026-08-14 04:40
 e66c40e3 feat: chip-tracker 連漲跌天數+庫存自動轉觀察，command-center 處置股卡片修正
-c634b418 chore: 每晚同步 2026-08-13 23:50
 ```
 
 ## 給 Hermes 的備註
