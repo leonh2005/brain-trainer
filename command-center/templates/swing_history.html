@@ -61,7 +61,7 @@
             {% for r in d.results %}
             <div class="stock-row">
               <span>{{ r.code }} {{ r.name }}</span>
-              <span class="{{ 'pos-up' if r.up else 'pos-down' }}">{{ r.baseline }} → {{ r.check_price }}（{{ '✅ 漲' if r.up else '❌ 跌' }}）</span>
+              <span class="{{ 'pos-up' if r.up else 'pos-down' }}">{{ r.baseline }} → {{ r.check_price }}（{{ '✅ 漲' if r.up else '❌ 跌' }}）{% if r.net_pnl is not none %} 淨損益 {{ '%+d'|format(r.net_pnl) }}{% endif %}</span>
             </div>
             {% endfor %}
           {% endif %}
