@@ -113,6 +113,8 @@ a.tk{text-decoration:none; cursor:pointer; transition:color .15s}
 a.tk:hover{color:var(--accent)}
 a.tk:hover .code{color:var(--accent-soft)}
 .spacer{flex:1}
+.row-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:0 20px}
+.row-grid .row{border-bottom:1px solid var(--border-soft)}
 .chg{font-family:var(--mono); font-size:12px; font-weight:600}
 .chg.up{color:var(--up)} .chg.down{color:var(--down)}
 .badge{font-size:10px; padding:2px 7px; border-radius:6px; font-weight:600; font-family:var(--mono)}
@@ -301,7 +303,7 @@ const CARDS=[
   {id:'news',    ic:'📰', title:'新聞情緒',   span:'', url:'/api/signals/news', render:renderNews, site:'/svc/5300/'},
   {id:'market',  ic:'🌡️', title:'市場恐慌指標', span:'wide', url:'/api/signals/market-fear', render:renderMarket, site:'/market-dashboard'},
   {id:'chips',   ic:'📊', title:'籌碼追蹤',   span:'wide', url:'/api/signals/chips', render:renderChips, site:'/svc/5850/'},
-  {id:'ma',      ic:'📈', title:'均線警報',   span:'', url:'/api/signals/ma', render:renderMA},
+  {id:'ma',      ic:'📈', title:'均線警報',   span:'full', url:'/api/signals/ma', render:renderMA},
 ];
 const LIFE=[
   {id:'portfolio',ic:'💼', title:'投資組合', span:'wide', url:'/api/portfolio', render:renderPortfolio, site:'/svc/5800/'},
@@ -541,7 +543,7 @@ function renderMA(d){
   const arr=Array.isArray(d)?d:[];
   if(!arr.length)return el('div','empty','無均線觸及紀錄');
   // 依代碼聚合，顯示最近觸及
-  const box=el('div');
+  const box=el('div','row-grid');
   arr.slice(0,7).forEach(m=>{
     const code=m.key.split('_')[0], type=m.key.split('_')[1];
     const above=m.price>=m.ma;
