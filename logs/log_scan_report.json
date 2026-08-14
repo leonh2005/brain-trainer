@@ -1,6 +1,6 @@
 {
-  "scanned_at": "2026-08-14 03:00:23",
-  "since": "2026-08-13 03:00:00",
+  "scanned_at": "2026-08-15 03:00:24",
+  "since": "2026-08-14 03:00:00",
   "results": {
     "市場儀表板": {
       "exists": true,
@@ -16,8 +16,8 @@
     },
     "motion-watcher": {
       "exists": true,
-      "errors": 707,
-      "last_error": "2026-08-14 02:58:00,702 WARNING 讀取影格失敗，重新連線",
+      "errors": 692,
+      "last_error": "2026-08-15 02:55:44,250 WARNING 讀取影格失敗，重新連線",
       "fix": "尚無對應建議，需人工判斷"
     },
     "Cloudflare Tunnel": {
@@ -28,9 +28,9 @@
     },
     "財經新聞分析": {
       "exists": true,
-      "errors": 711,
-      "last_error": "2026-08-13 12:05:32,842 [WARNING] analyzer: Single analyze failed id=2443309: Connection error.",
-      "fix": "尚無對應建議，需人工判斷"
+      "errors": 1,
+      "last_error": "2026-08-14 03:30:04,148 [WARNING] fetcher.ptt_fetcher: PTT index fetch failed: HTTPSConnectionPool(host='www.ptt.cc', port=443): Max retries exceeded with url: /bbs/Stock/index.html (Caused by NewConnectionError(\"HTTPSConnection(host='www.ptt.cc', port=443): Failed to establish a new connection: [Er",
+      "fix": "Port 被佔用或服務未啟動 → 檢查 LaunchAgent 是否正常載入"
     },
     "川普監測": {
       "exists": true,
@@ -40,9 +40,9 @@
     },
     "持倉新聞(台股)": {
       "exists": true,
-      "errors": 13,
-      "last_error": "2026-08-13 08:30:06,580 ERROR Telegram 推播失敗：HTTPSConnectionPool(host='api.telegram.org', port=443): Max retries exceeded with url: /bot8666778924:AAHI-Vi7kW6bLp6Nz3vk-UXJ7QNodcpIil0/sendMessage (Caused by NameResolutionError(\"HTTPSConnection(host='api.telegram.org', port=443): Failed to resolve 'api",
-      "fix": "Port 被佔用或服務未啟動 → 檢查 LaunchAgent 是否正常載入"
+      "errors": 0,
+      "last_error": null,
+      "fix": null
     },
     "持倉新聞(美股)": {
       "exists": true,
@@ -76,9 +76,9 @@
     },
     "當沖推播": {
       "exists": true,
-      "errors": 14,
-      "last_error": "requests.exceptions.ConnectionError: HTTPSConnectionPool(host='api.web.finmindtrade.com', port=443): Max retries exceeded with url: /v2/user_info (Caused by NameResolutionError(\"HTTPSConnection(host='api.web.finmindtrade.com', port=443): Failed to resolve 'api.web.finmindtrade.com' ([Errno 8] nodena",
-      "fix": "Port 被佔用或服務未啟動 → 檢查 LaunchAgent 是否正常載入"
+      "errors": 0,
+      "last_error": null,
+      "fix": null
     },
     "隔日沖推播": {
       "exists": true,
@@ -88,9 +88,9 @@
     },
     "盤中監控": {
       "exists": true,
-      "errors": 5,
-      "last_error": "TimeoutError: Topic: api/v1/auth/token_login, Corr: c1, Client: PYAPI/hj7FsrPYHW/0813/010006/230987/LOGINING, payload: {'msg': '2AYkfMuFDoYK612aUWYY6aErNtb9MrpdmZ7pyoHyerLHnc5258taimH7HmgYqJxoPSuzhhgafQLr6S1rFk4ztkTfcMR4bkYXko9eZkyXgQuCwUpWapaGxbuuEXfYipvAn58Pc74iupyDhnVHzxt6bBNa8L3mWqB3uocgSZzLfUgS",
-      "fix": "網路逾時 → 確認目標服務可達，或增加 timeout 設定"
+      "errors": 1,
+      "last_error": "[backfill] 2408 失敗: Topic: api/v1/data/ticks, Corr: c21, Client: PYAPI/N124711691/0814/010002/855994/220.141.47.113, payload: {'token': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYmYiOjE3ODY2NjkyMDMsImV4cCI6MTc4Njc1NTYwMywic2ltdWxhdGlvbiI6ZmFsc2UsInBlcnNvbl9pZCI6Ik4xMjQ3MTE2OTEiLCJ2ZXJzaW9uIjoiMS4zLj",
+      "fix": "尚無對應建議，需人工判斷"
     },
     "蝦皮軟纖監測": {
       "exists": true,
