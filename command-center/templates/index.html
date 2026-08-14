@@ -362,7 +362,8 @@ function renderSwing(d){
     head.href='/swing-history';
     head.style.cssText='display:block;margin-top:10px;padding-top:8px;border-top:1px solid var(--border);color:var(--text-dim);font-size:11px;text-decoration:underline';
     const hit=track.results.filter(r=>r.up).length;
-    head.textContent=`${track.date} 候選隔天10點命中：${hit}/${track.results.length}（看歷史紀錄）`;
+    const pnlSum=track.results.reduce((s,r)=>s+(r.net_pnl!=null?r.net_pnl:0),0);
+    head.textContent=`${track.date} 候選隔天命中：${hit}/${track.results.length} 淨損益${pnlSum>=0?'+':''}${Math.round(pnlSum)}（看歷史紀錄）`;
     box.appendChild(head);
     track.results.forEach(r=>{
       const row=el('div','row');
@@ -409,7 +410,8 @@ function renderDaytrade(d){
     head.style.cssText='display:block;margin-top:10px;padding-top:8px;border-top:1px solid var(--border);color:var(--text-dim);font-size:11px';
     const hit=track.results.filter(r=>r.up).length;
     const checkedTime=track.checked_at?track.checked_at.slice(11,16):'?';
-    head.textContent=`${track.date} 候選（${checkedTime}比對）上漲：${hit}/${track.results.length}`;
+    const pnlSum=track.results.reduce((s,r)=>s+(r.net_pnl!=null?r.net_pnl:0),0);
+    head.textContent=`${track.date} 候選（${checkedTime}比對）上漲：${hit}/${track.results.length} 淨損益${pnlSum>=0?'+':''}${Math.round(pnlSum)}`;
     box.appendChild(head);
     track.results.forEach(r=>{
       const row=el('div','row');
