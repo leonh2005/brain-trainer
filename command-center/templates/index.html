@@ -77,7 +77,7 @@ header{display:flex; align-items:center; gap:16px; margin-bottom:22px}
 .sec-label::after{content:''; flex:1; height:1px; background:linear-gradient(90deg,var(--border),transparent)}
 
 /* ── grid ── */
-.grid{display:grid; gap:13px; grid-template-columns:repeat(12,1fr)}
+.grid{display:grid; gap:13px; grid-template-columns:repeat(12,1fr); align-items:start; position:relative}
 .card{
   grid-column:span 4;
   background:var(--card);
@@ -161,6 +161,11 @@ a.tk:hover .code{color:var(--accent-soft)}
 }
 .stock-in input:focus{border-color:var(--accent)}
 .stock-in .btn{border-radius:0 var(--radius-sm) var(--radius-sm) 0}
+.bc-row .bc-input{
+  flex:1; min-width:0; background:var(--bg); border:1px solid var(--border-soft);
+  border-radius:var(--radius-sm); color:var(--fg); padding:8px 10px; font-size:12.5px; outline:none;
+}
+.bc-row .bc-input:focus{border-color:var(--accent)}
 .toast{
   position:fixed; bottom:20px; left:50%; transform:translateX(-50%) translateY(80px);
   background:var(--card); border:1px solid var(--border); border-radius:10px;
@@ -317,6 +322,50 @@ const LIFE=[
   {id:'guru-tracker',ic:'👴', title:'投資大老持股', span:'wide', url:'/api/life/guru-tracker', render:renderGuruTracker, site:'/svc/5910/'},
 ];
 
+/* ── masonry：卡片依內容高度自動找空位往上疊，同列不再被最高卡片撐開 ── */
+function spanCols(card){
+  if(card.classList.contains('full'))return 12;
+  if(card.classList.contains('wide'))return 6;
+  return 4;
+}
+function packMasonry(container){
+  if(!container)return;
+  const cards=[...container.children];
+  if(!cards.length)return;
+  const GAP=13;
+  const containerW=container.clientWidth;
+  if(containerW<=0)return;
+  const colW=(containerW-GAP*11)/12;
+  const colBottom=new Array(12).fill(0);
+  let maxBottom=0;
+  cards.forEach(card=>{
+    const span=Math.min(spanCols(card),12);
+    let bestStart=0,bestY=Infinity;
+    for(let start=0;start<=12-span;start++){
+      const y=Math.max(...colBottom.slice(start,start+span));
+      if(y<bestY){bestY=y;bestStart=start;}
+    }
+    card.style.position='absolute';
+    card.style.gridColumn='auto';
+    card.style.gridRow='auto';
+    card.style.left=(bestStart*(colW+GAP))+'px';
+    card.style.top=bestY+'px';
+    card.style.width=(span*colW+(span-1)*GAP)+'px';
+    const h=card.getBoundingClientRect().height;
+    const newBottom=bestY+h+GAP;
+    for(let i=bestStart;i<bestStart+span;i++)colBottom[i]=newBottom;
+    maxBottom=Math.max(maxBottom,newBottom);
+  });
+  container.style.height=Math.max(0,maxBottom-GAP)+'px';
+}
+const packQueued=new Set();
+function schedulePack(container){
+  if(!container||packQueued.has(container))return;
+  packQueued.add(container);
+  requestAnimationFrame(()=>{packQueued.delete(container);packMasonry(container);});
+}
+window.addEventListener('resize',()=>{['#signals','#life','#tools'].forEach(sel=>schedulePack($(sel)));});
+
 const CARD_POLL_MS=60000;
 const cardLastUpdated={};
 function loadCard(d){
@@ -325,10 +374,11 @@ function loadCard(d){
     cardLastUpdated[d.id]=res.updated;
     $('#ts-'+d.id).textContent=res.updated||'';
     const body=$('#cb-'+d.id);
-    if(!res.ok){body.innerHTML=`<div class="err">${res.error||'讀取失敗'}</div>`;return}
+    if(!res.ok){body.innerHTML=`<div class="err">${res.error||'讀取失敗'}</div>`;schedulePack(body.closest('.grid'));return}
     try{ body.innerHTML=''; body.appendChild(d.render(res.data)); }
     catch(e){ body.innerHTML=`<div class="err">render: ${e.message}</div>`; }
-  }).catch(e=>{$('#cb-'+d.id).innerHTML=`<div class="err">${e.message}</div>`});
+    schedulePack(body.closest('.grid'));
+  }).catch(e=>{const body=$('#cb-'+d.id);body.innerHTML=`<div class="err">${e.message}</div>`;schedulePack(body.closest('.grid'))});
 }
 function mount(container,defs){
   const wrap=$(container);
@@ -338,6 +388,7 @@ function mount(container,defs){
     wrap.appendChild(c);
     loadCard(d);
   });
+  schedulePack(wrap);
   setInterval(()=>defs.forEach(loadCard),CARD_POLL_MS);
 }
 
@@ -766,7 +817,7 @@ const TOOLS=[
   {ic:'🤖', title:'TradingAgents 多Agent分析', desc:'多個 AI Agent 深度分析個股：技術面／基本面／新聞面＋多空辯論', site:'/svc/5500/', how:'在 stock-screener-ai (5500) 的「多Agent深度分析」分頁使用'},
   {ic:'📚', title:'tw-coverage 台股研究報告', desc:'1735 家台股公司研究報告，wikilink 供應鏈搜尋', path:'~/CCProject/tw-coverage/', how:'用 Obsidian 或編輯器開啟資料夾查閱'},
   {ic:'🔎', title:'last30days 輿情研究', desc:'跨社群／市場／網路來源，搜尋近 30 天特定主題討論', site:'/svc/5750/', how:'服務常駐，開網站輸入主題即可查'},
-  {ic:'📡', title:'ai-broadcast 多AI廣播', desc:'同一問題同步發給 ChatGPT／Grok／Gemini／Perplexity 比較回答', site:'/svc/5070/', how:'服務常駐，開網站輸入問題'},
+  {ic:'📡', title:'ai-broadcast 多AI廣播', desc:'同一問題同步發給 ChatGPT／Grok／Gemini／Perplexity 比較回答', site:'/svc/5070/', broadcast:true},
   {ic:'🌿', title:'edible-plants-tw 可食植物辨識', desc:'拍照辨識可食植物並存檔備查', site:'/svc/5810/', how:'服務常駐，開網站上傳照片'},
   {ic:'🧩', title:'plant-quiz 植物辨識測驗', desc:'依已存植物照片出題的辨識小遊戲', site:'/svc/7799/', how:'服務常駐，開網站開始測驗'},
   {ic:'🦁', title:'roar-score 股票咆哮分數', desc:'輸入股票代號評估「咆哮指數」', path:'~/CCProject/roar-score/', how:'需手動啟動：cd 進資料夾 python3 app.py'},
@@ -785,10 +836,26 @@ function mountTools(){
   const wrap=$('#tools');
   TOOLS.forEach(t=>{
     const c=el('div','card fade-in');
-    c.innerHTML=`<div class="card-head"><span class="ic">${t.ic}</span><h3>${t.title}</h3>${t.site?`<a class="site-btn" href="${t.site}" title="開啟服務網站">↗</a>`:''}</div><div class="card-body"><div class="mini" style="line-height:1.7;color:var(--muted)">${t.desc}</div>${t.path?`<div class="mini" style="margin-top:8px">📁 ${t.path}</div>`:''}<div class="mini" style="margin-top:6px;color:var(--accent-soft)">▸ ${t.how}</div>${t.launch?`<button class="btn" data-tool-job="${t.launch}" style="margin-top:11px"><span class="k">▶</span>啟動</button>`:''}</div>`;
+    c.innerHTML=`<div class="card-head"><span class="ic">${t.ic}</span><h3>${t.title}</h3>${t.site?`<a class="site-btn" href="${t.site}" title="開啟服務網站">↗</a>`:''}</div><div class="card-body"><div class="mini" style="line-height:1.7;color:var(--muted)">${t.desc}</div>${t.path?`<div class="mini" style="margin-top:8px">📁 ${t.path}</div>`:''}${t.how?`<div class="mini" style="margin-top:6px;color:var(--accent-soft)">▸ ${t.how}</div>`:''}${t.launch?`<button class="btn" data-tool-job="${t.launch}" style="margin-top:11px"><span class="k">▶</span>啟動</button>`:''}${t.broadcast?`<div class="bc-row" style="display:flex;gap:6px;margin-top:11px"><input class="bc-input" placeholder="輸入問題…同步發給四個 AI"><button class="btn bc-send"><span class="k">📡</span>送出</button></div>`:''}</div>`;
     wrap.appendChild(c);
+    if(t.broadcast){
+      const input=c.querySelector('.bc-input'), btn=c.querySelector('.bc-send');
+      const send=()=>{
+        const topic=input.value.trim();
+        if(!topic)return;
+        btn.disabled=true;
+        fetch('/svc/5070/api/broadcast',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({topic})})
+          .then(r=>r.json().then(j=>({ok:r.ok,j})))
+          .then(({ok,j})=>{ if(!ok)throw new Error(j.error||'送出失敗'); toast(`已廣播給 ${j.opened.length} 個 AI`); input.value=''; })
+          .catch(e=>toast(e.message))
+          .finally(()=>{btn.disabled=false});
+      };
+      btn.addEventListener('click',send);
+      input.addEventListener('keydown',e=>{if(e.key==='Enter')send();});
+    }
   });
   wrap.querySelectorAll('.btn[data-tool-job]').forEach(b=>b.addEventListener('click',()=>runJob(b, b.dataset.toolJob)));
+  schedulePack(wrap);
 }
 mount('#signals',CARDS);
 mount('#life',LIFE);
