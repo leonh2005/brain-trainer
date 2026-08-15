@@ -1,5 +1,5 @@
-# Claude Handoff 20260815_0007
-> 自動生成於 2026-08-15 00:07
+# Claude Handoff 20260815_0819
+> 自動生成於 2026-08-15 08:19
 
 ## 未提交的檔案異動
 ```
@@ -7,16 +7,25 @@
  M command-center/templates/index.html
  m daily-stock-analysis
  M gemma_work/latest.md
+ M guru-tracker/guru_tracker.db
+ M market-dashboard/bb_cache.json
+ M market-dashboard/cape_cache.json
+ M market-dashboard/fg_history.json
+ M market-dashboard/hindenburg_cache.json
+ M market-dashboard/index.html
+ M market-dashboard/margin_cache.json
+ M market-dashboard/sp_state.json
+ M scripts/auto_investigate_state.json
  m stock-screener-ai
 ```
 
 ## 近期 Commits
 ```
+cd78eeeb chore: 自動同步 2026-08-15 05:40
+f69b87fc chore: 自動同步 2026-08-15 00:40
 360cb361 chore: 每晚同步 2026-08-14 23:50
 bce76f33 chore: 自動同步 2026-08-14 19:40
 d52e2ecc chore: 自動同步 2026-08-14 14:40
-89cef9c2 chore: 自動同步 2026-08-14 09:40
-535df595 chore: 自動同步 2026-08-14 04:40
 ```
 
 ## 給 Hermes 的備註
