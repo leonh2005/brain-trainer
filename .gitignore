@@ -4,8 +4,10 @@
 **/.env.production
 !**/.env.example
 .secrets/
-finmind/venv/
-market-analysis/venv/
+# Python 虛擬環境：內含指向本機絕對路徑的 symlink，進 repo 會讓 Pages Jekyll
+# build 在 CI 上找不到檔案而炸掉（2026-08-16 抓到 command-center/venv、roar-score/venv 誤入）
+**/venv/
+**/.venv/
 tw-coverage/
 BettaFish/
 line-claude-bot/
