@@ -128,6 +128,12 @@ def swing_history(request: Request):
     return templates.TemplateResponse(request, 'swing_history.html', sources.swing_history())
 
 
+@app.get('/daytrade-history', response_class=HTMLResponse)
+def daytrade_history(request: Request):
+    """當沖候選歷史命中率複查頁。"""
+    return templates.TemplateResponse(request, 'daytrade_history.html', sources.daytrade_history())
+
+
 @app.get('/market-dashboard')
 def market_dashboard():
     """市場恐慌儀表板靜態報告（每日 07:30 由 market-dashboard 服務產生）。"""

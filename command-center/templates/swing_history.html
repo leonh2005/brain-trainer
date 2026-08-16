@@ -39,13 +39,14 @@
     <div><div class="k">累積命中</div><div class="v">{{ total_hits }} / {{ total_picks }}</div></div>
     <div><div class="k">命中率</div><div class="v">{{ hit_rate if hit_rate is not none else '--' }}{{ '%' if hit_rate is not none else '' }}</div></div>
     <div><div class="k">追蹤天數</div><div class="v">{{ days|length }}</div></div>
+    <div><div class="k">累積淨損益（每檔1張）</div><div class="v {{ 'pos-up' if total_net_pnl >= 0 else 'pos-down' }}">{{ '%+d'|format(total_net_pnl) }}</div></div>
   </div>
 
   {% if not days %}
   <div class="empty">尚無紀錄</div>
   {% else %}
   <table>
-    <thead><tr><th>日期</th><th>候選股</th><th>結果</th></tr></thead>
+    <thead><tr><th>日期</th><th>候選股</th><th>結果</th><th>當日淨損益</th></tr></thead>
     <tbody>
       {% for d in days %}
       <tr>
@@ -61,10 +62,15 @@
             {% for r in d.results %}
             <div class="stock-row">
               <span>{{ r.code }} {{ r.name }}</span>
-              <span class="{{ 'pos-up' if r.up else 'pos-down' }}">{{ r.baseline }} → {{ r.check_price }}（{{ '✅ 漲' if r.up else '❌ 跌' }}）{% if r.net_pnl is not none %} 淨損益 {{ '%+d'|format(r.net_pnl) }}{% endif %}</span>
+              <span class="{{ 'pos-up' if r.up else 'pos-down' }}">{{ r.baseline }} → {{ r.check_price }}（{{ '✅ 漲' if r.up else '❌ 跌' }}）{% if r.net_pnl is defined and r.net_pnl is not none %} 淨損益 {{ '%+d'|format(r.net_pnl) }}{% endif %}</span>
             </div>
             {% endfor %}
           {% endif %}
+        </td>
+        <td>
+          {% if d.checked and d.results %}
+          <span class="{{ 'pos-up' if d.net_pnl >= 0 else 'pos-down' }}">{{ '%+d'|format(d.net_pnl) }}</span>
+          {% else %}<span class="pending">--</span>{% endif %}
         </td>
       </tr>
       {% endfor %}

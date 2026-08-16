@@ -8,10 +8,16 @@ from datetime import datetime
 DB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "chip.db")
 
 _DDL = """
+CREATE TABLE IF NOT EXISTS lists (
+    id         INTEGER PRIMARY KEY AUTOINCREMENT,
+    name       TEXT NOT NULL UNIQUE,
+    sort_order INTEGER NOT NULL DEFAULT 0,
+    created_at TEXT NOT NULL DEFAULT (datetime('now','localtime'))
+);
 CREATE TABLE IF NOT EXISTS stocks (
     code      TEXT PRIMARY KEY,
     name      TEXT NOT NULL DEFAULT '',
-    list_type TEXT NOT NULL CHECK(list_type IN ('holding','watch')),
+    list_id   INTEGER NOT NULL REFERENCES lists(id),
     added_at  TEXT NOT NULL DEFAULT (datetime('now','localtime'))
 );
 CREATE TABLE IF NOT EXISTS daily (
@@ -43,7 +49,7 @@ CREATE TABLE IF NOT EXISTS meta (key TEXT PRIMARY KEY, value TEXT);
 _DAILY_COLS = (
     "foreign_net", "trust_net", "dealer_net", "total_net",
     "margin_balance", "short_balance", "close", "change_pct", "change_point",
-    "foreign_ratio",
+    "foreign_ratio", "open", "high", "low", "volume",
 )
 
 
@@ -63,22 +69,91 @@ def get_conn(db_path: str = None) -> sqlite3.Connection:
         conn.execute("ALTER TABLE daily ADD COLUMN change_point REAL")
     except sqlite3.OperationalError:
         pass  # duplicate column
+    for col, typ in (("open", "REAL"), ("high", "REAL"), ("low", "REAL"), ("volume", "INTEGER")):
+        try:
+            conn.execute(f"ALTER TABLE daily ADD COLUMN {col} {typ}")
+        except sqlite3.OperationalError:
+            pass  # duplicate column
+    _migrate_lists(conn)
     return conn
+
+
+def _migrate_lists(conn) -> None:
+    """自訂多清單遷移：seed 預設清單 + 把舊版 stocks.list_type 換成 list_id（一次性，idempotent）。
+
+    新建 DB 的 stocks 表由 _DDL 直接建成 list_id 版本，這裡只處理帶著舊
+    list_type CHECK 欄位的既有 DB。
+    """
+    if conn.execute("SELECT COUNT(*) AS n FROM lists").fetchone()["n"] == 0:
+        conn.execute("INSERT INTO lists (name, sort_order) VALUES ('庫存', 0), ('觀察', 1)")
+        conn.commit()
+
+    cols = [r[1] for r in conn.execute("PRAGMA table_info(stocks)").fetchall()]
+    if "list_type" not in cols:
+        return  # 新 schema 或已遷移過
+
+    holding_id = conn.execute("SELECT id FROM lists WHERE name='庫存'").fetchone()["id"]
+    watch_id = conn.execute("SELECT id FROM lists WHERE name='觀察'").fetchone()["id"]
+    conn.execute("ALTER TABLE stocks RENAME TO stocks_old")
+    conn.execute("""
+        CREATE TABLE stocks (
+            code      TEXT PRIMARY KEY,
+            name      TEXT NOT NULL DEFAULT '',
+            list_id   INTEGER NOT NULL REFERENCES lists(id),
+            added_at  TEXT NOT NULL DEFAULT (datetime('now','localtime'))
+        )
+    """)
+    conn.execute(
+        "INSERT INTO stocks (code, name, list_id, added_at) "
+        "SELECT code, name, CASE list_type WHEN 'holding' THEN ? ELSE ? END, added_at FROM stocks_old",
+        (holding_id, watch_id),
+    )
+    conn.execute("DROP TABLE stocks_old")
+    conn.commit()
 
 
 def list_stocks(conn) -> list:
     rows = conn.execute(
-        "SELECT code, name, list_type FROM stocks ORDER BY added_at"
+        "SELECT code, name, list_id FROM stocks ORDER BY added_at"
     ).fetchall()
     return [dict(r) for r in rows]
 
 
-def add_stock(conn, code: str, name: str, list_type: str) -> None:
+def add_stock(conn, code: str, name: str, list_id: int) -> None:
     conn.execute(
-        "INSERT INTO stocks (code, name, list_type) VALUES (?, ?, ?) "
-        "ON CONFLICT(code) DO UPDATE SET name=excluded.name, list_type=excluded.list_type",
-        (code, name, list_type),
+        "INSERT INTO stocks (code, name, list_id) VALUES (?, ?, ?) "
+        "ON CONFLICT(code) DO UPDATE SET name=excluded.name, list_id=excluded.list_id",
+        (code, name, list_id),
     )
+    conn.commit()
+
+
+def list_lists(conn) -> list:
+    rows = conn.execute(
+        "SELECT id, name, sort_order FROM lists ORDER BY sort_order, id"
+    ).fetchall()
+    return [dict(r) for r in rows]
+
+
+def add_list(conn, name: str) -> int:
+    try:
+        cur = conn.execute("INSERT INTO lists (name) VALUES (?)", (name,))
+    except sqlite3.IntegrityError:
+        raise ValueError(f"清單「{name}」已存在")
+    conn.commit()
+    return cur.lastrowid
+
+
+def delete_list(conn, list_id: int) -> None:
+    row = conn.execute("SELECT name FROM lists WHERE id = ?", (list_id,)).fetchone()
+    if not row:
+        raise ValueError("清單不存在")
+    if row["name"] in ("庫存", "觀察"):
+        raise ValueError("預設清單無法刪除")
+    count = conn.execute("SELECT COUNT(*) AS n FROM stocks WHERE list_id = ?", (list_id,)).fetchone()["n"]
+    if count > 0:
+        raise ValueError("清單內尚有股票，請先移除")
+    conn.execute("DELETE FROM lists WHERE id = ?", (list_id,))
     conn.commit()
 
 

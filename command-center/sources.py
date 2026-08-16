@@ -62,11 +62,12 @@ def daytrade():
     if os.path.exists(track_path):
         with open(track_path, encoding='utf-8') as f:
             track = json.load(f)
-        today = date.today().strftime('%Y-%m-%d')
-        entry = track.get(today)
-        if entry and entry.get('checked'):
+        checked_dates = sorted(dt for dt, v in track.items() if v.get('checked'))
+        if checked_dates:
+            latest_date = checked_dates[-1]
+            entry = track[latest_date]
             d = {'candidates': d, 'track': {
-                'date': today, 'checked_at': entry.get('checked_at'),
+                'date': latest_date, 'checked_at': entry.get('checked_at'),
                 'results': entry.get('track_results', []),
             }}
     return d, _mtime(p)
@@ -87,30 +88,43 @@ def swing():
     return d, d.get('date', _mtime(p))
 
 
-def swing_history():
-    """隔日沖候選歷史命中紀錄，供 /swing-history 頁面複查用。回傳依日期新到舊排序的清單 + 整體命中率。"""
-    track_path = f'{CC}/telebot/data/swing_track.json'
+def _track_history(track_path: str):
+    """通用歷史紀錄整理：依日期新到舊排序 + 累積命中率 + 累積損益（供 swing/daytrade history 共用）。"""
     if not os.path.exists(track_path):
-        return {'days': [], 'total_hits': 0, 'total_picks': 0}
+        return {'days': [], 'total_hits': 0, 'total_picks': 0, 'hit_rate': None, 'total_net_pnl': 0}
     with open(track_path, encoding='utf-8') as f:
         track = json.load(f)
 
     days = []
     total_hits = total_picks = 0
+    total_net_pnl = 0
     for dt in sorted(track, reverse=True):
         entry = track[dt]
         results = entry.get('track_results', [])
         hits = sum(1 for r in results if r.get('up'))
+        day_net_pnl = sum(r['net_pnl'] for r in results if r.get('net_pnl') is not None)
         days.append({
             'date': dt, 'checked': entry.get('checked', False),
             'candidates': entry.get('candidates', []), 'results': results,
-            'hits': hits, 'picks': len(results),
+            'hits': hits, 'picks': len(results), 'net_pnl': day_net_pnl,
         })
         if entry.get('checked'):
             total_hits += hits
             total_picks += len(results)
+            total_net_pnl += day_net_pnl
     hit_rate = round(total_hits / total_picks * 100, 1) if total_picks else None
-    return {'days': days, 'total_hits': total_hits, 'total_picks': total_picks, 'hit_rate': hit_rate}
+    return {'days': days, 'total_hits': total_hits, 'total_picks': total_picks,
+            'hit_rate': hit_rate, 'total_net_pnl': total_net_pnl}
+
+
+def swing_history():
+    """隔日沖候選歷史命中紀錄，供 /swing-history 頁面複查用。回傳依日期新到舊排序的清單 + 整體命中率 + 累積損益。"""
+    return _track_history(f'{CC}/telebot/data/swing_track.json')
+
+
+def daytrade_history():
+    """當沖候選歷史命中紀錄，供 /daytrade-history 頁面複查用。回傳依日期新到舊排序的清單 + 整體命中率 + 累積損益。"""
+    return _track_history(f'{CC}/telebot/data/daytrade_track.json')
 
 
 @_wrap
@@ -198,6 +212,15 @@ def _twse_punish_rows(url: str) -> list:
     return (d or {}).get('data', [])
 
 
+def _next_trading_day(iso_date: str) -> str:
+    """處置期間最後一天的隔一個交易日（僅排除週末，未含國定假日）——
+    處置「迄日」當天仍在處置中，實際解除限制（出關）是這一天之後的下一個交易日。"""
+    d = date.fromisoformat(iso_date) + timedelta(days=1)
+    while d.weekday() >= 5:  # 5=六 6=日
+        d += timedelta(days=1)
+    return d.isoformat()
+
+
 @_wrap
 def disposition():
     """未來7天內仍處置中股票 + 明日真出關股（TWSE + TPEx 官方資料，30分鐘快取）
@@ -249,17 +272,19 @@ def disposition():
         prev = current.get(it['code'])
         if prev is None or it['end'] > prev['end']:
             current[it['code']] = it
+    for it in current.values():
+        it['exit_date'] = _next_trading_day(it['end'])  # 出關日＝迄日的下一個交易日，非迄日本身
 
     today_iso = date.today().isoformat()
     window_end = (date.today() + timedelta(days=7)).isoformat()
     tomorrow_iso = (date.today() + timedelta(days=1)).isoformat()
 
-    tomorrow_exit = [v for v in current.values() if v['end'] == tomorrow_iso]
+    tomorrow_exit = [v for v in current.values() if v['exit_date'] == tomorrow_iso]
     # 明日已出關的不重複列在「未來7天仍處置中」，兩份清單互斥
     still_in = sorted(
         [v for v in current.values()
-         if v['end'] >= today_iso and v['start'] <= window_end and v['end'] != tomorrow_iso],
-        key=lambda v: v['end']
+         if v['end'] >= today_iso and v['start'] <= window_end and v['exit_date'] != tomorrow_iso],
+        key=lambda v: v['exit_date']
     )
 
     return {'recent': still_in, 'tomorrow_exit': tomorrow_exit}, datetime.now().strftime('%Y-%m-%d %H:%M')

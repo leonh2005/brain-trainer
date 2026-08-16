@@ -21,14 +21,29 @@ button:hover { border-color: var(--blue); }
 .add-bar { display: flex; gap: 0.5rem; padding: 1rem 2rem; align-items: center; flex-wrap: wrap; }
 .add-bar input { background: var(--card); border: 1px solid var(--border); color: var(--text); border-radius: 6px; padding: 0.45rem 0.7rem; width: 7rem; font-family: var(--font-mono); }
 .add-bar select { background: var(--card); border: 1px solid var(--border); color: var(--text); border-radius: 6px; padding: 0.45rem; }
+.sort-bar { display: flex; gap: 0.5rem; padding: 0 2rem 0.6rem; align-items: center; font-size: 0.8rem; color: var(--text-dim); }
+.sort-bar select { background: var(--card); border: 1px solid var(--border); color: var(--text); border-radius: 6px; padding: 0.3rem 0.5rem; }
 .msg { font-size: 0.8rem; color: var(--amber); }
-.section-label { padding: 1rem 2rem 0.4rem; font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-dim); }
+.section-label { padding: 1rem 2rem 0.4rem; font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-dim); display: flex; align-items: center; gap: 0.5rem; }
+.section-label .del-list { font-size: 0.85rem; background: none; border: none; padding: 0; color: var(--text-dim); cursor: pointer; text-transform: none; letter-spacing: normal; }
+.section-label .del-list:hover { color: var(--red); }
 .stock-list { padding: 0 2rem 1rem; display: grid; gap: 0.7rem; }
 .stock { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 0.9rem 1.1rem; display: grid; grid-template-columns: 10rem 1fr 24rem 2rem; gap: 1rem; align-items: center; }
 .stock .head .code { font-family: var(--font-mono); color: var(--text-dim); font-size: 0.75rem; }
 .stock .head .streak-line { margin: 2px 0; }
+.stock .head .pattern-line { margin: 2px 0; }
+.badge.pattern-up { background: rgba(255,71,87,0.18); color: var(--red); }
+.badge.pattern-down { background: rgba(46,204,113,0.18); color: var(--green); }
+.badge.pattern-flat { background: rgba(59,130,246,0.18); color: var(--blue); }
+.pattern-legend { padding: 0.5rem 2rem 2rem; }
+.legend-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(22rem, 1fr)); gap: 0.5rem 1.5rem; font-size: 0.8rem; color: var(--text-dim); }
+.legend-item { display: flex; align-items: baseline; gap: 0.5rem; }
+.legend-item .badge { flex-shrink: 0; }
 .stock .head .name { font-size: 1.05rem; font-weight: 600; }
 .stock .head .price { font-family: var(--font-mono); font-size: 0.9rem; margin-top: 2px; }
+.stock .head .volume { font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-dim); margin-top: 1px; }
+.stock .head .disposition-line { margin-top: 2px; }
+.badge.disposition { background: rgba(255,71,87,0.25); color: var(--red); font-weight: 600; }
 .metrics { display: flex; flex-direction: column; gap: 0.6rem; }
 .metrics-row { display: grid; gap: 0.6rem 1.4rem; }
 .metrics-row.inst { grid-template-columns: repeat(4, auto); gap: 0.6rem 1.2rem; justify-content: start; }
@@ -64,18 +79,42 @@ button:hover { border-color: var(--blue); }
 
 <div class="add-bar">
   <input id="code" placeholder="代碼或股名 如 2330 / 台積電" maxlength="12" style="width:11rem">
-  <select id="listType">
-    <option value="holding">庫存</option>
-    <option value="watch">觀察</option>
-  </select>
+  <select id="listType"></select>
   <button id="add">＋ 加入</button>
+  <button id="newListBtn" title="新增清單">📋 新增清單</button>
   <span class="msg" id="msg"></span>
 </div>
 
-<div class="section-label">💼 庫存清單</div>
-<div class="stock-list" id="holding"></div>
-<div class="section-label">👀 觀察清單</div>
-<div class="stock-list" id="watch"></div>
+<div class="sort-bar">
+  排序：
+  <select id="sortBy">
+    <option value="default">預設</option>
+    <option value="price-desc">股價高→低</option>
+    <option value="price-asc">股價低→高</option>
+    <option value="volume-desc">成交量高→低</option>
+    <option value="volume-asc">成交量低→高</option>
+  </select>
+</div>
+
+<div id="sections"></div>
+
+<div class="pattern-legend">
+  <div class="section-label">📖 技術型態說明</div>
+  <div class="legend-grid">
+    <div class="legend-item"><span class="badge pattern-up">槌子線</span>下影線長、實體小的 K 棒，出現在跌勢末端常為止跌訊號</div>
+    <div class="legend-item"><span class="badge pattern-up">多頭吞噬</span>紅 K 完全吞沒前一根黑 K，代表買方力道轉強</div>
+    <div class="legend-item"><span class="badge pattern-up">三陽開泰</span>股價站上 5、10、20 日等三條短期均線之上，偏多訊號</div>
+    <div class="legend-item"><span class="badge pattern-up">黃金交叉</span>短期均線由下往上穿越長期均線，偏多訊號</div>
+    <div class="legend-item"><span class="badge pattern-up">多頭排列</span>短、中、長期均線依序在上，趨勢偏多</div>
+    <div class="legend-item"><span class="badge pattern-up">四海遊龍</span>股價站上 5、10、20、60 日等四條短期均線之上，強勢多頭訊號</div>
+    <div class="legend-item"><span class="badge pattern-down">空頭吞噬</span>黑 K 完全吞沒前一根紅 K，代表賣方力道轉強</div>
+    <div class="legend-item"><span class="badge pattern-down">烏雲罩頂</span>紅 K 之後出現開高走低的黑 K，收在前根實體中點以下，轉弱訊號</div>
+    <div class="legend-item"><span class="badge pattern-down">死亡交叉</span>短期均線由上往下穿越長期均線，偏空訊號</div>
+    <div class="legend-item"><span class="badge pattern-down">空頭排列</span>短、中、長期均線依序在下，趨勢偏空</div>
+    <div class="legend-item"><span class="badge pattern-flat">十字星</span>開盤收盤幾乎相同，多空拉鋸、變盤訊號</div>
+    <div class="legend-item"><span class="badge pattern-flat">母子線</span>當根實體完全包在前一根實體內，趨勢動能收斂、待變盤</div>
+  </div>
+</div>
 
 <script>
 const esc = s => s == null ? "" : String(s).replace(/[&<>"']/g,
@@ -83,6 +122,10 @@ const esc = s => s == null ? "" : String(s).replace(/[&<>"']/g,
 const fmtLots = v => v == null ? "—" : (v > 0 ? "+" : "") + v.toLocaleString();
 const cls = v => v == null ? "flat" : v > 0 ? "up" : v < 0 ? "down" : "flat";
 const fmtPct = v => v == null ? "—" : v.toFixed(2) + "%";
+const fmtVolume = v => v == null ? "—" : Math.round(v / 1000).toLocaleString() + " 張";
+const PATTERN_BULLISH = new Set(["槌子線", "多頭吞噬", "三陽開泰", "黃金交叉", "多頭排列", "四海遊龍"]);
+const PATTERN_BEARISH = new Set(["空頭吞噬", "烏雲罩頂", "死亡交叉", "空頭排列"]);
+const patternSentiment = p => PATTERN_BULLISH.has(p) ? "up" : PATTERN_BEARISH.has(p) ? "down" : "flat";
 
 function metricHtml(label, valueHtml, extraClass = "") {
   return `<div class="metric ${extraClass}"><div class="k">${label}</div><div class="v">${valueHtml}</div></div>`;
@@ -104,13 +147,22 @@ function stockHtml(s) {
     ` <span class="${cls(s.whale_change)}">(${s.whale_change > 0 ? "+" : ""}${s.whale_change}${s.whale_change_pct == null ? "" : ` ${s.whale_change_pct > 0 ? "+" : ""}${s.whale_change_pct}%`})</span>`;
   const marginDelta = s.margin_change == null ? "" :
     ` <span class="${cls(s.margin_change)}">(${s.margin_change > 0 ? "+" : ""}${s.margin_change.toLocaleString()})</span>`;
+  const patternLine = (s.patterns || []).length
+    ? `<div class="pattern-line">${s.patterns.map(p => `<span class="badge pattern-${patternSentiment(p)}">${esc(p)}</span>`).join("")}</div>`
+    : "";
+  const dispositionBadge = s.disposition
+    ? `<span class="badge disposition" title="${esc(s.disposition.reason || "")}">處置中 ${md(s.disposition.start)}~${md(s.disposition.end)}</span>`
+    : "";
 
   return `<div class="stock" data-code="${s.code}">
     <div class="head">
       <div class="code">${s.code} · ${esc(s.date)}</div>
       ${streakP ? `<div class="streak-line">${streakP}</div>` : ""}
+      ${patternLine}
       <div class="name"><a href="https://tw.stock.yahoo.com/quote/${esc(s.code)}.TW" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;">${esc(s.name)}</a></div>
       <div class="price" id="price-${s.code}">${price} ${chg}</div>
+      <div class="volume">量 ${fmtVolume(s.volume)}</div>
+      ${dispositionBadge ? `<div class="disposition-line">${dispositionBadge}</div>` : ""}
     </div>
     <div class="metrics">
       <div class="metrics-row inst">
@@ -195,23 +247,62 @@ async function loadQuotes() {
   } catch (e) { /* fail-open */ }
 }
 
+const listIcon = name => name === "庫存" ? "💼" : name === "觀察" ? "👀" : "📋";
+
+document.getElementById("sections").addEventListener("click", (e) => {
+  const btn = e.target.closest(".del-list");
+  if (btn) removeList(Number(btn.dataset.listId), btn.dataset.listName);
+});
+
+document.getElementById("listType").addEventListener("change", (e) => {
+  localStorage.setItem("chipTrackerListType", e.target.value);
+});
+
+const SORTERS = {
+  "price-desc": (a, b) => (b.close ?? -Infinity) - (a.close ?? -Infinity),
+  "price-asc": (a, b) => (a.close ?? Infinity) - (b.close ?? Infinity),
+  "volume-desc": (a, b) => (b.volume ?? -Infinity) - (a.volume ?? -Infinity),
+  "volume-asc": (a, b) => (a.volume ?? Infinity) - (b.volume ?? Infinity),
+};
+
+const sortByEl = document.getElementById("sortBy");
+sortByEl.value = localStorage.getItem("chipTrackerSortBy") || "default";
+sortByEl.addEventListener("change", (e) => {
+  localStorage.setItem("chipTrackerSortBy", e.target.value);
+  load();
+});
+
 let lastUpdate = null;
 async function load() {
   const r = await fetch("/api/data");
   const data = await r.json();
   lastUpdate = data.last_update;
   document.getElementById("updated").textContent = "最後更新：" + (data.last_update || "尚無資料");
-  for (const key of ["holding", "watch"]) {
-    const el = document.getElementById(key);
-    const list = data[key];
-    el.innerHTML = list.length ? list.map(stockHtml).join("") : '<div class="empty">尚未加入任何股票</div>';
-    list.forEach(drawSpark);
-  }
+
+  const listType = document.getElementById("listType");
+  const prevSelected = listType.value || localStorage.getItem("chipTrackerListType");
+  listType.innerHTML = data.lists.map(l => `<option value="${l.id}">${esc(l.name)}</option>`).join("");
+  if (prevSelected && data.lists.some(l => String(l.id) === prevSelected)) listType.value = prevSelected;
+
+  const sorter = SORTERS[sortByEl.value];
+
+  const sections = document.getElementById("sections");
+  sections.innerHTML = data.lists.map(l => {
+    const delBtn = (l.name === "庫存" || l.name === "觀察")
+      ? "" : `<button class="del-list" title="刪除清單" data-list-id="${l.id}" data-list-name="${esc(l.name)}">🗑</button>`;
+    const label = (l.name === "庫存" || l.name === "觀察") ? `${l.name}清單` : l.name;
+    const stocks = sorter ? [...l.stocks].sort(sorter) : l.stocks;
+    return `<div class="section-label">${listIcon(l.name)} ${esc(label)} ${delBtn}</div>
+      <div class="stock-list" id="list-${l.id}">${
+        stocks.length ? stocks.map(stockHtml).join("") : '<div class="empty">尚未加入任何股票</div>'
+      }</div>`;
+  }).join("");
+  data.lists.forEach(l => l.stocks.forEach(drawSpark));
   loadQuotes();
 }
 
 async function removeStock(code) {
-  if (!confirm(`移除 ${code}？（庫存會自動改列觀察，觀察則直接移除；歷史資料保留）`)) return;
+  if (!confirm(`移除 ${code}？（庫存會自動改列觀察，其餘清單則直接移除；歷史資料保留）`)) return;
   const msg = document.getElementById("msg");
   try {
     const r = await fetch("/api/stocks/remove", { method: "POST", headers: {"Content-Type": "application/json"},
@@ -224,19 +315,43 @@ async function removeStock(code) {
   load();
 }
 
+async function removeList(id, name) {
+  if (!confirm(`刪除清單「${name}」？（清單內需先淨空才能刪除）`)) return;
+  const msg = document.getElementById("msg");
+  try {
+    const r = await fetch(`/api/lists/${id}`, { method: "DELETE" });
+    const res = await r.json();
+    msg.textContent = res.ok ? `已刪除清單「${name}」` : res.error;
+  } catch (e) { msg.textContent = "刪除失敗：" + e; }
+  load();
+}
+
 document.getElementById("add").onclick = async () => {
   const code = document.getElementById("code").value.trim();
-  const listType = document.getElementById("listType").value;
+  const listId = Number(document.getElementById("listType").value);
   const msg = document.getElementById("msg");
   if (!code) return;
   msg.textContent = "加入中（回補 45 天籌碼＋12 週集保資料，約 20 秒）…";
   try {
     const r = await fetch("/api/stocks", { method: "POST", headers: {"Content-Type": "application/json"},
-      body: JSON.stringify({ code, list_type: listType }) });
+      body: JSON.stringify({ code, list_id: listId }) });
     const res = await r.json();
     msg.textContent = res.ok ? `已加入 ${res.name}` : res.error;
     if (res.ok) { document.getElementById("code").value = ""; load(); }
   } catch (e) { msg.textContent = "加入失敗：" + e; }
+};
+
+document.getElementById("newListBtn").onclick = async () => {
+  const name = prompt("新清單名稱：");
+  if (!name || !name.trim()) return;
+  const msg = document.getElementById("msg");
+  try {
+    const r = await fetch("/api/lists", { method: "POST", headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({ name: name.trim() }) });
+    const res = await r.json();
+    msg.textContent = res.ok ? `已新增清單「${res.name}」` : res.error;
+    if (res.ok) load();
+  } catch (e) { msg.textContent = "新增清單失敗：" + e; }
 };
 
 document.getElementById("refresh").onclick = async () => {

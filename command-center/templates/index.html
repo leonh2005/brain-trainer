@@ -413,12 +413,13 @@ function renderDaytrade(d){
 
   const track=!Array.isArray(d)&&d&&d.track;
   if(track&&track.results&&track.results.length){
-    const head=el('div','mini');
-    head.style.cssText='display:block;margin-top:10px;padding-top:8px;border-top:1px solid var(--border);color:var(--text-dim);font-size:11px';
+    const head=el('a','mini');
+    head.href='/daytrade-history';
+    head.style.cssText='display:block;margin-top:10px;padding-top:8px;border-top:1px solid var(--border);color:var(--text-dim);font-size:11px;text-decoration:underline';
     const hit=track.results.filter(r=>r.up).length;
     const checkedTime=track.checked_at?track.checked_at.slice(11,16):'?';
     const pnlSum=track.results.reduce((s,r)=>s+(r.net_pnl!=null?r.net_pnl:0),0);
-    head.textContent=`${track.date} 候選（${checkedTime}比對）上漲：${hit}/${track.results.length} 淨損益${pnlSum>=0?'+':''}${Math.round(pnlSum)}`;
+    head.textContent=`${track.date} 候選（${checkedTime}比對）上漲：${hit}/${track.results.length} 淨損益${pnlSum>=0?'+':''}${Math.round(pnlSum)}（看歷史紀錄）`;
     box.appendChild(head);
     track.results.forEach(r=>{
       const row=el('div','row');
@@ -527,7 +528,7 @@ function renderDisposition(d){
     box.appendChild(head);
     appendExpandableRows(box, exit, 8, x=>{
       const row=el('div','row');
-      row.innerHTML=`${tkLink(x.name,x.code)}<span class="mini" style="margin-left:6px">${x.market}</span><span class="spacer"></span><span class="mini">${esc(x.reason||'')}</span>`;
+      row.innerHTML=`${tkLink(x.name,x.code)}<span class="mini" style="margin-left:6px">${x.market}</span><span class="spacer"></span><span class="mini">${esc(x.reason||'')}</span><span class="mini" style="margin-left:8px">${x.exit_date.slice(5)}出關</span>`;
       return row;
     });
   }
@@ -538,7 +539,7 @@ function renderDisposition(d){
     box.appendChild(head2);
     appendExpandableRows(box, recent, 8, r=>{
       const row=el('div','row');
-      row.innerHTML=`${tkLink(r.name,r.code)}<span class="mini" style="margin-left:6px">${r.market}</span><span class="spacer"></span><span class="mini">出關${r.end.slice(5)}</span>`;
+      row.innerHTML=`${tkLink(r.name,r.code)}<span class="mini" style="margin-left:6px">${r.market}</span><span class="spacer"></span><span class="mini">${r.start.slice(5)}~${r.end.slice(5)}處置，${r.exit_date.slice(5)}出關</span>`;
       return row;
     });
   }
