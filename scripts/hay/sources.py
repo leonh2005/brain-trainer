@@ -32,6 +32,21 @@ def _is_soft(*texts: str) -> bool:
     return False
 
 
+_OTHER_FIBER_KEYWORDS = ("粗纖", "中纖", "果園")
+
+
+def _piggy_variant_is_soft(title: str, variant: str) -> bool:
+    """豬寶窩窩單一商品頁常把粗纖/中纖/軟纖/果園草放在同一頁的不同 variant，
+    title 會列出全部纖度、不能拿來判斷單一 variant，要看 variant 本身。
+    variant 沒標纖度（例如舊款只分裝規格）時才退回看 title。
+    """
+    if any(k in variant for k in _OTHER_FIBER_KEYWORDS):
+        return False
+    if _is_soft(variant):
+        return True
+    return _is_soft(title)
+
+
 def _get(url: str) -> str:
     return requests.get(url, headers=HEADERS, timeout=TIMEOUT).text
 
@@ -60,7 +75,7 @@ def parse_piggybabies(page: str, url: str = PIGGY_URL) -> list[dict]:
             "in_stock": bool(v.get("is_in_stock")),
             "url": url,
         }
-        if _is_soft(item["title"], item["variant"]):
+        if _piggy_variant_is_soft(item["title"], item["variant"]):
             items.append(item)
     return items
 

@@ -20,6 +20,27 @@ def test_piggybabies_all_soft_kept():
     assert len(items) == 2
 
 
+def test_piggybabies_mixed_fiber_page_keeps_only_soft_variant():
+    # 現況：豬寶窩窩把粗纖/中纖/軟纖/果園草放同一頁，title 列出全部纖度，
+    # 不能靠 title 判斷，要看 variant 本身標的纖度
+    import html as htmllib
+    import json
+
+    variations = [
+        {"attributes": {"attribute_規格": "粗纖梗多提摩西一割 / 10 oz"}, "display_price": 145, "is_in_stock": True},
+        {"attributes": {"attribute_規格": "中纖梗葉各半提摩西二割 / 10 oz"}, "display_price": 145, "is_in_stock": True},
+        {"attributes": {"attribute_規格": "軟纖葉多提摩西二割 / 10 oz"}, "display_price": 145, "is_in_stock": True},
+        {"attributes": {"attribute_規格": "頂級果園草 / 10 oz"}, "display_price": 145, "is_in_stock": True},
+    ]
+    page = (
+        '<html><head><title>【豬寶窩窩】兔子洞 Rabbit hole hay－提摩西草（粗纖、中纖、軟纖）、果園草</title></head>'
+        f'<body data-product_variations="{htmllib.escape(json.dumps(variations))}"></body></html>'
+    )
+    items = sources.parse_piggybabies(page, "https://example.com")
+    assert len(items) == 1
+    assert "軟纖" in items[0]["variant"]
+
+
 def test_weyyngbuy_non_soft_excluded():
     # Rabbit02 是「中纖」→ 應被軟纖過濾器排除
     items = sources.parse_weyyngbuy_product(
