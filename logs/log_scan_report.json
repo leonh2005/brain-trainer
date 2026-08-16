@@ -1,6 +1,6 @@
 {
-  "scanned_at": "2026-08-16 03:00:24",
-  "since": "2026-08-15 03:00:00",
+  "scanned_at": "2026-08-17 03:00:25",
+  "since": "2026-08-16 03:00:00",
   "results": {
     "市場儀表板": {
       "exists": true,
@@ -16,8 +16,8 @@
     },
     "motion-watcher": {
       "exists": true,
-      "errors": 482,
-      "last_error": "2026-08-16 02:58:53,240 WARNING 讀取影格失敗，重新連線",
+      "errors": 669,
+      "last_error": "2026-08-17 02:56:21,549 WARNING 讀取影格失敗，重新連線",
       "fix": "尚無對應建議，需人工判斷"
     },
     "Cloudflare Tunnel": {
@@ -28,9 +28,9 @@
     },
     "財經新聞分析": {
       "exists": true,
-      "errors": 1,
-      "last_error": "2026-08-15 03:30:04,962 [WARNING] fetcher.ptt_fetcher: PTT index fetch failed: HTTPSConnectionPool(host='www.ptt.cc', port=443): Max retries exceeded with url: /bbs/Stock/index.html (Caused by NewConnectionError(\"HTTPSConnection(host='www.ptt.cc', port=443): Failed to establish a new connection: [Er",
-      "fix": "Port 被佔用或服務未啟動 → 檢查 LaunchAgent 是否正常載入"
+      "errors": 3,
+      "last_error": "2026-08-16 12:17:08,948 [WARNING] fetcher.reddit_fetcher: Reddit fetch failed for r/wallstreetbets: 500 Server Error: Internal Server Error for url: https://www.reddit.com/r/wallstreetbets/hot/.rss",
+      "fix": "尚無對應建議，需人工判斷"
     },
     "川普監測": {
       "exists": true,
