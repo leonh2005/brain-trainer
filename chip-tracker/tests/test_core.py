@@ -34,12 +34,38 @@ def test_upsert_daily_idempotent_and_coalesce():
 
 def test_add_remove_stock():
     conn = _mem_conn()
-    db.add_stock(conn, "2330", "台積電", "holding")
-    db.add_stock(conn, "2330", "台積電", "watch")  # 重複加入 = 改清單
+    lists = {l["name"]: l["id"] for l in db.list_lists(conn)}
+    db.add_stock(conn, "2330", "台積電", lists["庫存"])
+    db.add_stock(conn, "2330", "台積電", lists["觀察"])  # 重複加入 = 改清單
     stocks = db.list_stocks(conn)
-    assert len(stocks) == 1 and stocks[0]["list_type"] == "watch"
+    assert len(stocks) == 1 and stocks[0]["list_id"] == lists["觀察"]
     db.remove_stock(conn, "2330")
     assert db.list_stocks(conn) == []
+
+
+def test_lists():
+    import pytest
+    conn = _mem_conn()
+    names = {l["name"] for l in db.list_lists(conn)}
+    assert names == {"庫存", "觀察"}
+
+    new_id = db.add_list(conn, "電子股")
+    assert {l["name"] for l in db.list_lists(conn)} == {"庫存", "觀察", "電子股"}
+
+    with pytest.raises(ValueError):
+        db.add_list(conn, "電子股")  # 重複命名
+
+    holding_id = next(l["id"] for l in db.list_lists(conn) if l["name"] == "庫存")
+    with pytest.raises(ValueError):
+        db.delete_list(conn, holding_id)  # 預設清單不可刪
+
+    db.add_stock(conn, "2330", "台積電", new_id)
+    with pytest.raises(ValueError):
+        db.delete_list(conn, new_id)  # 清單內尚有股票
+
+    db.remove_stock(conn, "2330")
+    db.delete_list(conn, new_id)  # 淨空後可刪
+    assert {l["name"] for l in db.list_lists(conn)} == {"庫存", "觀察"}
 
 
 def test_aggregate_institutional():

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>隔日沖候選命中歷史</title>
+<title>當沖候選命中歷史</title>
 <style>
   * { box-sizing: border-box; }
   body {
@@ -32,8 +32,8 @@
 </head>
 <body>
 <div class="wrap">
-  <h1>隔日沖候選命中歷史</h1>
-  <div class="sub">telebot/screener.py 每天選出的候選股，隔天 10:00 自動比對是否上漲（check_swing_track.py）</div>
+  <h1>當沖候選命中歷史</h1>
+  <div class="sub">finmind/daytrade_alert.py 每天選出的候選股，09:16 vs 10:00 比對是否上漲（check_daytrade_track.py）</div>
 
   <div class="summary">
     <div><div class="k">累積命中</div><div class="v">{{ total_hits }} / {{ total_picks }}</div></div>
@@ -53,7 +53,7 @@
         <td>{{ d.date }}</td>
         <td>
           {% if not d.candidates %}<span class="pending">（無候選）</span>{% endif %}
-          {% for c in d.candidates %}<div>{{ c.code }} {{ c.name }} @ {{ c.close }}</div>{% endfor %}
+          {% for c in d.candidates %}<div>{{ c.code }} {{ c.name }} @ {{ c.baseline if c.baseline is not none else c.close }}</div>{% endfor %}
         </td>
         <td>
           {% if not d.checked %}<span class="pending">尚未比對</span>

@@ -4,11 +4,15 @@
 import re
 import subprocess
 import sys
+import time
 import os
+from datetime import date
 
+import requests
 from flask import Flask, jsonify, render_template, request
 
 import db
+import patterns
 import updater
 
 app = Flask(__name__)
@@ -17,8 +21,36 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 PYTHON = sys.executable
 _CODE_RE = re.compile(r"^\d{4,6}[A-Z]?$")
 
+_disposition_cache = {"at": 0, "data": {}}
+_DISPOSITION_TTL = 600  # 秒；上游 command-center 本身也快取 30 分鐘
 
-def _stock_payload(conn, s: dict) -> dict:
+
+def _current_dispositions() -> dict:
+    """目前處置中股票：{code: {"reason": str, "start": str, "end": str}}。抓不到就回空字典（fail-open，不擋頁面）。"""
+    now = time.time()
+    if now - _disposition_cache["at"] < _DISPOSITION_TTL:
+        return _disposition_cache["data"]
+    data = {}
+    try:
+        r = requests.get("http://localhost:5950/api/signals/disposition", timeout=5)
+        r.raise_for_status()
+        recent = r.json().get("data", {}).get("recent", [])
+        today = date.today().isoformat()
+        for item in recent:
+            if item.get("start", "") <= today <= item.get("end", ""):
+                data[item["code"]] = {
+                    "reason": item.get("reason"),
+                    "start": item.get("start"),
+                    "end": item.get("end"),
+                }
+    except Exception:
+        return _disposition_cache["data"]  # 抓不到就沿用舊快取，總比整頁掛掉好
+    _disposition_cache["at"] = now
+    _disposition_cache["data"] = data
+    return data
+
+
+def _stock_payload(conn, s: dict, dispositions: dict) -> dict:
     code = s["code"]
     daily = db.get_daily_history(conn, code, days=30)   # date DESC
     weekly = db.get_weekly_history(conn, code, weeks=13)  # date DESC
@@ -52,6 +84,13 @@ def _stock_payload(conn, s: dict) -> dict:
     foreign_ratio_change = round(fr[0][1] - fr[1][1], 2) if len(fr) >= 2 else None
     foreign_ratio_prev_date = fr[1][0] if len(fr) >= 2 else None
 
+    # 型態偵測需要足夠的交易日歷史（四海遊龍需 MA60，至少 61 天），獨立查詢不影響上面既有的 30 天顯示邏輯
+    pattern_rows = list(reversed(db.get_daily_history(conn, code, days=65)))  # 依日期舊到新
+    stock_patterns = patterns.detect_candlestick(pattern_rows)
+    stock_patterns += patterns.detect_ma_patterns(
+        [d["close"] for d in pattern_rows if d.get("close") is not None]
+    )
+
     w_latest = weekly[0] if weekly else {}
     w_prev = weekly[1] if len(weekly) >= 2 else {}
     whale_change = None
@@ -68,8 +107,11 @@ def _stock_payload(conn, s: dict) -> dict:
         "close": price_row.get("close"),
         "change_pct": price_row.get("change_pct"),
         "change_point": price_row.get("change_point"),
+        "volume": price_row.get("volume"),
+        "disposition": dispositions.get(code),
         "price_streak": price_streak,
         "price_streak_pct": price_streak_pct,
+        "patterns": stock_patterns,
         "inst_date": inst_row.get("date"),
         "foreign_net": inst_row.get("foreign_net"),
         "trust_net": inst_row.get("trust_net"),
@@ -118,10 +160,61 @@ def index():
 def api_data():
     conn = db.get_conn()
     try:
-        payload = {"holding": [], "watch": [], "last_update": db.get_meta(conn, "last_update")}
+        lists = db.list_lists(conn)
+        dispositions = _current_dispositions()
+        stocks_by_list = {}
         for s in db.list_stocks(conn):
-            payload[s["list_type"]].append(_stock_payload(conn, s))
+            stocks_by_list.setdefault(s["list_id"], []).append(_stock_payload(conn, s, dispositions))
+        list_payloads = [
+            {"id": l["id"], "name": l["name"], "stocks": stocks_by_list.get(l["id"], [])}
+            for l in lists
+        ]
+        by_name = {l["name"]: l["stocks"] for l in list_payloads}
+        payload = {
+            "lists": list_payloads,
+            # command-center 的籌碼卡片直接吃 holding/watch，保留相容
+            "holding": by_name.get("庫存", []),
+            "watch": by_name.get("觀察", []),
+            "last_update": db.get_meta(conn, "last_update"),
+        }
         return jsonify(payload)
+    finally:
+        conn.close()
+
+
+@app.get("/api/lists")
+def api_get_lists():
+    conn = db.get_conn()
+    try:
+        return jsonify(db.list_lists(conn))
+    finally:
+        conn.close()
+
+
+@app.post("/api/lists")
+def api_add_list():
+    data = request.get_json(force=True)
+    name = str(data.get("name", "")).strip()
+    if not name:
+        return jsonify({"ok": False, "error": "請輸入清單名稱"}), 400
+    conn = db.get_conn()
+    try:
+        list_id = db.add_list(conn, name)
+        return jsonify({"ok": True, "id": list_id, "name": name})
+    except ValueError as e:
+        return jsonify({"ok": False, "error": str(e)}), 400
+    finally:
+        conn.close()
+
+
+@app.delete("/api/lists/<int:list_id>")
+def api_delete_list(list_id):
+    conn = db.get_conn()
+    try:
+        db.delete_list(conn, list_id)
+        return jsonify({"ok": True})
+    except ValueError as e:
+        return jsonify({"ok": False, "error": str(e)}), 400
     finally:
         conn.close()
 
@@ -130,9 +223,15 @@ def api_data():
 def api_add_stock():
     data = request.get_json(force=True)
     query = str(data.get("code", "")).strip()
-    list_type = data.get("list_type", "watch")
-    if not query or list_type not in ("holding", "watch"):
-        return jsonify({"ok": False, "error": "請輸入代碼或股名"}), 400
+    list_id = data.get("list_id")
+
+    conn = db.get_conn()
+    try:
+        valid_ids = {l["id"] for l in db.list_lists(conn)}
+    finally:
+        conn.close()
+    if not query or list_id not in valid_ids:
+        return jsonify({"ok": False, "error": "請輸入代碼或股名，並選擇清單"}), 400
     try:
         code, name = updater.resolve_query(query)
     except ValueError as e:
@@ -146,7 +245,7 @@ def api_add_stock():
 
     conn = db.get_conn()
     try:
-        db.add_stock(conn, code, name, list_type)
+        db.add_stock(conn, code, name, list_id)
         updater.backfill(conn, code)  # 同步回補 45 天，約 3-5 秒
         try:
             updater.backfill_tdcc(conn, code)  # 近 12 週股權分散，約 10-20 秒
@@ -163,15 +262,20 @@ def api_add_stock():
 
 @app.post("/api/stocks/remove")
 def api_remove_stock():
-    """移除股票：庫存刪除時自動改列觀察（保留追蹤），觀察刪除才是真的移除。"""
+    """移除股票：庫存刪除時自動改列觀察（保留追蹤），其餘清單移除才是真的移除。"""
     data = request.get_json(force=True)
     code = str(data.get("code", "")).strip().upper()
     conn = db.get_conn()
     try:
-        row = conn.execute("SELECT name, list_type FROM stocks WHERE code = ?", (code,)).fetchone()
-        if row and row["list_type"] == "holding":
-            db.add_stock(conn, code, row["name"], "watch")
-            return jsonify({"ok": True, "moved_to_watch": True})
+        row = conn.execute(
+            "SELECT s.name AS name, l.name AS list_name FROM stocks s "
+            "JOIN lists l ON l.id = s.list_id WHERE s.code = ?", (code,)
+        ).fetchone()
+        if row and row["list_name"] == "庫存":
+            watch = conn.execute("SELECT id FROM lists WHERE name = '觀察'").fetchone()
+            if watch:
+                db.add_stock(conn, code, row["name"], watch["id"])
+                return jsonify({"ok": True, "moved_to_watch": True})
         db.remove_stock(conn, code)
         return jsonify({"ok": True, "moved_to_watch": False})
     finally:
