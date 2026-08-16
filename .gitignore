@@ -44,3 +44,7 @@ shioaji-gateway/venv/
 hermes-training/tasks_*.json
 hermes-training/scheduled_tasks_*.json
 hermes-training/logs/
+
+# 外部 clone（自帶 .git），誤 add 會被 git 記成沒對應 .gitmodules 的 submodule gitlink，
+# 導致 GitHub Pages Jekyll build 每次 checkout 都 fail（2026-08-16 修過一次）
+TradingAgents/
