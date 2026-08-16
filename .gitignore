@@ -48,3 +48,7 @@ hermes-training/logs/
 # 外部 clone（自帶 .git），誤 add 會被 git 記成沒對應 .gitmodules 的 submodule gitlink，
 # 導致 GitHub Pages Jekyll build 每次 checkout 都 fail（2026-08-16 修過一次）
 TradingAgents/
+awesome-design-md/
+daily-stock-analysis/
+edible-plants-tw/
+stock-screener-ai/
