@@ -1,37 +1,23 @@
-# Claude Handoff 20260816_2058
-> 自動生成於 2026-08-16 20:58
+# Claude Handoff 20260816_2323
+> 自動生成於 2026-08-16 23:23
 
 ## 未提交的檔案異動
 ```
-? TradingAgents
- M chip-tracker/app.py
- M chip-tracker/chip.db
- M chip-tracker/db.py
- M chip-tracker/templates/index.html
- M chip-tracker/tests/test_core.py
- M chip-tracker/updater.py
- M command-center/app.py
- M command-center/sources.py
- M command-center/templates/index.html
- M command-center/templates/swing_history.html
- m daily-stock-analysis
- M gemma_work/latest.md
+M gemma_work/latest.md
+ M rabbit-care/rabbit.db
  M scripts/auto_investigate_state.json
+ M scripts/hay/sources.py
+ M scripts/hay/tests/test_sources.py
  M scripts/hay_restock_dates.json
- m stock-screener-ai
-?? chip-tracker/chip.db.bak_20260816175704
-?? chip-tracker/patterns.py
-?? chip-tracker/tests/test_patterns.py
-?? chip.db
 ```
 
 ## 近期 Commits
 ```
-e7743053 chore: 自動同步 2026-08-16 16:40
-8bc352e8 chore: 自動同步 2026-08-16 11:40
-e8fa31f4 chore: 自動同步 2026-08-16 06:40
-17673063 chore: 自動同步 2026-08-16 01:40
-2ff2214c chore: 每晚同步 2026-08-15 23:50
+fb64061e fix: 加 .nojekyll 徹底解決 Pages build 失敗
+d408c941 fix: 移除誤入 git 的 venv 目錄，避免 Pages build 找不到 symlink 炸掉
+a753ecbe fix: 移除其餘 4 個誤入的 submodule gitlink
+e27754cd fix: 移除 TradingAgents 誤入的 submodule gitlink
+b750a9cd chore: 自動同步 2026-08-16 21:40
 ```
 
 ## 給 Hermes 的備註
