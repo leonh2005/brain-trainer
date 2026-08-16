@@ -4,6 +4,9 @@
 BOT_TOKEN="$(cat "$HOME/CCProject/.secrets/telegram_token.txt")"
 CHAT_ID="7556217543"
 LOG="/Users/steven/CCProject/command-center/logs/tunnel.log"
+AUTH="$(cat "$HOME/CCProject/.secrets/command_center_auth.txt")"
+AUTH_USER="${AUTH%%:*}"
+AUTH_PASS="${AUTH#*:}"
 
 echo "[$(date)] 啟動 tunnel..." >> "$LOG"
 
@@ -19,8 +22,8 @@ sleep 5
                 -d text="🖥️ AI 指揮中心外部連結：
 ${URL}
 
-帳號：steven
-密碼：Vkgm1IRPvQ0rSS8e" >> "$LOG" 2>&1
+帳號：${AUTH_USER}
+密碼：${AUTH_PASS}" >> "$LOG" 2>&1
             echo "[$(date)] URL 已傳送：$URL" >> "$LOG"
         fi
     fi
