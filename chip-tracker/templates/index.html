@@ -93,6 +93,8 @@ button:hover { border-color: var(--blue); }
     <option value="price-asc">股價低→高</option>
     <option value="volume-desc">成交量高→低</option>
     <option value="volume-asc">成交量低→高</option>
+    <option value="chg-desc">今日漲跌幅高→低</option>
+    <option value="chg-asc">今日漲跌幅低→高</option>
   </select>
 </div>
 
@@ -263,6 +265,8 @@ const SORTERS = {
   "price-asc": (a, b) => (a.close ?? Infinity) - (b.close ?? Infinity),
   "volume-desc": (a, b) => (b.volume ?? -Infinity) - (a.volume ?? -Infinity),
   "volume-asc": (a, b) => (a.volume ?? Infinity) - (b.volume ?? Infinity),
+  "chg-desc": (a, b) => (b.change_pct ?? -Infinity) - (a.change_pct ?? -Infinity),
+  "chg-asc": (a, b) => (a.change_pct ?? Infinity) - (b.change_pct ?? Infinity),
 };
 
 const sortByEl = document.getElementById("sortBy");
