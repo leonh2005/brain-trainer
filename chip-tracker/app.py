@@ -282,27 +282,7 @@ def api_remove_stock():
         conn.close()
 
 
-_sj_api = None
-
-
-def _get_shioaji():
-    """Shioaji 即時行情 singleton；憑證讀 .secrets/shioaji.env。"""
-    global _sj_api
-    if _sj_api is None:
-        import shioaji as sj
-
-        creds = {}
-        with open(os.path.expanduser("~/CCProject/.secrets/shioaji.env")) as f:
-            for line in f:
-                key, _, val = line.strip().partition("=")
-                if key:
-                    creds[key] = val
-        api = sj.Shioaji(simulation=False)
-        api.login(api_key=creds["SHIOAJI_API_KEY"], secret_key=creds["SHIOAJI_SECRET_KEY"],
-                  contracts_timeout=15000)
-        _sj_api = api
-    return _sj_api
-
+SHIOAJI_GATEWAY = "http://127.0.0.1:5455"
 
 _quote_cache = {"ts": 0.0, "data": {}}
 _QUOTE_TTL = 60
@@ -310,9 +290,10 @@ _QUOTE_TTL = 60
 
 @app.get("/api/quotes")
 def api_quotes():
-    """全清單即時報價：Shioaji snapshot 優先，配額耗盡/失敗退 yfinance（延遲），60 秒快取。
+    """全清單即時報價：shioaji-gateway（單一共用連線）優先，失敗退 yfinance（延遲），60 秒快取。
 
-    fail-open：全部失敗回空 dict，前端保留 DB 收盤價。
+    不直連 Shioaji：本機所有服務共用 gateway 唯一連線，各自 login 會互踢/觸發登入限流
+    （見 project_shioaji_gateway 記憶）。fail-open：全部失敗回空 dict，前端保留 DB 收盤價。
     """
     import time as _time
 
@@ -326,34 +307,31 @@ def api_quotes():
     finally:
         conn.close()
 
-    global _sj_api
     result = {}
-    # Shioaji session token 約 24h 過期（401 Token is expired）→ 重置 singleton 重登一次
-    for attempt in (1, 2):
-        try:
-            api = _get_shioaji()
-            contracts = []
-            for c in codes:
-                ct = api.Contracts.Stocks.TSE.get(c) or api.Contracts.Stocks.OTC.get(c)
-                if ct is not None:
-                    contracts.append(ct)
-            for snap in api.snapshots(contracts):
-                price = float(snap.close)
-                prev = price - float(snap.change_price)
-                result[snap.code] = {
-                    "price": price,
-                    "change_pct": round(float(snap.change_price) / prev * 100, 2) if prev else None,
-                    "change_point": round(float(snap.change_price), 2),
-                    # Shioaji snap.ts 內部以台灣本地時間編碼、未做 UTC 轉換，換算後會超前真實 UTC 8 小時，需扣回
-                    "ts": int(snap.ts // 1_000_000_000) - 8 * 3600,
-                    "delayed": False,
-                }
-            break
-        except Exception as e:
-            app.logger.warning("Shioaji 即時報價失敗(第%d次): %s", attempt, e)
-            _sj_api = None
+    try:
+        r = requests.get(f"{SHIOAJI_GATEWAY}/snapshot", params={"codes": ",".join(codes)}, timeout=15)
+        r.raise_for_status()
+        resp = r.json()
+        if not resp.get("ok"):
+            raise RuntimeError(resp.get("error", "gateway error"))
+        for code, d in resp.get("data", {}).items():
+            close = d.get("close")
+            change_price = d.get("change_price")
+            if close is None or change_price is None:
+                continue
+            prev = close - change_price
+            result[code] = {
+                "price": float(close),
+                "change_pct": d["change_rate"] if d.get("change_rate") is not None
+                    else (round(change_price / prev * 100, 2) if prev else None),
+                "change_point": round(float(change_price), 2),
+                "ts": int(now),
+                "delayed": False,
+            }
+    except Exception as e:
+        app.logger.warning("shioaji-gateway 即時報價失敗: %s", e)
 
-    # Shioaji 每日流量配額（500MB）耗盡時 snapshots 回空 → yfinance 延遲報價備援
+    # gateway 掛掉/當日配額耗盡時回空 → yfinance 延遲報價備援
     missing = [c for c in codes if c not in result]
     if missing:
         try:

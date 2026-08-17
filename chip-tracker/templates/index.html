@@ -137,6 +137,11 @@ function stockHtml(s) {
   const chg = s.change_pct == null ? "" :
     `<span class="${cls(s.change_pct)}">${s.change_point == null ? "" : (s.change_point > 0 ? "+" : "") + s.change_point + " "}${s.change_pct > 0 ? "+" : ""}${s.change_pct}%</span>`;
   const price = s.close == null ? "—" : s.close.toLocaleString();
+  const liveBadge = s._live ? (() => {
+    const t = new Date(s._live.ts * 1000);
+    const hhmm = `${String(t.getHours()).padStart(2,"0")}:${String(t.getMinutes()).padStart(2,"0")}`;
+    return ` <span style="font-size:0.65rem;color:var(--text-dim)">${s._live.delayed ? "延遲" : "即時"} ${hhmm}</span>`;
+  })() : "";
   const streakF = s.foreign_streak >= 2 ? `<span class="badge ${s.foreign_streak >= 3 ? "hot" : ""}">連${s.foreign_streak}買</span>` : "";
   const streakT = s.trust_streak >= 2 ? `<span class="badge ${s.trust_streak >= 3 ? "hot" : ""}">連${s.trust_streak}買</span>` : "";
   const streakP = Math.abs(s.price_streak || 0) >= 2
@@ -162,7 +167,7 @@ function stockHtml(s) {
       ${streakP ? `<div class="streak-line">${streakP}</div>` : ""}
       ${patternLine}
       <div class="name"><a href="https://tw.stock.yahoo.com/quote/${esc(s.code)}.TW" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;">${esc(s.name)}</a></div>
-      <div class="price" id="price-${s.code}">${price} ${chg}</div>
+      <div class="price" id="price-${s.code}">${price} ${chg}${liveBadge}</div>
       <div class="volume">量 ${fmtVolume(s.volume)}</div>
       ${dispositionBadge ? `<div class="disposition-line">${dispositionBadge}</div>` : ""}
     </div>
@@ -234,18 +239,24 @@ function drawSpark(s) {
 
 async function loadQuotes() {
   // Shioaji 即時報價：載入完成後把 DB 收盤價蓋成最新價（失敗則保留原值）
+  // 蓋完要重新排序＋重繪，否則「今日漲跌幅」等排序會停留在舊的 DB 快照
+  if (!lastData) return;
   try {
     const r = await fetch("/api/quotes");
     const quotes = await r.json();
-    for (const [code, q] of Object.entries(quotes)) {
-      const el = document.getElementById(`price-${code}`);
-      if (!el || q.price == null) continue;
-      const chg = q.change_pct == null ? "" :
-        `<span class="${cls(q.change_pct)}">${q.change_point == null ? "" : (q.change_point > 0 ? "+" : "") + q.change_point + " "}${q.change_pct > 0 ? "+" : ""}${q.change_pct}%</span>`;
-      const t = new Date(q.ts * 1000);
-      const hhmm = `${String(t.getHours()).padStart(2,"0")}:${String(t.getMinutes()).padStart(2,"0")}`;
-      el.innerHTML = `${q.price.toLocaleString()} ${chg} <span style="font-size:0.65rem;color:var(--text-dim)">${q.delayed ? "延遲" : "即時"} ${hhmm}</span>`;
+    let changed = false;
+    for (const l of lastData.lists) {
+      for (const s of l.stocks) {
+        const q = quotes[s.code];
+        if (!q || q.price == null) continue;
+        s.close = q.price;
+        s.change_pct = q.change_pct;
+        s.change_point = q.change_point;
+        s._live = { delayed: q.delayed, ts: q.ts };
+        changed = true;
+      }
     }
+    if (changed) renderSections(lastData);
   } catch (e) { /* fail-open */ }
 }
 
@@ -273,16 +284,10 @@ const sortByEl = document.getElementById("sortBy");
 sortByEl.value = localStorage.getItem("chipTrackerSortBy") || "default";
 sortByEl.addEventListener("change", (e) => {
   localStorage.setItem("chipTrackerSortBy", e.target.value);
-  load();
+  if (lastData) renderSections(lastData); else load();
 });
 
-let lastUpdate = null;
-async function load() {
-  const r = await fetch("/api/data");
-  const data = await r.json();
-  lastUpdate = data.last_update;
-  document.getElementById("updated").textContent = "最後更新：" + (data.last_update || "尚無資料");
-
+function renderSections(data) {
   const listType = document.getElementById("listType");
   const prevSelected = listType.value || localStorage.getItem("chipTrackerListType");
   listType.innerHTML = data.lists.map(l => `<option value="${l.id}">${esc(l.name)}</option>`).join("");
@@ -302,6 +307,17 @@ async function load() {
       }</div>`;
   }).join("");
   data.lists.forEach(l => l.stocks.forEach(drawSpark));
+}
+
+let lastUpdate = null;
+let lastData = null;
+async function load() {
+  const r = await fetch("/api/data");
+  const data = await r.json();
+  lastUpdate = data.last_update;
+  document.getElementById("updated").textContent = "最後更新：" + (data.last_update || "尚無資料");
+  lastData = data;
+  renderSections(data);
   loadQuotes();
 }
 
