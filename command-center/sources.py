@@ -54,10 +54,23 @@ def _wrap(fn):
 
 # ── 訊號牆 ───────────────────────────────────────
 
+def _stock_sector(code: str) -> str:
+    """讀 screener.py / daytrade_alert.py 寫的產業別快取（唯讀，未快取過就回空字串，不主動打 API）"""
+    cache_path = f'/tmp/stock_sector_{code}.json'
+    if not os.path.exists(cache_path):
+        return ''
+    try:
+        return _read_json(cache_path).get('industry', '')
+    except Exception:
+        return ''
+
+
 @_wrap
 def daytrade():
     p = '/tmp/daytrade_candidates.json'
     d = _read_json(p)
+    for c in d:
+        c['sector'] = _stock_sector(c.get('code', ''))
     track_path = f'{CC}/telebot/data/daytrade_track.json'
     if os.path.exists(track_path):
         with open(track_path, encoding='utf-8') as f:
@@ -77,6 +90,8 @@ def daytrade():
 def swing():
     p = '/tmp/swing_candidates.json'
     d = _read_json(p)
+    for r in d.get('results', []):
+        r['sector'] = _stock_sector(r.get('code', ''))
     track_path = f'{CC}/telebot/data/swing_track.json'
     if os.path.exists(track_path):
         with open(track_path, encoding='utf-8') as f:

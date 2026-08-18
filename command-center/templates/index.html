@@ -347,19 +347,34 @@ function mount(container,defs){
 }
 
 /* ── renderers ── */
+function groupBySector(items,getCode,getSector){
+  const groups=new Map();
+  items.forEach(item=>{
+    const sector=getSector(item)||'其他';
+    if(!groups.has(sector))groups.set(sector,[]);
+    groups.get(sector).push(item);
+  });
+  return groups;
+}
 function renderSwing(d){
   const rs=(d&&d.results)||[];
   const box=el('div');
   if(!rs.length){
     box.appendChild(el('div','empty','今日無符合4大條件的隔日沖候選'));
   } else {
-    rs.forEach(r=>{
-      const changePt=r.close*r.pct_change/(100+r.pct_change);
-      const row=el('div','row');
-      row.innerHTML=`${tkLink(r.name,r.code)}<span class="spacer"></span>`
-        +`<span style="font-family:var(--mono);margin-right:8px">${fmt(r.close)}</span>`
-        +`<span class="chg ${chgCls(r.pct_change)}">${arrow(r.pct_change)} ${fmt(changePt)}（${fmt(r.pct_change)}%）</span>`;
-      box.appendChild(row);
+    const groups=groupBySector(rs,r=>r.code,r=>r.sector);
+    groups.forEach((rows,sector)=>{
+      const head=el('div','mini','🏷️ '+sector);
+      head.style.cssText='margin-top:8px;color:var(--text-dim);font-size:11px';
+      box.appendChild(head);
+      rows.forEach(r=>{
+        const changePt=r.close*r.pct_change/(100+r.pct_change);
+        const row=el('div','row');
+        row.innerHTML=`${tkLink(r.name,r.code)}<span class="spacer"></span>`
+          +`<span style="font-family:var(--mono);margin-right:8px">${fmt(r.close)}</span>`
+          +`<span class="chg ${chgCls(r.pct_change)}">${arrow(r.pct_change)} ${fmt(changePt)}（${fmt(r.pct_change)}%）</span>`;
+        box.appendChild(row);
+      });
     });
   }
 
@@ -389,26 +404,32 @@ function renderDaytrade(d){
   if(!arr.length){
     box.appendChild(el('div','empty','今日無當沖候選'));
   } else {
-    const pills=el('div');
-    pills.style.cssText='display:flex;flex-wrap:wrap;gap:7px';
-    arr.forEach(item=>{
-      const code=typeof item==='string'?item:(item.code||'');
-      const name=typeof item==='string'?'':(item.name||'');
-      const close=typeof item==='object'?item.close:null;
-      const inBand=close!=null&&close>=100&&close<=150;
-      const b=el('span','pill'+(inBand?' price-band':''));
-      b.innerHTML=tkLink(name,code,' style="font-size:12px"');
-      if(inBand){
-        const wrap=el('div','price-band-wrap');
-        const label=el('div','price-band-label','💰 100-150價格帶');
-        wrap.appendChild(label);
-        wrap.appendChild(b);
-        pills.appendChild(wrap);
-      }else{
-        pills.appendChild(b);
-      }
+    const groups=groupBySector(arr,item=>(typeof item==='string'?item:item.code),item=>(typeof item==='object'?item.sector:''));
+    groups.forEach((items,sector)=>{
+      const head=el('div','mini','🏷️ '+sector);
+      head.style.cssText='margin-top:8px;color:var(--text-dim);font-size:11px';
+      box.appendChild(head);
+      const pills=el('div');
+      pills.style.cssText='display:flex;flex-wrap:wrap;gap:7px';
+      items.forEach(item=>{
+        const code=typeof item==='string'?item:(item.code||'');
+        const name=typeof item==='string'?'':(item.name||'');
+        const close=typeof item==='object'?item.close:null;
+        const inBand=close!=null&&close>=100&&close<=150;
+        const b=el('span','pill'+(inBand?' price-band':''));
+        b.innerHTML=tkLink(name,code,' style="font-size:12px"');
+        if(inBand){
+          const wrap=el('div','price-band-wrap');
+          const label=el('div','price-band-label','💰 100-150價格帶');
+          wrap.appendChild(label);
+          wrap.appendChild(b);
+          pills.appendChild(wrap);
+        }else{
+          pills.appendChild(b);
+        }
+      });
+      box.appendChild(pills);
     });
-    box.appendChild(pills);
   }
 
   const track=!Array.isArray(d)&&d&&d.track;
