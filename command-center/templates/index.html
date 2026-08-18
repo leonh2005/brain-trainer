@@ -347,6 +347,13 @@ function mount(container,defs){
 }
 
 /* ── renderers ── */
+function dirBadges(item){
+  const mkt=item.mkt_dir_match;
+  const sec=item.sector_dir_match;
+  const mktTxt=mkt==null?'':(mkt?'🟢同大盤':'🔴逆大盤');
+  const secTxt=sec==null?'':(sec?'🟦同族群':'🟧逆族群');
+  return [mktTxt,secTxt].filter(Boolean).join(' ');
+}
 function groupBySector(items,getCode,getSector){
   const groups=new Map();
   items.forEach(item=>{
@@ -374,6 +381,12 @@ function renderSwing(d){
           +`<span style="font-family:var(--mono);margin-right:8px">${fmt(r.close)}</span>`
           +`<span class="chg ${chgCls(r.pct_change)}">${arrow(r.pct_change)} ${fmt(changePt)}（${fmt(r.pct_change)}%）</span>`;
         box.appendChild(row);
+        const badges=dirBadges(r);
+        if(badges){
+          const bRow=el('div','mini',badges);
+          bRow.style.cssText='margin:-4px 0 4px;color:var(--text-dim);font-size:10px;text-align:right';
+          box.appendChild(bRow);
+        }
       });
     });
   }
@@ -416,8 +429,12 @@ function renderDaytrade(d){
         const name=typeof item==='string'?'':(item.name||'');
         const close=typeof item==='object'?item.close:null;
         const inBand=close!=null&&close>=100&&close<=150;
+        const pct=typeof item==='object'?item.pct_change:null;
+        const pctTxt=pct!=null?` <span class="chg ${chgCls(pct)}">${fmt(pct)}%</span>`:'';
+        const badges=typeof item==='object'?dirBadges(item):'';
+        const badgeTxt=badges?` <span style="color:var(--text-dim);font-size:10px">${badges}</span>`:'';
         const b=el('span','pill'+(inBand?' price-band':''));
-        b.innerHTML=tkLink(name,code,' style="font-size:12px"');
+        b.innerHTML=tkLink(name,code,' style="font-size:12px"')+pctTxt+badgeTxt;
         if(inBand){
           const wrap=el('div','price-band-wrap');
           const label=el('div','price-band-label','💰 100-150價格帶');
