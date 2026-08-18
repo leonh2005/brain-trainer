@@ -347,12 +347,9 @@ function mount(container,defs){
 }
 
 /* ── renderers ── */
-function dirBadges(item){
-  const mkt=item.mkt_dir_match;
+function sectorIcon(item){
   const sec=item.sector_dir_match;
-  const mktTxt=mkt==null?'':(mkt?'🟢同大盤':'🔴逆大盤');
-  const secTxt=sec==null?'':(sec?'🟦同族群':'🟧逆族群');
-  return [mktTxt,secTxt].filter(Boolean).join(' ');
+  return sec==null?'':(sec?'🟦同族群':'🟧逆族群');
 }
 function groupBySector(items,getCode,getSector){
   const groups=new Map();
@@ -362,6 +359,38 @@ function groupBySector(items,getCode,getSector){
     groups.get(sector).push(item);
   });
   return groups;
+}
+function renderTrackGrouped(box,track,headText){
+  const head=el('a','mini');
+  head.href=track.href;
+  head.style.cssText='display:block;margin-top:10px;padding-top:8px;border-top:1px solid var(--border);color:var(--text-dim);font-size:11px;text-decoration:underline';
+  head.textContent=headText;
+  box.appendChild(head);
+
+  const same=[],diff=[],unknown=[];
+  track.results.forEach(r=>{
+    if(r.mkt_dir_match===true)same.push(r);
+    else if(r.mkt_dir_match===false)diff.push(r);
+    else unknown.push(r);
+  });
+  const renderGroup=(label,rows)=>{
+    if(!rows.length)return;
+    const gh=el('div','mini',label);
+    gh.style.cssText='margin-top:6px;color:var(--text-dim);font-size:10px';
+    box.appendChild(gh);
+    rows.forEach(r=>{
+      const row=el('div','row');
+      const mark=r.up?'✅':'❌';
+      const pct=r.pct;
+      const icon=sectorIcon(r);
+      row.innerHTML=`<span>${mark} ${tkLink(r.name,r.code)}${icon?' '+icon:''}</span><span class="spacer"></span>`
+        +`<span class="chg ${r.up?'up':'down'}">${pct!=null?fmt(pct)+'%':'—'}</span>`;
+      box.appendChild(row);
+    });
+  };
+  renderGroup('🟢 同大盤',same);
+  renderGroup('🔴 逆大盤',diff);
+  renderGroup('⬜ 大盤方向未知',unknown);
 }
 function renderSwing(d){
   const rs=(d&&d.results)||[];
@@ -381,33 +410,16 @@ function renderSwing(d){
           +`<span style="font-family:var(--mono);margin-right:8px">${fmt(r.close)}</span>`
           +`<span class="chg ${chgCls(r.pct_change)}">${arrow(r.pct_change)} ${fmt(changePt)}（${fmt(r.pct_change)}%）</span>`;
         box.appendChild(row);
-        const badges=dirBadges(r);
-        if(badges){
-          const bRow=el('div','mini',badges);
-          bRow.style.cssText='margin:-4px 0 4px;color:var(--text-dim);font-size:10px;text-align:right';
-          box.appendChild(bRow);
-        }
       });
     });
   }
 
   const track=d&&d.track;
   if(track&&track.results&&track.results.length){
-    const head=el('a','mini');
-    head.href='/swing-history';
-    head.style.cssText='display:block;margin-top:10px;padding-top:8px;border-top:1px solid var(--border);color:var(--text-dim);font-size:11px;text-decoration:underline';
     const hit=track.results.filter(r=>r.up).length;
     const pnlSum=track.results.reduce((s,r)=>s+(r.net_pnl!=null?r.net_pnl:0),0);
-    head.textContent=`${track.date} 候選隔天命中：${hit}/${track.results.length} 淨損益${pnlSum>=0?'+':''}${Math.round(pnlSum)}（看歷史紀錄）`;
-    box.appendChild(head);
-    track.results.forEach(r=>{
-      const row=el('div','row');
-      const mark=r.up?'✅':'❌';
-      const pct=(r.check_price!=null&&r.baseline)?((r.check_price-r.baseline)/r.baseline*100):null;
-      row.innerHTML=`<span>${mark} ${tkLink(r.name,r.code)}</span><span class="spacer"></span>`
-        +`<span class="chg ${r.up?'up':'down'}">${pct!=null?fmt(pct)+'%':'—'}</span>`;
-      box.appendChild(row);
-    });
+    renderTrackGrouped(box,{...track,href:'/swing-history'},
+      `${track.date} 候選隔天命中：${hit}/${track.results.length} 淨損益${pnlSum>=0?'+':''}${Math.round(pnlSum)}（看歷史紀錄）`);
   }
   return box;
 }
@@ -431,10 +443,8 @@ function renderDaytrade(d){
         const inBand=close!=null&&close>=100&&close<=150;
         const pct=typeof item==='object'?item.pct_change:null;
         const pctTxt=pct!=null?` <span class="chg ${chgCls(pct)}">${fmt(pct)}%</span>`:'';
-        const badges=typeof item==='object'?dirBadges(item):'';
-        const badgeTxt=badges?` <span style="color:var(--text-dim);font-size:10px">${badges}</span>`:'';
         const b=el('span','pill'+(inBand?' price-band':''));
-        b.innerHTML=tkLink(name,code,' style="font-size:12px"')+pctTxt+badgeTxt;
+        b.innerHTML=tkLink(name,code,' style="font-size:12px"')+pctTxt;
         if(inBand){
           const wrap=el('div','price-band-wrap');
           const label=el('div','price-band-label','💰 100-150價格帶');
@@ -451,22 +461,11 @@ function renderDaytrade(d){
 
   const track=!Array.isArray(d)&&d&&d.track;
   if(track&&track.results&&track.results.length){
-    const head=el('a','mini');
-    head.href='/daytrade-history';
-    head.style.cssText='display:block;margin-top:10px;padding-top:8px;border-top:1px solid var(--border);color:var(--text-dim);font-size:11px;text-decoration:underline';
     const hit=track.results.filter(r=>r.up).length;
     const checkedTime=track.checked_at?track.checked_at.slice(11,16):'?';
     const pnlSum=track.results.reduce((s,r)=>s+(r.net_pnl!=null?r.net_pnl:0),0);
-    head.textContent=`${track.date} 候選（${checkedTime}比對）上漲：${hit}/${track.results.length} 淨損益${pnlSum>=0?'+':''}${Math.round(pnlSum)}（看歷史紀錄）`;
-    box.appendChild(head);
-    track.results.forEach(r=>{
-      const row=el('div','row');
-      const mark=r.up?'✅':'❌';
-      const pct=(r.check_price!=null&&r.baseline)?((r.check_price-r.baseline)/r.baseline*100):null;
-      row.innerHTML=`<span>${mark} ${tkLink(r.name,r.code)}</span><span class="spacer"></span>`
-        +`<span class="chg ${r.up?'up':'down'}">${pct!=null?fmt(pct)+'%':'—'}</span>`;
-      box.appendChild(row);
-    });
+    renderTrackGrouped(box,{...track,href:'/daytrade-history'},
+      `${track.date} 候選（${checkedTime}比對）上漲：${hit}/${track.results.length} 淨損益${pnlSum>=0?'+':''}${Math.round(pnlSum)}（看歷史紀錄）`);
   }
   return box;
 }
