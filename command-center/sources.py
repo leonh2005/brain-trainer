@@ -110,18 +110,6 @@ def _dir_match(stock_pct, ref_pct):
     return (stock_pct > 0) == (ref_pct > 0)
 
 
-def _live_chg_pcts(codes: list) -> dict:
-    """走 shioaji-gateway(5455) 拿即時漲跌 %，command-center 一律不直連 Shioaji"""
-    codes = [c for c in codes if c]
-    if not codes:
-        return {}
-    try:
-        d = _proxy(f'http://localhost:5455/snapshot?codes={",".join(codes)}', ttl=60)
-        return {c: v.get('change_rate') for c, v in (d.get('data') or {}).items()}
-    except Exception:
-        return {}
-
-
 def _enrich_track_results(results: list, checked_at: str) -> list:
     """比對結果每檔標的補上：漲跌%、族群、同/逆大盤、同/逆族群（用比對當天的 TWSE 收盤指數）"""
     if not checked_at or not results:
@@ -143,10 +131,8 @@ def _enrich_track_results(results: list, checked_at: str) -> list:
 def daytrade():
     p = '/tmp/daytrade_candidates.json'
     d = _read_json(p)
-    live_pcts = _live_chg_pcts([c.get('code', '') for c in d])
     for c in d:
         c['sector'] = _stock_sector(c.get('code', ''))
-        c['pct_change'] = live_pcts.get(c.get('code', ''))
     track_path = f'{CC}/telebot/data/daytrade_track.json'
     if os.path.exists(track_path):
         with open(track_path, encoding='utf-8') as f:
@@ -168,12 +154,8 @@ def swing():
     p = '/tmp/swing_candidates.json'
     d = _read_json(p)
     results = d.get('results', [])
-    live_pcts = _live_chg_pcts([r.get('code', '') for r in results])
     for r in results:
         r['sector'] = _stock_sector(r.get('code', ''))
-        live_pct = live_pcts.get(r.get('code', ''))
-        if live_pct is not None:
-            r['pct_change'] = live_pct
     track_path = f'{CC}/telebot/data/swing_track.json'
     if os.path.exists(track_path):
         with open(track_path, encoding='utf-8') as f:
