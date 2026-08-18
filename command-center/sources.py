@@ -65,12 +65,68 @@ def _stock_sector(code: str) -> str:
         return ''
 
 
+def _market_change_pct():
+    """大盤（加權指數）今日漲跌 %，走 market-analysis(5350) 既有資料"""
+    try:
+        return _proxy('http://localhost:5350/api/live', ttl=60).get('index', {}).get('change_pct')
+    except Exception:
+        return None
+
+
+def _sector_index_pcts() -> dict:
+    """TWSE 類股指數今日漲跌 %，一次拿全部類股（收盤後才有當日資料）"""
+    today = date.today().strftime('%Y%m%d')
+    url = f'https://www.twse.com.tw/rwd/zh/afterTrading/MI_INDEX?date={today}&type=IND&response=json'
+    try:
+        d = _proxy(url, timeout=10, ttl=3600)
+        rows = (d.get('tables') or [{}])[0].get('data') or []
+    except Exception:
+        return {}
+    out = {}
+    for r in rows:
+        name = r[0]
+        if not name.endswith('類指數'):
+            continue
+        base = name[:-3]
+        sector = base if base.endswith('業') else base + '業'
+        try:
+            out[sector] = float(str(r[4]).replace(',', ''))
+        except (ValueError, IndexError):
+            continue
+    return out
+
+
+def _dir_match(stock_pct, ref_pct):
+    """股票漲跌方向是否與參照值（大盤/族群指數）同向；資料不足回 None"""
+    if stock_pct is None or ref_pct is None or stock_pct == 0 or ref_pct == 0:
+        return None
+    return (stock_pct > 0) == (ref_pct > 0)
+
+
+def _live_chg_pcts(codes: list) -> dict:
+    """走 shioaji-gateway(5455) 拿即時漲跌 %，command-center 一律不直連 Shioaji"""
+    codes = [c for c in codes if c]
+    if not codes:
+        return {}
+    try:
+        d = _proxy(f'http://localhost:5455/snapshot?codes={",".join(codes)}', ttl=60)
+        return {c: v.get('change_rate') for c, v in (d.get('data') or {}).items()}
+    except Exception:
+        return {}
+
+
 @_wrap
 def daytrade():
     p = '/tmp/daytrade_candidates.json'
     d = _read_json(p)
+    mkt_pct = _market_change_pct()
+    sector_pcts = _sector_index_pcts()
+    live_pcts = _live_chg_pcts([c.get('code', '') for c in d])
     for c in d:
         c['sector'] = _stock_sector(c.get('code', ''))
+        c['pct_change'] = live_pcts.get(c.get('code', ''))
+        c['mkt_dir_match'] = _dir_match(c['pct_change'], mkt_pct)
+        c['sector_dir_match'] = _dir_match(c['pct_change'], sector_pcts.get(c['sector']))
     track_path = f'{CC}/telebot/data/daytrade_track.json'
     if os.path.exists(track_path):
         with open(track_path, encoding='utf-8') as f:
@@ -90,8 +146,17 @@ def daytrade():
 def swing():
     p = '/tmp/swing_candidates.json'
     d = _read_json(p)
-    for r in d.get('results', []):
+    results = d.get('results', [])
+    mkt_pct = _market_change_pct()
+    sector_pcts = _sector_index_pcts()
+    live_pcts = _live_chg_pcts([r.get('code', '') for r in results])
+    for r in results:
         r['sector'] = _stock_sector(r.get('code', ''))
+        live_pct = live_pcts.get(r.get('code', ''))
+        if live_pct is not None:
+            r['pct_change'] = live_pct
+        r['mkt_dir_match'] = _dir_match(live_pct, mkt_pct)
+        r['sector_dir_match'] = _dir_match(live_pct, sector_pcts.get(r['sector']))
     track_path = f'{CC}/telebot/data/swing_track.json'
     if os.path.exists(track_path):
         with open(track_path, encoding='utf-8') as f:
