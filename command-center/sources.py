@@ -70,7 +70,10 @@ def _stock_sector(code: str) -> str:
             'https://api.finmindtrade.com/api/v4/data?' +
             f'dataset=TaiwanStockInfo&data_id={code}&token={token}', timeout=10,
         ) as resp:
-            rows = json.loads(resp.read()).get('data', [])
+            body = json.loads(resp.read())
+        if body.get('status') != 200:
+            return ''  # 額度限制/錯誤，不快取，下次再試
+        rows = body.get('data', [])
         industry = rows[0].get('industry_category', '') if rows else ''
         with open(cache_path, 'w') as f:
             json.dump({'industry': industry}, f, ensure_ascii=False)
@@ -79,14 +82,65 @@ def _stock_sector(code: str) -> str:
         return ''
 
 
+# TWSE「XX類指數」名稱 → 對應的 FinMind industry_category（含同義/新舊寫法別名）
+# FinMind 分類與 TWSE 類股指數不是同一套命名規則（例如「水泥工業」vs「水泥類指數」），
+# 不能用字串規則互轉，只能建對照表
+_TWSE_INDEX_TO_FINMIND_SECTORS = {
+    '水泥類指數': ['水泥工業'],
+    '食品類指數': ['食品工業'],
+    '塑膠類指數': ['塑膠工業'],
+    '紡織纖維類指數': ['紡織纖維'],
+    '電機機械類指數': ['電機機械'],
+    '電器電纜類指數': ['電器電纜'],
+    '化學生技醫療類指數': ['化學生技醫療'],
+    '化學類指數': ['化學工業'],
+    '生技醫療類指數': ['生技醫療業'],
+    '玻璃陶瓷類指數': ['玻璃陶瓷'],
+    '造紙類指數': ['造紙工業'],
+    '鋼鐵類指數': ['鋼鐵工業'],
+    '橡膠類指數': ['橡膠工業'],
+    '汽車類指數': ['汽車工業'],
+    '電子工業類指數': ['電子工業'],
+    '半導體類指數': ['半導體業'],
+    '電腦及週邊設備類指數': ['電腦及週邊設備業'],
+    '光電類指數': ['光電業'],
+    '通信網路類指數': ['通信網路業'],
+    '電子零組件類指數': ['電子零組件業'],
+    '電子通路類指數': ['電子通路業'],
+    '資訊服務類指數': ['資訊服務業'],
+    '其他電子類指數': ['其他電子業', '其他電子類'],
+    '建材營造類指數': ['建材營造'],
+    '航運類指數': ['航運業'],
+    '觀光餐旅類指數': ['觀光餐旅', '觀光事業'],
+    '金融保險類指數': ['金融保險', '金融業'],
+    '貿易百貨類指數': ['貿易百貨'],
+    '油電燃氣類指數': ['油電燃氣業'],
+    '綠能環保類指數': ['綠能環保', '綠能環保類'],
+    '數位雲端類指數': ['數位雲端', '數位雲端類'],
+    '運動休閒類指數': ['運動休閒', '運動休閒類'],
+    '居家生活類指數': ['居家生活', '居家生活類'],
+    '其他類指數': ['其他'],
+}
+
+
+_twse_idx_cache: dict = {}  # {date_str: (pcts_dict, cached_at)}；收盤前的空表只快取 30 秒，避免整小時顯示「方向未知」
+
+
 def _twse_index_pcts_for_date(date_str: str) -> dict:
-    """TWSE 某交易日的大盤（'大盤' key）+ 全部類股指數漲跌 %（date_str: YYYYMMDD）"""
+    """TWSE 某交易日的大盤（'大盤' key）+ 全部類股指數漲跌 %，key 用 FinMind industry_category 命名（date_str: YYYYMMDD）"""
+    now = time.time()
+    hit = _twse_idx_cache.get(date_str)
+    if hit and now - hit[1] < (3600 if hit[0] else 30):
+        return hit[0]
+
     url = f'https://www.twse.com.tw/rwd/zh/afterTrading/MI_INDEX?date={date_str}&type=IND&response=json'
     try:
-        d = _proxy(url, timeout=10, ttl=3600)
+        with urllib.request.urlopen(url, timeout=10) as resp:
+            d = json.loads(resp.read())
         rows = (d.get('tables') or [{}])[0].get('data') or []
     except Exception:
-        return {}
+        return hit[0] if hit else {}
+
     out = {}
     for r in rows:
         name = r[0]
@@ -96,10 +150,9 @@ def _twse_index_pcts_for_date(date_str: str) -> dict:
             continue
         if name == '發行量加權股價指數':
             out['大盤'] = pct
-        elif name.endswith('類指數'):
-            base = name[:-3]
-            sector = base if base.endswith('業') else base + '業'
+        for sector in _TWSE_INDEX_TO_FINMIND_SECTORS.get(name, []):
             out[sector] = pct
+    _twse_idx_cache[date_str] = (out, now)
     return out
 
 
