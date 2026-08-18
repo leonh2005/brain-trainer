@@ -9,6 +9,7 @@ import pandas as pd
 import warnings
 import shioaji as sj
 import os
+import html
 from datetime import datetime, date, timedelta
 from dotenv import load_dotenv
 from ai_analysis import analyze_stock, format_ai_block
@@ -147,6 +148,32 @@ def get_futures_direction():
         return 0, ''
 
 
+def get_stock_sector(code: str) -> str:
+    """從 FinMind TaiwanStockInfo 取股票產業別，供推播分族群顯示（/tmp 快取避免重複打 API）"""
+    import json as _json
+    cache_path = f'/tmp/stock_sector_{code}.json'
+    if os.path.exists(cache_path):
+        try:
+            with open(cache_path) as f:
+                return _json.load(f).get('industry', '')
+        except Exception:
+            pass
+    try:
+        res = requests.get(
+            'https://api.finmindtrade.com/api/v4/data',
+            params={'dataset': 'TaiwanStockInfo', 'data_id': code, 'token': TOKEN},
+            timeout=10,
+        )
+        rows = res.json().get('data', [])
+        industry = rows[0].get('industry_category', '') if rows else ''
+        with open(cache_path, 'w') as f:
+            _json.dump({'industry': industry}, f, ensure_ascii=False)
+        return industry
+    except Exception as e:
+        print(f'[finmind] 產業別查詢失敗 {code}: {e}')
+        return ''
+
+
 # ── 主程式 ────────────────────────────────────────
 
 top20 = get_top_volume_sj(n=20)
@@ -187,24 +214,29 @@ lines.append("今日量前20（Shioaji即時）＋ 振幅&gt;3% ＋ 近5均量&g
 
 if candidates:
     lines.append(f"✅ 符合 {len(candidates)} 檔：\n")
+    sectors = {}
     for c in candidates:
-        pos_emoji = "🔴" if c['close_pos'] >= 80 else "🟡" if c['close_pos'] >= 50 else "🟢"
-        in_price_band = 100 <= c['close'] <= 150
-        ai = analyze_stock(
-            code=c['code'], name=c['name'], close=c['close'],
-            chg_pct=c['chg_pct'], amp_pct=c['amp_pct'],
-            vol_k=c['vol_k'], avg5=c['avg5'], close_pos=c['close_pos'],
-            fi_net=0, signal="", strategy="當沖"
-        )
-        entry = (
-            f"{pos_emoji} <b>{c['code']} {c['name']}</b>\n"
-            f"   收:{c['close']:.1f}  漲:{c['chg_pct']:+.1f}%  振:{c['amp_pct']:.1f}%\n"
-            f"   量:{c['vol_k']:,}張  近5均:{c['avg5']:,}張  收盤位:{c['close_pos']:.0f}%\n"
-            f"{format_ai_block(ai)}"
-        )
-        if in_price_band:
-            entry = f"💰 <b>100-150價格帶</b>\n<blockquote>{entry}</blockquote>"
-        lines.append(entry + "\n")
+        sectors.setdefault(get_stock_sector(c['code']) or '其他', []).append(c)
+    for sector, group in sectors.items():
+        lines.append(f"🏷️ <b>{html.escape(sector)}</b>\n")
+        for c in group:
+            pos_emoji = "🔴" if c['close_pos'] >= 80 else "🟡" if c['close_pos'] >= 50 else "🟢"
+            in_price_band = 100 <= c['close'] <= 150
+            ai = analyze_stock(
+                code=c['code'], name=c['name'], close=c['close'],
+                chg_pct=c['chg_pct'], amp_pct=c['amp_pct'],
+                vol_k=c['vol_k'], avg5=c['avg5'], close_pos=c['close_pos'],
+                fi_net=0, signal="", strategy="當沖"
+            )
+            entry = (
+                f"{pos_emoji} <b>{c['code']} {c['name']}</b>\n"
+                f"   收:{c['close']:.1f}  漲:{c['chg_pct']:+.1f}%  振:{c['amp_pct']:.1f}%\n"
+                f"   量:{c['vol_k']:,}張  近5均:{c['avg5']:,}張  收盤位:{c['close_pos']:.0f}%\n"
+                f"{format_ai_block(ai)}"
+            )
+            if in_price_band:
+                entry = f"💰 <b>100-150價格帶</b>\n<blockquote>{entry}</blockquote>"
+            lines.append(entry + "\n")
     lines.append("⚡ 進場參考：開盤後5~15分鐘確認方向再進")
     lines.append("🛑 停損：跌破進場價 -1.5% 出清")
 else:
