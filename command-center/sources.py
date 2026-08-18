@@ -55,28 +55,33 @@ def _wrap(fn):
 # ── 訊號牆 ───────────────────────────────────────
 
 def _stock_sector(code: str) -> str:
-    """讀 screener.py / daytrade_alert.py 寫的產業別快取（唯讀，未快取過就回空字串，不主動打 API）"""
+    """股票產業別，快取共用 screener.py / daytrade_alert.py 同一份 /tmp 快取檔（未快取過才補打 FinMind）"""
+    if not code:
+        return ''
     cache_path = f'/tmp/stock_sector_{code}.json'
-    if not os.path.exists(cache_path):
-        return ''
+    if os.path.exists(cache_path):
+        try:
+            return _read_json(cache_path).get('industry', '')
+        except Exception:
+            pass
     try:
-        return _read_json(cache_path).get('industry', '')
+        token = open(os.path.expanduser('~/CCProject/.secrets/finmind_token.txt')).read().strip()
+        with urllib.request.urlopen(
+            'https://api.finmindtrade.com/api/v4/data?' +
+            f'dataset=TaiwanStockInfo&data_id={code}&token={token}', timeout=10,
+        ) as resp:
+            rows = json.loads(resp.read()).get('data', [])
+        industry = rows[0].get('industry_category', '') if rows else ''
+        with open(cache_path, 'w') as f:
+            json.dump({'industry': industry}, f, ensure_ascii=False)
+        return industry
     except Exception:
         return ''
 
 
-def _market_change_pct():
-    """大盤（加權指數）今日漲跌 %，走 market-analysis(5350) 既有資料"""
-    try:
-        return _proxy('http://localhost:5350/api/live', ttl=60).get('index', {}).get('change_pct')
-    except Exception:
-        return None
-
-
-def _sector_index_pcts() -> dict:
-    """TWSE 類股指數今日漲跌 %，一次拿全部類股（收盤後才有當日資料）"""
-    today = date.today().strftime('%Y%m%d')
-    url = f'https://www.twse.com.tw/rwd/zh/afterTrading/MI_INDEX?date={today}&type=IND&response=json'
+def _twse_index_pcts_for_date(date_str: str) -> dict:
+    """TWSE 某交易日的大盤（'大盤' key）+ 全部類股指數漲跌 %（date_str: YYYYMMDD）"""
+    url = f'https://www.twse.com.tw/rwd/zh/afterTrading/MI_INDEX?date={date_str}&type=IND&response=json'
     try:
         d = _proxy(url, timeout=10, ttl=3600)
         rows = (d.get('tables') or [{}])[0].get('data') or []
@@ -85,14 +90,16 @@ def _sector_index_pcts() -> dict:
     out = {}
     for r in rows:
         name = r[0]
-        if not name.endswith('類指數'):
-            continue
-        base = name[:-3]
-        sector = base if base.endswith('業') else base + '業'
         try:
-            out[sector] = float(str(r[4]).replace(',', ''))
+            pct = float(str(r[4]).replace(',', ''))
         except (ValueError, IndexError):
             continue
+        if name == '發行量加權股價指數':
+            out['大盤'] = pct
+        elif name.endswith('類指數'):
+            base = name[:-3]
+            sector = base if base.endswith('業') else base + '業'
+            out[sector] = pct
     return out
 
 
@@ -115,18 +122,31 @@ def _live_chg_pcts(codes: list) -> dict:
         return {}
 
 
+def _enrich_track_results(results: list, checked_at: str) -> list:
+    """比對結果每檔標的補上：漲跌%、族群、同/逆大盤、同/逆族群（用比對當天的 TWSE 收盤指數）"""
+    if not checked_at or not results:
+        return results
+    idx = _twse_index_pcts_for_date(checked_at[:10].replace('-', ''))
+    mkt_pct = idx.get('大盤')
+    for r in results:
+        baseline, check_price = r.get('baseline'), r.get('check_price')
+        pct = (check_price - baseline) / baseline * 100 if baseline and check_price is not None else None
+        r['pct'] = pct
+        sector = _stock_sector(r.get('code', ''))
+        r['sector'] = sector
+        r['mkt_dir_match'] = _dir_match(pct, mkt_pct)
+        r['sector_dir_match'] = _dir_match(pct, idx.get(sector))
+    return results
+
+
 @_wrap
 def daytrade():
     p = '/tmp/daytrade_candidates.json'
     d = _read_json(p)
-    mkt_pct = _market_change_pct()
-    sector_pcts = _sector_index_pcts()
     live_pcts = _live_chg_pcts([c.get('code', '') for c in d])
     for c in d:
         c['sector'] = _stock_sector(c.get('code', ''))
         c['pct_change'] = live_pcts.get(c.get('code', ''))
-        c['mkt_dir_match'] = _dir_match(c['pct_change'], mkt_pct)
-        c['sector_dir_match'] = _dir_match(c['pct_change'], sector_pcts.get(c['sector']))
     track_path = f'{CC}/telebot/data/daytrade_track.json'
     if os.path.exists(track_path):
         with open(track_path, encoding='utf-8') as f:
@@ -135,9 +155,10 @@ def daytrade():
         if checked_dates:
             latest_date = checked_dates[-1]
             entry = track[latest_date]
+            checked_at = entry.get('checked_at')
             d = {'candidates': d, 'track': {
-                'date': latest_date, 'checked_at': entry.get('checked_at'),
-                'results': entry.get('track_results', []),
+                'date': latest_date, 'checked_at': checked_at,
+                'results': _enrich_track_results(entry.get('track_results', []), checked_at),
             }}
     return d, _mtime(p)
 
@@ -147,16 +168,12 @@ def swing():
     p = '/tmp/swing_candidates.json'
     d = _read_json(p)
     results = d.get('results', [])
-    mkt_pct = _market_change_pct()
-    sector_pcts = _sector_index_pcts()
     live_pcts = _live_chg_pcts([r.get('code', '') for r in results])
     for r in results:
         r['sector'] = _stock_sector(r.get('code', ''))
         live_pct = live_pcts.get(r.get('code', ''))
         if live_pct is not None:
             r['pct_change'] = live_pct
-        r['mkt_dir_match'] = _dir_match(live_pct, mkt_pct)
-        r['sector_dir_match'] = _dir_match(live_pct, sector_pcts.get(r['sector']))
     track_path = f'{CC}/telebot/data/swing_track.json'
     if os.path.exists(track_path):
         with open(track_path, encoding='utf-8') as f:
@@ -164,7 +181,11 @@ def swing():
         checked_dates = sorted(dt for dt, v in track.items() if v.get('checked'))
         if checked_dates:
             latest = track[checked_dates[-1]]
-            d['track'] = {'date': checked_dates[-1], 'results': latest.get('track_results', [])}
+            checked_at = latest.get('checked_at')
+            d['track'] = {
+                'date': checked_dates[-1], 'checked_at': checked_at,
+                'results': _enrich_track_results(latest.get('track_results', []), checked_at),
+            }
     return d, d.get('date', _mtime(p))
 
 

@@ -1,26 +1,23 @@
-# Claude Handoff 20260818_1655
-> 自動生成於 2026-08-18 16:55
+# Claude Handoff 20260818_2331
+> 自動生成於 2026-08-18 23:31
 
 ## 未提交的檔案異動
 ```
-M gemma_work/latest.md
- M market-analysis/hit_counts.json
- M market-dashboard/bb_cache.json
- M market-dashboard/fg_history.json
- M market-dashboard/index.html
- M market-dashboard/margin_cache.json
- M market-dashboard/sp_state.json
+M chip-tracker/chip.db
+ M command-center/sources.py
+ M command-center/templates/index.html
+ M gemma_work/latest.md
+ M rabbit-care/rabbit.db
  M scripts/auto_investigate_state.json
-?? shopee-boost/
 ```
 
 ## 近期 Commits
 ```
+1877c0ab feat: 隔日沖/當沖候選標示同/逆大盤與同/逆族群
+3ae4545d feat: 訊號牆隔日沖/當沖卡片依產業別分族群顯示
+166e33f8 feat: 當沖推播依產業別分族群顯示
+b75fcacd chore: 自動同步 2026-08-18 18:40
 0d4c738b chore: 自動同步 2026-08-18 13:40
-9a0d821e chore: 自動同步 2026-08-18 08:40
-57bfe136 chore: 自動同步 2026-08-18 03:40
-d3f5d433 chore: 每晚同步 2026-08-17 23:50
-eb2e2969 chore: 自動同步 2026-08-17 22:40
 ```
 
 ## 給 Hermes 的備註
