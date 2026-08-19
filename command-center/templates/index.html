@@ -357,6 +357,11 @@ function checksScore(item){
   const passed=Object.values(checks).filter(Boolean).length;
   return {passed,total,full:total>0&&passed===total};
 }
+function streakTxt(item){
+  const s=item.streak;
+  if(s==null||s===0)return '';
+  return s>0?`<span class="chg up" style="font-size:11px">🔥連漲${s}天</span>`:`<span class="chg down" style="font-size:11px">🥶連跌${-s}天</span>`;
+}
 function sortCandidates(rows){
   return rows.slice().sort((a,b)=>{
     const sa=checksScore(a),sb=checksScore(b);
@@ -391,7 +396,7 @@ function renderTrackGrouped(box,track,headText){
     const gh=el('div','mini',label);
     gh.style.cssText='margin-top:6px;color:var(--text-dim);font-size:10px';
     box.appendChild(gh);
-    rows.forEach(r=>{
+    rows.slice().sort((a,b)=>(b.up?1:0)-(a.up?1:0)).forEach(r=>{
       const row=el('div','row');
       const mark=r.up?'✅':'❌';
       const pct=r.pct;
@@ -422,8 +427,9 @@ function renderSwing(d){
         const sc=checksScore(r);
         const scoreTxt=sc.total?` <span class="chg ${sc.full?'up':'down'}" style="font-size:11px">${sc.passed}/${sc.total}</span>`:'';
         const priceTxt=r.close!=null?` <span style="font-family:var(--mono);color:var(--text-dim)">${fmt(r.close)}</span>`:'';
+        const streakBadge=streakTxt(r)?' '+streakTxt(r):'';
         const b=el('span','pill');
-        b.innerHTML=tkLink(r.name,r.code,' style="font-size:12px"')+priceTxt+scoreTxt;
+        b.innerHTML=tkLink(r.name,r.code,' style="font-size:12px"')+priceTxt+scoreTxt+streakBadge;
         pills.appendChild(b);
       });
       box.appendChild(pills);
@@ -460,8 +466,9 @@ function renderDaytrade(d){
         const sc=checksScore(item);
         const scoreTxt=sc.total?` <span class="chg ${sc.full?'up':'down'}" style="font-size:11px">${sc.passed}/${sc.total}</span>`:'';
         const priceTxt=close!=null?` <span style="font-family:var(--mono);color:var(--text-dim)">${fmt(close)}</span>`:'';
+        const streakBadge=streakTxt(item)?' '+streakTxt(item):'';
         const b=el('span','pill'+(inBand?' price-band':''));
-        b.innerHTML=tkLink(name,code,' style="font-size:12px"')+priceTxt+scoreTxt;
+        b.innerHTML=tkLink(name,code,' style="font-size:12px"')+priceTxt+scoreTxt+streakBadge;
         if(inBand){
           const wrap=el('div','price-band-wrap');
           const label=el('div','price-band-label','💰 100-150價格帶');
