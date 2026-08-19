@@ -252,7 +252,7 @@ print(msg)
 import json
 candidate_list = [{
     'code': c['code'], 'name': c['name'], 'close': c['close'],
-    'checks': {'振幅≥3%': True, '近5日均量≥3000張': True, '漲幅≥1.5%': True},  # 單一AND篩選，能列入候選就是全通過
+    'checks': {'量前20': True, '振幅≥3%': True, '近5日均量≥3000張': True, '漲幅≥1.5%': True},  # 單一AND篩選，能列入候選就是全通過
 } for c in candidates]
 with open('/tmp/daytrade_candidates.json', 'w') as f:
     json.dump(candidate_list, f, ensure_ascii=False)
