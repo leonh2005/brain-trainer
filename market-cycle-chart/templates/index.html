@@ -45,6 +45,7 @@
     <label style="font-size:12px;color:var(--muted)">劇本</label>
     <select id="scriptSel"></select>
     <button id="btnMonthly" class="active">月線(大浪)</button>
+    <button id="btnWeekly">週線(加大浪)</button>
     <button id="btnDaily">日線+均線</button>
     <button id="btnEcon">經濟背景層：關</button>
   </div>
@@ -74,6 +75,7 @@ function showError(msg){
 let CHART=null;         // 最近一次 chart-data
 let SHOW_ECON=false;
 let CYCLE_OVERRIDES={}; // key -> {period_months, trough_ym}
+let VIEW_MODE='monthly'; // monthly|weekly|daily
 
 function monthsBetween(fromYm,toYm){
   const [fy,fm]=fromYm.split('-').map(Number), [ty,tm]=toYm.split('-').map(Number);
@@ -87,20 +89,23 @@ function cycleParam(cy){
   return {period:o.period_months||cy.period_months, trough:o.trough_ym||cy.trough_ym};
 }
 
-async function loadChartData(){
+async function loadChartData(resetOverrides=true){
   const id=document.getElementById('scriptSel').value||'v1';
-  const r=await fetch('/api/chart-data?script='+id);
+  const tf=VIEW_MODE==='weekly'?'weekly':'monthly';
+  const r=await fetch('/api/chart-data?script='+id+'&timeframe='+tf);
   const d=await r.json();
   if(d.error){showError('載入失敗：'+d.error);return;}
-  CHART=d; CYCLE_OVERRIDES={};
+  CHART=d;
+  if(resetOverrides)CYCLE_OVERRIDES={};
   renderCycleParams(); renderMonthly(); renderSidebar();
 }
 
 function renderMonthly(){
   const d=CHART, tl=d.timeline, traces=[], shapes=[], annos=[];
+  const priceLabel=VIEW_MODE==='weekly'?'加權指數(週收)':'加權指數(月收)';
 
-  // 加權指數月線收盤(主 y 軸)
-  traces.push({x:tl,y:d.taiex_close,name:'加權指數(月收)',type:'scatter',mode:'lines',
+  // 加權指數收盤(主 y 軸，月線或週線視 VIEW_MODE 而定)
+  traces.push({x:tl,y:d.taiex_close,name:priceLabel,type:'scatter',mode:'lines',
     line:{color:COLORS.taiex,width:2},connectgaps:false,yaxis:'y'});
 
   // 杜金龍波浪 anchors 連線 + 標記(主 y 軸)
@@ -114,7 +119,7 @@ function renderMonthly(){
   // 杜金龍預期後續波浪(從現在接續，空心菱形+點虛線區隔「已發生 vs 預期」)
   if(wave.projected&&wave.projected.length){
     traces.push({
-      x:[d.current_ym,...wave.projected.map(p=>p.date)],
+      x:[d.current_x,...wave.projected.map(p=>p.date)],
       y:[d.current_price,...wave.projected.map(p=>p.price)],
       name:'杜金龍預期後續',type:'scatter',mode:'lines+markers+text',
       text:['',...wave.projected.map(p=>p.wave)],textposition:'bottom center',
@@ -154,10 +159,10 @@ function renderMonthly(){
     });
   }
 
-  // 當前月份垂直線
-  shapes.push({type:'line',xref:'x',x0:d.current_ym,x1:d.current_ym,yref:'paper',y0:0,y1:1,
+  // 當前位置垂直線
+  shapes.push({type:'line',xref:'x',x0:d.current_x,x1:d.current_x,yref:'paper',y0:0,y1:1,
     line:{color:COLORS.current,width:1.5,dash:'dashdot'}});
-  annos.push({x:d.current_ym,xref:'x',y:1,yref:'paper',text:'現在 '+d.current_ym,showarrow:false,
+  annos.push({x:d.current_x,xref:'x',y:1,yref:'paper',text:'現在 '+d.current_ym,showarrow:false,
     font:{color:COLORS.current,size:11},xanchor:'left',yanchor:'top'});
 
   Plotly.react('chart',traces,monthlyLayout(shapes,annos),
@@ -171,7 +176,7 @@ function setupWheelZoom(){
   const gd=document.getElementById('chart');
   if(gd._wheelBound) return; gd._wheelBound=true;
   gd.addEventListener('wheel',e=>{
-    if(DAILY_VIEW||!CHART) return;             // 日線用 Plotly 預設
+    if(VIEW_MODE==='daily'||!CHART) return;    // 日線用 Plotly 預設
     const fl=gd._fullLayout; if(!fl||!fl.xaxis) return;
     const xa=fl.xaxis; e.preventDefault();
     let [r0,r1]=xa.range;
@@ -266,14 +271,17 @@ function renderSidebar(){
 }
 
 // 事件
-function setView(daily){
-  document.getElementById('btnDaily').classList.toggle('active',daily);
-  document.getElementById('btnMonthly').classList.toggle('active',!daily);
-  document.getElementById('paramPanel').classList.toggle('hidden',daily);
-  if(daily)renderDaily();else{renderMonthly();renderSidebar();}
+function setView(mode){
+  VIEW_MODE=mode;
+  document.getElementById('btnDaily').classList.toggle('active',mode==='daily');
+  document.getElementById('btnMonthly').classList.toggle('active',mode==='monthly');
+  document.getElementById('btnWeekly').classList.toggle('active',mode==='weekly');
+  document.getElementById('paramPanel').classList.toggle('hidden',mode==='daily');
+  if(mode==='daily')renderDaily();else loadChartData(false);
 }
-document.getElementById('btnMonthly').onclick=()=>setView(false);
-document.getElementById('btnDaily').onclick=()=>setView(true);
+document.getElementById('btnMonthly').onclick=()=>setView('monthly');
+document.getElementById('btnWeekly').onclick=()=>setView('weekly');
+document.getElementById('btnDaily').onclick=()=>setView('daily');
 document.getElementById('btnEcon').onclick=e=>{SHOW_ECON=!SHOW_ECON;e.target.textContent='經濟背景層：'+(SHOW_ECON?'開':'關');e.target.classList.toggle('active',SHOW_ECON);renderMonthly();};
 document.getElementById('scriptSel').onchange=loadChartData;
 
