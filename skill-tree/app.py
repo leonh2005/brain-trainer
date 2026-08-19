@@ -109,4 +109,4 @@ def api_categories():
 
 if __name__ == "__main__":
     init_db()
-    app.run(port=5500, debug=True)
+    app.run(port=5501, debug=True)
