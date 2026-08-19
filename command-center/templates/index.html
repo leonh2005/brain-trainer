@@ -63,6 +63,9 @@ header{display:flex; align-items:center; gap:16px; margin-bottom:22px}
 .price-band-wrap{display:flex; flex-direction:column; align-items:flex-start; gap:3px; padding:6px 8px 7px; border:1.5px solid #e8b93b; border-radius:10px; background:rgba(232,185,59,.1)}
 .price-band-label{font-size:9px; font-weight:700; color:#e8b93b; letter-spacing:.04em}
 .pill.price-band{border-color:#e8b93b; color:#e8b93b; font-weight:700}
+.price-band-wrap.price-band-hi{border-color:#8b5cf6; background:rgba(139,92,246,.1)}
+.price-band-label.price-band-hi{color:#8b5cf6}
+.pill.price-band-hi{border-color:#8b5cf6; color:#8b5cf6; font-weight:700}
 .dot{width:6px; height:6px; border-radius:50%; background:var(--faint); flex:none}
 .dot.up{background:var(--down); box-shadow:0 0 7px var(--down)}
 .dot.down{background:var(--up); box-shadow:0 0 7px var(--up)}
@@ -463,15 +466,16 @@ function renderDaytrade(d){
         const name=typeof item==='string'?'':(item.name||'');
         const close=typeof item==='object'?item.close:null;
         const inBand=close!=null&&close>=100&&close<=150;
+        const inBandHi=close!=null&&close>=1000&&close<=1500;
         const sc=checksScore(item);
         const scoreTxt=sc.total?` <span class="chg ${sc.full?'up':'down'}" style="font-size:11px">${sc.passed}/${sc.total}</span>`:'';
         const priceTxt=close!=null?` <span style="font-family:var(--mono);color:var(--text-dim)">${fmt(close)}</span>`:'';
         const streakBadge=streakTxt(item)?' '+streakTxt(item):'';
-        const b=el('span','pill'+(inBand?' price-band':''));
+        const b=el('span','pill'+(inBand?' price-band':inBandHi?' price-band-hi':''));
         b.innerHTML=tkLink(name,code,' style="font-size:12px"')+priceTxt+scoreTxt+streakBadge;
-        if(inBand){
-          const wrap=el('div','price-band-wrap');
-          const label=el('div','price-band-label','💰 100-150價格帶');
+        if(inBand||inBandHi){
+          const wrap=el('div','price-band-wrap'+(inBandHi?' price-band-hi':''));
+          const label=el('div','price-band-label'+(inBandHi?' price-band-hi':''),inBandHi?'💎 1000-1500價格帶':'💰 100-150價格帶');
           wrap.appendChild(label);
           wrap.appendChild(b);
           pills.appendChild(wrap);

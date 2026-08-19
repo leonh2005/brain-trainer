@@ -125,6 +125,45 @@ def get_sj_avg5(symbol: str) -> int:
     return 0
 
 
+def get_price_streak(symbol: str) -> int:
+    """Shioaji 歷史日K 算連漲跌天數（不含今日，正=連漲、負=連跌、0=無資料或平盤，
+    同 chip-tracker/db.py price_streak() 語意）"""
+    try:
+        api = _get_sj()
+        contract = api.Contracts.Stocks.get(symbol)
+        if contract is None:
+            return 0
+        start = str(date.today() - timedelta(days=20))
+        end   = str(date.today() - timedelta(days=1))
+        kb = api.kbars(contract, start=start, end=end)
+        df = pd.DataFrame({**kb})
+        if df.empty:
+            return 0
+        df['ts'] = pd.to_datetime(df['ts'])
+        df['_d'] = df['ts'].dt.date
+        daily = df.groupby('_d').agg(close=('Close', 'last')).reset_index().sort_values('_d')
+        closes = daily['close'].tolist()
+        if len(closes) < 2:
+            return 0
+        chg_pcts = []  # 新到舊
+        for i in range(len(closes) - 1, 0, -1):
+            prev, cur = closes[i - 1], closes[i]
+            if prev:
+                chg_pcts.append((cur - prev) / prev * 100)
+        if not chg_pcts or chg_pcts[0] == 0:
+            return 0
+        up = chg_pcts[0] > 0
+        count = 0
+        for v in chg_pcts:
+            if v == 0 or (v > 0) != up:
+                break
+            count += 1
+        return count if up else -count
+    except Exception as e:
+        print(f'[sj] streak {symbol} 失敗: {e}')
+        return 0
+
+
 def get_avg5_finmind(stock_id: str) -> int:
     """FinMind 近5日均量（Shioaji 失敗時備用）"""
     try:
@@ -191,6 +230,10 @@ for row in top20:
         avg5 = get_avg5_finmind(code)
 
     if row['amp_pct'] >= 3 and avg5 >= 3000 and row['chg_pct'] >= 1.5:
+        streak = get_price_streak(code)
+        if streak < 0:
+            print(f'[daytrade] {code} {row["name"]} 連跌{-streak}天，排除')
+            continue
         candidates.append({
             'code':      code,
             'name':      row['name'],
@@ -222,6 +265,7 @@ if candidates:
         for c in group:
             pos_emoji = "🔴" if c['close_pos'] >= 80 else "🟡" if c['close_pos'] >= 50 else "🟢"
             in_price_band = 100 <= c['close'] <= 150
+            in_price_band_hi = 1000 <= c['close'] <= 1500
             ai = analyze_stock(
                 code=c['code'], name=c['name'], close=c['close'],
                 chg_pct=c['chg_pct'], amp_pct=c['amp_pct'],
@@ -236,6 +280,8 @@ if candidates:
             )
             if in_price_band:
                 entry = f"💰 <b>100-150價格帶</b>\n<blockquote>{entry}</blockquote>"
+            elif in_price_band_hi:
+                entry = f"💎 <b>1000-1500價格帶</b>\n<blockquote>{entry}</blockquote>"
             lines.append(entry + "\n")
     lines.append("⚡ 進場參考：開盤後5~15分鐘確認方向再進")
     lines.append("🛑 停損：跌破進場價 -1.5% 出清")
