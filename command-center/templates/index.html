@@ -108,7 +108,7 @@ header{display:flex; align-items:center; gap:16px; margin-bottom:22px}
 .row{display:flex; align-items:center; gap:8px; padding:6px 0; border-bottom:1px solid var(--border-soft)}
 .row:last-child{border-bottom:0}
 .tk{font-family:var(--mono); font-weight:600; font-size:12px; color:var(--fg)}
-.tk .code{color:var(--faint); font-weight:400; margin-left:5px; font-size:11px}
+.tk .code{color:var(--faint); font-weight:400; margin-right:5px; font-size:11px}
 a.tk{text-decoration:none; cursor:pointer; transition:color .15s}
 a.tk:hover{color:var(--accent)}
 a.tk:hover .code{color:var(--accent-soft)}
@@ -289,7 +289,7 @@ const arrow=v=>v>0?'▲':(v<0?'▼':'·');
 const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const yq=code=>`https://www.cnyes.com/twstock/${encodeURIComponent(code)}`;
 const tkLink=(name,code,extra='')=>code
-  ?`<a class="tk"${extra} href="${yq(code)}" target="_blank" rel="noopener" title="鉅亨網 ${esc(code)}">${esc(name)}<span class="code">${esc(code)}</span></a>`
+  ?`<a class="tk"${extra} href="${yq(code)}" target="_blank" rel="noopener" title="鉅亨網 ${esc(code)}"><span class="code">${esc(code)}</span>${esc(name)}</a>`
   :`<span class="tk"${extra}>${esc(name)}</span>`;
 
 /* clock */
@@ -416,14 +416,17 @@ function renderSwing(d){
       const head=el('div','mini','🏷️ '+sector);
       head.style.cssText='margin-top:8px;color:var(--text-dim);font-size:11px';
       box.appendChild(head);
+      const pills=el('div');
+      pills.style.cssText='display:flex;flex-wrap:wrap;gap:7px';
       sortCandidates(rows).forEach(r=>{
-        const row=el('div','row');
         const sc=checksScore(r);
-        const scoreTxt=sc.total?`<span class="chg ${sc.full?'up':'down'}" style="font-size:11px">${sc.passed}/${sc.total}</span>`:'';
-        const priceTxt=r.close!=null?`<span style="font-family:var(--mono);margin-right:8px;color:var(--text-dim)">${fmt(r.close)}</span>`:'';
-        row.innerHTML=`${tkLink(r.name,r.code)}<span class="spacer"></span>${priceTxt}${scoreTxt}`;
-        box.appendChild(row);
+        const scoreTxt=sc.total?` <span class="chg ${sc.full?'up':'down'}" style="font-size:11px">${sc.passed}/${sc.total}</span>`:'';
+        const priceTxt=r.close!=null?` <span style="font-family:var(--mono);color:var(--text-dim)">${fmt(r.close)}</span>`:'';
+        const b=el('span','pill');
+        b.innerHTML=tkLink(r.name,r.code,' style="font-size:12px"')+priceTxt+scoreTxt;
+        pills.appendChild(b);
       });
+      box.appendChild(pills);
     });
   }
 
@@ -623,7 +626,7 @@ function renderPortfolio(d){
   p.positions.slice(0,6).forEach(pos=>{
     const row=el('div','row');
     const isTw=(pos.ticker||'').endsWith('.TW'), code=(pos.ticker||'').replace('.TW','');
-    const nameCell=isTw?tkLink(pos.name,code):`<span class="tk">${pos.name}<span class="code">${code}</span></span>`;
+    const nameCell=isTw?tkLink(pos.name,code):`<span class="tk"><span class="code">${code}</span>${pos.name}</span>`;
     row.innerHTML=`${nameCell}<span class="spacer"></span><span class="mini">${fmt(pos.weight)}%</span><span class="chg" style="font-size:11px;margin-left:10px;color:var(--muted)">${fmt(pos.value_twd)}</span>`;
     box.appendChild(row);
   });
