@@ -399,7 +399,7 @@ function renderTrackGrouped(box,track,headText){
     const gh=el('div','mini',label);
     gh.style.cssText='margin-top:6px;color:var(--text-dim);font-size:10px';
     box.appendChild(gh);
-    rows.slice().sort((a,b)=>(b.up?1:0)-(a.up?1:0)).forEach(r=>{
+    rows.slice().sort((a,b)=>(b.net_pnl||0)-(a.net_pnl||0)).forEach(r=>{
       const row=el('div','row');
       const mark=r.up?'✅':'❌';
       const pct=r.pct;
