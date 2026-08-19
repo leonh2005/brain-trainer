@@ -88,6 +88,16 @@ def get_monthly(df_daily: pd.DataFrame | None = None) -> pd.DataFrame:
     return m
 
 
+def get_weekly(df_daily: pd.DataFrame | None = None) -> pd.DataFrame:
+    """日線 resample 成週線 OHLCV。週標籤為當週五(台股收盤日)。"""
+    df = df_daily if df_daily is not None else get_daily()
+    w = df.set_index("date").resample("W-FRI").agg({
+        "open": "first", "high": "max", "low": "min",
+        "close": "last", "volume": "sum",
+    }).dropna(subset=["close"]).reset_index()
+    return w
+
+
 def add_moving_averages(df: pd.DataFrame, windows=(5, 20, 60)) -> pd.DataFrame:
     """依收盤價加入移動平均線欄位(ma5/ma20/ma60)。"""
     out = df.copy()
