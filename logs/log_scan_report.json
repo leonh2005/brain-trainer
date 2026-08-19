@@ -1,6 +1,6 @@
 {
-  "scanned_at": "2026-08-19 03:00:27",
-  "since": "2026-08-18 03:00:00",
+  "scanned_at": "2026-08-20 03:00:26",
+  "since": "2026-08-19 03:00:01",
   "results": {
     "市場儀表板": {
       "exists": true,
@@ -16,8 +16,8 @@
     },
     "motion-watcher": {
       "exists": true,
-      "errors": 657,
-      "last_error": "2026-08-19 02:57:34,480 WARNING 讀取影格失敗，重新連線",
+      "errors": 691,
+      "last_error": "2026-08-20 02:57:58,730 WARNING 讀取影格失敗，重新連線",
       "fix": "尚無對應建議，需人工判斷"
     },
     "Cloudflare Tunnel": {
@@ -28,9 +28,9 @@
     },
     "財經新聞分析": {
       "exists": true,
-      "errors": 2,
-      "last_error": "2026-08-19 00:01:37,651 [WARNING] fetcher.reddit_fetcher: Reddit fetch failed for r/investing: 500 Server Error: Internal Server Error for url: https://www.reddit.com/r/investing/hot/.rss",
-      "fix": "尚無對應建議，需人工判斷"
+      "errors": 1,
+      "last_error": "2026-08-19 03:30:03,375 [WARNING] fetcher.ptt_fetcher: PTT index fetch failed: HTTPSConnectionPool(host='www.ptt.cc', port=443): Max retries exceeded with url: /bbs/Stock/index.html (Caused by NewConnectionError(\"HTTPSConnection(host='www.ptt.cc', port=443): Failed to establish a new connection: [Er",
+      "fix": "Port 被佔用或服務未啟動 → 檢查 LaunchAgent 是否正常載入"
     },
     "川普監測": {
       "exists": true,
@@ -89,7 +89,7 @@
     "盤中監控": {
       "exists": true,
       "errors": 1,
-      "last_error": "[backfill] 2408 失敗: Topic: api/v1/data/ticks, Corr: c21, Client: PYAPI/N124711691/0818/010003/724391/220.141.33.239, payload: {'token': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYmYiOjE3ODcwMTQ4MDQsImV4cCI6MTc4NzEwMTIwNCwic2ltdWxhdGlvbiI6ZmFsc2UsInBlcnNvbl9pZCI6Ik4xMjQ3MTE2OTEiLCJ2ZXJzaW9uIjoiMS4zLj",
+      "last_error": "[backfill] 2408 失敗: Topic: api/v1/data/ticks, Corr: c21, Client: PYAPI/N124711691/0819/010003/120627/220.141.33.239, payload: {'token': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYmYiOjE3ODcxMDEyMDMsImV4cCI6MTc4NzE4NzYwMywic2ltdWxhdGlvbiI6ZmFsc2UsInBlcnNvbl9pZCI6Ik4xMjQ3MTE2OTEiLCJ2ZXJzaW9uIjoiMS4zLj",
       "fix": "尚無對應建議，需人工判斷"
     },
     "蝦皮軟纖監測": {
@@ -100,9 +100,9 @@
     },
     "自動簽到": {
       "exists": true,
-      "errors": 0,
-      "last_error": null,
-      "fix": null
+      "errors": 1,
+      "last_error": "[2026-08-19 09:00:01] ❌ 簽到失敗 (400): {\"message\":\"\\u672c\\u65e5\\u5df2\\u7c3d\\u5230\\u5b8c\\u7562\",\"errorCode\":400,\"status\":\"fail\"}",
+      "fix": "尚無對應建議，需人工判斷"
     },
     "夜間健康檢查": {
       "exists": true,
