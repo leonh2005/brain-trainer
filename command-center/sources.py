@@ -163,6 +163,32 @@ def _dir_match(stock_pct, ref_pct):
     return (stock_pct > 0) == (ref_pct > 0)
 
 
+def _price_streak(code: str):
+    """連漲跌天數：正數=連漲、負數=連跌、0=平盤、None=資料不足（走 shioaji-gateway 日K，邏輯同 chip-tracker/db.py price_streak）"""
+    try:
+        d = _proxy(f'http://localhost:5455/daily_ohlcv?code={code}&days=15', ttl=3600)
+        bars = d.get('bars') or []
+    except Exception:
+        return None
+    closes = [b['close'] for b in bars if b.get('close') is not None]  # 舊到新
+    if len(closes) < 2:
+        return None
+    chg_pcts = []  # 新到舊
+    for i in range(len(closes) - 1, 0, -1):
+        prev, cur = closes[i - 1], closes[i]
+        if prev:
+            chg_pcts.append((cur - prev) / prev * 100)
+    if not chg_pcts or chg_pcts[0] == 0:
+        return 0
+    up = chg_pcts[0] > 0
+    count = 0
+    for v in chg_pcts:
+        if v == 0 or (v > 0) != up:
+            break
+        count += 1
+    return count if up else -count
+
+
 def _enrich_track_results(results: list, checked_at: str) -> list:
     """比對結果每檔標的補上：漲跌%、族群、同/逆大盤、同/逆族群（用比對當天的 TWSE 收盤指數）
     telebot/check_sector_direction.py 每天 14:10 會把這些欄位直接寫進 track json，
@@ -190,6 +216,7 @@ def daytrade():
     d = _read_json(p)
     for c in d:
         c['sector'] = _stock_sector(c.get('code', ''))
+        c['streak'] = _price_streak(c.get('code', ''))
     track_path = f'{CC}/telebot/data/daytrade_track.json'
     if os.path.exists(track_path):
         with open(track_path, encoding='utf-8') as f:
@@ -213,6 +240,7 @@ def swing():
     results = d.get('results', [])
     for r in results:
         r['sector'] = _stock_sector(r.get('code', ''))
+        r['streak'] = _price_streak(r.get('code', ''))
     track_path = f'{CC}/telebot/data/swing_track.json'
     if os.path.exists(track_path):
         with open(track_path, encoding='utf-8') as f:
