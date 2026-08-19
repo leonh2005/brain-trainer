@@ -354,6 +354,10 @@ function sectorIcon(item){
   const sec=item.sector_dir_match;
   return sec==null?'':(sec?'🟦同族群':'🟧逆族群');
 }
+function mktIcon(item){
+  const mkt=item.mkt_dir_match;
+  return mkt==null?'':(mkt?'🟢同大盤':'🔴逆大盤');
+}
 function checksScore(item){
   const checks=item.checks||{};
   const total=Object.keys(checks).length;
@@ -388,30 +392,15 @@ function renderTrackGrouped(box,track,headText){
   head.textContent=headText;
   box.appendChild(head);
 
-  const same=[],diff=[],unknown=[];
-  track.results.forEach(r=>{
-    if(r.mkt_dir_match===true)same.push(r);
-    else if(r.mkt_dir_match===false)diff.push(r);
-    else unknown.push(r);
+  track.results.slice().sort((a,b)=>(b.net_pnl||0)-(a.net_pnl||0)).forEach(r=>{
+    const row=el('div','row');
+    const mark=r.up?'✅':'❌';
+    const pct=r.pct;
+    const icons=[mktIcon(r),sectorIcon(r)].filter(Boolean).join(' ');
+    row.innerHTML=`<span>${mark} ${tkLink(r.name,r.code)}${icons?' '+icons:''}</span><span class="spacer"></span>`
+      +`<span class="chg ${r.up?'up':'down'}">${pct!=null?fmt(pct)+'%':'—'}</span>`;
+    box.appendChild(row);
   });
-  const renderGroup=(label,rows)=>{
-    if(!rows.length)return;
-    const gh=el('div','mini',label);
-    gh.style.cssText='margin-top:6px;color:var(--text-dim);font-size:10px';
-    box.appendChild(gh);
-    rows.slice().sort((a,b)=>(b.net_pnl||0)-(a.net_pnl||0)).forEach(r=>{
-      const row=el('div','row');
-      const mark=r.up?'✅':'❌';
-      const pct=r.pct;
-      const icon=sectorIcon(r);
-      row.innerHTML=`<span>${mark} ${tkLink(r.name,r.code)}${icon?' '+icon:''}</span><span class="spacer"></span>`
-        +`<span class="chg ${r.up?'up':'down'}">${pct!=null?fmt(pct)+'%':'—'}</span>`;
-      box.appendChild(row);
-    });
-  };
-  renderGroup('🟢 同大盤',same);
-  renderGroup('🔴 逆大盤',diff);
-  renderGroup('⬜ 大盤方向未知',unknown);
 }
 function renderSwing(d){
   const rs=(d&&d.results)||[];
