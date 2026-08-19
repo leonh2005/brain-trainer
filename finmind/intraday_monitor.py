@@ -48,6 +48,7 @@ BOT_TOKEN        = open(os.path.expanduser("~/CCProject/.secrets/telegram_token.
 CHAT_ID          = "7556217543"
 SIGNAL_THRESHOLD = 4                    # 觸發推播的最低訊號數
 SIGNAL_MARGIN    = 2                    # 多空訊號數差距要達到這個門檻才推播，太接近視為方向不明
+CONFIDENCE_MIN   = 36                   # 信心分數低於此門檻不推播
 VOL_SIGNAL_KEYS  = ['昨量', '單K', '超越開盤量']  # 必要量能訊號（至少 1 個）
 COOLDOWN_MINUTES = 30
 COOLDOWN_FILE    = '/tmp/intraday_cooldown.json'
@@ -665,6 +666,8 @@ def volume_check():
 
         # 取信心分數較高的方向
         direction, signals = max(candidates, key=lambda x: calc_confidence(x[1]))
+        if calc_confidence(signals) < CONFIDENCE_MIN:
+            continue
         sector_txt = get_sector_status(code, all_snaps)
         msg = build_message(code, signals, snap, avg5, sector_txt, direction, tick_triggered)
         send_telegram(msg)
