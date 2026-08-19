@@ -164,8 +164,12 @@ def _dir_match(stock_pct, ref_pct):
 
 
 def _enrich_track_results(results: list, checked_at: str) -> list:
-    """比對結果每檔標的補上：漲跌%、族群、同/逆大盤、同/逆族群（用比對當天的 TWSE 收盤指數）"""
+    """比對結果每檔標的補上：漲跌%、族群、同/逆大盤、同/逆族群（用比對當天的 TWSE 收盤指數）
+    telebot/check_sector_direction.py 每天 14:10 會把這些欄位直接寫進 track json，
+    寫過的話這裡直接沿用存檔，不用每次即時打 TWSE/FinMind"""
     if not checked_at or not results:
+        return results
+    if all('mkt_dir_match' in r for r in results):
         return results
     idx = _twse_index_pcts_for_date(checked_at[:10].replace('-', ''))
     mkt_pct = idx.get('大盤')
