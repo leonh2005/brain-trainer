@@ -420,7 +420,8 @@ function renderSwing(d){
         const row=el('div','row');
         const sc=checksScore(r);
         const scoreTxt=sc.total?`<span class="chg ${sc.full?'up':'down'}" style="font-size:11px">${sc.passed}/${sc.total}</span>`:'';
-        row.innerHTML=`${tkLink(r.name,r.code)}<span class="spacer"></span>${scoreTxt}`;
+        const priceTxt=r.close!=null?`<span style="font-family:var(--mono);margin-right:8px;color:var(--text-dim)">${fmt(r.close)}</span>`:'';
+        row.innerHTML=`${tkLink(r.name,r.code)}<span class="spacer"></span>${priceTxt}${scoreTxt}`;
         box.appendChild(row);
       });
     });
@@ -455,8 +456,9 @@ function renderDaytrade(d){
         const inBand=close!=null&&close>=100&&close<=150;
         const sc=checksScore(item);
         const scoreTxt=sc.total?` <span class="chg ${sc.full?'up':'down'}" style="font-size:11px">${sc.passed}/${sc.total}</span>`:'';
+        const priceTxt=close!=null?` <span style="font-family:var(--mono);color:var(--text-dim)">${fmt(close)}</span>`:'';
         const b=el('span','pill'+(inBand?' price-band':''));
-        b.innerHTML=tkLink(name,code,' style="font-size:12px"')+scoreTxt;
+        b.innerHTML=tkLink(name,code,' style="font-size:12px"')+priceTxt+scoreTxt;
         if(inBand){
           const wrap=el('div','price-band-wrap');
           const label=el('div','price-band-label','💰 100-150價格帶');
