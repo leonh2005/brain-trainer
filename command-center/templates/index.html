@@ -351,6 +351,19 @@ function sectorIcon(item){
   const sec=item.sector_dir_match;
   return sec==null?'':(sec?'🟦同族群':'🟧逆族群');
 }
+function checksScore(item){
+  const checks=item.checks||{};
+  const total=Object.keys(checks).length;
+  const passed=Object.values(checks).filter(Boolean).length;
+  return {passed,total,full:total>0&&passed===total};
+}
+function sortCandidates(rows){
+  return rows.slice().sort((a,b)=>{
+    const sa=checksScore(a),sb=checksScore(b);
+    if(sa.full!==sb.full)return sa.full?-1:1;
+    return (b.close||0)-(a.close||0);
+  });
+}
 function groupBySector(items,getCode,getSector){
   const groups=new Map();
   items.forEach(item=>{
@@ -403,9 +416,11 @@ function renderSwing(d){
       const head=el('div','mini','🏷️ '+sector);
       head.style.cssText='margin-top:8px;color:var(--text-dim);font-size:11px';
       box.appendChild(head);
-      rows.forEach(r=>{
+      sortCandidates(rows).forEach(r=>{
         const row=el('div','row');
-        row.innerHTML=tkLink(r.name,r.code);
+        const sc=checksScore(r);
+        const scoreTxt=sc.total?`<span class="chg ${sc.full?'up':'down'}" style="font-size:11px">${sc.passed}/${sc.total}</span>`:'';
+        row.innerHTML=`${tkLink(r.name,r.code)}<span class="spacer"></span>${scoreTxt}`;
         box.appendChild(row);
       });
     });
@@ -433,13 +448,15 @@ function renderDaytrade(d){
       box.appendChild(head);
       const pills=el('div');
       pills.style.cssText='display:flex;flex-wrap:wrap;gap:7px';
-      items.forEach(item=>{
+      sortCandidates(items).forEach(item=>{
         const code=typeof item==='string'?item:(item.code||'');
         const name=typeof item==='string'?'':(item.name||'');
         const close=typeof item==='object'?item.close:null;
         const inBand=close!=null&&close>=100&&close<=150;
+        const sc=checksScore(item);
+        const scoreTxt=sc.total?` <span class="chg ${sc.full?'up':'down'}" style="font-size:11px">${sc.passed}/${sc.total}</span>`:'';
         const b=el('span','pill'+(inBand?' price-band':''));
-        b.innerHTML=tkLink(name,code,' style="font-size:12px"');
+        b.innerHTML=tkLink(name,code,' style="font-size:12px"')+scoreTxt;
         if(inBand){
           const wrap=el('div','price-band-wrap');
           const label=el('div','price-band-label','💰 100-150價格帶');

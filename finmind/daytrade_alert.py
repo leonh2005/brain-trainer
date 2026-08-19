@@ -250,7 +250,10 @@ print(msg)
 
 # 儲存候選清單供盤中監控腳本使用
 import json
-candidate_list = [{'code': c['code'], 'name': c['name'], 'close': c['close']} for c in candidates]
+candidate_list = [{
+    'code': c['code'], 'name': c['name'], 'close': c['close'],
+    'checks': {'振幅≥3%': True, '近5日均量≥3000張': True, '漲幅≥1.5%': True},  # 單一AND篩選，能列入候選就是全通過
+} for c in candidates]
 with open('/tmp/daytrade_candidates.json', 'w') as f:
     json.dump(candidate_list, f, ensure_ascii=False)
 print(f'[daytrade] 候選清單已寫入 /tmp/daytrade_candidates.json: {[c["code"] for c in candidate_list]}')
