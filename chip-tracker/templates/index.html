@@ -24,9 +24,12 @@ button:hover { border-color: var(--blue); }
 .sort-bar { display: flex; gap: 0.5rem; padding: 0 2rem 0.6rem; align-items: center; font-size: 0.8rem; color: var(--text-dim); }
 .sort-bar select { background: var(--card); border: 1px solid var(--border); color: var(--text); border-radius: 6px; padding: 0.3rem 0.5rem; }
 .msg { font-size: 0.8rem; color: var(--amber); }
-.section-label { padding: 1rem 2rem 0.4rem; font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-dim); display: flex; align-items: center; gap: 0.5rem; }
+.section-label { padding: 1rem 2rem 0.4rem; font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-dim); display: flex; align-items: center; gap: 0.5rem; cursor: pointer; user-select: none; }
 .section-label .del-list { font-size: 0.85rem; background: none; border: none; padding: 0; color: var(--text-dim); cursor: pointer; text-transform: none; letter-spacing: normal; }
 .section-label .del-list:hover { color: var(--red); }
+.section-label .toggle-list { font-size: 0.7rem; background: none; border: none; padding: 0; color: var(--text-dim); cursor: pointer; transition: transform 0.15s; }
+.section-label.collapsed .toggle-list { transform: rotate(-90deg); }
+.stock-list.collapsed { display: none; }
 .stock-list { padding: 0 2rem 1rem; display: grid; gap: 0.7rem; }
 .stock { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 0.9rem 1.1rem; display: grid; grid-template-columns: 10rem 1fr 24rem 2rem; gap: 1rem; align-items: center; }
 .stock .head .code { font-family: var(--font-mono); color: var(--text-dim); font-size: 0.75rem; }
@@ -262,9 +265,20 @@ async function loadQuotes() {
 
 const listIcon = name => name === "庫存" ? "💼" : name === "觀察" ? "👀" : "📋";
 
+const collapsedListIds = new Set(JSON.parse(localStorage.getItem("chipTrackerCollapsed") || "[]"));
+const saveCollapsed = () => localStorage.setItem("chipTrackerCollapsed", JSON.stringify([...collapsedListIds]));
+
 document.getElementById("sections").addEventListener("click", (e) => {
-  const btn = e.target.closest(".del-list");
-  if (btn) removeList(Number(btn.dataset.listId), btn.dataset.listName);
+  const delBtn = e.target.closest(".del-list");
+  if (delBtn) { removeList(Number(delBtn.dataset.listId), delBtn.dataset.listName); return; }
+  const label = e.target.closest(".section-label");
+  if (label) {
+    const id = Number(label.dataset.listId);
+    if (collapsedListIds.has(id)) collapsedListIds.delete(id); else collapsedListIds.add(id);
+    saveCollapsed();
+    label.classList.toggle("collapsed");
+    document.getElementById(`list-${id}`).classList.toggle("collapsed");
+  }
 });
 
 document.getElementById("listType").addEventListener("change", (e) => {
@@ -301,8 +315,12 @@ function renderSections(data) {
       ? "" : `<button class="del-list" title="刪除清單" data-list-id="${l.id}" data-list-name="${esc(l.name)}">🗑</button>`;
     const label = (l.name === "庫存" || l.name === "觀察") ? `${l.name}清單` : l.name;
     const stocks = sorter ? [...l.stocks].sort(sorter) : l.stocks;
-    return `<div class="section-label">${listIcon(l.name)} ${esc(label)} ${delBtn}</div>
-      <div class="stock-list" id="list-${l.id}">${
+    const collapsed = collapsedListIds.has(l.id);
+    return `<div class="section-label${collapsed ? " collapsed" : ""}" data-list-id="${l.id}">
+        <button class="toggle-list" title="展開/收合">▾</button>
+        ${listIcon(l.name)} ${esc(label)}（${stocks.length}）${delBtn}
+      </div>
+      <div class="stock-list${collapsed ? " collapsed" : ""}" id="list-${l.id}">${
         stocks.length ? stocks.map(stockHtml).join("") : '<div class="empty">尚未加入任何股票</div>'
       }</div>`;
   }).join("");
