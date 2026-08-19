@@ -1,0 +1,18 @@
+{
+  "buttonMenu": "play_pause",
+  "buttonOptions": "captions",
+  "buttonA": "none",
+  "buttonB": "none",
+  "buttonX": "mute",
+  "buttonY": "none",
+  "leftShoulder": "volume_down",
+  "rightShoulder": "volume_up",
+  "leftTrigger": "rewind",
+  "rightTrigger": "fastforward",
+  "leftThumbstickButton": "none",
+  "rightThumbstickButton": "fullscreen",
+  "dpad_up": "prev_video",
+  "dpad_down": "next_video",
+  "dpad_left": "prev_chapter",
+  "dpad_right": "next_chapter"
+}
