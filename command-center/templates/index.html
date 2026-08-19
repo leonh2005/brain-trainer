@@ -81,6 +81,8 @@ header{display:flex; align-items:center; gap:16px; margin-bottom:22px}
 
 /* ── grid ── */
 .grid{display:grid; gap:13px; grid-template-columns:repeat(12,1fr); align-items:start}
+#life.grid,#tools.grid{align-items:stretch}
+#life .card,#tools .card{display:flex; flex-direction:column}
 .card{
   grid-column:span 4;
   background:var(--card);
@@ -840,6 +842,7 @@ const TOOLS=[
   {ic:'📉', title:'台股個股評估', desc:'輸入代號查個股綜合評估', site:'/svc/5100/', how:'服務常駐，開網站輸入股票代號'},
   {ic:'💹', title:'當沖模擬（即時報價）', desc:'當沖情境模擬練習，即時報價', site:'/svc/5460/', how:'服務常駐，開網站直接操作'},
   {ic:'🧮', title:'hola-quant 個人量化交易系統', desc:'HolaOS + 現有工具整合，Phase 0 開發中，無網頁介面', path:'~/CCProject/hola-quant/', how:'LaunchAgent 常駐跑後端邏輯，進度見 PLAN.md'},
+  {ic:'🎮', title:'8BitDo YouTube/抖音 控制器', desc:'藍牙手把(Switch Pro相容模式)映射鍵盤/系統音量指令，控制Mac瀏覽器YouTube/抖音播放；依前景分頁自動切換對應，網頁可即時改按鍵/一鍵套用預設', site:'/svc/5970/', how:'LaunchAgent 常駐（com.steven.controller-media + com.steven.controller-media-ui），開機自動啟動'},
 ];
 function mountTools(){
   const wrap=$('#tools');

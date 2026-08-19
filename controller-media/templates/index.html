@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>8BitDo YouTube 控制器</title>
+<style>
+  :root { color-scheme: dark; }
+  body {
+    margin: 0; padding: 2rem; min-height: 100vh; box-sizing: border-box;
+    background: #14151a; color: #e8e8ec;
+    font-family: -apple-system, "PingFang TC", "Helvetica Neue", sans-serif;
+  }
+  .wrap { max-width: 640px; margin: 0 auto; }
+  h1 { font-size: 1.4rem; margin-bottom: 0.25rem; }
+  .sub { color: #8a8b92; font-size: 0.9rem; margin-bottom: 1.5rem; }
+  .card {
+    background: #1c1d24; border: 1px solid #2a2b33; border-radius: 12px;
+    padding: 1.25rem 1.5rem; margin-bottom: 1.25rem;
+  }
+  .status-row { display: flex; align-items: center; gap: 0.6rem; }
+  .dot { width: 10px; height: 10px; border-radius: 50%; background: #555; flex-shrink: 0; }
+  .dot.on { background: #3ddc84; box-shadow: 0 0 8px #3ddc84; }
+  .dot.off { background: #e05252; }
+  .controller-name { color: #8a8b92; font-size: 0.85rem; }
+  .last-action { margin-top: 0.75rem; font-size: 1.1rem; min-height: 1.4em; }
+  .last-action .label { color: #8a8b92; font-size: 0.8rem; display: block; margin-bottom: 0.15rem; }
+  table { width: 100%; border-collapse: collapse; }
+  td { padding: 0.55rem 0; border-bottom: 1px solid #2a2b33; font-size: 0.95rem; vertical-align: middle; }
+  td:first-child { color: #9fb8ff; font-weight: 600; width: 35%; }
+  tr:last-child td { border-bottom: none; }
+  select {
+    width: 100%; background: #14151a; color: #e8e8ec; border: 1px solid #34353f;
+    border-radius: 6px; padding: 0.4rem 0.5rem; font-size: 0.9rem;
+  }
+  .save-row { display: flex; align-items: center; gap: 1rem; margin-top: 1.25rem; }
+  button {
+    background: #4c7bff; color: white; border: none; border-radius: 8px;
+    padding: 0.6rem 1.4rem; font-size: 0.95rem; cursor: pointer;
+  }
+  button:hover { background: #3d69e6; }
+  .saved-msg { color: #3ddc84; font-size: 0.9rem; }
+  .preset-row { display: flex; gap: 0.75rem; margin-bottom: 1.25rem; }
+  .preset-row form { flex: 1; margin: 0; }
+  .preset-btn {
+    width: 100%; background: #2a2b33; color: #e8e8ec; border: 1px solid #3a3b45;
+    border-radius: 8px; padding: 0.6rem 1rem; font-size: 0.9rem; cursor: pointer;
+  }
+  .preset-btn:hover { background: #34353f; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>8BitDo → YouTube 控制器</h1>
+  <div class="sub">背景服務將手把輸入轉成鍵盤/系統音量指令</div>
+
+  <div class="card">
+    <div class="status-row">
+      <div class="dot" id="dot"></div>
+      <div>
+        <div id="status-text">檢查中…</div>
+        <div class="controller-name" id="controller-name"></div>
+        <div class="controller-name" id="profile-name"></div>
+      </div>
+    </div>
+    <div class="last-action">
+      <span class="label">最近動作</span>
+      <span id="last-action">—</span>
+    </div>
+  </div>
+
+  <div class="preset-row">
+    <form method="post" action="/api/preset/youtube">
+      <button type="submit" class="preset-btn">一鍵套用 YouTube 預設</button>
+    </form>
+    <form method="post" action="/api/preset/douyin">
+      <button type="submit" class="preset-btn">一鍵套用 抖音 預設</button>
+    </form>
+  </div>
+
+  <form class="card" method="post" action="/api/config">
+    <table>
+      {% for button_id, button_label, current in rows %}
+      <tr>
+        <td>{{ button_label }}</td>
+        <td>
+          <select name="{{ button_id }}">
+            {% for aid, alabel in action_options %}
+            <option value="{{ aid }}" {% if aid == current %}selected{% endif %}>{{ alabel }}</option>
+            {% endfor %}
+          </select>
+        </td>
+      </tr>
+      {% endfor %}
+    </table>
+    <div class="save-row">
+      <button type="submit">儲存設定</button>
+      {% if saved %}<span class="saved-msg">已儲存，控制服務會在幾秒內自動套用</span>{% endif %}
+    </div>
+  </form>
+</div>
+
+<script>
+async function poll() {
+  try {
+    const r = await fetch('/api/status');
+    const d = await r.json();
+    const dot = document.getElementById('dot');
+    const statusText = document.getElementById('status-text');
+    const nameEl = document.getElementById('controller-name');
+    const actionEl = document.getElementById('last-action');
+    if (d.connected) {
+      dot.className = 'dot on';
+      statusText.textContent = '手把已連線';
+      nameEl.textContent = d.controller_name || '';
+      const profileNames = {youtube: '目前模式：YouTube', douyin: '目前模式：抖音'};
+      document.getElementById('profile-name').textContent = profileNames[d.profile] || '目前模式：自動偵測中…';
+    } else {
+      dot.className = 'dot off';
+      statusText.textContent = '手把未連線 / 服務未執行';
+      nameEl.textContent = '';
+      document.getElementById('profile-name').textContent = '';
+    }
+    if (d.last_action) {
+      const ago = d.last_action_at ? Math.max(0, (Date.now()/1000 - d.last_action_at)).toFixed(0) : '';
+      actionEl.textContent = d.last_action + (ago ? ` (${ago}s 前)` : '');
+    }
+  } catch (e) {
+    document.getElementById('status-text').textContent = '無法連線到服務';
+  }
+}
+poll();
+setInterval(poll, 1500);
+</script>
+</body>
+</html>
