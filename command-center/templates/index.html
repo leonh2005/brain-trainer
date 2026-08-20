@@ -34,6 +34,30 @@ body{
 .main{padding:22px 26px 60px; min-width:0}
 @media(max-width:1100px){.layout{grid-template-columns:1fr}.chat-col{display:none}}
 
+/* ── 手機版 ── */
+@media(max-width:640px){
+  .main{padding:14px 12px 40px}
+  header{flex-wrap:wrap; gap:10px; margin-bottom:14px}
+  .brand h1{font-size:15px}
+  .brand .sub{font-size:10px}
+  #reorder-toggle{order:3; width:100%; justify-content:center}
+  .clock{margin-left:auto}
+  .health-bar{padding:9px 11px; margin-bottom:16px; font-size:10.5px}
+  .health-bar .hb-title{width:100%; margin-right:0}
+  .hb-count{margin-left:0}
+  .sec-label{margin:20px 0 10px}
+  .grid{gap:10px}
+  .card,.card.resizing{width:100%!important; height:auto!important; resize:none}
+  .card-head .resize-btn{display:none}
+  .actions{gap:7px}
+  .btn{padding:8px 12px; font-size:12px}
+  .stock-in{width:100%}
+  .stock-in input{flex:1; width:auto}
+  .row-grid{grid-template-columns:1fr}
+  .mg{grid-template-columns:1fr 1fr; gap:8px 12px}
+  .bigstat .n{font-size:26px}
+}
+
 /* ── header ── */
 header{display:flex; align-items:center; gap:16px; margin-bottom:22px}
 .brand{display:flex; align-items:center; gap:11px}

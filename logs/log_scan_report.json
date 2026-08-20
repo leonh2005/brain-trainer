@@ -1,6 +1,6 @@
 {
-  "scanned_at": "2026-08-20 03:00:26",
-  "since": "2026-08-19 03:00:01",
+  "scanned_at": "2026-08-21 03:00:24",
+  "since": "2026-08-20 03:00:00",
   "results": {
     "市場儀表板": {
       "exists": true,
@@ -16,8 +16,8 @@
     },
     "motion-watcher": {
       "exists": true,
-      "errors": 691,
-      "last_error": "2026-08-20 02:57:58,730 WARNING 讀取影格失敗，重新連線",
+      "errors": 604,
+      "last_error": "2026-08-21 02:54:09,940 WARNING 讀取影格失敗，重新連線",
       "fix": "尚無對應建議，需人工判斷"
     },
     "Cloudflare Tunnel": {
@@ -28,15 +28,15 @@
     },
     "財經新聞分析": {
       "exists": true,
-      "errors": 1,
-      "last_error": "2026-08-19 03:30:03,375 [WARNING] fetcher.ptt_fetcher: PTT index fetch failed: HTTPSConnectionPool(host='www.ptt.cc', port=443): Max retries exceeded with url: /bbs/Stock/index.html (Caused by NewConnectionError(\"HTTPSConnection(host='www.ptt.cc', port=443): Failed to establish a new connection: [Er",
-      "fix": "Port 被佔用或服務未啟動 → 檢查 LaunchAgent 是否正常載入"
+      "errors": 113,
+      "last_error": "2026-08-20 22:00:05,872 [WARNING] fetcher.ptt_fetcher: PTT article fetch failed https://www.ptt.cc/bbs/Stock/M.1768934799.A.0E1.html: ('Connection aborted.', ConnectionResetError(54, 'Connection reset by peer'))",
+      "fix": "尚無對應建議，需人工判斷"
     },
     "川普監測": {
       "exists": true,
-      "errors": 0,
-      "last_error": null,
-      "fix": null
+      "errors": 1,
+      "last_error": "2026-08-20 12:00:04,461 WARNING 分析失敗：investingLive Asia-Pacific market news: Trump vows — 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reaso",
+      "fix": "尚無對應建議，需人工判斷"
     },
     "持倉新聞(台股)": {
       "exists": true,
@@ -89,7 +89,7 @@
     "盤中監控": {
       "exists": true,
       "errors": 1,
-      "last_error": "[backfill] 2408 失敗: Topic: api/v1/data/ticks, Corr: c21, Client: PYAPI/N124711691/0819/010003/120627/220.141.33.239, payload: {'token': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYmYiOjE3ODcxMDEyMDMsImV4cCI6MTc4NzE4NzYwMywic2ltdWxhdGlvbiI6ZmFsc2UsInBlcnNvbl9pZCI6Ik4xMjQ3MTE2OTEiLCJ2ZXJzaW9uIjoiMS4zLj",
+      "last_error": "[backfill] 2408 失敗: Topic: api/v1/data/ticks, Corr: c21, Client: PYAPI/N124711691/0820/010004/007414/220.141.45.23, payload: {'token': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYmYiOjE3ODcxODc2MDQsImV4cCI6MTc4NzI3NDAwNCwic2ltdWxhdGlvbiI6ZmFsc2UsInBlcnNvbl9pZCI6Ik4xMjQ3MTE2OTEiLCJ2ZXJzaW9uIjoiMS4zLjI",
       "fix": "尚無對應建議，需人工判斷"
     },
     "蝦皮軟纖監測": {
@@ -100,9 +100,9 @@
     },
     "自動簽到": {
       "exists": true,
-      "errors": 1,
-      "last_error": "[2026-08-19 09:00:01] ❌ 簽到失敗 (400): {\"message\":\"\\u672c\\u65e5\\u5df2\\u7c3d\\u5230\\u5b8c\\u7562\",\"errorCode\":400,\"status\":\"fail\"}",
-      "fix": "尚無對應建議，需人工判斷"
+      "errors": 0,
+      "last_error": null,
+      "fix": null
     },
     "夜間健康檢查": {
       "exists": true,
