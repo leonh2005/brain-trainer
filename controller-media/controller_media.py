@@ -108,24 +108,35 @@ nc.addObserverForName_object_queue_usingBlock_(
     GameController.GCControllerDidConnectNotification, None, None, lambda n: None
 )
 
-print("waiting for controller...", flush=True)
-controller = None
-while controller is None:
-    NSRunLoop.currentRunLoop().runUntilDate_(NSDate.dateWithTimeIntervalSinceNow_(0.2))
-    cs = GameController.GCController.controllers()
-    if cs:
-        controller = cs[0]
+def bind_controller():
+    print("waiting for controller...", flush=True)
+    c = None
+    while c is None:
+        NSRunLoop.currentRunLoop().runUntilDate_(NSDate.dateWithTimeIntervalSinceNow_(0.2))
+        cs = GameController.GCController.controllers()
+        if cs:
+            c = cs[0]
+    name = c.vendorName()
+    print(f"bound: {name}, polling...", flush=True)
+    write_state(connected=True, controller_name=name)
+    return c, c.extendedGamepad(), name
 
-gp = controller.extendedGamepad()
+
+controller, gp, controller_name = bind_controller()
 dpad = gp.dpad()
-controller_name = controller.vendorName()
-print(f"bound: {controller_name}, polling...", flush=True)
-write_state(connected=True, controller_name=controller_name)
+REBIND_CHECK_SEC = 2
+last_rebind_check = 0.0
 
 
 def get_pressed(button_id):
     if button_id.startswith("dpad_"):
         return getattr(dpad, button_id.split("_", 1)[1])().isPressed()
+    if button_id.startswith("leftThumbstick_"):
+        direction = button_id.split("_", 1)[1]
+        return getattr(gp.leftThumbstick(), direction)().isPressed()
+    if button_id.startswith("rightThumbstick_"):
+        direction = button_id.split("_", 1)[1]
+        return getattr(gp.rightThumbstick(), direction)().isPressed()
     return getattr(gp, button_id)().isPressed()
 
 
@@ -140,6 +151,13 @@ last_auto_switch = 0.0
 
 while True:
     now = time.time()
+
+    if now - last_rebind_check >= REBIND_CHECK_SEC:
+        last_rebind_check = now
+        if controller not in GameController.GCController.controllers():
+            controller, gp, controller_name = bind_controller()
+            dpad = gp.dpad()
+            prev = {}
 
     if now - last_auto_switch >= AUTO_SWITCH_SEC:
         last_auto_switch = now

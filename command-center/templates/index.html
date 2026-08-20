@@ -371,6 +371,10 @@ function streakTxt(item){
   if(s==null||s===0)return '';
   return s>0?`<span class="chg up" style="font-size:11px">🔥連漲${s}天</span>`:`<span class="chg down" style="font-size:11px">🥶連跌${-s}天</span>`;
 }
+function buyTxt(item){
+  if(item.buy_shares==null)return '';
+  return `<span style="font-size:11px;color:var(--text-dim)">💰${item.buy_shares}股/${Math.round(item.buy_amount).toLocaleString()}</span>`;
+}
 function sortCandidates(rows){
   return rows.slice().sort((a,b)=>{
     const sa=checksScore(a),sb=checksScore(b);
@@ -422,8 +426,9 @@ function renderSwing(d){
         const scoreTxt=sc.total?` <span class="chg ${sc.full?'up':'down'}" style="font-size:11px">${sc.passed}/${sc.total}</span>`:'';
         const priceTxt=r.close!=null?` <span style="font-family:var(--mono);color:var(--text-dim)">${fmt(r.close)}</span>`:'';
         const streakBadge=streakTxt(r)?' '+streakTxt(r):'';
+        const buyBadge=buyTxt(r)?' '+buyTxt(r):'';
         const b=el('span','pill');
-        b.innerHTML=tkLink(r.name,r.code,' style="font-size:12px"')+priceTxt+scoreTxt+streakBadge;
+        b.innerHTML=tkLink(r.name,r.code,' style="font-size:12px"')+priceTxt+scoreTxt+streakBadge+buyBadge;
         pills.appendChild(b);
       });
       box.appendChild(pills);

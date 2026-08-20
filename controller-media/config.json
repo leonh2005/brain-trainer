@@ -11,8 +11,10 @@
   "rightTrigger": "fastforward",
   "leftThumbstickButton": "none",
   "rightThumbstickButton": "fullscreen",
-  "dpad_up": "prev_video",
-  "dpad_down": "next_video",
-  "dpad_left": "prev_chapter",
-  "dpad_right": "next_chapter"
+  "leftThumbstick_left": "none",
+  "leftThumbstick_right": "none",
+  "dpad_up": "none",
+  "dpad_down": "none",
+  "dpad_left": "prev_video",
+  "dpad_right": "next_video"
 }
