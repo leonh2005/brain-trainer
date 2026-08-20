@@ -197,7 +197,7 @@ _support_cache: dict = {}
 
 
 def _support_levels(code: str):
-    """算支撐位，5分鐘記憶體快取（避免同一股票被多張卡片重複打 gateway）"""
+    """算支撐位＋回傳近90天日K供畫圖，5分鐘記憶體快取（避免同一股票被多張卡片重複打 gateway）"""
     now = time.time()
     hit = _support_cache.get(code)
     if hit and now - hit[0] < 300:
@@ -208,14 +208,15 @@ def _support_levels(code: str):
     if bars and bars[-1].get('date') == today_str:
         bars = bars[:-1]
     levels = support_mod.analyze_support(bars)
-    _support_cache[code] = (now, levels)
-    return levels
+    result = (levels, bars[-90:])
+    _support_cache[code] = (now, result)
+    return result
 
 
 @_wrap
 def support(code: str):
-    levels = _support_levels(code)
-    return {'code': code, 'levels': levels}, datetime.now().strftime('%Y-%m-%d %H:%M')
+    levels, chart_bars = _support_levels(code)
+    return {'code': code, 'levels': levels, 'bars': chart_bars}, datetime.now().strftime('%Y-%m-%d %H:%M')
 
 
 def _enrich_track_results(results: list, checked_at: str) -> list:
