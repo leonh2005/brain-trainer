@@ -224,5 +224,5 @@ def analyze_support(bars):
             merged.append(dict(lv))
     merged.sort(key=lambda x: x['price'], reverse=True)
     current_price = bars[-1]['close']
-    merged = [m for m in merged if m['price'] >= current_price * 0.85]
+    merged = [m for m in merged if current_price * 0.85 <= m['price'] <= current_price]
     return merged[:5]
