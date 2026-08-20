@@ -170,6 +170,9 @@ def _price_streak(code: str):
         bars = d.get('bars') or []
     except Exception:
         return None
+    today_str = datetime.now().strftime('%Y-%m-%d')
+    if bars and bars[-1].get('date') == today_str:
+        bars = bars[:-1]  # 今天尚未收盤，不列入連漲跌計算（盤中價會反轉，盤前更可能是 gateway 補的假K）
     closes = [b['close'] for b in bars if b.get('close') is not None]  # 舊到新
     if len(closes) < 2:
         return None
@@ -233,14 +236,21 @@ def daytrade():
     return d, _mtime(p)
 
 
+SWING_DAILY_BUDGET = 1_000_000  # 隔日沖每日投入總額，平均分配到當天所有候選標的
+
+
 @_wrap
 def swing():
     p = '/tmp/swing_candidates.json'
     d = _read_json(p)
     results = d.get('results', [])
+    budget_per = SWING_DAILY_BUDGET / len(results) if results else 0
     for r in results:
         r['sector'] = _stock_sector(r.get('code', ''))
         r['streak'] = _price_streak(r.get('code', ''))
+        if r.get('close'):
+            r['buy_shares'] = int(budget_per // r['close'])
+            r['buy_amount'] = r['buy_shares'] * r['close']
     track_path = f'{CC}/telebot/data/swing_track.json'
     if os.path.exists(track_path):
         with open(track_path, encoding='utf-8') as f:
