@@ -100,13 +100,16 @@ def swing_low_support(bars):
         avg_price = sum(g['prices']) / len(g['prices'])
         strength = 1 + len(g['idxs'])
         sources = [f"波段低點×{len(g['idxs'])}次"]
+        volume_bonus = False
         for i in g['idxs']:
             if bottoming_pattern(bars, i):
                 strength += 1
                 sources.append(f"{bars[i]['date']}止跌K線")
             if volume_confirmed(bars, i):
-                strength += 1
                 sources.append(f"{bars[i]['date']}量能放大")
+                volume_bonus = True
+        if volume_bonus:
+            strength += 1
         levels.append({'price': round(avg_price, 2), 'strength': min(strength, 5), 'sources': sources})
     return levels
 
@@ -220,4 +223,6 @@ def analyze_support(bars):
         if not placed:
             merged.append(dict(lv))
     merged.sort(key=lambda x: x['price'], reverse=True)
-    return merged
+    current_price = bars[-1]['close']
+    merged = [m for m in merged if m['price'] >= current_price * 0.85]
+    return merged[:5]
