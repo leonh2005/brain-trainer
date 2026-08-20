@@ -7,7 +7,7 @@
   GET /health                              -> {status, logged_in}
   GET /snapshot?codes=IX0001,2330,2454     -> {ok, data:{code:{close,change_price,change_rate}}}
   GET /kbars?code=2330&days=30             -> {ok, closes:[...]}  (與 api.kbars(...).Close 相同)
-  GET /intraday?code=IX0001                -> {ok, points:[{t:"09:01",price:23458.1},...]}  (當日 1 分鐘走勢)
+  GET /intraday?code=IX0001[&date=2026-08-14] -> {ok, points:[{t:"09:01",price:23458.1},...]}  (指定日1分鐘走勢，預設當日)
 """
 import heapq
 import itertools
@@ -274,13 +274,13 @@ def _append_today_via_yfinance(code, bars):
 @app.get("/intraday")
 def intraday():
     code = request.args.get("code", "")
+    target_date = request.args.get("date") or date.today().strftime("%Y-%m-%d")
     if not code:
         return jsonify({"ok": False, "error": "no code"}), 400
     try:
         def work(api):
             contract = _resolve_contract(api, code)
-            today = date.today().strftime("%Y-%m-%d")
-            kb = api.kbars(contract=contract, start=today, end=today)
+            kb = api.kbars(contract=contract, start=target_date, end=target_date)
             points = []
             for ts, close, volume in zip(kb.ts, kb.Close, kb.Volume):
                 if close is None:

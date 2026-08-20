@@ -78,22 +78,22 @@
 
   <div class="tab-row">
     {% for p in profiles %}
-    <a class="tab-link {% if p == profile %}active{% endif %}" href="{{ url_for('index', profile=p) }}">
+    <a class="tab-link {% if p == profile %}active{% endif %}" href="?profile={{ p }}">
       {{ '抖音' if p == 'douyin' else 'YouTube' }} 設定
     </a>
     {% endfor %}
   </div>
 
   <div class="preset-row">
-    <form method="post" action="/api/preset/youtube">
+    <form method="post" action="api/preset/youtube">
       <button type="submit" class="preset-btn">一鍵套用 YouTube 預設</button>
     </form>
-    <form method="post" action="/api/preset/douyin">
+    <form method="post" action="api/preset/douyin">
       <button type="submit" class="preset-btn">一鍵套用 抖音 預設</button>
     </form>
   </div>
 
-  <form class="card" method="post" action="/api/config">
+  <form class="card" method="post" action="api/config">
     <input type="hidden" name="profile" value="{{ profile }}">
     <table>
       {% for button_id, button_label, current in rows %}
@@ -119,7 +119,7 @@
 <script>
 async function poll() {
   try {
-    const r = await fetch('/api/status');
+    const r = await fetch('api/status');
     const d = await r.json();
     const dot = document.getElementById('dot');
     const statusText = document.getElementById('status-text');

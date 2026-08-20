@@ -28,7 +28,7 @@
   "douyin": {
     "buttonMenu": "play_pause",
     "buttonOptions": "douyin_like",
-    "buttonA": "none",
+    "buttonA": "douyin_follow",
     "buttonB": "douyin_favorite",
     "buttonX": "douyin_comment",
     "buttonY": "douyin_clear_screen",

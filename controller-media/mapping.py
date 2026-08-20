@@ -6,7 +6,7 @@ CONFIG_PATH = Path(__file__).parent / "config.json"
 KEY = {
     "space": 49, "left": 123, "right": 124, "up": 126, "down": 125,
     "m": 46, "c": 8, "f": 3, "j": 38, "l": 37, "n": 45, "p": 35,
-    "x": 7, "z": 6, "h": 4,
+    "x": 7, "z": 6, "h": 4, "g": 5, "[": 33, "]": 30,
 }
 
 ACTIONS = {
@@ -18,8 +18,8 @@ ACTIONS = {
     "next_video": {"label": "下一部影片 (YouTube)", "key": "n", "shift": True},
     "rewind": {"label": "倒轉 10 秒 (YouTube)", "key": "j", "repeat": True},
     "fastforward": {"label": "快轉 10 秒 (YouTube)", "key": "l", "repeat": True},
-    "prev_chapter": {"label": "上一章節 (YouTube)", "key": "left", "ctrl": True},
-    "next_chapter": {"label": "下一章節 (YouTube)", "key": "right", "ctrl": True},
+    "prev_chapter": {"label": "上一章節 (YouTube)", "key": "left", "alt": True},
+    "next_chapter": {"label": "下一章節 (YouTube)", "key": "right", "alt": True},
     "seek_back": {"label": "倒退 5 秒", "key": "left", "repeat": True},
     "seek_forward": {"label": "快轉 5 秒", "key": "right", "repeat": True},
     "douyin_prev": {"label": "上一部影片 (抖音)", "key": "up"},
@@ -29,6 +29,9 @@ ACTIONS = {
     "douyin_favorite": {"label": "收藏 (抖音)", "key": "c"},
     "douyin_fullscreen": {"label": "全螢幕 (抖音)", "key": "h"},
     "douyin_clear_screen": {"label": "清屏 (抖音)", "key": "j"},
+    "douyin_prev_chapter": {"label": "上一段標記 (抖音)", "key": "[", "ctrl": True},
+    "douyin_next_chapter": {"label": "下一段標記 (抖音)", "key": "]", "ctrl": True},
+    "douyin_follow": {"label": "關注 (抖音)", "key": "g"},
     "volume_down": {"label": "系統音量 -", "volume_delta": -6, "repeat": True},
     "volume_up": {"label": "系統音量 +", "volume_delta": 6, "repeat": True},
     "none": {"label": "無動作"},
