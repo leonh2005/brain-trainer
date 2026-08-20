@@ -12,6 +12,7 @@ from mapping import ACTIONS, BUTTONS, CONFIG_PATH, DEFAULT_PROFILE, KEY, load_co
 STATE_PATH = Path(__file__).parent / "state.json"
 HEARTBEAT_SEC = 2
 REPEAT_SEC = 0.4
+DEBOUNCE_SEC = 0.15
 CONFIG_CHECK_SEC = 1
 AUTO_SWITCH_SEC = 2
 
@@ -34,6 +35,7 @@ def detect_profile():
         title = result.stdout.strip()
     except (subprocess.SubprocessError, OSError):
         return None
+    print(f"[{time.strftime('%H:%M:%S')}] detect_profile title={title!r}", flush=True)
     if "YouTube" in title:
         return "youtube"
     if "抖音" in title or "Douyin" in title or "TikTok" in title:
@@ -64,21 +66,39 @@ def write_state(last_action=None, connected=True, controller_name=""):
     STATE_PATH.write_text(json.dumps(data))
 
 
-def tap_key(key, label, shift=False, ctrl=False):
+MODIFIER_KEYCODES = {"shift": 56, "ctrl": 59, "alt": 58}
+
+
+def tap_key(key, label, shift=False, ctrl=False, alt=False):
     code = KEY[key]
-    down = Quartz.CGEventCreateKeyboardEvent(None, code, True)
-    up = Quartz.CGEventCreateKeyboardEvent(None, code, False)
+    modifiers = [name for name, held in (("shift", shift), ("ctrl", ctrl), ("alt", alt)) if held]
     flags = 0
     if shift:
         flags |= Quartz.kCGEventFlagMaskShift
     if ctrl:
         flags |= Quartz.kCGEventFlagMaskControl
+    if alt:
+        flags |= Quartz.kCGEventFlagMaskAlternate
+
+    for name in modifiers:
+        mod_down = Quartz.CGEventCreateKeyboardEvent(None, MODIFIER_KEYCODES[name], True)
+        Quartz.CGEventSetFlags(mod_down, flags)
+        Quartz.CGEventPost(Quartz.kCGHIDEventTap, mod_down)
+
+    down = Quartz.CGEventCreateKeyboardEvent(None, code, True)
+    up = Quartz.CGEventCreateKeyboardEvent(None, code, False)
     if flags:
         Quartz.CGEventSetFlags(down, flags)
         Quartz.CGEventSetFlags(up, flags)
     Quartz.CGEventPost(Quartz.kCGHIDEventTap, down)
     Quartz.CGEventPost(Quartz.kCGHIDEventTap, up)
-    print(f"-> {label}", flush=True)
+
+    for name in reversed(modifiers):
+        mod_up = Quartz.CGEventCreateKeyboardEvent(None, MODIFIER_KEYCODES[name], False)
+        Quartz.CGEventSetFlags(mod_up, 0)
+        Quartz.CGEventPost(Quartz.kCGHIDEventTap, mod_up)
+
+    print(f"[{time.strftime('%H:%M:%S')}] -> {label}", flush=True)
     write_state(last_action=label)
 
 
@@ -87,7 +107,7 @@ def do_volume(delta, label):
         "osascript", "-e",
         f"set volume output volume ((output volume of (get volume settings)) + ({delta}))"
     ])
-    print(f"-> {label}", flush=True)
+    print(f"[{time.strftime('%H:%M:%S')}] -> {label}", flush=True)
     write_state(last_action=label)
 
 
@@ -96,7 +116,7 @@ def run_action(action_id):
     if not action or action_id == "none":
         return
     if "key" in action:
-        tap_key(action["key"], action["label"], shift=action.get("shift", False), ctrl=action.get("ctrl", False))
+        tap_key(action["key"], action["label"], shift=action.get("shift", False), ctrl=action.get("ctrl", False), alt=action.get("alt", False))
     elif "volume_delta" in action:
         do_volume(action["volume_delta"], action["label"])
 
@@ -109,7 +129,7 @@ nc.addObserverForName_object_queue_usingBlock_(
 )
 
 def bind_controller():
-    print("waiting for controller...", flush=True)
+    print(f"[{time.strftime('%H:%M:%S')}] waiting for controller...", flush=True)
     c = None
     while c is None:
         NSRunLoop.currentRunLoop().runUntilDate_(NSDate.dateWithTimeIntervalSinceNow_(0.2))
@@ -117,7 +137,7 @@ def bind_controller():
         if cs:
             c = cs[0]
     name = c.vendorName()
-    print(f"bound: {name}, polling...", flush=True)
+    print(f"[{time.strftime('%H:%M:%S')}] bound: {name}, polling...", flush=True)
     write_state(connected=True, controller_name=name)
     return c, c.extendedGamepad(), name
 
@@ -164,12 +184,13 @@ while True:
         last_auto_switch = now
         detected = detect_profile()
         should_control = detected is not None
+        print(f"[{time.strftime('%H:%M:%S')}] profile-check detected={detected} should_control={should_control}", flush=True)
         if detected and detected != active_profile:
             config = load_config(detected)
             config_mtime = CONFIG_PATH.stat().st_mtime if CONFIG_PATH.exists() else 0
             active_profile = detected
             current_profile = detected
-            print(f"auto-switched profile -> {detected}", flush=True)
+            print(f"[{time.strftime('%H:%M:%S')}] auto-switched profile -> {detected}", flush=True)
 
     if now - last_config_check >= CONFIG_CHECK_SEC:
         last_config_check = now
@@ -177,16 +198,18 @@ while True:
         if mtime != config_mtime:
             config = load_config(active_profile)
             config_mtime = mtime
-            print("config reloaded", flush=True)
+            print(f"[{time.strftime('%H:%M:%S')}] config reloaded", flush=True)
 
     for button_id, _ in BUTTONS:
         pressed = get_pressed(button_id)
         action_id = config.get(button_id, "none")
         repeatable = ACTIONS.get(action_id, {}).get("repeat", False)
         fire = should_control and pressed and (
-            not prev.get(button_id)
+            (not prev.get(button_id) and now - last_fire.get(button_id, 0) >= DEBOUNCE_SEC)
             or (repeatable and now - last_fire.get(button_id, 0) >= REPEAT_SEC)
         )
+        if button_id in ("rightTrigger", "buttonX", "leftThumbstick_left", "leftThumbstick_right") and pressed != prev.get(button_id):
+            print(f"[{time.strftime('%H:%M:%S')}] {button_id} pressed={pressed} should_control={should_control} fire={fire}", flush=True)
         if fire:
             run_action(action_id)
             last_fire[button_id] = now

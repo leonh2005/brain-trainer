@@ -9,6 +9,7 @@
 import json
 import logging
 import os
+import re
 import sqlite3
 import shutil
 import tempfile
@@ -157,20 +158,21 @@ def run():
         more_btn.click()
         page.wait_for_timeout(800)
 
-        # 「置頂推廣」在下拉選單裡；冷卻中會顯示倒數計時而非文字，用 innerText 搜尋兩種情況
-        if '置頂推廣數量已被全部使用' in page.content():
-            import re
-            m = re.search(r'count-cool">(\d{2}:\d{2}:\d{2})', page.content())
-            remain = m.group(1) if m else '未知'
-            # 內部狀態未記錄到但實際還在冷卻（例如手動用過 App 版），這裡順手記錄，避免下次仍白跑一次瀏覽器
-            logger.info(f'置頂推廣冷卻中（頁面偵測），剩餘 {remain}')
-            browser.close()
-            return
-
-        boost_item = page.locator('li:has-text("置頂推廣")').first
+        # 「置頂推廣」在下拉選單裡；頁面上其他商品列的隱藏選單模板也含「已被全部使用」提示字串，
+        # 所以只能在「目前彈出來、真的看得到的那個選單」裡找，不能整頁原始碼搜尋（否則永遠誤判成冷卻中）
+        visible_menu = page.locator('ul.eds-dropdown-menu:visible')
+        boost_item = visible_menu.locator('li:has-text("置頂推廣")').first
         if boost_item.count() == 0:
             notify('⚠️ 蝦皮置頂推廣：下拉選單找不到「置頂推廣」選項，UI可能改版了')
             logger.error('找不到置頂推廣選項，UI可能改版')
+            browser.close()
+            return
+
+        item_text = boost_item.inner_text()
+        if '點我置頂推廣' not in item_text:
+            m = re.search(r'(\d{2}:\d{2}:\d{2})', item_text)
+            remain = m.group(1) if m else '未知'
+            logger.info(f'置頂推廣冷卻中（頁面偵測），剩餘 {remain}')
             browser.close()
             return
 
