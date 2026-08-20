@@ -136,3 +136,88 @@ def round_number_support(bars, current_price):
                 sources.append(f"{b['date']}長下影線")
         levels.append({'price': float(level_price), 'strength': min(strength, 5), 'sources': sources})
     return levels
+
+
+def trendline_support(bars):
+    """訊號2：上升趨勢線支撐 — 取最近2~3個波段低點做線性回歸，斜率須為正才算上升趨勢；
+    若近3天收盤明顯跌破線且量能配合，視為失效不列入"""
+    idxs = find_swing_lows(bars)
+    if len(idxs) < 2:
+        return []
+    recent = idxs[-3:] if len(idxs) >= 3 else idxs[-2:]
+    xs, ys = recent, [bars[i]['low'] for i in recent]
+    n = len(xs)
+    mean_x, mean_y = sum(xs) / n, sum(ys) / n
+    denom = sum((x - mean_x) ** 2 for x in xs)
+    if denom == 0:
+        return []
+    slope = sum((x - mean_x) * (y - mean_y) for x, y in zip(xs, ys)) / denom
+    if slope <= 0:
+        return []
+    intercept = mean_y - slope * mean_x
+    last_idx = len(bars) - 1
+    line_price = slope * last_idx + intercept
+    current_close = bars[-1]['close']
+    for i in range(max(0, last_idx - 2), last_idx + 1):
+        line_at_i = slope * i + intercept
+        if bars[i]['close'] < line_at_i * 0.995 and volume_confirmed(bars, i):
+            return []
+    if line_price >= current_close:
+        return []
+    return [{
+        'price': round(line_price, 2), 'strength': 3,
+        'sources': [f"上升趨勢線(連接{bars[recent[0]]['date']}~{bars[recent[-1]]['date']}低點)"],
+    }]
+
+
+def _ma_series(bars, n):
+    if len(bars) < n:
+        return None
+    return [sum(b['close'] for b in bars[i - n + 1:i + 1]) / n for i in range(n - 1, len(bars))]
+
+
+def ma_support(bars):
+    """訊號3：均線動態支撐 MA20/60/120/250 — 均線本身須向上，現價須在均線上方才算有效支撐"""
+    current_close = bars[-1]['close']
+    levels = []
+    for n in (20, 60, 120, 250):
+        if len(bars) < n + 5:
+            continue
+        ma_series = _ma_series(bars, n)
+        ma_now, ma_5ago = ma_series[-1], ma_series[-6] if len(ma_series) >= 6 else ma_series[0]
+        if ma_now <= ma_5ago or current_close < ma_now:
+            continue
+        strength = 2
+        sources = [f"MA{n}向上"]
+        offset = len(bars) - len(ma_series)
+        for i in range(max(0, len(bars) - 20), len(bars)):
+            j = i - offset
+            if 0 <= j < len(ma_series):
+                ma_i = ma_series[j]
+                if abs(bars[i]['low'] - ma_i) / ma_i <= 0.015 and bottoming_pattern(bars, i):
+                    strength += 1
+                    sources.append(f"{bars[i]['date']}止跌於MA{n}")
+        levels.append({'price': round(ma_now, 2), 'strength': min(strength, 5), 'sources': sources})
+    return levels
+
+
+def analyze_support(bars):
+    """整合6種訊號，合併相近價位(±1.5%)，回傳依price由高到低排序的支撐位列表"""
+    if len(bars) < 30:
+        return []
+    all_levels = (swing_low_support(bars) + trendline_support(bars)
+                  + ma_support(bars) + round_number_support(bars, bars[-1]['close']))
+    merged = []
+    for lv in sorted(all_levels, key=lambda x: x['price'], reverse=True):
+        placed = False
+        for m in merged:
+            if abs(lv['price'] - m['price']) / m['price'] <= 0.015:
+                m['strength'] = min(5, m['strength'] + 1)
+                m['sources'] += lv['sources']
+                m['price'] = round((m['price'] + lv['price']) / 2, 2)
+                placed = True
+                break
+        if not placed:
+            merged.append(dict(lv))
+    merged.sort(key=lambda x: x['price'], reverse=True)
+    return merged
