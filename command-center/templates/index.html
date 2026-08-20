@@ -321,6 +321,7 @@ let tmr; function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('
 /* ── 訊號卡片定義 ── */
 const CARDS=[
   {id:'swing',   ic:'🌙', title:'隔日沖候選', span:'', url:'/api/signals/swing', render:renderSwing, site:'/svc/5500/'},
+  {id:'pullback',ic:'📈', title:'回後買候選', span:'', url:'/api/signals/pullback', render:renderPullback, site:'/svc/5960/'},
   {id:'daytrade',ic:'⚡', title:'當沖候選',   span:'', url:'/api/signals/daytrade', render:renderDaytrade, site:'/svc/5400/'},
   {id:'disposition', ic:'🚧', title:'處置股警示', span:'', url:'/api/signals/disposition', render:renderDisposition},
   {id:'intraday',ic:'🎯', title:'盤中主力訊號', span:'wide', url:'/api/signals/intraday', render:renderIntraday, site:'/svc/5400/'},
@@ -476,6 +477,32 @@ function renderSwing(d){
     const pnlSum=track.results.reduce((s,r)=>s+(r.net_pnl!=null?r.net_pnl:0),0);
     renderTrackGrouped(box,{...track,href:'/swing-history'},
       `${track.date} 候選隔天命中：${hit}/${track.results.length} 淨損益${pnlSum>=0?'+':''}${Math.round(pnlSum)}（看歷史紀錄）`);
+  }
+  return box;
+}
+function renderPullback(d){
+  const rs=(d&&d.results)||[];
+  const box=el('div');
+  if(!rs.length){
+    box.appendChild(el('div','empty','今日無符合回後買條件的候選'));
+  } else {
+    const groups=groupBySector(rs,r=>r.code,r=>r.sector);
+    groups.forEach((rows,sector)=>{
+      const head=el('div','mini','🏷️ '+sector);
+      head.style.cssText='margin-top:8px;color:var(--text-dim);font-size:11px';
+      box.appendChild(head);
+      const pills=el('div');
+      pills.style.cssText='display:flex;flex-wrap:wrap;gap:7px';
+      sortCandidates(rows).forEach(r=>{
+        const priceTxt=r.close!=null?` <span style="font-family:var(--mono);color:var(--text-dim)">${fmt(r.close)}</span>`:'';
+        const chgTxt=r.change_pct!=null?` <span class="chg ${chgCls(r.change_pct)}" style="font-size:11px">${arrow(r.change_pct)}${fmt(Math.abs(r.change_pct))}%</span>`:'';
+        const streakBadge=streakTxt(r)?' '+streakTxt(r):'';
+        const b=el('span','pill');
+        b.innerHTML=tkLink(r.name,r.code,' style="font-size:12px"')+priceTxt+chgTxt+streakBadge+supportBtn(r.code);
+        pills.appendChild(b);
+      });
+      box.appendChild(pills);
+    });
   }
   return box;
 }

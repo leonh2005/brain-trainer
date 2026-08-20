@@ -292,6 +292,17 @@ def swing():
     return d, d.get('date', _mtime(p))
 
 
+@_wrap
+def pullback():
+    p = '/tmp/pullback_candidates.json'
+    d = _read_json(p)
+    results = d.get('results', [])
+    for r in results:
+        r['sector'] = _stock_sector(r.get('code', ''))
+        r['streak'] = _price_streak(r.get('code', ''))
+    return d, d.get('date', _mtime(p))
+
+
 def _track_history(track_path: str):
     """通用歷史紀錄整理：依日期新到舊排序 + 累積命中率 + 累積損益（供 swing/daytrade history 共用）。"""
     if not os.path.exists(track_path):
@@ -661,5 +672,5 @@ def guru_tracker():
 SIGNALS = {
     'daytrade': daytrade, 'swing': swing, 'intraday': intraday, 'ma': ma,
     'chips': chips, 'news': news, 'market-fear': market_fear,
-    'disposition': disposition,
+    'disposition': disposition, 'pullback': pullback,
 }
