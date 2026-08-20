@@ -18,8 +18,8 @@ ACTIONS = {
     "next_video": {"label": "下一部影片 (YouTube)", "key": "n", "shift": True},
     "rewind": {"label": "倒轉 10 秒 (YouTube)", "key": "j", "repeat": True},
     "fastforward": {"label": "快轉 10 秒 (YouTube)", "key": "l", "repeat": True},
-    "prev_chapter": {"label": "上一章節 (YouTube)", "key": "left", "ctrl": True, "repeat": True},
-    "next_chapter": {"label": "下一章節 (YouTube)", "key": "right", "ctrl": True, "repeat": True},
+    "prev_chapter": {"label": "上一章節 (YouTube)", "key": "left", "ctrl": True},
+    "next_chapter": {"label": "下一章節 (YouTube)", "key": "right", "ctrl": True},
     "seek_back": {"label": "倒退 5 秒", "key": "left", "repeat": True},
     "seek_forward": {"label": "快轉 5 秒", "key": "right", "repeat": True},
     "douyin_prev": {"label": "上一部影片 (抖音)", "key": "up"},
@@ -28,6 +28,7 @@ ACTIONS = {
     "douyin_comment": {"label": "留言區 (抖音)", "key": "x"},
     "douyin_favorite": {"label": "收藏 (抖音)", "key": "c"},
     "douyin_fullscreen": {"label": "全螢幕 (抖音)", "key": "h"},
+    "douyin_clear_screen": {"label": "清屏 (抖音)", "key": "j"},
     "volume_down": {"label": "系統音量 -", "volume_delta": -6, "repeat": True},
     "volume_up": {"label": "系統音量 +", "volume_delta": 6, "repeat": True},
     "none": {"label": "無動作"},
@@ -93,7 +94,7 @@ PRESETS = {
         "buttonA": "none",
         "buttonB": "douyin_favorite",
         "buttonX": "douyin_comment",
-        "buttonY": "none",
+        "buttonY": "douyin_clear_screen",
         "leftShoulder": "volume_down",
         "rightShoulder": "volume_up",
         "leftTrigger": "seek_back",
@@ -115,20 +116,31 @@ PRESETS = {
     },
 }
 
-DEFAULT_CONFIG = PRESETS["youtube"]
+DEFAULT_PROFILE = "youtube"
 
 
-def load_config():
+def _read_all():
     if CONFIG_PATH.exists():
         try:
             data = json.loads(CONFIG_PATH.read_text())
-            merged = dict(DEFAULT_CONFIG)
-            merged.update(data)
-            return merged
+            if isinstance(data, dict):
+                return data
         except (json.JSONDecodeError, OSError):
             pass
-    return dict(DEFAULT_CONFIG)
+    return {}
 
 
-def save_config(config):
-    CONFIG_PATH.write_text(json.dumps(config, ensure_ascii=False, indent=2))
+def load_config(profile=DEFAULT_PROFILE):
+    merged = dict(PRESETS.get(profile, PRESETS[DEFAULT_PROFILE]))
+    saved = _read_all().get(profile)
+    if isinstance(saved, dict):
+        merged.update(saved)
+    return merged
+
+
+def save_config(profile, config):
+    data = _read_all()
+    data[profile] = config
+    tmp = CONFIG_PATH.with_suffix(".json.tmp")
+    tmp.write_text(json.dumps(data, ensure_ascii=False, indent=2))
+    tmp.replace(CONFIG_PATH)

@@ -47,6 +47,13 @@
     border-radius: 8px; padding: 0.6rem 1rem; font-size: 0.9rem; cursor: pointer;
   }
   .preset-btn:hover { background: #34353f; }
+  .tab-row { display: flex; gap: 0.5rem; margin-bottom: 1.25rem; }
+  .tab-link {
+    flex: 1; text-align: center; text-decoration: none; color: #8a8b92;
+    background: #1c1d24; border: 1px solid #2a2b33; border-radius: 8px;
+    padding: 0.6rem 1rem; font-size: 0.9rem;
+  }
+  .tab-link.active { color: #e8e8ec; background: #2a2b33; border-color: #4c7bff; }
 </style>
 </head>
 <body>
@@ -69,6 +76,14 @@
     </div>
   </div>
 
+  <div class="tab-row">
+    {% for p in profiles %}
+    <a class="tab-link {% if p == profile %}active{% endif %}" href="{{ url_for('index', profile=p) }}">
+      {{ '抖音' if p == 'douyin' else 'YouTube' }} 設定
+    </a>
+    {% endfor %}
+  </div>
+
   <div class="preset-row">
     <form method="post" action="/api/preset/youtube">
       <button type="submit" class="preset-btn">一鍵套用 YouTube 預設</button>
@@ -79,6 +94,7 @@
   </div>
 
   <form class="card" method="post" action="/api/config">
+    <input type="hidden" name="profile" value="{{ profile }}">
     <table>
       {% for button_id, button_label, current in rows %}
       <tr>

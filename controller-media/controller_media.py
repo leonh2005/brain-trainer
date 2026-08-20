@@ -7,7 +7,7 @@ import GameController
 import Quartz
 from Foundation import NSNotificationCenter, NSRunLoop, NSDate
 
-from mapping import ACTIONS, BUTTONS, CONFIG_PATH, KEY, PRESETS, load_config, save_config
+from mapping import ACTIONS, BUTTONS, CONFIG_PATH, DEFAULT_PROFILE, KEY, load_config
 
 STATE_PATH = Path(__file__).parent / "state.json"
 HEARTBEAT_SEC = 2
@@ -140,9 +140,10 @@ def get_pressed(button_id):
     return getattr(gp, button_id)().isPressed()
 
 
-config = load_config()
+config = load_config(DEFAULT_PROFILE)
 config_mtime = CONFIG_PATH.stat().st_mtime if CONFIG_PATH.exists() else 0
-active_profile = None
+active_profile = DEFAULT_PROFILE
+should_control = False
 prev = {}
 last_fire = {}
 last_heartbeat = 0.0
@@ -162,8 +163,10 @@ while True:
     if now - last_auto_switch >= AUTO_SWITCH_SEC:
         last_auto_switch = now
         detected = detect_profile()
+        should_control = detected is not None
         if detected and detected != active_profile:
-            save_config(dict(PRESETS[detected]))
+            config = load_config(detected)
+            config_mtime = CONFIG_PATH.stat().st_mtime if CONFIG_PATH.exists() else 0
             active_profile = detected
             current_profile = detected
             print(f"auto-switched profile -> {detected}", flush=True)
@@ -172,7 +175,7 @@ while True:
         last_config_check = now
         mtime = CONFIG_PATH.stat().st_mtime if CONFIG_PATH.exists() else 0
         if mtime != config_mtime:
-            config = load_config()
+            config = load_config(active_profile)
             config_mtime = mtime
             print("config reloaded", flush=True)
 
@@ -180,7 +183,7 @@ while True:
         pressed = get_pressed(button_id)
         action_id = config.get(button_id, "none")
         repeatable = ACTIONS.get(action_id, {}).get("repeat", False)
-        fire = pressed and (
+        fire = should_control and pressed and (
             not prev.get(button_id)
             or (repeatable and now - last_fire.get(button_id, 0) >= REPEAT_SEC)
         )

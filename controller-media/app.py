@@ -12,34 +12,44 @@ STALE_SEC = 6
 app = Flask(__name__)
 
 
+def _get_profile():
+    profile = request.values.get("profile", "youtube")
+    return profile if profile in PRESETS else "youtube"
+
+
 @app.route("/")
 def index():
-    config = load_config()
+    profile = _get_profile()
+    config = load_config(profile)
     rows = [
         (button_id, label, config.get(button_id, "none"))
         for button_id, label in BUTTONS
     ]
     action_options = [(aid, a["label"]) for aid, a in ACTIONS.items()]
     saved = request.args.get("saved") == "1"
-    return render_template("index.html", rows=rows, action_options=action_options, saved=saved)
+    return render_template(
+        "index.html", rows=rows, action_options=action_options, saved=saved,
+        profile=profile, profiles=list(PRESETS.keys()),
+    )
 
 
 @app.route("/api/config", methods=["POST"])
 def update_config():
-    config = load_config()
+    profile = _get_profile()
+    config = load_config(profile)
     for button_id, _ in BUTTONS:
         value = request.form.get(button_id)
         if value in ACTIONS:
             config[button_id] = value
-    save_config(config)
-    return redirect(url_for("index", saved=1))
+    save_config(profile, config)
+    return redirect(url_for("index", saved=1, profile=profile))
 
 
 @app.route("/api/preset/<name>", methods=["POST"])
 def apply_preset(name):
     if name in PRESETS:
-        save_config(dict(PRESETS[name]))
-    return redirect(url_for("index", saved=1))
+        save_config(name, dict(PRESETS[name]))
+    return redirect(url_for("index", saved=1, profile=name))
 
 
 @app.route("/api/status")
