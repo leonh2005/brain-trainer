@@ -62,3 +62,77 @@ def volume_confirmed(bars, idx):
     vol = bars[idx]['volume']
     avg5 = sum(b['volume'] for b in bars[idx - 5:idx]) / 5
     return avg5 > 0 and vol >= avg5
+
+
+def find_swing_lows(bars, window=5):
+    """找局部低點：前後各window天內，該天low為最低"""
+    lows = []
+    for i in range(window, len(bars) - window):
+        lo = bars[i]['low']
+        neighborhood = bars[i - window:i + window + 1]
+        if lo == min(b['low'] for b in neighborhood):
+            lows.append(i)
+    return lows
+
+
+def swing_low_support(bars):
+    """訊號1：波段低點水平支撐 — 相近低點(±2%)分群，出現≥2次才算有效支撐"""
+    idxs = find_swing_lows(bars)
+    if not idxs:
+        return []
+    groups = []
+    for i in idxs:
+        price = bars[i]['low']
+        placed = False
+        for g in groups:
+            gprice = sum(g['prices']) / len(g['prices'])
+            if abs(price - gprice) / gprice <= 0.02:
+                g['prices'].append(price)
+                g['idxs'].append(i)
+                placed = True
+                break
+        if not placed:
+            groups.append({'prices': [price], 'idxs': [i]})
+    levels = []
+    for g in groups:
+        if len(g['idxs']) < 2:
+            continue
+        avg_price = sum(g['prices']) / len(g['prices'])
+        strength = 1 + len(g['idxs'])
+        sources = [f"波段低點×{len(g['idxs'])}次"]
+        for i in g['idxs']:
+            if bottoming_pattern(bars, i):
+                strength += 1
+                sources.append(f"{bars[i]['date']}止跌K線")
+            if volume_confirmed(bars, i):
+                strength += 1
+                sources.append(f"{bars[i]['date']}量能放大")
+        levels.append({'price': round(avg_price, 2), 'strength': min(strength, 5), 'sources': sources})
+    return levels
+
+
+def round_number_support(bars, current_price):
+    """訊號4：整數關卡 — 依現價量級自動選單位，找現價下方最近的1-2個整數價位"""
+    if current_price >= 1000:
+        unit = 100
+    elif current_price >= 100:
+        unit = 50
+    elif current_price >= 20:
+        unit = 10
+    else:
+        unit = 5
+    lower = (int(current_price) // unit) * unit
+    candidates = [lower] if lower < current_price else []
+    candidates.append(lower - unit)
+    levels = []
+    for level_price in candidates:
+        if level_price <= 0:
+            continue
+        strength = 1
+        sources = [f"整數關卡{level_price}"]
+        for b in bars:
+            if abs(b['low'] - level_price) / level_price <= 0.015 and has_long_lower_shadow(b):
+                strength += 1
+                sources.append(f"{b['date']}長下影線")
+        levels.append({'price': float(level_price), 'strength': min(strength, 5), 'sources': sources})
+    return levels
