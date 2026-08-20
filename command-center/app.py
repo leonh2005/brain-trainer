@@ -245,6 +245,13 @@ def stock_query(symbol: str):
     return sources.stock_query(symbol)
 
 
+@app.get('/api/support/{symbol}')
+def support_query(symbol: str):
+    if not (symbol.isdigit() and 4 <= len(symbol) <= 6):
+        raise HTTPException(400, 'invalid symbol')
+    return sources.support(symbol)
+
+
 class ChatRequest(BaseModel):
     prompt: str
 

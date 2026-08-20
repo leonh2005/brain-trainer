@@ -6,6 +6,7 @@ import sqlite3
 import time
 import urllib.request
 from datetime import datetime, date, timedelta
+import support as support_mod
 
 CC = '/Users/steven/CCProject'
 
@@ -190,6 +191,31 @@ def _price_streak(code: str):
             break
         count += 1
     return count if up else -count
+
+
+_support_cache: dict = {}
+
+
+def _support_levels(code: str):
+    """算支撐位，5分鐘記憶體快取（避免同一股票被多張卡片重複打 gateway）"""
+    now = time.time()
+    hit = _support_cache.get(code)
+    if hit and now - hit[0] < 300:
+        return hit[1]
+    d = _proxy(f'http://localhost:5455/daily_ohlcv?code={code}&days=250', ttl=3600)
+    bars = d.get('bars') or []
+    today_str = datetime.now().strftime('%Y-%m-%d')
+    if bars and bars[-1].get('date') == today_str:
+        bars = bars[:-1]
+    levels = support_mod.analyze_support(bars)
+    _support_cache[code] = (now, levels)
+    return levels
+
+
+@_wrap
+def support(code: str):
+    levels = _support_levels(code)
+    return {'code': code, 'levels': levels}, datetime.now().strftime('%Y-%m-%d %H:%M')
 
 
 def _enrich_track_results(results: list, checked_at: str) -> list:
