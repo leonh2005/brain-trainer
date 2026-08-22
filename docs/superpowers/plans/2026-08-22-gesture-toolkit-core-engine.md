@@ -6,7 +6,7 @@
 
 **Architecture:** `GestureAccessibilityService`（背景服務，透過 `performGlobalAction` 執行系統層動作）+ `Action` 介面（每個系統動作各自實作，含 `isAvailable()`/`execute()`）+ `ActionRegistry`（持有動作清單，供 UI 查詢）+ `ActionListScreen`（Jetpack Compose 設定畫面，列出所有動作並提供「測試」按鈕）。之後的感應器手勢模組（下一個 plan）只需要查 `ActionRegistry` 拿到對應 `Action` 並呼叫 `execute()`，不需要碰這裡的任何實作細節。
 
-**Tech Stack:** Kotlin 2.3.20、Android Gradle Plugin 9.0.1、Gradle 9.1.0、Jetpack Compose（compose-bom 2026.08.00）、minSdk 28 / targetSdk・compileSdk 36、JUnit4（純 JVM 單元測試，不用 Robolectric/Mockito——見下方全域限制）
+**Tech Stack:** Kotlin 2.3.20、Android Gradle Plugin 9.0.1、Gradle 9.1.0、Jetpack Compose（compose-bom 2026.06.01）、minSdk 28 / targetSdk・compileSdk 36、JUnit4（純 JVM 單元測試，不用 Robolectric/Mockito——見下方全域限制）
 
 **Spec:** `docs/superpowers/specs/2026-08-22-gesture-toolkit-core-engine-design.md`
 
@@ -18,6 +18,8 @@
 - `Action` 介面簽名為 `isAvailable(): Boolean`（不帶 `Context` 參數）——比 spec 原文少一個參數，因為所有「是否可用」判斷實際上只需要檢查 `GestureAccessibilityService.instance` 是否為 null，不需要 Context；這樣單元測試不用假造 Context 物件
 - 每個 Action 的 `id` 全域唯一，`ActionRegistry` 建構時會檢查並在重複時丟例外
 - JAVA_HOME 使用 Android Studio 內建 JBR：`/Applications/Android Studio.app/Contents/jbr/Contents/Home`（已確認此路徑存在且 `java -version` 正常）
+- **AGP 9.0+ 已內建 Kotlin 支援**：`app/build.gradle.kts` 不套用 `org.jetbrains.kotlin.android` plugin（套用會直接報錯，Gradle 官方訊息說 AGP 9.0 起不再需要），也不用 `kotlinOptions{}` DSL；`compileOptions{sourceCompatibility/targetCompatibility}` 已足夠。根目錄 `build.gradle.kts` 保留 `id("org.jetbrains.kotlin.android") version "2.3.20" apply false` 純聲明不影響（`apply false` 不會實際套用）
+- **compose-bom 鎖定 2026.06.01（非最新的 2026.08.00）**：2026.08.00 對應 Compose 1.12.0 系列，強制要求 compileSdk ≥37 + AGP ≥9.1.0，本機只快取 compileSdk 36 + AGP 9.0.1，會建置失敗；2026.06.01 對應的 Compose 版本相容於 compileSdk 36 + AGP 9.0.1。之後如果要升級 compose-bom，必須同時確認 compileSdk/AGP 有沒有一起達到新版要求
 
 ---
 
@@ -103,7 +105,6 @@ app/build/
 ```kotlin
 plugins {
     id("com.android.application")
-    id("org.jetbrains.kotlin.android")
     id("org.jetbrains.kotlin.plugin.compose")
 }
 
@@ -130,10 +131,6 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
 
-    kotlinOptions {
-        jvmTarget = "17"
-    }
-
     buildFeatures {
         compose = true
     }
@@ -149,7 +146,7 @@ android {
 }
 
 dependencies {
-    implementation(platform("androidx.compose:compose-bom:2026.08.00"))
+    implementation(platform("androidx.compose:compose-bom:2026.06.01"))
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.material3:material3")
     implementation("androidx.compose.ui:ui-tooling-preview")
