@@ -11,11 +11,19 @@ class LaunchAppAction(private val packageName: String, override val label: Strin
     override fun execute(context: Context) {
         val intent = context.packageManager.getLaunchIntentForPackage(packageName)
         if (intent == null) {
-            Toast.makeText(context, "找不到 App：$label", Toast.LENGTH_SHORT).show()
+            showNotFoundToast(context)
             return
         }
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        context.startActivity(intent)
+        try {
+            context.startActivity(intent)
+        } catch (e: Exception) {
+            showNotFoundToast(context)
+        }
+    }
+
+    private fun showNotFoundToast(context: Context) {
+        Toast.makeText(context, "找不到 App：$label", Toast.LENGTH_SHORT).show()
     }
 }
 

@@ -1,7 +1,10 @@
 package com.steven.gesturetoolkit.ui
 
+import android.accessibilityservice.AccessibilityServiceInfo
+import android.content.Context
 import android.content.Intent
 import android.provider.Settings
+import android.view.accessibility.AccessibilityManager
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -26,13 +29,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.steven.gesturetoolkit.actions.AppActions
-import com.steven.gesturetoolkit.service.GestureAccessibilityService
 
 @Composable
 fun ActionListScreen() {
     val context = LocalContext.current
     var refreshTick by remember { mutableStateOf(0) }
-    val serviceEnabled = remember(refreshTick) { GestureAccessibilityService.instance != null }
+    val serviceEnabled = remember(refreshTick) { isGestureToolkitAccessibilityServiceEnabled(context) }
 
     Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
         Text("Gesture Toolkit", style = MaterialTheme.typography.headlineSmall)
@@ -75,4 +77,10 @@ fun ActionListScreen() {
             }
         }
     }
+}
+
+private fun isGestureToolkitAccessibilityServiceEnabled(context: Context): Boolean {
+    val am = context.getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager
+    return am.getEnabledAccessibilityServiceList(AccessibilityServiceInfo.FEEDBACK_ALL_MASK)
+        .any { it.resolveInfo.serviceInfo.packageName == context.packageName }
 }
