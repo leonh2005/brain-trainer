@@ -69,7 +69,7 @@ fun ActionListScreen() {
                     Text(action.label)
                     Button(
                         onClick = { action.execute(context) },
-                        enabled = action.isAvailable(),
+                        enabled = remember(refreshTick) { action.isAvailable() },
                     ) {
                         Text("測試")
                     }
