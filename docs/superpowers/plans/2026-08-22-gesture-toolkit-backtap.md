@@ -307,6 +307,8 @@ adb shell am start -n com.steven.gesturetoolkit/.MainActivity
 2. 把手機拿在手上，實際用手指輕敲手機背面兩下（間隔大約 0.3 秒，不要太快也不要太慢）
 3. 確認畫面真的觸發了螢幕截圖（可以用 `adb shell find /sdcard/Pictures/Screenshots -newer <剛才某個檔案>` 確認有沒有新截圖產生，或直接看畫面有沒有截圖動畫/音效反應）
 4. 走路、搖晃手機一段時間，確認**沒有**誤觸發截圖（沒有絕對量化標準，人工感受「明顯不會亂觸發」即可；如果一直誤觸發，代表 `IMPACT_THRESHOLD`/`MAX_IMPACT_DURATION_MS` 需要之後再調整，先記錄現象，不在這個 task 裡調參數）
+   - **（2026-08-22 最終審查補充）**：「窄而急的衝擊」不只走路搖晃會產生——把手機放到桌上、放進口袋跑步、下樓梯都可能造成單次短促的閾值以上衝擊，兩次剛好落在 100~600ms 內就會誤觸發。這幾個情境也要實測，不是只測走路/搖晃
+   - 如果實機測試發現「敲了常常沒反應」，先看 logcat 有沒有印出「Back Tap 觸發」這行，判斷是「感測器取樣太慢沒抓到尖峰」還是「演算法閾值不對」；前者可以先把 `GestureAccessibilityService.ACCELEROMETER_SAMPLING_DELAY` 改成 `SensorManager.SENSOR_DELAY_FASTEST` 試試看（不要一開始就調 `IMPACT_THRESHOLD`，兩種問題外顯症狀一樣但成因不同）
 5. 敲一下、停頓超過 1 秒、再敲一下（間隔太大），確認不會觸發
 
 - [ ] **Step 4: Commit**
