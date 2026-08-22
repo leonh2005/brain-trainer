@@ -13,8 +13,15 @@ import com.steven.gesturetoolkit.sensors.BackTapDetector
 class GestureAccessibilityService : AccessibilityService(), SensorEventListener {
 
     companion object {
+        private const val TAG = "GestureA11yService"
+
         var instance: GestureAccessibilityService? = null
             private set
+
+        // 加速度計取樣延遲。SENSOR_DELAY_GAME(~50Hz) 若實機測試發現敲擊常常沒反應，
+        // 優先試 SENSOR_DELAY_FASTEST（API 31+ 免額外權限最高約 200Hz），
+        // 不要先調 IMPACT_THRESHOLD——取樣太慢跟閾值不對從外部看起來一樣，但成因不同。
+        private const val ACCELEROMETER_SAMPLING_DELAY = SensorManager.SENSOR_DELAY_GAME
     }
 
     private val backTapDetector = BackTapDetector()
@@ -27,7 +34,9 @@ class GestureAccessibilityService : AccessibilityService(), SensorEventListener 
         sensorManager = sm
         val accelerometer = sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
         if (accelerometer != null) {
-            sm.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_GAME)
+            sm.registerListener(this, accelerometer, ACCELEROMETER_SAMPLING_DELAY)
+        } else {
+            android.util.Log.w(TAG, "裝置沒有加速度計，敲背手勢功能停用")
         }
     }
 
@@ -35,6 +44,7 @@ class GestureAccessibilityService : AccessibilityService(), SensorEventListener 
         val timestampMs = event.timestamp / 1_000_000L
         val triggered = backTapDetector.onSensorData(event.values[0], event.values[1], event.values[2], timestampMs)
         if (triggered) {
+            android.util.Log.d(TAG, "Back Tap 觸發，timestampMs=$timestampMs")
             val action = AppActions.registry.get("screenshot")
             if (action != null && action.isAvailable()) {
                 action.execute(this)
