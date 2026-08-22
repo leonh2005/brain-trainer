@@ -6,7 +6,7 @@ CONFIG_PATH = Path(__file__).parent / "config.json"
 KEY = {
     "space": 49, "left": 123, "right": 124, "up": 126, "down": 125,
     "m": 46, "c": 8, "f": 3, "j": 38, "l": 37, "n": 45, "p": 35,
-    "x": 7, "z": 6, "h": 4, "g": 5, "[": 33, "]": 30,
+    "x": 7, "z": 6, "h": 4, "g": 5, "[": 33, "]": 30, "esc": 53,
 }
 
 ACTIONS = {
@@ -32,6 +32,8 @@ ACTIONS = {
     "douyin_prev_chapter": {"label": "上一段標記 (抖音)", "key": "[", "ctrl": True},
     "douyin_next_chapter": {"label": "下一段標記 (抖音)", "key": "]", "ctrl": True},
     "douyin_follow": {"label": "關注 (抖音)", "key": "g"},
+    "douyin_exit": {"label": "退出作品 (抖音網頁版)", "key": "esc"},
+    "douyin_enter": {"label": "進入作品 (抖音網頁版)", "key": "f"},
     "volume_down": {"label": "系統音量 -", "volume_delta": -6, "repeat": True},
     "volume_up": {"label": "系統音量 +", "volume_delta": 6, "repeat": True},
     "none": {"label": "無動作"},
