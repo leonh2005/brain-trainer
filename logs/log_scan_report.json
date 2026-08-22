@@ -1,6 +1,6 @@
 {
-  "scanned_at": "2026-08-22 03:00:25",
-  "since": "2026-08-21 03:00:00",
+  "scanned_at": "2026-08-23 03:00:25",
+  "since": "2026-08-22 03:00:00",
   "results": {
     "市場儀表板": {
       "exists": true,
@@ -16,8 +16,8 @@
     },
     "motion-watcher": {
       "exists": true,
-      "errors": 657,
-      "last_error": "2026-08-22 02:57:23,830 WARNING 讀取影格失敗，重新連線",
+      "errors": 643,
+      "last_error": "2026-08-23 02:56:43,824 WARNING 讀取影格失敗，重新連線",
       "fix": "尚無對應建議，需人工判斷"
     },
     "Cloudflare Tunnel": {
@@ -28,15 +28,15 @@
     },
     "財經新聞分析": {
       "exists": true,
-      "errors": 5,
-      "last_error": "2026-08-21 19:00:05,953 [WARNING] fetcher.ptt_fetcher: PTT article fetch failed https://www.ptt.cc/bbs/Stock/M.1768934799.A.0E1.html: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))",
+      "errors": 4,
+      "last_error": "2026-08-22 20:15:04,801 [WARNING] fetcher.ptt_fetcher: PTT article fetch failed https://www.ptt.cc/bbs/Stock/M.1787389131.A.7A1.html: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))",
       "fix": "尚無對應建議，需人工判斷"
     },
     "川普監測": {
       "exists": true,
-      "errors": 1,
-      "last_error": "2026-08-21 13:00:05,028 WARNING 分析失敗：Trump’s Economic Threat Puts Focus on Iran’s Tradi — 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reaso",
-      "fix": "尚無對應建議，需人工判斷"
+      "errors": 0,
+      "last_error": null,
+      "fix": null
     },
     "持倉新聞(台股)": {
       "exists": true,
@@ -88,9 +88,9 @@
     },
     "盤中監控": {
       "exists": true,
-      "errors": 1,
-      "last_error": "[backfill] 2408 失敗: Topic: api/v1/data/ticks, Corr: c21, Client: PYAPI/N124711691/0821/010003/585216/220.141.45.23, payload: {'token': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYmYiOjE3ODcyNzQwMDMsImV4cCI6MTc4NzM2MDQwMywic2ltdWxhdGlvbiI6ZmFsc2UsInBlcnNvbl9pZCI6Ik4xMjQ3MTE2OTEiLCJ2ZXJzaW9uIjoiMS4zLjI",
-      "fix": "尚無對應建議，需人工判斷"
+      "errors": 0,
+      "last_error": null,
+      "fix": null
     },
     "蝦皮軟纖監測": {
       "exists": true,
