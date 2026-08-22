@@ -6,7 +6,7 @@
 
 **Architecture:** `GestureAccessibilityService`（背景服務，透過 `performGlobalAction` 執行系統層動作）+ `Action` 介面（每個系統動作各自實作，含 `isAvailable()`/`execute()`）+ `ActionRegistry`（持有動作清單，供 UI 查詢）+ `ActionListScreen`（Jetpack Compose 設定畫面，列出所有動作並提供「測試」按鈕）。之後的感應器手勢模組（下一個 plan）只需要查 `ActionRegistry` 拿到對應 `Action` 並呼叫 `execute()`，不需要碰這裡的任何實作細節。
 
-**Tech Stack:** Kotlin 2.3.20、Android Gradle Plugin 9.1.0、Gradle 9.1.0、Jetpack Compose（compose-bom 2026.08.00）、minSdk 28 / targetSdk・compileSdk 37、JUnit4（純 JVM 單元測試，不用 Robolectric/Mockito——見下方全域限制）
+**Tech Stack:** Kotlin 2.3.20、Android Gradle Plugin 9.1.0、Gradle 9.3.1、Jetpack Compose（compose-bom 2026.08.00）、minSdk 28 / targetSdk・compileSdk 37、JUnit4（純 JVM 單元測試，不用 Robolectric/Mockito——見下方全域限制）
 
 **Spec:** `docs/superpowers/specs/2026-08-22-gesture-toolkit-core-engine-design.md`
 
@@ -19,7 +19,7 @@
 - 每個 Action 的 `id` 全域唯一，`ActionRegistry` 建構時會檢查並在重複時丟例外
 - JAVA_HOME 使用 Android Studio 內建 JBR：`/Applications/Android Studio.app/Contents/jbr/Contents/Home`（已確認此路徑存在且 `java -version` 正常）
 - **AGP 9.0+ 已內建 Kotlin 支援**：`app/build.gradle.kts` 不套用 `org.jetbrains.kotlin.android` plugin（套用會直接報錯，Gradle 官方訊息說 AGP 9.0 起不再需要），也不用 `kotlinOptions{}` DSL；`compileOptions{sourceCompatibility/targetCompatibility}` 已足夠。根目錄 `build.gradle.kts` 保留 `id("org.jetbrains.kotlin.android") version "2.3.20" apply false` 純聲明不影響（`apply false` 不會實際套用）
-- **compileSdk/targetSdk = 37、AGP = 9.1.0**（原計畫是 36/9.0.1）：實作時發現 compose-bom 2026.08.00（Compose 1.12.0 系列）與 lifecycle-runtime-ktx 2.11.0 都要求 compileSdk≥37+AGP≥9.1.0，逐一降版下游函式庫會一直撞到同一波要求（2026年8月前後發布的 AndroidX 函式庫幾乎都一起把最低需求提高到 37），改為直接升級到 37/9.1.0 才是一次到位的解法。本機已用 `sdkmanager "platforms;android-37.0"` 安裝好 android-37 platform（非 beta，`ro.build.version.sdk=37`，穩定版）。AGP 9.1.0 本機無快取，首次建置需要網路下載
+- **compileSdk/targetSdk = 37、AGP = 9.1.0、Gradle = 9.3.1**（原計畫是 36/9.0.1/9.1.0）：實作時發現 compose-bom 2026.08.00（Compose 1.12.0 系列）與 lifecycle-runtime-ktx 2.11.0 都要求 compileSdk≥37+AGP≥9.1.0，逐一降版下游函式庫會一直撞到同一波要求（2026年8月前後發布的 AndroidX 函式庫幾乎都一起把最低需求提高到 37），改為直接升級到 37/9.1.0 才是一次到位的解法。AGP 9.1.0 官方文件（developer.android.com/build/releases/agp-9-1-0-release-notes）明確要求 Gradle 最低/預設版本都是 **9.3.1**，所以 Gradle wrapper 也要跟著升到 9.3.1（不是 9.1.0）。本機已用 `sdkmanager "platforms;android-37.0"` 安裝好 android-37 platform（非 beta，`ro.build.version.sdk=37`，穩定版）。AGP 9.1.0 與 Gradle 9.3.1 本機都無快取，首次建置需要網路下載，屬預期行為
 
 ---
 
@@ -224,14 +224,14 @@ class MainActivity : ComponentActivity() {
 }
 ```
 
-- [ ] **Step 10: 用本機已快取的 Gradle 產生 wrapper**
+- [ ] **Step 10: 用本機已快取的 Gradle 產生 wrapper（指向 9.3.1，AGP 9.1.0 官方要求的最低版本）**
 
 ```bash
 cd /Users/steven/CCProject/gesture-toolkit
-/Users/steven/.gradle/wrapper/dists/gradle-9.1.0-all/7wzd0jkjit61aq2p43wpjgij9/gradle-9.1.0/bin/gradle wrapper --gradle-version 9.1.0
+/Users/steven/.gradle/wrapper/dists/gradle-9.1.0-all/7wzd0jkjit61aq2p43wpjgij9/gradle-9.1.0/bin/gradle wrapper --gradle-version 9.3.1
 ```
 
-Expected: 產生 `gradlew`、`gradlew.bat`、`gradle/wrapper/gradle-wrapper.properties`、`gradle/wrapper/gradle-wrapper.jar`
+Expected: 產生 `gradlew`、`gradlew.bat`、`gradle/wrapper/gradle-wrapper.properties`（內容會指向 9.3.1）、`gradle/wrapper/gradle-wrapper.jar`。本機沒有快取 Gradle 9.3.1，第一次執行 `./gradlew` 時會自動下載，屬預期行為
 
 - [ ] **Step 11: 建置驗證**
 
