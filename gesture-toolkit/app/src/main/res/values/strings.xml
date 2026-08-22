@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Gesture Toolkit</string>
+    <string name="accessibility_service_description">Gesture Toolkit 需要無障礙權限才能執行螢幕截圖、鎖定螢幕、返回/首頁/最近使用等系統層級動作。所有資料僅在本機處理，不會上傳。</string>
 </resources>
