@@ -21,7 +21,7 @@ class GestureAccessibilityService : AccessibilityService(), SensorEventListener 
         // 加速度計取樣延遲。SENSOR_DELAY_GAME(~50Hz) 若實機測試發現敲擊常常沒反應，
         // 優先試 SENSOR_DELAY_FASTEST（API 31+ 免額外權限最高約 200Hz），
         // 不要先調 IMPACT_THRESHOLD——取樣太慢跟閾值不對從外部看起來一樣，但成因不同。
-        private const val ACCELEROMETER_SAMPLING_DELAY = SensorManager.SENSOR_DELAY_GAME
+        private const val ACCELEROMETER_SAMPLING_DELAY = SensorManager.SENSOR_DELAY_FASTEST
     }
 
     private val backTapDetector = BackTapDetector()

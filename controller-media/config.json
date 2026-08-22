@@ -48,7 +48,7 @@
     "rightThumbstick_right": "none",
     "dpad_up": "douyin_prev",
     "dpad_down": "douyin_next",
-    "dpad_left": "none",
-    "dpad_right": "none"
+    "dpad_left": "douyin_exit",
+    "dpad_right": "douyin_enter"
   }
 }
