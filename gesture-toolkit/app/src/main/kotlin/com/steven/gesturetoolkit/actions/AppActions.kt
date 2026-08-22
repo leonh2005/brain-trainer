@@ -2,6 +2,7 @@ package com.steven.gesturetoolkit.actions
 
 import com.steven.gesturetoolkit.actions.impl.BackAction
 import com.steven.gesturetoolkit.actions.impl.HomeAction
+import com.steven.gesturetoolkit.actions.impl.LaunchAppAction
 import com.steven.gesturetoolkit.actions.impl.LockScreenAction
 import com.steven.gesturetoolkit.actions.impl.RecentsAction
 import com.steven.gesturetoolkit.actions.impl.ScreenshotAction
@@ -18,6 +19,7 @@ object AppActions {
             RecentsAction(),
             VolumeUpAction(),
             VolumeDownAction(),
+            LaunchAppAction("com.google.android.GoogleCamera", "相機"),
         )
     )
 }
