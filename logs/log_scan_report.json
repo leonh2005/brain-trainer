@@ -1,6 +1,6 @@
 {
-  "scanned_at": "2026-08-23 03:00:25",
-  "since": "2026-08-22 03:00:00",
+  "scanned_at": "2026-08-24 03:00:26",
+  "since": "2026-08-23 03:00:01",
   "results": {
     "市場儀表板": {
       "exists": true,
@@ -16,8 +16,8 @@
     },
     "motion-watcher": {
       "exists": true,
-      "errors": 643,
-      "last_error": "2026-08-23 02:56:43,824 WARNING 讀取影格失敗，重新連線",
+      "errors": 655,
+      "last_error": "2026-08-24 02:57:07,662 WARNING 讀取影格失敗，重新連線",
       "fix": "尚無對應建議，需人工判斷"
     },
     "Cloudflare Tunnel": {
@@ -28,9 +28,9 @@
     },
     "財經新聞分析": {
       "exists": true,
-      "errors": 4,
-      "last_error": "2026-08-22 20:15:04,801 [WARNING] fetcher.ptt_fetcher: PTT article fetch failed https://www.ptt.cc/bbs/Stock/M.1787389131.A.7A1.html: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))",
-      "fix": "尚無對應建議，需人工判斷"
+      "errors": 1,
+      "last_error": "2026-08-23 03:30:03,477 [WARNING] fetcher.ptt_fetcher: PTT index fetch failed: HTTPSConnectionPool(host='www.ptt.cc', port=443): Max retries exceeded with url: /bbs/Stock/index.html (Caused by NewConnectionError(\"HTTPSConnection(host='www.ptt.cc', port=443): Failed to establish a new connection: [Er",
+      "fix": "Port 被佔用或服務未啟動 → 檢查 LaunchAgent 是否正常載入"
     },
     "川普監測": {
       "exists": true,
