@@ -7,8 +7,9 @@ import time
 from datetime import date, timedelta
 from pathlib import Path
 from analysis import get_portfolio_data, PORTFOLIO_FILE
-from ai_masters import get_all_analyses
+from ai_masters import get_all_analyses, load_history
 from dcf import get_dcf_data
+from stock_names import load_stock_names
 
 FINMIND_TOKEN = Path('/Users/steven/CCProject/.secrets/finmind_token.txt').read_text().strip()
 _whale_cache: dict = {"data": {}, "time": 0}
@@ -49,6 +50,15 @@ def api_ai():
         portfolio_data = get_portfolio_data()
         results = get_all_analyses(portfolio_data, force_refresh=force)
         return jsonify({"ok": True, "data": results})
+    except Exception as e:
+        return jsonify({"ok": False, "error": str(e)}), 500
+
+
+@app.route("/api/ai-analysis/history")
+def api_ai_history():
+    try:
+        history = load_history()
+        return jsonify({"ok": True, "data": list(reversed(history))})
     except Exception as e:
         return jsonify({"ok": False, "error": str(e)}), 500
 
@@ -117,6 +127,14 @@ def api_dcf():
         portfolio_data = get_portfolio_data()
         results = get_dcf_data(portfolio_data["positions"], force_refresh=force)
         return jsonify({"ok": True, "data": results})
+    except Exception as e:
+        return jsonify({"ok": False, "error": str(e)}), 500
+
+
+@app.route("/api/stock_names")
+def api_stock_names():
+    try:
+        return jsonify({"ok": True, "data": load_stock_names()})
     except Exception as e:
         return jsonify({"ok": False, "error": str(e)}), 500
 

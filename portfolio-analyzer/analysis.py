@@ -4,6 +4,8 @@ import json
 import time
 from pathlib import Path
 
+from stock_names import load_stock_names
+
 PORTFOLIO_FILE = Path(__file__).parent / "portfolio.json"
 CACHE_TTL = 900  # 15 分鐘快取
 _cache = {"data": None, "time": 0}
@@ -32,11 +34,13 @@ def fetch_data(portfolio):
 
 def build_positions(portfolio, prices, usdtwd):
     positions = []
+    stock_names = load_stock_names()
 
     for p in portfolio["taiwan"]:
         price = float(prices.get(p["ticker"], 0) or 0)
         value = price * p["shares"]
-        positions.append({**p, "price": round(price, 2), "value_twd": round(value, 0), "currency": "TWD"})
+        name = p["name"] or stock_names.get(p["ticker"].replace(".TW", "").replace(".TWO", ""), {}).get("name", "")
+        positions.append({**p, "name": name, "price": round(price, 2), "value_twd": round(value, 0), "currency": "TWD"})
 
     for p in portfolio["us"]:
         price = float(prices.get(p["ticker"], 0) or 0)

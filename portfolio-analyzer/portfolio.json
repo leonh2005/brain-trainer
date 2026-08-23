@@ -3,7 +3,22 @@
     {
       "ticker": "2327.TW",
       "name": "國巨",
-      "shares": 5000
+      "shares": 334
+    },
+    {
+      "ticker": "2344.TW",
+      "name": "",
+      "shares": 2000
+    },
+    {
+      "ticker": "0052.TW",
+      "name": "",
+      "shares": 145
+    },
+    {
+      "ticker": "3189.TW",
+      "name": "",
+      "shares": 1000
     }
   ],
   "us": [],
