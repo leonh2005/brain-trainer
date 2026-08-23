@@ -1,9 +1,36 @@
+import json
 import os
 import time
+from datetime import datetime
+from pathlib import Path
+
 from openai import OpenAI
 
 _cache = {"data": None, "time": 0}
 CACHE_TTL = 3600
+
+HISTORY_FILE = Path(__file__).parent / "ai_analysis_history.json"
+MAX_HISTORY = 100
+
+
+def _append_history(results: dict):
+    history = []
+    if HISTORY_FILE.exists():
+        try:
+            history = json.loads(HISTORY_FILE.read_text())
+        except Exception:
+            history = []
+    history.append({"timestamp": datetime.now().isoformat(timespec="seconds"), "data": results})
+    HISTORY_FILE.write_text(json.dumps(history[-MAX_HISTORY:], ensure_ascii=False, indent=2))
+
+
+def load_history() -> list:
+    if not HISTORY_FILE.exists():
+        return []
+    try:
+        return json.loads(HISTORY_FILE.read_text())
+    except Exception:
+        return []
 
 MASTERS = {
     "buffett": {
@@ -56,7 +83,7 @@ def get_master_analysis(master_key: str, portfolio_data: dict) -> str:
     client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
     response = client.chat.completions.create(
         model="gpt-4o-mini",
-        max_tokens=800,
+        max_tokens=1600,
         messages=[
             {"role": "system", "content": master["prompt"]},
             {"role": "user", "content": f"Analyze my portfolio and comment on the transition plan:\n\n{summary}"}
@@ -87,6 +114,8 @@ def get_all_analyses(portfolio_data: dict, force_refresh: bool = False) -> dict:
                 "analysis": None,
                 "error": str(e)
             }
+
+    _append_history(results)
 
     _cache = {"data": results, "time": now}
     return results

@@ -118,6 +118,9 @@
       <div class="ai-actions">
         <button onclick="loadAI(false)">▶ 執行分析</button>
         <button onclick="loadAI(true)" style="background:#6e3b9c">↻ 重新分析</button>
+        <select id="ai-history-select" onchange="loadAIHistoryEntry(this.value)" style="background:#0d1117;border:1px solid #30363d;color:#e1e4e8;padding:6px 10px;border-radius:6px;font-size:12px">
+          <option value="">歷史紀錄...</option>
+        </select>
         <span class="ai-note">每次分析約需 30 秒，結果快取 1 小時</span>
       </div>
       <div id="ai-content"><div class="ai-loading">點擊「執行分析」讓四位大師評論你的投資組合</div></div>
@@ -126,7 +129,7 @@
       <div class="ai-actions">
         <button onclick="loadDCF(false)">▶ 執行估值</button>
         <button onclick="loadDCF(true)" style="background:#6e3b9c">↻ 重新抓取</button>
-        <span class="ai-note">自動抓取財報資料，ETF/債券不計算 DCF｜折現率 10%，永續成長 3%</span>
+        <span class="ai-note">自由現金流兩段式折現，WACC 依個股風險(beta)調整，已扣淨負債｜基準永續成長 3%，DCF中值旁另列敏感度區間</span>
       </div>
       <div id="dcf-content"><div class="ai-loading">點擊「執行估值」開始 DCF 分析</div></div>
     </div>
@@ -165,7 +168,7 @@
             <td class="ticker">${item.ticker.replace('.TW','').replace('.TWO','')}</td>
             <td>${item.name}</td>
             <td style="color:#8b949e">ETF/債券</td>
-            <td>—</td><td>—</td><td>—</td><td>—</td><td>—</td>
+            <td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td>
             <td><span style="color:#8b949e">—</span></td>
           </tr>`;
         }
@@ -173,20 +176,23 @@
           return `<tr>
             <td class="ticker">${item.ticker.replace('.TW','')}</td>
             <td>${item.name}</td><td>股票</td>
-            <td colspan="5" style="color:#f85149;font-size:12px">${item.error}</td>
+            <td colspan="6" style="color:#f85149;font-size:12px">${item.error}</td>
             <td>—</td>
           </tr>`;
         }
         const upsideColor = item.upside > 20 ? '#3fb950' : item.upside < -20 ? '#f85149' : '#e1e4e8';
         const verdictColor = item.verdict.includes('低估') ? '#3fb950' : item.verdict.includes('高估') ? '#f85149' : '#ffa657';
+        const dcfRange = (item.dcf_low != null && item.dcf_high != null)
+          ? `${item.dcf_low} ~ ${item.dcf_high}` : '—';
         return `<tr>
           <td class="ticker">${item.ticker.replace('.TW','').replace('.TWO','')}</td>
           <td>${item.name}</td>
           <td style="color:#8b949e">股票</td>
           <td>${item.price ?? '—'}</td>
-          <td style="color:#58a6ff;font-weight:600">${item.dcf ?? '—'}</td>
+          <td style="color:#58a6ff;font-weight:600">${item.dcf_mid ?? '—'}</td>
+          <td style="font-size:11px;color:#8b949e">${dcfRange}</td>
           <td style="color:${upsideColor}">${item.upside != null ? (item.upside > 0 ? '+' : '') + item.upside + '%' : '—'}</td>
-          <td>${item.eps ?? '—'}</td>
+          <td>${item.wacc != null ? item.wacc + '%' : '—'}</td>
           <td>${item.growth != null ? item.growth + '%' : '—'}</td>
           <td><span style="color:${verdictColor};font-weight:600">${item.verdict}</span></td>
         </tr>`;
@@ -194,13 +200,13 @@
 
       document.getElementById('dcf-content').innerHTML = `
         <div class="section">
-          <div class="section-title">DCF 內在價值估算（兩段式，折現率 10%）</div>
+          <div class="section-title">DCF 內在價值估算（自由現金流兩段式折現，WACC 風險調整折現率，已扣淨負債）</div>
           <table>
             <thead>
               <tr>
                 <th>代號</th><th>名稱</th><th>類型</th>
-                <th>現價</th><th>DCF 價值</th><th>上漲空間</th>
-                <th>EPS</th><th>預估成長</th><th>判斷</th>
+                <th>現價</th><th>DCF 中值</th><th>敏感度區間</th><th>上漲空間</th>
+                <th>WACC</th><th>預估成長</th><th>判斷</th>
               </tr>
             </thead>
             <tbody>${rows}</tbody>
@@ -208,6 +214,8 @@
           <div class="rate-note" style="margin-top:12px">⚠️ DCF 僅供參考，成長率來自 Yahoo Finance 分析師預估，實際結果可能偏差</div>
         </div>`;
     }
+
+    let _aiHistory = [];
 
     async function loadAI(refresh = false) {
       document.getElementById('ai-content').innerHTML = '<div class="ai-loading">分析中，請稍候約 30 秒...</div>';
@@ -217,9 +225,28 @@
         const j = await r.json();
         if (!j.ok) throw new Error(j.error);
         renderAI(j.data);
+        if (refresh) loadAIHistoryList();
       } catch(e) {
         document.getElementById('ai-content').innerHTML = `<div class="err">分析失敗：${e.message}</div>`;
       }
+    }
+
+    async function loadAIHistoryList() {
+      try {
+        const r = await fetch('/api/ai-analysis/history');
+        const j = await r.json();
+        if (!j.ok) return;
+        _aiHistory = j.data;
+        const sel = document.getElementById('ai-history-select');
+        sel.innerHTML = '<option value="">歷史紀錄...</option>' +
+          _aiHistory.map((h, i) => `<option value="${i}">${h.timestamp}</option>`).join('');
+      } catch (e) { /* 歷史清單載入失敗不影響主功能 */ }
+    }
+    loadAIHistoryList();
+
+    function loadAIHistoryEntry(idx) {
+      if (idx === '') return;
+      renderAI(_aiHistory[idx].data);
     }
 
     function renderAI(data) {
@@ -446,6 +473,52 @@
 
     let _currentPositions = [];
     let _rawPositions = [];
+
+    let _stockNameMap = {};   // 代號(不含後綴) -> {name, suffix}
+    let _nameToStock = {};    // 名稱 -> {code, suffix}
+
+    (async function loadStockNames() {
+      try {
+        const r = await fetch('/api/stock_names');
+        const j = await r.json();
+        if (j.ok) {
+          _stockNameMap = j.data;
+          _nameToStock = {};
+          for (const [code, info] of Object.entries(_stockNameMap)) {
+            _nameToStock[info.name] = { code, suffix: info.suffix };
+          }
+        }
+      } catch (e) { /* 查無代號表不影響手動輸入，靜默失敗 */ }
+    })();
+
+    function autoFillFromTicker(tickerInput, nameInput) {
+      if (nameInput.value.trim()) return;
+      const code = tickerInput.value.trim().toUpperCase().replace(/\.TWO?$/, '');
+      const info = _stockNameMap[code];
+      if (info) nameInput.value = info.name;
+    }
+
+    function autoFillFromName(tickerInput, nameInput) {
+      if (tickerInput.value.trim()) return;
+      const info = _nameToStock[nameInput.value.trim()];
+      if (info) tickerInput.value = info.code + info.suffix;
+    }
+
+    document.getElementById('app').addEventListener('change', (e) => {
+      const posRow = e.target.closest('.pos-edit-row');
+      if (posRow) {
+        const t = posRow.querySelector('.pe-ticker'), n = posRow.querySelector('.pe-name');
+        if (e.target.classList.contains('pe-ticker')) autoFillFromTicker(t, n);
+        else if (e.target.classList.contains('pe-name')) autoFillFromName(t, n);
+        return;
+      }
+      const targetRow = e.target.closest('.target-edit-row');
+      if (targetRow) {
+        const t = targetRow.querySelector('.inp-ticker'), n = targetRow.querySelector('.inp-name');
+        if (e.target.classList.contains('inp-ticker')) autoFillFromTicker(t, n);
+        else if (e.target.classList.contains('inp-name')) autoFillFromName(t, n);
+      }
+    });
 
     function enterPosEdit() {
       _currentPositions = _rawPositions.map(p => ({
