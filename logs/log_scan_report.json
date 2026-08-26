@@ -1,6 +1,6 @@
 {
-  "scanned_at": "2026-08-26 03:00:25",
-  "since": "2026-08-25 03:00:00",
+  "scanned_at": "2026-08-27 03:00:26",
+  "since": "2026-08-26 03:00:00",
   "results": {
     "市場儀表板": {
       "exists": true,
@@ -16,8 +16,8 @@
     },
     "motion-watcher": {
       "exists": true,
-      "errors": 674,
-      "last_error": "2026-08-26 02:59:21,673 WARNING 讀取影格失敗，重新連線",
+      "errors": 547,
+      "last_error": "2026-08-27 02:51:38,199 WARNING 讀取影格失敗，重新連線",
       "fix": "尚無對應建議，需人工判斷"
     },
     "Cloudflare Tunnel": {
@@ -28,14 +28,14 @@
     },
     "財經新聞分析": {
       "exists": true,
-      "errors": 2,
-      "last_error": "2026-08-25 21:45:08,974 [WARNING] fetcher.ptt_fetcher: PTT article fetch failed https://www.ptt.cc/bbs/Stock/M.1786082047.A.EA9.html: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))",
-      "fix": "尚無對應建議，需人工判斷"
+      "errors": 1,
+      "last_error": "2026-08-26 03:30:04,012 [WARNING] fetcher.ptt_fetcher: PTT index fetch failed: HTTPSConnectionPool(host='www.ptt.cc', port=443): Max retries exceeded with url: /bbs/Stock/index.html (Caused by NewConnectionError(\"HTTPSConnection(host='www.ptt.cc', port=443): Failed to establish a new connection: [Er",
+      "fix": "Port 被佔用或服務未啟動 → 檢查 LaunchAgent 是否正常載入"
     },
     "川普監測": {
       "exists": true,
       "errors": 6,
-      "last_error": "2026-08-25 12:20:04,820 WARNING 分析失敗：China is the biggest buyer of Iran’s oil. Could US — 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reaso",
+      "last_error": "2026-08-26 09:35:03,428 WARNING 分析失敗：Trump Tightens Iran Sanctions, Hits China and Cana — 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reaso",
       "fix": "尚無對應建議，需人工判斷"
     },
     "持倉新聞(台股)": {
@@ -89,7 +89,7 @@
     "盤中監控": {
       "exists": true,
       "errors": 1,
-      "last_error": "[backfill] 2408 失敗: Topic: api/v1/data/ticks, Corr: c21, Client: PYAPI/N124711691/0825/010003/224929/220.141.14.198, payload: {'token': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYmYiOjE3ODc2MTk2MDMsImV4cCI6MTc4NzcwNjAwMywic2ltdWxhdGlvbiI6ZmFsc2UsInBlcnNvbl9pZCI6Ik4xMjQ3MTE2OTEiLCJ2ZXJzaW9uIjoiMS4zLj",
+      "last_error": "[backfill] 2408 失敗: Topic: api/v1/data/ticks, Corr: c21, Client: PYAPI/N124711691/0826/010003/834508/220.141.14.198, payload: {'token': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYmYiOjE3ODc3MDYwMDQsImV4cCI6MTc4Nzc5MjQwNCwic2ltdWxhdGlvbiI6ZmFsc2UsInBlcnNvbl9pZCI6Ik4xMjQ3MTE2OTEiLCJ2ZXJzaW9uIjoiMS4zLj",
       "fix": "尚無對應建議，需人工判斷"
     },
     "蝦皮軟纖監測": {
