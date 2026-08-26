@@ -187,11 +187,6 @@ def life_skilltree():
     return sources.skilltree()
 
 
-@app.get('/api/hay')
-def hay():
-    return sources.hay()
-
-
 @app.get('/api/life/sim-invest')
 def life_sim_invest():
     return sources.sim_invest()

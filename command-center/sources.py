@@ -595,13 +595,6 @@ def skilltree():
 
 
 @_wrap
-def hay():
-    p = f'{CC}/scripts/hay_current.json'
-    d = _read_json(p)
-    return d.get('items', []), d.get('updated', _mtime(p))
-
-
-@_wrap
 def stock_query(symbol: str):
     d = _proxy(f'http://localhost:5100/api/analyze?symbol={symbol}', timeout=25, ttl=60)
     return d, datetime.now().strftime('%Y-%m-%d %H:%M')
