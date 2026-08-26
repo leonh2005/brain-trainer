@@ -55,6 +55,7 @@ def write_login_required(f):
 # ── Telegram ────────────────────────────────────────────────
 
 def send_telegram(text: str):
+    return  # 2026-08-26 Steven 要求墨墨相關資訊不再推播
     if not TELEGRAM_BOT_TOKEN or not TELEGRAM_CHAT_ID:
         return
     try:

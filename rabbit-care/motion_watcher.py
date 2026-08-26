@@ -289,6 +289,7 @@ def save_screenshot(frames: list, action: str) -> str:
 
 def send_telegram(action: str, confidence: float):
     """推播 Telegram 通知"""
+    return  # 2026-08-26 Steven 要求墨墨相關資訊不再推播
     if not BOT_TOKEN or not CHAT_ID:
         return
     emoji = ACTION_EMOJI.get(action, '🐾')
