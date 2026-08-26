@@ -363,7 +363,6 @@ const CARDS=[
 ];
 const LIFE=[
   {id:'portfolio',ic:'💼', title:'投資組合', span:'wide', url:'/api/portfolio', render:renderPortfolio, site:'/svc/5800/'},
-  {id:'hay',      ic:'🌾', title:'RHH 軟纖補貨', span:'wide', url:'/api/hay', render:renderHay},
   {id:'rabbit',   ic:'🐰', title:'兔子照護', span:'', url:'/api/life/rabbit', render:renderRabbit, site:'/svc/5200/'},
   {id:'skill',    ic:'🌳', title:'技能樹',   span:'', url:'/api/life/skilltree', render:renderSkill, site:'/svc/5501/'},
   {id:'sim-invest',ic:'📈', title:'模擬投資', span:'wide', url:'/api/life/sim-invest', render:renderSimInvest, site:'/svc/5250/'},
@@ -936,25 +935,6 @@ function renderRabbit(d){
   const w=d.water_today;
   info.innerHTML=`今日飲水 ${w?fmt(w.cc)+' cc':'—'} · 今日 ${d.actions.length} 筆行為`;
   box.appendChild(info);
-  return box;
-}
-function renderHay(d){
-  const arr=Array.isArray(d)?d:[];
-  if(!arr.length)return el('div','empty','無軟纖品項資料');
-  const box=el('div');
-  arr.forEach(it=>{
-    const row=el('div','row');
-    const stockCol=it.in_stock?'var(--up)':'var(--faint)';
-    const stockTxt=it.in_stock?(it.since?`有貨 · ${it.since}起`:'有貨'):'缺貨';
-    const price=it.price?`$${it.price}`:'';
-    row.innerHTML=`<a href="${it.url}" target="_blank" style="text-decoration:none;color:inherit;display:flex;align-items:center;gap:8px;flex:1;min-width:0">`+
-      `<span class="badge" style="background:var(--accent)1e;color:var(--accent);flex:none">${it.shop}</span>`+
-      `<span class="tk" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${it.variant}</span>`+
-      (price?`<span class="mini" style="flex:none">${price}</span>`:'')+
-      `<span class="spacer"></span>`+
-      `<span class="chg" style="font-size:11px;flex:none;color:${stockCol}">${stockTxt}</span></a>`;
-    box.appendChild(row);
-  });
   return box;
 }
 function renderSkill(d){
