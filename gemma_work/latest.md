@@ -1,19 +1,19 @@
-# Claude Handoff 20260827_1913
-> 自動生成於 2026-08-27 19:13
+# Claude Handoff 20260828_0125
+> 自動生成於 2026-08-28 01:25
 
 ## 未提交的檔案異動
 ```
-M chip-tracker/chip.db
- M scripts/auto_investigate_state.json
+M scripts/auto_investigate_state.json
+ M shopee-boost/data/last_success.json
 ```
 
 ## 近期 Commits
 ```
+ed5704dd chore: 每晚同步 2026-08-27 23:50
+5bccd09d chore: 自動同步 2026-08-27 22:40
 5dea76da chore: 自動同步 2026-08-27 17:40
 71f0d107 chore: 自動同步 2026-08-27 12:40
 dae00f2d chore: 自動同步 2026-08-27 07:40
-3f6b58c7 chore: 自動同步 2026-08-27 02:40
-c234b769 chore: 每晚同步 2026-08-26 23:50
 ```
 
 ## 給 Hermes 的備註
