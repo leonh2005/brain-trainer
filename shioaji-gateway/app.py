@@ -8,6 +8,7 @@
   GET /snapshot?codes=IX0001,2330,2454     -> {ok, data:{code:{close,change_price,change_rate}}}
   GET /kbars?code=2330&days=30             -> {ok, closes:[...]}  (與 api.kbars(...).Close 相同)
   GET /intraday?code=IX0001[&date=2026-08-14] -> {ok, points:[{t:"09:01",price:23458.1},...]}  (指定日1分鐘走勢，預設當日)
+  GET /scanner?date=2026-08-28&count=2000     -> {ok, items:[{code,name,close,change_price,pct},...]}  (全市場漲跌幅排行)
 """
 import heapq
 import itertools
@@ -291,6 +292,32 @@ def intraday():
                 points.append({"t": t.strftime("%H:%M"), "price": float(close), "volume": int(volume)})
             return points
         return jsonify({"ok": True, "points": _run(work)})
+    except Exception as e:
+        return jsonify({"ok": False, "error": str(e)})
+
+
+@app.get("/scanner")
+def scanner():
+    """漲跌幅排行掃描（跨全市場，非單檔查詢）。
+    GET /scanner?date=2026-08-28&count=2000&ascending=false -> {ok, items:[{code,name,close,change_price,pct},...]}"""
+    import shioaji as sj
+    target_date = request.args.get("date") or date.today().strftime("%Y-%m-%d")
+    count = int(request.args.get("count", "500"))
+    ascending = request.args.get("ascending", "false").lower() == "true"
+    try:
+        def work(api):
+            items = api.scanners(
+                scanner_type=sj.constant.ScannerType.ChangePercentRank,
+                date=target_date, ascending=ascending, count=count,
+            )
+            out = []
+            for it in items:
+                prev_close = it.close - it.change_price
+                pct = (it.change_price / prev_close * 100) if prev_close else None
+                out.append({"code": it.code, "name": it.name, "close": float(it.close),
+                            "change_price": float(it.change_price), "pct": pct})
+            return out
+        return jsonify({"ok": True, "items": _run(work)})
     except Exception as e:
         return jsonify({"ok": False, "error": str(e)})
 

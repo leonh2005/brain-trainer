@@ -1,6 +1,6 @@
 {
-  "scanned_at": "2026-08-28 03:00:26",
-  "since": "2026-08-27 03:00:00",
+  "scanned_at": "2026-08-29 03:00:26",
+  "since": "2026-08-28 03:00:00",
   "results": {
     "市場儀表板": {
       "exists": true,
@@ -16,8 +16,8 @@
     },
     "motion-watcher": {
       "exists": true,
-      "errors": 97,
-      "last_error": "2026-08-28 02:50:45,835 WARNING 讀取影格失敗，重新連線",
+      "errors": 45,
+      "last_error": "2026-08-28 13:55:28,445 WARNING 讀取影格失敗，重新連線",
       "fix": "尚無對應建議，需人工判斷"
     },
     "Cloudflare Tunnel": {
@@ -28,14 +28,14 @@
     },
     "財經新聞分析": {
       "exists": true,
-      "errors": 3,
-      "last_error": "2026-08-27 23:32:20,436 [WARNING] analyzer: Batch parse failed, falling back to single analyze for all",
-      "fix": "尚無對應建議，需人工判斷"
+      "errors": 8,
+      "last_error": "2026-08-28 03:30:03,939 [WARNING] fetcher.ptt_fetcher: PTT article fetch failed https://www.ptt.cc/bbs/Stock/M.1787810403.A.9C5.html: HTTPSConnectionPool(host='www.ptt.cc', port=443): Max retries exceeded with url: /bbs/Stock/M.1787810403.A.9C5.html (Caused by NewConnectionError(\"HTTPSConnection(hos",
+      "fix": "Session/Token 過期 → 重新登入對應網站或更新 API Key"
     },
     "川普監測": {
       "exists": true,
-      "errors": 1,
-      "last_error": "2026-08-27 10:20:04,462 WARNING 分析失敗：Trump's Iran Sanctions Put China Under US Pressure — 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reaso",
+      "errors": 4,
+      "last_error": "2026-08-28 11:05:04,714 WARNING 分析失敗：Trump ratchets up rhetoric against Beijing as U.S. — 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reaso",
       "fix": "尚無對應建議，需人工判斷"
     },
     "持倉新聞(台股)": {
@@ -89,7 +89,7 @@
     "盤中監控": {
       "exists": true,
       "errors": 1,
-      "last_error": "[backfill] 2408 失敗: Topic: api/v1/data/ticks, Corr: c22, Client: PYAPI/N124711691/0827/010003/651733/220.141.28.26, payload: {'token': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYmYiOjE3ODc3OTI0MDMsImV4cCI6MTc4Nzg3ODgwMywic2ltdWxhdGlvbiI6ZmFsc2UsInBlcnNvbl9pZCI6Ik4xMjQ3MTE2OTEiLCJ2ZXJzaW9uIjoiMS4zLjI",
+      "last_error": "[backfill] 2408 失敗: Topic: api/v1/data/ticks, Corr: c22, Client: PYAPI/N124711691/0828/010003/152014/220.141.28.26, payload: {'token': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYmYiOjE3ODc4Nzg4MDMsImV4cCI6MTc4Nzk2NTIwMywic2ltdWxhdGlvbiI6ZmFsc2UsInBlcnNvbl9pZCI6Ik4xMjQ3MTE2OTEiLCJ2ZXJzaW9uIjoiMS4zLjI",
       "fix": "尚無對應建議，需人工判斷"
     },
     "蝦皮軟纖監測": {
