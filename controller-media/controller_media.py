@@ -35,6 +35,8 @@ def detect_profile():
         title = result.stdout.strip()
     except (subprocess.SubprocessError, OSError):
         return None
+    if result.returncode != 0:
+        print(f"[{time.strftime('%H:%M:%S')}] detect_profile ERROR rc={result.returncode} stderr={result.stderr.strip()!r}", flush=True)
     print(f"[{time.strftime('%H:%M:%S')}] detect_profile title={title!r}", flush=True)
     if "YouTube" in title:
         return "youtube"
