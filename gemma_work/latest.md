@@ -1,20 +1,19 @@
-# Claude Handoff 20260829_1723
-> 自動生成於 2026-08-29 17:23
+# Claude Handoff 20260829_2033
+> 自動生成於 2026-08-29 20:33
 
 ## 未提交的檔案異動
 ```
 M gemma_work/latest.md
  M scripts/auto_investigate_state.json
- M scripts/phone_weekly_reboot.sh
 ```
 
 ## 近期 Commits
 ```
+45e473c8 chore: 自動同步 2026-08-29 19:40
 93b7c95e chore: 自動同步 2026-08-29 14:40
 ec49091e chore: 自動同步 2026-08-29 09:40
 028a7ce0 chore: 自動同步 2026-08-29 04:40
 c0f43f2e chore: 自動同步 2026-08-28 23:40
-8be77236 chore: 自動同步 2026-08-28 18:40
 ```
 
 ## 給 Hermes 的備註
