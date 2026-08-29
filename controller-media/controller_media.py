@@ -1,4 +1,5 @@
 import json
+import os
 import subprocess
 import time
 from pathlib import Path
@@ -27,7 +28,12 @@ return ""
 '''
 
 
+ACCESSIBILITY_ERROR_RESTART_THRESHOLD = 8
+_consecutive_accessibility_errors = 0
+
+
 def detect_profile():
+    global _consecutive_accessibility_errors
     try:
         result = subprocess.run(
             ["osascript", "-e", DETECT_SCRIPT], capture_output=True, text=True, timeout=2
@@ -37,6 +43,12 @@ def detect_profile():
         return None
     if result.returncode != 0:
         print(f"[{time.strftime('%H:%M:%S')}] detect_profile ERROR rc={result.returncode} stderr={result.stderr.strip()!r}", flush=True)
+        _consecutive_accessibility_errors += 1
+        if _consecutive_accessibility_errors >= ACCESSIBILITY_ERROR_RESTART_THRESHOLD:
+            print(f"[{time.strftime('%H:%M:%S')}] 輔助取用連續失敗 {_consecutive_accessibility_errors} 次，重啟服務以重新取得權限", flush=True)
+            os._exit(1)
+    else:
+        _consecutive_accessibility_errors = 0
     print(f"[{time.strftime('%H:%M:%S')}] detect_profile title={title!r}", flush=True)
     if "YouTube" in title:
         return "youtube"

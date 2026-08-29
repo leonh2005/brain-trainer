@@ -1,17 +1,14 @@
-# Claude Handoff 20260829_0936
-> 自動生成於 2026-08-29 09:36
+# Claude Handoff 20260829_1419
+> 自動生成於 2026-08-29 14:19
 
 ## 未提交的檔案異動
 ```
 M chip-tracker/chip.db
+ M controller-media/controller_media.py
  M gemma_work/latest.md
- M guru-tracker/guru_tracker.db
+ M logs/pullback_daily_scan.err
  M market-dashboard/bb_cache.json
- M market-dashboard/cape_cache.json
- M market-dashboard/fg_history.json
- M market-dashboard/hindenburg_cache.json
  M market-dashboard/index.html
- M market-dashboard/m1b_cache.json
  M market-dashboard/margin_cache.json
  M market-dashboard/sp_state.json
  M scripts/auto_investigate_state.json
@@ -20,11 +17,11 @@ M chip-tracker/chip.db
 
 ## 近期 Commits
 ```
+ec49091e chore: 自動同步 2026-08-29 09:40
 028a7ce0 chore: 自動同步 2026-08-29 04:40
 c0f43f2e chore: 自動同步 2026-08-28 23:40
 8be77236 chore: 自動同步 2026-08-28 18:40
 3d95c4e9 chore: 自動同步 2026-08-28 13:40
-43872ac2 chore: 自動同步 2026-08-28 08:40
 ```
 
 ## 給 Hermes 的備註
