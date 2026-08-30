@@ -211,7 +211,7 @@ def analyze_frames_gemini(frames: list):
     for attempt in range(3):
         try:
             response = client.models.generate_content(
-                model='gemini-2.0-flash',
+                model='gemini-3.6-flash',
                 contents=pil_images + [PROMPT]
             )
             return _parse_response(response.text)
