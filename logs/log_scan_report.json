@@ -1,6 +1,6 @@
 {
-  "scanned_at": "2026-08-30 03:00:26",
-  "since": "2026-08-29 03:00:00",
+  "scanned_at": "2026-08-31 03:00:26",
+  "since": "2026-08-30 03:00:00",
   "results": {
     "市場儀表板": {
       "exists": true,
@@ -16,8 +16,8 @@
     },
     "motion-watcher": {
       "exists": true,
-      "errors": 70,
-      "last_error": "2026-08-30 02:51:47,069 WARNING 讀取影格失敗，重新連線",
+      "errors": 569,
+      "last_error": "2026-08-31 03:00:02,034 WARNING RTSP 連線失敗，30 秒後重試",
       "fix": "尚無對應建議，需人工判斷"
     },
     "Cloudflare Tunnel": {
@@ -28,9 +28,9 @@
     },
     "財經新聞分析": {
       "exists": true,
-      "errors": 2,
-      "last_error": "2026-08-29 16:17:21,138 [WARNING] analyzer: Batch parse failed, falling back to single analyze for all",
-      "fix": "尚無對應建議，需人工判斷"
+      "errors": 0,
+      "last_error": null,
+      "fix": null
     },
     "川普監測": {
       "exists": true,
