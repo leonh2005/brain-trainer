@@ -1,11 +1,11 @@
 {
   "youtube": {
     "buttonMenu": "play_pause",
-    "buttonOptions": "captions",
+    "buttonOptions": "mute",
     "buttonA": "none",
     "buttonB": "none",
-    "buttonX": "mute",
-    "buttonY": "none",
+    "buttonX": "none",
+    "buttonY": "captions",
     "leftShoulder": "volume_down",
     "rightShoulder": "volume_up",
     "leftTrigger": "rewind",
