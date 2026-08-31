@@ -319,10 +319,12 @@ def _track_history(track_path: str):
         results = entry.get('track_results', [])
         hits = sum(1 for r in results if r.get('up'))
         day_net_pnl = sum(r['net_pnl'] for r in results if r.get('net_pnl') is not None)
+        day_cost = sum(r['baseline'] * r['buy_shares'] for r in results if r.get('net_pnl') is not None and 'buy_shares' in r)
+        day_pct = round(day_net_pnl / day_cost * 100, 2) if day_cost else None
         days.append({
             'date': dt, 'checked': entry.get('checked', False),
             'candidates': entry.get('candidates', []), 'results': results,
-            'hits': hits, 'picks': len(results), 'net_pnl': day_net_pnl,
+            'hits': hits, 'picks': len(results), 'net_pnl': day_net_pnl, 'net_pnl_pct': day_pct,
         })
         if entry.get('checked'):
             total_hits += hits
