@@ -1,6 +1,6 @@
 {
-  "scanned_at": "2026-08-31 03:00:26",
-  "since": "2026-08-30 03:00:00",
+  "scanned_at": "2026-09-01 03:00:26",
+  "since": "2026-08-31 03:00:00",
   "results": {
     "市場儀表板": {
       "exists": true,
@@ -16,8 +16,8 @@
     },
     "motion-watcher": {
       "exists": true,
-      "errors": 569,
-      "last_error": "2026-08-31 03:00:02,034 WARNING RTSP 連線失敗，30 秒後重試",
+      "errors": 1437,
+      "last_error": "2026-09-01 03:00:03,892 WARNING RTSP 連線失敗，30 秒後重試",
       "fix": "尚無對應建議，需人工判斷"
     },
     "Cloudflare Tunnel": {
@@ -28,9 +28,9 @@
     },
     "財經新聞分析": {
       "exists": true,
-      "errors": 0,
-      "last_error": null,
-      "fix": null
+      "errors": 3,
+      "last_error": "2026-08-31 11:00:05,406 [WARNING] fetcher.ptt_fetcher: PTT article fetch failed https://www.ptt.cc/bbs/Stock/M.1788100806.A.BCD.html: ('Connection aborted.', ConnectionResetError(54, 'Connection reset by peer'))",
+      "fix": "尚無對應建議，需人工判斷"
     },
     "川普監測": {
       "exists": true,
@@ -124,9 +124,9 @@
     },
     "daily-stock-analysis": {
       "exists": true,
-      "errors": 0,
-      "last_error": null,
-      "fix": null
+      "errors": 23,
+      "last_error": "2026-08-31 23:44:09 | DEBUG    | venv/lib/python3.14/site-packages/httpcore/_trace.py:47 | receive_response_body.failed exception=GeneratorExit()",
+      "fix": "尚無對應建議，需人工判斷"
     }
   },
   "no_log": [
