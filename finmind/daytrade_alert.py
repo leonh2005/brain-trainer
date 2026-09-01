@@ -248,6 +248,12 @@ for row in top20:
 fut_diff, fut_date = get_futures_direction()
 mkt_dir = "偏多 ↑" if fut_diff > 0 else "偏空 ↓"
 
+# 外資期貨偏空時，統計上勝率大幅下降（大盤逆風19.4% vs順風47.6%），直接跳過不推播候選
+mkt_bearish_skip = fut_diff <= 0
+if mkt_bearish_skip and candidates:
+    print(f'[daytrade] 外資期貨偏空（多空差{fut_diff:+,}口），跳過本日{len(candidates)}檔候選')
+    candidates = []
+
 # ── 組訊息 ────────────────────────────────────────
 
 lines = [f"📊 <b>當沖候選</b>｜{TODAY} 09:10\n"]
@@ -285,6 +291,8 @@ if candidates:
             lines.append(entry + "\n")
     lines.append("⚡ 進場參考：開盤後5~15分鐘確認方向再進")
     lines.append("🛑 停損：跌破進場價 -1.5% 出清")
+elif mkt_bearish_skip:
+    lines.append("🌧️ 外資期貨偏空，今日跳過推播（大盤逆風時歷史勝率明顯偏低）")
 else:
     lines.append("❌ 今日無符合當沖條件標的\n建議觀望或等待盤中突破訊號")
 

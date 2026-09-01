@@ -335,11 +335,11 @@ const fmt=n=>n==null?'—':(typeof n==='number'?n.toLocaleString('en-US',{maximu
 const ago=ts=>{if(!ts)return'';const s=Date.now()/1000-ts;if(s<3600)return Math.max(1,Math.floor(s/60))+'分前';if(s<86400)return Math.floor(s/3600)+'小時前';if(s<2592000)return Math.floor(s/86400)+'天前';return Math.floor(s/2592000)+'個月前'};
 const chgCls=v=>v>0?'up':(v<0?'down':'');
 const arrow=v=>v>0?'▲':(v<0?'▼':'·');
-/* 台股代號 → 鉅亨網個股頁；無代號則退回純文字 */
+/* 台股代號 → Yahoo奇摩股市個股頁；無代號則退回純文字 */
 const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const yq=code=>`https://www.cnyes.com/twstock/${encodeURIComponent(code)}`;
+const yq=code=>`https://tw.stock.yahoo.com/quote/${encodeURIComponent(code)}.TW`;
 const tkLink=(name,code,extra='')=>code
-  ?`<a class="tk"${extra} href="${yq(code)}" target="_blank" rel="noopener" title="鉅亨網 ${esc(code)}"><span class="code">${esc(code)}</span>${esc(name)}</a>`
+  ?`<a class="tk"${extra} href="${yq(code)}" target="_blank" rel="noopener" title="Yahoo股市 ${esc(code)}"><span class="code">${esc(code)}</span>${esc(name)}</a>`
   :`<span class="tk"${extra}>${esc(name)}</span>`;
 
 /* clock */
