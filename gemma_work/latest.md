@@ -1,30 +1,22 @@
-# Claude Handoff 20260901_1416
-> 自動生成於 2026-09-01 14:16
+# Claude Handoff 20260901_2228
+> 自動生成於 2026-09-01 22:28
 
 ## 未提交的檔案異動
 ```
 M chip-tracker/chip.db
- M command-center/templates/index.html
- M finmind/daytrade_alert.py
  M gemma_work/latest.md
- M logs/pullback_daily_scan.err
- M market-dashboard/bb_cache.json
- M market-dashboard/fg_history.json
- M market-dashboard/index.html
- M market-dashboard/margin_cache.json
- M market-dashboard/sp_state.json
- M news-analyzer/trump_seen.json
+ M hermes-training/run_nightly.sh
  M scripts/auto_investigate_state.json
-?? .claude/skills/phone-lag-diagnosis.md
+ M shopee-boost/data/last_success.json
 ```
 
 ## 近期 Commits
 ```
+fe1a93f5 chore: 自動同步 2026-09-01 17:40
 d54a5929 chore: 自動同步 2026-09-01 12:40
 ac1d29fd chore: 自動同步 2026-09-01 07:40
 a6863b5f chore: 自動同步 2026-09-01 02:40
 cb11bcf3 chore: 每晚同步 2026-08-31 23:50
-28417494 chore: 自動同步 2026-08-31 21:40
 ```
 
 ## 給 Hermes 的備註
