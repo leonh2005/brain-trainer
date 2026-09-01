@@ -33,13 +33,13 @@
 <body>
 <div class="wrap">
   <h1>隔日沖候選命中歷史</h1>
-  <div class="sub">telebot/screener.py 每天選出的候選股，隔天 10:18 自動比對是否上漲（check_swing_track.py）</div>
+  <div class="sub">telebot/screener.py 每天選出的候選股，隔天 09:40 自動比對是否上漲（check_swing_track.py）</div>
 
   <div class="summary">
     <div><div class="k">累積命中</div><div class="v">{{ total_hits }} / {{ total_picks }}</div></div>
     <div><div class="k">命中率</div><div class="v">{{ hit_rate if hit_rate is not none else '--' }}{{ '%' if hit_rate is not none else '' }}</div></div>
     <div><div class="k">追蹤天數</div><div class="v">{{ days|length }}</div></div>
-    <div><div class="k">累積淨損益（每檔1張）</div><div class="v {{ 'pos-up' if total_net_pnl >= 0 else 'pos-down' }}">{{ '%+d'|format(total_net_pnl) }}</div></div>
+    <div><div class="k">累積淨損益（每日100萬元平分候選股）</div><div class="v {{ 'pos-up' if total_net_pnl >= 0 else 'pos-down' }}">{{ '%+d'|format(total_net_pnl) }}</div></div>
   </div>
 
   {% if not days %}
