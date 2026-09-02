@@ -13,6 +13,7 @@ from flask import Flask, jsonify, render_template, request
 
 import db
 import patterns
+import support as support_mod
 import updater
 
 app = Flask(__name__)
@@ -362,6 +363,43 @@ def api_quotes():
         _quote_cache["ts"] = now
         _quote_cache["data"] = result
     return jsonify(result)
+
+
+_support_cache: dict = {}
+_SUPPORT_TTL = 300  # 秒
+
+
+@app.get("/api/chip-support/<code>")
+def api_support(code):
+    """支撐位分析：走 Shioaji gateway 抓250天日K，5分鐘記憶體快取。
+    路徑刻意取名 chip-support（不叫 support）：command-center 自己也有 /api/support/{symbol}，
+    透過 /svc/5850/ 代理載入本頁時，若同名會被 command-center 自己的路由攔截，
+    根本轉不到這裡（2026-09-02 踩過一次）。"""
+    import time as _time
+
+    now = _time.time()
+    hit = _support_cache.get(code)
+    if hit and now - hit[0] < _SUPPORT_TTL:
+        levels, bars = hit[1]
+        return jsonify({"ok": True, "code": code, "levels": levels, "bars": bars})
+
+    try:
+        r = requests.get(f"{SHIOAJI_GATEWAY}/daily_ohlcv", params={"code": code, "days": 250}, timeout=15)
+        r.raise_for_status()
+        resp = r.json()
+        if not resp.get("ok"):
+            raise RuntimeError(resp.get("error", "gateway error"))
+    except Exception as e:
+        return jsonify({"ok": False, "error": str(e)}), 502
+
+    bars = resp.get("bars") or []
+    today_str = date.today().isoformat()
+    if bars and bars[-1].get("date") == today_str:
+        bars = bars[:-1]  # 今天還沒收盤，排除避免支撐位跟現價矛盾
+    levels = support_mod.analyze_support(bars)
+    chart_bars = bars[-90:]
+    _support_cache[code] = (now, (levels, chart_bars))
+    return jsonify({"ok": True, "code": code, "levels": levels, "bars": chart_bars})
 
 
 @app.post("/api/refresh")

@@ -559,7 +559,9 @@ function openSupportModal(code){
     const list=levels.map(lv=>{
       const stars='★'.repeat(lv.strength)+'☆'.repeat(5-lv.strength);
       const srcLines=(lv.sources||[]).map(s=>`<div>・${esc(s)}</div>`).join('');
-      return `<div class="support-level"><div class="support-price">${fmt(lv.price)} <span style="color:var(--accent)">${stars}</span></div><div class="support-src">${srcLines}</div></div>`;
+      const farNote=lv.far
+        ? `<div class="support-src" style="color:var(--amber)">⚠ 股價漲勢已甩開近期支撐（距現價 ${lv.distance_pct}%），僅供參考</div>` : '';
+      return `<div class="support-level"><div class="support-price">${fmt(lv.price)} <span style="color:var(--accent)">${stars}</span></div>${farNote}<div class="support-src">${srcLines}</div></div>`;
     }).join('');
     $('#support-modal-body').innerHTML=chart+list;
   }).catch(()=>{$('#support-modal-body').innerHTML='<div class="empty">讀取失敗</div>'});
