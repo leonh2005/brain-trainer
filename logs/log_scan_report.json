@@ -1,6 +1,6 @@
 {
-  "scanned_at": "2026-09-02 03:00:26",
-  "since": "2026-09-01 03:00:01",
+  "scanned_at": "2026-09-03 03:00:27",
+  "since": "2026-09-02 03:00:00",
   "results": {
     "市場儀表板": {
       "exists": true,
@@ -16,8 +16,8 @@
     },
     "motion-watcher": {
       "exists": true,
-      "errors": 1437,
-      "last_error": "2026-09-02 02:59:42,646 WARNING RTSP 連線失敗，30 秒後重試",
+      "errors": 1436,
+      "last_error": "2026-09-03 02:59:28,198 WARNING RTSP 連線失敗，30 秒後重試",
       "fix": "尚無對應建議，需人工判斷"
     },
     "Cloudflare Tunnel": {
@@ -28,8 +28,8 @@
     },
     "財經新聞分析": {
       "exists": true,
-      "errors": 2,
-      "last_error": "2026-09-01 20:00:04,605 [WARNING] fetcher.ptt_fetcher: PTT article fetch failed https://www.ptt.cc/bbs/Stock/M.1788255258.A.033.html: ('Connection aborted.', ConnectionResetError(54, 'Connection reset by peer'))",
+      "errors": 4,
+      "last_error": "2026-09-03 00:02:29,491 [WARNING] fetcher.reddit_fetcher: Reddit fetch failed for r/wallstreetbets: ('Connection broken: IncompleteRead(33728 bytes read, 14781 more expected)', IncompleteRead(33728 bytes read, 14781 more expected))",
       "fix": "尚無對應建議，需人工判斷"
     },
     "川普監測": {
