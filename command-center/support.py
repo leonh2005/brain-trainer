@@ -224,5 +224,14 @@ def analyze_support(bars):
             merged.append(dict(lv))
     merged.sort(key=lambda x: x['price'], reverse=True)
     current_price = bars[-1]['close']
-    merged = [m for m in merged if current_price * 0.85 <= m['price'] <= current_price]
-    return merged[:5]
+    below_current = [m for m in merged if m['price'] <= current_price]
+    nearby = [m for m in below_current if m['price'] >= current_price * 0.85]
+    if nearby:
+        return nearby[:5]
+    if below_current:
+        # 急漲股常見：所有支撐都被漲勢甩開超過15%，仍附上最近一個供參考，並標記距離
+        nearest = dict(below_current[0])
+        nearest['far'] = True
+        nearest['distance_pct'] = round((current_price - nearest['price']) / current_price * 100, 1)
+        return [nearest]
+    return []
