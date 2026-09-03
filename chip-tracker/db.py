@@ -188,6 +188,16 @@ def upsert_weekly(conn, code: str, date: str, big400_pct, whale_holders, retail_
     )
 
 
+def get_prev_close(conn, code: str, before_date: str):
+    """指定日期之前最近一筆有收盤價的紀錄，回傳 (date, close) 或 None。"""
+    row = conn.execute(
+        "SELECT date, close FROM daily WHERE code = ? AND date < ? AND close IS NOT NULL "
+        "ORDER BY date DESC LIMIT 1",
+        (code, before_date),
+    ).fetchone()
+    return (row["date"], row["close"]) if row else None
+
+
 def get_daily_history(conn, code: str, days: int = 30) -> list:
     rows = conn.execute(
         "SELECT * FROM daily WHERE code = ? ORDER BY date DESC LIMIT ?",
