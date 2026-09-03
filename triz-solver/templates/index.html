@@ -1,0 +1,308 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TRIZ 解題助手</title>
+<style>
+:root{
+  --bg:#f7f5f2; --card:#ffffff; --border:#e4ddd3; --text:#2b2620; --text-dim:#7a7168;
+  --accent:#c15f3c; --accent-dim:#e8d9d0; --accent-text:#ffffff;
+  --tab-bg:#efe9e1; --danger:#b3492f; --ok:#4a7c59;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#1c1a17; --card:#26231f; --border:#3a352d; --text:#ece6dc; --text-dim:#a89e90;
+    --accent:#e08a5f; --accent-dim:#4a3527; --accent-text:#1c1a17;
+    --tab-bg:#332e27; --danger:#e08066; --ok:#7fbb8f;
+  }
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"PingFang TC","Microsoft JhengHei",sans-serif;margin:0;padding:0}
+.wrap{max-width:720px;margin:0 auto;padding:24px 16px 60px}
+h1{font-size:1.3rem;margin:4px 0 2px}
+.sub{color:var(--text-dim);font-size:.85rem;margin-bottom:18px}
+.tabs{display:flex;gap:6px;background:var(--tab-bg);border-radius:10px;padding:4px;margin-bottom:16px}
+.tab{flex:1;text-align:center;padding:9px 8px;border-radius:8px;cursor:pointer;font-size:.9rem;font-weight:600;color:var(--text-dim);user-select:none}
+.tab.active{background:var(--accent);color:var(--accent-text)}
+.panel{display:none}
+.panel.active{display:block}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:14px}
+textarea{width:100%;min-height:90px;background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:10px;font-size:.95rem;font-family:inherit;resize:vertical}
+select{width:100%;background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:9px;font-size:.9rem;font-family:inherit}
+label{display:block;font-size:.8rem;color:var(--text-dim);margin:10px 0 4px;font-weight:600}
+button{background:var(--accent);color:var(--accent-text);border:none;border-radius:8px;padding:10px 18px;font-size:.9rem;font-weight:700;cursor:pointer;margin-top:12px}
+button.secondary{background:transparent;color:var(--accent);border:1px solid var(--accent)}
+button:disabled{opacity:.5;cursor:not-allowed}
+.row{display:flex;gap:10px}
+.row>div{flex:1}
+.principle{border:1px solid var(--border);border-radius:8px;padding:10px 12px;margin-top:8px;background:var(--bg)}
+.principle b{color:var(--accent)}
+.principle .idea{font-size:.85rem;color:var(--text-dim);margin-top:2px}
+.reasoning{font-size:.85rem;color:var(--text-dim);font-style:italic;margin:8px 0}
+.status{font-size:.85rem;color:var(--text-dim);margin-top:8px}
+.status.err{color:var(--danger)}
+.status.ok{color:var(--ok)}
+.suggestion{margin-top:14px;padding-top:14px;border-top:1px dashed var(--border)}
+.suggestion:first-child{margin-top:0;padding-top:0;border-top:none}
+.suggestion img{width:100%;max-width:320px;border-radius:10px;border:1px solid var(--border);margin-top:8px;display:block}
+.hist-item{border-bottom:1px solid var(--border);padding:10px 0}
+.hist-item:last-child{border-bottom:none}
+.hist-head{cursor:pointer}
+.hist-q{font-weight:600;font-size:.9rem}
+.hist-meta{font-size:.75rem;color:var(--text-dim);margin-top:2px}
+.hist-detail{margin-top:10px;padding-top:10px;border-top:1px dashed var(--border)}
+.empty{color:var(--text-dim);font-size:.85rem;text-align:center;padding:20px 0}
+.badge{display:inline-block;background:var(--accent-dim);color:var(--accent);border-radius:6px;padding:2px 8px;font-size:.75rem;font-weight:700;margin-right:6px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>TRIZ 解題助手</h1>
+  <div class="sub">矛盾矩陣 × AI 建議 × ComfyUI 漫畫插圖</div>
+
+  <div class="tabs">
+    <div class="tab active" data-tab="ai">AI 分析</div>
+    <div class="tab" data-tab="manual">手動查表</div>
+    <div class="tab" data-tab="history">歷史紀錄</div>
+  </div>
+
+  <div class="panel active" id="panel-ai">
+    <div class="card">
+      <label>用白話描述你遇到的問題</label>
+      <textarea id="problemInput" placeholder="例如：手機保護殼加厚可以防摔，但拿起來變得很笨重，操作不方便"></textarea>
+      <button id="analyzeBtn">分析矛盾</button>
+      <div class="status" id="aiStatus"></div>
+    </div>
+    <div class="card" id="resultCard" style="display:none">
+      <div id="reasoningBox" class="reasoning"></div>
+      <div class="row">
+        <div>
+          <label>改善的參數</label>
+          <select id="improvingSelect"></select>
+        </div>
+        <div>
+          <label>惡化的參數</label>
+          <select id="worseningSelect"></select>
+        </div>
+      </div>
+      <div id="principlesBox"></div>
+      <button id="suggestBtn">生成建議＋插圖</button>
+      <div class="status" id="suggestStatus"></div>
+      <div id="suggestBox"></div>
+    </div>
+  </div>
+
+  <div class="panel" id="panel-manual">
+    <div class="card">
+      <div class="row">
+        <div>
+          <label>改善的參數</label>
+          <select id="mImproving"></select>
+        </div>
+        <div>
+          <label>惡化的參數</label>
+          <select id="mWorsening"></select>
+        </div>
+      </div>
+      <div id="mPrinciplesBox"></div>
+      <label style="margin-top:14px">（選用）補充問題情境，可再生成建議＋插圖</label>
+      <textarea id="mProblemInput" placeholder="選填：描述你的具體情境"></textarea>
+      <button id="mSuggestBtn">生成建議＋插圖</button>
+      <div class="status" id="mSuggestStatus"></div>
+      <div id="mSuggestBox"></div>
+    </div>
+  </div>
+
+  <div class="panel" id="panel-history">
+    <div class="card">
+      <div id="historyList"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+let PARAMS = [], PRINCIPLES = [], P_BY_ID = {};
+
+async function loadData(){
+  const r = await fetch('/api/data');
+  const d = await r.json();
+  PARAMS = d.params; PRINCIPLES = d.principles;
+  P_BY_ID = Object.fromEntries(PRINCIPLES.map(p=>[p.id,p]));
+  const opts = PARAMS.map(p=>`<option value="${p.id}">${p.id}. ${p.zh}</option>`).join('');
+  ['improvingSelect','worseningSelect','mImproving','mWorsening'].forEach(id=>{
+    document.getElementById(id).innerHTML = opts;
+  });
+  document.getElementById('worseningSelect').value = '3';
+  document.getElementById('mWorsening').value = '3';
+  updateManual();
+}
+
+function P_BY_ID_PARAM(id){
+  const p = PARAMS.find(x=>x.id===id);
+  return p ? `${p.id}.${p.zh}` : (id||'-');
+}
+function escapeHtml(s){
+  const d = document.createElement('div');
+  d.textContent = s == null ? '' : s;
+  return d.innerHTML;
+}
+function setStatus(el, text, cls){
+  el.textContent = text;
+  el.className = 'status' + (cls ? ' '+cls : '');
+}
+
+async function renderPrinciplesFor(containerEl, improving, worsening){
+  if(improving === worsening){
+    containerEl.innerHTML = '<div class="status">改善與惡化參數不能相同，請重新選擇。</div>';
+    return;
+  }
+  const r = await fetch(`/api/lookup?improving=${improving}&worsening=${worsening}`);
+  const d = await r.json();
+  const ids = d.principle_ids || [];
+  if(!ids.length){
+    containerEl.innerHTML = '<div class="status">此矛盾組合暫無經典對應原理，AI 建議會直接根據問題脈絡生成。</div>';
+    return;
+  }
+  containerEl.innerHTML = ids.map(id=>{
+    const p = P_BY_ID[id];
+    return `<div class="principle"><span class="badge">${p.id}</span><b>${p.zh}</b><div class="idea">${p.idea}</div></div>`;
+  }).join('');
+}
+
+function renderSuggestions(suggestions){
+  if(!Array.isArray(suggestions) || !suggestions.length) return '<div class="status err">沒有可用的建議</div>';
+  return suggestions.map((s,i)=>`
+<div class="suggestion">
+  <div style="font-size:.9rem">${escapeHtml(s.text)}</div>
+  ${s.image_url
+    ? `<img src="${s.image_url}" alt="${escapeHtml(s.text)}">`
+    : `<div class="status err">插圖生成失敗：${escapeHtml(s.image_error || '未知錯誤')}</div>`}
+</div>`).join('');
+}
+
+// ---- Tabs ----
+document.querySelectorAll('.tab').forEach(tabEl=>{
+  tabEl.addEventListener('click', ()=>{
+    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+    tabEl.classList.add('active');
+    document.getElementById('panel-'+tabEl.dataset.tab).classList.add('active');
+    if(tabEl.dataset.tab === 'history') loadHistory();
+  });
+});
+
+// ---- Manual tab ----
+function updateManual(){
+  renderPrinciplesFor(document.getElementById('mPrinciplesBox'),
+    parseInt(document.getElementById('mImproving').value),
+    parseInt(document.getElementById('mWorsening').value));
+}
+document.getElementById('mImproving').addEventListener('change', updateManual);
+document.getElementById('mWorsening').addEventListener('change', updateManual);
+
+// ---- AI analyze ----
+document.getElementById('analyzeBtn').addEventListener('click', async ()=>{
+  const problem = document.getElementById('problemInput').value.trim();
+  const statusEl = document.getElementById('aiStatus');
+  if(!problem){ setStatus(statusEl, '請先描述你的問題', 'err'); return; }
+  const btn = document.getElementById('analyzeBtn');
+  btn.disabled = true;
+  setStatus(statusEl, '分析中...', '');
+  document.getElementById('resultCard').style.display = 'none';
+  try{
+    const r = await fetch('/api/analyze', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({problem})});
+    const d = await r.json();
+    if(!r.ok) throw new Error(d.error || '分析失敗');
+    document.getElementById('improvingSelect').value = d.improving;
+    document.getElementById('worseningSelect').value = d.worsening;
+    document.getElementById('reasoningBox').textContent = d.reasoning || '';
+    await renderPrinciplesFor(document.getElementById('principlesBox'), d.improving, d.worsening);
+    document.getElementById('resultCard').style.display = 'block';
+    document.getElementById('suggestBox').innerHTML = '';
+    setStatus(statusEl, '分析完成，可在下方修正參數或直接生成建議', 'ok');
+  }catch(e){
+    setStatus(statusEl, 'AI 呼叫失敗：' + e.message, 'err');
+  }
+  btn.disabled = false;
+});
+
+['improvingSelect','worseningSelect'].forEach(id=>{
+  document.getElementById(id).addEventListener('change', ()=>{
+    renderPrinciplesFor(document.getElementById('principlesBox'),
+      parseInt(document.getElementById('improvingSelect').value),
+      parseInt(document.getElementById('worseningSelect').value));
+  });
+});
+
+async function runSuggest({problem, improving, worsening, boxEl, statusEl, btnEl}){
+  btnEl.disabled = true;
+  setStatus(statusEl, '生成建議＋插圖中，每張圖約 30-60 秒，請耐心等候...', '');
+  boxEl.innerHTML = '';
+  try{
+    const r = await fetch('/api/suggest', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({problem, improving, worsening})});
+    const d = await r.json();
+    if(!r.ok) throw new Error(d.error || '生成失敗');
+    boxEl.innerHTML = renderSuggestions(d.suggestions);
+    setStatus(statusEl, '完成，已存入歷史紀錄', 'ok');
+  }catch(e){
+    setStatus(statusEl, 'AI 呼叫失敗：' + e.message, 'err');
+  }
+  btnEl.disabled = false;
+}
+
+document.getElementById('suggestBtn').addEventListener('click', ()=>{
+  runSuggest({
+    problem: document.getElementById('problemInput').value.trim(),
+    improving: parseInt(document.getElementById('improvingSelect').value),
+    worsening: parseInt(document.getElementById('worseningSelect').value),
+    boxEl: document.getElementById('suggestBox'),
+    statusEl: document.getElementById('suggestStatus'),
+    btnEl: document.getElementById('suggestBtn'),
+  });
+});
+document.getElementById('mSuggestBtn').addEventListener('click', ()=>{
+  runSuggest({
+    problem: document.getElementById('mProblemInput').value.trim(),
+    improving: parseInt(document.getElementById('mImproving').value),
+    worsening: parseInt(document.getElementById('mWorsening').value),
+    boxEl: document.getElementById('mSuggestBox'),
+    statusEl: document.getElementById('mSuggestStatus'),
+    btnEl: document.getElementById('mSuggestBtn'),
+  });
+});
+
+// ---- History ----
+async function loadHistory(){
+  const el = document.getElementById('historyList');
+  const r = await fetch('/api/history');
+  const d = await r.json();
+  const hist = d.history || [];
+  if(!hist.length){
+    el.innerHTML = '<div class="empty">還沒有歷史紀錄</div>';
+    return;
+  }
+  el.innerHTML = hist.map((h,i)=>{
+    const impName = P_BY_ID_PARAM(h.improving);
+    const worName = P_BY_ID_PARAM(h.worsening);
+    const date = new Date(h.created_at.replace(' ','T')).toLocaleString('zh-TW');
+    return `<div class="hist-item">
+      <div class="hist-head" data-idx="${i}">
+        <div class="hist-q">${escapeHtml(h.problem || '(手動查表)')}</div>
+        <div class="hist-meta">${impName} × ${worName} · ${date}</div>
+      </div>
+      <div class="hist-detail" data-detail="${i}" hidden>${renderSuggestions(h.suggestions)}</div>
+    </div>`;
+  }).join('');
+  el.querySelectorAll('.hist-head').forEach(head=>{
+    head.addEventListener('click', ()=>{
+      const detail = el.querySelector(`[data-detail="${head.dataset.idx}"]`);
+      detail.hidden = !detail.hidden;
+    });
+  });
+}
+
+loadData();
+</script>
+</body>
+</html>
