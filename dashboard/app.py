@@ -86,10 +86,10 @@ LOCAL_CRONS = [
     },
 ]
 
-# ── VM 排程任務（SSH grep journald）──────────────────────────
+# ── VM 排程任務（SSH grep 服務自己的 log 檔）──────────────────────────
 VM_CRONS = [
-    {"name": "lotto",       "label": "大樂透監測",   "schedule": "週二、五 21:00", "keyword": "大樂透"},
-    {"name": "super-lotto", "label": "威力彩監測",   "schedule": "週一、四 21:00", "keyword": "威力彩"},
+    {"name": "lotto",       "label": "大樂透監測",   "schedule": "週二、五 16:30+21:00", "keyword": "開始執行大樂透頭獎監測"},
+    {"name": "super-lotto", "label": "威力彩監測",   "schedule": "週一、四 16:30+21:00", "keyword": "開始執行威力彩頭獎監測"},
     {"name": "steam",       "label": "Steam 免費遊戲", "schedule": "每小時",        "keyword": "steam"},
     {"name": "food",        "label": "食物效期提醒",  "schedule": "每日12:00",      "keyword": "效期"},
     {"name": "vm-health",   "label": "VM 健康檢查",  "schedule": "每日13:00",      "keyword": "健康檢查"},
@@ -158,14 +158,15 @@ def check_local_cron(task: dict) -> dict:
 
 
 def check_vm_crons() -> list:
-    today = date.today().strftime("%b %d").lstrip("0") if date.today().day >= 10 else date.today().strftime("%b %d")
     today_iso = date.today().isoformat()
     results = []
     try:
+        # tele-bot 的 systemd unit 把 stdout/stderr 導到檔案（非 journald），
+        # journalctl -u tele-bot 只看得到 systemd 自己的啟停訊息，永遠抓不到任何排程執行紀錄。
         cmd = [
             "ssh", "-i", VM_SSH_KEY, "-o", "StrictHostKeyChecking=no",
             "-o", "ConnectTimeout=5", f"ubuntu@{VM_IP}",
-            f"journalctl -u tele-bot --since today --no-pager -q 2>/dev/null | tail -200"
+            f"grep '^{today_iso}' /home/ubuntu/telebot/logs/tele-bot.log 2>/dev/null | tail -500"
         ]
         out = subprocess.check_output(cmd, timeout=8, stderr=subprocess.DEVNULL).decode("utf-8", errors="replace")
         for task in VM_CRONS:
