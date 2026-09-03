@@ -20,13 +20,13 @@ LOCAL_SERVICES = [
     {"name": "ai-compare",          "port": 5050, "url": "http://localhost:5050", "watchdog": False},
     {"name": "stock_analyzer",      "port": 5100, "url": "http://localhost:5100", "watchdog": False},
     {"name": "dsa-vite",            "port": 5173, "url": "http://localhost:5173", "watchdog": True},
-    {"name": "rabbit-care",         "port": 5200, "url": "http://localhost:5200", "watchdog": True},
     {"name": "news-analyzer",       "port": 5300, "url": "http://localhost:5300", "watchdog": True},
     {"name": "daytrade-replay",     "port": 5400, "url": "http://localhost:5400", "watchdog": True},
     {"name": "stock-screener-ai",   "port": 5500, "url": "http://localhost:5500", "watchdog": True},
     {"name": "dashboard",           "port": 5600, "url": "http://localhost:5600", "watchdog": True},
     {"name": "dsa-webui",           "port": 5650, "url": "http://localhost:5650", "watchdog": True},
     {"name": "portfolio-analyzer",  "port": 5800, "url": "http://localhost:5800", "watchdog": False},
+    {"name": "triz-solver",         "port": 5980, "url": "http://localhost:5980", "watchdog": True},
     {"name": "dsa-backend",         "port": 8000, "url": "http://localhost:8000", "watchdog": True},
 ]
 
@@ -43,18 +43,6 @@ BACKGROUND_PROCS = [
         "label": "YouTube 監測器",
         "log": "/Users/steven/youtube-monitor/monitor.log",
         "alive_minutes": 90,
-    },
-    {
-        "name": "motion-watcher",
-        "label": "墨墨行為辨識",
-        "log": "/Users/steven/CCProject/rabbit-care/motion-watcher.log",
-        "alive_minutes": 10,
-    },
-    {
-        "name": "rabbit-tunnel",
-        "label": "Rabbit Tunnel",
-        "log": "/Users/steven/CCProject/rabbit-care/tunnel.log",
-        "alive_minutes": 30,
     },
 ]
 

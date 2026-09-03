@@ -570,19 +570,6 @@ def health_all():
 
 
 @_wrap
-def rabbit():
-    d = _proxy('http://localhost:5200/api/today-actions', ttl=120)
-    con = _ro_db(f'{CC}/rabbit-care/rabbit.db')
-    row = con.execute(
-        'SELECT log_date, SUM(amount_cc) FROM water_log GROUP BY log_date ORDER BY log_date DESC LIMIT 1'
-    ).fetchone()
-    con.close()
-    out = dict(d)  # 複製，避免 mutate _proxy 快取物件
-    out['water_today'] = {'date': row[0], 'cc': row[1]} if row else None
-    return out, datetime.now().strftime('%Y-%m-%d %H:%M')
-
-
-@_wrap
 def skilltree():
     p = f'{CC}/skill-tree/skill_tree.db'
     con = _ro_db(p)

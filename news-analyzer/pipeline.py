@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Main pipeline: fetch → deduplicate → analyze → store.
+Main pipeline: fetch → deduplicate → store.
 Run via crontab every 15 minutes.
 """
 import json
@@ -17,8 +17,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from fetcher.rss_fetcher import fetch_all_rss
 from fetcher.ptt_fetcher import fetch_ptt
 from fetcher.reddit_fetcher import fetch_reddit
-from analyzer import analyze_all
-from storage import DB_PATH, init_db, save_articles, get_unanalyzed, update_analysis, get_irrelevant_examples, set_irrelevant
+from storage import DB_PATH, init_db, save_articles
 
 logging.basicConfig(
     level=logging.INFO,
@@ -90,21 +89,6 @@ def run_pipeline(db_path=DB_PATH):
         state["zero_insert_streak"] = 0
         state["last_alert_streak"] = 0
     save_state(state)
-
-    unanalyzed = get_unanalyzed(db_path)
-    logger.info(f"Unanalyzed: {len(unanalyzed)}")
-    if unanalyzed:
-        examples = get_irrelevant_examples(limit=5, db_path=db_path)
-        if examples:
-            logger.info(f"Using {len(examples)} irrelevant examples for few-shot filtering")
-        enriched = analyze_all(unanalyzed, irrelevant_examples=examples if examples else None)
-        auto_irrelevant = 0
-        for a in enriched:
-            update_analysis(a["id"], a["score"], a["summary"], a["tags"], db_path)
-            if not a.get("relevant", True):
-                set_irrelevant(a["id"], True, db_path)
-                auto_irrelevant += 1
-        logger.info(f"Analyzed: {len(enriched)}, auto-marked irrelevant: {auto_irrelevant}")
 
     logger.info("=== Pipeline done ===")
 
