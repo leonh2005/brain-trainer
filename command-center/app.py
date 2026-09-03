@@ -21,8 +21,8 @@ import sources
 
 # 卡片連結透過 /svc/<port>/... 走反向代理，讓外網（Cloudflare Tunnel）也連得到
 # 各服務的本機頁面，不必各自對外開洞。僅白名單內的 port 可被代理。
-PROXY_PORTS = {5070, 5100, 5200, 5250, 5300, 5350, 5400, 5460, 5500, 5501,
-               5650, 5750, 5800, 5810, 5850, 5905, 5910, 5960, 5970, 7799, 8188}
+PROXY_PORTS = {5070, 5100, 5250, 5300, 5350, 5400, 5460, 5500, 5501,
+               5650, 5750, 5800, 5810, 5850, 5905, 5910, 5960, 5970, 5980, 7799, 8188}
 _PROXY_HOP_HEADERS = {
     'connection', 'keep-alive', 'proxy-authenticate', 'proxy-authorization',
     'te', 'trailers', 'transfer-encoding', 'upgrade', 'content-encoding', 'content-length',
