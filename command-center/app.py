@@ -177,11 +177,6 @@ def health_all():
     return sources.health_all()
 
 
-@app.get('/api/life/rabbit')
-def life_rabbit():
-    return sources.rabbit()
-
-
 @app.get('/api/life/skilltree')
 def life_skilltree():
     return sources.skilltree()

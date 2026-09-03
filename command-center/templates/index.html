@@ -363,7 +363,6 @@ const CARDS=[
 ];
 const LIFE=[
   {id:'portfolio',ic:'💼', title:'投資組合', span:'wide', url:'/api/portfolio', render:renderPortfolio, site:'/svc/5800/'},
-  {id:'rabbit',   ic:'🐰', title:'兔子照護', span:'', url:'/api/life/rabbit', render:renderRabbit, site:'/svc/5200/'},
   {id:'skill',    ic:'🌳', title:'技能樹',   span:'', url:'/api/life/skilltree', render:renderSkill, site:'/svc/5501/'},
   {id:'sim-invest',ic:'📈', title:'模擬投資', span:'wide', url:'/api/life/sim-invest', render:renderSimInvest, site:'/svc/5250/'},
   {id:'market-analysis',ic:'📊', title:'市場分析', span:'wide', url:'/api/life/market-analysis', render:renderMarketAnalysis, site:'/svc/5350/'},
@@ -925,20 +924,6 @@ function renderMarketCycle(d){
   });
   return box;
 }
-function renderRabbit(d){
-  if(!d||!d.actions)return el('div','empty','無資料');
-  const box=el('div');
-  const last=d.actions[d.actions.length-1];
-  const map={eating:'🍽️ 進食',sleeping:'😴 睡覺',drinking:'💧 喝水',moving:'🏃 活動',grooming:'🧼 理毛'};
-  const bs=el('div','bigstat');
-  bs.innerHTML=`<span class="n" style="font-size:20px">${last?(map[last.action]||last.action):'—'}</span>`;
-  box.appendChild(bs);
-  const info=el('div','mini');info.style.marginTop='10px';
-  const w=d.water_today;
-  info.innerHTML=`今日飲水 ${w?fmt(w.cc)+' cc':'—'} · 今日 ${d.actions.length} 筆行為`;
-  box.appendChild(info);
-  return box;
-}
 function renderSkill(d){
   if(!d||!d.categories)return el('div','empty','無資料');
   const box=el('div');box.style.cssText='display:flex;flex-wrap:wrap;gap:7px';
@@ -1051,6 +1036,7 @@ const TOOLS=[
   {ic:'💹', title:'當沖模擬（即時報價）', desc:'當沖情境模擬練習，即時報價', site:'/svc/5460/', how:'服務常駐，開網站直接操作'},
   {ic:'🧮', title:'hola-quant 個人量化交易系統', desc:'HolaOS + 現有工具整合，Phase 0 開發中，無網頁介面', path:'~/CCProject/hola-quant/', how:'LaunchAgent 常駐跑後端邏輯，進度見 PLAN.md'},
   {ic:'🎮', title:'8BitDo YouTube/抖音 控制器', desc:'藍牙手把(Switch Pro相容模式)映射鍵盤/系統音量指令，控制Mac瀏覽器YouTube/抖音播放；依前景分頁自動切換對應，網頁可即時改按鍵/一鍵套用預設', site:'/svc/5970/', how:'LaunchAgent 常駐（com.steven.controller-media + com.steven.controller-media-ui），開機自動啟動'},
+  {ic:'🧩', title:'TRIZ 解題助手', desc:'TRIZ 矛盾矩陣（39參數×40原理）+ Groq 生成建議 + ComfyUI 漫畫風示意圖，也可手動查表', site:'/svc/5980/', how:'服務常駐；生插圖需先插著 1TOWC 硬碟手動開 ComfyUI(8188)，沒開只會顯示文字建議'},
 ];
 function mountTools(defs){
   const wrap=$('#tools');
