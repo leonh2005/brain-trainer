@@ -1,5 +1,6 @@
 """last30days-web: 薄殼 Flask 包 last30days 引擎（觸發研究 + 進度 + 報告庫 + Groq 中文翻譯）"""
 import glob
+import logging
 import os
 import queue
 import re
@@ -156,9 +157,25 @@ def health():
     return jsonify(status="ok", timestamp=datetime.now().isoformat())
 
 
+def read_text_retry(path, size=None):
+    """讀檔重試，扛 macOS 本機快照暫時鎖檔（EDEADLK）；重試後仍失敗則拋出原始例外"""
+    for attempt in range(3):
+        try:
+            text = path.read_text(errors="replace")
+            return text[:size] if size else text
+        except OSError as e:
+            if e.errno != 11 or attempt == 2:
+                raise
+            time.sleep(0.2)
+
+
 def report_title(path):
     """md 讀首行標題、html 讀 <title>；檔名 slug 對中文主題會失真"""
-    head = path.read_text(errors="replace")[:2000]
+    try:
+        head = read_text_retry(path, size=2000)
+    except OSError as e:
+        logging.warning("report_title: 讀取 %s 失敗，改用檔名當標題 (%s)", path, e)
+        return path.stem.replace("-", " ").replace("_", " ")
     m = (re.search(r"# Production Brief: (.+)", head) if path.suffix == ".md"
          else re.search(r"<title>last30days\s*·\s*([^<]+)</title>", head))
     return m.group(1).strip() if m else path.stem.replace("-", " ").replace("_", " ")
@@ -262,7 +279,7 @@ def report(filename):
                       f'const d=await r.json();'
                       f'if(r.ok)location.href="/report/"+encodeURIComponent(d.file);'
                       f'else{{b.textContent="翻譯失敗";alert(d.error)}}}}</script>')
-    content = path.read_text(errors="replace")
+    content = read_text_retry(path)
     toolbar = TOOLBAR.format(switch=switch)
     if filename.endswith(".md"):
         import html as html_mod
@@ -324,7 +341,7 @@ def translate(filename):
         return jsonify(file=zh_path.name)
     try:
         api_key = groq_api_key()
-        content = path.read_text(errors="replace")
+        content = read_text_retry(path)
         translated = "".join(groq_translate(c, api_key) for c in chunk_html(content))
         zh_path.write_text(translated)
         return jsonify(file=zh_path.name)
