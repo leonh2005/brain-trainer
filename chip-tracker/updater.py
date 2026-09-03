@@ -17,6 +17,8 @@ import urllib.parse
 import urllib.request
 from datetime import datetime, timedelta
 
+import requests
+
 import db
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
@@ -36,6 +38,71 @@ _TRUST_NAMES = ("Investment_Trust",)
 _DEALER_NAMES = ("Dealer_self", "Dealer_Hedging")
 
 _stock_info_cache = None
+
+SHIOAJI_GATEWAY = "http://127.0.0.1:5455"
+CHANGE_PCT_DIVERGE_THRESHOLD = 1.0  # 百分點，超過才觸發三方比對
+
+
+def _yahoo_change_pct(code: str):
+    """查 Yahoo Finance 當前 regularMarketChangePercent，上市/上櫃自動試兩種後綴。"""
+    for suffix in (".TW", ".TWO"):
+        try:
+            url = f"https://query1.finance.yahoo.com/v8/finance/chart/{code}{suffix}?range=1d"
+            req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+            body = json.loads(urllib.request.urlopen(req, timeout=10).read())
+            meta = body.get("chart", {}).get("result", [{}])[0].get("meta", {})
+            pct = meta.get("regularMarketChangePercent")
+            if pct is not None:
+                return round(pct, 2)
+        except Exception:
+            continue
+    return None
+
+
+def _shioaji_change_pct(code: str):
+    """查 shioaji-gateway /snapshot 的 change_rate（唯一共用連線，見 project_shioaji_gateway 記憶）。"""
+    try:
+        resp = requests.get(f"{SHIOAJI_GATEWAY}/snapshot", params={"codes": code}, timeout=10).json()
+        if not resp.get("ok"):
+            return None
+        pct = resp.get("data", {}).get(code, {}).get("change_rate")
+        return round(pct, 2) if pct is not None else None
+    except Exception:
+        return None
+
+
+def verify_latest_change_pct(code: str, date: str, fm_pct, derived_pct):
+    """FinMind 的漲跌幅跟自算值方向不一致時，用 Yahoo + Shioaji 多數決裁定。
+
+    回傳 (final_pct, overridden: bool)。無法判斷（來源都查不到）時保留 FinMind 原值。
+    """
+    if fm_pct is None or derived_pct is None:
+        return fm_pct, False
+
+    fm_sign = (fm_pct > 0) - (fm_pct < 0)
+    derived_sign = (derived_pct > 0) - (derived_pct < 0)
+    if fm_sign == derived_sign and abs(fm_pct - derived_pct) <= CHANGE_PCT_DIVERGE_THRESHOLD:
+        return fm_pct, False
+
+    yahoo_pct = _yahoo_change_pct(code)
+    shioaji_pct = _shioaji_change_pct(code)
+
+    votes_for_derived = sum(
+        1 for p in (yahoo_pct, shioaji_pct) if p is not None and (p > 0) - (p < 0) == derived_sign
+    )
+    votes_for_fm = sum(
+        1 for p in (yahoo_pct, shioaji_pct) if p is not None and (p > 0) - (p < 0) == fm_sign
+    )
+
+    logger.warning(
+        "%s %s 漲跌幅來源不一致 FinMind=%s%% 自算=%s%% Yahoo=%s%% Shioaji=%s%%",
+        code, date, fm_pct, derived_pct, yahoo_pct, shioaji_pct,
+    )
+
+    if votes_for_derived > votes_for_fm:
+        logger.warning("%s %s 判定 FinMind 漲跌幅有誤，改用自算值 %s%%", code, date, derived_pct)
+        return derived_pct, True
+    return fm_pct, False
 
 
 def _read_token() -> str:
@@ -353,7 +420,9 @@ def update_daily(conn, code: str, start: str, end: str) -> None:
         logger.info("%s 融資融券無資料或失敗（ETF 屬正常）: %s", code, e)
 
     try:
-        for r in fm_get("TaiwanStockPrice", code, start, end):
+        rows = fm_get("TaiwanStockPrice", code, start, end)
+        latest_row = None
+        for r in rows:
             close = r.get("close")
             spread = r.get("spread", 0) or 0
             prev = (close - spread) if close is not None else None
@@ -362,6 +431,23 @@ def update_daily(conn, code: str, start: str, end: str) -> None:
                 conn, code, r["date"], close=close, change_pct=change_pct, change_point=round(spread, 2),
                 open=r.get("open"), high=r.get("max"), low=r.get("min"), volume=r.get("Trading_Volume"),
             )
+            if latest_row is None or r["date"] > latest_row["date"]:
+                latest_row = r
+
+        # 最新一筆漲跌幅另外拿自算值跟 FinMind 對照，不一致時用 Yahoo+Shioaji 多數決（見 verify_latest_change_pct）
+        if latest_row is not None and latest_row.get("close") is not None:
+            prev_close_row = db.get_prev_close(conn, code, latest_row["date"])
+            if prev_close_row and prev_close_row[1]:
+                close = latest_row["close"]
+                fm_pct = round((latest_row.get("spread", 0) or 0) / (close - (latest_row.get("spread", 0) or 0)) * 100, 2) \
+                    if (close - (latest_row.get("spread", 0) or 0)) else None
+                derived_pct = round((close - prev_close_row[1]) / prev_close_row[1] * 100, 2)
+                final_pct, overridden = verify_latest_change_pct(code, latest_row["date"], fm_pct, derived_pct)
+                if overridden:
+                    db.upsert_daily(
+                        conn, code, latest_row["date"],
+                        change_pct=final_pct, change_point=round(close - prev_close_row[1], 2),
+                    )
     except Exception as e:
         logger.warning("%s 價格資料失敗: %s", code, e)
 
