@@ -34,6 +34,18 @@ JOBS = {
         'cwd': f'{CC}/telebot',
         'log': f'{CC}/logs/swing_track.log',
     },
+    'swing-exit-stats': {
+        'name': '隔日沖出場統計',
+        'cmd': [FINMIND_PY, f'{CC}/telebot/analyze_swing_exit_time.py'],
+        'cwd': f'{CC}/telebot',
+        'log': f'{CC}/logs/swing_exit_stats.log',
+    },
+    'swing-strategy-compare': {
+        'name': '嚴格全過 vs 放寬篩選(差一項) 勝率比較',
+        'cmd': [FINMIND_PY, f'{CC}/telebot/compare_swing_strategies.py'],
+        'cwd': f'{CC}/telebot',
+        'log': f'{CC}/logs/swing_strategy_compare.log',
+    },
     'daytrade-track-check': {
         'name': '手動比對當沖',
         'cmd': [FINMIND_PY, f'{CC}/telebot/check_daytrade_track.py'],
@@ -118,7 +130,7 @@ def status(jid: str):
     tail = ''
     try:
         with open(job['log'], errors='replace') as f:
-            tail = ''.join(f.readlines()[-15:])
+            tail = ''.join(f.readlines()[-60:])
     except OSError:
         pass
     return {'id': jid, 'name': job['name'], 'running': is_running(jid), 'log_tail': tail}
