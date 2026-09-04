@@ -1,6 +1,6 @@
 {
-  "scanned_at": "2026-09-04 03:00:26",
-  "since": "2026-09-03 03:00:00",
+  "scanned_at": "2026-09-05 03:00:27",
+  "since": "2026-09-04 03:00:01",
   "results": {
     "市場儀表板": {
       "exists": true,
@@ -16,9 +16,9 @@
     },
     "motion-watcher": {
       "exists": true,
-      "errors": 1192,
-      "last_error": "2026-09-03 22:54:31,188 WARNING RTSP 連線失敗，30 秒後重試",
-      "fix": "尚無對應建議，需人工判斷"
+      "errors": 0,
+      "last_error": null,
+      "fix": null
     },
     "Cloudflare Tunnel": {
       "exists": true,
@@ -28,15 +28,15 @@
     },
     "財經新聞分析": {
       "exists": true,
-      "errors": 4,
-      "last_error": "2026-09-03 21:31:38,625 [WARNING] fetcher.reddit_fetcher: Reddit fetch failed for r/investing: 429 Client Error: Too Many Requests for url: https://www.reddit.com/r/investing/hot/.rss",
+      "errors": 2,
+      "last_error": "2026-09-04 16:15:10,741 [WARNING] fetcher.reddit_fetcher: Reddit fetch failed for r/stocks: 500 Server Error: Internal Server Error for url: https://www.reddit.com/r/stocks/hot/.rss",
       "fix": "尚無對應建議，需人工判斷"
     },
     "川普監測": {
       "exists": true,
-      "errors": 2,
-      "last_error": "2026-09-03 12:00:06,524 WARNING 分析失敗：investingLive Asia-Pacific market news: Trump mull — 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reaso",
-      "fix": "尚無對應建議，需人工判斷"
+      "errors": 0,
+      "last_error": null,
+      "fix": null
     },
     "持倉新聞(台股)": {
       "exists": true,
