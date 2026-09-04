@@ -284,6 +284,7 @@ a.tk:hover .code{color:var(--accent-soft)}
       <button class="btn" data-job="swing-rerun"><span class="k">🌙</span>重跑隔日沖</button>
       <button class="btn" data-job="daytrade-rerun"><span class="k">⚡</span>重跑當沖</button>
       <button class="btn" data-job="swing-track-check"><span class="k">✅</span>手動比對隔日沖</button>
+      <button class="btn" data-job="swing-exit-stats" data-show-modal="1"><span class="k">📈</span>隔日沖出場統計</button>
       <button class="btn" data-job="daytrade-track-check"><span class="k">✅</span>手動比對當沖</button>
       <button class="btn" data-job="chip-update"><span class="k">📊</span>更新籌碼</button>
       <button class="btn" data-job="market-rebuild"><span class="k">🌡️</span>重建市場儀表板</button>
@@ -637,6 +638,11 @@ function renderSwing(d){
     renderTrackGrouped(box,{...track,href:'/swing-history'},
       `${track.date} 候選隔天命中：${hit}/${track.results.length} 淨損益${pnlSum>=0?'+':''}${Math.round(pnlSum)}（看歷史紀錄）`);
   }
+  const cmpBtn=el('button','btn','📊 嚴格全過 vs 放寬篩選(差一項) 勝率比較');
+  cmpBtn.style.cssText='margin-top:10px;font-size:11px;padding:6px 10px';
+  cmpBtn.dataset.showModal='1';
+  cmpBtn.addEventListener('click',()=>runJob(cmpBtn,'swing-strategy-compare'));
+  box.appendChild(cmpBtn);
   return box;
 }
 function renderPullback(d){
@@ -952,18 +958,31 @@ document.querySelectorAll('#actions .btn[data-job]').forEach(b=>{
 });
 function runJob(btn, jobId){
   const id=jobId||btn.dataset.job;
+  const showModal=btn.dataset.showModal==='1';
   btn.disabled=true;btn.classList.add('busy');const orig=btn.innerHTML;btn.innerHTML=btn.innerHTML.replace(/^(<span.*?<\/span>)?.*/,'$1 執行中…');
   fetch(`/api/jobs/${id}/run`,{method:'POST'}).then(r=>r.json()).then(res=>{
     toast(res.started?'✅ 已觸發，稍候查看結果':('⚠️ '+(res.reason||'未啟動')));
-    poll(id,btn,orig);
+    poll(id,btn,orig,showModal?40:20,showModal);
   }).catch(e=>{toast('❌ '+e.message);btn.disabled=false;btn.classList.remove('busy');btn.innerHTML=orig});
 }
-function poll(id,btn,orig){
+function poll(id,btn,orig,maxAttempts,showModal){
+  maxAttempts=maxAttempts||20;
   let n=0;const iv=setInterval(()=>{
     fetch(`/api/jobs/${id}/status`).then(r=>r.json()).then(s=>{
-      if(!s.running||++n>20){clearInterval(iv);btn.disabled=false;btn.classList.remove('busy');btn.innerHTML=orig;if(!s.running)toast('✅ '+s.name+' 完成')}
+      if(!s.running||++n>maxAttempts){
+        clearInterval(iv);btn.disabled=false;btn.classList.remove('busy');btn.innerHTML=orig;
+        if(!s.running){
+          toast('✅ '+s.name+' 完成');
+          if(showModal)showJobResultModal(s.name,s.log_tail||'（無輸出）');
+        }
+      }
     });
   },3000);
+}
+function showJobResultModal(title,text){
+  $('#support-modal-title').textContent=title;
+  $('#support-modal-body').innerHTML=`<pre style="white-space:pre-wrap;font-family:ui-monospace,monospace;font-size:12px;line-height:1.6">${esc(text)}</pre>`;
+  $('#support-modal-overlay').style.display='flex';
 }
 $('#stock-go').addEventListener('click',queryStock);
 $('#stock-q').addEventListener('keydown',e=>{if(e.key==='Enter')queryStock()});
