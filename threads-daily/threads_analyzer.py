@@ -20,6 +20,18 @@ TELEGRAM_TOKEN = open(os.path.expanduser("~/CCProject/.secrets/telegram_token.tx
 TELEGRAM_CHAT  = "7556217543"
 FF_PROFILE     = Path.home() / "Library/Application Support/Firefox/Profiles/ro7nczf2.default-release"
 OPENAI_KEY     = open(os.path.expanduser("~/CCProject/.secrets/openai_news_key.txt")).read().strip()
+OBSIDIAN_VAULT_DIR = Path.home() / "我的雲端硬碟" / "📚 學習 & 筆記" / "from Google keep" / "Projects" / "Threads 珍藏日報"
+
+
+def copy_to_obsidian(out_file: Path):
+    """複製當天報告進 Obsidian vault；vault 資料夾不存在（Google Drive 未同步）就跳過，不影響主流程"""
+    try:
+        if OBSIDIAN_VAULT_DIR.is_dir():
+            shutil.copy2(str(out_file), str(OBSIDIAN_VAULT_DIR / out_file.name))
+        else:
+            print(f"警告：Obsidian vault 資料夾不存在，跳過複製（{OBSIDIAN_VAULT_DIR}）")
+    except Exception as e:
+        print(f"複製進 Obsidian 失敗（不影響主流程）: {e}")
 
 # ── 工具函數 ─────────────────────────────────────────────────────────────────
 def send_telegram(msg: str):
@@ -49,10 +61,10 @@ def get_ff_cookies() -> dict:
     return cookies
 
 # ── 抓取 Threads 珍藏 ────────────────────────────────────────────────────────
-def fetch_saved_posts(cookies: dict) -> list[str]:
+def fetch_saved_posts(cookies: dict) -> list[dict]:
+    """回傳 [{"text": 貼文內容, "url": 貼文永久連結}, ...]"""
     from playwright.sync_api import sync_playwright
 
-    posts = []
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
         ctx = browser.new_context(
@@ -66,35 +78,53 @@ def fetch_saved_posts(cookies: dict) -> list[str]:
         page.goto("https://www.threads.com/saved", timeout=20000)
         page.wait_for_timeout(3000)
 
-        # 滾動兩次確保載入更多
+        # 用貼文永久連結（/@user/post/shortcode）當錨點，往上找最近的內文區塊，
+        # 一則貼文只取一筆（避免同貼文裡的引用/連結預覽文字被當成獨立項目重複計算）
+        extract_js = """() => {
+            const seen = new Set();
+            const results = [];
+            document.querySelectorAll('a[href*="/post/"]').forEach(link => {
+                const href = link.getAttribute('href');
+                if (!href || seen.has(href)) return;
+                let el = link, text = '';
+                for (let i = 0; i < 10; i++) {
+                    el = el.parentElement;
+                    if (!el) break;
+                    if (el.querySelectorAll('a[href*="/post/"]').length !== 1) break;
+                    const texts = Array.from(el.querySelectorAll('div[dir="auto"], span[dir="auto"]'))
+                        .map(x => (x.innerText || x.textContent || '').trim())
+                        .filter(x => x.length > 40);
+                    if (texts.length > 0) { text = texts[0]; break; }
+                }
+                if (text) { seen.add(href); results.push({href, text}); }
+            });
+            return results;
+        }"""
+
+        raw = page.evaluate(extract_js)
+
+        # 滾動載入更多；Threads 偶爾滾動後整頁改顯示錯誤訊息（蓋掉原本已載入的內容），
+        # 一旦偵測到就放棄這次滾動、保留滾動前已抓到的內容，不讓失敗的滾動把資料弄丟
         for _ in range(2):
             page.evaluate("window.scrollTo(0, document.body.scrollHeight)")
             page.wait_for_timeout(1500)
+            if page.get_by_text("Something went wrong").count() > 0:
+                break
+            raw = page.evaluate(extract_js)
 
-        # 抓所有 dir=auto 文字區塊
-        texts = page.evaluate("""() => {
-            const seen = new Set();
-            const results = [];
-            document.querySelectorAll('div[dir="auto"], span[dir="auto"]').forEach(el => {
-                const t = (el.innerText || el.textContent || '').trim();
-                if (t.length > 40 && !seen.has(t)) {
-                    seen.add(t);
-                    results.push(t);
-                }
-            });
-            return results;
-        }""")
-
-        posts = [t[:800] for t in texts if t]
+        posts = [
+            {"text": r["text"][:800], "url": f"https://www.threads.com{r['href']}"}
+            for r in raw if r.get("text")
+        ]
         browser.close()
 
     return posts
 
 # ── Claude Haiku 分析 ────────────────────────────────────────────────────────
-def analyze_with_llm(posts: list[str]) -> str:
+def analyze_with_llm(posts: list[dict]) -> str:
     client = OpenAI(api_key=OPENAI_KEY)
 
-    posts_text = "\n\n---\n\n".join(f"[{i+1}] {p}" for i, p in enumerate(posts))
+    posts_text = "\n\n---\n\n".join(f"[{i+1}] {p['text']}" for i, p in enumerate(posts))
 
     prompt = f"""以下是 Steven 在 Threads 上的新增珍藏貼文（共 {len(posts)} 篇）。
 
@@ -145,7 +175,7 @@ def main():
         return
 
     # 過濾已分析過的
-    new_posts = [p for p in all_posts if post_id(p) not in analyzed_ids]
+    new_posts = [p for p in all_posts if post_id(p["text"]) not in analyzed_ids]
 
     if not new_posts:
         print("沒有新珍藏，跳過分析。")
@@ -167,13 +197,13 @@ def main():
         f"> 分析時間：{now:%H:%M}｜新增 {len(new_posts)} 篇\n\n"
         f"## 分析結果\n\n{analysis}\n\n"
         f"## 原始珍藏內容\n\n" +
-        "\n\n---\n\n".join(f"**[{i+1}]**\n{p}" for i, p in enumerate(new_posts)),
+        "\n\n---\n\n".join(f"**[{i+1}]** [查看原文]({p['url']})\n{p['text']}" for i, p in enumerate(new_posts)),
         encoding="utf-8"
     )
 
     # 更新已分析 ID
     for p in new_posts:
-        pid = post_id(p)
+        pid = post_id(p["text"])
         if pid not in analyzed_ids:
             analyzed_ids.append(pid)
     state["analyzed_ids"] = analyzed_ids[-500:]  # 保留最近 500 筆
@@ -191,6 +221,7 @@ def main():
         f"_完整分析已存至 threads-daily/{today}.md_"
     )
     send_telegram(tg_msg)
+    copy_to_obsidian(out_file)
     print(f"完成！分析結果已存至 {out_file}")
 
 if __name__ == "__main__":

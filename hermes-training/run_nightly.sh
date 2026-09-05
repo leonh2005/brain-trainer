@@ -19,7 +19,7 @@ VAULT_DIR="$HOME/我的雲端硬碟/📚 學習 & 筆記/from Google keep/Projec
 
 log() { echo "[$(date '+%Y-%m-%d %H:%M:%S')] $1" >> "$LOG"; }
 
-# Firefox 常駐佔記憶體會擠壓 Ollama 載入模型的空間（曾連續2晚 HTTP 507 失敗），訓練前先關掉釋放記憶體
+# Firefox 常駐佔記憶體會擠壓 oMLX 載入模型的空間（曾連續2晚 HTTP 507 失敗），訓練前先關掉釋放記憶體
 if pgrep -x firefox >/dev/null 2>&1 || pgrep -f "Firefox.app" >/dev/null 2>&1; then
   osascript -e 'quit app "Firefox"' 2>>"$LOG"
   sleep 2
