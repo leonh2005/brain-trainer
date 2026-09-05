@@ -1,20 +1,32 @@
-# Claude Handoff 20260904_2309
-> 自動生成於 2026-09-04 23:09
+# Claude Handoff 20260905_1446
+> 自動生成於 2026-09-05 14:46
 
 ## 未提交的檔案異動
 ```
 M chip-tracker/chip.db
+ M gemma_work/latest.md
+ M hermes-training/call_hermes.py
+ M hermes-training/run_nightly.sh
+ M logs/pullback_daily_scan.err
+ M market-dashboard/bb_cache.json
+ M market-dashboard/cape_cache.json
+ M market-dashboard/index.html
+ M market-dashboard/margin_cache.json
+ M market-dashboard/sp_state.json
  M scripts/auto_investigate_state.json
  M shopee-boost/data/last_success.json
+ M threads-daily/state.json
+ M threads-daily/threads_analyzer.py
+?? threads-daily/2026-09-05.md
 ```
 
 ## 近期 Commits
 ```
+625097ff chore: 自動同步 2026-09-05 11:40
+aafc8c97 chore: 自動同步 2026-09-05 06:40
+5274ff48 chore: 自動同步 2026-09-05 01:40
+53af0ad5 chore: 每晚同步 2026-09-04 23:50
 f4b5d89f chore: 自動同步 2026-09-04 20:40
-a32e8c22 chore: 自動同步 2026-09-04 15:40
-6931ebd0 chore: 自動同步 2026-09-04 10:40
-23692ef3 chore: 自動同步 2026-09-04 05:40
-c11eed6f fix: dashboard VM排程監控改抓正確log來源，樂透抓漏頻率加開獎前4小時查
 ```
 
 ## 給 Hermes 的備註
