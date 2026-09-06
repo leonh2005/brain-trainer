@@ -1,6 +1,6 @@
 {
-  "scanned_at": "2026-09-06 03:00:26",
-  "since": "2026-09-05 03:00:00",
+  "scanned_at": "2026-09-07 03:00:26",
+  "since": "2026-09-06 03:00:00",
   "results": {
     "市場儀表板": {
       "exists": true,
@@ -29,7 +29,7 @@
     "財經新聞分析": {
       "exists": true,
       "errors": 1,
-      "last_error": "2026-09-05 03:30:03,765 [WARNING] fetcher.ptt_fetcher: PTT index fetch failed: HTTPSConnectionPool(host='www.ptt.cc', port=443): Max retries exceeded with url: /bbs/Stock/index.html (Caused by NewConnectionError(\"HTTPSConnection(host='www.ptt.cc', port=443): Failed to establish a new connection: [Er",
+      "last_error": "2026-09-06 03:30:02,806 [WARNING] fetcher.ptt_fetcher: PTT index fetch failed: HTTPSConnectionPool(host='www.ptt.cc', port=443): Max retries exceeded with url: /bbs/Stock/index.html (Caused by NewConnectionError(\"HTTPSConnection(host='www.ptt.cc', port=443): Failed to establish a new connection: [Er",
       "fix": "Port 被佔用或服務未啟動 → 檢查 LaunchAgent 是否正常載入"
     },
     "川普監測": {
