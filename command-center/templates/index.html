@@ -637,6 +637,9 @@ function renderSwing(d){
     const pnlSum=track.results.reduce((s,r)=>s+(r.net_pnl!=null?r.net_pnl:0),0);
     renderTrackGrouped(box,{...track,href:'/swing-history'},
       `${track.date} 候選隔天命中：${hit}/${track.results.length} 淨損益${pnlSum>=0?'+':''}${Math.round(pnlSum)}（看歷史紀錄）`);
+  } else if(track){
+    renderTrackGrouped(box,{...track,href:'/swing-history',results:[]},
+      `${track.date} 無候選標的（看歷史紀錄）`);
   }
   const cmpBtn=el('button','btn','📊 嚴格全過 vs 放寬篩選(差一項) 勝率比較');
   cmpBtn.style.cssText='margin-top:10px;font-size:11px;padding:6px 10px';
