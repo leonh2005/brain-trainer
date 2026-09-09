@@ -19,6 +19,28 @@ VAULT_DIR="$HOME/我的雲端硬碟/📚 學習 & 筆記/from Google keep/Projec
 
 log() { echo "[$(date '+%Y-%m-%d %H:%M:%S')] $1" >> "$LOG"; }
 
+# omlx 平常不常駐（記憶體考量），只在最頂層呼叫（無日期參數 = 01:00 正常排程或手動觸發）時
+# 負責開關；run_backfill.sh 逐日呼叫本腳本時帶了日期參數，不重複開關，交給頂層管。
+OMLX_STARTED_BY_SCRIPT=0
+if [ -z "$1" ]; then
+  if ! lsof -nP -iTCP:8005 -sTCP:LISTEN >/dev/null 2>&1; then
+    log "啟動 omlx server 供夜訓使用"
+    brew services start omlx >>"$LOG" 2>&1
+    OMLX_STARTED_BY_SCRIPT=1
+    for i in $(seq 1 30); do
+      lsof -nP -iTCP:8005 -sTCP:LISTEN >/dev/null 2>&1 && break
+      sleep 2
+    done
+  fi
+  stop_omlx_if_started() {
+    if [ "$OMLX_STARTED_BY_SCRIPT" = "1" ]; then
+      log "夜訓結束，關閉 omlx server"
+      brew services stop omlx >>"$LOG" 2>&1
+    fi
+  }
+  trap stop_omlx_if_started EXIT
+fi
+
 # Firefox 常駐佔記憶體會擠壓 oMLX 載入模型的空間（曾連續2晚 HTTP 507 失敗），訓練前先關掉釋放記憶體
 if pgrep -x firefox >/dev/null 2>&1 || pgrep -f "Firefox.app" >/dev/null 2>&1; then
   osascript -e 'quit app "Firefox"' 2>>"$LOG"
