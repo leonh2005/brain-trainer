@@ -290,6 +290,12 @@ def swing():
                 'date': checked_dates[-1], 'checked_at': checked_at,
                 'results': _enrich_track_results(latest.get('track_results', []), checked_at),
             }
+    near_miss_path = f'{CC}/telebot/data/near_miss_detail.json'
+    if os.path.exists(near_miss_path):
+        with open(near_miss_path, encoding='utf-8') as f:
+            near_miss_log = json.load(f)
+        today = date.today().isoformat()
+        d['near_miss'] = near_miss_log.get(today, [])
     return d, d.get('date', _mtime(p))
 
 
