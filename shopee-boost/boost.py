@@ -30,25 +30,29 @@ FIREFOX_PROFILE = os.path.expanduser(
     '~/Library/Application Support/Firefox/Profiles/ro7nczf2.default-release'
 )
 PRODUCT_URL = 'https://seller.shopee.tw/portal/product/list/live/all'
-PRODUCT_NAME_KEYWORD = '恩雅'  # 全新恩雅 Enya Inspire電吉他 特價
-PRODUCT_ID = '57064166103'
+PRODUCTS = [
+    '恩雅',  # 全新恩雅 Enya Inspire電吉他 特價，商品ID 57064166103
+    'steamdeck oled 2T',  # 商品ID 50267678070
+]
 
 TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN', '')
 TELEGRAM_CHAT_ID = os.getenv('TELEGRAM_CHAT_ID', '')
 
 
-def load_last_success():
+def load_last_success() -> dict:
     if not os.path.exists(STATE_FILE):
-        return None
+        return {}
     with open(STATE_FILE, encoding='utf-8') as f:
         data = json.load(f)
-    return datetime.fromisoformat(data['last_success'])
+    if 'last_success' in data:  # 舊格式（單商品）相容：搬進第一個商品名下
+        return {PRODUCTS[0]: data['last_success']}
+    return data
 
 
-def save_last_success(dt: datetime):
+def save_last_success(all_success: dict):
     os.makedirs(os.path.dirname(STATE_FILE), exist_ok=True)
     with open(STATE_FILE, 'w', encoding='utf-8') as f:
-        json.dump({'last_success': dt.isoformat()}, f)
+        json.dump(all_success, f)
 
 
 def notify(msg: str):
@@ -95,13 +99,19 @@ def load_shopee_cookies() -> list:
 
 
 def run():
-    last_success = load_last_success()
-    if last_success is not None:
-        elapsed = datetime.now() - last_success
-        if elapsed < COOLDOWN:
-            remain = COOLDOWN - elapsed
-            logger.info(f'距上次成功僅 {elapsed}，未滿4小時，跳過（還需等 {remain}）')
-            return
+    all_success = load_last_success()
+    now = datetime.now()
+    pending = []
+    for keyword in PRODUCTS:
+        last = all_success.get(keyword)
+        if last is not None:
+            elapsed = now - datetime.fromisoformat(last)
+            if elapsed < COOLDOWN:
+                logger.info(f'「{keyword}」距上次成功僅 {elapsed}，未滿4小時，跳過（還需等 {COOLDOWN - elapsed}）')
+                continue
+        pending.append(keyword)
+    if not pending:
+        return
 
     cookies = load_shopee_cookies()
     if not any(c['name'] == 'SPC_ST' for c in cookies):
@@ -132,7 +142,7 @@ def run():
             if t.locator('tbody tr').count() == 0:
                 continue
             txt = t.inner_text() or ''
-            if info_table is None and ('商品 ID' in txt or PRODUCT_NAME_KEYWORD in txt):
+            if info_table is None and '商品 ID' in txt:
                 info_table = t
             if action_table is None and '更多' in txt:
                 action_table = t
@@ -143,44 +153,44 @@ def run():
             return
 
         info_rows = info_table.locator('tbody tr')
-        target_idx = None
-        for i in range(info_rows.count()):
-            if PRODUCT_NAME_KEYWORD in (info_rows.nth(i).inner_text() or ''):
-                target_idx = i
-                break
-        if target_idx is None:
-            notify(f'⚠️ 蝦皮置頂推廣：商品列表找不到「{PRODUCT_NAME_KEYWORD}」，可能已下架或改名')
-            logger.error('找不到目標商品列')
-            browser.close()
-            return
+        for keyword in pending:
+            target_idx = None
+            for i in range(info_rows.count()):
+                if keyword in (info_rows.nth(i).inner_text() or ''):
+                    target_idx = i
+                    break
+            if target_idx is None:
+                logger.warning(f'商品列表找不到「{keyword}」，可能尚未過審／已下架，跳過')
+                continue
 
-        more_btn = action_table.locator('tbody tr').nth(target_idx).locator('button:has-text("更多")')
-        more_btn.click()
-        page.wait_for_timeout(800)
+            more_btn = action_table.locator('tbody tr').nth(target_idx).locator('button:has-text("更多")')
+            more_btn.click()
+            page.wait_for_timeout(800)
 
-        # 「置頂推廣」在下拉選單裡；頁面上其他商品列的隱藏選單模板也含「已被全部使用」提示字串，
-        # 所以只能在「目前彈出來、真的看得到的那個選單」裡找，不能整頁原始碼搜尋（否則永遠誤判成冷卻中）
-        visible_menu = page.locator('ul.eds-dropdown-menu:visible')
-        boost_item = visible_menu.locator('li:has-text("置頂推廣")').first
-        if boost_item.count() == 0:
-            notify('⚠️ 蝦皮置頂推廣：下拉選單找不到「置頂推廣」選項，UI可能改版了')
-            logger.error('找不到置頂推廣選項，UI可能改版')
-            browser.close()
-            return
+            # 「置頂推廣」在下拉選單裡；頁面上其他商品列的隱藏選單模板也含「已被全部使用」提示字串，
+            # 所以只能在「目前彈出來、真的看得到的那個選單」裡找，不能整頁原始碼搜尋（否則永遠誤判成冷卻中）
+            visible_menu = page.locator('ul.eds-dropdown-menu:visible')
+            boost_item = visible_menu.locator('li:has-text("置頂推廣")').first
+            if boost_item.count() == 0:
+                logger.warning(f'「{keyword}」下拉選單找不到「置頂推廣」選項，UI可能改版了，跳過')
+                page.keyboard.press('Escape')
+                continue
 
-        item_text = boost_item.inner_text()
-        if '點我置頂推廣' not in item_text:
-            m = re.search(r'(\d{2}:\d{2}:\d{2})', item_text)
-            remain = m.group(1) if m else '未知'
-            logger.info(f'置頂推廣冷卻中（頁面偵測），剩餘 {remain}')
-            browser.close()
-            return
+            item_text = boost_item.inner_text()
+            if '點我置頂推廣' not in item_text:
+                m = re.search(r'(\d{2}:\d{2}:\d{2})', item_text)
+                remain = m.group(1) if m else '未知'
+                logger.info(f'「{keyword}」置頂推廣冷卻中（頁面偵測），剩餘 {remain}')
+                page.keyboard.press('Escape')
+                continue
 
-        boost_item.click()
-        page.wait_for_timeout(1500)
-        save_last_success(datetime.now())
-        logger.info('已點擊置頂推廣，記錄成功時間')
-        notify(f'✅ 蝦皮置頂推廣：「{PRODUCT_NAME_KEYWORD}」已成功置頂，下次約4小時後再試')
+            boost_item.click()
+            page.wait_for_timeout(1500)
+            all_success[keyword] = datetime.now().isoformat()
+            save_last_success(all_success)
+            logger.info(f'「{keyword}」已點擊置頂推廣，記錄成功時間')
+            notify(f'✅ 蝦皮置頂推廣：「{keyword}」已成功置頂，下次約4小時後再試')
+
         browser.close()
 
 
