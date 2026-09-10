@@ -631,6 +631,24 @@ function renderSwing(d){
     });
   }
 
+  const nm=(d&&d.near_miss)||[];
+  if(nm.length){
+    const head=el('div','mini','🔸 差一項未過');
+    head.style.cssText='margin-top:10px;color:var(--text-dim);font-size:11px';
+    box.appendChild(head);
+    const pills=el('div');
+    pills.style.cssText='display:flex;flex-wrap:wrap;gap:7px';
+    nm.forEach(r=>{
+      const priceTxt=r.close!=null?` <span style="font-family:var(--mono);color:var(--text-dim)">${fmt(r.close)}</span>`:'';
+      const [actual,threshold,unit]=r.metric||[];
+      const missTxt=` <span style="font-size:11px;color:var(--text-dim)">${r.failed_check}：${actual}${unit||''}（門檻${threshold}${unit||''}）</span>`;
+      const b=el('span','pill');
+      b.innerHTML=tkLink(r.name,r.code,' style="font-size:12px"')+priceTxt+missTxt+supportBtn(r.code);
+      pills.appendChild(b);
+    });
+    box.appendChild(pills);
+  }
+
   const track=d&&d.track;
   if(track&&track.results&&track.results.length){
     const hit=track.results.filter(r=>r.up).length;
