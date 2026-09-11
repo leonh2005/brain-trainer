@@ -1,6 +1,6 @@
 {
-  "scanned_at": "2026-09-11 03:00:27",
-  "since": "2026-09-10 03:00:00",
+  "scanned_at": "2026-09-12 03:00:26",
+  "since": "2026-09-11 03:00:00",
   "results": {
     "市場儀表板": {
       "exists": true,
@@ -28,9 +28,9 @@
     },
     "財經新聞分析": {
       "exists": true,
-      "errors": 2,
-      "last_error": "2026-09-11 00:30:03,350 [WARNING] fetcher.ptt_fetcher: PTT article fetch failed https://www.ptt.cc/bbs/Stock/M.1789044081.A.E51.html: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))",
-      "fix": "尚無對應建議，需人工判斷"
+      "errors": 0,
+      "last_error": null,
+      "fix": null
     },
     "川普監測": {
       "exists": true,
