@@ -82,6 +82,22 @@ else
   OUT+="$WARN thread_summarizer (最後：${LAST:-無記錄}，請確認)\n"
 fi
 
+# 5. 孤兒 headless MCP 行程（playwright-mcp等），跑超過2小時視為孤兒直接清掉
+ORPHAN_COUNT=0
+while read -r pid etime; do
+  [ -z "$pid" ] && continue
+  # etime 格式可能是 MM:SS / HH:MM:SS / DD-HH:MM:SS，超過2小時（含DD-或HH:>=2）才視為孤兒
+  if echo "$etime" | grep -qE '^([0-9]+-|[2-9][0-9]*:)' ; then
+    kill "$pid" 2>/dev/null && ORPHAN_COUNT=$((ORPHAN_COUNT + 1))
+  fi
+done < <(ps -eo pid,etime,command | grep -E 'playwright-mcp.*headless|npm exec @playwright/mcp.*headless' | grep -v grep | awk '{print $1, $2}')
+
+if [ "$ORPHAN_COUNT" -gt 0 ]; then
+  OUT+="$WARN 清掉 $ORPHAN_COUNT 個孤兒 headless MCP 行程（跑超過2小時）\n"
+else
+  OUT+="$PASS 無孤兒 headless MCP 行程\n"
+fi
+
 echo ""
 echo "╔══════════════════════════════╗"
 echo "║  每日服務狀態報告 $(date +%m/%d)       ║"
