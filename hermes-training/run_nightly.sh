@@ -6,6 +6,9 @@
 export PATH="$HOME/.local/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/usr/bin:/bin:$PATH"
 export LANG="en_US.UTF-8"
 export LC_ALL="en_US.UTF-8"
+# headless無人值守用一般互動登入的token常遇到refresh失敗（見hermes_nightly_training.log連續3晚auth失敗），
+# 改用 claude setup-token 產生的長效token，不會過期
+export CLAUDE_CODE_OAUTH_TOKEN="$(cat "$HOME/CCProject/.secrets/claude_code_oauth_token.txt" 2>/dev/null)"
 
 PROJECT_DIR="$HOME/CCProject"
 WORK_DIR="$PROJECT_DIR/hermes-training"
@@ -18,6 +21,16 @@ DAILY_LOG_FILE="$WORK_DIR/logs/${DATE_STR}.md"
 VAULT_DIR="$HOME/我的雲端硬碟/📚 學習 & 筆記/from Google keep/Projects/Hermes 夜間訓練日誌"
 
 log() { echo "[$(date '+%Y-%m-%d %H:%M:%S')] $1" >> "$LOG"; }
+
+notify_auth_failure() {
+  local token
+  token="$(cat "$PROJECT_DIR/.secrets/telegram_token.txt" 2>/dev/null)"
+  [ -z "$token" ] && return
+  curl -s -X POST "https://api.telegram.org/bot${token}/sendMessage" \
+    -d chat_id="7556217543" \
+    --data-urlencode "text=🔴 Hermes 夜訓：claude -p headless 驗證失敗（OAuth session expired and could not be refreshed），本輪補訓已中止，需要手動開一次互動式 Claude Code session 觸發登入更新 token" \
+    > /dev/null
+}
 
 # omlx 平常不常駐（記憶體考量），只在最頂層呼叫（無日期參數 = 01:00 正常排程或手動觸發）時
 # 負責開關；run_backfill.sh 逐日呼叫本腳本時帶了日期參數，不重複開關，交給頂層管。

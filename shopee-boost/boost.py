@@ -135,18 +135,25 @@ def run():
             return
 
         # 商品資訊表與操作按鈕表是兩張分開的 <table>（同步捲動用，欄位用 row index 對齊）
-        tables = page.locator('table')
+        # 頁面偶爾要超過3秒才把表格資料載完（曾偶發誤判成「頁面結構改變」），改成輪詢最多15秒再放棄
         info_table = None
         action_table = None
-        for i in range(tables.count()):
-            t = tables.nth(i)
-            if t.locator('tbody tr').count() == 0:
-                continue
-            txt = t.inner_text() or ''
-            if info_table is None and '商品 ID' in txt:
-                info_table = t
-            if action_table is None and '更多' in txt:
-                action_table = t
+        for _ in range(15):
+            tables = page.locator('table')
+            info_table = None
+            action_table = None
+            for i in range(tables.count()):
+                t = tables.nth(i)
+                if t.locator('tbody tr').count() == 0:
+                    continue
+                txt = t.inner_text() or ''
+                if info_table is None and '商品 ID' in txt:
+                    info_table = t
+                if action_table is None and '更多' in txt:
+                    action_table = t
+            if info_table is not None and action_table is not None:
+                break
+            page.wait_for_timeout(1000)
         if info_table is None or action_table is None:
             notify('⚠️ 蝦皮置頂推廣：頁面結構改變，找不到商品表格或操作表格')
             logger.error(f'info_table found={info_table is not None} action_table found={action_table is not None}')
@@ -163,6 +170,13 @@ def run():
             if target_idx is None:
                 logger.warning(f'商品列表找不到「{keyword}」，可能尚未過審／已下架，跳過')
                 continue
+
+            # 上一輪的下拉選單若還沒關閉，會蓋住這一行的「更多」按鈕導致點擊被攔截，先確保沒有殘留選單
+            try:
+                page.locator('ul.eds-dropdown-menu:visible').wait_for(state='hidden', timeout=3000)
+            except Exception:
+                page.keyboard.press('Escape')
+                page.wait_for_timeout(500)
 
             more_btn = action_table.locator('tbody tr').nth(target_idx).locator('button:has-text("更多")')
             more_btn.click()
