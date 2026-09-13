@@ -1,18 +1,20 @@
-# Claude Handoff 20260913_2345
-> 自動生成於 2026-09-13 23:45
+# Claude Handoff 20260914_0126
+> 自動生成於 2026-09-14 01:26
 
 ## 未提交的檔案異動
 ```
-（無未提交變更）
+M gemma_work/latest.md
+ D scripts/.auto_investigate_state.json.swp
+ M scripts/auto_investigate_state.json
 ```
 
 ## 近期 Commits
 ```
+99ec2fa4 chore: 自動同步 2026-09-14 00:40
+0225c7c8 chore: 每晚同步 2026-09-13 23:50
 5753dc72 fix: market-dashboard CPI改用整體年增率、修正Chart.js全域plugin污染與Hindenburg Omen觸發過頻bug
 98eefea4 chore: 自動同步 2026-09-13 19:40
 56554d3b chore: 自動同步 2026-09-13 14:40
-cb615844 chore: 對話結束同步
-38bbdabf chore: 自動同步 2026-09-13 09:40
 ```
 
 ## 給 Hermes 的備註
