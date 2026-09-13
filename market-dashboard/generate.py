@@ -549,8 +549,8 @@ def fetch_hindenburg_omen() -> dict:
                     continue
 
                 c, h, l = c[common], h[common], l[common]
-                new_highs = int((c >= h * 0.985).sum())   # 距52周高點 1.5% 以內
-                new_lows  = int((c <= l * 1.015).sum())   # 距52周低點 1.5% 以內
+                new_highs = int((c >= h).sum())   # 當日收盤即為 52 週最高
+                new_lows  = int((c <= l).sum())   # 當日收盤即為 52 週最低
                 n = len(common)
 
                 nh_pct = trunc2(new_highs / n * 100)
@@ -649,8 +649,8 @@ def fetch_recession_signals():
     print("  抓取失業率 (UNRATE via BLS)...")
     unrate = fetch_bls("LNS14000000", _today.year - 2, _today.year)[-24:]
 
-    print("  抓取核心 CPI (CPILFESL via BLS)...")
-    core_cpi_raw = fetch_bls("CUSR0000SA0L1E", _today.year - 3, _today.year)[-36:]
+    print("  抓取 CPI (CPIAUCSL via BLS)...")
+    core_cpi_raw = fetch_bls("CUSR0000SA0", _today.year - 3, _today.year)[-36:]
 
     print("  ISM 新訂單（暫無免費 API，跳過）")
     ism = []
@@ -672,24 +672,32 @@ def fetch_recession_signals():
         unemp_consec = consec
         unemp_signal = consec >= 3
 
-    # ── 核心 CPI：是否重新加速（近 3 個月 YoY 趨勢回升）─────────
+    # ── CPI：用「去年同月」比對，而非 index 位移（BLS 資料偶爾缺月，位移會錯位）
+    cpi_by_date = {d["x"]: d["y"] for d in core_cpi_raw}
+
+    def _same_month_last_year(date_str: str) -> str:
+        y, m, d = date_str.split("-")
+        return f"{int(y) - 1}-{m}-{d}"
+
+    # ── CPI：是否重新加速（近 3 個月 YoY 趨勢回升）─────────
     cpi_signal = False
     cpi_yoy_recent = []
     if len(core_cpi_raw) >= 14:
-        for i in range(-3, 0):
-            cur = core_cpi_raw[i]["y"]
-            prev = core_cpi_raw[i - 12]["y"]
-            yoy = trunc2((cur / prev - 1) * 100)
-            cpi_yoy_recent.append(yoy)
+        for entry in core_cpi_raw[-3:]:
+            prev = cpi_by_date.get(_same_month_last_year(entry["x"]))
+            if prev is None:
+                continue
+            cpi_yoy_recent.append(trunc2((entry["y"] / prev - 1) * 100))
         # 如果近 3 個月 YoY 連升 → 重新加速
         cpi_signal = len(cpi_yoy_recent) == 3 and cpi_yoy_recent[2] > cpi_yoy_recent[1] > cpi_yoy_recent[0]
 
     # 轉成 YoY 序列用於圖表
     cpi_yoy = []
-    for i in range(12, len(core_cpi_raw)):
-        cur = core_cpi_raw[i]["y"]
-        prev = core_cpi_raw[i - 12]["y"]
-        cpi_yoy.append({"x": core_cpi_raw[i]["x"], "y": trunc2((cur / prev - 1) * 100)})
+    for entry in core_cpi_raw:
+        prev = cpi_by_date.get(_same_month_last_year(entry["x"]))
+        if prev is None:
+            continue
+        cpi_yoy.append({"x": entry["x"], "y": trunc2((entry["y"] / prev - 1) * 100)})
 
     # ── ISM 新訂單：低於 50 幾個月 ───────────────────────────────
     ism_signal = False
@@ -1528,11 +1536,11 @@ def generate_html(vix_data, sp_data, ma_data, sp_hist_high, fg_data, tw_data, tw
     </div>
   </div>
   <div class="card {cpi_alert}" style="--accent: {cpi_color}">
-    <div class="card-label">{cpi_icon} 核心 CPI（YoY）</div>
+    <div class="card-label">{cpi_icon} CPI（YoY）</div>
     <div class="card-value" style="font-size:2rem">{cpi_val}</div>
     <div class="card-sub">
       {'<b>🚨 CPI &gt; 4%</b>' if cpi_above4 else ('<b>🔺 重新加速</b>' if r_cpi["signal"] else '趨勢未加速')}
-      &nbsp;·&nbsp; {'<b>警戒：核心通膨過熱</b>' if cpi_above4 else 'CPILFESL'}
+      &nbsp;·&nbsp; {'<b>警戒：通膨過熱</b>' if cpi_above4 else 'CPIAUCSL'}
       <br><span style="opacity:0.5">{cpi_date} · 預計下次更新：{cpi_next_release}</span>
     </div>
   </div>
@@ -1663,7 +1671,7 @@ def generate_html(vix_data, sp_data, ma_data, sp_hist_high, fg_data, tw_data, tw
   </div>
   <div class="chart-section">
     <div class="chart-header">
-      <div class="chart-title"><b>核心 CPI YoY</b> CPILFESL <span style="font-size:0.65rem;opacity:0.5">（年增率，%）</span></div>
+      <div class="chart-title"><b>CPI YoY</b> CPIAUCSL <span style="font-size:0.65rem;opacity:0.5">（年增率，%）</span></div>
       <div class="chart-legend">
         <div class="legend-item" style="color:{cpi_color}"><div class="legend-dot" style="background:{cpi_color}"></div>{'⚠ 重新加速' if r_cpi["signal"] else '持平或下行'}</div>
       </div>
@@ -1754,11 +1762,12 @@ const CHART_DEFAULTS = {{
   }},
 }};
 
-function makeChart(id, datasets, yMin, yMax, extras={{}}) {{
+function makeChart(id, datasets, yMin, yMax, extras={{}}, chartPlugins=[]) {{
   const ctx = document.getElementById(id).getContext('2d');
   return new Chart(ctx, {{
     type: 'line',
     data: {{ datasets }},
+    plugins: chartPlugins,
     options: {{ ...CHART_DEFAULTS, ...extras,
       plugins: {{ ...CHART_DEFAULTS.plugins, ...extras.plugins }},
       scales: {{
@@ -1811,10 +1820,7 @@ const vixChart = makeChart('vixChart', [{{
   fill: false,
   parsing: {{ xAxisKey: 'x', yAxisKey: 'y' }},
   tension: 0.3,
-}}], 0, null);
-Chart.register(vixPlugin);
-vixChart.config.plugins = [vixPlugin];
-vixChart.update();
+}}], 0, null, {{}}, [vixPlugin]);
 
 // Fear & Greed chart
 const fgPlugin = {{
@@ -1852,10 +1858,7 @@ const fgChart = makeChart('fgChart', [{{
                         ctx.p1.parsed.y < 45 ? '#ffaa00' :
                         ctx.p1.parsed.y > 75 ? '#00d68f' : '#c8d6e8',
   }},
-}}], 0, 100);
-Chart.register(fgPlugin);
-fgChart.config.plugins = [fgPlugin];
-fgChart.update();
+}}], 0, 100, {{}}, [fgPlugin]);
 
 // S&P 500 chart with ATH line
 const spHighPlugin = {{
@@ -1902,10 +1905,7 @@ const spChart = makeChart('spChart', [
     tension: 0.2,
     borderDash: [5,3],
   }},
-], null, null);
-Chart.register(spHighPlugin);
-spChart.config.plugins = [spHighPlugin];
-spChart.update();
+], null, null, {{}}, [spHighPlugin]);
 
 // TAIEX chart with historical high line
 const twHighPlugin = {{
@@ -1952,10 +1952,7 @@ const twChart = makeChart('twChart', [
     tension: 0.2,
     borderDash: [5,3],
   }},
-], null, null);
-Chart.register(twHighPlugin);
-twChart.config.plugins = [twHighPlugin];
-twChart.update();
+], null, null, {{}}, [twHighPlugin]);
 
 // M1B ratio chart
 // 建立每日 ratio 序列：每日成交(億) ÷ 對應月份 M1B(億) × 100
@@ -2034,10 +2031,7 @@ const m1bChart = makeChart('m1bChart', [{{
     borderColor: ctx => ctx.p1.parsed.y > 10 ? '#ff4757' :
                         ctx.p1.parsed.y > 7  ? '#ffaa00' : '#00b8ff',
   }},
-}}], 0, null);
-Chart.register(m1bPlugin);
-m1bChart.config.plugins = [m1bPlugin];
-m1bChart.update();
+}}], 0, null, {{}}, [m1bPlugin]);
 
 // 融資市值比圖表
 const marginPlugin = {{
@@ -2093,10 +2087,7 @@ const marginChart = makeChart('marginChart', [{{
   }},
 }}], 0, null, {{
   scales: {{ x: {{ time: {{ unit: 'month' }} }} }}
-}});
-Chart.register(marginPlugin);
-marginChart.config.plugins = [marginPlugin];
-marginChart.update();
+}}, [marginPlugin]);
 
 // CAPE chart with historical avg + danger band
 const capePlugin = {{
@@ -2138,10 +2129,7 @@ const capeChart = makeChart('capeChart', [{{
   fill: false,
   parsing: {{ xAxisKey: 'x', yAxisKey: 'y' }},
   tension: 0.2,
-}}], null, null);
-Chart.register(capePlugin);
-capeChart.config.plugins = [capePlugin];
-capeChart.update();
+}}], null, null, {{}}, [capePlugin]);
 
 // 失業率
 const unrateChart = makeChart('unrateChart', [{{
@@ -2154,7 +2142,7 @@ const unrateChart = makeChart('unrateChart', [{{
   tension: 0.3,
 }}], null, null);
 
-// 核心 CPI YoY（綠<2.5 / 黃2.5-4 / 紅>4）
+// CPI YoY（綠<2.5 / 黃2.5-4 / 紅>4）
 const cpiPlugin = {{
   id: 'cpiBands',
   beforeDraw(chart) {{
@@ -2205,10 +2193,7 @@ const cpiChart = makeChart('cpiChart', [{{
     borderColor: ctx => ctx.p1.parsed.y > (CPI_YOY_DATA[Math.max(0, ctx.p1DataIndex-1)]?.y ?? 0)
       ? '#ff4757' : '#00d68f',
   }},
-}}], null, null);
-Chart.register(cpiPlugin);
-cpiChart.config.plugins = [cpiPlugin];
-cpiChart.update();
+}}], null, null, {{}}, [cpiPlugin]);
 
 // ISM 新訂單
 const ismPlugin = {{
@@ -2245,10 +2230,7 @@ const ismChart = makeChart('ismChart', [{{
   segment: {{
     borderColor: ctx => ctx.p1.parsed.y < 50 ? '#ff4757' : '#00b8ff',
   }},
-}}], null, null);
-Chart.register(ismPlugin);
-ismChart.config.plugins = [ismPlugin];
-ismChart.update();
+}}], null, null, {{}}, [ismPlugin]);
 
 // 10Y-2Y 利差
 const ycPlugin = {{
@@ -2305,10 +2287,7 @@ const yieldCurveChart = makeChart('yieldCurveChart', [{{
     borderColor: ctx => ctx.p1.parsed.y < 0 ? '#ff4757' :
                         ctx.p1.parsed.y < 0.5 ? '#ffaa00' : '#00d68f',
   }},
-}}], null, null);
-Chart.register(ycPlugin);
-yieldCurveChart.config.plugins = [ycPlugin];
-yieldCurveChart.update();
+}}], null, null, {{}}, [ycPlugin]);
 
 // BofA Bull & Bear chart
 const bbAnnotationPlugin = {{
@@ -2422,10 +2401,7 @@ const buffettChart = makeChart('buffettChart', [{{
   }},
 }}], null, null, {{
   scales: {{ x: {{ time: {{ unit: 'quarter' }} }} }}
-}});
-Chart.register(buffettPlugin);
-buffettChart.config.plugins = [buffettPlugin];
-buffettChart.update();
+}}, [buffettPlugin]);
 
 // Hindenburg Omen 圖表
 const hoPlugin = {{
@@ -2492,10 +2468,7 @@ const hindenburgChart = makeChart('hindenburgChart', [
       }},
     }},
   }},
-}});
-Chart.register(hoPlugin);
-hindenburgChart.config.plugins = [hoPlugin];
-hindenburgChart.update();
+}}, [hoPlugin]);
 
 // Range selector
 function setRange(days) {{
