@@ -87,6 +87,8 @@ def decide_thinking(body):
 def log_decision(label, body):
     text = extract_text(body).strip().replace("\n", " ")
     logging.info("[%s] %s", label, text[:100])
+    for h in logging.getLogger().handlers:
+        h.flush()
 
 
 class ProxyHandler(http.server.BaseHTTPRequestHandler):
@@ -122,6 +124,8 @@ class ProxyHandler(http.server.BaseHTTPRequestHandler):
         fwd["Connection"] = "close"
         fwd["Content-Length"] = str(len(body))
 
+        headers_sent = False
+        conn = None
         try:
             conn = http.client.HTTPSConnection(UPSTREAM_HOST, timeout=600)
             conn.request(method, UPSTREAM_BASE + self.path, body=body, headers=fwd)
@@ -130,36 +134,57 @@ class ProxyHandler(http.server.BaseHTTPRequestHandler):
             self.send_response(resp.status)
             for k, v in resp.getheaders():
                 lk = k.lower()
-                if lk in ("transfer-encoding", "connection", "content-length", "keep-alive"):
+                if lk in ("transfer-encoding", "connection", "content-length", "keep-alive", "content-encoding"):
                     continue
                 self.send_header(k, v)
             self.end_headers()
+            headers_sent = True
 
+            # 主動判斷回應完整，不依賴上游關閉連接（CloudFront 偶發 keep-alive 不關）。
+            # 完成條件二選一：SSE 收到 message_stop，或回應是完整 JSON
+            # （後者涵蓋非 stream 正常回應，以及 stream 請求但上游回 JSON error 的情況）。
+            buf = b""
             while True:
                 chunk = resp.read(8192)
                 if not chunk:
                     break
+                buf += chunk
                 self.wfile.write(chunk)
                 self.wfile.flush()
-            conn.close()
+                if b"message_stop" in buf[-65536:]:
+                    break
+                try:
+                    json.loads(buf)
+                    break
+                except ValueError:
+                    continue
         except Exception as e:
             logging.info("[upstream-error] %s", e)
-            try:
-                self.send_response(502)
-                self.send_header("Content-Type", "application/json")
-                self.end_headers()
-                self.wfile.write(json.dumps({"error": str(e)}).encode())
-            except Exception:
-                pass
+            if not headers_sent:
+                try:
+                    self.send_response(502)
+                    self.send_header("Content-Type", "application/json")
+                    self.end_headers()
+                    self.wfile.write(json.dumps({"error": str(e)}).encode())
+                except Exception:
+                    pass
         finally:
+            if conn is not None:
+                try:
+                    conn.close()
+                except Exception:
+                    pass
             self.close_connection = True
 
     def do_GET(self):
         if self.path == "/health":
+            body = b"ok"
             self.send_response(200)
             self.send_header("Content-Type", "text/plain")
+            self.send_header("Content-Length", str(len(body)))
             self.end_headers()
-            self.wfile.write(b"ok")
+            self.wfile.write(body)
+            self.close_connection = True
             return
         self._forward("GET")
 
