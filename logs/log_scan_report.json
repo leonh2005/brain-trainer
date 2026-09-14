@@ -1,6 +1,6 @@
 {
-  "scanned_at": "2026-09-14 03:00:27",
-  "since": "2026-09-13 03:00:01",
+  "scanned_at": "2026-09-15 03:00:26",
+  "since": "2026-09-14 03:00:00",
   "results": {
     "市場儀表板": {
       "exists": true,
@@ -28,9 +28,9 @@
     },
     "財經新聞分析": {
       "exists": true,
-      "errors": 2,
-      "last_error": "2026-09-13 10:15:12,630 [WARNING] fetcher.ptt_fetcher: PTT index fetch failed: HTTPSConnectionPool(host='www.ptt.cc', port=443): Max retries exceeded with url: /bbs/Stock/index.html (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.ptt.cc', port=443) at 0x1071912b0>, 'Connection to www.ptt.c",
-      "fix": "Port 被佔用或服務未啟動 → 檢查 LaunchAgent 是否正常載入"
+      "errors": 1,
+      "last_error": "2026-09-14 15:15:03,473 [WARNING] fetcher.ptt_fetcher: PTT article fetch failed https://www.ptt.cc/bbs/Stock/M.1789359194.A.FAD.html: ('Connection aborted.', ConnectionResetError(54, 'Connection reset by peer'))",
+      "fix": "尚無對應建議，需人工判斷"
     },
     "川普監測": {
       "exists": true,
