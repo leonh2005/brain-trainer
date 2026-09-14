@@ -1077,6 +1077,7 @@ const TOOLS=[
   {ic:'🧮', title:'hola-quant 個人量化交易系統', desc:'HolaOS + 現有工具整合，Phase 0 開發中，無網頁介面', path:'~/CCProject/hola-quant/', how:'LaunchAgent 常駐跑後端邏輯，進度見 PLAN.md'},
   {ic:'🎮', title:'8BitDo YouTube/抖音 控制器', desc:'藍牙手把(Switch Pro相容模式)映射鍵盤/系統音量指令，控制Mac瀏覽器YouTube/抖音播放；依前景分頁自動切換對應，網頁可即時改按鍵/一鍵套用預設', site:'/svc/5970/', how:'LaunchAgent 常駐（com.steven.controller-media + com.steven.controller-media-ui），開機自動啟動'},
   {ic:'🧩', title:'TRIZ 解題助手', desc:'TRIZ 矛盾矩陣（39參數×40原理）+ Groq 生成建議 + ComfyUI 漫畫風示意圖，也可手動查表', site:'/svc/5980/', how:'服務常駐；生插圖需先插著 1TOWC 硬碟手動開 ComfyUI(8188)，沒開只會顯示文字建議'},
+  {ic:'⚙️', title:'thinking-proxy', desc:'DeepSeek thinking 節流 proxy，依 prompt 關鍵字判斷開/關 thinking 省 token', path:'~/CCProject/thinking-proxy/proxy.py', how:'LaunchAgent 常駐（com.steven.thinking-proxy，8787），Claude Code 的 ANTHROPIC_BASE_URL 已指向它'},
 ];
 function mountTools(defs){
   const wrap=$('#tools');
