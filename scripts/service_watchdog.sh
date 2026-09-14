@@ -95,10 +95,10 @@ check_launchagent() {
 
 check_launchagent "command-center" 5950 "com.steven.command-center"
 
-check_and_restart "rabbit-care"       5200 \
-  "venv/bin/python app.py" \
-  "/Users/steven/CCProject/rabbit-care" \
-  "/Users/steven/CCProject/logs/rabbit-care-web.log"
+# check_and_restart "rabbit-care"       5200 \
+#   "venv/bin/python app.py" \
+#   "/Users/steven/CCProject/rabbit-care" \
+#   "/Users/steven/CCProject/logs/rabbit-care-web.log"
 
 check_and_restart "news-analyzer"     5300 \
   "venv/bin/python app.py" \
