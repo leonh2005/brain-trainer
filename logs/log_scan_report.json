@@ -1,6 +1,6 @@
 {
-  "scanned_at": "2026-09-15 03:00:26",
-  "since": "2026-09-14 03:00:00",
+  "scanned_at": "2026-09-16 03:00:26",
+  "since": "2026-09-15 03:00:00",
   "results": {
     "市場儀表板": {
       "exists": true,
@@ -28,8 +28,8 @@
     },
     "財經新聞分析": {
       "exists": true,
-      "errors": 1,
-      "last_error": "2026-09-14 15:15:03,473 [WARNING] fetcher.ptt_fetcher: PTT article fetch failed https://www.ptt.cc/bbs/Stock/M.1789359194.A.FAD.html: ('Connection aborted.', ConnectionResetError(54, 'Connection reset by peer'))",
+      "errors": 3,
+      "last_error": "2026-09-16 01:02:09,376 [WARNING] fetcher.reddit_fetcher: Reddit fetch failed for r/wallstreetbets: 500 Server Error: Internal Server Error for url: https://www.reddit.com/r/wallstreetbets/hot/.rss",
       "fix": "尚無對應建議，需人工判斷"
     },
     "川普監測": {
