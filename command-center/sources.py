@@ -242,7 +242,7 @@ def _enrich_track_results(results: list, checked_at: str) -> list:
 
 @_wrap
 def daytrade():
-    p = '/tmp/daytrade_candidates.json'
+    p = f'{CC}/telebot/data/daytrade_candidates.json'
     d = _read_json(p)
     for c in d:
         c['sector'] = _stock_sector(c.get('code', ''))
@@ -268,7 +268,7 @@ SWING_DAILY_BUDGET = 1_000_000  # 隔日沖每日投入總額，平均分配到�
 
 @_wrap
 def swing():
-    p = '/tmp/swing_candidates.json'
+    p = f'{CC}/telebot/data/swing_candidates.json'
     d = _read_json(p)
     results = d.get('results', [])
     budget_per = SWING_DAILY_BUDGET / len(results) if results else 0
@@ -301,7 +301,7 @@ def swing():
 
 @_wrap
 def pullback():
-    p = '/tmp/pullback_candidates.json'
+    p = f'{CC}/telebot/data/pullback_candidates.json'
     d = _read_json(p)
     results = d.get('results', [])
     for r in results:

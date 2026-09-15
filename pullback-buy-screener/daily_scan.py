@@ -2,6 +2,7 @@
 """回後買上漲選股 — 每日自動掃描，結果存檔供 command-center 被動讀取（比照 swing_candidates.json 格式）"""
 import json
 import logging
+import os
 from datetime import datetime
 
 import screener
@@ -9,7 +10,7 @@ import screener
 logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s %(message)s')
 log = logging.getLogger('daily_scan')
 
-OUT_PATH = '/tmp/pullback_candidates.json'
+OUT_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'telebot', 'data', 'pullback_candidates.json')
 N_UNIVERSE = 600
 
 
