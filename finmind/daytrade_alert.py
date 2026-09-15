@@ -308,9 +308,9 @@ candidate_list = [{
     'code': c['code'], 'name': c['name'], 'close': c['close'],
     'checks': {'量前20': True, '振幅≥3%': True, '近5日均量≥3000張': True, '漲幅≥1.5%': True},  # 單一AND篩選，能列入候選就是全通過
 } for c in candidates]
-with open('/tmp/daytrade_candidates.json', 'w') as f:
+with open(os.path.join(os.path.dirname(__file__), '..', 'telebot', 'data', 'daytrade_candidates.json'), 'w') as f:
     json.dump(candidate_list, f, ensure_ascii=False)
-print(f'[daytrade] 候選清單已寫入 /tmp/daytrade_candidates.json: {[c["code"] for c in candidate_list]}')
+print(f'[daytrade] 候選清單已寫入 telebot/data/daytrade_candidates.json: {[c["code"] for c in candidate_list]}')
 
 # 存進當沖 10:30 追蹤紀錄（供 check_daytrade_track.py 比對是否仍上漲）
 try:
