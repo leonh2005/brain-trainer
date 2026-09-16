@@ -1,6 +1,6 @@
 {
-  "scanned_at": "2026-09-16 03:00:26",
-  "since": "2026-09-15 03:00:00",
+  "scanned_at": "2026-09-17 03:00:26",
+  "since": "2026-09-16 03:00:00",
   "results": {
     "市場儀表板": {
       "exists": true,
@@ -28,15 +28,15 @@
     },
     "財經新聞分析": {
       "exists": true,
-      "errors": 3,
-      "last_error": "2026-09-16 01:02:09,376 [WARNING] fetcher.reddit_fetcher: Reddit fetch failed for r/wallstreetbets: 500 Server Error: Internal Server Error for url: https://www.reddit.com/r/wallstreetbets/hot/.rss",
-      "fix": "尚無對應建議，需人工判斷"
+      "errors": 2,
+      "last_error": "2026-09-16 18:15:13,438 [WARNING] fetcher.ptt_fetcher: PTT index fetch failed: HTTPSConnectionPool(host='www.ptt.cc', port=443): Read timed out. (read timeout=10)",
+      "fix": "網路逾時 → 確認目標服務可達，或增加 timeout 設定"
     },
     "川普監測": {
       "exists": true,
-      "errors": 0,
-      "last_error": null,
-      "fix": null
+      "errors": 3,
+      "last_error": "2026-09-16 12:55:03,251 WARNING 分析失敗：100% tariffs on India? US advances Russia sanction — 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reaso",
+      "fix": "尚無對應建議，需人工判斷"
     },
     "持倉新聞(台股)": {
       "exists": true,
