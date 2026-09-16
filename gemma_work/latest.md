@@ -1,23 +1,21 @@
-# Claude Handoff 20260915_2028
-> 自動生成於 2026-09-15 20:28
+# Claude Handoff 20260916_2238
+> 自動生成於 2026-09-16 22:38
 
 ## 未提交的檔案異動
 ```
-M command-center/sources.py
- M finmind/daytrade_alert.py
- M logs/pullback_daily_scan.out
- M pullback-buy-screener/daily_scan.py
+M chip-tracker/chip.db
+ M gemma_work/latest.md
  M scripts/auto_investigate_state.json
  M shopee-boost/data/last_success.json
 ```
 
 ## 近期 Commits
 ```
-1b85014c chore: 自動同步 2026-09-15 16:40
-4bf13de8 chore: 自動同步 2026-09-15 11:40
-50774dbc chore: 自動同步 2026-09-15 06:40
-7ffec287 chore: 自動同步 2026-09-15 01:40
-f6f24e54 chore: 每晚同步 2026-09-14 23:50
+e15e32a1 chore: 自動同步 2026-09-16 17:40
+e696358f chore: 自動同步 2026-09-16 12:40
+b94b2a8f chore: 自動同步 2026-09-16 07:40
+de412923 chore: 自動同步 2026-09-16 02:40
+ff7ab330 chore: 每晚同步 2026-09-15 23:50
 ```
 
 ## 給 Hermes 的備註
