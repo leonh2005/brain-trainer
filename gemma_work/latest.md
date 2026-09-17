@@ -1,18 +1,26 @@
-# Claude Handoff 20260916_2244
-> 自動生成於 2026-09-16 22:44
+# Claude Handoff 20260917_1547
+> 自動生成於 2026-09-17 15:47
 
 ## 未提交的檔案異動
 ```
-（無未提交變更）
+M logs/pullback_daily_scan.err
+ M market-analysis/hit_counts.json
+ M market-dashboard/bb_cache.json
+ M market-dashboard/fg_history.json
+ M market-dashboard/index.html
+ M market-dashboard/margin_cache.json
+ M market-dashboard/sp_state.json
+ M scripts/auto_investigate_state.json
+ M shopee-boost/data/last_success.json
 ```
 
 ## 近期 Commits
 ```
+bb048b57 chore: 自動同步 2026-09-17 13:40
+8b0bd1b5 chore: 自動同步 2026-09-17 08:40
+3280c9d9 chore: 自動同步 2026-09-17 03:40
+d3cc12e6 chore: 每晚同步 2026-09-16 23:50
 3d05173e chore: 自動同步 2026-09-16 22:40
-e15e32a1 chore: 自動同步 2026-09-16 17:40
-e696358f chore: 自動同步 2026-09-16 12:40
-b94b2a8f chore: 自動同步 2026-09-16 07:40
-de412923 chore: 自動同步 2026-09-16 02:40
 ```
 
 ## 給 Hermes 的備註
