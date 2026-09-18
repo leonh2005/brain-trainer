@@ -1,32 +1,29 @@
-# Claude Handoff 20260918_0937
-> 自動生成於 2026-09-18 09:37
+# Claude Handoff 20260918_1424
+> 自動生成於 2026-09-18 14:24
 
 ## 未提交的檔案異動
 ```
 M chip-tracker/chip.db
- M finmind/daytrade_alert.py
  M gemma_work/latest.md
- M guru-tracker/guru_tracker.db
+ M logs/pullback_daily_scan.err
+ M market-analysis/hit_counts.json
  M market-dashboard/bb_cache.json
- M market-dashboard/cape_cache.json
  M market-dashboard/fg_history.json
- M market-dashboard/hindenburg_cache.json
  M market-dashboard/index.html
  M market-dashboard/margin_cache.json
  M market-dashboard/sp_state.json
  M news-analyzer/trump_seen.json
  M scripts/auto_investigate_state.json
- M scripts/ma_monitor_state.json
  M shopee-boost/data/last_success.json
 ```
 
 ## 近期 Commits
 ```
+cb469642 docs: CLAUDE.md 加 Jev 判斷層使用規則（何時呼叫 MCP）
+193ee8c0 chore: 自動同步 2026-09-18 09:40
 8d77919f chore: 自動同步 2026-09-18 04:40
 4803dbd9 chore: 每晚同步 2026-09-17 23:50
 dc648a38 chore: 自動同步 2026-09-17 23:40
-151550e8 chore: 自動同步 2026-09-17 18:40
-bb048b57 chore: 自動同步 2026-09-17 13:40
 ```
 
 ## 給 Hermes 的備註
