@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 當沖候選推播 — 週間 09:19 執行
-資料來源：永豐金 Shioaji snapshots（主，即時）+ TWSE 公開 API（輔）+ FinMind（期貨法人）
+資料來源：永豐金 Shioaji snapshots（主，即時）+ TWSE 公開 API（輔）+ FinMind（三大法人現貨）
 """
 
 import requests
@@ -49,7 +49,7 @@ try:
     finmind.login_by_token(api_token=TOKEN)
 except Exception as e:
     print(f'[finmind] 登入失敗，改用降級模式: {e}')
-    send_telegram(f"⚠️ {TODAY} 當沖掃描：FinMind 連線失敗（{type(e).__name__}），改用降級模式繼續（無期貨方向/FinMind均量備援）")
+    send_telegram(f"⚠️ {TODAY} 當沖掃描：FinMind 連線失敗（{type(e).__name__}），改用降級模式繼續（無三大法人方向/FinMind均量備援）")
     finmind = None
 
 # ── Shioaji 連線（singleton）─────────────────────
@@ -91,14 +91,14 @@ def get_top_volume_sj(n: int = 20) -> list:
                     'chg_pct':   round(float(s.change_rate), 2),
                     'amp_pct':   round(rng / s.low * 100, 2) if s.low > 0 else 0.0,
                     'close_pos': round((s.close - s.low) / rng * 100, 1) if rng > 0 else 50.0,
-                    'vol_k':     int(s.total_volume / 1000),
+                    'vol_k':     int(s.total_volume),  # 單位：張（Shioaji 量本就是張，勿再 /1000）
                 }
         except Exception as e:
             print(f'[sj] snapshot batch {i} 失敗: {e}')
     if not rows:
         return []
     top = sorted(rows.values(), key=lambda x: x['vol_k'], reverse=True)[:n]
-    print(f'[top{n}] ' + ' '.join(f"{r['code']}({r['vol_k']}K)" for r in top[:5]) + ' ...')
+    print(f'[top{n}] ' + ' '.join(f"{r['code']}({r['vol_k']//1000}K)" for r in top[:5]) + ' ...')
     return top
 
 
@@ -176,14 +176,22 @@ def get_avg5_finmind(stock_id: str) -> int:
     return 0
 
 
-def get_futures_direction():
+def get_institutional_net():
+    """三大法人現貨買賣超合計（億元），負值=賣超。資料源 FinMind TaiwanStockTotalInstitutionalInvestors 的 total 欄位。"""
     try:
-        fut = finmind.taiwan_futures_institutional_investors(futures_id="TX", start_date=D5)
-        fi = fut[fut['institutional_investors']=='外資']
-        last = fi.iloc[-1]
-        diff = int(last['long_open_interest_balance_volume']) - int(last['short_open_interest_balance_volume'])
-        return diff, str(last['date'])[:10]
-    except:
+        res = requests.get(
+            'https://api.finmindtrade.com/api/v4/data',
+            params={'dataset': 'TaiwanStockTotalInstitutionalInvestors', 'start_date': D5, 'token': TOKEN},
+            timeout=10,
+        )
+        rows = res.json().get('data', [])
+        totals = [r for r in rows if r.get('name') == 'total']
+        if not totals:
+            return 0, ''
+        last = totals[-1]
+        net = (int(last['buy']) - int(last['sell'])) / 1e8  # 元 → 億元
+        return round(net, 1), str(last['date'])[:10]
+    except Exception:
         return 0, ''
 
 
@@ -245,19 +253,19 @@ for row in top20:
             'close_pos': row['close_pos'],
         })
 
-fut_diff, fut_date = get_futures_direction()
-mkt_dir = "偏多 ↑" if fut_diff > 0 else "偏空 ↓"
+inst_net, inst_date = get_institutional_net()
+mkt_dir = "偏多 ↑" if inst_net > 0 else "偏空 ↓"
 
-# 外資期貨偏空時，統計上勝率大幅下降（大盤逆風19.4% vs順風47.6%），直接跳過不推播候選
-mkt_bearish_skip = fut_diff <= 0
+# 三大法人現貨合計賣超超過 300 億時，統計上勝率大幅下降（大盤逆風19.4% vs順風47.6%），跳過不推播候選
+mkt_bearish_skip = inst_net <= -300
 if mkt_bearish_skip and candidates:
-    print(f'[daytrade] 外資期貨偏空（多空差{fut_diff:+,}口），跳過本日{len(candidates)}檔候選')
+    print(f'[daytrade] 三大法人賣超 {inst_net:+,.1f} 億（逾300億），跳過本日{len(candidates)}檔候選')
     candidates = []
 
 # ── 組訊息 ────────────────────────────────────────
 
 lines = [f"📊 <b>當沖候選</b>｜{TODAY} 09:10\n"]
-lines.append(f"🌐 大盤外資期貨（{fut_date}）：{mkt_dir}（多空差 {fut_diff:+,} 口）\n")
+lines.append(f"🌐 三大法人現貨（{inst_date}）：{mkt_dir}（買賣超 {inst_net:+,.1f} 億）\n")
 lines.append("📋 <b>篩選條件</b>")
 lines.append("今日量前20（Shioaji即時）＋ 振幅&gt;3% ＋ 近5均量&gt;3000張 ＋ 漲幅&gt;1.5%\n")
 
@@ -292,7 +300,7 @@ if candidates:
     lines.append("⚡ 進場參考：開盤後5~15分鐘確認方向再進")
     lines.append("🛑 停損：跌破進場價 -1.5% 出清")
 elif mkt_bearish_skip:
-    lines.append("🌧️ 外資期貨偏空，今日跳過推播（大盤逆風時歷史勝率明顯偏低）")
+    lines.append("🌧️ 三大法人賣超逾300億，今日跳過推播（大盤逆風時歷史勝率明顯偏低）")
 else:
     lines.append("❌ 今日無符合當沖條件標的\n建議觀望或等待盤中突破訊號")
 
