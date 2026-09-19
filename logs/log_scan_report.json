@@ -1,6 +1,6 @@
 {
-  "scanned_at": "2026-09-19 03:00:27",
-  "since": "2026-09-18 03:00:01",
+  "scanned_at": "2026-09-20 03:00:27",
+  "since": "2026-09-19 03:00:01",
   "results": {
     "市場儀表板": {
       "exists": true,
@@ -34,9 +34,9 @@
     },
     "川普監測": {
       "exists": true,
-      "errors": 2,
-      "last_error": "2026-09-18 09:00:04,255 WARNING 分析失敗：Trump to sign Russia sanctions bill, gets power to — 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reaso",
-      "fix": "尚無對應建議，需人工判斷"
+      "errors": 0,
+      "last_error": null,
+      "fix": null
     },
     "持倉新聞(台股)": {
       "exists": true,
@@ -47,7 +47,7 @@
     "持倉新聞(美股)": {
       "exists": true,
       "errors": 2,
-      "last_error": "2026-09-18 21:00:40,217 ERROR 純文字重試也失敗 401：{\"ok\":false,\"error_code\":401,\"description\":\"Unauthorized\"}",
+      "last_error": "2026-09-19 21:00:38,060 ERROR 純文字重試也失敗 401：{\"ok\":false,\"error_code\":401,\"description\":\"Unauthorized\"}",
       "fix": "Session/Token 過期 → 重新登入對應網站或更新 API Key"
     },
     "HolaQuant": {
