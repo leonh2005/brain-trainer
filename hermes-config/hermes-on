@@ -1,0 +1,35 @@
+#!/bin/bash
+# Hermes 開關（on）— 啟動 omlx 推理後端，供 hermes chat 使用
+# 用法：hermes-on   （之後再跑 hermes chat）
+# 注意：本服務已脫離 brew services（formula 寫死 KeepAlive 會讓 kill 後自動復活），
+#       勿再跑 `brew services start omlx`，否則會多一個 job 搶 port 8005。
+
+PLIST="$HOME/.omlx/com.steven.omlx.plist"
+LABEL="com.steven.omlx"
+
+if lsof -nP -iTCP:8005 -sTCP:LISTEN >/dev/null 2>&1; then
+  echo "omlx 已經在跑（localhost:8005）"
+  exit 0
+fi
+
+[ -f "$PLIST" ] || { echo "找不到 $PLIST"; exit 1; }
+
+echo "啟動 omlx ..."
+if launchctl print gui/$(id -u)/$LABEL >/dev/null 2>&1; then
+  launchctl kickstart gui/$(id -u)/$LABEL
+else
+  launchctl bootstrap gui/$(id -u) "$PLIST"
+fi
+
+for _ in $(seq 1 40); do
+  lsof -nP -iTCP:8005 -sTCP:LISTEN >/dev/null 2>&1 && break
+  sleep 2
+done
+
+if lsof -nP -iTCP:8005 -sTCP:LISTEN >/dev/null 2>&1; then
+  echo "omlx 已就緒，可以開始 hermes chat"
+else
+  echo "等了 80 秒還沒就緒，omlx.log 尾端供判斷："
+  tail -5 /opt/homebrew/var/log/omlx.log
+  exit 1
+fi
