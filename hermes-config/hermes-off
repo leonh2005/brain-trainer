@@ -1,0 +1,24 @@
+#!/bin/bash
+# Hermes 開關（off）— 停止 omlx 推理後端，釋放記憶體
+# 用法：hermes-off   （用完 hermes chat 之後跑）
+
+LABEL="com.steven.omlx"
+
+was_running=false
+lsof -nP -iTCP:8005 -sTCP:LISTEN >/dev/null 2>&1 && was_running=true
+
+launchctl bootout gui/$(id -u)/$LABEL 2>/dev/null
+
+for _ in $(seq 1 10); do
+  lsof -nP -iTCP:8005 -sTCP:LISTEN >/dev/null 2>&1 || break
+  sleep 1
+done
+
+if lsof -nP -iTCP:8005 -sTCP:LISTEN >/dev/null 2>&1; then
+  echo "omlx 停止失敗，仍在 localhost:8005 監聽（可能是脫離 launchd 的孤兒 process）"
+  exit 1
+elif $was_running; then
+  echo "omlx 已停止，記憶體已釋放"
+else
+  echo "omlx 本來就沒在跑"
+fi
