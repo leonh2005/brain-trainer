@@ -1,6 +1,6 @@
 {
-  "scanned_at": "2026-09-20 03:00:27",
-  "since": "2026-09-19 03:00:01",
+  "scanned_at": "2026-09-21 03:00:26",
+  "since": "2026-09-20 03:00:00",
   "results": {
     "市場儀表板": {
       "exists": true,
@@ -47,7 +47,7 @@
     "持倉新聞(美股)": {
       "exists": true,
       "errors": 2,
-      "last_error": "2026-09-19 21:00:38,060 ERROR 純文字重試也失敗 401：{\"ok\":false,\"error_code\":401,\"description\":\"Unauthorized\"}",
+      "last_error": "2026-09-20 21:00:25,359 ERROR 純文字重試也失敗 401：{\"ok\":false,\"error_code\":401,\"description\":\"Unauthorized\"}",
       "fix": "Session/Token 過期 → 重新登入對應網站或更新 API Key"
     },
     "HolaQuant": {
