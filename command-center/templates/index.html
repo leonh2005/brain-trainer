@@ -768,26 +768,48 @@ function renderNews(d){
 function renderMarket(d){
   if(!d)return el('div','empty','無資料');
   const box=el('div');
-  if(d.fear_greed){
-    const fg=d.fear_greed, colors={'extreme fear':'#5f7346','fear':'#788c5d','neutral':'#b0803a','greed':'#cc7a4a','extreme greed':'#c15f3c'};
+  const ag=d.alert_grid, hasGrid=!!(ag&&ag.cells);
+  if(hasGrid){
+    const danger=ag.count>=ag.threshold;
     const bs=el('div','bigstat');
-    bs.innerHTML=`<span class="n">${fmt(fg.y)}</span><span class="u">Fear & Greed</span>`;
+    // 此卡片用紅=警戒、綠=安全，故借用 --up(紅)/--down(綠) 兩色
+    bs.innerHTML=`<span class="n" style="color:${danger?'var(--up)':'var(--fg)'}">${ag.count}</span><span class="u">/ ${ag.cells.length} 格進入警告區</span>`;
     box.appendChild(bs);
-    const rt=el('span','rating');const col=colors[fg.rating]||'var(--muted)';
-    rt.style.cssText=`background:${col}22;color:${col}`;rt.textContent=fg.rating;
+  }else{
+    const w=el('div','mini');w.style.color='var(--up)';w.textContent='警示資料尚未產生';
+    box.appendChild(w);
+  }
+  if(d.fear_greed){
+    const colors={'extreme fear':'#5f7346','fear':'#788c5d','neutral':'#b0803a','greed':'#cc7a4a','extreme greed':'#c15f3c'};
+    const rt=el('span','rating');const col=colors[d.fear_greed.rating]||'var(--muted)';
+    rt.style.cssText=`background:${col}22;color:${col}`;rt.textContent=d.fear_greed.rating;
     box.appendChild(rt);
   }
   const mg=el('div','mg');mg.style.marginTop='13px';
-  const items=[
-    ['S&P vs MA', d.sp_vs_ma?(d.sp_vs_ma.state==='above'?'站上':'跌破'):'—'],
-    ['CAPE', d.cape?fmt(d.cape.y):'—'],
-    ['BofA B&B', d.bofa_bb?fmt(d.bofa_bb.value):'—'],
-    ['融資市值比', d.margin_ratio?fmt(d.margin_ratio.y)+'%':'—'],
-    ['巴菲特現金', d.buffett_cash?fmt(d.buffett_cash.ratio)+'%':'—'],
-    ['興登堡', d.hindenburg?(d.hindenburg.triggered?'⚠ 觸發':'正常'):'—'],
-  ];
-  items.forEach(([k,v])=>{const m=el('div','m');m.innerHTML=`<span class="k">${k}</span><span class="v">${v}</span>`;mg.appendChild(m)});
+  if(hasGrid)ag.cells.forEach(c=>{
+    const neutral=c.name==='台股 vs 200MA';
+    const col=neutral?'var(--faint)':(c.triggered?'var(--up)':'var(--down)');
+    const m=el('div','m');
+    m.innerHTML=`<span class="k">${neutral?'⚪':(c.triggered?'🔴':'🟢')} ${c.name}</span><span class="v" style="color:${col}">${c.detail}</span>`;
+    mg.appendChild(m);
+  });
+  if(d.hindenburg){
+    const m=el('div','m');
+    const t=d.hindenburg.triggered;
+    m.innerHTML=`<span class="k">${t?'🔴':'🟢'} 興登堡</span><span class="v" style="color:${t?'var(--up)':'var(--down)'}">${t?'⚠ 觸發':'正常'}（不列入九宮格）</span>`;
+    mg.appendChild(m);
+  }
   box.appendChild(mg);
+  if(hasGrid){
+    const now=new Date();
+    const today=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+    const stale=ag.generated_at&&ag.generated_at.slice(0,10)!==today;
+    const foot=el('div','mini');foot.style.marginTop='9px';
+    foot.textContent=stale?`⚠ 資料未更新（${ag.generated_at.slice(5)}）· 門檻 ${ag.threshold} 格`
+                          :`門檻 ${ag.threshold} 格 · 更新 ${ag.generated_at?ag.generated_at.slice(5):'—'}`;
+    if(stale)foot.style.color='var(--up)';
+    box.appendChild(foot);
+  }
   return box;
 }
 function renderChips(d){

@@ -549,6 +549,10 @@ def market_fear():
             out[key] = hist[-1] if hist else None
         except Exception:
             out[key] = None
+    try:
+        out['alert_grid'] = _read_json(f'{md}/alert_grid.json')
+    except Exception:
+        out['alert_grid'] = None
     return out, _mtime(f'{md}/index.html')
 
 

@@ -18,6 +18,11 @@ def trunc2(x):
     """截斷至小數點後兩位，不四捨五入"""
     return math.trunc(x * 100) / 100
 
+
+def fmt_or_na(val, spec, note):
+    """抓取失敗時的 fallback 值（0/None）不當真實數據顯示，一律標 N/A"""
+    return f"{val:{spec}}{note}" if val else "N/A（抓取失敗）"
+
 try:
     import yfinance as yf
     import pandas as pd
@@ -33,6 +38,8 @@ BB_CACHE   = Path(__file__).parent / "bb_cache.json"
 MARGIN_CACHE = Path(__file__).parent / "margin_cache.json"
 BUFFETT_CACHE    = Path(__file__).parent / "buffett_cache.json"
 HINDENBURG_CACHE = Path(__file__).parent / "hindenburg_cache.json"
+ALERT_GRID       = Path(__file__).parent / "alert_grid.json"
+ALERT_THRESHOLD  = 6
 BOT_TOKEN = open(os.path.expanduser("~/CCProject/.secrets/telegram_token.txt")).read().strip()
 CHAT_ID = "7556217543"
 
@@ -2625,7 +2632,8 @@ def main():
     vix_cur      = vix_data[-1]["y"] if vix_data else 0
     sp_cur       = sp_data[-1]["y"] if sp_data else 0
     ma_cur       = ma_data[-1]["y"] if ma_data else 0
-    fg_score_val = fg_data.get("score") or 100
+    fg_raw       = fg_data.get("score")
+    fg_score_val = fg_raw or 100
     cape_cur     = cape_data[-1]["y"] if cape_data else 0
     m1b_cur      = m1b_data[-1]["y"] if m1b_data else 0
     trade_cur    = trade_data[-1]["y"] if trade_data else 0
@@ -2634,20 +2642,23 @@ def main():
     bb_val       = (bb_data or {}).get("value")
     bf_r         = (buffett_data or {}).get("ratio")
     sp_vs_ma_pct = trunc2((sp_cur / ma_cur - 1) * 100) if ma_cur else 0
+    tw_cur       = tw_data[-1]["y"] if tw_data else 0
+    tw_ma_cur    = tw_ma_data[-1]["y"] if tw_ma_data else 0
+    tw_vs_ma_pct = trunc2((tw_cur / tw_ma_cur - 1) * 100) if tw_ma_cur else 0
 
     alert_grid = [
-        ("VIX",        vix_cur > 20,                                          f"{vix_cur:.2f}（>20 警戒）"),
-        ("F&G",        fg_score_val < 45,                                     f"{fg_score_val:.1f}（<45 恐慌）"),
-        ("CAPE",       cape_cur > 25,                                         f"{cape_cur:.1f}（>25 偏高）"),
-        ("S&P vs 200MA", sp_vs_ma_pct < 0,                                   f"{sp_vs_ma_pct:+.2f}%"),
-        ("台股 vs 200MA", False,                                              "（不納入警示）"),
-        ("M1B比",      m1b_r > 7,                                            f"{m1b_r:.2f}%（>7% 偏熱）"),
-        ("融資市值比", mg_r > 3.5,                                            f"{mg_r:.2f}%（>3.5%）"),
+        ("VIX",        vix_cur > 20,                                          fmt_or_na(vix_cur, ".2f", "（>20 警戒）")),
+        ("F&G",        fg_score_val < 45,                                     fmt_or_na(fg_raw, ".1f", "（<45 恐慌）")),
+        ("CAPE",       cape_cur > 25,                                         fmt_or_na(cape_cur, ".1f", "（>25 偏高）")),
+        ("S&P vs 200MA", sp_vs_ma_pct < 0,                                   fmt_or_na(sp_vs_ma_pct, "+.2f", "%")),
+        ("台股 vs 200MA", False,                                              fmt_or_na(tw_vs_ma_pct, "+.2f", "%（不納入警示）")),
+        ("M1B比",      m1b_r > 7,                                            fmt_or_na(m1b_r, ".2f", "%（>7% 偏熱）")),
+        ("融資市值比", mg_r > 3.5,                                            fmt_or_na(mg_r, ".2f", "%（>3.5%）")),
         ("美銀牛熊",   bb_val is not None and (bb_val >= 8.0 or bb_val < 2.0), f"{bb_val if bb_val is not None else 'N/A'}"),
         ("巴菲特現金", bf_r is not None and bf_r >= 20,                      f"{bf_r:.1f}%（>=20% 謹慎）" if bf_r is not None else "N/A"),
     ]
     alert_count = sum(1 for _, triggered, _ in alert_grid if triggered)
-    if alert_count >= 6:
+    if alert_count >= ALERT_THRESHOLD:
         lines = [f"🚨 市場警報：九宮格同時亮燈 {alert_count}/9 格", ""]
         for name, triggered, val in alert_grid:
             icon = "🔴" if triggered else ("⚪" if name == "台股 vs 200MA" else "🟢")
@@ -2655,7 +2666,15 @@ def main():
         send_telegram("\n".join(lines))
         print(f"  ⚠ 九宮格警報推播：{alert_count}/9 格亮燈")
     else:
-        print(f"  九宮格亮燈：{alert_count}/9 格（門檻 6 格）")
+        print(f"  九宮格亮燈：{alert_count}/9 格（門檻 {ALERT_THRESHOLD} 格）")
+
+    # 給 command-center 卡片讀取，寫在警報之後避免寫檔失敗影響推播
+    ALERT_GRID.write_text(json.dumps({
+        "generated_at": generated_at,
+        "count": alert_count,
+        "threshold": ALERT_THRESHOLD,
+        "cells": [{"name": n, "triggered": t, "detail": d} for n, t, d in alert_grid],
+    }, ensure_ascii=False, indent=2), encoding="utf-8")
 
 
 if __name__ == "__main__":
