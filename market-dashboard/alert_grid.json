@@ -1,0 +1,52 @@
+{
+  "generated_at": "2026-09-21 23:00",
+  "count": 5,
+  "threshold": 6,
+  "cells": [
+    {
+      "name": "VIX",
+      "triggered": false,
+      "detail": "14.69（>20 警戒）"
+    },
+    {
+      "name": "F&G",
+      "triggered": true,
+      "detail": "33.0（<45 恐慌）"
+    },
+    {
+      "name": "CAPE",
+      "triggered": true,
+      "detail": "40.9（>25 偏高）"
+    },
+    {
+      "name": "S&P vs 200MA",
+      "triggered": false,
+      "detail": "+7.43%"
+    },
+    {
+      "name": "台股 vs 200MA",
+      "triggered": false,
+      "detail": "+24.56%（不納入警示）"
+    },
+    {
+      "name": "M1B比",
+      "triggered": false,
+      "detail": "2.84%（>7% 偏熱）"
+    },
+    {
+      "name": "融資市值比",
+      "triggered": true,
+      "detail": "3.82%（>3.5%）"
+    },
+    {
+      "name": "美銀牛熊",
+      "triggered": true,
+      "detail": "9.7"
+    },
+    {
+      "name": "巴菲特現金",
+      "triggered": true,
+      "detail": "28.9%（>=20% 謹慎）"
+    }
+  ]
+}

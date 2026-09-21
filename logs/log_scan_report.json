@@ -1,6 +1,6 @@
 {
-  "scanned_at": "2026-09-21 03:00:26",
-  "since": "2026-09-20 03:00:00",
+  "scanned_at": "2026-09-22 03:00:27",
+  "since": "2026-09-21 03:00:01",
   "results": {
     "市場儀表板": {
       "exists": true,
@@ -28,9 +28,9 @@
     },
     "財經新聞分析": {
       "exists": true,
-      "errors": 0,
-      "last_error": null,
-      "fix": null
+      "errors": 2,
+      "last_error": "2026-09-21 17:46:44,473 [WARNING] fetcher.reddit_fetcher: Reddit fetch failed for r/investing: 500 Server Error: Internal Server Error for url: https://www.reddit.com/r/investing/hot/.rss",
+      "fix": "尚無對應建議，需人工判斷"
     },
     "川普監測": {
       "exists": true,
@@ -40,14 +40,14 @@
     },
     "持倉新聞(台股)": {
       "exists": true,
-      "errors": 0,
-      "last_error": null,
-      "fix": null
+      "errors": 2,
+      "last_error": "2026-09-21 08:30:15,249 ERROR 純文字重試也失敗 401：{\"ok\":false,\"error_code\":401,\"description\":\"Unauthorized\"}",
+      "fix": "Session/Token 過期 → 重新登入對應網站或更新 API Key"
     },
     "持倉新聞(美股)": {
       "exists": true,
       "errors": 2,
-      "last_error": "2026-09-20 21:00:25,359 ERROR 純文字重試也失敗 401：{\"ok\":false,\"error_code\":401,\"description\":\"Unauthorized\"}",
+      "last_error": "2026-09-21 21:00:24,142 ERROR 純文字重試也失敗 401：{\"ok\":false,\"error_code\":401,\"description\":\"Unauthorized\"}",
       "fix": "Session/Token 過期 → 重新登入對應網站或更新 API Key"
     },
     "HolaQuant": {
