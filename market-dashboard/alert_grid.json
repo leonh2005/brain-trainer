@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-22 07:00",
+  "generated_at": "2026-09-22 14:01",
   "count": 5,
   "threshold": 6,
   "cells": [
@@ -11,7 +11,7 @@
     {
       "name": "F&G",
       "triggered": true,
-      "detail": "33.7（<45 恐慌）"
+      "detail": "33.6（<45 恐慌）"
     },
     {
       "name": "CAPE",
@@ -26,7 +26,7 @@
     {
       "name": "台股 vs 200MA",
       "triggered": false,
-      "detail": "+24.56%（不納入警示）"
+      "detail": "+24.43%（不納入警示）"
     },
     {
       "name": "M1B比",

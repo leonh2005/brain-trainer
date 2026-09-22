@@ -35,6 +35,13 @@ _AUTH_USER, _AUTH_PASS = open(
     f'{sources.CC}/.secrets/command_center_auth.txt', encoding='utf-8'
 ).read().strip().split(':', 1)
 
+# 一鍵登入用 token（給手機／Telegram 內建瀏覽器用：那些環境不彈 Basic Auth 輸入框）。
+# 檔案不存在時 _TOKEN 為空字串，該路徑自動停用，只剩密碼登入。
+COOKIE_NAME = 'cc_token'
+COOKIE_MAX_AGE = 365 * 24 * 3600
+_TOKEN_FILE = f'{sources.CC}/.secrets/command_center_token.txt'
+_TOKEN = open(_TOKEN_FILE, encoding='utf-8').read().strip() if os.path.exists(_TOKEN_FILE) else ''
+
 
 class BasicAuthMiddleware(BaseHTTPMiddleware):
     """經 Cloudflare Tunnel 暴露到外網時的最低限度保護（外流網址也連不進去）。"""
@@ -49,6 +56,19 @@ class BasicAuthMiddleware(BaseHTTPMiddleware):
                     return await call_next(request)
             except ValueError:
                 pass
+        if _TOKEN:
+            # ?k=<token> 一鍵登入：先種 cookie 再 302 導回不帶 token 的網址，
+            # 避免 token 留在網址列，或經 Referer 洩漏給頁面載入的外部資源。
+            # 比對 bytes：compare_digest 對含非 ASCII 的 str 會直接 TypeError（曾讓 ?k=中文 回 500）
+            if secrets.compare_digest(request.query_params.get('k', '').encode(), _TOKEN.encode()):
+                url = request.url.remove_query_params('k')
+                resp = RedirectResponse(f"{url.path}?{url.query}" if url.query else url.path,
+                                        status_code=302)
+                resp.set_cookie(COOKIE_NAME, _TOKEN, max_age=COOKIE_MAX_AGE,
+                                httponly=True, samesite='lax', secure=True)
+                return resp
+            if secrets.compare_digest(request.cookies.get(COOKIE_NAME, '').encode(), _TOKEN.encode()):
+                return await call_next(request)
         creds = await HTTPBasic(auto_error=False)(request)
         if not (isinstance(creds, HTTPBasicCredentials)
                 and secrets.compare_digest(creds.username, _AUTH_USER)
