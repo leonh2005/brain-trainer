@@ -7,6 +7,7 @@ LOG="/Users/steven/CCProject/command-center/logs/tunnel.log"
 AUTH="$(cat "$HOME/CCProject/.secrets/command_center_auth.txt")"
 AUTH_USER="${AUTH%%:*}"
 AUTH_PASS="${AUTH#*:}"
+TOKEN_FILE="$HOME/CCProject/.secrets/command_center_token.txt"
 
 echo "[$(date)] 啟動 tunnel..." >> "$LOG"
 
@@ -17,10 +18,18 @@ sleep 5
     if [[ "$line" == *"trycloudflare.com"* ]]; then
         URL=$(echo "$line" | grep -aoE 'https://[a-z0-9-]+\.trycloudflare\.com')
         if [ -n "$URL" ]; then
+            if [ -f "$TOKEN_FILE" ]; then
+                ONE_TAP="${URL}/?k=$(cat "$TOKEN_FILE")"
+            else
+                ONE_TAP=""
+            fi
             curl -s -X POST "https://api.telegram.org/bot${BOT_TOKEN}/sendMessage" \
                 -d chat_id="$CHAT_ID" \
                 -d text="🖥️ AI 指揮中心外部連結：
 ${URL}
+
+🔑 一鍵登入（手機點這個，免輸入帳密）：
+${ONE_TAP}
 
 帳號：${AUTH_USER}
 密碼：${AUTH_PASS}" >> "$LOG" 2>&1
