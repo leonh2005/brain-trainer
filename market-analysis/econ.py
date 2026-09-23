@@ -3,7 +3,7 @@
 來源(皆特定可靠來源,非 LLM):
   市場數值(油/金/美元/殖利率/VIX) -> yfinance
   CPI / Fed 利率                    -> FRED 官方 CSV(免 key)
-  重大事件日曆(結算日/三巫日/Fed會議/選舉/法說會) -> 規則計算 + Fed 官方公告 + Finnhub 財報行事曆
+  重大事件日曆(結算日/三巫日/Fed會議/選舉/法說會/元首會面) -> 規則計算 + Fed 官方公告 + Finnhub 財報行事曆
   戰爭 / 地緣消息                    -> Google News RSS 標題
 
 每個來源各自 try/except,單一來源失敗不影響其他。15 分鐘快取。
@@ -171,9 +171,19 @@ _PPI_RELEASE_2026 = ["2026-01-14", "2026-01-30", "2026-02-27", "2026-03-18",
 # BEA 官方公告之 2026 核心PCE物價指數(Personal Income and Outlays)公布日期(美東時間 8:30 AM)
 _PCE_RELEASE_2026 = ["2026-08-26", "2026-09-30", "2026-11-25", "2026-12-23"]
 
+# 2026 國際領袖峰會(國家元首會面)。僅收主辦方/官方公告確認日期者,
+# 媒體推估或日期未定(如 BRICS 印度)一律不列,避免日曆出現假事件。
+# 日期取領袖場次首日(ASEAN 取菲總統府公告之非工作日首日)。
+_SUMMITS_2026 = [
+    ("2026-11-11", "COP31 世界領袖氣候行動峰會（土耳其安塔利亞）"),
+    ("2026-11-16", "第49屆東協峰會暨相關峰會（菲律賓馬尼拉）"),
+    ("2026-11-18", "APEC 經濟領袖會議（中國深圳）"),
+    ("2026-12-14", "G20 領袖峰會（美國邁阿密）"),
+]
+
 
 def _events():
-    """重大市場事件日曆(即日起至今年年底):結算日/三巫日/Fed會議/美國選舉/法說會。"""
+    """重大市場事件日曆(即日起至今年年底):結算日/三巫日/Fed會議/美國選舉/法說會/元首會面。"""
     today = date.today()
     year_end = date(today.year, 12, 31)
     events = []
@@ -220,6 +230,11 @@ def _events():
     election = first_monday + timedelta(days=1)
     if today <= election <= year_end:
         events.append({"date": election.isoformat(), "category": "美國選舉", "title": "美國期中選舉日"})
+
+    # 國際領袖峰會(國家元首會面)
+    for d, title in _SUMMITS_2026:
+        if today.isoformat() <= d <= year_end.isoformat():
+            events.append({"date": d, "category": "元首會面", "title": title})
 
     # 台美龍頭法說會
     events += _earnings(today.isoformat(), year_end.isoformat())

@@ -1,12 +1,12 @@
 {
-  "generated_at": "2026-09-23 07:00",
+  "generated_at": "2026-09-23 14:00",
   "count": 5,
   "threshold": 6,
   "cells": [
     {
       "name": "VIX",
       "triggered": false,
-      "detail": "14.21（>20 警戒）"
+      "detail": "14.86（>20 警戒）"
     },
     {
       "name": "F&G",
@@ -21,12 +21,12 @@
     {
       "name": "S&P vs 200MA",
       "triggered": false,
-      "detail": "+7.95%"
+      "detail": "+8.02%"
     },
     {
       "name": "台股 vs 200MA",
       "triggered": false,
-      "detail": "+24.43%（不納入警示）"
+      "detail": "+25.02%（不納入警示）"
     },
     {
       "name": "M1B比",
@@ -36,7 +36,7 @@
     {
       "name": "融資市值比",
       "triggered": true,
-      "detail": "3.78%（>3.5%）"
+      "detail": "3.80%（>3.5%）"
     },
     {
       "name": "美銀牛熊",
