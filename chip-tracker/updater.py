@@ -71,6 +71,84 @@ def _shioaji_change_pct(code: str):
         return None
 
 
+# main() 開頭設定：今天是否為交易日。用來擋掉週末與國定假日 ——
+# gateway 的日K在缺當日資料時會用 yfinance 補一根，假日會補出幽靈K棒，
+# 寫進 DB 後 FinMind 永不回補該日期，連漲跌天數會永久多算一天。
+_TRADING_DAY = None
+
+
+def _check_trading_day(today: str) -> bool:
+    """FinMind 對台積電(2330)已有當日行情 → 今天是交易日。"""
+    try:
+        return bool(fm_get("TaiwanStockPrice", "2330", today, today))
+    except Exception:
+        return False
+
+
+def _should_backfill_today(end: str, fm_latest) -> bool:
+    """收盤後、當天為交易日、且 FinMind 缺當日行情時才由 gateway 補。
+
+    hour>=15 是因興櫃交易到 15:00，太早補會寫入盤中未定值。
+    """
+    now = datetime.now()
+    return (now.strftime("%Y-%m-%d") == end and now.hour >= 15
+            and now.weekday() < 5 and _TRADING_DAY is True
+            and (fm_latest is None or fm_latest < end))
+
+
+def _volume_in_shares(volume, snapshot) -> int | None:
+    """gateway 日K的成交量單位不一致：走 Shioaji 是「股」，走 yfinance 備援是「張」。
+
+    用成交金額回推股數校正 —— 差兩個數量級以上就判定原值是「張」。
+    """
+    if not volume:
+        return volume
+    amount, close = snapshot.get("total_amount"), snapshot.get("close")
+    if not amount or not close:
+        return volume
+    return volume * 1000 if (amount / close) / volume > 100 else volume
+
+
+def _fill_today_from_gateway(conn, code: str, today: str) -> bool:
+    """FinMind 缺當日行情時，由 shioaji-gateway 補上當日 OHLCV 與漲跌幅。
+
+    興櫃股(emerging)的當日行情在 FinMind 常延遲數小時、甚至隔日才上線，
+    會讓籌碼頁停在昨日、連漲跌天數跟著算錯。gateway 是共用連線(見 project_shioaji_gateway)。
+    """
+    try:
+        bars = requests.get(f"{SHIOAJI_GATEWAY}/daily_ohlcv",
+                            params={"code": code, "days": 5}, timeout=20).json()
+        bar = next((b for b in (bars.get("bars") or []) if b.get("date") == today), None)
+    except Exception as e:
+        logger.warning("%s gateway 日K查詢失敗: %s", code, e)
+        return False
+    if not bar or bar.get("close") is None:
+        return False
+
+    cols = {"close": bar["close"], "open": bar.get("open"), "high": bar.get("high"),
+            "low": bar.get("low"), "volume": bar.get("volume")}
+    # 漲跌幅取自 snapshot；它查不到時仍要落 OHLCV，不該讓整根K缺漏
+    try:
+        snap = requests.get(f"{SHIOAJI_GATEWAY}/snapshot",
+                            params={"codes": code}, timeout=10).json()
+        s = (snap.get("data") or {}).get(code, {})
+        cols["volume"] = _volume_in_shares(bar.get("volume"), s)
+        if s.get("change_rate") is not None:
+            cols["change_pct"], cols["change_point"] = s["change_rate"], s.get("change_price")
+    except Exception as e:
+        logger.warning("%s gateway snapshot 查詢失敗，僅補 OHLCV: %s", code, e)
+
+    try:
+        db.upsert_daily(conn, code, today, **cols)
+        conn.commit()
+    except Exception as e:
+        logger.warning("%s gateway 備援寫入失敗: %s", code, e)
+        return False
+    logger.info("%s %s 當日行情由 gateway 備援補上 (close=%s 漲跌=%s%%)",
+                code, today, cols["close"], cols.get("change_pct"))
+    return True
+
+
 def verify_latest_change_pct(code: str, date: str, fm_pct, derived_pct):
     """FinMind 的漲跌幅跟自算值方向不一致時，用 Yahoo + Shioaji 多數決裁定。
 
@@ -419,6 +497,7 @@ def update_daily(conn, code: str, start: str, end: str) -> None:
     except Exception as e:
         logger.info("%s 融資融券無資料或失敗（ETF 屬正常）: %s", code, e)
 
+    fm_latest = None
     try:
         rows = fm_get("TaiwanStockPrice", code, start, end)
         latest_row = None
@@ -433,6 +512,7 @@ def update_daily(conn, code: str, start: str, end: str) -> None:
             )
             if latest_row is None or r["date"] > latest_row["date"]:
                 latest_row = r
+        fm_latest = max((r["date"] for r in rows), default=None)
 
         # 最新一筆漲跌幅另外拿自算值跟 FinMind 對照，不一致時用 Yahoo+Shioaji 多數決（見 verify_latest_change_pct）
         if latest_row is not None and latest_row.get("close") is not None:
@@ -450,6 +530,11 @@ def update_daily(conn, code: str, start: str, end: str) -> None:
                     )
     except Exception as e:
         logger.warning("%s 價格資料失敗: %s", code, e)
+
+    # FinMind 對興櫃股當日行情常延遲(曾拖到隔日)，收盤後仍缺當日就由 gateway 補，
+    # 否則籌碼頁停在昨日、連漲跌天數跟著算錯。獨立於上面的 try —— FinMind 掛掉時更該補。
+    if _should_backfill_today(end, fm_latest):
+        _fill_today_from_gateway(conn, code, end)
 
     try:
         conn.commit()
@@ -508,6 +593,10 @@ def main() -> int:
         return 0
 
     today = datetime.now().strftime("%Y-%m-%d")
+    global _TRADING_DAY
+    _TRADING_DAY = _check_trading_day(today)
+    if not _TRADING_DAY:
+        logger.info("今天非交易日或 FinMind 尚未上線，停用當日行情備援")
     for s in stocks:
         code = s["code"]
         last = db.latest_daily_date(conn, code)

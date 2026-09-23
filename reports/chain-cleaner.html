@@ -1,0 +1,595 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>自行車洗鏈器選物</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;700&display=swap">
+<style>
+  :root{
+    --plane:#f7f7f5; --surface:#fdfdfc; --sunken:#ededea;
+    --ink:#0a0a09; --ink2:#4d4d48; --muted:#87877e;
+    --grid:#e0e0da; --rule:#c2c2b8;
+    --accent:#4a6b3f; --accent-ink:#33502a;
+    --critical:#b93b2b; --good:#1d6b3d;
+    --sans:"Noto Sans TC",-apple-system,"PingFang TC","Microsoft JhengHei",sans-serif;
+    --serif:"Noto Serif TC","Songti TC",Georgia,serif;
+    --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --plane:#0d0e0c; --surface:#191b18; --sunken:#222520;
+      --ink:#ffffff; --ink2:#c2c2b8; --muted:#87877e;
+      --grid:#2b2e28; --rule:#3a3d36;
+      --accent:#8fb37f; --accent-ink:#b3d0a4;
+      --critical:#e07566; --good:#4aae72;
+    }
+  }
+  :root[data-theme="dark"]{
+    --plane:#0d0e0c; --surface:#191b18; --sunken:#222520;
+    --ink:#ffffff; --ink2:#c2c2b8; --muted:#87877e;
+    --grid:#2b2e28; --rule:#3a3d36;
+    --accent:#8fb37f; --accent-ink:#b3d0a4;
+    --critical:#e07566; --good:#4aae72;
+  }
+
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--plane); color:var(--ink);
+    font-family:var(--sans); font-size:15px; line-height:1.7;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:900px; margin:0 auto; padding-block:48px 72px; padding-inline:24px;
+        display:flex; flex-direction:column; gap:44px}
+
+  .mast{display:flex; flex-direction:column; gap:14px; padding-bottom:26px;
+        border-bottom:2px solid var(--ink)}
+  .eyebrow{font-size:11.5px; letter-spacing:.18em; text-transform:uppercase;
+           color:var(--muted); font-weight:500}
+  h1{font-family:var(--serif); font-weight:700; font-size:clamp(28px,5vw,40px);
+     line-height:1.25; margin:0; text-wrap:balance}
+  .standfirst{color:var(--ink2); font-size:16px; max-width:62ch; margin:0}
+  .meta{display:flex; flex-wrap:wrap; gap:8px; margin-top:4px}
+  .chip{font-size:12.5px; padding:3px 11px; border:1px solid var(--rule);
+        border-radius:999px; color:var(--ink2); white-space:nowrap}
+  .chip b{font-weight:700; color:var(--ink)}
+
+  section{display:flex; flex-direction:column; gap:18px}
+  h2{font-family:var(--serif); font-size:21px; font-weight:700; margin:0;
+     line-height:1.4; text-wrap:balance}
+  h3{font-family:var(--sans); font-size:15.5px; font-weight:700; margin:0}
+  .lede{color:var(--ink2); margin:0; max-width:66ch}
+  p{margin:0}
+
+  .verdict{border-left:3px solid var(--critical); background:var(--surface);
+           padding:20px 22px; display:flex; flex-direction:column; gap:10px}
+  .verdict .vh{font-weight:700; font-size:13px; letter-spacing:.1em;
+               text-transform:uppercase; color:var(--critical)}
+  .verdict p{color:var(--ink2); font-size:15px}
+  .verdict strong{color:var(--ink); font-weight:700}
+
+  .chart{background:var(--surface); border:1px solid var(--grid); padding:22px 20px 18px}
+  .chart-title{font-weight:700; font-size:14px; margin-bottom:2px}
+  .chart-sub{font-size:12.5px; color:var(--muted); margin-bottom:20px}
+  .ruler{display:grid; grid-template-columns:210px 1fr 78px; align-items:end;
+         gap:12px; margin-bottom:6px}
+  .ruler .ticks{position:relative; height:16px}
+  .ruler .tick{position:absolute; bottom:0; font-family:var(--mono); font-size:10.5px;
+               color:var(--muted); transform:translateX(-50%); white-space:nowrap}
+  .rows{display:flex; flex-direction:column; gap:3px}
+  .row{display:grid; grid-template-columns:210px 1fr 78px; align-items:center; gap:12px;
+       padding:3px 4px; border-radius:4px}
+  .row:hover{background:var(--sunken)}
+  .row .nm{font-size:12.5px; color:var(--ink2); line-height:1.35; overflow-wrap:anywhere}
+  .row.cand .nm{color:var(--ink); font-weight:500}
+  .track{position:relative; height:16px; display:flex; align-items:center}
+  .bar{height:9px; border-radius:0 4px 4px 0; background:var(--accent);
+       min-width:2px; transition:filter .12s}
+  .row.other .bar{opacity:.34}
+  .row.over .bar{background:var(--muted)}
+  .row:hover .bar{filter:brightness(1.12)}
+  .budget{position:absolute; left:33.333%; top:-4px; bottom:-4px; width:2px;
+          background:repeating-linear-gradient(to bottom,var(--ink) 0 4px,transparent 4px 8px)}
+  .row .val{font-family:var(--mono); font-size:12.5px; font-weight:500;
+            text-align:right; color:var(--ink); font-variant-numeric:tabular-nums}
+  .row.other .val{color:var(--muted)}
+  .budget-key{display:flex; align-items:center; gap:8px; margin-top:16px;
+              padding-top:14px; border-top:1px solid var(--grid);
+              font-size:12.5px; color:var(--ink2)}
+  .budget-key .swatch{width:2px; height:15px;
+                      background:repeating-linear-gradient(to bottom,var(--ink) 0 4px,transparent 4px 8px)}
+  .legend{display:flex; flex-wrap:wrap; gap:16px; margin-top:10px; font-size:12.5px; color:var(--ink2)}
+  .legend span{display:flex; align-items:center; gap:7px}
+  .legend i{width:16px; height:9px; border-radius:0 4px 4px 0; background:var(--accent)}
+  .legend i.dim{opacity:.34}
+  .legend i.over{background:var(--muted)}
+
+  .tw{overflow-x:auto; border:1px solid var(--grid); background:var(--surface)}
+  table{border-collapse:collapse; width:100%; min-width:600px; font-size:13px}
+  th,td{text-align:left; padding:11px 14px; border-bottom:1px solid var(--grid);
+        vertical-align:top}
+  th{font-size:11.5px; letter-spacing:.08em; text-transform:uppercase;
+     color:var(--muted); font-weight:500; white-space:nowrap; background:var(--sunken)}
+  tr:last-child td{border-bottom:0}
+  td.num{font-family:var(--mono); font-variant-numeric:tabular-nums; white-space:nowrap}
+  td.name{font-weight:500; min-width:200px}
+  .tag{display:inline-block; font-size:11px; padding:1px 7px; border-radius:3px;
+       border:1px solid var(--rule); color:var(--ink2); white-space:nowrap;
+       font-weight:500; vertical-align:1px}
+  .tag.rec{border-color:var(--accent); color:var(--accent-ink)}
+  .tag.warn{border-color:var(--critical); color:var(--critical)}
+  .tag.mut{color:var(--muted)}
+
+  .cand-card{background:var(--surface); border:1px solid var(--grid);
+             border-top:3px solid var(--rule); padding:24px 22px;
+             display:flex; flex-direction:column; gap:18px}
+  .cand-card.rank1{border-top-color:var(--accent)}
+  .cand-head{display:flex; flex-wrap:wrap; gap:10px 18px;
+             justify-content:space-between; align-items:flex-start}
+  .rank{font-size:11.5px; letter-spacing:.14em; text-transform:uppercase;
+        color:var(--muted); font-weight:500; margin-bottom:5px}
+  .cand-card.rank1 .rank{color:var(--accent-ink)}
+  .cand-name{font-family:var(--serif); font-size:19px; font-weight:700;
+             line-height:1.4; margin:0; max-width:34ch; text-wrap:balance}
+  .price{font-family:var(--mono); font-size:26px; font-weight:600;
+         font-variant-numeric:tabular-nums; white-space:nowrap; line-height:1.1; text-align:right}
+  .price small{display:block; font-family:var(--sans); font-size:11.5px;
+               font-weight:400; color:var(--muted); letter-spacing:.04em;
+               text-transform:uppercase; margin-bottom:2px}
+  .specs{display:flex; flex-wrap:wrap; gap:7px}
+  .spec{font-size:12px; padding:3px 10px; background:var(--sunken);
+        border-radius:4px; color:var(--ink2); font-family:var(--mono)}
+  .rationale{color:var(--ink2); font-size:14.5px; max-width:66ch}
+  .pc{display:grid; grid-template-columns:1fr 1fr; gap:8px 26px}
+  @media (max-width:620px){ .pc{grid-template-columns:1fr} }
+  .pc ul{margin:0; padding:0; list-style:none; display:flex; flex-direction:column; gap:6px}
+  .pc li{font-size:13.5px; color:var(--ink2); padding-left:17px; position:relative; line-height:1.55}
+  .pc li::before{position:absolute; left:0; top:0; font-weight:700}
+  .pros li::before{content:"+"; color:var(--good)}
+  .cons li::before{content:"–"; color:var(--critical)}
+  .pc .lbl{font-size:11.5px; letter-spacing:.1em; text-transform:uppercase;
+           color:var(--muted); font-weight:500; margin-bottom:8px}
+  .sub{border-top:1px solid var(--grid); padding-top:16px;
+       display:flex; flex-direction:column; gap:10px}
+  .sub .lbl{font-size:11.5px; letter-spacing:.1em; text-transform:uppercase;
+            color:var(--muted); font-weight:500}
+  .src{font-size:13px; color:var(--ink2); line-height:1.6}
+  .src a{color:var(--accent-ink); text-decoration:none; border-bottom:1px solid var(--rule)}
+  .src a:hover{border-bottom-color:var(--accent)}
+  .flaw{display:flex; flex-direction:column; gap:4px; font-size:13.5px; color:var(--ink2)}
+  .flaw b{color:var(--ink); font-weight:700}
+  .flaw .q{color:var(--muted); font-size:12.5px; font-style:italic}
+  .buy{display:flex; flex-direction:column; gap:8px}
+  .buy a{display:inline-flex; align-items:baseline; gap:10px; font-size:13.5px;
+         color:var(--ink); text-decoration:none; padding:9px 13px;
+         border:1px solid var(--rule); background:var(--plane);
+         border-radius:5px; transition:border-color .12s}
+  .buy a:hover{border-color:var(--accent)}
+  .buy a .pl{font-weight:700; min-width:120px}
+  .buy a .pr{font-family:var(--mono); font-variant-numeric:tabular-nums;
+             margin-left:auto; font-weight:600}
+  .buy a .note{font-size:11.5px; color:var(--muted)}
+
+  .deep{background:var(--surface); border:1px solid var(--grid);
+        padding:24px 22px; display:flex; flex-direction:column; gap:18px}
+  .deep .lead{color:var(--ink2); font-size:14.5px}
+  .findings{display:flex; flex-direction:column; gap:14px}
+  .finding{display:flex; gap:13px; align-items:baseline}
+  .finding .mk{font-family:var(--mono); font-size:12px; font-weight:600;
+               color:var(--accent-ink); white-space:nowrap; min-width:26px; padding-top:2px}
+  .finding .tx{font-size:14px; color:var(--ink2); line-height:1.65}
+  .finding .tx b{color:var(--ink)}
+
+  .advice{background:var(--surface); border:1px solid var(--grid);
+          padding:24px 22px; display:flex; flex-direction:column; gap:16px}
+  .advice-item{display:flex; gap:14px; align-items:baseline}
+  .advice-item .k{font-family:var(--mono); font-size:12px; font-weight:600;
+                  color:var(--accent-ink); white-space:nowrap; min-width:118px; padding-top:2px}
+  .advice-item .v{font-size:14.5px; color:var(--ink2); line-height:1.65}
+  .advice-item .v b{color:var(--ink)}
+  @media (max-width:560px){ .advice-item{flex-direction:column; gap:4px} }
+  .note-block{font-size:12.5px; color:var(--muted); line-height:1.75;
+              border-top:1px solid var(--grid); padding-top:20px}
+  .note-block b{color:var(--ink2); font-weight:500}
+  footer{font-size:12px; color:var(--muted); border-top:1px solid var(--grid);
+         padding-top:18px; line-height:1.7}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <header class="mast">
+    <div class="eyebrow">選物報告 · 2026-09-23 實查</div>
+    <h1>自行車洗鏈器選物</h1>
+    <p class="standfirst">預算 NT$500 以內、偶爾騎車低頻保養用的鏈條清洗器。這個價位帶的關鍵不是「哪支最好」，而是「便宜款一定會壞在哪裡」。</p>
+    <div class="meta">
+      <span class="chip">預算 <b>NT$500 以內</b></span>
+      <span class="chip">偶爾騎 · 低頻保養</span>
+      <span class="chip">免手持夾式洗鏈盒</span>
+      <span class="chip">不限廠牌</span>
+    </div>
+  </header>
+
+  <section>
+    <div class="verdict">
+      <div class="vh">結論先講</div>
+      <p>五百元內買得到能用的洗鏈器，<b>IceToolz C115（NT$199–315）</b>是這個價位帶資訊最完整、台灣通路最普遍的選擇 —— 台灣品牌（立富自行車）、65g、20 支刷毛、免手持扣帶。以你的低頻使用情境，它的主要缺點（塑膠不耐用）幾乎不會遇到。</p>
+      <p>但有一件事該先知道：<b>洗鏈器的清潔力天生不如「拆鏈泡去漬油」</b>。PTT 單車板的老手直言洗鏈器是方便、不髒手，但洗不到鏈條內側；而且平價款（尤其大陸製）普遍有<b>塑膠脆裂、扣帶鬆脫、化學耐受性差</b>三個通病。詳見下方專節。</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>價格分布與預算門檻</h2>
+    <p class="lede">每條代表一個查證過的通路價。綠色為預算內候選、淡色為資料不足的同價位款、灰色為超預算。</p>
+
+    <div class="chart">
+      <div class="chart-title">洗鏈器 · 通路價</div>
+      <div class="chart-sub">單位：新台幣 · 虛線為預算門檻 NT$500 · 資料時間 2026-09-23</div>
+
+      <div class="ruler">
+        <div></div>
+        <div class="ticks">
+          <span class="tick" style="left:0%">0</span>
+          <span class="tick" style="left:33.333%">500</span>
+          <span class="tick" style="left:66.667%">1,000</span>
+          <span class="tick" style="left:100%">1,500</span>
+        </div>
+        <div></div>
+      </div>
+
+      <div class="rows">
+        <div class="row other" title="INBIKE 洗鏈器 — 蝦皮約 175 元，資料不足">
+          <span class="nm">INBIKE 洗鏈器 <span class="tag mut">資料不足</span></span>
+          <div class="track"><div class="bar" style="width:11.7%"></div><div class="budget"></div></div>
+          <span class="val">175</span>
+        </div>
+        <div class="row other" title="ROCKBROS 洗鏈器 — 蝦皮約 194 元，資料不足">
+          <span class="nm">ROCKBROS 洗鏈器 <span class="tag mut">資料不足</span></span>
+          <div class="track"><div class="bar" style="width:12.9%"></div><div class="budget"></div></div>
+          <span class="val">194</span>
+        </div>
+        <div class="row cand" title="IceToolz C115 免手持洗鏈盒 — 德興單車蝦皮 199，PChome 商店街 200">
+          <span class="nm">IceToolz C115 <span class="tag rec">首選</span></span>
+          <div class="track"><div class="bar" style="width:13.3%"></div><div class="budget"></div></div>
+          <span class="val">199</span>
+        </div>
+        <div class="row other" title="賽領 CYLION 北斗多功能鏈條洗鏈器 — 蝦皮約 225">
+          <span class="nm">賽領 CYLION 北斗星 <span class="tag mut">中國品牌</span></span>
+          <div class="track"><div class="bar" style="width:15%"></div><div class="budget"></div></div>
+          <span class="val">225</span>
+        </div>
+        <div class="row over" title="Park Tool CM-5.3 Cyclone — 業界標竿，約 NT$1,000 以上">
+          <span class="nm">Park Tool CM-5.3 <span class="tag warn">超預算</span></span>
+          <div class="track"><div class="bar" style="width:70%"></div><div class="budget"></div></div>
+          <span class="val">1,050+</span>
+        </div>
+      </div>
+
+      <div class="budget-key"><span class="swatch"></span>預算門檻 NT$500 — 越過這條線就是超支</div>
+      <div class="legend">
+        <span><i></i>預算內候選</span>
+        <span><i class="dim"></i>同價位但資料不足</span>
+        <span><i class="over"></i>超預算</span>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>候選總表</h2>
+    <div class="tw">
+      <table>
+        <thead>
+          <tr>
+            <th>型號</th>
+            <th>關鍵規格</th>
+            <th>最低價 / 通路</th>
+            <th>高頻毛病</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="name">IceToolz C115 免手持洗鏈盒<br><span class="tag rec">首選</span></td>
+            <td>65g、12.5×5.3×4.7cm、20 支刷毛、4 面刷洗、附備用海綿</td>
+            <td class="num">199<br><span class="tag mut">蝦皮 德興單車</span></td>
+            <td>塑膠脆 ×4、扣帶鬆脫捲曲柄 ×2、化學耐受差 ×1</td>
+          </tr>
+          <tr>
+            <td class="name">賽領 CYLION 北斗星多功能洗鏈器</td>
+            <td>雙腔咬合、360° 刷毛、軟硬毛混植、手柄附刮油槽</td>
+            <td class="num">225<br><span class="tag mut">蝦皮</span></td>
+            <td>台灣無實際評測；中國通路好評為主，無從驗證</td>
+          </tr>
+          <tr>
+            <td class="name">ROCKBROS / INBIKE 平價洗鏈盒</td>
+            <td>規格未標示清楚，多為通用款貼牌</td>
+            <td class="num">175–194<br><span class="tag mut">蝦皮</span></td>
+            <td>無評價可查（樣本 0）</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="lede" style="font-size:13px">高頻毛病欄的次數來自可逐條核對的國外評論（Merlin Cycles／eBay／Amazon）；台灣這幾款在蝦皮與 PChome 幾乎沒有文字評價，僅有星等。</p>
+  </section>
+
+  <section>
+    <h2>候選詳解</h2>
+
+    <div class="cand-card rank1">
+      <div class="cand-head">
+        <div>
+          <div class="rank">首選 · 台灣品牌，資訊最完整</div>
+          <h3 class="cand-name">IceToolz C115 免手持洗鏈盒</h3>
+        </div>
+        <div class="price"><small>預算內</small>199</div>
+      </div>
+
+      <div class="specs">
+        <span class="spec">65 g</span>
+        <span class="spec">20 支刷毛</span>
+        <span class="spec">4 面刷洗</span>
+        <span class="spec">附備用海綿</span>
+        <span class="spec">台灣品牌</span>
+      </div>
+
+      <p class="rationale">這個價位帶唯一查得到完整使用者回饋的款式。核心優點是<b>省清潔劑</b>——小容量設計讓你不用倒太多，這被多則評論重複提到；其次是體積小、好收納，可以直接放車上。台灣通路從蝦皮到 PChome 商店街都有，價格落在 199–315 元，屬於買錯也不痛的價位。</p>
+
+      <div class="pc">
+        <div>
+          <div class="lbl">優點</div>
+          <ul class="pros">
+            <li>省洗劑，多則評論共同提到（對環境也較友善）</li>
+            <li>65g、可放進車袋，收納無負擔</li>
+            <li>台灣品牌（立富自行車），通路多、好買</li>
+            <li>$199 起，是「先買一支試試」的最低風險選擇</li>
+          </ul>
+        </div>
+        <div>
+          <div class="lbl">缺點</div>
+          <ul class="cons">
+            <li>塑膠感重、結構單薄，多人反映易損</li>
+            <li>扣帶鬆脫會往前捲入曲柄撞壞（有使用者因此扣一星）</li>
+            <li>清潔力有限，刷毛數少於 Park Tool 等大型款</li>
+            <li>需往前踩踏板，等於需要駐車架</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="sub">
+        <div class="lbl">口碑來源</div>
+        <div class="src">
+          Merlin Cycles 使用者評論（多則長評，含優缺點）→ <a href="https://www.merlincycles.com/en-jp/icetoolz-chain-scrubber-44499.html" target="_blank" rel="noopener">商品頁</a><br>
+          IceToolz 官方產品頁（規格：20 刷毛、4 面系統、65g）→ <a href="https://www.icetoolz.com/ec99/rwd1111/product.asp?category_id=197&amp;cty_id=197&amp;prodid=c115_cn" target="_blank" rel="noopener">官網</a><br>
+          台灣價格：蝦皮德興單車 $199 起、PChome 商店街 $200 → <a href="http://feebee.com.tw/s/icetoolz%20c115/" target="_blank" rel="noopener">飛比比價</a>
+        </div>
+      </div>
+
+      <div class="sub">
+        <div class="lbl">差評歸因 · 掃描國外評論中的負評</div>
+        <div class="flaw">
+          <b>塑膠結構脆弱（4 次）</b>
+          <span>「plastic feel heavy」「very flimsy, could break very easily」「零件不小心會掉出來」；eBay 一則 1 星直指「設計很差、非常脆弱」→ <a href="https://www.ebay.com/p/25012029228" target="_blank" rel="noopener">出處</a></span>
+          <b style="margin-top:8px">扣帶設計風險（2 次）</b>
+          <span>使用者 Sam：扣帶若鬆脫會往前捲入曲柄組並撞壞（因此扣一星）；Mr Waite：扣帶一端孔太小扣不進卡榫 → <a href="https://www.merlincycles.com/en-jp/icetoolz-chain-scrubber-44499.html" target="_blank" rel="noopener">出處</a></span>
+          <b style="margin-top:8px">化學耐受性差（1 次）</b>
+          <span class="q">「某些去油劑（如 Finish Line Citrus）會殺死這個洗鏈器」</span>
+          <span>塑膠對強效去油劑耐受度不佳，1 星評論 → <a href="https://www.centrumrowerowe.pl/" target="_blank" rel="noopener">出處</a></span>
+        </div>
+      </div>
+
+      <div class="sub">
+        <div class="lbl">購買</div>
+        <div class="buy">
+          <a href="http://feebee.com.tw/s/icetoolz%20c115/" target="_blank" rel="noopener"><span class="pl">蝦皮／PChome 商店街</span>德興單車 $199、崇越單車 $200<span class="pr">199</span></a>
+        </div>
+        <p class="lede" style="font-size:12.5px">蝦皮搜尋「IceToolz C115」即有；PChome 商店街「崇越單車」$200 可直接下單。</p>
+      </div>
+    </div>
+
+    <div class="cand-card">
+      <div class="cand-head">
+        <div>
+          <div class="rank">次選 · 中國品牌，台灣無評測</div>
+          <h3 class="cand-name">賽領 CYLION 北斗星多功能鏈條洗鏈器</h3>
+        </div>
+        <div class="price"><small>預算內</small>225</div>
+      </div>
+
+      <div class="specs">
+        <span class="spec">雙腔咬合</span>
+        <span class="spec">360° 刷毛</span>
+        <span class="spec">軟硬毛混植</span>
+        <span class="spec">手柄刮油槽</span>
+      </div>
+
+      <p class="rationale">設計思路比 C115 激進：雙腔咬合式可卡住鏈條自動滾動、刷毛 360° 包裹鏈節、手柄附刮油槽避免沾手。中國通路（什麼值得買、淘江湖）的分享文不少，多為好評。但<b>那些內容帶有明顯導購性質</b>，且台灣找不到任何實際評測或使用者回饋。</p>
+
+      <div class="pc">
+        <div>
+          <div class="lbl">優點</div>
+          <ul class="pros">
+            <li>雙腔咬合設計，理論上鏈條定位更穩</li>
+            <li>360° 刷毛包覆，鏈節縫隙清潔較徹底</li>
+            <li>手柄刮油槽，操作不沾手</li>
+            <li>$225，與 C115 同價位</li>
+          </ul>
+        </div>
+        <div>
+          <div class="lbl">缺點</div>
+          <ul class="cons">
+            <li>台灣查無任何實際評測或使用者心得</li>
+            <li>可見的分享文多為中國導購內容，可信度低</li>
+            <li>品牌在台灣無代理，售後與零件取得需靠賣家</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="sub">
+        <div class="lbl">口碑來源</div>
+        <div class="src">
+          中國什麼值得買、淘江湖多篇分享文（導購性質，僅供參考）→ <a href="https://post.smzdm.com/zz/p/agw5v993/" target="_blank" rel="noopener">什麼值得買</a><br>
+          台灣拍賣通路可見，但無評價區 → <a href="https://feebee.com.tw/bid/%E6%B4%97%E9%8D%8A%E5%99%A8/?mode=l" target="_blank" rel="noopener">飛比拍賣</a>
+        </div>
+      </div>
+
+      <div class="sub">
+        <div class="lbl">差評歸因</div>
+        <div class="flaw">無可核對的負評。台灣零樣本，中國通路的分享文以好評為主、缺乏缺點描述。<b>樣本不足，無法評估品質。</b></div>
+      </div>
+
+      <div class="sub">
+        <div class="lbl">購買</div>
+        <div class="buy">
+          <a href="https://feebee.com.tw/bid/%E6%B4%97%E9%8D%8A%E5%99%A8/?mode=l" target="_blank" rel="noopener"><span class="pl">蝦皮／拍賣</span><span class="note">下單前留意賣家評價與是否為正品</span><span class="pr">225</span></a>
+        </div>
+      </div>
+    </div>
+
+    <div class="cand-card">
+      <div class="cand-head">
+        <div>
+          <div class="rank">第三 · 更低價，但資訊幾乎為零</div>
+          <h3 class="cand-name">ROCKBROS／INBIKE 平價洗鏈盒</h3>
+        </div>
+        <div class="price"><small>預算內</small>175–194</div>
+      </div>
+
+      <div class="specs">
+        <span class="spec">通用款</span>
+        <span class="spec">規格不明</span>
+      </div>
+
+      <p class="rationale">比 C115 再便宜 5–25 元，但換來的資訊落差很大：規格未標示刷毛數、材質、密封設計，且查不到任何實際使用心得。ROCKBROS 是中國配件品牌，產品線極廣、品質落差大；這類通用貼牌款的風險是「買到哪一批全憑運氣」。<b>省下的 25 元，換到的是完全無法預判的品質。</b></p>
+
+      <div class="pc">
+        <div>
+          <div class="lbl">優點</div>
+          <ul class="pros">
+            <li>價格最低（$175 起）</li>
+            <li>ROCKBROS 在單車配件領域是有知名度的品牌</li>
+          </ul>
+        </div>
+        <div>
+          <div class="lbl">缺點</div>
+          <ul class="cons">
+            <li>規格完全不透明（刷毛數、材質、密封皆未標）</li>
+            <li>無任何實際評價可查</li>
+            <li>比 C115 只便宜 25 元，資訊落差卻極大</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="sub">
+        <div class="lbl">口碑來源</div>
+        <div class="src">無。蝦皮賣場僅有星等，無文字評價；PTT／Dcard／Mobile01 查無討論。</div>
+      </div>
+
+      <div class="sub">
+        <div class="lbl">差評歸因</div>
+        <div class="flaw">無負評可掃描（0 則）。這不代表沒問題，只代表沒有可核對的樣本。</div>
+      </div>
+
+      <div class="sub">
+        <div class="lbl">購買</div>
+        <div class="buy">
+          <a href="https://feebee.com.tw/bid/%E6%B4%97%E9%8D%8A%E5%99%A8/?mode=l" target="_blank" rel="noopener"><span class="pl">蝦皮</span><span class="note">不建議：同價位有資訊更完整的選擇</span><span class="pr">175</span></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>專題：便宜洗鏈器一定會壞在哪裡</h2>
+    <p class="lede">PTT 單車板有句話很直白：「找不到好的洗鏈器，都大陸製」，板友抱怨「現在的品質都不好，刷毛、位置、靈活都差」。整理一路查到的負評，平價洗鏈器的毛病高度集中在三處：</p>
+
+    <div class="deep">
+      <div class="findings">
+        <div class="finding">
+          <span class="mk">01</span>
+          <span class="tx"><b>塑膠脆裂。</b>這是最普遍的負評：外殼第一次用就裂、手柄斷、卡榫拆一次就解體、內部齒輪掉出來。有品牌（Asista）被回報約一年就得丟；也有人抱怨「放在抽屜裡也斷裂」。對<b>低頻使用者</b>來說，這反而是最少遇到的問題——一年用不到幾次，塑膠不太有機會累積損耗。</span>
+        </div>
+        <div class="finding">
+          <span class="mk">02</span>
+          <span class="tx"><b>扣帶／卡榫鬆脫。</b>C115 的具體案例是扣帶鬆脫後捲入曲柄組並撞壞。這比塑膠斷裂更該注意，因為它<b>傷的是車</b>。使用時務必確認扣帶固定牢靠再開始轉踏板。</span>
+        </div>
+        <div class="finding">
+          <span class="mk">03</span>
+          <span class="tx"><b>化學耐受性差。</b>某些強效去油劑（如 Finish Line Citrus 這類柑橘基）會腐蝕塑膠本體，有 1 星評論直接寫「殺死這個洗鏈器」。<b>別用強效去油劑</b>，用中性清潔劑或專用洗鏈劑就好。</span>
+        </div>
+        <div class="finding">
+          <span class="mk">04</span>
+          <span class="tx"><b>清潔力天生有限。</b>PTT 老手直言洗鏈器「清不到的地方太多」，要真正乾淨還是<b>拆鏈條泡去漬油</b>。洗鏈器的價值是方便、不髒手、不用拆鏈，不是洗得最乾淨——這點要先接受，才不會買了失望。</span>
+        </div>
+        <div class="finding">
+          <span class="mk">05</span>
+          <span class="tx"><b>清潔劑是鹼性的。</b>PTT 推文提醒：洗鏈器與清潔劑多為鹼性，<b>噴到陽極處理或烤漆件會褪色</b>。洗的時候避開車架，洗完沖乾淨。</span>
+        </div>
+      </div>
+
+      <p class="lead" style="font-size:13px; color:var(--muted)">還有一點：這類洗鏈器<b>需要用駐車架或把車架起來</b>才能往前轉踏板（不能倒踩）。如果你沒有駐車架，這件事要先想辦法。</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>查證過但不符合的選項</h2>
+    <div class="tw">
+      <table>
+        <thead>
+          <tr><th>商品</th><th>價格</th><th>排除原因</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="name">Park Tool CM-5.3 Cyclone Chain Scrubber</td><td class="num">1,050+</td><td>業界標竿、清潔力與耐用度最好，但超預算一倍</td></tr>
+          <tr><td class="name">Park Tool CG-2.4 Chaingang System</td><td class="num">1,500+</td><td>含清潔劑與齒刷的完整套組，超預算</td></tr>
+          <tr><td class="name">Park Tool CM-25 Professional</td><td class="num">2,000+</td><td>鑄鋁本體、可換刷，最耐用但價格最高</td></tr>
+          <tr><td class="name">Muc-Off X-3 Dirty Chain Machine</td><td class="num">1,200+</td><td>PTT 有推薦，雙槽設計，但超預算；負評指扣環鬆脫會漏液</td></tr>
+          <tr><td class="name">Pedro's Chain Pig II</td><td class="num">1,000+</td><td>國外測試的頑垢組冠軍，超預算</td></tr>
+          <tr><td class="name">迪卡儂洗鏈器</td><td class="num">—</td><td>德國測試列為「價格推薦」，但台灣官網查無此品項</td></tr>
+          <tr><td class="name">淘寶／蝦皮 48–149 元極低價款</td><td class="num">48–149</td><td>價格低於合理製造成本，密封與刷毛品質無法預期</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>建議</h2>
+    <div class="advice">
+      <div class="advice-item">
+        <div class="k">直接買</div>
+        <div class="v"><b>IceToolz C115（$199 起）</b>。低頻使用下，它的塑膠耐用度弱點幾乎不會碰到，而省洗劑、好收納、不髒手這三個優點每次都會用到。台灣品牌、通路多、$199 買錯也不痛。</div>
+      </div>
+      <div class="advice-item">
+        <div class="k">使用時</div>
+        <div class="v">開始轉踏板前，<b>務必確認扣帶已固定牢靠</b>——這是 C115 唯一會傷到車的風險點。<b>別用柑橘基強效去油劑</b>（會腐蝕塑膠本體），中性清潔劑或專用洗鏈劑即可。</div>
+      </div>
+      <div class="advice-item">
+        <div class="k">要有駐車架</div>
+        <div class="v">洗鏈器需要往前轉踏板，沒有駐車架就得想辦法把車架起來（頂天立地架或倒車）。這筆預算別忘了算。</div>
+      </div>
+      <div class="advice-item">
+        <div class="k">期望值校正</div>
+        <div class="v">洗鏈器的定位是「日常維護」，<b>不是深度清潔</b>。如果你的鏈條已經積了厚油垢，拆鏈泡去漬油才是正解——洗鏈器洗完大概七成，剩下要靠刷子和耐心。</div>
+      </div>
+      <div class="advice-item">
+        <div class="k">要不要加碼</div>
+        <div class="v">若你之後騎得勤、開始在意鏈條壽命，<b>Park Tool CM-5.3（$1,050）</b>是公認標竿（刷毛數、密閉性、耐用度都高一階）。但以「偶爾騎」來說，先買 $199 的 C115 是合理的起步。</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="note-block">
+    <b>方法備註</b><br>
+    搜尋範圍：PTT bicycle 單車板（讀原文討論串）、國際評測（德國 FAZ 洗鏈器橫評、Bike Forums、ADVNTR）、電商評論（Merlin Cycles／eBay／Amazon 逐條閱讀，非摘要轉述）、台灣通路比價（蝦皮／PChome 商店街／飛比）。<br>
+    <b>樣本誠實說明</b>：台灣這三款在蝦皮與 PChome 幾乎沒有文字評價，僅有星等；本報告的高頻毛病統計主要來自<b>國外使用者評論</b>。賽領 CYLION 與 ROCKBROS／INBIKE 的可見內容多為中國導購性質或完全無評價，已明確標示樣本不足，未以推測填補。<br>
+    價格不含運費，實際以各平台結帳頁為準。
+  </div>
+
+  <footer>
+    資料時間 2026-09-23 · 篩選條件：預算 NT$500 以內、偶爾騎低頻保養、不限廠牌
+  </footer>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,664 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>銀離子登山短袖選物</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;700&display=swap">
+<style>
+  :root{
+    /* 冷調中性色，呼應「銀」的主題 */
+    --plane:#f6f7f8; --surface:#fdfdfe; --sunken:#eceef1;
+    --ink:#0a0c0e; --ink2:#4c5157; --muted:#848a91;
+    --grid:#dfe2e6; --rule:#c0c6cc;
+    --accent:#3d6b8f; --accent-ink:#2b5271;
+    --critical:#b93b2b; --good:#1d6b3d;
+    --sans:"Noto Sans TC",-apple-system,"PingFang TC","Microsoft JhengHei",sans-serif;
+    --serif:"Noto Serif TC","Songti TC",Georgia,serif;
+    --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --plane:#0c0e10; --surface:#181b1e; --sunken:#212528;
+      --ink:#ffffff; --ink2:#c0c6cc; --muted:#848a91;
+      --grid:#2a2f33; --rule:#3a4046;
+      --accent:#6b9dc4; --accent-ink:#9cc0dc;
+      --critical:#e07566; --good:#3fae6a;
+    }
+  }
+  :root[data-theme="dark"]{
+    --plane:#0c0e10; --surface:#181b1e; --sunken:#212528;
+    --ink:#ffffff; --ink2:#c0c6cc; --muted:#848a91;
+    --grid:#2a2f33; --rule:#3a4046;
+    --accent:#6b9dc4; --accent-ink:#9cc0dc;
+    --critical:#e07566; --good:#3fae6a;
+  }
+
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--plane); color:var(--ink);
+    font-family:var(--sans); font-size:15px; line-height:1.7;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:900px; margin:0 auto; padding-block:48px 72px; padding-inline:24px;
+        display:flex; flex-direction:column; gap:44px}
+
+  /* ---------- masthead ---------- */
+  .mast{display:flex; flex-direction:column; gap:14px; padding-bottom:26px;
+        border-bottom:2px solid var(--ink)}
+  .eyebrow{font-size:11.5px; letter-spacing:.18em; text-transform:uppercase;
+           color:var(--muted); font-weight:500}
+  h1{font-family:var(--serif); font-weight:700; font-size:clamp(28px,5vw,40px);
+     line-height:1.25; margin:0; text-wrap:balance}
+  .standfirst{color:var(--ink2); font-size:16px; max-width:62ch; margin:0}
+  .meta{display:flex; flex-wrap:wrap; gap:8px; margin-top:4px}
+  .chip{font-size:12.5px; padding:3px 11px; border:1px solid var(--rule);
+        border-radius:999px; color:var(--ink2); white-space:nowrap}
+  .chip b{font-weight:700; color:var(--ink)}
+
+  /* ---------- sections ---------- */
+  section{display:flex; flex-direction:column; gap:18px}
+  h2{font-family:var(--serif); font-size:21px; font-weight:700; margin:0;
+     line-height:1.4; text-wrap:balance}
+  h3{font-family:var(--sans); font-size:15.5px; font-weight:700; margin:0}
+  .lede{color:var(--ink2); margin:0; max-width:66ch}
+  p{margin:0}
+
+  /* ---------- verdict ---------- */
+  .verdict{border-left:3px solid var(--critical); background:var(--surface);
+           padding:20px 22px; display:flex; flex-direction:column; gap:10px}
+  .verdict .vh{font-weight:700; font-size:13px; letter-spacing:.1em;
+               text-transform:uppercase; color:var(--critical)}
+  .verdict p{color:var(--ink2); font-size:15px}
+  .verdict strong{color:var(--ink); font-weight:700}
+
+  /* ---------- price chart ---------- */
+  .chart{background:var(--surface); border:1px solid var(--grid); padding:22px 20px 18px}
+  .chart-title{font-weight:700; font-size:14px; margin-bottom:2px}
+  .chart-sub{font-size:12.5px; color:var(--muted); margin-bottom:20px}
+  .ruler{display:grid; grid-template-columns:200px 1fr 78px; align-items:end;
+         gap:12px; margin-bottom:6px}
+  .ruler .ticks{position:relative; height:16px}
+  .ruler .tick{position:absolute; bottom:0; font-family:var(--mono); font-size:10.5px;
+               color:var(--muted); transform:translateX(-50%); white-space:nowrap}
+  .rows{display:flex; flex-direction:column; gap:3px}
+  .row{display:grid; grid-template-columns:200px 1fr 78px; align-items:center; gap:12px;
+       padding:3px 4px; border-radius:4px}
+  .row:hover{background:var(--sunken)}
+  .row .nm{font-size:12.5px; color:var(--ink2); line-height:1.35; overflow-wrap:anywhere}
+  .row.cand .nm{color:var(--ink); font-weight:500}
+  .track{position:relative; height:16px; display:flex; align-items:center}
+  .bar{height:9px; border-radius:0 4px 4px 0; background:var(--accent);
+       min-width:2px; transition:filter .12s}
+  .row.other .bar{opacity:.34}
+  .row.dead .bar{background:var(--muted)}
+  .row:hover .bar{filter:brightness(1.12)}
+  .budget{position:absolute; left:33.333%; top:-4px; bottom:-4px; width:2px;
+          background:repeating-linear-gradient(to bottom,var(--ink) 0 4px,transparent 4px 8px)}
+  .row .val{font-family:var(--mono); font-size:12.5px; font-weight:500;
+            text-align:right; color:var(--ink); font-variant-numeric:tabular-nums}
+  .row.other .val{color:var(--muted)}
+  .budget-key{display:flex; align-items:center; gap:8px; margin-top:16px;
+              padding-top:14px; border-top:1px solid var(--grid);
+              font-size:12.5px; color:var(--ink2)}
+  .budget-key .swatch{width:2px; height:15px;
+                      background:repeating-linear-gradient(to bottom,var(--ink) 0 4px,transparent 4px 8px)}
+  .legend{display:flex; flex-wrap:wrap; gap:16px; margin-top:10px; font-size:12.5px; color:var(--ink2)}
+  .legend span{display:flex; align-items:center; gap:7px}
+  .legend i{width:16px; height:9px; border-radius:0 4px 4px 0; background:var(--accent)}
+  .legend i.dim{opacity:.34}
+  .legend i.dead{background:var(--muted)}
+
+  /* ---------- tables ---------- */
+  .tw{overflow-x:auto; border:1px solid var(--grid); background:var(--surface)}
+  table{border-collapse:collapse; width:100%; min-width:600px; font-size:13px}
+  th,td{text-align:left; padding:11px 14px; border-bottom:1px solid var(--grid);
+        vertical-align:top}
+  th{font-size:11.5px; letter-spacing:.08em; text-transform:uppercase;
+     color:var(--muted); font-weight:500; white-space:nowrap; background:var(--sunken)}
+  tr:last-child td{border-bottom:0}
+  td.num{font-family:var(--mono); font-variant-numeric:tabular-nums; white-space:nowrap}
+  td.name{font-weight:500; min-width:210px}
+  .tag{display:inline-block; font-size:11px; padding:1px 7px; border-radius:3px;
+       border:1px solid var(--rule); color:var(--ink2); white-space:nowrap;
+       font-weight:500; vertical-align:1px}
+  .tag.rec{border-color:var(--accent); color:var(--accent-ink)}
+  .tag.warn{border-color:var(--critical); color:var(--critical)}
+  .tag.mut{color:var(--muted)}
+
+  /* ---------- candidate cards ---------- */
+  .cand-card{background:var(--surface); border:1px solid var(--grid);
+             border-top:3px solid var(--rule); padding:24px 22px;
+             display:flex; flex-direction:column; gap:18px}
+  .cand-card.rank1{border-top-color:var(--accent)}
+  .cand-head{display:flex; flex-wrap:wrap; gap:10px 18px;
+             justify-content:space-between; align-items:flex-start}
+  .rank{font-size:11.5px; letter-spacing:.14em; text-transform:uppercase;
+        color:var(--muted); font-weight:500; margin-bottom:5px}
+  .cand-card.rank1 .rank{color:var(--accent-ink)}
+  .cand-name{font-family:var(--serif); font-size:19px; font-weight:700;
+             line-height:1.4; margin:0; max-width:34ch; text-wrap:balance}
+  .price{font-family:var(--mono); font-size:26px; font-weight:600;
+         font-variant-numeric:tabular-nums; white-space:nowrap; line-height:1.1; text-align:right}
+  .price small{display:block; font-family:var(--sans); font-size:11.5px;
+               font-weight:400; color:var(--muted); letter-spacing:.04em;
+               text-transform:uppercase; margin-bottom:2px}
+  .specs{display:flex; flex-wrap:wrap; gap:7px}
+  .spec{font-size:12px; padding:3px 10px; background:var(--sunken);
+        border-radius:4px; color:var(--ink2); font-family:var(--mono)}
+  .rationale{color:var(--ink2); font-size:14.5px; max-width:66ch}
+  .pc{display:grid; grid-template-columns:1fr 1fr; gap:8px 26px}
+  @media (max-width:620px){ .pc{grid-template-columns:1fr} }
+  .pc ul{margin:0; padding:0; list-style:none; display:flex;
+         flex-direction:column; gap:6px}
+  .pc li{font-size:13.5px; color:var(--ink2); padding-left:17px; position:relative; line-height:1.55}
+  .pc li::before{position:absolute; left:0; top:0; font-weight:700}
+  .pros li::before{content:"+"; color:var(--good)}
+  .cons li::before{content:"–"; color:var(--critical)}
+  .pc .lbl{font-size:11.5px; letter-spacing:.1em; text-transform:uppercase;
+           color:var(--muted); font-weight:500; margin-bottom:8px}
+  .sub{border-top:1px solid var(--grid); padding-top:16px;
+       display:flex; flex-direction:column; gap:10px}
+  .sub .lbl{font-size:11.5px; letter-spacing:.1em; text-transform:uppercase;
+            color:var(--muted); font-weight:500}
+  .src{font-size:13px; color:var(--ink2); line-height:1.6}
+  .src a{color:var(--accent-ink); text-decoration:none; border-bottom:1px solid var(--rule)}
+  .src a:hover{border-bottom-color:var(--accent)}
+  .flaw{display:flex; flex-direction:column; gap:3px; font-size:13.5px; color:var(--ink2)}
+  .flaw b{color:var(--ink); font-weight:700}
+  .flaw .q{color:var(--muted); font-size:12.5px; font-style:italic}
+  .buy{display:flex; flex-direction:column; gap:8px}
+  .buy a{display:inline-flex; align-items:baseline; gap:10px; font-size:13.5px;
+         color:var(--ink); text-decoration:none; padding:9px 13px;
+         border:1px solid var(--rule); background:var(--plane);
+         border-radius:5px; transition:border-color .12s}
+  .buy a:hover{border-color:var(--accent)}
+  .buy a .pl{font-weight:700; min-width:110px}
+  .buy a .pr{font-family:var(--mono); font-variant-numeric:tabular-nums;
+             margin-left:auto; font-weight:600}
+  .buy a.caveat{border-style:dashed}
+  .buy a .note{font-size:11.5px; color:var(--critical)}
+
+  /* ---------- deep-dive: 銀離子機制 ---------- */
+  .deep{background:var(--surface); border:1px solid var(--grid);
+        padding:24px 22px; display:flex; flex-direction:column; gap:20px}
+  .deep .lead{color:var(--ink2); font-size:14.5px}
+  .split{display:grid; grid-template-columns:1fr 1fr; gap:14px}
+  @media (max-width:620px){ .split{grid-template-columns:1fr} }
+  .split .box{border:1px solid var(--grid); padding:16px 16px 14px;
+              display:flex; flex-direction:column; gap:7px}
+  .split .box.good-box{border-top:3px solid var(--good)}
+  .split .box.bad-box{border-top:3px solid var(--critical)}
+  .split .box h4{margin:0; font-size:13.5px; font-weight:700}
+  .split .box .n{font-family:var(--mono); font-size:24px; font-weight:600;
+                 font-variant-numeric:tabular-nums; line-height:1.1}
+  .split .box.good-box .n{color:var(--good)}
+  .split .box.bad-box .n{color:var(--critical)}
+  .split .box p{font-size:12.5px; color:var(--ink2); line-height:1.6}
+  .findings{display:flex; flex-direction:column; gap:14px}
+  .finding{display:flex; gap:13px; align-items:baseline}
+  .finding .mk{font-family:var(--mono); font-size:12px; font-weight:600;
+               color:var(--accent-ink); white-space:nowrap; min-width:26px; padding-top:2px}
+  .finding .tx{font-size:14px; color:var(--ink2); line-height:1.65}
+  .finding .tx b{color:var(--ink)}
+
+  /* ---------- closing blocks ---------- */
+  .advice{background:var(--surface); border:1px solid var(--grid);
+          padding:24px 22px; display:flex; flex-direction:column; gap:16px}
+  .advice-item{display:flex; gap:14px; align-items:baseline}
+  .advice-item .k{font-family:var(--mono); font-size:12px; font-weight:600;
+                  color:var(--accent-ink); white-space:nowrap; min-width:118px; padding-top:2px}
+  .advice-item .v{font-size:14.5px; color:var(--ink2); line-height:1.65}
+  .advice-item .v b{color:var(--ink)}
+  @media (max-width:560px){ .advice-item{flex-direction:column; gap:4px} }
+  .note-block{font-size:12.5px; color:var(--muted); line-height:1.75;
+              border-top:1px solid var(--grid); padding-top:20px}
+  .note-block b{color:var(--ink2); font-weight:500}
+  footer{font-size:12px; color:var(--muted); border-top:1px solid var(--grid);
+         padding-top:18px; line-height:1.7}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <header class="mast">
+    <div class="eyebrow">選物報告 · 2026-09-23 實查</div>
+    <h1>登山銀離子短袖選物</h1>
+    <p class="standfirst">男款 L、預算 NT$1,000 以內的「聚酯纖維 ＋ 銀離子」抗菌短袖。這次除了比價，還多查證了一件事：銀離子的除臭效果，到底能撐多久。</p>
+    <div class="meta">
+      <span class="chip">男款 <b>L</b></span>
+      <span class="chip">登山用</span>
+      <span class="chip">預算 <b>NT$1,000</b></span>
+      <span class="chip">聚酯纖維 ＋ 銀離子</span>
+      <span class="chip">不限廠牌</span>
+    </div>
+  </header>
+
+  <section>
+    <div class="verdict">
+      <div class="vh">結論先講</div>
+      <p>千元內的「聚酯＋銀離子」登山短袖，台灣買得到、也選得出來——<b>這點比上次的羊毛好處理</b>。目前唯一同時滿足「男 L 現貨 ＋ 有真實評價 ＋ 聚酯＋銀纖維」的是 <b>Wildland 荒野 0B31618（$990）</b>，它的 Pinkoi 設計館有 5.0／75 則評價。</p>
+      <p>但買之前該知道一件事：<b>銀離子的除臭不是萬靈丹</b>。學術研究顯示，銀處理過的聚酯在實際穿著中，臭味抑制未必顯著優於未處理布料；而且效果高度取決於「表面塗層」還是「纖維嵌入」——前者洗 10–15 次就衰退。詳見下方專節。</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>價格分布與預算門檻</h2>
+    <p class="lede">每條代表一個查證過的通路價。藍色實心為預算內的可行候選、淡色為超預算或無法驗證、灰色為已完售或規格不符。</p>
+
+    <div class="chart">
+      <div class="chart-title">男款聚酯銀離子短袖 · 通路價</div>
+      <div class="chart-sub">單位：新台幣 · 虛線為預算門檻 NT$1,000 · 資料時間 2026-09-23</div>
+
+      <div class="ruler">
+        <div></div>
+        <div class="ticks">
+          <span class="tick" style="left:0%">0</span>
+          <span class="tick" style="left:33.333%">1,000</span>
+          <span class="tick" style="left:66.667%">2,000</span>
+          <span class="tick" style="left:100%">3,000</span>
+        </div>
+        <div></div>
+      </div>
+
+      <div class="rows">
+        <div class="row other" title="飛狼 男銀離子抗菌短袖排汗衣『藍』— 100% 聚酯，搜尋所得價格，未實查庫存">
+          <span class="nm">飛狼銀離子抗菌短袖『藍』 <span class="tag mut">未實查</span></span>
+          <div class="track"><div class="bar" style="width:19.1%"></div><div class="budget"></div></div>
+          <span class="val">572</span>
+        </div>
+        <div class="row dead" title="AStage Buff A11202-0021 — 100% Polyester + Polygiene — 全尺寸完售">
+          <span class="nm">AStage Buff A11202 <span class="tag warn">完售</span></span>
+          <div class="track"><div class="bar" style="width:21%"></div><div class="budget"></div></div>
+          <span class="val">630</span>
+        </div>
+        <div class="row other" title="飛狼 170127 森林綠 — 100% 聚酯＋銀離子，實查只剩 S 一件">
+          <span class="nm">飛狼 170127 森林綠 <span class="tag warn">僅剩 S</span></span>
+          <div class="track"><div class="bar" style="width:24.7%"></div><div class="budget"></div></div>
+          <span class="val">740</span>
+        </div>
+        <div class="row other" title="Wildland 0B01616 彈性銀纖抗菌拼接圓領衣 — 丹大戶外特價，頁面現已 404，庫存未確認">
+          <span class="nm">Wildland 0B01616 <span class="tag mut">頁面失效</span></span>
+          <div class="track"><div class="bar" style="width:25%"></div><div class="budget"></div></div>
+          <span class="val">750</span>
+        </div>
+        <div class="row other" title="Wildland 0B21626 男彈性銀纖維抗菌排汗衣 — 銀纖維比例各通路標示不一（3–6%），未實查庫存">
+          <span class="nm">Wildland 0B21626 <span class="tag mut">未實查</span></span>
+          <div class="track"><div class="bar" style="width:29.3%"></div><div class="budget"></div></div>
+          <span class="val">880</span>
+        </div>
+        <div class="row cand" title="Wildland 0B31618-180 黑水塘 — 實查 88sport M/L/2XL 現貨，NT$990">
+          <span class="nm">Wildland 0B31618 黑水塘 <span class="tag rec">候選</span></span>
+          <div class="track"><div class="bar" style="width:33%"></div><div class="budget"></div></div>
+          <span class="val">990</span>
+        </div>
+        <div class="row dead" title="飛狼涼感圓領排汗衣 170155 — 92% 尼龍 / 8% 彈性纖維，非聚酯，排除">
+          <span class="nm">飛狼涼感 170155 <span class="tag mut">非聚酯</span></span>
+          <div class="track"><div class="bar" style="width:33%"></div><div class="budget"></div></div>
+          <span class="val">990</span>
+        </div>
+      </div>
+
+      <div class="budget-key"><span class="swatch"></span>預算門檻 NT$1,000 — 越過這條線就是超支</div>
+      <div class="legend">
+        <span><i></i>預算內候選</span>
+        <span><i class="dim"></i>未實查 / 已失效</span>
+        <span><i class="dead"></i>完售或規格不符（排除）</span>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>候選總表</h2>
+    <div class="tw">
+      <table>
+        <thead>
+          <tr>
+            <th>型號</th>
+            <th>關鍵參數</th>
+            <th>男 L 庫存</th>
+            <th>最低價 / 通路</th>
+            <th>高頻毛病</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="name">Wildland 荒野 四向彈性輕量銀纖維抗菌吸排衣（黑水塘 0B31618-180）<br><span class="tag rec">首選</span></td>
+            <td>聚酯纖維 ＋ 銀纖維 6%、四向彈性、抗菌除臭、後領反光條</td>
+            <td>有貨<br><span class="tag mut">88sport 標示 M／L／2XL 現貨</span></td>
+            <td class="num">990<br><span class="tag mut">新竹名將 88sport</span></td>
+            <td>官方自承易起毛球、勾紗</td>
+          </tr>
+          <tr>
+            <td class="name">Jack Wolfskin 飛狼 男圓領短袖排汗衣 銀離子抗菌除臭（森林綠 170127）</td>
+            <td>100% 聚酯纖維、銀離子抑菌、微孔洞組織、台灣製</td>
+            <td><span class="tag warn">僅剩 S 一件</span><br>其他色未查</td>
+            <td class="num">740<br><span class="tag mut">飛狼官網</span></td>
+            <td>無評價可查（樣本 0）</td>
+          </tr>
+          <tr>
+            <td class="name">Wildland 荒野 男彈性輕量銀纖維抗菌排汗衣（0B21626）</td>
+            <td>環保紗、銀纖維標示不一（各通路 3–6%）、Q ANTIBAC 抗菌</td>
+            <td>未實查</td>
+            <td class="num">880<br><span class="tag mut">野雁戶外</span></td>
+            <td>無評價可查；規格標示矛盾</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="lede" style="font-size:13px">高頻毛病欄的每一項都對應下方候選卡的出處連結，可直接點回原評論核對。台灣這三款都缺乏電商負評樣本，詳見各卡的「差評歸因」說明。</p>
+  </section>
+
+  <section>
+    <h2>候選詳解</h2>
+
+    <div class="cand-card rank1">
+      <div class="cand-head">
+        <div>
+          <div class="rank">首選 · 唯一同時有男 L 現貨與真實評價</div>
+          <h3 class="cand-name">Wildland 荒野 四向彈性輕量銀纖維抗菌吸排衣（黑水塘 0B31618-180）</h3>
+        </div>
+        <div class="price"><small>預算內</small>990</div>
+      </div>
+
+      <div class="specs">
+        <span class="spec">聚酯纖維</span>
+        <span class="spec">銀纖維 6%</span>
+        <span class="spec">四向彈性</span>
+        <span class="spec">抗菌除臭</span>
+        <span class="spec">台灣製</span>
+      </div>
+
+      <p class="rationale">這價位帶最站得住腳的選擇：Pinkoi 荒野戶外設計館累積 5.0 分／75 則評價，是本次唯一「有品牌、有評價、男 L 現貨」三者兼具的款式。銀纖維 6% 是候選中標示最高者，主打抗菌除臭與抗靜電，布料四向彈性、輕薄透氣，官方定位在郊山與健行。設計上後領有夜間反光條、左胸鹿頭繡花，是典型台灣機能衣的做法。</p>
+
+      <div class="pc">
+        <div>
+          <div class="lbl">優點</div>
+          <ul class="pros">
+            <li>銀纖維 6%，候選中標示含量最高</li>
+            <li>Pinkoi 5.0 分／75 則，唯一有評價樣本</li>
+            <li>實查 88sport 男 L 現貨（M／L／2XL）</li>
+            <li>台灣製造、四向彈性、後領反光條</li>
+          </ul>
+        </div>
+        <div>
+          <div class="lbl">缺點</div>
+          <ul class="cons">
+            <li>官方明講布料細緻，易因摩擦起毛球、勾紗</li>
+            <li>Pinkoi 換算約 US$36.47，略高於 88sport 特價</li>
+            <li>四向彈性＝含彈性纖維，長期比純聚酯易鬆</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="sub">
+        <div class="lbl">口碑來源</div>
+        <div class="src">
+          Pinkoi 荒野戶外設計館品牌總評 <b>5.0 分／75 則</b>（男裝 T 恤類排行 No.507）→ <a href="https://cn.pinkoi.com/product/mEeaJRi4" target="_blank" rel="noopener">商品頁</a><br>
+          新竹名將 88sport 商品頁標示布種特性「銀纖維 6%」、庫存現貨、尺寸 M／L／2XL → <a href="https://www.88sport.com.tw/Wildland-%E8%8D%92%E9%87%8E-%E7%94%B7%E5%9B%9B%E5%90%91%E5%BD%88%E6%80%A7%E8%BC%95%E9%87%8F%E9%8A%80%E7%BA%96%E7%B6%AD%E6%8A%97%E8%8F%8C%E5%90%B8%E6%8E%92%E8%A1%A3-%E9%BB%91%E6%B0%B4%E5%A1%98" target="_blank" rel="noopener">商品頁</a>
+        </div>
+      </div>
+
+      <div class="sub">
+        <div class="lbl">差評歸因 · 樣本不足</div>
+        <div class="flaw">
+          <span>這款在 Pinkoi 的 75 則評價以好評為主，但<b>沒有可逐條核對的負評文本</b>；88sport 與遠百頁面則無評價區。因此無法歸納高頻毛病。</span>
+          <span class="q">可確認的唯一風險來自官方警語：同系列銀纖維款商品說明載明「背包、腰包，肩部與腰部背帶與衣身面料接觸處，容易摩損面料以致起毛球與勾紗」——這與登山背負的使用情境高度相關，值得留意。</span>
+        </div>
+      </div>
+
+      <div class="sub">
+        <div class="lbl">購買</div>
+        <div class="buy">
+          <a href="https://www.88sport.com.tw/Wildland-%E8%8D%92%E9%87%8E-%E7%94%B7%E5%9B%9B%E5%90%91%E5%BD%88%E6%80%A7%E8%BC%95%E9%87%8F%E9%8A%80%E7%BA%96%E7%B6%AD%E6%8A%97%E8%8F%8C%E5%90%B8%E6%8E%92%E8%A1%A3-%E9%BB%91%E6%B0%B4%E5%A1%98" target="_blank" rel="noopener"><span class="pl">新竹名將 88sport</span>黑水塘 · M／L／2XL 現貨<span class="pr">990</span></a>
+          <a href="https://www.feds.com.tw/tw/Shop/Detail/167328" target="_blank" rel="noopener"><span class="pl">遠百 ONLINE</span>黑水塘 0B31618-180<span class="pr">970</span></a>
+        </div>
+      </div>
+    </div>
+
+    <div class="cand-card">
+      <div class="cand-head">
+        <div>
+          <div class="rank">次選 · 最便宜的真聚酯銀離子款，但要找尺寸</div>
+          <h3 class="cand-name">Jack Wolfskin 飛狼 男圓領短袖排汗衣 銀離子抗菌除臭（170127）</h3>
+        </div>
+        <div class="price"><small>預算內</small>740</div>
+      </div>
+
+      <div class="specs">
+        <span class="spec">100% 聚酯纖維</span>
+        <span class="spec">銀離子抑菌</span>
+        <span class="spec">微孔洞組織</span>
+        <span class="spec">台灣製</span>
+      </div>
+
+      <p class="rationale">本次唯一實查確認「100% 聚酯纖維」而非混紡的款式，台灣製造，價格也是候選中最低。機能訴求明確：銀離子智慧抑菌除臭、微孔洞組織增加透氣、布料挺且耐洗耐穿，左胸有口袋。問題出在庫存——實查官網，森林綠僅剩 S 一件，其他顏色（藍、天空藍等）需另行確認。</p>
+
+      <div class="pc">
+        <div>
+          <div class="lbl">優點</div>
+          <ul class="pros">
+            <li>實查確認為 100% 聚酯纖維，非混紡</li>
+            <li>台灣製造，價格 $740 為候選最低</li>
+            <li>micro 孔洞組織、布料挺、官方稱耐洗耐穿</li>
+            <li>同系列其他顏色最低曾見 $572</li>
+          </ul>
+        </div>
+        <div>
+          <div class="lbl">缺點</div>
+          <ul class="cons">
+            <li>森林綠實查僅剩 S 一件，L 需另找顏色</li>
+            <li>官網無任何使用者評價</li>
+            <li>銀離子未標明供應商技術，無法判斷耐洗等級</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="sub">
+        <div class="lbl">口碑來源</div>
+        <div class="src">
+          飛狼官網商品頁（Playwright 實查）：材質 100% 聚酯纖維、產地台灣、銀離子智慧抑菌除臭、森林綠尺寸僅剩 S、庫存剩 1 件 → <a href="https://www.jackwolfskin.com.tw/zh-hant/products/man-t-shirt-170127-1" target="_blank" rel="noopener">商品頁</a><br>
+          同品牌系列另有『藍』（約 $572）、V 領『鵝黃』（約 $690）等顏色款式，於 feebee 比價可見 → <a href="https://feebee.com.tw/all/jack%20wolfskin%e8%a1%a3/?client=pcweb&amp;mode=l" target="_blank" rel="noopener">比價頁</a>
+        </div>
+      </div>
+
+      <div class="sub">
+        <div class="lbl">差評歸因</div>
+        <div class="flaw">無負評可掃描（0 則）。官網商品頁與 Yahoo 通路頁皆顯示「尚無任何評價」。這不代表沒問題，只代表這款銷量與評價累積都還不足。</div>
+      </div>
+
+      <div class="sub">
+        <div class="lbl">購買</div>
+        <div class="buy">
+          <a class="caveat" href="https://www.jackwolfskin.com.tw/zh-hant/products/man-t-shirt-170127-1" target="_blank" rel="noopener"><span class="pl">飛狼官網</span><span class="note">森林綠只剩 S，男 L 需改找其他色</span><span class="pr">740</span></a>
+        </div>
+      </div>
+    </div>
+
+    <div class="cand-card">
+      <div class="cand-head">
+        <div>
+          <div class="rank">第三 · 便宜，但規格標示互相矛盾</div>
+          <h3 class="cand-name">Wildland 荒野 男彈性輕量銀纖維抗菌排汗衣（0B21626）</h3>
+        </div>
+        <div class="price"><small>預算內</small>880</div>
+      </div>
+
+      <div class="specs">
+        <span class="spec">環保紗</span>
+        <span class="spec">銀纖維 ?%</span>
+        <span class="spec">Q ANTIBAC</span>
+        <span class="spec">抗UV-CUT 30+</span>
+      </div>
+
+      <p class="rationale">比首選便宜 $110，機能標示也完整：銀纖維抗菌除臭、抗靜電、四向彈性、吸濕排汗、抗 UV。但查證時發現一個警訊——<b>銀纖維比例在不同通路標示為 3%、6%、甚至 35%</b>，三個數字差距過大，其中至少兩個是錯的。加上材質只寫「環保紗」而非明列聚酯比例，規格透明度不如首選。</p>
+
+      <div class="pc">
+        <div>
+          <div class="lbl">優點</div>
+          <ul class="pros">
+            <li>$880，比首選便宜</li>
+            <li>機能標示完整（抗菌、抗靜電、抗UV）</li>
+            <li>適用場合明列登山、露營、旅行</li>
+          </ul>
+        </div>
+        <div>
+          <div class="lbl">缺點</div>
+          <ul class="cons">
+            <li>銀纖維比例各通路標 3%／6%／35%，互相矛盾</li>
+            <li>材質僅寫「環保紗」，未明列聚酯比例</li>
+            <li>未實查到男 L 庫存與實際評價</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="sub">
+        <div class="lbl">口碑來源</div>
+        <div class="src">
+          野雁戶外標示特價 $880、銀纖維 3%、適用登山 → <a href="https://wild-goose.com.tw/product.php?cat=119&amp;id=6874" target="_blank" rel="noopener">商品頁</a><br>
+          遠百 ONLINE 同型號 0B21626-101 標示 $890、銀纖維抗菌除臭、抗 UV-CUT30+ → <a href="https://www.feds.com.tw/tw/Shop/Detail/139117" target="_blank" rel="noopener">商品頁</a><br>
+          Wildland 官方與龍營戶外則標示銀纖維 6% → <a href="https://longyingoutdoor.com/products/info.php?id=34832" target="_blank" rel="noopener">商品頁</a>
+        </div>
+      </div>
+
+      <div class="sub">
+        <div class="lbl">差評歸因</div>
+        <div class="flaw">無可掃描的負評樣本。款式聲量低，未見 PTT／Dcard／Mobile01 討論，電商頁面亦無評價區。</div>
+      </div>
+
+      <div class="sub">
+        <div class="lbl">購買</div>
+        <div class="buy">
+          <a class="caveat" href="https://wild-goose.com.tw/product.php?cat=119&amp;id=6874" target="_blank" rel="noopener"><span class="pl">野雁戶外</span><span class="note">下單前請先確認男 L 庫存與吊牌銀纖維比例</span><span class="pr">880</span></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>專題：銀離子除臭，能撐多久？</h2>
+    <p class="lede">這是這次最該知道的事。銀離子被行銷成「永久抗菌」，但查證後發現它的效果有一條明確的分水嶺，而且不是每一種銀離子都一樣。</p>
+
+    <div class="deep">
+      <p class="lead">同樣標「銀離子」，做法分兩大類，耐用度差一個數量級：</p>
+
+      <div class="split">
+        <div class="box bad-box">
+          <h4>表面後整理塗層</h4>
+          <div class="n">5–15 次</div>
+          <p>抗菌劑像噴香水一樣附著在布料表面，洗滌後保護膜逐漸流失。多次查證來源都指向約 5–15 次水洗後大幅衰退，味道就會回來。</p>
+        </div>
+        <div class="box good-box">
+          <h4>纖維嵌入 / 核心紡絲</h4>
+          <div class="n">50 次以上</div>
+          <p>抗菌成分鎖在紗線內部，可耐 50 次以上水洗，甚至 100 次工業洗滌後抑菌率仍維持 90% 以上。Polygiene 屬此類，官方聲稱可撐過衣物壽命。</p>
+        </div>
+      </div>
+
+      <p class="lead">但這裡有個對行銷話術的當頭棒喝——實驗室數據不等於實際穿著效果：</p>
+
+      <div class="findings">
+        <div class="finding">
+          <span class="mk">01</span>
+          <span class="tx"><b>學術研究顯示銀處理未必有效。</b>McQueen 等人的研究以銀氯化物處理聚酯布料，結果顯示即使未洗或洗 30 次，與未處理布料相比，<b>在實際穿著的臭味強度與細菌量上並無顯著差異</b>。實驗室的抑菌率漂亮，不等於穿在身上就不臭。</span>
+        </div>
+        <div class="finding">
+          <span class="mk">02</span>
+          <span class="tx"><b>濕掉收包包，除臭力就失效。</b>英國戶外媒體 ADVNTR 實測 Polygiene 布料：連續 4 天各種運動、4–5 天日常穿著都不臭，但「長時間流汗後揉成一團悶在補給包裡」就會明顯變臭——<b>Polygiene 應付不了長時間潮濕悶放</b>。</span>
+        </div>
+        <div class="finding">
+          <span class="mk">03</span>
+          <span class="tx"><b>聚酯本身會抓油，這才是臭的根源。</b>臭味不是汗，是細菌分解汗中蛋白質與皮脂產生的異戊酸。聚酯纖維親油，會牢牢抓住體油成為細菌的食物——這就是「洗完還是臭」的機制。</span>
+        </div>
+        <div class="finding">
+          <span class="mk">04</span>
+          <span class="tx"><b>柔軟精是隱形殺手。</b>它會在纖維上留下蠟層，把汗水與細菌封在裡面，造成俗稱「永久臭（Permastink）」的狀況，連剛洗好都聞得到酸味。用這類衣服就別碰柔軟精，也別高溫烘乾。</span>
+        </div>
+      </div>
+
+      <p class="lead" style="font-size:13px; color:var(--muted)">回到選購：與其看包裝上的「99% 抗菌」，不如問「洗 N 次後還剩幾 % 抑菌率、有無第三方測試（AATCC 100 / ISO 20743）」。這次三個候選<b>都沒有標示耐洗次數</b>，這是它們共同的資訊缺口。</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>查證過但不符合的選項</h2>
+    <div class="tw">
+      <table>
+        <thead>
+          <tr><th>商品</th><th>價格</th><th>排除原因</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="name">飛狼 涼感圓領短袖排汗衣 170155（冰青綠）</td><td class="num">990</td><td>材質 92% 尼龍／8% 彈性纖維，<b>非聚酯</b>，且未標銀離子</td></tr>
+          <tr><td class="name">AStage Buff 透氣快乾短袖排汗衣 A11202-0021</td><td class="num">630</td><td>100% 聚酯＋Polygiene 完全符合規格，但<b>實查全尺寸完售</b></td></tr>
+          <tr><td class="name">ODLO Light Effect 銀離子短袖圓領（OL181012）</td><td class="num">約 1,500+</td><td>銀離子代表品牌，但超預算</td></tr>
+          <tr><td class="name">ODLO Cubic Effect 銀離子圓領短袖（OL140042）</td><td class="num">約 1,500+</td><td>同上，超預算</td></tr>
+          <tr><td class="name">迪卡儂 Tagart Woodsman 男短袖機能 T</td><td class="num">約 €46</td><td>含銀離子但材質為 95% 聚酰胺，且為歐洲通路</td></tr>
+          <tr><td class="name">Kailas FUGA 男短袖（100% 聚酯＋Polygiene）</td><td class="num">—</td><td>規格符合且國際評價好，但<b>台灣查無通路</b></td></tr>
+          <tr><td class="name">RAB Aeon Tee（Polygiene 銀鹽抗菌）</td><td class="num">約 1,800+</td><td>PTT 板公認的銀離子代表作，但超預算</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>建議</h2>
+    <div class="advice">
+      <div class="advice-item">
+        <div class="k">直接買</div>
+        <div class="v"><b>Wildland 0B31618 黑水塘（$990）</b>。它是這次唯一「男 L 有現貨 ＋ 有評價樣本 ＋ 銀纖維含量標示最高（6%）」三者兼具的選擇，遠百甚至標到 $970。以千元內的標準，沒有更好的組合。</div>
+      </div>
+      <div class="advice-item">
+        <div class="k">想再省一點</div>
+        <div class="v">去飛狼官網找 <b>170127 的其他顏色</b>（藍／天空藍曾見 $572–740），那是 100% 聚酯、台灣製。但森林綠實查只剩 S，下單前務必確認男 L 有貨。</div>
+      </div>
+      <div class="advice-item">
+        <div class="k">別碰</div>
+        <div class="v">標示「銀纖維 35%」卻只賣 $890 的品項——規格標示互相矛盾，代表連賣家自己都不清楚成分。銀纖維是貴金屬纖維，35% 不可能是這個價格。</div>
+      </div>
+      <div class="advice-item">
+        <div class="k">保養決定壽命</div>
+        <div class="v">這類衣服的除臭力有天花板：<b>絕對不用柔軟精</b>（會造成永久臭）、<b>不高温烘乾</b>（加速銀離子流失）、<b>流汗後別悶在包裡</b>。做對這三件事，比多花錢買更貴的款更有效。</div>
+      </div>
+      <div class="advice-item">
+        <div class="k">與羊毛的取捨</div>
+        <div class="v">上次的美麗諾羊毛在長天數縱走的除臭表現仍是公認最強，代價是易破洞與價格。銀離子聚酯的優勢是<b>便宜、耐磨、快乾</b>——如果你的行程多在 1–3 天，它比羊毛划算；若要走 5 天以上縱走，PTT 板友仍一致推薦羊毛。</div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>降價追蹤</h2>
+    <p class="lede">本報告不建立自動排程。以下是各平台可自行設定的通知方式：</p>
+    <div class="tw">
+      <table>
+        <thead>
+          <tr><th>目標</th><th>平台</th><th>設定方式</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="name">Wildland 0B31618</td><td>比價王 BigGo</td><td>設「降價通知」，可跨 88sport／遠百／Pinkoi 比價</td></tr>
+          <tr><td class="name">飛狼 170127 各色</td><td>飛狼官網</td><td>商品頁「貨到通知我」，等 L 補貨推播</td></tr>
+          <tr><td class="name">Wildland 各款</td><td>Yahoo 購物中心</td><td>商品頁「追蹤商品」，降價推播</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <div class="note-block">
+    <b>方法備註</b><br>
+    搜尋範圍：PTT OutdoorGear（讀原文）、Dcard／Mobile01（僅摘要）、Reddit 與國際評測（WebSearch）、飛狼官網與新竹名將 88sport／遠百 ONLINE（Playwright 實查庫存與材質）、比價王 BigGo／feebee。<br>
+    蝦皮的搜尋頁與商品頁全程未以自動化進站（會被指紋偵測擋下），相關價格改由 feebee 取得。<br>
+    <b>樣本誠實說明</b>：台灣這三個候選都缺乏可逐條核對的負評文本，本報告未以推測填補。銀離子機制專節的數據來自學術研究（McQueen 等）、ADVNTR 實測與多篇耐洗測試報導，屬通則性資訊，非針對本次候選的實測。<br>
+    價格不含運費，實際以各平台結帳頁為準；庫存為 2026-09-23 查詢當下的狀態，可能隨時變動。
+  </div>
+
+  <footer>
+    資料時間 2026-09-23 · 篩選條件：男款 L、登山用、NT$1,000 以內、聚酯纖維 ＋ 銀離子、不限廠牌
+  </footer>
+
+</div>
+
+</body>
+</html>
