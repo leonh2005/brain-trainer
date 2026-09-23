@@ -1,0 +1,603 @@
+<title>登山羊毛短袖選物</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;700&display=swap">
+<style>
+  :root{
+    --plane:#f9f9f7; --surface:#fcfcfb; --sunken:#f2f2ef;
+    --ink:#0b0b0b; --ink2:#52514e; --muted:#898781;
+    --grid:#e1e0d9; --rule:#c3c2b7;
+    --accent:#2a78d6; --accent-ink:#1c5cab;
+    --critical:#d03b3b; --good:#006300;
+    --sans:"Noto Sans TC",-apple-system,"PingFang TC","Microsoft JhengHei",sans-serif;
+    --serif:"Noto Serif TC","Songti TC",Georgia,serif;
+    --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --plane:#0d0d0d; --surface:#1a1a19; --sunken:#232322;
+      --ink:#ffffff; --ink2:#c3c2b7; --muted:#898781;
+      --grid:#2c2c2a; --rule:#383835;
+      --accent:#3987e5; --accent-ink:#86b6ef;
+      --critical:#e66767; --good:#0ca30c;
+    }
+  }
+  :root[data-theme="dark"]{
+    --plane:#0d0d0d; --surface:#1a1a19; --sunken:#232322;
+    --ink:#ffffff; --ink2:#c3c2b7; --muted:#898781;
+    --grid:#2c2c2a; --rule:#383835;
+    --accent:#3987e5; --accent-ink:#86b6ef;
+    --critical:#e66767; --good:#0ca30c;
+  }
+
+  body{
+    background:var(--plane); color:var(--ink);
+    font-family:var(--sans); font-size:15px; line-height:1.7;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:900px; margin:0 auto; padding-block:48px 72px; padding-inline:24px;
+        display:flex; flex-direction:column; gap:44px}
+
+  /* ---------- masthead ---------- */
+  .mast{display:flex; flex-direction:column; gap:14px; padding-bottom:26px;
+        border-bottom:2px solid var(--ink)}
+  .eyebrow{font-size:11.5px; letter-spacing:.18em; text-transform:uppercase;
+           color:var(--muted); font-weight:500}
+  h1{font-family:var(--serif); font-weight:700; font-size:clamp(28px,5vw,40px);
+     line-height:1.25; margin:0; text-wrap:balance}
+  .standfirst{color:var(--ink2); font-size:16px; max-width:62ch; margin:0}
+  .meta{display:flex; flex-wrap:wrap; gap:8px; margin-top:4px}
+  .chip{font-size:12.5px; padding:3px 11px; border:1px solid var(--rule);
+        border-radius:999px; color:var(--ink2); white-space:nowrap}
+  .chip b{font-weight:700; color:var(--ink)}
+
+  /* ---------- sections ---------- */
+  section{display:flex; flex-direction:column; gap:18px}
+  h2{font-family:var(--serif); font-size:21px; font-weight:700; margin:0;
+     line-height:1.4; text-wrap:balance}
+  h3{font-family:var(--sans); font-size:15.5px; font-weight:700; margin:0}
+  .lede{color:var(--ink2); margin:0; max-width:66ch}
+  p{margin:0}
+
+  /* ---------- verdict ---------- */
+  .verdict{border-left:3px solid var(--critical); background:var(--surface);
+           padding:20px 22px; display:flex; flex-direction:column; gap:10px}
+  .verdict .vh{font-weight:700; font-size:13px; letter-spacing:.1em;
+               text-transform:uppercase; color:var(--critical)}
+  .verdict p{color:var(--ink2); font-size:15px}
+  .verdict strong{color:var(--ink); font-weight:700}
+
+  /* ---------- price chart ---------- */
+  .chart{background:var(--surface); border:1px solid var(--grid); padding:22px 20px 18px}
+  .chart-title{font-weight:700; font-size:14px; margin-bottom:2px}
+  .chart-sub{font-size:12.5px; color:var(--muted); margin-bottom:20px}
+  .ruler{display:grid; grid-template-columns:184px 1fr 78px; align-items:end;
+         gap:12px; margin-bottom:6px}
+  .ruler .ticks{position:relative; height:16px}
+  .ruler .tick{position:absolute; bottom:0; font-family:var(--mono); font-size:10.5px;
+               color:var(--muted); transform:translateX(-50%); white-space:nowrap}
+  .rows{display:flex; flex-direction:column; gap:3px}
+  .row{display:grid; grid-template-columns:184px 1fr 78px; align-items:center; gap:12px;
+       padding:3px 4px; border-radius:4px}
+  .row:hover{background:var(--sunken)}
+  .row .nm{font-size:12.5px; color:var(--ink2); line-height:1.35;
+           overflow-wrap:anywhere}
+  .row.cand .nm{color:var(--ink); font-weight:500}
+  .track{position:relative; height:16px; display:flex; align-items:center}
+  .bar{height:9px; border-radius:0 4px 4px 0; background:var(--accent);
+       min-width:2px; transition:filter .12s}
+  .row.other .bar{opacity:.34}
+  .row:hover .bar{filter:brightness(1.12)}
+  .budget{position:absolute; left:33.333%; top:-4px; bottom:-4px; width:2px;
+          background:repeating-linear-gradient(to bottom,var(--ink) 0 4px,transparent 4px 8px)}
+  .row .val{font-family:var(--mono); font-size:12.5px; font-weight:500;
+            text-align:right; color:var(--ink); font-variant-numeric:tabular-nums}
+  .row.other .val{color:var(--muted)}
+  .budget-key{display:flex; align-items:center; gap:8px; margin-top:16px;
+              padding-top:14px; border-top:1px solid var(--grid);
+              font-size:12.5px; color:var(--ink2)}
+  .budget-key .swatch{width:2px; height:15px;
+                      background:repeating-linear-gradient(to bottom,var(--ink) 0 4px,transparent 4px 8px)}
+  .legend{display:flex; flex-wrap:wrap; gap:16px; margin-top:10px; font-size:12.5px; color:var(--ink2)}
+  .legend span{display:flex; align-items:center; gap:7px}
+  .legend i{width:16px; height:9px; border-radius:0 4px 4px 0; background:var(--accent)}
+  .legend i.dim{opacity:.34}
+
+  /* ---------- tables ---------- */
+  .tw{overflow-x:auto; border:1px solid var(--grid); background:var(--surface)}
+  table{border-collapse:collapse; width:100%; min-width:600px; font-size:13px}
+  th,td{text-align:left; padding:11px 14px; border-bottom:1px solid var(--grid);
+        vertical-align:top}
+  th{font-size:11.5px; letter-spacing:.08em; text-transform:uppercase;
+     color:var(--muted); font-weight:500; white-space:nowrap;
+     background:var(--sunken)}
+  tr:last-child td{border-bottom:0}
+  td.num{font-family:var(--mono); font-variant-numeric:tabular-nums; white-space:nowrap}
+  td.name{font-weight:500; min-width:210px}
+  .tag{display:inline-block; font-size:11px; padding:1px 7px; border-radius:3px;
+       border:1px solid var(--rule); color:var(--ink2); white-space:nowrap;
+       font-weight:500; vertical-align:1px}
+  .tag.rec{border-color:var(--accent); color:var(--accent-ink)}
+  .tag.warn{border-color:var(--critical); color:var(--critical)}
+  .tag.mut{color:var(--muted)}
+
+  /* ---------- candidate cards ---------- */
+  .cand-card{background:var(--surface); border:1px solid var(--grid);
+             border-top:3px solid var(--rule); padding:24px 22px;
+             display:flex; flex-direction:column; gap:18px}
+  .cand-card.rank1{border-top-color:var(--accent)}
+  .cand-head{display:flex; flex-wrap:wrap; gap:10px 18px;
+             justify-content:space-between; align-items:flex-start}
+  .rank{font-size:11.5px; letter-spacing:.14em; text-transform:uppercase;
+        color:var(--muted); font-weight:500; margin-bottom:5px}
+  .cand-card.rank1 .rank{color:var(--accent-ink)}
+  .cand-name{font-family:var(--serif); font-size:19px; font-weight:700;
+             line-height:1.4; margin:0; max-width:34ch; text-wrap:balance}
+  .price{font-family:var(--mono); font-size:26px; font-weight:600;
+         font-variant-numeric:tabular-nums; white-space:nowrap; line-height:1.1}
+  .price small{display:block; font-family:var(--sans); font-size:11.5px;
+               font-weight:400; color:var(--muted); letter-spacing:.04em;
+               text-transform:uppercase; margin-bottom:2px}
+  .price.over{color:var(--critical)}
+  .specs{display:flex; flex-wrap:wrap; gap:7px}
+  .spec{font-size:12px; padding:3px 10px; background:var(--sunken);
+        border-radius:4px; color:var(--ink2); font-family:var(--mono)}
+  .rationale{color:var(--ink2); font-size:14.5px; max-width:66ch}
+  .pc{display:grid; grid-template-columns:1fr 1fr; gap:8px 26px}
+  @media (max-width:620px){ .pc{grid-template-columns:1fr} }
+  .pc ul{margin:0; padding:0; list-style:none; display:flex;
+         flex-direction:column; gap:6px}
+  .pc li{font-size:13.5px; color:var(--ink2); padding-left:17px; position:relative; line-height:1.55}
+  .pc li::before{position:absolute; left:0; top:0; font-weight:700}
+  .pros li::before{content:"+"; color:var(--good)}
+  .cons li::before{content:"–"; color:var(--critical)}
+  .pc .lbl{font-size:11.5px; letter-spacing:.1em; text-transform:uppercase;
+           color:var(--muted); font-weight:500; margin-bottom:8px}
+  .sub{border-top:1px solid var(--grid); padding-top:16px;
+       display:flex; flex-direction:column; gap:10px}
+  .sub .lbl{font-size:11.5px; letter-spacing:.1em; text-transform:uppercase;
+            color:var(--muted); font-weight:500}
+  .src{font-size:13px; color:var(--ink2); line-height:1.6}
+  .src a{color:var(--accent-ink); text-decoration:none; border-bottom:1px solid var(--rule)}
+  .src a:hover{border-bottom-color:var(--accent)}
+  .flaw{display:flex; flex-direction:column; gap:3px; font-size:13.5px;
+        color:var(--ink2)}
+  .flaw b{color:var(--ink); font-weight:700}
+  .flaw .q{color:var(--muted); font-size:12.5px; font-style:italic}
+  .buy{display:flex; flex-direction:column; gap:8px}
+  .buy a{display:inline-flex; align-items:baseline; gap:10px; font-size:13.5px;
+         color:var(--ink); text-decoration:none; padding:9px 13px;
+         border:1px solid var(--rule); background:var(--plane);
+         border-radius:5px; transition:border-color .12s}
+  .buy a:hover{border-color:var(--accent)}
+  .buy a .pl{font-weight:700; min-width:96px}
+  .buy a .pr{font-family:var(--mono); font-variant-numeric:tabular-nums;
+             margin-left:auto; font-weight:600}
+  .buy a.caveat{border-style:dashed}
+  .buy a .note{font-size:11.5px; color:var(--critical)}
+
+  /* ---------- closing blocks ---------- */
+  .advice{background:var(--surface); border:1px solid var(--grid);
+          padding:24px 22px; display:flex; flex-direction:column; gap:16px}
+  .advice-item{display:flex; gap:14px; align-items:baseline}
+  .advice-item .k{font-family:var(--mono); font-size:12px; font-weight:600;
+                  color:var(--accent-ink); white-space:nowrap; min-width:118px;
+                  padding-top:2px}
+  .advice-item .v{font-size:14.5px; color:var(--ink2); line-height:1.65}
+  .advice-item .v b{color:var(--ink)}
+  @media (max-width:560px){ .advice-item{flex-direction:column; gap:4px} }
+  .note-block{font-size:12.5px; color:var(--muted); line-height:1.75;
+              border-top:1px solid var(--grid); padding-top:20px}
+  .note-block b{color:var(--ink2); font-weight:500}
+  footer{font-size:12px; color:var(--muted); border-top:1px solid var(--grid);
+         padding-top:18px; line-height:1.7}
+</style>
+
+<div class="wrap">
+
+  <header class="mast">
+    <div class="eyebrow">選物報告 · 2026-09-23 實查</div>
+    <h1>登山羊毛短袖選物</h1>
+    <p class="standfirst">男款 L、預算 NT$1,000 以內的美麗諾羊毛短袖。查證範圍涵蓋台灣論壇、國際評測與電商實際評價，重點放在「哪裡會壞」而不是「可以買」。</p>
+    <div class="meta">
+      <span class="chip">男款 <b>L</b></span>
+      <span class="chip">登山用</span>
+      <span class="chip">預算 <b>NT$1,000</b></span>
+      <span class="chip">不限廠牌</span>
+    </div>
+  </header>
+
+  <section>
+    <div class="verdict">
+      <div class="vh">結論先講</div>
+      <p>台灣市場上，「男款 L ＋ 美麗諾短袖 ＋ NT$1,000 以內」幾乎沒有<b>有品牌、有評價</b>的選項。有品牌的一線貨（Smartwool、Icebreaker、OAI sensor）實際地板價落在 NT$1,800–3,000；預算內唯一有男 L 現貨的是 <b>PROGA（NT$930）</b>，但它<b>零評價</b>，無從判斷做工。</p>
+      <p>換句話說，這筆預算買到的不是「便宜的好貨」，而是「要不要為了 NT$249 去承擔未知風險」。詳見下方價格分布與建議。</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>價格分布與預算門檻</h2>
+    <p class="lede">每條代表一個查證過的通路價，藍色實心為預算內的可買項、淡色為超出預算或無法驗證的選項。</p>
+
+    <div class="chart">
+      <div class="chart-title">男款美麗諾短袖 · 通路最低價</div>
+      <div class="chart-sub">單位：新台幣 · 虛線為預算門檻 NT$1,000 · 資料時間 2026-09-23</div>
+
+      <div class="ruler">
+        <div></div>
+        <div class="ticks">
+          <span class="tick" style="left:0%">0</span>
+          <span class="tick" style="left:33.333%">1,000</span>
+          <span class="tick" style="left:66.667%">2,000</span>
+          <span class="tick" style="left:100%">3,000</span>
+        </div>
+        <div></div>
+      </div>
+
+      <div class="rows">
+        <div class="row other" title="ISOBAA Merino 150 短袖 — 蝦皮 NT$820，真偽與尺寸無法驗證">
+          <span class="nm">ISOBAA Merino 150 <span class="tag mut">無法驗證</span></span>
+          <div class="track"><div class="bar" style="width:27.3%"></div><div class="budget"></div></div>
+          <span class="val">820</span>
+        </div>
+        <div class="row cand" title="PROGA PG26052L — 100% 美麗諾、17 微米、130g — Yahoo 購物中心 NT$930">
+          <span class="nm">PROGA PG26052L <span class="tag rec">候選</span></span>
+          <div class="track"><div class="bar" style="width:31%"></div><div class="budget"></div></div>
+          <span class="val">930</span>
+        </div>
+        <div class="row cand" title="Decathlon SIMOND 男款耐穿美麗諾短袖 — 89% 美麗諾 — 迪卡儂台灣 NT$1,249">
+          <span class="nm">Decathlon SIMOND <span class="tag rec">候選</span></span>
+          <div class="track"><div class="bar" style="width:41.6%"></div><div class="budget"></div></div>
+          <span class="val">1,249</span>
+        </div>
+        <div class="row other" title="Smartwool Merino Short 出清 — momo NT$1,399">
+          <span class="nm">Smartwool Merino Short（出清）</span>
+          <div class="track"><div class="bar" style="width:46.6%"></div><div class="budget"></div></div>
+          <span class="val">1,399</span>
+        </div>
+        <div class="row other" title="ISOBAA Merino 150 — 蝦皮商城官方經銷 NT$1,480">
+          <span class="nm">ISOBAA Merino 150 <span class="tag mut">官方經銷</span></span>
+          <div class="track"><div class="bar" style="width:49.3%"></div><div class="budget"></div></div>
+          <span class="val">1,480</span>
+        </div>
+        <div class="row other" title="Smartwool Merino Sport 150 男短袖 — momo 起價 NT$1,804">
+          <span class="nm">Smartwool Merino Sport 150</span>
+          <div class="track"><div class="bar" style="width:60.1%"></div><div class="budget"></div></div>
+          <span class="val">1,804</span>
+        </div>
+        <div class="row other" title="Icebreaker 男 Core 圓領短袖 — 僅 15% 羊毛、僅 S 尺寸 — NT$2,412">
+          <span class="nm">Icebreaker Core 圓領 <span class="tag mut">僅 S</span></span>
+          <div class="track"><div class="bar" style="width:80.4%"></div><div class="budget"></div></div>
+          <span class="val">2,412</span>
+        </div>
+        <div class="row other" title="OAI sensor 男款 DF 雙面美麗諾短袖 170g — NT$2,592">
+          <span class="nm">OAI sensor DF 雙面 170g</span>
+          <div class="track"><div class="bar" style="width:86.4%"></div><div class="budget"></div></div>
+          <span class="val">2,592</span>
+        </div>
+        <div class="row other" title="OAI sensor M Compass 男款 160g — NT$2,952">
+          <span class="nm">OAI sensor M Compass 160g</span>
+          <div class="track"><div class="bar" style="width:98.4%"></div><div class="budget"></div></div>
+          <span class="val">2,952</span>
+        </div>
+      </div>
+
+      <div class="budget-key"><span class="swatch"></span>預算門檻 NT$1,000 — 越過這條線就是超支</div>
+      <div class="legend">
+        <span><i></i>預算內候選</span>
+        <span><i class="dim"></i>超預算 / 無法驗證</span>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>候選總表</h2>
+    <div class="tw">
+      <table>
+        <thead>
+          <tr>
+            <th>型號</th>
+            <th>關鍵參數</th>
+            <th>男 L 庫存</th>
+            <th>最低價 / 通路</th>
+            <th>高頻毛病</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="name">Decathlon SIMOND 男款耐穿美麗諾羊毛短袖 T 恤（卡其 8976798）<br><span class="tag rec">首選</span></td>
+            <td>89% 美麗諾 + 11% 聚醯胺、網眼內襯、ISO 17299-3 抗臭</td>
+            <td>少量庫存<br><span class="tag mut">灰色款 L 已售完</span></td>
+            <td class="num">1,249<br><span class="tag mut">迪卡儂官網</span></td>
+            <td>破洞 ×3、縫線綻開 ×1</td>
+          </tr>
+          <tr>
+            <td class="name">PROGA PG26052L 男款 100% 純美麗諾短袖</td>
+            <td>100% 美麗諾、17 微米、130g</td>
+            <td>有貨<br><span class="tag mut">2XL 缺貨</span></td>
+            <td class="num">930<br><span class="tag mut">Yahoo 購物中心</span></td>
+            <td>無評價可查（樣本 0）</td>
+          </tr>
+          <tr>
+            <td class="name">ISOBAA Merino 150 Short Sleeve Crew</td>
+            <td>100% 美麗諾、18.5 微米、150g、英國品牌</td>
+            <td><span class="tag warn">低價場無法確認</span><br>旋轉拍賣款僅 S</td>
+            <td class="num">820（蝦皮，無法驗證）<br>1,480（官方經銷）</td>
+            <td>尺碼不穩 ×2、約 1 年破洞 ×2</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="lede" style="font-size:13px">高頻毛病欄的每一項都對應下方候選卡的出處連結，可直接點回原評論核對。</p>
+  </section>
+
+  <section>
+    <h2>候選詳解</h2>
+
+    <div class="cand-card rank1">
+      <div class="cand-head">
+        <div>
+          <div class="rank">首選 · 唯一有大量真實評價且男 L 有貨</div>
+          <h3 class="cand-name">Decathlon SIMOND 男款耐穿美麗諾羊毛短袖 T 恤（卡其色 8976798）</h3>
+        </div>
+        <div class="price over"><small>超預算 NT$249</small>1,249</div>
+      </div>
+
+      <div class="specs">
+        <span class="spec">89% 美麗諾</span>
+        <span class="spec">11% 聚醯胺</span>
+        <span class="spec">網眼內襯</span>
+        <span class="spec">ISO 17299-3 抗臭</span>
+      </div>
+
+      <p class="rationale">這價位帶最可信的選擇：台灣商品頁 4.7★／1,184 則、北美同款 4.4★／319 則，加上迪卡儂本地退換保固。89% 美麗諾混 11% 聚醯胺包覆紗，耐磨性優於純羊毛；網眼內襯加強排汗。缺點很明確——超預算 25%，而且耐用度是它的弱項。</p>
+
+      <div class="pc">
+        <div>
+          <div class="lbl">優點</div>
+          <ul class="pros">
+            <li>混紡聚醯胺，耐磨性優於純羊毛</li>
+            <li>通過 ISO 17299-3 抗臭實驗室測試</li>
+            <li>迪卡儂 365 天退貨、門市取貨與維修保養</li>
+            <li>上千則評價可查，踩雷風險最低</li>
+          </ul>
+        </div>
+        <div>
+          <div class="lbl">缺點</div>
+          <ul class="cons">
+            <li>NT$1,249，超出預算 25%</li>
+            <li>破洞是明確弱點，尤其背包摩擦處</li>
+            <li>卡其色僅少量庫存，灰色款 L 已售完</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="sub">
+        <div class="lbl">口碑來源</div>
+        <div class="src">
+          台灣迪卡儂商品頁 4.7★ / 1,184 則 → <a href="https://www.decathlon.tw/p/%E7%94%B7%E6%AC%BE%E7%BE%8E%E9%BA%97%E8%AB%BE%E7%BE%8A%E6%AF%9B%E7%9F%AD%E8%A2%96-t-%E6%81%A4-%E5%8D%A1%E5%85%B6%E8%89%B2-simond-8976798.html" target="_blank" rel="noopener">商品頁</a><br>
+          北美同款 4.4★ / 319 則（5★ 74%、1★ 6.3%）→ <a href="https://www.decathlon.ca/en/r/mens-merino-wool-trekking-t-shirt/349694/c394c394m8976795" target="_blank" rel="noopener">評論頁</a><br>
+          PTT OutdoorGear 將迪卡儂列為「價格低、品質不差」的平價羊毛選擇 → <a href="https://www.pttweb.cc/bbs/outdoorgear/M.1507198171.A.D62" target="_blank" rel="noopener">討論串</a>
+        </div>
+      </div>
+
+      <div class="sub">
+        <div class="lbl">差評歸因 · 掃描 319 則中的 38 則低星</div>
+        <div class="flaw">
+          <b>耐磨度不足、易破洞（3 次）</b>
+          <span>「買兩件只穿幾個月就出現多處破洞，布料很薄，破洞出現在背負腰帶摩擦處與袖子」— Joshua, Canada（3 週前，Value 2/5）→ <a href="https://www.decathlon.ca/en/r/mens-merino-wool-trekking-t-shirt/349694/c394c394m8976795" target="_blank" rel="noopener">出處</a></span>
+          <span>哥倫比亞頁面使用者「買 3 件都穿幾次就破洞」，迪卡儂官方回覆：美麗諾纖維較脆弱，可能因背包肩帶／腰帶摩擦造成，提供維修、換貨或退款 → <a href="https://www.decathlon.com.co/p/331113-80588-camiseta-lana-merino-de-trekking-para-hombre-forclaz-mt500-azul.html" target="_blank" rel="noopener">商品頁</a></span>
+          <b style="margin-top:9px">縫線綻開（1 次）</b>
+          <span class="q">“Coutures ne tiennent pas… les coutures se défont tous. Très piètre qualité.”</span>
+          <span>所有縫線都綻開 — Alexandre, Canada（6 個月前，Value 1/5）→ <a href="https://www.decathlon.ca/en/r/mens-merino-wool-trekking-t-shirt/349694/c394c394m8976795" target="_blank" rel="noopener">出處</a></span>
+        </div>
+      </div>
+
+      <div class="sub">
+        <div class="lbl">購買</div>
+        <div class="buy">
+          <a href="https://www.decathlon.tw/p/%E7%94%B7%E6%AC%BE%E7%BE%8E%E9%BA%97%E8%AB%BE%E7%BE%8A%E6%AF%9B%E7%9F%AD%E8%A2%96-t-%E6%81%A4-%E5%8D%A1%E5%85%B6%E8%89%B2-simond-8976798.html" target="_blank" rel="noopener"><span class="pl">迪卡儂台灣</span>卡其色 · L 少量庫存<span class="pr">1,249</span></a>
+          <a href="https://www.decathlon.tw/p/%E7%94%B7%E6%AC%BE%E8%80%90%E7%A9%BF%E7%BE%8E%E9%BA%97%E8%AB%BE%E7%BE%8A%E6%AF%9B%E7%9F%AD%E8%A2%96-t-%E6%81%A4-%E7%81%B0%E8%89%B2-simond-8976797.html" target="_blank" rel="noopener"><span class="pl">迪卡儂台灣</span>灰色 — 實測 S 有／M 無／L 無／XL 少量<span class="pr">1,249</span></a>
+        </div>
+      </div>
+    </div>
+
+    <div class="cand-card">
+      <div class="cand-head">
+        <div>
+          <div class="rank">次選 · 預算內唯一有男 L 現貨</div>
+          <h3 class="cand-name">PROGA PG26052L 男款 100% 純美麗諾羊毛短袖 T 恤</h3>
+        </div>
+        <div class="price"><small>預算內</small>930</div>
+      </div>
+
+      <div class="specs">
+        <span class="spec">100% 美麗諾</span>
+        <span class="spec">17 微米</span>
+        <span class="spec">130g</span>
+        <span class="spec">4 色</span>
+      </div>
+
+      <p class="rationale">唯一在 NT$1,000 內、男 L 現貨可買、且標示 100% 純美麗諾的選項。17 微米屬親膚等級，130g 適合夏季登山，走 Yahoo 購物中心有 15 天鑑賞期與退貨免運。但賣場新開幕、零評價——你買的是規格與退貨機制，不是口碑。</p>
+
+      <div class="pc">
+        <div>
+          <div class="lbl">優點</div>
+          <ul class="pros">
+            <li>100% 純美麗諾、17 微米、130g 輕量</li>
+            <li>NT$930（原價 1,860 的新開幕 5 折），預算內</li>
+            <li>S／M／L／XL 皆有貨</li>
+            <li>15 天鑑賞期、退貨免運，風險可控</li>
+          </ul>
+        </div>
+        <div>
+          <div class="lbl">缺點</div>
+          <ul class="cons">
+            <li>零評價，做工、縮水率、耐用度全未知</li>
+            <li>賣場新開幕，品牌辨識度低</li>
+            <li>無第三方認證或產地標示可驗證「100% 純」</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="sub">
+        <div class="lbl">口碑來源</div>
+        <div class="src">無。Yahoo 商品頁明載「尚無任何評價」；PTT／Dcard／Mobile01 查無此品牌討論；WebSearch 亦無任何 PROGA 評測。<b style="color:var(--critical)">樣本不足，無法評估品質。</b></div>
+      </div>
+
+      <div class="sub">
+        <div class="lbl">差評歸因</div>
+        <div class="flaw">無負評可掃描（0 則）。這不代表沒問題，只代表銷量低到還沒累積出樣本。</div>
+      </div>
+
+      <div class="sub">
+        <div class="lbl">購買</div>
+        <div class="buy">
+          <a href="https://tw.buy.yahoo.com/gdsale/gdsale.asp?gdid=p0530266442376" target="_blank" rel="noopener"><span class="pl">Yahoo 購物中心</span>賣場：PROGA 璞洛服飾純羊絨羊毛<span class="pr">930</span></a>
+        </div>
+      </div>
+    </div>
+
+    <div class="cand-card">
+      <div class="cand-head">
+        <div>
+          <div class="rank">第三 · 品牌可靠但台灣通路價差混亂</div>
+          <h3 class="cand-name">ISOBAA Merino 150 Short Sleeve Crew 男款 100% 美麗諾短袖</h3>
+        </div>
+        <div class="price over"><small>正品超預算</small>1,480</div>
+      </div>
+
+      <div class="specs">
+        <span class="spec">100% 美麗諾</span>
+        <span class="spec">18.5 微米</span>
+        <span class="spec">150g</span>
+        <span class="spec">Trustpilot 4.2</span>
+      </div>
+
+      <p class="rationale">英國倫敦品牌（2016 創立），專做美麗諾，設計有腋下插角布與偏移肩縫，是為背包族設想的版型。問題出在台灣通路：蝦皮 NT$820 的場無法驗證真偽與尺寸，正品經銷價 NT$1,480 則超預算。</p>
+
+      <div class="pc">
+        <div>
+          <div class="lbl">優點</div>
+          <ul class="pros">
+            <li>100% 美麗諾 18.5 微米 150g</li>
+            <li>腋下插角布、平鎖縫線、偏移肩縫、後擺加長</li>
+            <li>品牌信譽可查（Trustpilot 4.2／近 2,000 則）</li>
+            <li>國際評測評價高</li>
+          </ul>
+        </div>
+        <div>
+          <div class="lbl">缺點</div>
+          <ul class="cons">
+            <li>正品經銷價 NT$1,480–1,580，超預算</li>
+            <li>蝦皮 NT$820 場無法驗證真偽與尺寸</li>
+            <li>旋轉拍賣 NT$1,000 場僅 S 尺寸，且已刊登 1 年</li>
+            <li>版型 athletic fit 偏小，需選大一碼</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="sub">
+        <div class="lbl">口碑來源</div>
+        <div class="src">
+          Trustpilot 品牌總評 4.2／5 → <a href="https://at.trustpilot.com/review/www.isobaa.com" target="_blank" rel="noopener">連結</a><br>
+          品牌背景（2016 倫敦創立、非割臀羊毛、OEKO-TEX）→ <a href="https://madegooddesigns.com/isobaa-brand-guidelines/" target="_blank" rel="noopener">連結</a><br>
+          英國部落客實測「或許是我穿過最好的 T 恤」→ <a href="https://splodzblogz.co.uk/2021/07/26/isobaa-basic-tee/" target="_blank" rel="noopener">Splodz Blogz</a>
+        </div>
+      </div>
+
+      <div class="sub">
+        <div class="lbl">差評歸因</div>
+        <div class="flaw">
+          <b>尺碼偏小且極不穩定（2 次）</b>
+          <span>Trustpilot 多位使用者反映「有人得從 S 試到 XL 才找到合適」「像抽獎」；官方版型為 athletic fit → <a href="https://at.trustpilot.com/review/www.isobaa.com" target="_blank" rel="noopener">出處</a></span>
+          <b style="margin-top:9px">約 1 年後破洞（2 次）</b>
+          <span>使用約一年後多件產品出現破洞；也有人新衣溫和清洗一次就破洞並擴大 → <a href="https://at.trustpilot.com/review/www.isobaa.com" target="_blank" rel="noopener">出處</a></span>
+          <span>專家評測補充：美麗諾纖維易受磨損，背負重背包時背部摩擦處磨損最快 → <a href="https://www.attitude-sports.fr/isobaa-avis-la-marque-isobaa-est-elle-fiable-ce-quil-faut-savoir/" target="_blank" rel="noopener">attitude-sports</a></span>
+        </div>
+      </div>
+
+      <div class="sub">
+        <div class="lbl">購買</div>
+        <div class="buy">
+          <a class="caveat" href="https://feebee.com.tw/s/%E7%BE%8E%E9%BA%97%E8%AB%BE%E7%BE%8A%E6%AF%9B%E7%9F%AD%E8%A2%96/" target="_blank" rel="noopener"><span class="pl">蝦皮精選</span><span class="note">無法驗證真偽與尺寸，不建議直接下單</span><span class="pr">820</span></a>
+          <a class="caveat" href="https://tw.carousell.com/p/%E8%8B%B1%E5%9C%8B%E5%B0%8F%E7%BE%8A%E7%94%B7%E7%94%9F100-%E7%BE%8E%E9%BA%97%E8%AB%BE%E7%BE%8A%E6%AF%9B%E7%9F%AD%E8%A2%96%E4%B8%8A%E8%A1%A3--isobaa-merino-150-short-sleeve-crew-1341256618/" target="_blank" rel="noopener"><span class="pl">旋轉拍賣</span><span class="note">僅 S 尺寸，已刊登 1 年</span><span class="pr">1,000</span></a>
+          <a href="https://shopee.tw/product/6120488/29304718920" target="_blank" rel="noopener"><span class="pl">蝦皮商城</span>官方經銷「野型嚴選」條紋款<span class="pr">1,580</span></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>查證過但不符合的選項</h2>
+    <div class="tw">
+      <table>
+        <thead>
+          <tr><th>商品</th><th>價格</th><th>排除原因</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="name">OAI sensor 男款 DF 雙面美麗諾短袖 170g</td><td class="num">2,592</td><td>超預算（L 有貨）</td></tr>
+          <tr><td class="name">OAI sensor M Compass 男款美麗諾短袖 160g</td><td class="num">2,952</td><td>超預算</td></tr>
+          <tr><td class="name">Icebreaker 男 Core 圓領短袖（迪卡儂經銷）</td><td class="num">2,412</td><td>僅 15% 羊毛、僅 S 尺寸</td></tr>
+          <tr><td class="name">Smartwool Merino Sport 150 男短袖（momo）</td><td class="num">1,804–2,193</td><td>超預算</td></tr>
+          <tr><td class="name">Smartwool Merino Short 出清（momo）</td><td class="num">1,399</td><td>超預算（但為最低價一線品牌）</td></tr>
+          <tr><td class="name">Icebreaker Anatomica 短袖 L（旋轉拍賣二手）</td><td class="num">880</td><td>3 年前刊登，幾乎確定已售出</td></tr>
+          <tr><td class="name">男美利奴羊毛條紋海魂衫（蝦皮）</td><td class="num">376</td><td>價格過低、羊毛比例與真偽不明</td></tr>
+          <tr><td class="name">迪卡儂香港 70% 羊毛混紡短袖</td><td class="num">≈700</td><td>香港通路，台灣迪卡儂未販售</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>建議</h2>
+    <div class="advice">
+      <div class="advice-item">
+        <div class="k">加到 1,250</div>
+        <div class="v">直接買 <b>Decathlon SIMOND 卡其色（L 少量庫存）</b>。超出的 NT$249 換到的是上千則評價、365 天退貨與門市保固——「不會踩雷」在登山裝備上值這個錢。</div>
+      </div>
+      <div class="advice-item">
+        <div class="k">守住 1,000</div>
+        <div class="v">只能選 <b>PROGA PG26052L（NT$930）</b>，等於賭它的「100% 純美麗諾」標示為真。務必利用 15 天鑑賞期：<b>收貨當天就檢查車縫、試穿確認版型與縮水</b>，不滿意直接退。</div>
+      </div>
+      <div class="advice-item">
+        <div class="k">別碰</div>
+        <div class="v">蝦皮 NT$820 與 NT$376 那類低價場。無法驗證真偽、退換無保障，省下的是幾百元，賠上的是整趟行程的保暖層。</div>
+      </div>
+      <div class="advice-item">
+        <div class="k">保養才是關鍵</div>
+        <div class="v">不論買哪件，美麗諾遇到<b>背包肩帶／腰帶摩擦處</b>都容易破洞——三個候選的負評都指向同一點。用中性或酸性洗劑（PTT 版友點名 Persil 是「羊毛殺手」）、水溫低於 40°C、陰乾，可明顯延長壽命 → <a href="https://www.pttweb.cc/bbs/outdoorgear/M.1507198171.A.D62" target="_blank" rel="noopener" style="color:var(--accent-ink)">PTT 羊毛保養討論</a></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>降價追蹤</h2>
+    <p class="lede">本報告不建立自動排程。以下是各平台可自行設定的通知方式：</p>
+    <div class="tw">
+      <table>
+        <thead>
+          <tr><th>目標</th><th>平台</th><th>設定方式</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="name">Decathlon SIMOND 降到 NT$1,000 內</td><td>迪卡儂官網</td><td>商品頁加入追蹤；迪卡儂季末常有 10–30% 折扣</td></tr>
+          <tr><td class="name">PROGA</td><td>Yahoo 購物中心</td><td>商品頁「追蹤商品」，降價推播</td></tr>
+          <tr><td class="name">ISOBAA 正品</td><td>比價王 BigGo</td><td>設「降價通知」，可跨平台比價</td></tr>
+          <tr><td class="name">泛用</td><td>蝦皮</td><td>商品頁按「❤ 關注」由 App 推播（僅供追蹤）</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <div class="note-block">
+    <b>方法備註</b><br>
+    搜尋範圍：PTT OutdoorGear（讀原文）、Mobile01／Dcard（僅摘要）、Reddit 與國際評測（WebSearch）、迪卡儂台灣官網（Playwright 實查庫存）、BigGo／feebee 比價、Yahoo 購物中心與旋轉拍賣（Playwright 實查）。<br>
+    蝦皮的搜尋頁與商品頁全程未以自動化進站，蝦皮價格改由 BigGo／feebee 取得。ISOBAA 的 Trustpilot 負評與 Decathlon 北美評論頁為逐條實際閱讀，非摘要轉述。PROGA 因零評價，已明確標示樣本不足，未以推測填補。<br>
+    價格不含運費，實際以各平台結帳頁為準；庫存為 2026-09-23 查詢當下的狀態，可能隨時變動。
+  </div>
+
+  <footer>
+    資料時間 2026-09-23 · 篩選條件：男款 L、登山用、NT$1,000 以內、不限廠牌
+  </footer>
+
+</div>
