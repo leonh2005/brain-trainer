@@ -10,6 +10,7 @@
 // 但接進正式管線前仍須由使用者確認隱私政策。
 import fs from 'node:fs';
 import path from 'node:path';
+import { Pseudonyms, applyPrivacy, listEntities } from './anonymize.mjs';
 
 const HOME = process.env.HOME;
 const TRANSCRIPT = path.join(
@@ -19,7 +20,8 @@ const KEY_PATH = path.join(HOME, 'CCProject/.secrets/typesafe_jev_key.txt');
 
 // --anchor：改測「同一條任務線實際執行時產生的 tool 輸出」（真陽性對照組）
 const MODE = process.argv.includes('--anchor') ? 'anchor' : 'baseline';
-const OUT_PATH = path.join(HOME, `CCProject/jev-compaction/result-${MODE}.json`);
+const ANON = process.argv.includes('--anon');
+const OUT_PATH = path.join(HOME, `CCProject/jev-compaction/result-${MODE}${ANON ? '-anon' : ''}.json`);
 
 const TARGET_LINE = 5472;   // 模擬時刻：第 120 個使用者提問
 const ANCHOR_END = 5904;    // 錨點模式：到第 121 個提問為止（同為 DCF 任務）
@@ -39,34 +41,13 @@ function withTimeout(promise, ms) {
   ]);
 }
 
-// 送出前的敏感字串遮蔽。順序重要：較具體的樣式要排在較通用的前面。
-const REDACTIONS = [
-  [/-----BEGIN [A-Z ]*PRIVATE KEY-----[\s\S]*?-----END [A-Z ]*PRIVATE KEY-----/g, '[REDACTED_PRIVATE_KEY]'],
-  [/sk-ant-[A-Za-z0-9_-]{16,}/g, '[REDACTED_ANTHROPIC_KEY]'],
-  [/sk-[A-Za-z0-9_-]{16,}/g, '[REDACTED_OPENAI_KEY]'],
-  [/apikey_[A-Za-z0-9_]{16,}/g, '[REDACTED_TYPESAFE_KEY]'],
-  [/AKIA[0-9A-Z]{16}/g, '[REDACTED_AWS_KEY]'],
-  [/gh[pousr]_[A-Za-z0-9]{20,}/g, '[REDACTED_GITHUB_TOKEN]'],
-  [/glpat-[A-Za-z0-9_-]{20,}/g, '[REDACTED_GITLAB_TOKEN]'],
-  [/xox[baprs]-[A-Za-z0-9-]{10,}/g, '[REDACTED_SLACK_TOKEN]'],
-  [/AIza[0-9A-Za-z_-]{35}/g, '[REDACTED_GOOGLE_KEY]'],
-  [/\b\d{8,10}:[A-Za-z0-9_-]{35}\b/g, '[REDACTED_TELEGRAM_TOKEN]'],
-  [/eyJ[A-Za-z0-9_-]{15,}\.[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}/g, '[REDACTED_JWT]'],
-  [/\b[A-Z][12]\d{8}\b/g, '[REDACTED_TW_ID]'],
-  [/\b[\w.+-]+@[\w-]+\.[a-z]{2,}\b/gi, '[REDACTED_EMAIL]'],
-  [/(Bearer\s+)[A-Za-z0-9._-]{10,}/g, '$1[REDACTED]'],
-  // 通用賦值：涵蓋雙引號、單引號、無引號三種寫法
-  [
-    /((?:"|')?(?:password|passwd|pwd|api[_-]?key|token|secret)(?:"|')?\s*[:=]\s*)(?:"[^"]{4,}"|'[^']{4,}'|[A-Za-z0-9_\-./+]{12,})/gi,
-    '$1[REDACTED]',
-  ],
-];
-
-function redact(text) {
-  let out = text;
-  for (const [re, rep] of REDACTIONS) out = out.replace(re, rep);
-  return out;
-}
+// 隱私處理（憑證遮蔽 + 偽名化）抽在 anonymize.mjs，供其他腳本共用。
+const pseudonyms = new Pseudonyms();
+// 專案名單：處理純文字中對專案的提及（不只路徑形式）。
+const ENTITIES = listEntities(path.join(HOME, 'CCProject'));
+// current_task 本身也含識別資訊（localhost:5950、control-center），必須一併處理，
+// 且必須與 tool_outputs 共用同一組代號，否則 Jev 看到的任務與內容對不起來。
+const SAFE_TASK = applyPrivacy(TASK, pseudonyms, ANON, ENTITIES);
 
 // 定位 npx 快取中的 SDK（不硬編 hash，npx 重裝後仍可用）
 function resolveSdk() {
@@ -108,7 +89,7 @@ function collectCandidates(file, startLine, endLine) {
           id: blk.tool_use_id,
           tool: toolNames.get(blk.tool_use_id) ?? '?',
           chars: raw.length,
-          text: redact(raw.slice(0, TRUNC)),
+          text: applyPrivacy(raw.slice(0, TRUNC), pseudonyms, ANON, ENTITIES),
         });
       }
     }
@@ -126,7 +107,7 @@ async function scoreBatch(client, noul, batch, offset) {
     );
   });
   const res = await client.systemOne({
-    state: { current_task: TASK, tool_outputs: outputs },
+    state: { current_task: SAFE_TASK, tool_outputs: outputs },
     questions,
     model: 'jev-latest',
   });
