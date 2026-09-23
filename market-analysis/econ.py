@@ -171,8 +171,10 @@ _PPI_RELEASE_2026 = ["2026-01-14", "2026-01-30", "2026-02-27", "2026-03-18",
 # BEA 官方公告之 2026 核心PCE物價指數(Personal Income and Outlays)公布日期(美東時間 8:30 AM)
 _PCE_RELEASE_2026 = ["2026-08-26", "2026-09-30", "2026-11-25", "2026-12-23"]
 
-# 2026 國際領袖峰會(國家元首會面)。僅收主辦方/官方公告確認日期者,
+# 2026 多邊領袖峰會。僅收主辦方/官方公告確認日期者,
 # 媒體推估或日期未定(如 BRICS 印度)一律不列,避免日曆出現假事件。
+# 雙邊元首會面(如川習會)由 leader_meetings.json 每週自動掃描維護,不列於此,
+# 以免兩個來源對同一場會面各寫一筆。
 # 日期取領袖場次首日(ASEAN 取菲總統府公告之非工作日首日)。
 _SUMMITS_2026 = [
     ("2026-11-11", "COP31 世界領袖氣候行動峰會（土耳其安塔利亞）"),
@@ -231,10 +233,16 @@ def _events():
     if today <= election <= year_end:
         events.append({"date": election.isoformat(), "category": "美國選舉", "title": "美國期中選舉日"})
 
-    # 國際領袖峰會(國家元首會面)
+    # 國際領袖會面(人工兜底 + 每週自動掃描)
     for d, title in _SUMMITS_2026:
         if today.isoformat() <= d <= year_end.isoformat():
             events.append({"date": d, "category": "元首會面", "title": title})
+    try:
+        events += [{"date": e["date"], "category": "元首會面", "title": e["title"]}
+                   for e in _leader_meetings()
+                   if today.isoformat() <= e["date"] <= year_end.isoformat()]
+    except Exception:
+        pass  # 掃描檔缺失或損毀不影響其他事件
 
     # 台美龍頭法說會
     events += _earnings(today.isoformat(), year_end.isoformat())
@@ -243,8 +251,16 @@ def _events():
     except Exception:
         pass  # MOPS 偶爾不穩,不影響其他事件顯示
 
-    events.sort(key=lambda x: x["date"])
-    return events
+    # 人工清單與自動掃描可能有重複,依日期+標題去重
+    seen = set()
+    unique = []
+    for e in events:
+        key = (e["date"], e["title"])
+        if key not in seen:
+            seen.add(key)
+            unique.append(e)
+    unique.sort(key=lambda x: x["date"])
+    return unique
 
 
 def _war_news():
@@ -273,6 +289,14 @@ def _tw_econ():
     path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "tw_econ.json")
     with open(path, encoding="utf-8") as f:
         return json.load(f)
+
+
+def _leader_meetings():
+    """自動掃描寫入的元首會面(scan_leader_meetings.py 每週更新)。"""
+    path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "leader_meetings.json")
+    with open(path, encoding="utf-8") as f:
+        data = json.load(f)
+    return [e for e in data.get("events", []) if e.get("date") and e.get("title")]
 
 
 def _build():

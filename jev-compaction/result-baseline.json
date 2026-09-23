@@ -1,0 +1,2526 @@
+{
+  "task": "使用者在問：http://localhost:5950/svc/5800/ 只輸入代碼無法帶出中文股名，想辦法要可以互相帶出（輸入代碼要顯示中文股名）。這是 control-center 上的 DCF 查詢頁。",
+  "target_line": 5472,
+  "threshold": 0.2,
+  "batch_size": 25,
+  "total": {
+    "count": 358,
+    "chars": 556810
+  },
+  "dropped": {
+    "count": 335,
+    "chars": 491073
+  },
+  "usage": {
+    "input_tokens": 114952,
+    "output_tokens": 6752
+  },
+  "results": [
+    {
+      "id": "toolu_01JhKyVwW7aekNZn865PvFyC",
+      "tool": "Bash",
+      "chars": 1723,
+      "relevance": 0.2,
+      "kept": true
+    },
+    {
+      "id": "toolu_01KgshhHSCFTH88dup9hivcG",
+      "tool": "Bash",
+      "chars": 1999,
+      "relevance": 0.17,
+      "kept": false
+    },
+    {
+      "id": "toolu_01B5EzXSfhJJi9nr44CJ2hw3",
+      "tool": "Bash",
+      "chars": 700,
+      "relevance": 0.14,
+      "kept": false
+    },
+    {
+      "id": "toolu_01UVSwfR6MnefJjztGAFjoyP",
+      "tool": "Read",
+      "chars": 6809,
+      "relevance": 0.21,
+      "kept": true
+    },
+    {
+      "id": "toolu_01G1HXjWSRf6dfYwm3WBSKYe",
+      "tool": "Bash",
+      "chars": 467,
+      "relevance": 0.15,
+      "kept": false
+    },
+    {
+      "id": "toolu_01BpzMf8vgyiHdpHzNQdSBec",
+      "tool": "Bash",
+      "chars": 1796,
+      "relevance": 0.15,
+      "kept": false
+    },
+    {
+      "id": "toolu_013gjJWnxGWW8vNy9KjxQrjy",
+      "tool": "Read",
+      "chars": 2095,
+      "relevance": 0.15,
+      "kept": false
+    },
+    {
+      "id": "toolu_01A6hX2mwxivX1r3DU1HpGqr",
+      "tool": "Read",
+      "chars": 4133,
+      "relevance": 0.21,
+      "kept": true
+    },
+    {
+      "id": "toolu_01TcCyjxsVTJ1benK6kqrb4j",
+      "tool": "mcp__playwright__browser_navigate",
+      "chars": 219,
+      "relevance": 0.23,
+      "kept": true
+    },
+    {
+      "id": "toolu_01Azh4A5bPgnfC9A8cQBrEmf",
+      "tool": "mcp__playwright__browser_find",
+      "chars": 17211,
+      "relevance": 0.15,
+      "kept": false
+    },
+    {
+      "id": "toolu_01GvpVmjueP1MkGstdt9pKMb",
+      "tool": "mcp__playwright__browser_click",
+      "chars": 219,
+      "relevance": 0.16,
+      "kept": false
+    },
+    {
+      "id": "toolu_015KhSepQxr2rV9SCHQenzyp",
+      "tool": "mcp__playwright__browser_evaluate",
+      "chars": 750,
+      "relevance": 0.13,
+      "kept": false
+    },
+    {
+      "id": "toolu_013L7xJ8J2UCBykeKHSqSuYi",
+      "tool": "mcp__playwright__browser_evaluate",
+      "chars": 304,
+      "relevance": 0.12,
+      "kept": false
+    },
+    {
+      "id": "toolu_019BxZBhNrTsff3BhzHwxwtU",
+      "tool": "mcp__playwright__browser_click",
+      "chars": 219,
+      "relevance": 0.13,
+      "kept": false
+    },
+    {
+      "id": "toolu_01DeoTmU49iw8NWRsZEL8dbU",
+      "tool": "mcp__playwright__browser_navigate",
+      "chars": 219,
+      "relevance": 0.17,
+      "kept": false
+    },
+    {
+      "id": "toolu_01EzRUko2Uh3JkKzVwGvGgH5",
+      "tool": "mcp__playwright__browser_evaluate",
+      "chars": 234,
+      "relevance": 0.12,
+      "kept": false
+    },
+    {
+      "id": "toolu_01RvY91Y7Tts3Mgt9SMM5D1m",
+      "tool": "Bash",
+      "chars": 1876,
+      "relevance": 0.15,
+      "kept": false
+    },
+    {
+      "id": "toolu_014xDSHcpHDbek6ug5M58dHN",
+      "tool": "Read",
+      "chars": 2101,
+      "relevance": 0.14,
+      "kept": false
+    },
+    {
+      "id": "toolu_01NJqYRrRpqQnsboPQWiSTvH",
+      "tool": "Bash",
+      "chars": 888,
+      "relevance": 0.14,
+      "kept": false
+    },
+    {
+      "id": "toolu_018jRTiPyEu3ZbHF6pzMgxMz",
+      "tool": "Read",
+      "chars": 3378,
+      "relevance": 0.15,
+      "kept": false
+    },
+    {
+      "id": "toolu_01Tqr574DGoFryraRWpngWCW",
+      "tool": "mcp__playwright__browser_navigate",
+      "chars": 219,
+      "relevance": 0.17,
+      "kept": false
+    },
+    {
+      "id": "toolu_01Wg28YsJ8JhTpjefV6GqDNX",
+      "tool": "mcp__playwright__browser_evaluate",
+      "chars": 705,
+      "relevance": 0.11,
+      "kept": false
+    },
+    {
+      "id": "toolu_01Mkz3Ymd7zYAMeTSEqWeBJr",
+      "tool": "mcp__playwright__browser_navigate",
+      "chars": 219,
+      "relevance": 0.13,
+      "kept": false
+    },
+    {
+      "id": "toolu_01U2xebN9peRTKA7NETXmtLn",
+      "tool": "mcp__playwright__browser_evaluate",
+      "chars": 326,
+      "relevance": 0.1,
+      "kept": false
+    },
+    {
+      "id": "toolu_01VN2ScVHSpdWD8j2XBvdubA",
+      "tool": "mcp__playwright__browser_take_screenshot",
+      "chars": 258,
+      "relevance": 0.08,
+      "kept": false
+    },
+    {
+      "id": "toolu_0198mxBJbWV3R49ZQEr5Mfn2",
+      "tool": "mcp__playwright__browser_take_screenshot",
+      "chars": 264,
+      "relevance": 0.16,
+      "kept": false
+    },
+    {
+      "id": "toolu_01Q6kT6aKXnDdJsuhEzMDsgN",
+      "tool": "Bash",
+      "chars": 1995,
+      "relevance": 0.1,
+      "kept": false
+    },
+    {
+      "id": "toolu_011xmib53tCEvH28kNYEBSaU",
+      "tool": "Bash",
+      "chars": 7795,
+      "relevance": 0.11,
+      "kept": false
+    },
+    {
+      "id": "toolu_01Ch8bYrU3m4fQZeBzvYK7k4",
+      "tool": "Bash",
+      "chars": 1371,
+      "relevance": 0.19,
+      "kept": false
+    },
+    {
+      "id": "toolu_01HiBbM1YHQwYNW8CirtWdR2",
+      "tool": "Bash",
+      "chars": 2250,
+      "relevance": 0.18,
+      "kept": false
+    },
+    {
+      "id": "toolu_01Ewgo6KvKrKadfFpwY8xRuE",
+      "tool": "Bash",
+      "chars": 3703,
+      "relevance": 0.17,
+      "kept": false
+    },
+    {
+      "id": "toolu_01GMjkNJRFceotrQoiMmgKcm",
+      "tool": "Bash",
+      "chars": 1616,
+      "relevance": 0.13,
+      "kept": false
+    },
+    {
+      "id": "toolu_01BdETzs5DncLZ3DLErcihwX",
+      "tool": "Write",
+      "chars": 202,
+      "relevance": 0.1,
+      "kept": false
+    },
+    {
+      "id": "toolu_01FoEJRC7dd7NLaKZbKamEve",
+      "tool": "Bash",
+      "chars": 1196,
+      "relevance": 0.17,
+      "kept": false
+    },
+    {
+      "id": "toolu_01CwV6hV4rCnEKyvAA1M1RQR",
+      "tool": "Bash",
+      "chars": 422,
+      "relevance": 0.15,
+      "kept": false
+    },
+    {
+      "id": "toolu_01CJUB8D8gxWKyPUNWkobzBi",
+      "tool": "Bash",
+      "chars": 273,
+      "relevance": 0.14,
+      "kept": false
+    },
+    {
+      "id": "toolu_011iNZriRraM5JGBHSNdvnAu",
+      "tool": "Bash",
+      "chars": 607,
+      "relevance": 0.12,
+      "kept": false
+    },
+    {
+      "id": "toolu_01ShEd8GRYg4uqQFzMSSMKVh",
+      "tool": "Bash",
+      "chars": 577,
+      "relevance": 0.16,
+      "kept": false
+    },
+    {
+      "id": "toolu_0199bW2UzcbkVH8qujbhMat6",
+      "tool": "Bash",
+      "chars": 673,
+      "relevance": 0.13,
+      "kept": false
+    },
+    {
+      "id": "toolu_01HorDk14usJUViP5J7kTMdF",
+      "tool": "Bash",
+      "chars": 264,
+      "relevance": 0.15,
+      "kept": false
+    },
+    {
+      "id": "toolu_01Tvc3UWocJenCjqYKPqNUEt",
+      "tool": "Bash",
+      "chars": 3842,
+      "relevance": 0.12,
+      "kept": false
+    },
+    {
+      "id": "toolu_01HN58ek8GpPZvdHS375AsfT",
+      "tool": "Bash",
+      "chars": 1494,
+      "relevance": 0.12,
+      "kept": false
+    },
+    {
+      "id": "toolu_019EQKz5gWcXcbjhxSjKZMJi",
+      "tool": "Bash",
+      "chars": 318,
+      "relevance": 0.11,
+      "kept": false
+    },
+    {
+      "id": "toolu_01TfdQM7PsXXhjnqEfdWVPma",
+      "tool": "Bash",
+      "chars": 2110,
+      "relevance": 0.11,
+      "kept": false
+    },
+    {
+      "id": "toolu_01VyXBQwq71NRAzJuSk9kUc2",
+      "tool": "Bash",
+      "chars": 353,
+      "relevance": 0.1,
+      "kept": false
+    },
+    {
+      "id": "toolu_016VWdSZMGsAL18nAkv1mQdt",
+      "tool": "Bash",
+      "chars": 1061,
+      "relevance": 0.11,
+      "kept": false
+    },
+    {
+      "id": "toolu_01AXTfTtztYJXEAzXedjRygX",
+      "tool": "Bash",
+      "chars": 775,
+      "relevance": 0.08,
+      "kept": false
+    },
+    {
+      "id": "toolu_01Xu83aAjBX3paXtq3rJfMMC",
+      "tool": "Bash",
+      "chars": 406,
+      "relevance": 0.09,
+      "kept": false
+    },
+    {
+      "id": "toolu_01G1suZDBaV262yJ3VUnaoJx",
+      "tool": "Read",
+      "chars": 1483,
+      "relevance": 0.13,
+      "kept": false
+    },
+    {
+      "id": "toolu_011zDHHafR389HdLMxrRLPti",
+      "tool": "Read",
+      "chars": 10307,
+      "relevance": 0.46,
+      "kept": true
+    },
+    {
+      "id": "toolu_01E1Vox7kUDuVS8BZcGbbT1P",
+      "tool": "Bash",
+      "chars": 645,
+      "relevance": 0.16,
+      "kept": false
+    },
+    {
+      "id": "toolu_01PPZZWvFfTmkJznMz5z9MMg",
+      "tool": "Read",
+      "chars": 1782,
+      "relevance": 0.15,
+      "kept": false
+    },
+    {
+      "id": "toolu_017YbKuBGxoLvu2cpFqbnCrR",
+      "tool": "mcp__playwright__browser_navigate",
+      "chars": 219,
+      "relevance": 0.18,
+      "kept": false
+    },
+    {
+      "id": "toolu_01Bos8XPbCVShFKC83D6Afp1",
+      "tool": "mcp__playwright__browser_evaluate",
+      "chars": 238,
+      "relevance": 0.11,
+      "kept": false
+    },
+    {
+      "id": "toolu_019gPjoGkQN8skmdqRdwZC6q",
+      "tool": "mcp__playwright__browser_navigate",
+      "chars": 219,
+      "relevance": 0.16,
+      "kept": false
+    },
+    {
+      "id": "toolu_018v8SKYCB9rMLE98kn1jUhp",
+      "tool": "mcp__playwright__browser_take_screenshot",
+      "chars": 259,
+      "relevance": 0.11,
+      "kept": false
+    },
+    {
+      "id": "toolu_01KZH9rbYseQt1oMGwTgFW9U",
+      "tool": "mcp__playwright__browser_take_screenshot",
+      "chars": 258,
+      "relevance": 0.1,
+      "kept": false
+    },
+    {
+      "id": "toolu_01GAKMt5VTvmULqraU9CzaQk",
+      "tool": "mcp__playwright__browser_evaluate",
+      "chars": 204,
+      "relevance": 0.1,
+      "kept": false
+    },
+    {
+      "id": "toolu_01QW7rmRTyWAUK696LGJmqKs",
+      "tool": "mcp__playwright__browser_take_screenshot",
+      "chars": 261,
+      "relevance": 0.12,
+      "kept": false
+    },
+    {
+      "id": "toolu_01FLXbqqTrX7Ns9oBqBXHoi7",
+      "tool": "mcp__playwright__browser_find",
+      "chars": 471,
+      "relevance": 0.13,
+      "kept": false
+    },
+    {
+      "id": "toolu_01TFhnUASanEjcZ9R3o6beKq",
+      "tool": "mcp__playwright__browser_evaluate",
+      "chars": 272,
+      "relevance": 0.11,
+      "kept": false
+    },
+    {
+      "id": "toolu_015UwkDzEkmgph3qBL78WxSn",
+      "tool": "mcp__playwright__browser_take_screenshot",
+      "chars": 255,
+      "relevance": 0.11,
+      "kept": false
+    },
+    {
+      "id": "toolu_013KHHV5EnEmL5eBociXv23M",
+      "tool": "mcp__playwright__browser_evaluate",
+      "chars": 301,
+      "relevance": 0.11,
+      "kept": false
+    },
+    {
+      "id": "toolu_01PvtB5ggAKgPdexp73Wwu68",
+      "tool": "mcp__playwright__browser_take_screenshot",
+      "chars": 267,
+      "relevance": 0.1,
+      "kept": false
+    },
+    {
+      "id": "toolu_01F9LJKTXHSKPbYijpHDV9Lv",
+      "tool": "mcp__playwright__browser_navigate",
+      "chars": 219,
+      "relevance": 0.17,
+      "kept": false
+    },
+    {
+      "id": "toolu_01FmZcv9rDVSYzZeNTk9yGpU",
+      "tool": "mcp__playwright__browser_take_screenshot",
+      "chars": 256,
+      "relevance": 0.11,
+      "kept": false
+    },
+    {
+      "id": "toolu_01UswTQYH3kCWYyHaXn9JJ3a",
+      "tool": "Bash",
+      "chars": 210,
+      "relevance": 0.07,
+      "kept": false
+    },
+    {
+      "id": "toolu_01X1sbor9tUSeYCwt7GnU92r",
+      "tool": "Bash",
+      "chars": 4344,
+      "relevance": 0.07,
+      "kept": false
+    },
+    {
+      "id": "toolu_013RPVw7TQVM5Hj2h9HaFVN9",
+      "tool": "Bash",
+      "chars": 5395,
+      "relevance": 0.1,
+      "kept": false
+    },
+    {
+      "id": "toolu_01DraevUmf3E9rSBfQxDzZg9",
+      "tool": "Bash",
+      "chars": 530,
+      "relevance": 0.08,
+      "kept": false
+    },
+    {
+      "id": "toolu_012T7nK3K82gdXg7haixLE5K",
+      "tool": "Bash",
+      "chars": 2329,
+      "relevance": 0.08,
+      "kept": false
+    },
+    {
+      "id": "toolu_01L9Z9cx51JQNMCQ9atgFgkW",
+      "tool": "Bash",
+      "chars": 2466,
+      "relevance": 0.06,
+      "kept": false
+    },
+    {
+      "id": "toolu_01MVQXEzYp8wz6dqU7yFVv8C",
+      "tool": "Read",
+      "chars": 1579,
+      "relevance": 0.12,
+      "kept": false
+    },
+    {
+      "id": "toolu_01Go5ZKekKhKbqqwBrShsx1h",
+      "tool": "Bash",
+      "chars": 13016,
+      "relevance": 0.1,
+      "kept": false
+    },
+    {
+      "id": "toolu_017v7XGs6KkuT8rnGb3959xt",
+      "tool": "Bash",
+      "chars": 659,
+      "relevance": 0.09,
+      "kept": false
+    },
+    {
+      "id": "toolu_015wGUxMACTGbHsohDBpj6gH",
+      "tool": "Bash",
+      "chars": 330,
+      "relevance": 0.15,
+      "kept": false
+    },
+    {
+      "id": "toolu_013HQoWhKgDjLic9NyVEdM5w",
+      "tool": "Read",
+      "chars": 1311,
+      "relevance": 0.15,
+      "kept": false
+    },
+    {
+      "id": "toolu_01S1hYVZ5h4aPDR8dRpjG1uf",
+      "tool": "Bash",
+      "chars": 227,
+      "relevance": 0.19,
+      "kept": false
+    },
+    {
+      "id": "toolu_01UtogqKLvCVpTqC1mkfwDgE",
+      "tool": "Bash",
+      "chars": 681,
+      "relevance": 0.12,
+      "kept": false
+    },
+    {
+      "id": "toolu_01LVwj3d7gAU2PzGhiX5e3qu",
+      "tool": "Bash",
+      "chars": 463,
+      "relevance": 0.12,
+      "kept": false
+    },
+    {
+      "id": "toolu_014FPMFM2EeswEhiB2hJNAX5",
+      "tool": "Bash",
+      "chars": 208,
+      "relevance": 0.11,
+      "kept": false
+    },
+    {
+      "id": "toolu_01EVi5hFCB27KinMJaibeSHd",
+      "tool": "Bash",
+      "chars": 506,
+      "relevance": 0.12,
+      "kept": false
+    },
+    {
+      "id": "toolu_019sm3mjy5kERaQbeBLvzbd4",
+      "tool": "Bash",
+      "chars": 326,
+      "relevance": 0.11,
+      "kept": false
+    },
+    {
+      "id": "toolu_01Kp59JZJ6HH3TEk5AgHstMf",
+      "tool": "Read",
+      "chars": 2920,
+      "relevance": 0.08,
+      "kept": false
+    },
+    {
+      "id": "toolu_01CitcbtHrQABAg6V2GFg3g7",
+      "tool": "Read",
+      "chars": 6754,
+      "relevance": 0.11,
+      "kept": false
+    },
+    {
+      "id": "toolu_01NVSC7scPqJKiDz5D6QLGvh",
+      "tool": "Bash",
+      "chars": 1933,
+      "relevance": 0.19,
+      "kept": false
+    },
+    {
+      "id": "toolu_012M5ozx6KqURMiao2i1MjFe",
+      "tool": "Bash",
+      "chars": 2067,
+      "relevance": 0.28,
+      "kept": true
+    },
+    {
+      "id": "toolu_01H3DKjipyYsXYn2kyMKMLNW",
+      "tool": "Bash",
+      "chars": 1290,
+      "relevance": 0.13,
+      "kept": false
+    },
+    {
+      "id": "toolu_01UVnQkc186kjTFu5xMgYWfW",
+      "tool": "Bash",
+      "chars": 819,
+      "relevance": 0.22,
+      "kept": true
+    },
+    {
+      "id": "toolu_01QyeGoXSRQus9XLNTbCacC5",
+      "tool": "Bash",
+      "chars": 1322,
+      "relevance": 0.12,
+      "kept": false
+    },
+    {
+      "id": "toolu_01Xb9Z3dEwKX53URmizjr1B1",
+      "tool": "Bash",
+      "chars": 1424,
+      "relevance": 0.12,
+      "kept": false
+    },
+    {
+      "id": "toolu_01SZQ4mVE985nK6sXAh6K3Ae",
+      "tool": "Bash",
+      "chars": 437,
+      "relevance": 0.14,
+      "kept": false
+    },
+    {
+      "id": "toolu_01EM45EqhHR2PFiJurNr4U6A",
+      "tool": "Bash",
+      "chars": 1292,
+      "relevance": 0.12,
+      "kept": false
+    },
+    {
+      "id": "toolu_0152go1XzLY4tsDhmFiw95E9",
+      "tool": "Bash",
+      "chars": 3285,
+      "relevance": 0.2,
+      "kept": true
+    },
+    {
+      "id": "toolu_0119wGYgqDoWxx1af3yzaCmv",
+      "tool": "Bash",
+      "chars": 875,
+      "relevance": 0.22,
+      "kept": true
+    },
+    {
+      "id": "toolu_01F5E4x7iVUhG2YBaYBmZfnu",
+      "tool": "Read",
+      "chars": 1527,
+      "relevance": 0.14,
+      "kept": false
+    },
+    {
+      "id": "toolu_01Qgp1y5MD2MjhudkYnp2UWr",
+      "tool": "Bash",
+      "chars": 346,
+      "relevance": 0.2,
+      "kept": true
+    },
+    {
+      "id": "toolu_012fBPG7H9zxwfbwKiLydKiV",
+      "tool": "Read",
+      "chars": 305,
+      "relevance": 0.12,
+      "kept": false
+    },
+    {
+      "id": "toolu_01Hfj5VwUfwthq1YhbmPunQh",
+      "tool": "Bash",
+      "chars": 2055,
+      "relevance": 0.26,
+      "kept": true
+    },
+    {
+      "id": "toolu_01LV1Y5XUeM7uotP2AZB71Vz",
+      "tool": "Bash",
+      "chars": 2634,
+      "relevance": 0.22,
+      "kept": true
+    },
+    {
+      "id": "toolu_01Nfbnt75RW5iRbBpKS4Qox7",
+      "tool": "Bash",
+      "chars": 367,
+      "relevance": 0.14,
+      "kept": false
+    },
+    {
+      "id": "toolu_01SAGeRikRtBobL6XoNVG8eG",
+      "tool": "Bash",
+      "chars": 2119,
+      "relevance": 0.18,
+      "kept": false
+    },
+    {
+      "id": "toolu_01RLZshpU49PCPXUEshbPKrq",
+      "tool": "Bash",
+      "chars": 5908,
+      "relevance": 0.24,
+      "kept": true
+    },
+    {
+      "id": "toolu_01K9Q24nAR6v1AYshwNxnUZx",
+      "tool": "Bash",
+      "chars": 660,
+      "relevance": 0.19,
+      "kept": false
+    },
+    {
+      "id": "toolu_01Jwv2NScwwyiU4awnX1fpfa",
+      "tool": "Bash",
+      "chars": 737,
+      "relevance": 0.21,
+      "kept": true
+    },
+    {
+      "id": "toolu_012BUq8BTQ2xWDWxcaX7sPij",
+      "tool": "Bash",
+      "chars": 519,
+      "relevance": 0.16,
+      "kept": false
+    },
+    {
+      "id": "toolu_01SXWF7Kce8Lcm3kZtJ3gd4a",
+      "tool": "Bash",
+      "chars": 444,
+      "relevance": 0.36,
+      "kept": true
+    },
+    {
+      "id": "toolu_01XqSURF94E2iV2i4oTtB57v",
+      "tool": "Bash",
+      "chars": 1133,
+      "relevance": 0.29,
+      "kept": true
+    },
+    {
+      "id": "toolu_01NFihBZPprktEwiWamCHNf6",
+      "tool": "Bash",
+      "chars": 389,
+      "relevance": 0.13,
+      "kept": false
+    },
+    {
+      "id": "toolu_01Kzu4XEysgkzco6E3XXbabB",
+      "tool": "Write",
+      "chars": 217,
+      "relevance": 0.08,
+      "kept": false
+    },
+    {
+      "id": "toolu_01Raz4vrRufM2ewjsdMc2zfo",
+      "tool": "Bash",
+      "chars": 2315,
+      "relevance": 0.09,
+      "kept": false
+    },
+    {
+      "id": "toolu_01EaepH8RCJvJu9wPG6YXWta",
+      "tool": "Bash",
+      "chars": 221,
+      "relevance": 0.12,
+      "kept": false
+    },
+    {
+      "id": "toolu_01LUqX72GktzTr1nscGeeQ64",
+      "tool": "Read",
+      "chars": 3363,
+      "relevance": 0.09,
+      "kept": false
+    },
+    {
+      "id": "toolu_01292k5FzayTggz6NeKpt8qc",
+      "tool": "Bash",
+      "chars": 317,
+      "relevance": 0.07,
+      "kept": false
+    },
+    {
+      "id": "toolu_011c5BP7QnbTtvYZAMMKNpMo",
+      "tool": "Bash",
+      "chars": 335,
+      "relevance": 0.08,
+      "kept": false
+    },
+    {
+      "id": "toolu_016C2emzmJrF55m33WvZYwee",
+      "tool": "Read",
+      "chars": 477,
+      "relevance": 0.08,
+      "kept": false
+    },
+    {
+      "id": "toolu_01FsbVRojwM3xBJnFEaC53AB",
+      "tool": "Bash",
+      "chars": 361,
+      "relevance": 0.07,
+      "kept": false
+    },
+    {
+      "id": "toolu_01EmGvDt1mu8KbH1AFg9c8kt",
+      "tool": "Bash",
+      "chars": 468,
+      "relevance": 0.06,
+      "kept": false
+    },
+    {
+      "id": "toolu_017znJCzmH6XRj3Y3iERiNxv",
+      "tool": "Bash",
+      "chars": 361,
+      "relevance": 0.07,
+      "kept": false
+    },
+    {
+      "id": "toolu_01SG6U6E4WZ6YbehNd1STwvu",
+      "tool": "Bash",
+      "chars": 335,
+      "relevance": 0.07,
+      "kept": false
+    },
+    {
+      "id": "toolu_016cYAjewGwR6Q27a6SdGatq",
+      "tool": "Bash",
+      "chars": 7075,
+      "relevance": 0.07,
+      "kept": false
+    },
+    {
+      "id": "toolu_01NCYzNGsx8au97UNz9F3YxF",
+      "tool": "Bash",
+      "chars": 3562,
+      "relevance": 0.09,
+      "kept": false
+    },
+    {
+      "id": "toolu_01YZf9PuSCuqEvmZe79jSuCo",
+      "tool": "Bash",
+      "chars": 434,
+      "relevance": 0.1,
+      "kept": false
+    },
+    {
+      "id": "toolu_011ZbXFRZbGor7nHsz6aE7uq",
+      "tool": "Bash",
+      "chars": 2415,
+      "relevance": 0.08,
+      "kept": false
+    },
+    {
+      "id": "toolu_01CaucjSjas5b6nWHVwALypb",
+      "tool": "Bash",
+      "chars": 349,
+      "relevance": 0.07,
+      "kept": false
+    },
+    {
+      "id": "toolu_01Gw4VMyY2FbmrTgoQmm4yyi",
+      "tool": "Bash",
+      "chars": 341,
+      "relevance": 0.06,
+      "kept": false
+    },
+    {
+      "id": "toolu_01EGT9j6ZCdic2VPpUA8FcV2",
+      "tool": "WebFetch",
+      "chars": 222,
+      "relevance": 0.08,
+      "kept": false
+    },
+    {
+      "id": "toolu_01FyrAZVCN9PYz2nZhgMQAca",
+      "tool": "WebFetch",
+      "chars": 1374,
+      "relevance": 0.05,
+      "kept": false
+    },
+    {
+      "id": "toolu_018hcYDFfX2BKA4SqVWfDSEX",
+      "tool": "WebFetch",
+      "chars": 1926,
+      "relevance": 0.04,
+      "kept": false
+    },
+    {
+      "id": "toolu_012wEpETQfoEEzF4cB8BPWm7",
+      "tool": "Read",
+      "chars": 5374,
+      "relevance": 0.35,
+      "kept": true
+    },
+    {
+      "id": "toolu_01JstLQZmf4BbZgCWmSASTH7",
+      "tool": "Read",
+      "chars": 8086,
+      "relevance": 0.25,
+      "kept": true
+    },
+    {
+      "id": "toolu_01Tk2d7FRzkRqJxetqFRkGbL",
+      "tool": "Bash",
+      "chars": 1530,
+      "relevance": 0.11,
+      "kept": false
+    },
+    {
+      "id": "toolu_019xdRAmjnU3tQAdq8y8UPHP",
+      "tool": "WebSearch",
+      "chars": 2293,
+      "relevance": 0.03,
+      "kept": false
+    },
+    {
+      "id": "toolu_01A9FmYsRmwcvXHqUq2KqJ45",
+      "tool": "WebFetch",
+      "chars": 322,
+      "relevance": 0.03,
+      "kept": false
+    },
+    {
+      "id": "toolu_017We93ttNpKKffYC7Bn3KJw",
+      "tool": "WebSearch",
+      "chars": 2862,
+      "relevance": 0.04,
+      "kept": false
+    },
+    {
+      "id": "toolu_015uLsdo2yZhr8txZ1MNUA2r",
+      "tool": "Bash",
+      "chars": 372,
+      "relevance": 0.05,
+      "kept": false
+    },
+    {
+      "id": "toolu_01CrBL17JfR6qzB7denXQfsz",
+      "tool": "WebFetch",
+      "chars": 224,
+      "relevance": 0.03,
+      "kept": false
+    },
+    {
+      "id": "toolu_01V8UEeThxGxcZ6ji4VfmijF",
+      "tool": "WebFetch",
+      "chars": 891,
+      "relevance": 0.04,
+      "kept": false
+    },
+    {
+      "id": "toolu_01XQYWLYHVfivN3U2Aqm2uRV",
+      "tool": "WebSearch",
+      "chars": 2167,
+      "relevance": 0.04,
+      "kept": false
+    },
+    {
+      "id": "toolu_012iJcVk2uh12CkebBr6SCvo",
+      "tool": "WebSearch",
+      "chars": 2046,
+      "relevance": 0.04,
+      "kept": false
+    },
+    {
+      "id": "toolu_01ByHeQ3tJqdAaQNh7xk1QLw",
+      "tool": "WebFetch",
+      "chars": 225,
+      "relevance": 0.04,
+      "kept": false
+    },
+    {
+      "id": "toolu_01M7oodDHKgXeAmWurUJG3En",
+      "tool": "Edit",
+      "chars": 201,
+      "relevance": 0.04,
+      "kept": false
+    },
+    {
+      "id": "toolu_01PNztcSLnqpnTJJNs2r5jUd",
+      "tool": "Bash",
+      "chars": 791,
+      "relevance": 0.04,
+      "kept": false
+    },
+    {
+      "id": "toolu_01Ni5q5j7vQZBf2zSyTvULnU",
+      "tool": "Bash",
+      "chars": 357,
+      "relevance": 0.05,
+      "kept": false
+    },
+    {
+      "id": "toolu_014rAB6iwW6Kh3dSPr9PFFRT",
+      "tool": "Bash",
+      "chars": 384,
+      "relevance": 0.05,
+      "kept": false
+    },
+    {
+      "id": "toolu_018R2JswsnDs5yy3UuU4ubrF",
+      "tool": "Bash",
+      "chars": 361,
+      "relevance": 0.05,
+      "kept": false
+    },
+    {
+      "id": "toolu_01Ch3QWkYLH8e8haB39aCxz8",
+      "tool": "WebSearch",
+      "chars": 5153,
+      "relevance": 0.05,
+      "kept": false
+    },
+    {
+      "id": "toolu_01XYVJ2VTFX7TLxJehJyWfNQ",
+      "tool": "WebSearch",
+      "chars": 1791,
+      "relevance": 0.04,
+      "kept": false
+    },
+    {
+      "id": "toolu_015aUdFtnhj2HxiFQUYeRZSD",
+      "tool": "Bash",
+      "chars": 810,
+      "relevance": 0.05,
+      "kept": false
+    },
+    {
+      "id": "toolu_01WBdXbvaQLzni11nd5NSkmd",
+      "tool": "Bash",
+      "chars": 769,
+      "relevance": 0.04,
+      "kept": false
+    },
+    {
+      "id": "toolu_01T4G7k2SZKCuhrhgKVmcapB",
+      "tool": "AskUserQuestion",
+      "chars": 200,
+      "relevance": 0.09,
+      "kept": false
+    },
+    {
+      "id": "toolu_01Lenoc9AF8vCjmn9WZn4qJn",
+      "tool": "Agent",
+      "chars": 1056,
+      "relevance": 0.06,
+      "kept": false
+    },
+    {
+      "id": "toolu_014ASn8FCx5xuEjnT4os9sWJ",
+      "tool": "Bash",
+      "chars": 3284,
+      "relevance": 0.08,
+      "kept": false
+    },
+    {
+      "id": "toolu_01BMDCGukZ3H8JD4JNTUMxaz",
+      "tool": "WebSearch",
+      "chars": 3062,
+      "relevance": 0.08,
+      "kept": false
+    },
+    {
+      "id": "toolu_015RpxXKVa4Yq5QBNDRDLDtw",
+      "tool": "Read",
+      "chars": 9508,
+      "relevance": 0.07,
+      "kept": false
+    },
+    {
+      "id": "toolu_01RXCT7Nzx1Z8c6JyUtLMyj5",
+      "tool": "Bash",
+      "chars": 275,
+      "relevance": 0.06,
+      "kept": false
+    },
+    {
+      "id": "toolu_01C9goBANKmVQ2k414S3RGee",
+      "tool": "Bash",
+      "chars": 275,
+      "relevance": 0.07,
+      "kept": false
+    },
+    {
+      "id": "toolu_017MN7Z98p5YZVtnYDHr6e43",
+      "tool": "Bash",
+      "chars": 760,
+      "relevance": 0.06,
+      "kept": false
+    },
+    {
+      "id": "toolu_01Lkbdocp8kR48vBS6F7Yt9Z",
+      "tool": "Bash",
+      "chars": 8135,
+      "relevance": 0.07,
+      "kept": false
+    },
+    {
+      "id": "toolu_01UVn2KAnUVvQ7ToCf34Mw7z",
+      "tool": "Bash",
+      "chars": 686,
+      "relevance": 0.07,
+      "kept": false
+    },
+    {
+      "id": "toolu_01WcAe1wMmEFkrZj6nFV7tTR",
+      "tool": "Bash",
+      "chars": 655,
+      "relevance": 0.06,
+      "kept": false
+    },
+    {
+      "id": "toolu_0116RTZ2gsnuiGh38qe1qcaQ",
+      "tool": "Bash",
+      "chars": 793,
+      "relevance": 0.06,
+      "kept": false
+    },
+    {
+      "id": "toolu_01FiunafiJvefKZazYttA6WT",
+      "tool": "Bash",
+      "chars": 711,
+      "relevance": 0.06,
+      "kept": false
+    },
+    {
+      "id": "toolu_01HxciT9M8v9wZqaNr6NdWjB",
+      "tool": "WebSearch",
+      "chars": 2793,
+      "relevance": 0.07,
+      "kept": false
+    },
+    {
+      "id": "toolu_016AJQGbtke45cqDsPdJtYpX",
+      "tool": "WebFetch",
+      "chars": 581,
+      "relevance": 0.06,
+      "kept": false
+    },
+    {
+      "id": "toolu_013xBxAc7m3TpEc5Q64Mk5hC",
+      "tool": "WebFetch",
+      "chars": 504,
+      "relevance": 0.06,
+      "kept": false
+    },
+    {
+      "id": "toolu_01KWeWjQX2Wj1wJohVHt86sn",
+      "tool": "Bash",
+      "chars": 337,
+      "relevance": 0.07,
+      "kept": false
+    },
+    {
+      "id": "toolu_01SfL7fmESbzzCcU8ovdcynU",
+      "tool": "Bash",
+      "chars": 389,
+      "relevance": 0.06,
+      "kept": false
+    },
+    {
+      "id": "toolu_011cE62TQo581jCBgPZnMiZe",
+      "tool": "Bash",
+      "chars": 718,
+      "relevance": 0.06,
+      "kept": false
+    },
+    {
+      "id": "toolu_01Y5geq7vxPRYMsLtjWJ6TeP",
+      "tool": "Bash",
+      "chars": 425,
+      "relevance": 0.06,
+      "kept": false
+    },
+    {
+      "id": "toolu_01NwaXB2wQnLQWCwTQiu7XKQ",
+      "tool": "Bash",
+      "chars": 8950,
+      "relevance": 0.07,
+      "kept": false
+    },
+    {
+      "id": "toolu_011LmXo24ZoS1N6ayxYE3e1Z",
+      "tool": "Bash",
+      "chars": 1581,
+      "relevance": 0.07,
+      "kept": false
+    },
+    {
+      "id": "toolu_01Gf6Zco5W4dxNjMKFv3pQaE",
+      "tool": "Agent",
+      "chars": 1056,
+      "relevance": 0.06,
+      "kept": false
+    },
+    {
+      "id": "toolu_01SeUN7B7EuMKCnBxwHiqWdm",
+      "tool": "Agent",
+      "chars": 1056,
+      "relevance": 0.06,
+      "kept": false
+    },
+    {
+      "id": "toolu_017VtEKFxsKv8qhST5V3MnDZ",
+      "tool": "Bash",
+      "chars": 200,
+      "relevance": 0.07,
+      "kept": false
+    },
+    {
+      "id": "toolu_01KjUn6Two8bua9GeHeHHkH2",
+      "tool": "Agent",
+      "chars": 1056,
+      "relevance": 0.06,
+      "kept": false
+    },
+    {
+      "id": "toolu_018LuTNXYkM3gWudnbrNdMbc",
+      "tool": "Agent",
+      "chars": 1056,
+      "relevance": 0.06,
+      "kept": false
+    },
+    {
+      "id": "toolu_013hFNM8ECKHpdRdVMs1EcUG",
+      "tool": "Bash",
+      "chars": 213,
+      "relevance": 0.04,
+      "kept": false
+    },
+    {
+      "id": "toolu_01VL3xJksFCCydmeSkZnYGPC",
+      "tool": "Agent",
+      "chars": 1056,
+      "relevance": 0.07,
+      "kept": false
+    },
+    {
+      "id": "toolu_01SYgzGMvAHpAoXzrGDi4Pfa",
+      "tool": "Agent",
+      "chars": 1056,
+      "relevance": 0.06,
+      "kept": false
+    },
+    {
+      "id": "toolu_014M7WEinXRhBJKF7UWjMGu8",
+      "tool": "Bash",
+      "chars": 205,
+      "relevance": 0.05,
+      "kept": false
+    },
+    {
+      "id": "toolu_01TRP8RjrR9mq15rHhHKj4o8",
+      "tool": "Agent",
+      "chars": 1056,
+      "relevance": 0.06,
+      "kept": false
+    },
+    {
+      "id": "toolu_01NkhK5dQ9gv9h6iH5YjtnTw",
+      "tool": "Agent",
+      "chars": 1056,
+      "relevance": 0.07,
+      "kept": false
+    },
+    {
+      "id": "toolu_01XSp8U2XqCVgBzAHVnmDB9M",
+      "tool": "Agent",
+      "chars": 1056,
+      "relevance": 0.06,
+      "kept": false
+    },
+    {
+      "id": "toolu_015FrAbeeSVhfM5feTfAPf2G",
+      "tool": "Agent",
+      "chars": 1056,
+      "relevance": 0.06,
+      "kept": false
+    },
+    {
+      "id": "toolu_01LEZjMeFQ17v2JzvpEsum2S",
+      "tool": "Agent",
+      "chars": 1056,
+      "relevance": 0.06,
+      "kept": false
+    },
+    {
+      "id": "toolu_01XhjfNcnqqZTj5MowXhk4jc",
+      "tool": "Agent",
+      "chars": 1056,
+      "relevance": 0.06,
+      "kept": false
+    },
+    {
+      "id": "toolu_014T1ZmdGxJ6qmP3VD3ojbuC",
+      "tool": "Bash",
+      "chars": 203,
+      "relevance": 0.05,
+      "kept": false
+    },
+    {
+      "id": "toolu_01NWfXdYGcUiwu8FWY9AHVea",
+      "tool": "Agent",
+      "chars": 1056,
+      "relevance": 0.08,
+      "kept": false
+    },
+    {
+      "id": "toolu_01D3JzqGAVsE8aJFdY5AD1nf",
+      "tool": "Bash",
+      "chars": 907,
+      "relevance": 0.06,
+      "kept": false
+    },
+    {
+      "id": "toolu_01MvEnm2zSZXV48FeUCPoqHa",
+      "tool": "Bash",
+      "chars": 5656,
+      "relevance": 0.06,
+      "kept": false
+    },
+    {
+      "id": "toolu_016HZUxhMUURVfRcD9mdKuk2",
+      "tool": "Agent",
+      "chars": 1056,
+      "relevance": 0.07,
+      "kept": false
+    },
+    {
+      "id": "toolu_019ZrQFTf6MdhFMqESHAE4gm",
+      "tool": "Agent",
+      "chars": 1056,
+      "relevance": 0.07,
+      "kept": false
+    },
+    {
+      "id": "toolu_01QfkXdVsYjj38CV3GAh5QNo",
+      "tool": "Bash",
+      "chars": 224,
+      "relevance": 0.06,
+      "kept": false
+    },
+    {
+      "id": "toolu_015RT15FiZuVyU7Bnoa6BfJj",
+      "tool": "Bash",
+      "chars": 4723,
+      "relevance": 0.06,
+      "kept": false
+    },
+    {
+      "id": "toolu_012vSJV9YULak3QkjHwGXW6q",
+      "tool": "Agent",
+      "chars": 1056,
+      "relevance": 0.08,
+      "kept": false
+    },
+    {
+      "id": "toolu_01JWvbpdKvGGQya6xqyJwHbj",
+      "tool": "Bash",
+      "chars": 869,
+      "relevance": 0.05,
+      "kept": false
+    },
+    {
+      "id": "toolu_01KDKRDZwt9fsSNj4Po7FLVX",
+      "tool": "AskUserQuestion",
+      "chars": 226,
+      "relevance": 0.04,
+      "kept": false
+    },
+    {
+      "id": "toolu_01Wop3A7io33HJnUPoSDpTu5",
+      "tool": "Bash",
+      "chars": 867,
+      "relevance": 0.05,
+      "kept": false
+    },
+    {
+      "id": "toolu_01DUhzDkHVogiTxmYBLJmNQh",
+      "tool": "Bash",
+      "chars": 699,
+      "relevance": 0.05,
+      "kept": false
+    },
+    {
+      "id": "toolu_01UeEQ8EEWjYHF3fvKN97bEq",
+      "tool": "Bash",
+      "chars": 442,
+      "relevance": 0.05,
+      "kept": false
+    },
+    {
+      "id": "toolu_01Wuj9qa11aHkdBgaw4QyG1w",
+      "tool": "Bash",
+      "chars": 314,
+      "relevance": 0.06,
+      "kept": false
+    },
+    {
+      "id": "toolu_01Rowv9Xqh8AJJ9t1hxSFUFd",
+      "tool": "Bash",
+      "chars": 258,
+      "relevance": 0.06,
+      "kept": false
+    },
+    {
+      "id": "toolu_01MjbYWh724jB5B2UCFVoEPM",
+      "tool": "Bash",
+      "chars": 6431,
+      "relevance": 0.07,
+      "kept": false
+    },
+    {
+      "id": "toolu_01R8aPgSsnPx7YE8LEkwqm2p",
+      "tool": "Bash",
+      "chars": 364,
+      "relevance": 0.06,
+      "kept": false
+    },
+    {
+      "id": "toolu_01Sz4WVXK8o6ZiMiJ5evQwXn",
+      "tool": "Bash",
+      "chars": 268,
+      "relevance": 0.05,
+      "kept": false
+    },
+    {
+      "id": "toolu_01JMbz5Cm3xSHvjwv7qNbVZb",
+      "tool": "Bash",
+      "chars": 506,
+      "relevance": 0.05,
+      "kept": false
+    },
+    {
+      "id": "toolu_01W911UH7aaVCRmSmNADBvqw",
+      "tool": "Bash",
+      "chars": 2233,
+      "relevance": 0.09,
+      "kept": false
+    },
+    {
+      "id": "toolu_01Lb5MDeJVww25Mvo3oNRtkr",
+      "tool": "Bash",
+      "chars": 496,
+      "relevance": 0.07,
+      "kept": false
+    },
+    {
+      "id": "toolu_01NMBRsSmhcKUr9M5274QjcC",
+      "tool": "Bash",
+      "chars": 317,
+      "relevance": 0.06,
+      "kept": false
+    },
+    {
+      "id": "toolu_01UdfoPHKm2bWfXCdFNSQ5yS",
+      "tool": "Bash",
+      "chars": 566,
+      "relevance": 0.06,
+      "kept": false
+    },
+    {
+      "id": "toolu_01SR4wLxyovX8RAJgg7rGoV3",
+      "tool": "Bash",
+      "chars": 262,
+      "relevance": 0.07,
+      "kept": false
+    },
+    {
+      "id": "toolu_011t2rCMNP2ZCP3GqJWurNt2",
+      "tool": "Bash",
+      "chars": 251,
+      "relevance": 0.06,
+      "kept": false
+    },
+    {
+      "id": "toolu_01NxEp6HViRKdUCedyCvNeqZ",
+      "tool": "Bash",
+      "chars": 232,
+      "relevance": 0.06,
+      "kept": false
+    },
+    {
+      "id": "toolu_01KUQcSuo5t8wtstKeXMRaUd",
+      "tool": "Bash",
+      "chars": 310,
+      "relevance": 0.07,
+      "kept": false
+    },
+    {
+      "id": "toolu_01RdRD8hDaUVRognMBzfer2e",
+      "tool": "Bash",
+      "chars": 267,
+      "relevance": 0.07,
+      "kept": false
+    },
+    {
+      "id": "toolu_013iFnJEpQq8rNjeYzdTgB1i",
+      "tool": "Bash",
+      "chars": 368,
+      "relevance": 0.07,
+      "kept": false
+    },
+    {
+      "id": "toolu_01WV6GeKgi3QWaeqUGufoTAG",
+      "tool": "Bash",
+      "chars": 1393,
+      "relevance": 0.06,
+      "kept": false
+    },
+    {
+      "id": "toolu_01WFyunoYrhnt5Kn2JzLVwMg",
+      "tool": "Bash",
+      "chars": 862,
+      "relevance": 0.07,
+      "kept": false
+    },
+    {
+      "id": "toolu_01GJfThykkaiUjnuo4XGqrbX",
+      "tool": "Bash",
+      "chars": 1349,
+      "relevance": 0.07,
+      "kept": false
+    },
+    {
+      "id": "toolu_01GVdKShyeQYigwortrS6A1V",
+      "tool": "Bash",
+      "chars": 1027,
+      "relevance": 0.08,
+      "kept": false
+    },
+    {
+      "id": "toolu_017CyWY3NQbxMXnNo5TXXwLU",
+      "tool": "Bash",
+      "chars": 735,
+      "relevance": 0.07,
+      "kept": false
+    },
+    {
+      "id": "toolu_01U9pYhiJGScR9sYkkNvnMRA",
+      "tool": "Bash",
+      "chars": 1298,
+      "relevance": 0.07,
+      "kept": false
+    },
+    {
+      "id": "toolu_01EiiweyYyu1oS8A6KLgxANi",
+      "tool": "Bash",
+      "chars": 279,
+      "relevance": 0.07,
+      "kept": false
+    },
+    {
+      "id": "toolu_01WQBwZcg42Bn7vaWpwXHZ4F",
+      "tool": "Read",
+      "chars": 25371,
+      "relevance": 0.08,
+      "kept": false
+    },
+    {
+      "id": "toolu_01Mwevpv51fJYZb1H3p9BMWm",
+      "tool": "Bash",
+      "chars": 806,
+      "relevance": 0.08,
+      "kept": false
+    },
+    {
+      "id": "toolu_01M79JWAK6XbuUBvEnrtfKZn",
+      "tool": "Read",
+      "chars": 868,
+      "relevance": 0.09,
+      "kept": false
+    },
+    {
+      "id": "toolu_01YQV4Pw5jhZuK2RihMJ15oR",
+      "tool": "Bash",
+      "chars": 264,
+      "relevance": 0.08,
+      "kept": false
+    },
+    {
+      "id": "toolu_01QSwxmsET89jRNa4q8kY4SM",
+      "tool": "Edit",
+      "chars": 230,
+      "relevance": 0.09,
+      "kept": false
+    },
+    {
+      "id": "toolu_01GQMPXDKW7UMBqr2URaW5B9",
+      "tool": "Read",
+      "chars": 3669,
+      "relevance": 0.11,
+      "kept": false
+    },
+    {
+      "id": "toolu_01Hki357EWyVs8WJ92XpGqFX",
+      "tool": "Edit",
+      "chars": 230,
+      "relevance": 0.1,
+      "kept": false
+    },
+    {
+      "id": "toolu_011tUhPgoEb8u7noa2FpG333",
+      "tool": "Edit",
+      "chars": 214,
+      "relevance": 0.1,
+      "kept": false
+    },
+    {
+      "id": "toolu_01SJRczTRsd3XtyCvcwtX1De",
+      "tool": "Bash",
+      "chars": 479,
+      "relevance": 0.09,
+      "kept": false
+    },
+    {
+      "id": "toolu_015E1c9EU2SS3p4yhvKDcs1b",
+      "tool": "Bash",
+      "chars": 402,
+      "relevance": 0.08,
+      "kept": false
+    },
+    {
+      "id": "toolu_01ShxvLVRQsru5CnUDPuDZeV",
+      "tool": "Bash",
+      "chars": 4155,
+      "relevance": 0.07,
+      "kept": false
+    },
+    {
+      "id": "toolu_01SrsyNoZuC5H6Hd5Xbs1JGM",
+      "tool": "Bash",
+      "chars": 3157,
+      "relevance": 0.07,
+      "kept": false
+    },
+    {
+      "id": "toolu_01CocgQnuLDW1W5ipHxUhLGx",
+      "tool": "Bash",
+      "chars": 234,
+      "relevance": 0.07,
+      "kept": false
+    },
+    {
+      "id": "toolu_01EVGHJn6djk42DqquyU46e5",
+      "tool": "Bash",
+      "chars": 996,
+      "relevance": 0.07,
+      "kept": false
+    },
+    {
+      "id": "toolu_01LY1QxwhshWeSnBL1cGvA1o",
+      "tool": "Bash",
+      "chars": 2367,
+      "relevance": 0.09,
+      "kept": false
+    },
+    {
+      "id": "toolu_01RqtANa1HrHnHmD8gsf4mHX",
+      "tool": "Bash",
+      "chars": 245,
+      "relevance": 0.08,
+      "kept": false
+    },
+    {
+      "id": "toolu_01CkB2rmFz4KPxN14w5XMDKB",
+      "tool": "Bash",
+      "chars": 342,
+      "relevance": 0.07,
+      "kept": false
+    },
+    {
+      "id": "toolu_018RoTzgWSJFYWjWFMEmE8ue",
+      "tool": "Bash",
+      "chars": 350,
+      "relevance": 0.07,
+      "kept": false
+    },
+    {
+      "id": "toolu_01VEnFFo4b9tCsrdCfPFUpdc",
+      "tool": "Bash",
+      "chars": 1448,
+      "relevance": 0.15,
+      "kept": false
+    },
+    {
+      "id": "toolu_01SBWxcfXu7HAoXMVfJaZk83",
+      "tool": "Bash",
+      "chars": 350,
+      "relevance": 0.07,
+      "kept": false
+    },
+    {
+      "id": "toolu_01Wy3MbpUDg1vbe1F96b8bpD",
+      "tool": "Bash",
+      "chars": 262,
+      "relevance": 0.1,
+      "kept": false
+    },
+    {
+      "id": "toolu_01MhYjoPN5MJERjiP5CGmRuw",
+      "tool": "Bash",
+      "chars": 733,
+      "relevance": 0.1,
+      "kept": false
+    },
+    {
+      "id": "toolu_01TtEvGe5veK44wfAgiwRBXE",
+      "tool": "Bash",
+      "chars": 4005,
+      "relevance": 0.1,
+      "kept": false
+    },
+    {
+      "id": "toolu_01Y9Wue2WZjA6gU2E8BrSSne",
+      "tool": "Bash",
+      "chars": 4818,
+      "relevance": 0.1,
+      "kept": false
+    },
+    {
+      "id": "toolu_01JdVD6QhmU69vEsDGQpFyXF",
+      "tool": "Bash",
+      "chars": 356,
+      "relevance": 0.1,
+      "kept": false
+    },
+    {
+      "id": "toolu_019hkGXHs84DiyMUYbkb4yD4",
+      "tool": "Read",
+      "chars": 369,
+      "relevance": 0.09,
+      "kept": false
+    },
+    {
+      "id": "toolu_01AGUULKnpQ7NQo6KnXqdqfc",
+      "tool": "Read",
+      "chars": 4029,
+      "relevance": 0.17,
+      "kept": false
+    },
+    {
+      "id": "toolu_019H9iuwsMh9FRmLmaS8xMt7",
+      "tool": "Bash",
+      "chars": 1092,
+      "relevance": 0.11,
+      "kept": false
+    },
+    {
+      "id": "toolu_01TL7iyFsvuVjpMZEC8UiX2b",
+      "tool": "Bash",
+      "chars": 282,
+      "relevance": 0.09,
+      "kept": false
+    },
+    {
+      "id": "toolu_01WmaAyaERhUVuj65BpUEZqq",
+      "tool": "Bash",
+      "chars": 447,
+      "relevance": 0.08,
+      "kept": false
+    },
+    {
+      "id": "toolu_01Q4rkiwRcL9qd5NwgPo5B5Y",
+      "tool": "AskUserQuestion",
+      "chars": 337,
+      "relevance": 0.07,
+      "kept": false
+    },
+    {
+      "id": "toolu_01CYgmHvo2c5FA2sRxTLzLQo",
+      "tool": "AskUserQuestion",
+      "chars": 235,
+      "relevance": 0.07,
+      "kept": false
+    },
+    {
+      "id": "toolu_01LtNvamAS2az8nNtLArqtwU",
+      "tool": "Read",
+      "chars": 2191,
+      "relevance": 0.09,
+      "kept": false
+    },
+    {
+      "id": "toolu_01RSLEtwwawHtn6Pc65Qgxnp",
+      "tool": "Read",
+      "chars": 1553,
+      "relevance": 0.09,
+      "kept": false
+    },
+    {
+      "id": "toolu_01VvVXqbL3zqF95xkLN6kHjh",
+      "tool": "Read",
+      "chars": 3912,
+      "relevance": 0.1,
+      "kept": false
+    },
+    {
+      "id": "toolu_01HgvZgNQb4PiNfUBRUQVtPN",
+      "tool": "Bash",
+      "chars": 760,
+      "relevance": 0.08,
+      "kept": false
+    },
+    {
+      "id": "toolu_01S7rpMfmcCYBdz53z8VH7Fq",
+      "tool": "Bash",
+      "chars": 319,
+      "relevance": 0.07,
+      "kept": false
+    },
+    {
+      "id": "toolu_019V231TYPorRDrBo3YsU83R",
+      "tool": "Bash",
+      "chars": 405,
+      "relevance": 0.09,
+      "kept": false
+    },
+    {
+      "id": "toolu_01LpWvYHD1CWNWfrLb44DbZ9",
+      "tool": "Bash",
+      "chars": 222,
+      "relevance": 0.11,
+      "kept": false
+    },
+    {
+      "id": "toolu_01HAUTDKGfNRnfRUoyTGqGUq",
+      "tool": "Bash",
+      "chars": 500,
+      "relevance": 0.08,
+      "kept": false
+    },
+    {
+      "id": "toolu_01J4KEkUj69miVTWHXVJUdCH",
+      "tool": "Read",
+      "chars": 1882,
+      "relevance": 0.11,
+      "kept": false
+    },
+    {
+      "id": "toolu_01WLmpwosisLudCAbsq9JdhY",
+      "tool": "Bash",
+      "chars": 281,
+      "relevance": 0.08,
+      "kept": false
+    },
+    {
+      "id": "toolu_01EDuWEpwUke6fJJSyVDE1Fv",
+      "tool": "Write",
+      "chars": 216,
+      "relevance": 0.08,
+      "kept": false
+    },
+    {
+      "id": "toolu_01H8YAYq6ZG52auQ9KkkcNN7",
+      "tool": "Bash",
+      "chars": 1345,
+      "relevance": 0.07,
+      "kept": false
+    },
+    {
+      "id": "toolu_01QRMWmYzToaLudwU7KE7VJg",
+      "tool": "Bash",
+      "chars": 340,
+      "relevance": 0.09,
+      "kept": false
+    },
+    {
+      "id": "toolu_01HJMRtToMHCmnTgEwSbYmy8",
+      "tool": "Bash",
+      "chars": 3132,
+      "relevance": 0.09,
+      "kept": false
+    },
+    {
+      "id": "toolu_013qCQQnkDH4qw5Lv8QLuMKQ",
+      "tool": "Bash",
+      "chars": 1468,
+      "relevance": 0.08,
+      "kept": false
+    },
+    {
+      "id": "toolu_01Evp2Lhc2dAcRKJz4QNbHH6",
+      "tool": "Bash",
+      "chars": 2742,
+      "relevance": 0.09,
+      "kept": false
+    },
+    {
+      "id": "toolu_01RwmjqbkcZQTj6euw3XdF3u",
+      "tool": "Bash",
+      "chars": 2665,
+      "relevance": 0.07,
+      "kept": false
+    },
+    {
+      "id": "toolu_01XXbf4AkvvEsRubsLiWysaH",
+      "tool": "Bash",
+      "chars": 1330,
+      "relevance": 0.1,
+      "kept": false
+    },
+    {
+      "id": "toolu_01NDE5qYu5QJXU7v9BT5DJH4",
+      "tool": "Bash",
+      "chars": 203,
+      "relevance": 0.09,
+      "kept": false
+    },
+    {
+      "id": "toolu_01HtvtMkTcpsfwD49Zytt3as",
+      "tool": "Bash",
+      "chars": 1222,
+      "relevance": 0.07,
+      "kept": false
+    },
+    {
+      "id": "toolu_01LMorv6VgFWyzPHs5uRoV3m",
+      "tool": "Bash",
+      "chars": 473,
+      "relevance": 0.07,
+      "kept": false
+    },
+    {
+      "id": "toolu_019rJJZnoecgMtihWvcBFNkH",
+      "tool": "Bash",
+      "chars": 229,
+      "relevance": 0.07,
+      "kept": false
+    },
+    {
+      "id": "toolu_01GtGs81Eo57PCvKFqtAhRFS",
+      "tool": "Bash",
+      "chars": 2905,
+      "relevance": 0.06,
+      "kept": false
+    },
+    {
+      "id": "toolu_0148uScfxRLwsJZBLNRXFN3s",
+      "tool": "Bash",
+      "chars": 235,
+      "relevance": 0.06,
+      "kept": false
+    },
+    {
+      "id": "toolu_01PxPwXaZEe9KAv29Pu7tXnJ",
+      "tool": "Bash",
+      "chars": 892,
+      "relevance": 0.06,
+      "kept": false
+    },
+    {
+      "id": "toolu_01N9Pjwz8QoMKzKHx9of5geq",
+      "tool": "Bash",
+      "chars": 906,
+      "relevance": 0.08,
+      "kept": false
+    },
+    {
+      "id": "toolu_011ZdUzJzp3RUNehpRYPHRqS",
+      "tool": "Bash",
+      "chars": 515,
+      "relevance": 0.09,
+      "kept": false
+    },
+    {
+      "id": "toolu_01KwfmespMZvzxKRDUTHUuEf",
+      "tool": "Bash",
+      "chars": 339,
+      "relevance": 0.06,
+      "kept": false
+    },
+    {
+      "id": "toolu_01QfvTamfxYeXg7XKckKGHmE",
+      "tool": "Bash",
+      "chars": 331,
+      "relevance": 0.06,
+      "kept": false
+    },
+    {
+      "id": "toolu_012qY9HeowYKF8KWSAMxVUi9",
+      "tool": "Read",
+      "chars": 3509,
+      "relevance": 0.08,
+      "kept": false
+    },
+    {
+      "id": "toolu_01CcL78mtQNrhJgh3eU3683k",
+      "tool": "AskUserQuestion",
+      "chars": 206,
+      "relevance": 0.06,
+      "kept": false
+    },
+    {
+      "id": "toolu_011mz48o77PUULfGFxQ8te8Q",
+      "tool": "Bash",
+      "chars": 272,
+      "relevance": 0.07,
+      "kept": false
+    },
+    {
+      "id": "toolu_01TeS5QPPDhRmHz16TCQZCUA",
+      "tool": "Bash",
+      "chars": 13981,
+      "relevance": 0.07,
+      "kept": false
+    },
+    {
+      "id": "toolu_01VwA3z3YhNZTVQmr1fTwdPH",
+      "tool": "Bash",
+      "chars": 307,
+      "relevance": 0.06,
+      "kept": false
+    },
+    {
+      "id": "toolu_01MC6pLyHP7Yii7aCNnnMUBw",
+      "tool": "Bash",
+      "chars": 257,
+      "relevance": 0.06,
+      "kept": false
+    },
+    {
+      "id": "toolu_017kKz7QoTvaHTdTxGU2T2WV",
+      "tool": "Bash",
+      "chars": 316,
+      "relevance": 0.08,
+      "kept": false
+    },
+    {
+      "id": "toolu_01RnYveNUGyp7nHmcg45FEv4",
+      "tool": "Bash",
+      "chars": 222,
+      "relevance": 0.07,
+      "kept": false
+    },
+    {
+      "id": "toolu_01UJ3LMptwnjW3wCsCh6SSya",
+      "tool": "Bash",
+      "chars": 3614,
+      "relevance": 0.07,
+      "kept": false
+    },
+    {
+      "id": "toolu_01HARChfimkJTQ2nnGVKwy3U",
+      "tool": "Bash",
+      "chars": 3197,
+      "relevance": 0.06,
+      "kept": false
+    },
+    {
+      "id": "toolu_01WiV8nUjinHBb6vMudEwS7D",
+      "tool": "Bash",
+      "chars": 910,
+      "relevance": 0.07,
+      "kept": false
+    },
+    {
+      "id": "toolu_01GDkdkX4JCMPVVWqHhE13FD",
+      "tool": "Read",
+      "chars": 567,
+      "relevance": 0.05,
+      "kept": false
+    },
+    {
+      "id": "toolu_01XBXBe2p3zGCQC4oie4FT5G",
+      "tool": "Bash",
+      "chars": 3541,
+      "relevance": 0.06,
+      "kept": false
+    },
+    {
+      "id": "toolu_01TSF1ZL2apiPSFDSptsDZbk",
+      "tool": "Bash",
+      "chars": 209,
+      "relevance": 0.05,
+      "kept": false
+    },
+    {
+      "id": "toolu_01AwLAmSXsRkrcseLzDkHL3M",
+      "tool": "Bash",
+      "chars": 715,
+      "relevance": 0.05,
+      "kept": false
+    },
+    {
+      "id": "toolu_01K3bQ1XXenvbNfXNj52gP4N",
+      "tool": "Bash",
+      "chars": 241,
+      "relevance": 0.07,
+      "kept": false
+    },
+    {
+      "id": "toolu_01SRJhFTA5M3zTRyrvPU9C5u",
+      "tool": "Bash",
+      "chars": 6332,
+      "relevance": 0.06,
+      "kept": false
+    },
+    {
+      "id": "toolu_016xBc81i3q82otUL4v9cL4P",
+      "tool": "Read",
+      "chars": 3566,
+      "relevance": 0.06,
+      "kept": false
+    },
+    {
+      "id": "toolu_01P5rqrxWUinhCKvWaEedCQ5",
+      "tool": "Bash",
+      "chars": 833,
+      "relevance": 0.07,
+      "kept": false
+    },
+    {
+      "id": "toolu_01L3cNidxw9X9VWxx1XQEekL",
+      "tool": "Bash",
+      "chars": 469,
+      "relevance": 0.05,
+      "kept": false
+    },
+    {
+      "id": "toolu_01CqdDQShkjmujLHmZNKDxzG",
+      "tool": "Bash",
+      "chars": 2845,
+      "relevance": 0.08,
+      "kept": false
+    },
+    {
+      "id": "toolu_01J6Rx3kvFMccAA1pkM1bqb8",
+      "tool": "Bash",
+      "chars": 1030,
+      "relevance": 0.08,
+      "kept": false
+    },
+    {
+      "id": "toolu_015j1d4urhk6sjrHypcxUAuY",
+      "tool": "Bash",
+      "chars": 783,
+      "relevance": 0.05,
+      "kept": false
+    },
+    {
+      "id": "toolu_01JDNRRC5h8A26okvyNroKhJ",
+      "tool": "Bash",
+      "chars": 756,
+      "relevance": 0.04,
+      "kept": false
+    },
+    {
+      "id": "toolu_01U7g9ahFWxZGieRWnHtSWvu",
+      "tool": "Agent",
+      "chars": 1056,
+      "relevance": 0.05,
+      "kept": false
+    },
+    {
+      "id": "toolu_01He5d3RExBWEQ3MBQGvAMYQ",
+      "tool": "Bash",
+      "chars": 200,
+      "relevance": 0.04,
+      "kept": false
+    },
+    {
+      "id": "toolu_015ZR58FzJjFXAe66mNsmzbT",
+      "tool": "Agent",
+      "chars": 1056,
+      "relevance": 0.05,
+      "kept": false
+    },
+    {
+      "id": "toolu_01GVfTok9vEbN7ADEFLYndF4",
+      "tool": "Agent",
+      "chars": 1056,
+      "relevance": 0.05,
+      "kept": false
+    },
+    {
+      "id": "toolu_01Q782Yk8AcfoUomB2zCREXZ",
+      "tool": "Agent",
+      "chars": 1056,
+      "relevance": 0.05,
+      "kept": false
+    },
+    {
+      "id": "toolu_01KcjQHXrumrETWQQC6gQehn",
+      "tool": "Bash",
+      "chars": 262,
+      "relevance": 0.05,
+      "kept": false
+    },
+    {
+      "id": "toolu_01JL4vRhJuqrBvGzgQHxkLGP",
+      "tool": "Agent",
+      "chars": 1056,
+      "relevance": 0.05,
+      "kept": false
+    },
+    {
+      "id": "toolu_01BHpqAFkWKZtBG5g2PrKRyr",
+      "tool": "Agent",
+      "chars": 1056,
+      "relevance": 0.05,
+      "kept": false
+    },
+    {
+      "id": "toolu_016NCRLU5P4tZk17Qtk4RDJf",
+      "tool": "Bash",
+      "chars": 771,
+      "relevance": 0.04,
+      "kept": false
+    },
+    {
+      "id": "toolu_01Hfo4jpDvfe6Gm5FXGxMsMf",
+      "tool": "Bash",
+      "chars": 257,
+      "relevance": 0.04,
+      "kept": false
+    },
+    {
+      "id": "toolu_0122L8WJhrFoyxDSXxiVXbmH",
+      "tool": "Agent",
+      "chars": 1056,
+      "relevance": 0.06,
+      "kept": false
+    },
+    {
+      "id": "toolu_019a3qpQhoyHCGKXtCuzJ3NV",
+      "tool": "Bash",
+      "chars": 388,
+      "relevance": 0.05,
+      "kept": false
+    },
+    {
+      "id": "toolu_01Gzqe8Ytp8KFHTWSyyQT4gJ",
+      "tool": "Bash",
+      "chars": 413,
+      "relevance": 0.05,
+      "kept": false
+    },
+    {
+      "id": "toolu_01FKFCGpCLeHjW6jWzzz8nhU",
+      "tool": "Bash",
+      "chars": 408,
+      "relevance": 0.06,
+      "kept": false
+    },
+    {
+      "id": "toolu_01GQAi77XGFP7p9azzxUxfq1",
+      "tool": "Bash",
+      "chars": 263,
+      "relevance": 0.04,
+      "kept": false
+    },
+    {
+      "id": "toolu_01S2uTQSqGfYcvtGbX4PiJKA",
+      "tool": "Bash",
+      "chars": 4194,
+      "relevance": 0.06,
+      "kept": false
+    },
+    {
+      "id": "toolu_012PjNtE47UfDBYbXgSKZY3L",
+      "tool": "Bash",
+      "chars": 968,
+      "relevance": 0.05,
+      "kept": false
+    },
+    {
+      "id": "toolu_01WZg3Kb5uCREjpmVeMd2RVH",
+      "tool": "Bash",
+      "chars": 3730,
+      "relevance": 0.04,
+      "kept": false
+    },
+    {
+      "id": "toolu_017FBCEpgX92YdPvh1AjQBEi",
+      "tool": "Edit",
+      "chars": 230,
+      "relevance": 0.05,
+      "kept": false
+    },
+    {
+      "id": "toolu_01PVb24pvtRK5E5c84gy9DdW",
+      "tool": "Bash",
+      "chars": 825,
+      "relevance": 0.05,
+      "kept": false
+    },
+    {
+      "id": "toolu_01Mw9kETaES8ZtSz6uGKyKrU",
+      "tool": "Bash",
+      "chars": 210,
+      "relevance": 0.05,
+      "kept": false
+    },
+    {
+      "id": "toolu_01WoiugjHggEPjw2Dzni79KN",
+      "tool": "Bash",
+      "chars": 617,
+      "relevance": 0.05,
+      "kept": false
+    },
+    {
+      "id": "toolu_01VCTzVTuYibS3fNKJPNi9oD",
+      "tool": "Bash",
+      "chars": 3771,
+      "relevance": 0.06,
+      "kept": false
+    },
+    {
+      "id": "toolu_01T98YfS8pE2Kh1N944zJtTt",
+      "tool": "Bash",
+      "chars": 1067,
+      "relevance": 0.06,
+      "kept": false
+    },
+    {
+      "id": "toolu_01PgFLbsenwqqabexC4Z6USH",
+      "tool": "Bash",
+      "chars": 425,
+      "relevance": 0.04,
+      "kept": false
+    },
+    {
+      "id": "toolu_01GLhp6kjhWdQn3C991oNZVz",
+      "tool": "Bash",
+      "chars": 924,
+      "relevance": 0.05,
+      "kept": false
+    },
+    {
+      "id": "toolu_01HaFKZNo7FTjibaobPFPAqS",
+      "tool": "Bash",
+      "chars": 4271,
+      "relevance": 0.05,
+      "kept": false
+    },
+    {
+      "id": "toolu_01F8xjx19MRrpFts5xZgU6bZ",
+      "tool": "Bash",
+      "chars": 2669,
+      "relevance": 0.05,
+      "kept": false
+    },
+    {
+      "id": "toolu_01SkEsCRfAdXjT1uytvW1phs",
+      "tool": "Bash",
+      "chars": 853,
+      "relevance": 0.05,
+      "kept": false
+    },
+    {
+      "id": "toolu_01M6awgb5WXGEY68k49iyDev",
+      "tool": "Bash",
+      "chars": 3706,
+      "relevance": 0.05,
+      "kept": false
+    },
+    {
+      "id": "toolu_019e7xKcJoNVNM1KveP63VjG",
+      "tool": "Bash",
+      "chars": 291,
+      "relevance": 0.04,
+      "kept": false
+    },
+    {
+      "id": "toolu_01MV2EHhQuGXSUheJafremuB",
+      "tool": "Bash",
+      "chars": 821,
+      "relevance": 0.05,
+      "kept": false
+    },
+    {
+      "id": "toolu_01XkntEhtyrLfnGBTwPAKiLb",
+      "tool": "WebSearch",
+      "chars": 2067,
+      "relevance": 0.05,
+      "kept": false
+    },
+    {
+      "id": "toolu_014N1Mgd7YVMgaNt65YqXeX2",
+      "tool": "Bash",
+      "chars": 2278,
+      "relevance": 0.06,
+      "kept": false
+    },
+    {
+      "id": "toolu_0175vofBybFsH8KAPKiY6Ckw",
+      "tool": "Bash",
+      "chars": 2012,
+      "relevance": 0.06,
+      "kept": false
+    },
+    {
+      "id": "toolu_01SfyWhuC388xaPdYoJBwqGy",
+      "tool": "Bash",
+      "chars": 289,
+      "relevance": 0.06,
+      "kept": false
+    },
+    {
+      "id": "toolu_01AgvMUmZHPRFkswQ6QWuGF3",
+      "tool": "Bash",
+      "chars": 998,
+      "relevance": 0.05,
+      "kept": false
+    },
+    {
+      "id": "toolu_01SjkRP1AAtAThAphUG9wHBP",
+      "tool": "Bash",
+      "chars": 7021,
+      "relevance": 0.06,
+      "kept": false
+    },
+    {
+      "id": "toolu_0165ubvenmvsK2qiPsffNHgx",
+      "tool": "Bash",
+      "chars": 2412,
+      "relevance": 0.05,
+      "kept": false
+    },
+    {
+      "id": "toolu_01THN4cCAw5VdUmebmySPbR1",
+      "tool": "WebSearch",
+      "chars": 2498,
+      "relevance": 0.05,
+      "kept": false
+    },
+    {
+      "id": "toolu_01EDfC7WUTFMJ4D9P5eLjCqX",
+      "tool": "Bash",
+      "chars": 361,
+      "relevance": 0.05,
+      "kept": false
+    },
+    {
+      "id": "toolu_01Au1bSMuo16BWoDkJ4HohnF",
+      "tool": "Bash",
+      "chars": 327,
+      "relevance": 0.15,
+      "kept": false
+    },
+    {
+      "id": "toolu_01CRgrK8iUQn8hzfqPFJgocZ",
+      "tool": "Bash",
+      "chars": 1119,
+      "relevance": 0.12,
+      "kept": false
+    },
+    {
+      "id": "toolu_01SeXzCQQgwYJUea8XVWa8mH",
+      "tool": "Read",
+      "chars": 824,
+      "relevance": 0.15,
+      "kept": false
+    },
+    {
+      "id": "toolu_01AkAENyyZmQ8oRV5adYMh3n",
+      "tool": "Bash",
+      "chars": 356,
+      "relevance": 0.48,
+      "kept": true
+    },
+    {
+      "id": "toolu_01SKx57ZxHeGdLmqFvYd5Qf4",
+      "tool": "Read",
+      "chars": 4895,
+      "relevance": 0.35,
+      "kept": true
+    },
+    {
+      "id": "toolu_01HhHr4Yuf7JUqypk3iHLtY7",
+      "tool": "Bash",
+      "chars": 828,
+      "relevance": 0.48,
+      "kept": true
+    },
+    {
+      "id": "toolu_01637g1GbVG3dZKQ6ZtPwEfj",
+      "tool": "Bash",
+      "chars": 2504,
+      "relevance": 0.52,
+      "kept": true
+    },
+    {
+      "id": "toolu_01NeZ9uuySkMDWXiC66RTuKi",
+      "tool": "Bash",
+      "chars": 200,
+      "relevance": 0.29,
+      "kept": true
+    }
+  ]
+}
