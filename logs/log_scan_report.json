@@ -1,6 +1,6 @@
 {
-  "scanned_at": "2026-09-23 03:00:26",
-  "since": "2026-09-22 03:00:01",
+  "scanned_at": "2026-09-24 03:00:27",
+  "since": "2026-09-23 03:00:00",
   "results": {
     "市場儀表板": {
       "exists": true,
@@ -28,26 +28,26 @@
     },
     "財經新聞分析": {
       "exists": true,
-      "errors": 0,
-      "last_error": null,
-      "fix": null
+      "errors": 49,
+      "last_error": "2026-09-23 08:32:20,153 [WARNING] fetcher.ptt_fetcher: PTT article fetch failed https://www.ptt.cc/bbs/Stock/M.1790056805.A.A91.html: HTTPSConnectionPool(host='www.ptt.cc', port=443): Read timed out. (read timeout=10)",
+      "fix": "網路逾時 → 確認目標服務可達，或增加 timeout 設定"
     },
     "川普監測": {
       "exists": true,
       "errors": 2,
-      "last_error": "2026-09-22 13:25:04,633 WARNING 分析失敗：Trump's Nvidia deal turns Armenia into surprising  — 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reaso",
+      "last_error": "2026-09-23 11:50:03,835 WARNING 分析失敗：Trump threatens to use Russia sanctions law puttin — 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reaso",
       "fix": "尚無對應建議，需人工判斷"
     },
     "持倉新聞(台股)": {
       "exists": true,
       "errors": 2,
-      "last_error": "2026-09-22 08:30:22,535 ERROR 純文字重試也失敗 401：{\"ok\":false,\"error_code\":401,\"description\":\"Unauthorized\"}",
+      "last_error": "2026-09-23 08:30:23,336 ERROR 純文字重試也失敗 401：{\"ok\":false,\"error_code\":401,\"description\":\"Unauthorized\"}",
       "fix": "Session/Token 過期 → 重新登入對應網站或更新 API Key"
     },
     "持倉新聞(美股)": {
       "exists": true,
       "errors": 2,
-      "last_error": "2026-09-22 21:00:23,546 ERROR 純文字重試也失敗 401：{\"ok\":false,\"error_code\":401,\"description\":\"Unauthorized\"}",
+      "last_error": "2026-09-23 21:00:31,516 ERROR 純文字重試也失敗 401：{\"ok\":false,\"error_code\":401,\"description\":\"Unauthorized\"}",
       "fix": "Session/Token 過期 → 重新登入對應網站或更新 API Key"
     },
     "HolaQuant": {
