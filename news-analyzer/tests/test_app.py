@@ -57,3 +57,15 @@ def test_api_trend_returns_json(client):
     data = json.loads(resp.data)
     assert "labels" in data
     assert "datasets" in data
+
+
+def test_api_stats_excludes_auto_irrelevant(client):
+    """Jev 判為無關的新聞不計入多空統計。"""
+    from storage import get_conn
+    with get_conn(flask_app.DB_PATH) as conn:
+        conn.execute("UPDATE articles SET auto_irrelevant=1 WHERE score=3")
+        conn.commit()
+    data = json.loads(client.get("/api/stats").data)
+    assert data["total"] == 1
+    assert data["bullish"] == 1
+    assert data["bearish"] == 0

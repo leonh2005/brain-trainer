@@ -45,6 +45,30 @@ CLASSES = {
     ),
 }
 
+SENTIMENT_TASK = "判斷財經新聞對市場的方向是利多、利空或無明確方向"
+
+# 三分類，對應前端統計門檻（score>=7 算多方、<=4 算空方）
+SENTIMENT_CLASSES = {
+    "bullish": (
+        "會推升股價或市場情緒的利多消息。例如：財報優於預期、財測上修、"
+        "重大訂單或併購、法人買超、政策利多、原物料或加密貨幣上漲、"
+        "產業景氣轉強、大盤走揚。"
+    ),
+    "bearish": (
+        "會壓低股價或市場情緒的利空消息。例如：財報不如預期、財測下修、"
+        "裁員或營運危機、法人賣超、政策打壓、違約或財務疑慮、"
+        "原物料或加密貨幣下跌、產業景氣轉弱、大盤走弱。"
+    ),
+    "neutral": (
+        "與市場有關但沒有明確多空方向者。例如：股價持平或小幅震盪、"
+        "營運數據符合預期、中性的事件報導、多空因素並陳、"
+        "與方向無關的市場制度或規則說明。"
+    ),
+}
+
+# 分類 → 前端使用的 1-10 情緒分數（5 為中性）
+SENTIMENT_SCORE = {"bullish": 10, "bearish": 1, "neutral": 5}
+
 
 class JevFilterError(RuntimeError):
     """Jev 呼叫失敗。呼叫端應據此跳過本批，不要讓整條管線中斷。"""
@@ -80,12 +104,9 @@ def _post(body: dict, api_key: str, timeout: float) -> dict:
         raise JevFilterError(f"{type(e).__name__}: {e}") from e
 
 
-def classify(titles: list[str], api_key: str, timeout: float = 30.0,
-             model: str = DEFAULT_MODEL) -> list[dict]:
-    """對一批標題分類。回傳 [{relevant: bool, cls: str, probs: {...}}, ...]
-
-    順序與輸入一致。整批失敗時丟 JevFilterError（由呼叫端決定怎麼退）。
-    """
+def _classify(titles: list[str], classes: dict, task: str, api_key: str,
+              timeout: float, model: str) -> list[tuple[str, dict]]:
+    """送一批標題給 Jev 分類，回傳 [(選中的類別, 機率分布), ...]，順序與輸入一致。"""
     if not titles:
         return []
 
@@ -94,19 +115,19 @@ def classify(titles: list[str], api_key: str, timeout: float = 30.0,
         f"out{i}": {
             "type": "choice",
             "instructions": f"state.news 裡編號【{i}】的新聞標題，該歸為哪一類？",
-            "criteria": CLASSES,
+            "criteria": classes,
         }
         for i in range(len(titles))
     }
-    data = _post({"state": {"task": TASK, "news": outputs},
+    data = _post({"state": {"task": task, "news": outputs},
                   "questions": questions, "model": model}, api_key, timeout)
 
     answers = data.get("answers")
     if not isinstance(answers, dict):
         raise JevFilterError(f"回應缺少 answers：{json.dumps(data)[:200]}")
 
-    out = []
-    for i, _t in enumerate(titles):
+    out: list[tuple[str, dict]] = []
+    for i in range(len(titles)):
         ans = answers.get(f"out{i}")
         if not isinstance(ans, dict):
             raise JevFilterError(f"回應缺少 out{i}")
@@ -117,15 +138,47 @@ def classify(titles: list[str], api_key: str, timeout: float = 30.0,
             pick = max(probs, key=probs.get) if probs else None
         if pick is None:
             raise JevFilterError(f"out{i} 無法解析分類")
-        out.append({"cls": pick, "relevant": pick == "relevant", "probs": probs})
+        out.append((pick, probs))
     return out
+
+
+def classify(titles: list[str], api_key: str, timeout: float = 30.0,
+             model: str = DEFAULT_MODEL) -> list[dict]:
+    """判斷相關性。回傳 [{relevant: bool, cls: str, probs: {...}}, ...]
+
+    順序與輸入一致。整批失敗時丟 JevFilterError（由呼叫端決定怎麼退）。
+    """
+    return [{"cls": pick, "relevant": pick == "relevant", "probs": probs}
+            for pick, probs in _classify(titles, CLASSES, TASK, api_key, timeout, model)]
+
+
+def classify_sentiment(titles: list[str], api_key: str, timeout: float = 30.0,
+                       model: str = DEFAULT_MODEL) -> list[dict]:
+    """判斷多空方向。回傳 [{sentiment: str, probs: {...}}, ...]
+
+    只適用於已判定為相關的新聞；不相關的新聞不該送進來。
+    """
+    return [{"sentiment": pick, "probs": probs}
+            for pick, probs in _classify(titles, SENTIMENT_CLASSES, SENTIMENT_TASK,
+                                         api_key, timeout, model)]
+
+
+def _classify_all(classify_fn, titles: list[str], api_key: str | None,
+                  batch_size: int, timeout: float) -> list[dict]:
+    key = api_key or load_api_key()
+    results: list[dict] = []
+    for i in range(0, len(titles), batch_size):
+        results.extend(classify_fn(titles[i:i + batch_size], key, timeout=timeout))
+    return results
 
 
 def classify_all(titles: list[str], api_key: str | None = None,
                  batch_size: int = BATCH_SIZE, timeout: float = 30.0) -> list[dict]:
-    """分批處理任意數量的標題。"""
-    key = api_key or load_api_key()
-    results: list[dict] = []
-    for i in range(0, len(titles), batch_size):
-        results.extend(classify(titles[i:i + batch_size], key, timeout=timeout))
-    return results
+    """分批判斷相關性。"""
+    return _classify_all(classify, titles, api_key, batch_size, timeout)
+
+
+def classify_sentiment_all(titles: list[str], api_key: str | None = None,
+                           batch_size: int = BATCH_SIZE, timeout: float = 30.0) -> list[dict]:
+    """分批判斷多空方向。只該用在已判定相關的新聞上。"""
+    return _classify_all(classify_sentiment, titles, api_key, batch_size, timeout)
