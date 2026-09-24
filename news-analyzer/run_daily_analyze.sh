@@ -1,5 +1,5 @@
 #!/bin/bash
-# 常態分析：Jev 篩相關性 → 相關的才送 LLM。
+# 常態分析：Jev 判相關性 → 相關的再判多空。
 #
 # 與 run_backfill.sh 的差別：
 #   run_backfill.sh 是一次性補跑（跑完自我移除、會通知）

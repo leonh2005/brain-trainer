@@ -17,24 +17,27 @@ def init_db(db_path=DB_PATH):
     with get_conn(db_path) as conn:
         conn.execute("""
             CREATE TABLE IF NOT EXISTS articles (
-                id           INTEGER PRIMARY KEY AUTOINCREMENT,
-                source       TEXT NOT NULL,
-                title        TEXT NOT NULL,
-                url          TEXT UNIQUE NOT NULL,
-                content      TEXT,
-                published_at DATETIME,
-                fetched_at   DATETIME NOT NULL,
-                score        INTEGER,
-                summary      TEXT,
-                tags         TEXT,
-                analyzed_at  DATETIME,
-                irrelevant   INTEGER NOT NULL DEFAULT 0
+                id              INTEGER PRIMARY KEY AUTOINCREMENT,
+                source          TEXT NOT NULL,
+                title           TEXT NOT NULL,
+                url             TEXT UNIQUE NOT NULL,
+                content         TEXT,
+                published_at    DATETIME,
+                fetched_at      DATETIME NOT NULL,
+                score           INTEGER,
+                summary         TEXT,
+                tags            TEXT,
+                analyzed_at     DATETIME,
+                irrelevant      INTEGER NOT NULL DEFAULT 0,
+                auto_irrelevant INTEGER NOT NULL DEFAULT 0
             )
         """)
         # migration：舊 DB 補欄位
         cols = [r[1] for r in conn.execute("PRAGMA table_info(articles)").fetchall()]
         if "irrelevant" not in cols:
             conn.execute("ALTER TABLE articles ADD COLUMN irrelevant INTEGER NOT NULL DEFAULT 0")
+        if "auto_irrelevant" not in cols:
+            conn.execute("ALTER TABLE articles ADD COLUMN auto_irrelevant INTEGER NOT NULL DEFAULT 0")
         conn.commit()
 
 
@@ -165,7 +168,7 @@ def get_trend_data(period="day", db_path=DB_PATH):
         rows = conn.execute(
             f"""SELECT {time_bucket} as t, source, ROUND(AVG(score), 2) as avg_score
                 FROM articles
-                WHERE score IS NOT NULL AND irrelevant = 0 AND {cond_sql}
+                WHERE score IS NOT NULL AND irrelevant = 0 AND auto_irrelevant = 0 AND {cond_sql}
                 GROUP BY t, source
                 ORDER BY t""",
             cond_params,
@@ -204,7 +207,7 @@ def get_bullish_trend_data(period="day", db_path=DB_PATH):
             f"""SELECT {time_bucket} as t,
                        ROUND(100.0 * SUM(CASE WHEN score >= 7 THEN 1 ELSE 0 END) / COUNT(*), 1) as bullish_pct
                 FROM articles
-                WHERE score IS NOT NULL AND irrelevant = 0 AND {cond_sql}
+                WHERE score IS NOT NULL AND irrelevant = 0 AND auto_irrelevant = 0 AND {cond_sql}
                 GROUP BY t
                 ORDER BY t""",
             cond_params,

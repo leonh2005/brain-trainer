@@ -109,7 +109,7 @@ def api_stats():
         params = []
     with get_conn(DB_PATH) as conn:
         rows = conn.execute(
-            f"SELECT score FROM articles WHERE score IS NOT NULL AND irrelevant = 0 AND {condition}",
+            f"SELECT score FROM articles WHERE score IS NOT NULL AND irrelevant = 0 AND auto_irrelevant = 0 AND {condition}",
             params,
         ).fetchall()
         last_row = conn.execute(
