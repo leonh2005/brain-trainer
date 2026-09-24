@@ -1,42 +1,42 @@
 {
-  "generated_at": "2026-09-23 14:00",
+  "generated_at": "2026-09-24 14:01",
   "count": 5,
   "threshold": 6,
   "cells": [
     {
       "name": "VIX",
       "triggered": false,
-      "detail": "14.86（>20 警戒）"
+      "detail": "15.18（>20 警戒）"
     },
     {
       "name": "F&G",
       "triggered": true,
-      "detail": "35.2（<45 恐慌）"
+      "detail": "34.6（<45 恐慌）"
     },
     {
       "name": "CAPE",
       "triggered": true,
-      "detail": "41.6（>25 偏高）"
+      "detail": "41.3（>25 偏高）"
     },
     {
       "name": "S&P vs 200MA",
       "triggered": false,
-      "detail": "+8.02%"
+      "detail": "+7.14%"
     },
     {
       "name": "台股 vs 200MA",
       "triggered": false,
-      "detail": "+25.02%（不納入警示）"
+      "detail": "+24.35%（不納入警示）"
     },
     {
       "name": "M1B比",
       "triggered": false,
-      "detail": "3.54%（>7% 偏熱）"
+      "detail": "2.93%（>7% 偏熱）"
     },
     {
       "name": "融資市值比",
       "triggered": true,
-      "detail": "3.80%（>3.5%）"
+      "detail": "3.77%（>3.5%）"
     },
     {
       "name": "美銀牛熊",

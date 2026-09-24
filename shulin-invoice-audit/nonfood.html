@@ -1,0 +1,285 @@
+<meta charset="utf-8">
+<title>樹林店家查核清單</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@700&display=swap">
+<style>
+:root{
+  --ground:#F6F7F9; --surface:#FFFFFF; --sunken:#EFF2F5;
+  --line:#DDE2E8; --line-soft:#EBEFF3;
+  --ink:#141C24; --ink-soft:#4A5866; --ink-faint:#77848F;
+  --accent:#1E4E70; --accent-soft:#E8F0F6;
+  --warn-fg:#8A5100; --warn-bg:#FDF3E4; --warn-line:#F2D6AA;
+  --dim-fg:#5A6672; --dim-bg:#EDF0F3; --dim-line:#D8DEE4;
+  --shadow:0 1px 2px rgba(20,28,36,.05),0 6px 18px -12px rgba(20,28,36,.28);
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --ground:#10161C; --surface:#171F27; --sunken:#1C242C;
+    --line:#2C3843; --line-soft:#222C35;
+    --ink:#E8EDF2; --ink-soft:#A9B6C2; --ink-faint:#7C8A97;
+    --accent:#7FB3D6; --accent-soft:#1B2A36;
+    --warn-fg:#E8BC72; --warn-bg:#302517; --warn-line:#574224;
+    --dim-fg:#98A5B2; --dim-bg:#202932; --dim-line:#33404C;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 18px -12px rgba(0,0,0,.6);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#10161C; --surface:#171F27; --sunken:#1C242C;
+  --line:#2C3843; --line-soft:#222C35;
+  --ink:#E8EDF2; --ink-soft:#A9B6C2; --ink-faint:#7C8A97;
+  --accent:#7FB3D6; --accent-soft:#1B2A36;
+  --warn-fg:#E8BC72; --warn-bg:#302517; --warn-line:#574224;
+  --dim-fg:#98A5B2; --dim-bg:#202932; --dim-line:#33404C;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 18px -12px rgba(0,0,0,.6);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--ground); color:var(--ink);
+  font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  font-size:15px; line-height:1.6;
+  padding-inline:20px; padding-block:26px 60px;
+}
+.wrap{max-width:840px;margin:0 auto;display:flex;flex-direction:column;gap:22px}
+h1{font-family:"Noto Serif TC","Songti TC",serif;font-size:clamp(25px,4.2vw,34px);line-height:1.25;margin:0;text-wrap:balance}
+p{margin:0}
+a{color:var(--accent)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:3px}
+header{display:flex;flex-direction:column;gap:9px}
+.eyebrow{font-size:12px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-faint);font-weight:500}
+.lead{color:var(--ink-soft);font-size:15.5px;max-width:62ch}
+.caveat{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--accent);
+  border-radius:4px;padding:13px 16px;box-shadow:var(--shadow);font-size:13.5px;color:var(--ink-soft);max-width:72ch}
+.caveat strong{color:var(--ink)}
+.stats{display:flex;flex-wrap:wrap;border:1px solid var(--line);border-radius:4px;background:var(--surface);overflow:hidden}
+.stat{flex:1 1 104px;padding:12px 16px;border-right:1px solid var(--line-soft)}
+.stat:last-child{border-right:none}
+.stat .n{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:22px;font-weight:500;line-height:1.15;font-variant-numeric:tabular-nums}
+.stat .k{font-size:11.5px;color:var(--ink-faint);letter-spacing:.05em}
+.controls{display:flex;flex-wrap:wrap;gap:9px;align-items:center;position:sticky;top:env(safe-area-inset-top,0px);z-index:5;
+  background:var(--ground);padding-block:8px}
+.controls input[type=search]{font:inherit;font-size:14px;color:var(--ink);background:var(--surface);
+  border:1px solid var(--line);border-radius:4px;padding:8px 11px;flex:1 1 180px;min-width:0}
+.controls input[type=search]::placeholder{color:var(--ink-faint)}
+.toggle{display:inline-flex;align-items:center;gap:7px;font-size:13.5px;color:var(--ink-soft);
+  background:var(--surface);border:1px solid var(--line);border-radius:4px;padding:8px 11px;cursor:pointer;white-space:nowrap}
+.toggle input{margin:0;accent-color:var(--accent)}
+.count{font-size:12.5px;color:var(--ink-faint);font-variant-numeric:tabular-nums;margin-left:auto}
+.band{display:flex;align-items:center;gap:11px;margin-top:8px}
+.band h2{font-family:"Noto Serif TC","Songti TC",serif;font-size:16px;margin:0;white-space:nowrap}
+.band .rule{flex:1;height:1px;background:var(--line)}
+.band .cnt{font-size:12px;color:var(--ink-faint);font-variant-numeric:tabular-nums}
+.list{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+.card{display:flex;gap:14px;align-items:flex-start;background:var(--surface);
+  border:1px solid var(--line);border-radius:4px;padding:12px 14px;box-shadow:var(--shadow)}
+.card.done{opacity:.45}
+.card.done .nm{text-decoration:line-through}
+.card.b2b{background:var(--sunken);box-shadow:none}
+.dist{flex:0 0 66px;font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant-numeric:tabular-nums;
+  font-size:15px;font-weight:500;color:var(--accent);padding-top:1px}
+.dist .u{font-size:11px;color:var(--ink-faint);font-weight:400}
+.body{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.nm{font-weight:500;font-size:15px;line-height:1.4}
+.meta{font-size:12.5px;color:var(--ink-soft);display:flex;flex-wrap:wrap;gap:3px 9px;align-items:baseline}
+.mono{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant-numeric:tabular-nums;color:var(--ink-faint)}
+.tag{display:inline-block;font-size:11px;font-weight:500;line-height:1.5;padding:0 7px;border-radius:999px;border:1px solid}
+.tag.dim{color:var(--dim-fg);background:var(--dim-bg);border-color:var(--dim-line)}
+.tag.warn{color:var(--warn-fg);background:var(--warn-bg);border-color:var(--warn-line)}
+.acts{display:flex;flex-direction:column;gap:6px;align-items:flex-end;flex:0 0 auto}
+.map{font-size:12.5px;color:var(--accent);text-decoration:none;border-bottom:1px solid color-mix(in srgb,var(--accent) 40%,transparent);white-space:nowrap}
+.map:hover{border-bottom-color:var(--accent)}
+.chk{display:inline-flex;align-items:center;gap:5px;font-size:12px;color:var(--ink-faint);cursor:pointer;white-space:nowrap}
+.chk input{margin:0;accent-color:var(--accent)}
+.empty{padding:24px 14px;text-align:center;color:var(--ink-faint);font-size:14px}
+footer{border-top:1px solid var(--line);padding-top:16px;display:flex;flex-direction:column;gap:9px;font-size:13px;color:var(--ink-soft)}
+footer h2{font-family:"Noto Serif TC","Songti TC",serif;font-size:15px;margin:0}
+footer details{border:1px solid var(--line);border-radius:4px;background:var(--surface);padding:10px 14px}
+footer summary{cursor:pointer;font-size:13.5px}
+footer details[open] summary{margin-bottom:8px}
+footer ul{margin:0;padding-left:19px;display:flex;flex-direction:column;gap:2px;font-size:12.5px}
+.src{font-size:12px;color:var(--ink-faint);display:flex;flex-direction:column;gap:3px}
+@media (max-width:520px){
+  body{padding-inline:16px}
+  .dist{flex-basis:56px;font-size:14px}
+  .card{gap:10px;padding:11px 12px}
+  .count{margin-left:0;flex-basis:100%}
+}
+</style>
+
+<div class="wrap">
+  <header>
+    <p class="eyebrow">財政部營業稅籍開放資料 · 新北市樹林區 · 2026-09-24</p>
+    <h1>樹林店家查核清單</h1>
+    <p class="lead">非餐飲的 144 家店家，登記「使用統一發票＝Y」——依法應主動開立，而同業在全國大多免用。依離你家（新北市樹林區復興路295巷13號）的直線距離排序。</p>
+  </header>
+
+  <div class="caveat">
+    <strong>這不是違規名單。</strong>「依法該開」不等於「實際沒開」，公開資料沒有它們的行為紀錄。走進去消費，結帳時看有沒有給發票；<strong>沒拿到發票就是具體事證</strong>，可具名檢舉（獎金為罰金 20%，上限 480 萬）。標記「非店面」的是屠宰場、洗衣服務、計程車行之類，你走不進去買東西，已預設灰化。
+  </div>
+
+  <div class="stats">
+    <div class="stat"><div class="n">144</div><div class="k">總家數</div></div>
+    <div class="stat"><div class="n">57</div><div class="k">1 公里內</div></div>
+    <div class="stat"><div class="n">127</div><div class="k">可現場消費</div></div>
+    <div class="stat"><div class="n">17</div><div class="k">非店面</div></div>
+    <div class="stat"><div class="n">9</div><div class="k">座標較粗略</div></div>
+  </div>
+
+  <div class="controls">
+    <input type="search" id="q" placeholder="搜尋店名、地址、統編、業別…" aria-label="搜尋">
+    <label class="toggle"><input type="checkbox" id="hideB2b" checked> 隱藏非店面</label>
+    <label class="toggle"><input type="checkbox" id="hideDone"> 隱藏已查</label>
+    <span class="count" id="count" aria-live="polite"></span>
+  </div>
+
+  <div id="out"></div>
+  <div class="empty" id="empty" hidden>沒有符合條件的店家。</div>
+
+  <footer>
+    <h2>說明</h2>
+    <p>距離是<strong>直線距離</strong>（haversine），不是步行距離。座標取自 OpenStreetMap 門牌點位，135 家門牌級精準定位；標記「座標較粗略」者在 OSM 查無門牌，退回街道層級。</p>
+    <p>判準：行業在全國開發票比例 <code>30%</code>（樣本 ≥100），卻登記為應開發票 → 同業大多免用、唯獨它被核定要開。已排除餐飲業 62 家、北大特區 25 家、以及 <strong>26 家投資公司</strong>（投資公司免用屬制度性正常，非可疑）。</p>
+    <div class="src">
+      <span>資料來源：財政部財政資訊中心「全國營業(稅籍)登記資料集」（data.gov.tw 9400），檔期 2026-09-24；地理資料 © OpenStreetMap 貢獻者 (ODbL)。</span>
+      <span>判準為本清單自行設定，非官方認定。勾選狀態只存在你這台裝置的瀏覽器裡。</span>
+    </div>
+  </footer>
+</div>
+
+<script>
+const STORES = [{"name": "優幼購家居百貨館", "ban": "80006749", "addr": "育英里育英街１５３之１號２樓", "dist": 81, "ind": "未分類其他家用器具及用品零售", "ratio": 0.2802, "sample": 15289, "lat": 24.9893887, "lon": 121.4192647, "geo": "exact", "b2b": false}, {"name": "萬幸企業社", "ban": "47981187", "addr": "育英里文化街２８號６樓之１", "dist": 84, "ind": "未分類其他家用器具及用品零售", "ratio": 0.2802, "sample": 15289, "lat": 24.9879147, "lon": 121.4190704, "geo": "exact", "b2b": false}, {"name": "台灣辻沐企業有限公司", "ban": "00088228", "addr": "文化街４３號", "dist": 105, "ind": "其他美容美體服務", "ratio": 0.1739, "sample": 10370, "lat": 24.9882611, "lon": 121.4182239, "geo": "exact", "b2b": false}, {"name": "永光五金商行", "ban": "98795094", "addr": "中山路１段２３０號", "dist": 220, "ind": "未分類其他家用器具及用品零售", "ratio": 0.2802, "sample": 15289, "lat": 24.987759, "lon": 121.4211011, "geo": "exact", "b2b": false}, {"name": "如馨企業有限公司", "ban": "23264046", "addr": "樹南里中山路１段３０６巷１１號", "dist": 242, "ind": "茶葉零售", "ratio": 0.1546, "sample": 3849, "lat": 24.9865024, "lon": 121.4193986, "geo": "exact", "b2b": false}, {"name": "一戴賣場", "ban": "60062898", "addr": "育英里中山路１段１８９號３樓之１", "dist": 244, "ind": "機車零件、機車百貨零售", "ratio": 0.2899, "sample": 3864, "lat": 24.9879022, "lon": 121.4214375, "geo": "exact", "b2b": false}, {"name": "斯曼特企業股份有限公司樹林分公司", "ban": "27958286", "addr": "育英里中山路１段１８５號１樓及２樓", "dist": 245, "ind": "其他美容美體服務", "ratio": 0.1739, "sample": 10370, "lat": 24.98804, "lon": 121.4215007, "geo": "exact", "b2b": false}, {"name": "鴻翔租賃有限公司", "ban": "82787317", "addr": "樹南里中山路１段２８４號", "dist": 246, "ind": "機車出租", "ratio": 0.1944, "sample": 746, "lat": 24.986842, "lon": 121.420549, "geo": "exact", "b2b": false}, {"name": "錦錠實業有限公司", "ban": "94032130", "addr": "育英里中山路１段２１７號３樓之２", "dist": 254, "ind": "蔬菜零售", "ratio": 0.0943, "sample": 9064, "lat": 24.9870838, "lon": 121.42099, "geo": "exact", "b2b": false}, {"name": "嫁御藝術美學館", "ban": "91237882", "addr": "樹南里中山路１段３０６巷６０號（１樓）", "dist": 288, "ind": "美甲美睫服務", "ratio": 0.0565, "sample": 5631, "lat": 24.9862575, "lon": 121.4181223, "geo": "exact", "b2b": false}, {"name": "蝦妹與蟹老闆海產行", "ban": "50599235", "addr": "樹西里日新街８３號", "dist": 340, "ind": "水產品零售", "ratio": 0.177, "sample": 5411, "lat": 24.9905233, "lon": 121.4218389, "geo": "exact", "b2b": false}, {"name": "心上心企業社", "ban": "50679687", "addr": "樹南里備前街３８號（１樓）", "dist": 355, "ind": "未分類其他家用器具及用品零售", "ratio": 0.2802, "sample": 15289, "lat": 24.9860068, "lon": 121.4172227, "geo": "exact", "b2b": false}, {"name": "臺灣菸酒股份有限公司北部營業處", "ban": "33506347", "addr": "樹東里鎮前街１６３號", "dist": 359, "ind": "菸酒零售", "ratio": 0.1483, "sample": 14204, "lat": 24.9871532, "lon": 121.4223182, "geo": "exact", "b2b": false}, {"name": "薰衣草美學生活館", "ban": "92785957", "addr": "樹西里中山路１段１３７巷７號１樓", "dist": 362, "ind": "推拿按摩服務", "ratio": 0.1276, "sample": 5571, "lat": 24.9896643, "lon": 121.4225813, "geo": "exact", "b2b": false}, {"name": "牧匠國際有限公司", "ban": "62180870", "addr": "中山路１段１２２號１２樓", "dist": 415, "ind": "畜肉零售", "ratio": 0.0726, "sample": 6171, "lat": 24.9905139, "lon": 121.4227408, "geo": "exact", "b2b": false}, {"name": "淡妍企業社", "ban": "80015064", "addr": "啓智街３９號２樓", "dist": 492, "ind": "其他美容美體服務", "ratio": 0.1739, "sample": 10370, "lat": 24.9928884, "lon": 121.4206279, "geo": "exact", "b2b": false}, {"name": "良方藥局", "ban": "95071497", "addr": "樹福里日新街４０號１樓", "dist": 527, "ind": "中藥零售", "ratio": 0.1014, "sample": 6541, "lat": 24.9924583, "lon": 121.422298, "geo": "exact", "b2b": false}, {"name": "台績宏實業有限公司", "ban": "25004051", "addr": "樹東里博愛街２００號１樓", "dist": 559, "ind": "機車零件、機車百貨零售", "ratio": 0.2899, "sample": 3864, "lat": 24.9894145, "lon": 121.4246516, "geo": "exact", "b2b": false}, {"name": "松耘藥局", "ban": "95189209", "addr": "樹福里中山路１段６８號１樓", "dist": 562, "ind": "中藥零售", "ratio": 0.1014, "sample": 6541, "lat": 24.9918394, "lon": 121.4235068, "geo": "exact", "b2b": false}, {"name": "創造能量生物科技企業社", "ban": "72688653", "addr": "坡內里大安路５０２號５樓之２", "dist": 587, "ind": "未分類其他家用器具及用品零售", "ratio": 0.2802, "sample": 15289, "lat": 24.9863797, "lon": 121.4139138, "geo": "exact", "b2b": false}, {"name": "利能車業", "ban": "41080029", "addr": "樹德里大安路２５５號", "dist": 592, "ind": "機車維修", "ratio": 0.1023, "sample": 9263, "lat": 24.9939878, "lon": 121.4194255, "geo": "exact", "b2b": false}, {"name": "御品賞商行", "ban": "91697029", "addr": "樹福里中山路１段４８號", "dist": 607, "ind": "夾娃娃機店", "ratio": 0.0215, "sample": 10147, "lat": 24.9922233, "lon": 121.4237336, "geo": "exact", "b2b": false}, {"name": "快點托吊有限公司", "ban": "89834259", "addr": "東昇里東榮街３５號１樓", "dist": 623, "ind": "汽車美容", "ratio": 0.2063, "sample": 5123, "lat": 24.9832676, "lon": 121.4175021, "geo": "exact", "b2b": false}, {"name": "立興鋁業有限公司", "ban": "23843236", "addr": "大安路５３６號３樓", "dist": 636, "ind": "未分類其他家用器具及用品零售", "ratio": 0.2802, "sample": 15289, "lat": 24.9859086, "lon": 121.4136374, "geo": "exact", "b2b": false}, {"name": "宇勝商店", "ban": "78320752", "addr": "樹興里啓智街１２９―１０號１樓", "dist": 639, "ind": "雜貨店", "ratio": 0.1653, "sample": 3103, "lat": 24.9941346, "lon": 121.4211115, "geo": "road-only", "b2b": false}, {"name": "沛方生物科技有限公司", "ban": "96855118", "addr": "樹福里復興路３７號１８樓", "dist": 644, "ind": "服裝及服飾配件零售攤販", "ratio": 0.0773, "sample": 1294, "lat": 24.9936604, "lon": 121.42239, "geo": "exact", "b2b": false}, {"name": "妍運有限公司", "ban": "00233139", "addr": "樹福里復興路３７號２樓", "dist": 644, "ind": "其他美容美體服務", "ratio": 0.1739, "sample": 10370, "lat": 24.9936604, "lon": 121.42239, "geo": "exact", "b2b": false}, {"name": "玖億珍鮮食品有限公司", "ban": "67019133", "addr": "坡內里大安路５３８號２樓", "dist": 645, "ind": "水產品零售", "ratio": 0.177, "sample": 5411, "lat": 24.9858251, "lon": 121.41359, "geo": "exact", "b2b": false}, {"name": "小太陽照相館", "ban": "67793395", "addr": "樹東里博愛一街２號", "dist": 655, "ind": "照相館", "ratio": 0.2056, "sample": 1216, "lat": 24.9910603, "lon": 121.4250997, "geo": "exact", "b2b": false}, {"name": "辰颺實業有限公司", "ban": "79971388", "addr": "坡內里大安路５３４號２樓", "dist": 655, "ind": "未分類其他家用器具及用品零售", "ratio": 0.2802, "sample": 15289, "lat": 24.9857923, "lon": 121.4134957, "geo": "exact", "b2b": false}, {"name": "固鋼興業有限公司", "ban": "84205935", "addr": "坡內里大安路５３４號９樓", "dist": 655, "ind": "未分類其他家用器具及用品零售", "ratio": 0.2802, "sample": 15289, "lat": 24.9857923, "lon": 121.4134957, "geo": "exact", "b2b": false}, {"name": "富怡生技美妍館", "ban": "72683566", "addr": "樹東里博愛一街１０號２樓", "dist": 664, "ind": "美髮院及髮廊", "ratio": 0.025, "sample": 18311, "lat": 24.9910169, "lon": 121.4252227, "geo": "exact", "b2b": false}, {"name": "鼎毅食品有限公司", "ban": "66441056", "addr": "樹福里長壽街２８巷１號２樓", "dist": 713, "ind": "禽肉零售", "ratio": 0.1519, "sample": 790, "lat": 24.9940893, "lon": 121.4229296, "geo": "exact", "b2b": false}, {"name": "昇活圈商行", "ban": "01937511", "addr": "樹北里博愛街１５６號１樓", "dist": 742, "ind": "未分類其他家用器具及用品零售", "ratio": 0.2802, "sample": 15289, "lat": 24.9910121, "lon": 121.4260522, "geo": "exact", "b2b": false}, {"name": "寵愛有家寵物沙龍", "ban": "60029131", "addr": "大同里太平路６３號", "dist": 751, "ind": "寵物照顧及訓練", "ratio": 0.0947, "sample": 2735, "lat": 24.9819081, "lon": 121.4192908, "geo": "exact", "b2b": false}, {"name": "鴻期國際有限公司", "ban": "13042186", "addr": "東陽里東榮街８８巷７號３樓", "dist": 753, "ind": "未分類其他家用器具及用品零售", "ratio": 0.2802, "sample": 15289, "lat": 24.9827082, "lon": 121.415608, "geo": "exact", "b2b": false}, {"name": "大都會平台科技股份有限公司新北市分公司", "ban": "24785240", "addr": "樹福里中山路一段２巷１３號２樓", "dist": 762, "ind": "計程車客運", "ratio": 0.0245, "sample": 4653, "lat": 24.9938952, "lon": 121.4240501, "geo": "exact", "b2b": true}, {"name": "歡喜緣佛具店", "ban": "72689560", "addr": "樹東里中華路１―３號", "dist": 774, "ind": "宗教、喪葬用品零售", "ratio": 0.1, "sample": 5359, "lat": 24.9837633, "lon": 121.4246158, "geo": "road-only", "b2b": false}, {"name": "金車股份有限公司樹林店", "ban": "31610294", "addr": "育英里中山路一段１８５―１號１樓", "dist": 789, "ind": "菸酒零售", "ratio": 0.1483, "sample": 14204, "lat": 24.9933009, "lon": 121.4250917, "geo": "road-only", "b2b": false}, {"name": "廷轅園藝有限公司", "ban": "80478194", "addr": "仁愛街４７號３樓", "dist": 791, "ind": "切花、盆栽零售", "ratio": 0.1616, "sample": 4326, "lat": 24.9821692, "lon": 121.4223745, "geo": "exact", "b2b": false}, {"name": "亮晶晶汽車美容店八德門市", "ban": "50239400", "addr": "八德街９２號旁", "dist": 816, "ind": "汽車美容", "ratio": 0.2063, "sample": 5123, "lat": 24.9813823, "lon": 121.4201715, "geo": "near(±1)", "b2b": false}, {"name": "桔誠企業有限公司", "ban": "79986679", "addr": "坡內里光明街５號（１樓）", "dist": 841, "ind": "未分類其他家用器具及用品零售", "ratio": 0.2802, "sample": 15289, "lat": 24.9891707, "lon": 121.4108419, "geo": "exact", "b2b": false}, {"name": "有利車行", "ban": "10618186", "addr": "彭福里八德街９５號（１樓）", "dist": 843, "ind": "機車零件、機車百貨零售", "ratio": 0.2899, "sample": 3864, "lat": 24.98117, "lon": 121.4204019, "geo": "exact", "b2b": false}, {"name": "美娟美容國際有限公司", "ban": "94077706", "addr": "樹北里四德街８號", "dist": 844, "ind": "美甲美睫服務", "ratio": 0.0565, "sample": 5631, "lat": 24.9921033, "lon": 121.426632, "geo": "exact", "b2b": false}, {"name": "誠采實業股份有限公司", "ban": "70463067", "addr": "彭福里八德街９０號１２樓", "dist": 849, "ind": "未分類其他家用器具及用品零售", "ratio": 0.2802, "sample": 15289, "lat": 24.9810663, "lon": 121.4199699, "geo": "exact", "b2b": false}, {"name": "富龍佛具行", "ban": "95034331", "addr": "東陽里鎮前街４２５巷７號", "dist": 852, "ind": "宗教、喪葬用品零售", "ratio": 0.1, "sample": 5359, "lat": 24.9826016, "lon": 121.4139946, "geo": "exact", "b2b": false}, {"name": "緯鴻車業有限公司", "ban": "22557500", "addr": "保安二街１０２號１樓", "dist": 858, "ind": "機車零件、機車百貨零售", "ratio": 0.2899, "sample": 3864, "lat": 24.9956619, "lon": 121.4227499, "geo": "exact", "b2b": false}, {"name": "酒世界菸酒行", "ban": "13781773", "addr": "中華路２３３號", "dist": 877, "ind": "菸酒零售", "ratio": 0.1483, "sample": 14204, "lat": 24.9807905, "lon": 121.4186887, "geo": "exact", "b2b": false}, {"name": "錦泰儀器有限公司", "ban": "54043239", "addr": "東陽里東榮街１８０號３樓", "dist": 896, "ind": "未分類其他家用器具及用品零售", "ratio": 0.2802, "sample": 15289, "lat": 24.9818262, "lon": 121.4144546, "geo": "exact", "b2b": false}, {"name": "美芳美容國際有限公司", "ban": "60562177", "addr": "博愛街４９號（１、２樓）", "dist": 924, "ind": "其他美容美體服務", "ratio": 0.1739, "sample": 10370, "lat": 24.9919274, "lon": 121.4275979, "geo": "exact", "b2b": false}, {"name": "友琦實業有限公司", "ban": "84375234", "addr": "潭底里大安路１４５巷２８號１樓", "dist": 930, "ind": "寵物零售", "ratio": 0.1654, "sample": 1904, "lat": 24.9963183, "lon": 121.4228951, "geo": "exact", "b2b": false}, {"name": "台灣屈臣氏個人用品商店股份有限公司樹林三分公司", "ban": "53012602", "addr": "中華里中華路２６７號１、２、３樓", "dist": 930, "ind": "未分類其他家用器具及用品零售", "ratio": 0.2802, "sample": 15289, "lat": 24.9803802, "lon": 121.417875, "geo": "exact", "b2b": false}, {"name": "統一生活事業股份有限公司台北縣第五十九分公司", "ban": "28479860", "addr": "中華路１３０號１、２樓", "dist": 931, "ind": "中藥零售", "ratio": 0.1014, "sample": 6541, "lat": 24.9804538, "lon": 121.4173614, "geo": "exact", "b2b": false}, {"name": "可圈可點企業社", "ban": "91686971", "addr": "中山路２段１５８之１號", "dist": 941, "ind": "未分類其他家用器具及用品零售", "ratio": 0.2802, "sample": 15289, "lat": 24.9827754, "lon": 121.4124607, "geo": "exact", "b2b": false}, {"name": "嘟寶行", "ban": "61222922", "addr": "中華里太元街１９號（１樓）", "dist": 943, "ind": "雜貨店", "ratio": 0.1653, "sample": 3103, "lat": 24.9802301, "lon": 121.418148, "geo": "exact", "b2b": false}, {"name": "皓米股份有限公司樹林忠孝分公司", "ban": "00179016", "addr": "彭福里忠孝街５９號", "dist": 946, "ind": "經營網路購物（食品、飲料類商品）", "ratio": 0.2887, "sample": 9303, "lat": 24.9814699, "lon": 121.4241833, "geo": "exact", "b2b": true}, {"name": "國榮交通企業有限公司", "ban": "33728994", "addr": "大安路１４７號１樓", "dist": 956, "ind": "計程車客運", "ratio": 0.0245, "sample": 4653, "lat": 24.9968993, "lon": 121.4218801, "geo": "exact", "b2b": true}, {"name": "坤田商行", "ban": "78320248", "addr": "保安街１段２０巷３號", "dist": 1013, "ind": "未分類其他家用器具及用品零售", "ratio": 0.2802, "sample": 15289, "lat": 24.9936285, "lon": 121.4275989, "geo": "exact", "b2b": false}, {"name": "吉輪車業行", "ban": "99481212", "addr": "國凱街１５８號", "dist": 1019, "ind": "機車零件、機車百貨零售", "ratio": 0.2899, "sample": 3864, "lat": 24.9807949, "lon": 121.4243511, "geo": "exact", "b2b": false}, {"name": "亞德奇有限公司", "ban": "90039028", "addr": "太順里太順街６２巷３弄５號４樓", "dist": 1021, "ind": "未分類其他家用器具及用品零售", "ratio": 0.2802, "sample": 15289, "lat": 24.9796086, "lon": 121.417495, "geo": "exact", "b2b": false}, {"name": "廣益雜糧行", "ban": "37890032", "addr": "保安里樹新路２８巷７號", "dist": 1038, "ind": "雜貨店", "ratio": 0.1653, "sample": 3103, "lat": 24.9942713, "lon": 121.427397, "geo": "exact", "b2b": false}, {"name": "統一超商股份有限公司台北縣第四八九分公司", "ban": "28427414", "addr": "中華里中華路３４１－５、３４１－６號１樓", "dist": 1046, "ind": "菸酒零售", "ratio": 0.1483, "sample": 14204, "lat": 24.9799841, "lon": 121.4151747, "geo": "road-only", "b2b": false}, {"name": "騏鼎車業", "ban": "91804576", "addr": "太元街６４號", "dist": 1048, "ind": "機車維修", "ratio": 0.1023, "sample": 9263, "lat": 24.9792572, "lon": 121.4185343, "geo": "exact", "b2b": false}, {"name": "京江企業社", "ban": "82092772", "addr": "潭底里豐林街６４號", "dist": 1079, "ind": "水產品零售", "ratio": 0.177, "sample": 5411, "lat": 24.9980532, "lon": 121.4218661, "geo": "exact", "b2b": false}, {"name": "泰霸有限公司", "ban": "93560837", "addr": "潭底里豐林街６４號", "dist": 1079, "ind": "經營網路購物（食品、飲料類商品）", "ratio": 0.2887, "sample": 9303, "lat": 24.9980532, "lon": 121.4218661, "geo": "exact", "b2b": true}, {"name": "兩輪機車行", "ban": "60031729", "addr": "潭底里保安街１段３２７之３號（１樓）", "dist": 1098, "ind": "機車維修", "ratio": 0.1023, "sample": 9263, "lat": 24.9984234, "lon": 121.4174802, "geo": "exact", "b2b": false}, {"name": "仟安企業社", "ban": "82127462", "addr": "彭興里國凱街３２―５號", "dist": 1115, "ind": "夾娃娃機店", "ratio": 0.0215, "sample": 10147, "lat": 24.9787986, "lon": 121.4211154, "geo": "road-only", "b2b": false}, {"name": "巧悅花藝設計坊", "ban": "82313091", "addr": "坡內里備內街１５８巷２７號１樓", "dist": 1117, "ind": "切花、盆栽零售", "ratio": 0.1616, "sample": 4326, "lat": 24.9899598, "lon": 121.4081716, "geo": "exact", "b2b": false}, {"name": "永祐有限公司", "ban": "24716841", "addr": "彭興里國凱街２７號", "dist": 1125, "ind": "雜貨店", "ratio": 0.1653, "sample": 3103, "lat": 24.97855, "lon": 121.4195006, "geo": "exact", "b2b": false}, {"name": "喬貿國際有限公司", "ban": "54855995", "addr": "文林里潭興街５３號９樓之２", "dist": 1165, "ind": "未分類其他家用器具及用品零售", "ratio": 0.2802, "sample": 15289, "lat": 24.9981782, "lon": 121.4240064, "geo": "exact", "b2b": false}, {"name": "修文電商有限公司", "ban": "62148387", "addr": "八德街２６９號", "dist": 1184, "ind": "未分類其他家用器具及用品零售", "ratio": 0.2802, "sample": 15289, "lat": 24.9783851, "lon": 121.422218, "geo": "exact", "b2b": false}, {"name": "台成機車材料行", "ban": "34559617", "addr": "保安里樹新路１０１號（１樓）", "dist": 1196, "ind": "機車零件、機車百貨零售", "ratio": 0.2899, "sample": 3864, "lat": 24.9958836, "lon": 121.4279677, "geo": "exact", "b2b": false}, {"name": "指舞小春秋美容國際有限公司樹泰分公司", "ban": "90882004", "addr": "保安里４鄰樹新路４０－６號", "dist": 1211, "ind": "推拿按摩服務", "ratio": 0.1276, "sample": 5571, "lat": 24.9955186, "lon": 121.4285072, "geo": "exact", "b2b": false}, {"name": "統廉社有限公司", "ban": "29143153", "addr": "彭厝里太平路１５６號", "dist": 1220, "ind": "雜貨店", "ratio": 0.1653, "sample": 3103, "lat": 24.9777164, "lon": 121.4184252, "geo": "exact", "b2b": false}, {"name": "益宏機車行", "ban": "34295242", "addr": "保安里樹新路１０９號", "dist": 1248, "ind": "機車維修", "ratio": 0.1023, "sample": 9263, "lat": 24.9962861, "lon": 121.4282518, "geo": "exact", "b2b": false}, {"name": "尚業商行", "ban": "01911619", "addr": "保安里樹新路１１９號", "dist": 1273, "ind": "豆類、麥類及其他雜糧零售", "ratio": 0.2277, "sample": 874, "lat": 24.9964755, "lon": 121.4284063, "geo": "exact", "b2b": false}, {"name": "明家商店", "ban": "14646277", "addr": "千歲街６１巷８之２號", "dist": 1283, "ind": "雜貨店", "ratio": 0.1653, "sample": 3103, "lat": 24.9982404, "lon": 121.4262653, "geo": "exact", "b2b": false}, {"name": "美麗佳人健康館", "ban": "30267574", "addr": "保安里樹新路１２９號", "dist": 1284, "ind": "推拿按摩服務", "ratio": 0.1276, "sample": 5571, "lat": 24.996556, "lon": 121.4284694, "geo": "exact", "b2b": false}, {"name": "雙新企業社", "ban": "47979197", "addr": "坡內里備內街１６０巷１２號", "dist": 1286, "ind": "肉鬆、肉乾、火腿、臘味零售", "ratio": 0.2058, "sample": 826, "lat": 24.9897373, "lon": 121.4064596, "geo": "exact", "b2b": false}, {"name": "好菜場小吃店", "ban": "72673949", "addr": "保安里樹新路１４３、１４５、１４７、１４９號", "dist": 1311, "ind": "水產品零售", "ratio": 0.177, "sample": 5411, "lat": 24.9967675, "lon": 121.428621, "geo": "road-only", "b2b": false}, {"name": "鄉楓有限公司", "ban": "84584443", "addr": "保安街２段４７號", "dist": 1319, "ind": "雜貨店", "ratio": 0.1653, "sample": 3103, "lat": 25.00017, "lon": 121.4159828, "geo": "exact", "b2b": false}, {"name": "長勝天事業股份有限公司", "ban": "90877966", "addr": "金寮里保安街２段２之３號９樓", "dist": 1361, "ind": "水果零售", "ratio": 0.0723, "sample": 5619, "lat": 25.0006364, "lon": 121.4163416, "geo": "exact", "b2b": false}, {"name": "取禾有限公司", "ban": "83114958", "addr": "保安里樹新路５０巷５弄２８號７樓", "dist": 1376, "ind": "未分類其他家用器具及用品零售", "ratio": 0.2802, "sample": 15289, "lat": 24.996747, "lon": 121.4295094, "geo": "exact", "b2b": false}, {"name": "群山淨水科技有限公司", "ban": "54867887", "addr": "圳福里千歲街９２巷７弄５６號１樓", "dist": 1389, "ind": "飲用淨水零售", "ratio": 0.1025, "sample": 1317, "lat": 24.9984793, "lon": 121.4276951, "geo": "exact", "b2b": false}, {"name": "柴好有限公司", "ban": "90645538", "addr": "金寮里保安街２段１０７巷１弄６號２樓", "dist": 1400, "ind": "未分類其他家用器具及用品零售", "ratio": 0.2802, "sample": 15289, "lat": 25.0006844, "lon": 121.4150422, "geo": "exact", "b2b": false}, {"name": "品成衡器行", "ban": "74922374", "addr": "圳福里樹新路８２號１樓", "dist": 1413, "ind": "未分類其他家用器具及用品零售", "ratio": 0.2802, "sample": 15289, "lat": 24.9973757, "lon": 121.4293792, "geo": "exact", "b2b": false}, {"name": "佑慈企業社", "ban": "87473820", "addr": "文林里潭興街１４３巷１４之６號４樓", "dist": 1431, "ind": "宗教、喪葬用品零售", "ratio": 0.1, "sample": 5359, "lat": 25.0002296, "lon": 121.4253951, "geo": "exact", "b2b": false}, {"name": "尚鼎商行", "ban": "91731103", "addr": "圳福里中正路５７號七樓", "dist": 1437, "ind": "經營網路購物（食品、飲料類商品）", "ratio": 0.2887, "sample": 9303, "lat": 24.9996815, "lon": 121.4266272, "geo": "exact", "b2b": false}, {"name": "慶順汽車修配廠", "ban": "90928487", "addr": "文林里大安路７號", "dist": 1441, "ind": "機車零件、機車百貨零售", "ratio": 0.2899, "sample": 3864, "lat": 25.0004357, "lon": 121.4251541, "geo": "exact", "b2b": false}, {"name": "欣亞有限公司", "ban": "24787401", "addr": "東山里東興街４７號", "dist": 1523, "ind": "其他洗衣服務", "ratio": 0.1384, "sample": 4141, "lat": 24.9770292, "lon": 121.4111843, "geo": "exact", "b2b": true}, {"name": "泉泰蒸餾水有限公司", "ban": "34176338", "addr": "東山里東興街４９號", "dist": 1526, "ind": "飲用淨水零售", "ratio": 0.1025, "sample": 1317, "lat": 24.9769837, "lon": 121.4112208, "geo": "exact", "b2b": false}, {"name": "好貨多五金百貨商行", "ban": "37889247", "addr": "彭興里太平路２５３號", "dist": 1557, "ind": "未分類其他家用器具及用品零售", "ratio": 0.2802, "sample": 15289, "lat": 24.974667, "lon": 121.4189101, "geo": "exact", "b2b": false}, {"name": "大哥大釣餌行", "ban": "08572255", "addr": "東豐街４９巷８弄３３號", "dist": 1598, "ind": "釣具零售", "ratio": 0.161, "sample": 671, "lat": 24.9751685, "lon": 121.4137306, "geo": "exact", "b2b": false}, {"name": "佳德農品社", "ban": "02152544", "addr": "彭厝里東豐街４９巷８弄３５號", "dist": 1599, "ind": "豆類、麥類及其他雜糧零售", "ratio": 0.2277, "sample": 874, "lat": 24.9751782, "lon": 121.4136703, "geo": "exact", "b2b": false}, {"name": "位達股份有限公司", "ban": "04233311", "addr": "東山里中山路２段１５１巷１６號", "dist": 1610, "ind": "未分類其他家用器具及用品零售", "ratio": 0.2802, "sample": 15289, "lat": 24.9774589, "lon": 121.4090522, "geo": "exact", "b2b": false}, {"name": "臻穎股份有限公司", "ban": "28404398", "addr": "金寮里武林街１８號（１樓）", "dist": 1617, "ind": "其他洗衣服務", "ratio": 0.1384, "sample": 4141, "lat": 25.0031256, "lon": 121.4208698, "geo": "exact", "b2b": true}, {"name": "宏苹商行", "ban": "41411885", "addr": "東山里東大街１１６號（２樓）", "dist": 1622, "ind": "未分類其他家用器具及用品零售", "ratio": 0.2802, "sample": 15289, "lat": 24.976127, "lon": 121.4109375, "geo": "exact", "b2b": false}, {"name": "宏祥瓷器有限公司", "ban": "66529637", "addr": "武林街１９－１２號", "dist": 1658, "ind": "陶瓷器皿及餐具零售", "ratio": 0.2843, "sample": 496, "lat": 25.0034406, "lon": 121.421386, "geo": "exact", "b2b": false}, {"name": "泓源金香舖", "ban": "61224870", "addr": "圳福里千歲街１８６號", "dist": 1716, "ind": "宗教、喪葬用品零售", "ratio": 0.1, "sample": 5359, "lat": 25.0010539, "lon": 121.4293137, "geo": "exact", "b2b": false}, {"name": "竣惟洗車工作室", "ban": "91756700", "addr": "大安路３４號", "dist": 1808, "ind": "汽車美容", "ratio": 0.2063, "sample": 5123, "lat": 25.0030719, "lon": 121.4274835, "geo": "exact", "b2b": false}, {"name": "世晟洋行", "ban": "30268052", "addr": "東山里東順街９０巷３弄１４號４樓", "dist": 1826, "ind": "菸酒零售", "ratio": 0.1483, "sample": 14204, "lat": 24.9762884, "lon": 121.4072505, "geo": "exact", "b2b": false}, {"name": "登發商店", "ban": "14180067", "addr": "保安街２段２５７號", "dist": 1920, "ind": "雜貨店", "ratio": 0.1653, "sample": 3103, "lat": 25.0049769, "lon": 121.4129317, "geo": "exact", "b2b": false}, {"name": "平安大車隊股份有限公司", "ban": "85038007", "addr": "彭厝里八德街２３０號", "dist": 2053, "ind": "計程車客運", "ratio": 0.0245, "sample": 4653, "lat": 24.9709263, "lon": 121.413526, "geo": "exact", "b2b": true}, {"name": "台灣福祉科技有限公司", "ban": "80488974", "addr": "彭厝里八德街２３０號", "dist": 2053, "ind": "機車維修", "ratio": 0.1023, "sample": 9263, "lat": 24.9709263, "lon": 121.413526, "geo": "exact", "b2b": false}, {"name": "永新圖染工業股份有限公司", "ban": "04737880", "addr": "東山里味王街１號", "dist": 2144, "ind": "其他洗衣服務", "ratio": 0.1384, "sample": 4141, "lat": 24.9760514, "lon": 121.4030776, "geo": "exact", "b2b": true}, {"name": "毓泰企業社", "ban": "91395208", "addr": "圳安里俊英街１７０之２號（１樓）", "dist": 2199, "ind": "未分類其他家用器具及用品零售", "ratio": 0.2802, "sample": 15289, "lat": 25.0073118, "lon": 121.4264379, "geo": "exact", "b2b": false}, {"name": "鴻頡企業社", "ban": "60043794", "addr": "俊英街１８８號（１樓）", "dist": 2241, "ind": "汽車美容", "ratio": 0.2063, "sample": 5123, "lat": 25.0077964, "lon": 121.4261421, "geo": "exact", "b2b": false}, {"name": "弼發商行", "ban": "08574367", "addr": "新興街１９巷６號", "dist": 2584, "ind": "雜貨店", "ratio": 0.1653, "sample": 3103, "lat": 24.9727979, "lon": 121.4004307, "geo": "exact", "b2b": false}, {"name": "巧鼎小吃店", "ban": "72659159", "addr": "圳民里俊英街１３９號（１樓）", "dist": 2614, "ind": "食品零售攤販", "ratio": 0.0324, "sample": 1327, "lat": 25.011707, "lon": 121.424294, "geo": "exact", "b2b": false}, {"name": "瀧澤寶馬奔馳國際車業", "ban": "26521645", "addr": "圳民里俊英街１４１號", "dist": 2618, "ind": "機車零件、機車百貨零售", "ratio": 0.2899, "sample": 3864, "lat": 25.0117518, "lon": 121.4242837, "geo": "exact", "b2b": false}, {"name": "一方隅工作室", "ban": "60080777", "addr": "俊英街１５５巷９弄８號", "dist": 2619, "ind": "手工藝品零售", "ratio": 0.221, "sample": 2095, "lat": 25.0118938, "lon": 121.4234571, "geo": "exact", "b2b": false}, {"name": "文鴻印工坊", "ban": "94865816", "addr": "圳民里俊英街１９７號十三樓之６", "dist": 2680, "ind": "刻印章", "ratio": 0.0622, "sample": 836, "lat": 25.012426, "lon": 121.4236346, "geo": "exact", "b2b": true}, {"name": "永鑫包裝材料有限公司", "ban": "28406945", "addr": "三多里三德街３６巷１０號", "dist": 2693, "ind": "未分類其他家用器具及用品零售", "ratio": 0.2802, "sample": 15289, "lat": 25.0126577, "lon": 121.4155415, "geo": "exact", "b2b": false}, {"name": "夠愛夾中正店", "ban": "60009466", "addr": "三多里中正路４６４號", "dist": 2747, "ind": "夾娃娃機店", "ratio": 0.0215, "sample": 10147, "lat": 25.0126864, "lon": 121.41282, "geo": "exact", "b2b": false}, {"name": "承昕珠寶金飾企業社", "ban": "61250095", "addr": "俊興街１９７號（２樓）", "dist": 2775, "ind": "手工藝品零售", "ratio": 0.221, "sample": 2095, "lat": 25.0135548, "lon": 121.4171923, "geo": "exact", "b2b": false}, {"name": "亮晶晶汽車美容店", "ban": "39954503", "addr": "圳生里俊安街２４巷５號", "dist": 2788, "ind": "汽車美容", "ratio": 0.2063, "sample": 5123, "lat": 25.0137421, "lon": 121.419208, "geo": "exact", "b2b": false}, {"name": "京典企業社", "ban": "80021967", "addr": "圳生里俊安街２４巷６號", "dist": 2806, "ind": "未分類其他家用器具及用品零售", "ratio": 0.2802, "sample": 15289, "lat": 25.0138999, "lon": 121.4191377, "geo": "exact", "b2b": false}, {"name": "藍世界水族設計館", "ban": "66945697", "addr": "三多里中正路５０６號", "dist": 2844, "ind": "寵物零售", "ratio": 0.1654, "sample": 1904, "lat": 25.0134546, "lon": 121.4122198, "geo": "exact", "b2b": false}, {"name": "築沛有限公司", "ban": "90228864", "addr": "三多里俊德街２７號（１樓）", "dist": 2864, "ind": "未分類其他家用器具及用品零售", "ratio": 0.2802, "sample": 15289, "lat": 25.0141791, "lon": 121.4152716, "geo": "exact", "b2b": false}, {"name": "昇澔興業有限公司", "ban": "84241496", "addr": "三多里三俊街７４巷２５號", "dist": 2889, "ind": "未分類其他家用器具及用品零售", "ratio": 0.2802, "sample": 15289, "lat": 25.0142044, "lon": 121.4138862, "geo": "exact", "b2b": false}, {"name": "宗泓便利商店", "ban": "92881831", "addr": "圳生里三俊街２６６號１樓", "dist": 2892, "ind": "雜貨店", "ratio": 0.1653, "sample": 3103, "lat": 25.0145591, "lon": 121.421817, "geo": "exact", "b2b": false}, {"name": "潤達綜合園藝有限公司", "ban": "53721837", "addr": "三多里三俊街５８號", "dist": 3053, "ind": "園藝苗木零售", "ratio": 0.2331, "sample": 399, "lat": 25.0155294, "lon": 121.412917, "geo": "exact", "b2b": false}, {"name": "永讚便利商店", "ban": "18075848", "addr": "中山路３段７０號１樓", "dist": 3135, "ind": "雜貨店", "ratio": 0.1653, "sample": 3103, "lat": 24.9724218, "lon": 121.3937448, "geo": "exact", "b2b": false}, {"name": "宜家企業社", "ban": "91181260", "addr": "中山里佳園路１段４１巷２８弄３號３樓", "dist": 3167, "ind": "未分類其他家用器具及用品零售", "ratio": 0.2802, "sample": 15289, "lat": 24.9708214, "lon": 121.3946741, "geo": "exact", "b2b": false}, {"name": "上林肉品行", "ban": "13362482", "addr": "圳生里三俊街１９９巷２０弄２６號１樓", "dist": 3169, "ind": "畜肉零售", "ratio": 0.0726, "sample": 6171, "lat": 25.0170996, "lon": 121.4213121, "geo": "exact", "b2b": false}, {"name": "誌成企業社", "ban": "94881983", "addr": "山佳里八德街６８２號６樓", "dist": 3183, "ind": "未分類其他家用器具及用品零售", "ratio": 0.2802, "sample": 15289, "lat": 24.9691324, "lon": 121.3960786, "geo": "exact", "b2b": false}, {"name": "樂清服務股份有限公司台北第三分公司", "ban": "83089971", "addr": "三龍里三俊街６５巷２５－１號", "dist": 3210, "ind": "其他洗衣服務", "ratio": 0.1384, "sample": 4141, "lat": 25.0170163, "lon": 121.4131698, "geo": "exact", "b2b": true}, {"name": "冠呈車業行", "ban": "34752578", "addr": "東園里柑園街１段２２號", "dist": 3251, "ind": "機車維修", "ratio": 0.1023, "sample": 9263, "lat": 24.9618447, "lon": 121.4063204, "geo": "exact", "b2b": false}, {"name": "根本國際有限公司", "ban": "85076705", "addr": "中山里佳園路１段７號", "dist": 3257, "ind": "機車零件、機車百貨零售", "ratio": 0.2899, "sample": 3864, "lat": 24.9717484, "lon": 121.3927809, "geo": "exact", "b2b": false}, {"name": "宇煌企業有限公司", "ban": "90577222", "addr": "三龍里中正路６７０號", "dist": 3284, "ind": "自行車租賃", "ratio": 0.1465, "sample": 157, "lat": 25.0169199, "lon": 121.409683, "geo": "exact", "b2b": false}, {"name": "超速部件車業精品行", "ban": "02420632", "addr": "圳生里三俊街１９９巷３５－３號", "dist": 3285, "ind": "機車零件、機車百貨零售", "ratio": 0.2899, "sample": 3864, "lat": 25.0181641, "lon": 121.4208628, "geo": "exact", "b2b": false}, {"name": "儒興科技貿易有限公司", "ban": "90660782", "addr": "三福里三福街６１號４樓", "dist": 3291, "ind": "經營網路購物（食品、飲料類商品）", "ratio": 0.2887, "sample": 9303, "lat": 25.0164246, "lon": 121.4078445, "geo": "exact", "b2b": true}, {"name": "珍時時計實業社", "ban": "87462529", "addr": "樂山里中和街１８號三樓", "dist": 3299, "ind": "鐘錶維修", "ratio": 0.1139, "sample": 237, "lat": 24.9736699, "lon": 121.3909199, "geo": "exact", "b2b": false}, {"name": "天然美科技有限公司", "ban": "90737847", "addr": "三福街１３６號２樓", "dist": 3325, "ind": "其他美容美體服務", "ratio": 0.1739, "sample": 10370, "lat": 25.0160726, "lon": 121.4059781, "geo": "exact", "b2b": false}, {"name": "正章生活事業有限公司", "ban": "47018537", "addr": "三龍里三龍街３６號（１樓）", "dist": 3339, "ind": "其他洗衣服務", "ratio": 0.1384, "sample": 4141, "lat": 25.0179601, "lon": 121.4118833, "geo": "exact", "b2b": true}, {"name": "沃爾斯丹國際有限公司", "ban": "91069127", "addr": "三龍里三龍街４５巷２號", "dist": 3392, "ind": "經營網路購物（食品、飲料類商品）", "ratio": 0.2887, "sample": 9303, "lat": 25.0188871, "lon": 121.4146022, "geo": "exact", "b2b": true}, {"name": "鮮時代冷凍食品有限公司", "ban": "28785045", "addr": "東園里柑園街１段１―１號", "dist": 3394, "ind": "家畜屠宰", "ratio": 0.1365, "sample": 696, "lat": 24.9602362, "lon": 121.4069209, "geo": "road-only", "b2b": true}, {"name": "德勝家畜屠宰場", "ban": "10621128", "addr": "東園里柑園街１段１之１號", "dist": 3406, "ind": "家畜屠宰", "ratio": 0.1365, "sample": 696, "lat": 24.9596271, "lon": 121.4084168, "geo": "exact", "b2b": true}, {"name": "皇宣美容商行", "ban": "60051484", "addr": "三興里龍興街４６巷４２號三樓", "dist": 3428, "ind": "其他美容美體服務", "ratio": 0.1739, "sample": 10370, "lat": 25.0150958, "lon": 121.401647, "geo": "exact", "b2b": false}, {"name": "武鶴國際貿易有限公司", "ban": "83416291", "addr": "北園里西圳街１段１１７－３號", "dist": 3451, "ind": "成禽批發", "ratio": 0.2282, "sample": 701, "lat": 24.9639673, "lon": 121.3984237, "geo": "exact", "b2b": true}, {"name": "玄樹企業社", "ban": "80020496", "addr": "中山里八德街１１０８號（１樓）", "dist": 3566, "ind": "寵物零售", "ratio": 0.1654, "sample": 1904, "lat": 24.969071, "lon": 121.3911541, "geo": "exact", "b2b": false}, {"name": "沂家商行樹林量販倉", "ban": "61359291", "addr": "東園里柑園街１段１３３巷３０－１號", "dist": 4157, "ind": "水產品零售", "ratio": 0.177, "sample": 5411, "lat": 24.953972, "lon": 121.4037958, "geo": "near(±0)", "b2b": false}, {"name": "大百合國際有限公司", "ban": "89466141", "addr": "西圳街２段１５６巷１號", "dist": 5268, "ind": "其他洗衣服務", "ratio": 0.1384, "sample": 4141, "lat": 24.9566624, "lon": 121.3806226, "geo": "exact", "b2b": true}, {"name": "豐鈺食品企業社", "ban": "91786057", "addr": "佳園路３段１４２號４樓", "dist": 5505, "ind": "畜肉零售", "ratio": 0.0726, "sample": 6171, "lat": 24.9496707, "lon": 121.3855096, "geo": "exact", "b2b": false}];
+const out = document.getElementById('out');
+const empty = document.getElementById('empty');
+const count = document.getElementById('count');
+const q = document.getElementById('q');
+const hideB2b = document.getElementById('hideB2b');
+const hideDone = document.getElementById('hideDone');
+const KEY = 'shulin-checked-nonfood';
+
+function loadDone() {
+  try { return new Set(JSON.parse(localStorage.getItem(KEY) || '[]')); } catch (e) { return new Set(); }
+}
+function saveDone(set) {
+  try { localStorage.setItem(KEY, JSON.stringify([...set])); } catch (e) {}
+}
+let done = loadDone();
+
+const BANDS = [
+  { min: 0, max: 1000, label: '走路可到（1 公里內）' },
+  { min: 1000, max: 2000, label: '1–2 公里' },
+  { min: 2000, max: Infinity, label: '2 公里以上' },
+];
+
+function fmtDist(m) {
+  return m < 1000 ? [String(m), 'm'] : [(m / 1000).toFixed(1), 'km'];
+}
+
+function mapHref(s) {
+  const query = (s.lat != null) ? (s.lat + ',' + s.lon) : ('新北市樹林區' + s.addr);
+  return 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(query);
+}
+
+function textEl(cls, text) {
+  const el = document.createElement('span');
+  if (cls) el.className = cls;
+  el.textContent = text;
+  return el;
+}
+
+function buildCard(s) {
+  const el = document.createElement('div');
+  el.className = 'card' + (done.has(s.ban) ? ' done' : '') + (s.b2b ? ' b2b' : '');
+
+  const d = fmtDist(s.dist);
+  const dist = document.createElement('div');
+  dist.className = 'dist';
+  dist.append(d[0]);
+  dist.append(textEl('u', ' ' + d[1]));
+  el.append(dist);
+
+  const body = document.createElement('div');
+  body.className = 'body';
+
+  const nm = document.createElement('div');
+  nm.className = 'nm';
+  nm.textContent = s.name;
+  body.append(nm);
+
+  const meta = document.createElement('div');
+  meta.className = 'meta';
+  meta.append(textEl('', s.addr));
+  meta.append(textEl('mono', s.ban));
+  meta.append(textEl('mono', s.ind));
+  meta.append(textEl('mono', '全國開發票 ' + Math.round(s.ratio * 100) + '%／n=' + s.sample.toLocaleString('en-US')));
+  if (s.b2b) meta.append(textEl('tag dim', '非店面'));
+  if (s.geo !== 'exact') meta.append(textEl('tag warn', '座標較粗略'));
+  body.append(meta);
+  el.append(body);
+
+  const acts = document.createElement('div');
+  acts.className = 'acts';
+  const a = document.createElement('a');
+  a.className = 'map';
+  a.href = mapHref(s);
+  a.target = '_blank';
+  a.rel = 'noopener';
+  a.textContent = '地圖 ↗';
+  acts.append(a);
+
+  const lbl = document.createElement('label');
+  lbl.className = 'chk';
+  const cb = document.createElement('input');
+  cb.type = 'checkbox';
+  cb.checked = done.has(s.ban);
+  cb.addEventListener('change', () => {
+    if (cb.checked) { done.add(s.ban); } else { done.delete(s.ban); }
+    saveDone(done);
+    el.classList.toggle('done', cb.checked);
+    if (hideDone.checked) render();
+  });
+  lbl.append(cb, document.createTextNode('已查'));
+  acts.append(lbl);
+  el.append(acts);
+  return el;
+}
+
+function render() {
+  const term = q.value.trim().toLowerCase();
+  const list = STORES.filter(s => {
+    if (hideB2b.checked && s.b2b) return false;
+    if (hideDone.checked && done.has(s.ban)) return false;
+    if (!term) return true;
+    return (s.name + ' ' + s.addr + ' ' + s.ban + ' ' + s.ind).toLowerCase().includes(term);
+  });
+
+  const frag = document.createDocumentFragment();
+  let shown = 0;
+  for (const band of BANDS) {
+    const inBand = list.filter(s => s.dist > band.min && s.dist <= band.max ||
+      (band.min === 0 && s.dist === 0));
+    if (!inBand.length) continue;
+    shown += inBand.length;
+    const head = document.createElement('div');
+    head.className = 'band';
+    const h = document.createElement('h2');
+    h.textContent = band.label;
+    head.append(h, textEl('rule', ''), textEl('cnt', inBand.length + ' 家'));
+    frag.append(head);
+    const box = document.createElement('div');
+    box.className = 'list';
+    inBand.forEach(s => box.append(buildCard(s)));
+    frag.append(box);
+  }
+  out.replaceChildren(frag);
+  empty.hidden = shown > 0;
+  count.textContent = '顯示 ' + shown + ' / ' + STORES.length + ' 家';
+}
+
+q.addEventListener('input', render);
+hideB2b.addEventListener('change', render);
+hideDone.addEventListener('change', render);
+render();
+</script>

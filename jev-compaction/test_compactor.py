@@ -11,7 +11,7 @@ import compactor
 from compactor import (
     REMOVAL_NOTICE, _block_text, _replace_block_text, current_task, select_candidates,
 )
-from privacy import Pseudonyms, apply_privacy, list_entities
+from privacy import Pseudonyms, apply_privacy, list_entities, redact
 
 
 def _long(n: int = 300, ch: str = "x") -> str:
@@ -161,8 +161,8 @@ class TestPrivacy(unittest.TestCase):
         self.assertIn("<PROJECT_", out)
 
     def test_credentials_redacted(self):
-        out = self._anon("key 是 sk-abcdefghijklmnopqrstuvwxyz")
-        self.assertNotIn("sk-abcdefghijklmnopqrstuvwxyz", out)
+        out = self._anon("key 是 sk-EXAMPLEONLYNOTAREALKEY000000")
+        self.assertNotIn("sk-EXAMPLEONLYNOTAREALKEY000000", out)
         self.assertIn("[REDACTED_OPENAI_KEY]", out)
 
     def test_generic_dirs_are_not_entities(self):
@@ -186,6 +186,59 @@ class TestPrivacy(unittest.TestCase):
         out = self._anon("第 10.5 章與 20~30 頁，售價 10.99")
         self.assertIn("10.5", out)
         self.assertIn("10.99", out)
+
+
+class TestCredentialRedaction(unittest.TestCase):
+    """憑證遮蔽是這個 proxy 唯一的安全要求，逐類別釘住。"""
+
+    SAMPLES = {
+        "openai": "OPENAI_API_KEY=sk-proj-EXAMPLEONLYNOTAREALKEY00000",
+        "anthropic": "使用 sk-ant-api03-EXAMPLEONLYNOTAREALKEY0 呼叫",
+        "typesafe": "key=apikey_EXAMPLEONLYNOTAREALKEY000000",
+        "telegram": "TELEGRAM_BOT_TOKEN=0000000000:EXAMPLEONLYNOTAREALTELEGRAMTOKEN0",
+        "aws_access": "AKIAEXAMPLEONLYNOTREAL",
+        "aws_secret": 'aws_secret_access_key = "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"',
+        "github": "ghp_EXAMPLEONLYNOTAREALTOKEN0000",
+        "gitlab": "glpat-EXAMPLEONLYNOTAREAL00",
+        "slack": "xoxb-EXAMPLEONLY-NOTAREALTOKEN00",
+        "google": "AIzaEXAMPLEONLYNOTAREALKEY0000000000000",
+        "jwt": "eyJEXAMPLEONLYAAAAAAAA.eyJEXAMPLEONLYBBBBBBBB.CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
+        "ssh_key": "-----BEGIN RSA PRIVATE KEY-----\nMIIEowIBAAKCAQEA\n-----END RSA PRIVATE KEY-----",
+        "basic_auth": "Authorization: Basic EXAMPLEONLYNOTREAL00",
+        "curl_u": "curl -u admin:hunter2 https://api.example.com",
+        "conn_string": "postgres://user:S3cretPwd@db.internal:5432/mydb",
+        "password_assign": 'password = "MyPassw0rd!"',
+        "single_quote": "api_key: 'abcdef1234567890'",
+        "unquoted": "PASSWORD=hunter2hunter2",
+        "env_upper": "FINMIND_TOKEN=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9",
+        "tw_id": "身分證 A123456789",
+        "email": "聯絡 admin@example.com",
+    }
+
+    def test_every_sample_is_masked(self):
+        for name, text in self.SAMPLES.items():
+            with self.subTest(sample=name):
+                out = apply_privacy(text, Pseudonyms(), True, [])
+                self.assertNotEqual(out, text, f"{name} 沒有被處理")
+                self.assertIn("[REDACTED", out, f"{name} 沒有產生遮蔽記號")
+
+    def test_conn_string_password_not_swallowed_as_email(self):
+        """連線字串的密碼該標成一般遮蔽，不是 email（順序問題）。"""
+        out = apply_privacy("postgres://user:S3cretPwd@db.internal:5432/mydb",
+                            Pseudonyms(), True, [])
+        self.assertNotIn("S3cretPwd", out)
+        self.assertNotIn("REDACTED_EMAIL", out)
+
+    def test_normal_text_untouched(self):
+        """不能把正常內容也吃掉——過度遮蔽會讓 Jev 判斷失準。"""
+        for s in [
+            "The quick brown fox jumps over the lazy dog.",
+            "def compute(x, y): return x + y",
+            "總共 42 筆資料，耗時 1.9 秒",
+            "http://localhost:5950/market-dashboard",
+        ]:
+            # localhost 那條會被偽名化，所以這裡只驗證「不會出現 REDACTED」
+            self.assertNotIn("[REDACTED", redact(s), f"過度遮蔽：{s}")
 
 
 class TestCompactFailOpen(unittest.TestCase):
