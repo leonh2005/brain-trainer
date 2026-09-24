@@ -55,3 +55,6 @@ daily-stock-analysis/
 edible-plants-tw/
 stock-screener-ai/
 controller-media/state.json
+
+# ccr 設定備份含 API key，絕不可進 repo（2026-09-24 外洩事件）
+jev-compaction/ccr-backup/

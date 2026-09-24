@@ -71,8 +71,8 @@ class TestCacheConcurrency(unittest.TestCase):
         def worker(n: int):
             try:
                 for i in range(300):
-                    cache.put(f"text-{n}-{i}", 0.5)
-                    cache.get(f"text-{n}-{i}")
+                    cache.put(f"text-{n}-{i}", 0.5, "task-a")
+                    cache.get(f"text-{n}-{i}", "task-a")
             except Exception as e:  # noqa: BLE001
                 errors.append(e)
 
@@ -87,9 +87,31 @@ class TestCacheConcurrency(unittest.TestCase):
 
     def test_cache_hit_returns_same_value(self):
         cache = compactor._Cache(limit=10)
-        cache.put("hello", 0.25)
-        self.assertEqual(cache.get("hello"), 0.25)
-        self.assertIsNone(cache.get("never-seen"))
+        cache.put("hello", 0.25, "task-a")
+        self.assertEqual(cache.get("hello", "task-a"), 0.25)
+        self.assertIsNone(cache.get("never-seen", "task-a"))
+
+    def test_cache_is_scoped_to_task(self):
+        """同一筆內容在不同任務下必須重判。
+
+        這是實際被抓到的 bug：只雜湊內容會讓前一個任務的「無關」判定
+        沿用到後一個任務，把其實需要的內容砍掉。
+        """
+        cache = compactor._Cache(limit=10)
+        content = "chip-tracker/updater.py 的內容"
+        cache.put(content, 0.05, "改 chip-tracker 的 updater")
+
+        # 同一任務 → 命中
+        self.assertEqual(cache.get(content, "改 chip-tracker 的 updater"), 0.05)
+        # 換任務 → 必須 miss（否則會誤砍）
+        self.assertIsNone(cache.get(content, "幫我看兔子照片"))
+
+    def test_same_task_still_hits(self):
+        """快取真正的價值：同一任務內反覆出現的內容不重問 Jev。"""
+        cache = compactor._Cache(limit=10)
+        for _ in range(5):
+            cache.put("same-content", 0.9, "同一個任務")
+        self.assertEqual(cache.get("same-content", "同一個任務"), 0.9)
 
 
 class TestStatsAccuracy(unittest.TestCase):

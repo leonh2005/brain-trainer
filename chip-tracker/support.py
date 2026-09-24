@@ -204,12 +204,160 @@ def ma_support(bars):
     return levels
 
 
+def fib_support(bars, lookback=120):
+    """訊號5：斐波那契回撤 — 取近期波段高低點，回撤 38.2% / 50% / 61.8% 為支撐。
+
+    上漲段（低點在前、高點在後）才適用回撤支撐：以「低→高」的量測，
+    回撤位 = 高點 - (高點-低點) × 比例。只保留落在現價之下者。
+    """
+    if len(bars) < 40:
+        return []
+    seg = bars[-lookback:] if len(bars) > lookback else bars
+    hi_i = max(range(len(seg)), key=lambda i: seg[i]['high'])
+    lo_i = min(range(len(seg)), key=lambda i: seg[i]['low'])
+    if lo_i >= hi_i:          # 高點在低點之前＝下跌段，回撤不作為支撐
+        return []
+    # 近期性要求：高點必須落在區間後半段。
+    # 只檢查「低點在前、高點在後」不夠——「早低、中高、長期下殺」也滿足，
+    # 那會拿 100 天前的舊波段來算回撤位，對現在的支撐沒意義。
+    if hi_i < len(seg) * 0.5:
+        return []
+    hi, lo = seg[hi_i]['high'], seg[lo_i]['low']
+    rng = hi - lo
+    if rng <= 0:
+        return []
+    current = bars[-1]['close']
+    levels = []
+    for ratio, label in ((0.382, '38.2%'), (0.5, '50%'), (0.618, '61.8%')):
+        price = hi - rng * ratio
+        if price >= current or price <= 0:
+            continue
+        strength = 3 if ratio == 0.618 else 2   # 黃金比例權重較高
+        sources = [f"斐波那契{label}（{seg[lo_i]['date']}低→{seg[hi_i]['date']}高）"]
+        base = len(bars) - len(bars[-30:])      # bars[-30:] 在母陣列中的起點
+        for offset, b in enumerate(bars[-30:]):
+            if abs(b['low'] - price) / price <= 0.015 and bottoming_pattern(bars, base + offset):
+                strength += 1
+                sources.append(f"{b['date']}止跌於Fib{label}")
+        levels.append({'price': round(price, 2), 'strength': min(strength, 5), 'sources': sources})
+    return levels
+
+
+def pivot_support(bars):
+    """訊號6：樞紐點（Standard Pivot）— 以前一根K棒的 H/L/C 計算 S1/S2/S3。
+
+    這是日內與短線最常用的當日支撐，只保留現價之下者。
+    """
+    if len(bars) < 2:
+        return []
+    prev = bars[-2]
+    h, l, c = prev['high'], prev['low'], prev['close']
+    pp = (h + l + c) / 3
+    current = bars[-1]['close']
+    cands = [
+        ('S1', 2 * pp - h, 2),
+        ('S2', pp - (h - l), 3),
+        ('S3', l - 2 * (h - pp), 2),
+    ]
+    levels = []
+    for label, price, strength in cands:
+        if price >= current or price <= 0:
+            continue
+        levels.append({
+            'price': round(price, 2), 'strength': strength,
+            'sources': [f"樞紐點{label}（依{prev['date']} H/L/C）"],
+        })
+    return levels
+
+
+def volume_profile_support(bars, bins=24, lookback=120):
+    """訊號7：成交量密集區（Volume Profile / HVN）— 把價格分箱累加成交量，
+    取現價下方成交量最大的價位。高成交量節點通常是籌碼密集、容易形成支撐的位置。
+    """
+    if len(bars) < 30:
+        return []
+    seg = bars[-lookback:] if len(bars) > lookback else bars
+    highs = [b['high'] for b in seg]
+    lows = [b['low'] for b in seg]
+    top, bot = max(highs), min(lows)
+    if top <= bot:
+        return []
+    width = (top - bot) / bins
+    bucket = [0.0] * bins
+    for b in seg:
+        # 用典型價 (H+L+C)/3 落點，比單看收盤價更接近當日實際成交重心
+        if width <= 0:
+            continue
+        typical = (b['high'] + b['low'] + b['close']) / 3
+        idx = min(bins - 1, max(0, int((typical - bot) / width)))
+        bucket[idx] += b['volume']
+    current = bars[-1]['close']
+    total = sum(bucket) or 1
+    levels = []
+    for i, v in enumerate(bucket):
+        if v <= 0:
+            continue
+        price = bot + (i + 0.5) * width
+        if price >= current or price <= 0:
+            continue
+        share = v / total
+        if share < 0.08:            # 佔比太低的箱子不算密集區
+            continue
+        levels.append({
+            'price': round(price, 2), 'strength': 0,   # 強度由 share 決定，見下
+            'sources': [f"成交量密集區（{share*100:.0f}% 成交量）"], '_share': share,
+        })
+    # 依實際佔比取最密集的兩個（不是依 strength，否則較遠的箱會擠掉較近的）
+    levels.sort(key=lambda x: x['_share'], reverse=True)
+    top = levels[:2]
+    for lv in top:
+        lv['strength'] = 3 if lv.pop('_share') >= 0.15 else 2
+    return top
+
+
+def vwap_support(bars, lookback=60):
+    """訊號8：VWAP（成交量加權平均價）— 以近 N 日累積成交量加權計算，
+    代表這段期間的平均持有成本，回檔至此常有支撐。
+    """
+    seg = [b for b in bars[-lookback:] if b.get('volume', 0) > 0]
+    if len(seg) < 10:
+        return []
+    pv = sum(((b['high'] + b['low'] + b['close']) / 3) * b['volume'] for b in seg)
+    vv = sum(b['volume'] for b in seg)
+    if vv <= 0:
+        return []
+    vwap = pv / vv
+    current = bars[-1]['close']
+    if vwap >= current or vwap <= 0:
+        return []
+    return [{'price': round(vwap, 2), 'strength': 2,
+             'sources': [f"VWAP（近{len(seg)}日平均成本）"]}]
+
+
+# 訊號種類前綴 → 種類代號。用來判斷「這個支撐被幾種不同訊號支持」，
+# 避免同一訊號的多個相近價位被誤認為多重確認。
+_KIND_PREFIXES = (
+    ("波段低點", "swing"), ("上升趨勢線", "trend"), ("MA", "ma"),
+    ("整數關卡", "round"), ("斐波那契", "fib"), ("樞紐點", "pivot"),
+    ("成交量密集區", "vp"), ("VWAP", "vwap"),
+)
+
+
+def _source_kind(source: str) -> str:
+    for prefix, kind in _KIND_PREFIXES:
+        if source.startswith(prefix):
+            return kind
+    return source[:6]
+
+
 def analyze_support(bars):
-    """整合6種訊號，合併相近價位(±1.5%)，回傳依price由高到低排序的支撐位列表"""
+    """整合所有訊號，合併相近價位(±1.5%)，回傳依price由高到低排序的支撐位列表"""
     if len(bars) < 30:
         return []
     all_levels = (swing_low_support(bars) + trendline_support(bars)
-                  + ma_support(bars) + round_number_support(bars, bars[-1]['close']))
+                  + ma_support(bars) + round_number_support(bars, bars[-1]['close'])
+                  + fib_support(bars) + pivot_support(bars)
+                  + volume_profile_support(bars) + vwap_support(bars))
     merged = []
     for lv in sorted(all_levels, key=lambda x: x['price'], reverse=True):
         placed = False
@@ -223,6 +371,14 @@ def analyze_support(bars):
         if not placed:
             merged.append(dict(lv))
     merged.sort(key=lambda x: x['price'], reverse=True)
+    # 重算強度：只看「有幾種不同的訊號支持這個價位」。
+    # 合併時逐筆 +1 會讓同源重複自我加乘（例如平盤時 pivot S1/S2/S3 同價），
+    # 8 個訊號下任何價位都能湊滿 5，強度就沒有鑑別度了。
+    for m in merged:
+        kinds = {_source_kind(s) for s in m['sources']}
+        m['strength'] = min(5, len(kinds))
+        m['sources'] = list(dict.fromkeys(m['sources']))   # 去重但保留順序
+
     current_price = bars[-1]['close']
     below_current = [m for m in merged if m['price'] <= current_price]
     nearby = [m for m in below_current if m['price'] >= current_price * 0.85]

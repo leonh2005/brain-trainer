@@ -24,12 +24,26 @@ REDACTIONS: list[tuple[re.Pattern, str]] = [
     (re.compile(r"\b\d{8,10}:[A-Za-z0-9_-]{35}\b"), "[REDACTED_TELEGRAM_TOKEN]"),
     (re.compile(r"eyJ[A-Za-z0-9_-]{15,}\.[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}"), "[REDACTED_JWT]"),
     (re.compile(r"\b[A-Z][12]\d{8}\b"), "[REDACTED_TW_ID]"),
+    # 連線字串內嵌的密碼：scheme://user:pass@host
+    # 必須排在 email 之前，否則 user:pass@host 會被當成 email 先吃掉（安全但標籤誤導）
+    (re.compile(r"(\b\w+://[^\s:/@]+:)[^\s@/]{3,}(?=@)"), r"\1[REDACTED]"),
     (re.compile(r"\b[\w.+-]+@[\w-]+\.[a-z]{2,}\b", re.I), "[REDACTED_EMAIL]"),
     (re.compile(r"(Bearer\s+)[A-Za-z0-9._-]{10,}"), r"\1[REDACTED]"),
-    # 通用賦值：涵蓋雙引號、單引號、無引號三種寫法
+    # Basic auth
+    (re.compile(r"(?i)(authorization:\s*basic\s+)[A-Za-z0-9+/=]{8,}"), r"\1[REDACTED]"),
+    # curl -u user:password
+    (re.compile(r"(\s-u\s+[^\s:]+:)[^\s]{3,}"), r"\1[REDACTED]"),
+    # AWS secret access key（40 字元 base64，需上下文才認得出來）
+    (re.compile(r"(?i)(aws[_\s-]?(?:secret|private)[_\s-]?\w*[\"'\s:=]{1,6})[A-Za-z0-9/+=]{40}"),
+     r"\1[REDACTED]"),
+    # 大寫常數形式的憑證賦值：BOT_TOKEN=xxx、FINMIND_TOKEN=xxx
+    (re.compile(r"\b([A-Z][A-Z0-9_]{2,}(?:KEY|TOKEN|SECRET|PASSWORD|PASSWD|PWD))\s*=\s*\S{8,}"),
+     r"\1=[REDACTED]"),
+    # 通用賦值：涵蓋雙引號、單引號、無引號三種寫法。
+    # 值允許 ':'（token 常長成 1234:AAH... 這種形狀）。
     (re.compile(
         r"((?:\"|')?(?:password|passwd|pwd|api[_-]?key|token|secret)(?:\"|')?\s*[:=]\s*)"
-        r"(?:\"[^\"]{4,}\"|'[^']{4,}'|[A-Za-z0-9_\-./+]{12,})", re.I), r"\1[REDACTED]"),
+        r"(?:\"[^\"]{4,}\"|'[^']{4,}'|[A-Za-z0-9_\-./+:]{12,})", re.I), r"\1[REDACTED]"),
 ]
 
 # 通用目錄名不可代號化：換掉會破壞語意（Jev 反而看不懂「scripts」是什麼）。

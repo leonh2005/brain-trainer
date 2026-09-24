@@ -36,13 +36,30 @@ import jev_client
 
 LISTEN_HOST = "127.0.0.1"
 LISTEN_PORT = 8788
-UPSTREAM_HOST = "127.0.0.1"
-UPSTREAM_PORT = 8787          # 下游＝thinking-proxy
-UPSTREAM_BASE = "/anthropic"
+
+# 上游＝真正的 LLM 供應商。
+#
+# 接法：ccr 的 deepseek provider 有一個 api_base_url
+# (`https://api.deepseek.com/anthropic`)，把它改成 http://127.0.0.1:8788，
+# ccr 就會把請求送來這裡，我們壓縮後再轉給真正的 DeepSeek。
+# 這樣做不用碰 ccr 管理的 settings.json／wrapper（那些會被覆蓋）。
+UPSTREAM_SCHEME = os.environ.get("JEV_COMPACTION_UPSTREAM_SCHEME", "https")
+UPSTREAM_HOST = os.environ.get("JEV_COMPACTION_UPSTREAM_HOST", "api.deepseek.com")
+UPSTREAM_PORT = int(os.environ.get("JEV_COMPACTION_UPSTREAM_PORT", "443"))
+UPSTREAM_BASE = os.environ.get("JEV_COMPACTION_UPSTREAM_BASE", "/anthropic")
+
 LOG_PATH = Path(__file__).resolve().parent / "proxy.log"
 
-# 是否啟用偽名化（隱私優先；關掉可省一點 CPU，但內容會原樣外送）
-ANON = os.environ.get("JEV_COMPACTION_ANON", "1") != "0"
+# 偽名化（把路徑／專案名換成代號）。
+# 預設關閉：使用者只要求「憑證不能洩漏」，不在意對話內容的去識別化。
+# 而偽名化會微幅干擾 Jev 的判斷（實測一致率 98.6%），沒必要開著。
+# 需要時設 JEV_COMPACTION_ANON=1 開啟。
+# 注意：憑證遮蔽（redact）不受這個開關影響，永遠開啟。
+ANON = os.environ.get("JEV_COMPACTION_ANON", "0") == "1"
+
+# 影子模式：評估但不實際改動送出的內容。
+# 接上真實鏈路前先用它觀察「會砍什麼」，風險為零（只多花一點 Jev 費用）。
+DRY_RUN = os.environ.get("JEV_COMPACTION_DRY_RUN", "0") == "1"
 TIMEOUT = float(os.environ.get("JEV_COMPACTION_TIMEOUT", "10.0"))
 # 上游（thinking-proxy）的等待上限。跟 JEV_COMPACTION_TIMEOUT 無關——
 # 後者只管 Jev 呼叫。設太短會截斷長回應，太長則上游卡住時佔住執行緒。
@@ -86,6 +103,11 @@ def maybe_compact(data: dict) -> tuple[dict, str]:
         log.warning("壓縮例外，原樣轉發：%s", e)
         return data, f"error:{type(e).__name__}"
 
+    if DRY_RUN:
+        # 影子模式：照常評估（會花 Jev 費用），但送出原始內容。
+        # 用來觀察「它會砍什麼」而不承擔任何風險。
+        return data, f"dry-run | {stats.summary()}"
+
     if new_messages is not messages:
         data = {**data, "messages": new_messages}
     return data, stats.summary()
@@ -127,14 +149,17 @@ class ProxyHandler(http.server.BaseHTTPRequestHandler):
             if lk in ("host", "content-length", "connection", "accept-encoding"):
                 continue
             fwd[k] = v
-        fwd["Host"] = f"{UPSTREAM_HOST}:{UPSTREAM_PORT}"
+        default_port = 443 if UPSTREAM_SCHEME == "https" else 80
+        fwd["Host"] = UPSTREAM_HOST if UPSTREAM_PORT == default_port else f"{UPSTREAM_HOST}:{UPSTREAM_PORT}"
         fwd["Connection"] = "close"
         fwd["Content-Length"] = str(len(body))
 
         headers_sent = False
         conn = None
         try:
-            conn = http.client.HTTPConnection(UPSTREAM_HOST, UPSTREAM_PORT, timeout=UPSTREAM_TIMEOUT)
+            conn_cls = (http.client.HTTPSConnection if UPSTREAM_SCHEME == "https"
+                        else http.client.HTTPConnection)
+            conn = conn_cls(UPSTREAM_HOST, UPSTREAM_PORT, timeout=UPSTREAM_TIMEOUT)
             conn.request(method, UPSTREAM_BASE + self.path, body=body, headers=fwd)
             resp = conn.getresponse()
 
@@ -201,6 +226,7 @@ class ProxyHandler(http.server.BaseHTTPRequestHandler):
         if self.path == "/health":
             payload = json.dumps({
                 "status": "ok",
+                "dry_run": DRY_RUN,
                 "anon": ANON,
                 "upstream": f"{UPSTREAM_HOST}:{UPSTREAM_PORT}",
                 "key_loaded": api_key() is not None,

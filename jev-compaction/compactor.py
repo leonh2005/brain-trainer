@@ -68,7 +68,13 @@ class CompactStats:
 
 
 class _Cache:
-    """內容 hash → 相關性機率。內容不變就不必重問 Jev。
+    """（內容 + 當前任務）→ 相關性機率。
+
+    ⚠️ key 一定要含任務。相關性是 f(內容, 任務)：
+    `chip-tracker/updater.py` 在「改 chip-tracker」時相關，在「看兔子照片」時無關。
+    只用內容當 key 會讓前一個任務的判斷被沿用到後一個任務——
+    尤其危險的是「先前判無關 → 後來其實需要它」這個方向，會直接誤砍。
+    加上任務後，同一任務內反覆出現的內容仍會命中（那才是快取真正的價值）。
 
     proxy 是多執行緒，get/put 必須加鎖：淘汰邏輯是
     check-then-delete-then-set，兩個執行緒同時觸發會讓其中一個 KeyError。
@@ -80,15 +86,19 @@ class _Cache:
         self._lock = threading.Lock()
 
     @staticmethod
-    def _key(text: str) -> str:
-        return hashlib.sha256(text.encode("utf-8", "ignore")).hexdigest()[:32]
+    def _key(text: str, task: str) -> str:
+        h = hashlib.sha256()
+        h.update(text.encode("utf-8", "ignore"))
+        h.update(b"\x00")          # 分隔符，避免內容與任務的邊界混淆
+        h.update(task.encode("utf-8", "ignore"))
+        return h.hexdigest()[:32]
 
-    def get(self, text: str) -> float | None:
+    def get(self, text: str, task: str) -> float | None:
         with self._lock:
-            return self._d.get(self._key(text))
+            return self._d.get(self._key(text, task))
 
-    def put(self, text: str, value: float) -> None:
-        key = self._key(text)
+    def put(self, text: str, value: float, task: str) -> None:
+        key = self._key(text, task)
         with self._lock:
             if len(self._d) >= self._limit:
                 # 簡單淘汰：清掉一部分（不需要精確 LRU）
@@ -214,7 +224,7 @@ def compact(messages: list[dict], api_key: str, anon: bool = True,
     scores: dict[int, float] = {}
     pending: list[Candidate] = []
     for c in cands:
-        hit = cache.get(c.text)
+        hit = cache.get(c.text, task)
         if hit is not None:
             scores[c.idx] = hit
             stats.cached += 1
@@ -240,7 +250,7 @@ def compact(messages: list[dict], api_key: str, anon: bool = True,
                 stats.chars_after = stats.chars_before
                 return messages, stats
             scores[c.idx] = v
-            cache.put(c.text, v)
+            cache.put(c.text, v, task)
 
     # 套用替換
     new_messages = messages
