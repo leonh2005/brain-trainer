@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-25 07:00",
+  "generated_at": "2026-09-25 14:00",
   "count": 5,
   "threshold": 6,
   "cells": [
@@ -11,7 +11,7 @@
     {
       "name": "F&G",
       "triggered": true,
-      "detail": "36.1（<45 恐慌）"
+      "detail": "36.0（<45 恐慌）"
     },
     {
       "name": "CAPE",
