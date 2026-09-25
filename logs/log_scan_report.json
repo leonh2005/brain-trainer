@@ -1,6 +1,6 @@
 {
-  "scanned_at": "2026-09-25 03:00:26",
-  "since": "2026-09-24 03:00:01",
+  "scanned_at": "2026-09-26 03:00:27",
+  "since": "2026-09-25 03:00:00",
   "results": {
     "市場儀表板": {
       "exists": true,
@@ -29,25 +29,25 @@
     "財經新聞分析": {
       "exists": true,
       "errors": 1,
-      "last_error": "2026-09-24 03:45:14,089 [WARNING] fetcher.ptt_fetcher: PTT index fetch failed: HTTPSConnectionPool(host='www.ptt.cc', port=443): Read timed out. (read timeout=10)",
+      "last_error": "2026-09-25 03:45:13,395 [WARNING] fetcher.ptt_fetcher: PTT index fetch failed: HTTPSConnectionPool(host='www.ptt.cc', port=443): Read timed out. (read timeout=10)",
       "fix": "網路逾時 → 確認目標服務可達，或增加 timeout 設定"
     },
     "川普監測": {
       "exists": true,
-      "errors": 1,
-      "last_error": "2026-09-24 11:45:04,031 WARNING 分析失敗：China's AI chip blitz arms Xi with a message for T — 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reaso",
-      "fix": "尚無對應建議，需人工判斷"
+      "errors": 0,
+      "last_error": null,
+      "fix": null
     },
     "持倉新聞(台股)": {
       "exists": true,
       "errors": 2,
-      "last_error": "2026-09-24 08:30:15,520 ERROR 純文字重試也失敗 401：{\"ok\":false,\"error_code\":401,\"description\":\"Unauthorized\"}",
+      "last_error": "2026-09-25 08:30:16,737 ERROR 純文字重試也失敗 401：{\"ok\":false,\"error_code\":401,\"description\":\"Unauthorized\"}",
       "fix": "Session/Token 過期 → 重新登入對應網站或更新 API Key"
     },
     "持倉新聞(美股)": {
       "exists": true,
       "errors": 2,
-      "last_error": "2026-09-24 21:00:23,905 ERROR 純文字重試也失敗 401：{\"ok\":false,\"error_code\":401,\"description\":\"Unauthorized\"}",
+      "last_error": "2026-09-25 21:00:26,029 ERROR 純文字重試也失敗 401：{\"ok\":false,\"error_code\":401,\"description\":\"Unauthorized\"}",
       "fix": "Session/Token 過期 → 重新登入對應網站或更新 API Key"
     },
     "HolaQuant": {
