@@ -1,27 +1,27 @@
 {
-  "generated_at": "2026-09-25 14:00",
+  "generated_at": "2026-09-26 07:00",
   "count": 5,
   "threshold": 6,
   "cells": [
     {
       "name": "VIX",
       "triggered": false,
-      "detail": "15.67（>20 警戒）"
+      "detail": "14.86（>20 警戒）"
     },
     {
       "name": "F&G",
       "triggered": true,
-      "detail": "36.0（<45 恐慌）"
+      "detail": "37.0（<45 恐慌）"
     },
     {
       "name": "CAPE",
       "triggered": true,
-      "detail": "41.2（>25 偏高）"
+      "detail": "41.5（>25 偏高）"
     },
     {
       "name": "S&P vs 200MA",
       "triggered": false,
-      "detail": "+7.05%"
+      "detail": "+7.46%"
     },
     {
       "name": "台股 vs 200MA",
