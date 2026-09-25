@@ -72,9 +72,10 @@ def test_irrelevant_articles_are_marked_and_not_scored_by_sentiment(monkeypatch,
     assert "秋季家居博覽登場" not in sent_titles
     assert set(sent_titles) == {"台積電大漲", "台股平盤震盪"}
 
-    arts = {a["title"]: a for a in get_articles(db_path=db_path)["articles"]}
+    arts = {a["title"]: a for a in get_articles(show_irrelevant=True, db_path=db_path)["articles"]}
     assert arts["秋季家居博覽登場"]["auto_irrelevant"] == 1
-    assert arts["台積電大漲"]["auto_irrelevant"] == 0
+    # 相關的新聞不該被標記，預設列表仍看得到
+    assert "台積電大漲" in {a["title"] for a in get_articles(db_path=db_path)["articles"]}
 
 
 def test_relevance_failure_retries_then_succeeds(monkeypatch, db_path, no_sleep):

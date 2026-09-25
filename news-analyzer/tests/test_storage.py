@@ -3,7 +3,8 @@ import tempfile
 import json
 import pytest
 from storage import (init_db, save_articles, get_unanalyzed, update_analysis,
-                     get_articles, get_trend_data, get_bullish_trend_data, get_conn)
+                     get_articles, get_trend_data, get_bullish_trend_data, get_conn,
+                     set_irrelevant)
 
 
 @pytest.fixture
@@ -133,3 +134,32 @@ def test_bullish_trend_excludes_auto_irrelevant(db_path):
     _seed_bull_and_auto_irrelevant(db_path)
     pcts, _ = get_bullish_trend_data(period="day", db_path=db_path)
     assert [p for p in pcts if p is not None] == [100.0]
+
+
+def test_get_articles_excludes_auto_irrelevant_by_default(db_path):
+    _seed_bull_and_auto_irrelevant(db_path)
+    result = get_articles(db_path=db_path)
+    assert [a["title"] for a in result["articles"]] == ["利多"]
+
+
+def test_get_articles_show_irrelevant_covers_both_sources(db_path):
+    """「顯示無關」要同時涵蓋人工標記與 Jev 自動標記。"""
+    save_articles([
+        {"source": "ptt", "title": "正常", "url": "https://ptt.cc/ok", "content": "", "published_at": None},
+        {"source": "ptt", "title": "人工無關", "url": "https://ptt.cc/manual", "content": "", "published_at": None},
+        {"source": "ptt", "title": "自動無關", "url": "https://ptt.cc/auto", "content": "", "published_at": None},
+    ], db_path)
+    ids = {a["title"]: a["id"] for a in get_unanalyzed(db_path)}
+    update_analysis(ids["正常"], 8, "看好", [], db_path)
+    update_analysis(ids["人工無關"], 5, "", [], db_path)
+    update_analysis(ids["自動無關"], 5, "", [], db_path)
+    set_irrelevant(ids["人工無關"], True, db_path)
+    with get_conn(db_path) as conn:
+        conn.execute("UPDATE articles SET auto_irrelevant=1 WHERE id=?", (ids["自動無關"],))
+        conn.commit()
+
+    default = get_articles(db_path=db_path)
+    assert [a["title"] for a in default["articles"]] == ["正常"]
+
+    shown = get_articles(show_irrelevant=True, db_path=db_path)
+    assert sorted(a["title"] for a in shown["articles"]) == ["人工無關", "自動無關"]

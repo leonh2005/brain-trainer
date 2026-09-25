@@ -107,9 +107,9 @@ def get_articles(source=None, date=None, score_min=None, score_max=None, query=N
     conditions = []
     params = []
     if not show_irrelevant:
-        conditions.append("irrelevant = 0")
+        conditions.append("irrelevant = 0 AND auto_irrelevant = 0")
     else:
-        conditions.append("irrelevant = 1")
+        conditions.append("(irrelevant = 1 OR auto_irrelevant = 1)")
     if source and source != "all":
         conditions.append("source = ?")
         params.append(source)
