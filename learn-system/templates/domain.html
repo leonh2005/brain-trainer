@@ -2,9 +2,69 @@
 <html lang="zh-Hant">
 <head>
 <meta charset="utf-8">
-<title>領域 {{ domain_id }}</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>學習系統</title>
+<link rel="stylesheet" href="/static/style.css">
 </head>
-<body>
-<h1>領域 {{ domain_id }}</h1>
+<body data-domain-id="{{ domain_id }}">
+<header>
+  <div>
+    <a href="/" class="dim">← 全部領域</a>
+    <h1 id="domain-name"></h1>
+  </div>
+  <div class="meta" id="domain-meta"></div>
+</header>
+
+<main class="workspace">
+  <section class="map">
+    <div id="map-sections"></div>
+    <div id="map-empty" hidden>
+      <p>智識地圖還沒生成好，或生成失敗了。</p>
+      <button id="retry-hint">重新載入</button>
+    </div>
+  </section>
+
+  <section class="work">
+    <div id="work-empty" class="dim">從左邊選一個概念開始。</div>
+    <div id="work-body" hidden>
+      <h2 id="concept-name"></h2>
+      <div id="concept-desc" class="dim"></div>
+      <div class="row">
+        <select id="goal-type"></select>
+        <button id="ask-question">出題</button>
+      </div>
+      <div id="question-area" hidden>
+        <div id="question-prompt"></div>
+        <pre id="question-code" hidden></pre>
+        <textarea id="answer" rows="10" placeholder="在這裡作答（程式碼題直接寫程式）"></textarea>
+        <div class="row">
+          <button id="submit-answer">送出</button>
+          <span id="answer-status" class="dim"></span>
+        </div>
+        <div id="verdict" hidden></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<section class="progress">
+  <h3>進度</h3>
+  <div id="progress-body" class="dim"></div>
+  <h3>錯題本</h3>
+  <div id="mistakes" class="dim"></div>
+</section>
+
+<button id="drawer-toggle">導師</button>
+<aside id="drawer" hidden>
+  <header><span>導師對話</span><button id="drawer-close">✕</button></header>
+  <div id="chat-log"></div>
+  <form id="chat-form">
+    <input type="text" id="chat-input" placeholder="問問題…">
+    <button type="submit">送出</button>
+  </form>
+</aside>
+
+<script src="/static/escape.js"></script>
+<script src="/static/domain.js"></script>
 </body>
 </html>

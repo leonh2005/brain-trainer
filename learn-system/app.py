@@ -8,6 +8,9 @@ from learn_system.executor import run_pytest, run_python
 
 logger = logging.getLogger(__name__)
 
+# 錯題本一次回傳的上限。attempts 只增不減，不設上限查詢成本會隨練習量成長。
+MISTAKES_LIMIT = 50
+
 # create_app 指定的資料庫路徑。背景執行緒不在 app context 內，且測試替身以
 # 單一參數呼叫 _generate_map，故以模組層變數記住，None 代表用 config.DB_PATH。
 _DB_PATH = None
@@ -165,6 +168,22 @@ def create_app(db_path=None):
         finally:
             conn.close()
 
+    @app.get("/api/domains/<int:domain_id>/mistakes")
+    def list_mistakes(domain_id):
+        """錯題本：這個領域所有非 correct 的作答，新的在前。
+
+        查詢帶上限（MISTAKES_LIMIT）後才在 Python 端濾掉 correct；先撈全部再
+        過濾會讓這個只增不減的資料表拖慢每次載入。
+        """
+        conn = db.connect(db_path)
+        try:
+            if db.get_domain(conn, domain_id) is None:
+                return jsonify(error="找不到領域"), 404
+            attempts = db.list_attempts_for_domain(conn, domain_id, limit=MISTAKES_LIMIT)
+            return jsonify(mistakes=[a for a in attempts if a["verdict"] != "correct"])
+        finally:
+            conn.close()
+
     @app.post("/api/domains/<int:domain_id>/override_executable")
     def override_executable(domain_id):
         body = request.get_json(force=True)
@@ -235,7 +254,11 @@ def create_app(db_path=None):
                 if result["env_error"]:
                     return jsonify(error="執行環境錯誤，不計入對錯，請稍後重試"), 503
                 verdict = "correct" if result["ok"] else "wrong"
-                feedback = "測試通過" if result["ok"] else f"測試失敗：\n{result['stderr'][-800:]}"
+                # pytest 把失敗報告寫在 stdout，stderr 只在環境層級錯誤時才有內容
+                # （而那條路徑已在前面的 503 返回）；只讀 stderr 會讓每次答錯都只
+                # 顯示「測試失敗：」後面空一片，學習者拿不到任何線索。
+                detail = result["stderr"] or result["stdout"]
+                feedback = "測試通過" if result["ok"] else f"測試失敗：\n{detail[-800:]}"
                 root_cause = None if result["ok"] else "程式未通過測試"
             else:
                 try:

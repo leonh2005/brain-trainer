@@ -49,6 +49,20 @@ def test_write_answer_wrong_when_test_fails(ctx, monkeypatch):
     assert r.get_json()["attempt"]["verdict"] == "wrong"
 
 
+def test_wrong_write_answer_feedback_shows_the_failure(ctx, monkeypatch):
+    """答錯時要看到 pytest 的失敗報告。
+
+    pytest 把失敗報告寫在 stdout、stderr 是空的，只讀 stderr 會讓每一次答錯
+    都只顯示「測試失敗：」後面沒有任何線索，學習者無從修正。
+    """
+    client, did, cid = ctx
+    qid = make_question(client, cid, monkeypatch, "write",
+                        {"starter_code": "", "test_code": TEST_CODE}, CORRECT_ANSWER)
+    attempt = client.post(f"/api/questions/{qid}/answer",
+                          json={"answer": WRONG_ANSWER}).get_json()["attempt"]
+    assert "test_add" in attempt["feedback"]
+
+
 def test_bare_assert_test_code_grades_both_ways(ctx, monkeypatch):
     """模組層級的裸 assert 是提示詞的自然讀法，也是本任務 brief 的寫法。
 
