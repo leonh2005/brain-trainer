@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jev Atlas — 適合 Steven 的專案</title>
+<style>
+  :root{
+    --bg:#f7f7f5; --card:#fff; --ink:#1a1a18; --muted:#6b6b66;
+    --line:#e2e2dd; --accent:#3d5afe; --warn:#b26a00; --warnbg:#fff6e5;
+    --ok:#1f7a4d;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --bg:#141413; --card:#1d1d1b; --ink:#ececea; --muted:#9a9a94;
+           --line:#31312e; --accent:#8fa4ff; --warn:#e0a458; --warnbg:#2a2113; --ok:#5fbf8a; }
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+       font:16px/1.65 -apple-system,"PingFang TC","Noto Sans TC",system-ui,sans-serif;}
+  .wrap{max-width:840px;margin:0 auto;padding:48px 20px 80px}
+  h1{font-size:28px;margin:0 0 6px;letter-spacing:-.01em}
+  .sub{color:var(--muted);font-size:14px;margin-bottom:32px}
+  .note{background:var(--warnbg);border-left:3px solid var(--warn);
+        padding:14px 16px;border-radius:6px;font-size:14px;margin:0 0 32px}
+  .note strong{color:var(--warn)}
+  h2{font-size:15px;text-transform:uppercase;letter-spacing:.08em;
+     color:var(--muted);margin:40px 0 16px;font-weight:600}
+  .item{background:var(--card);border:1px solid var(--line);border-radius:10px;
+        padding:18px 20px;margin-bottom:12px}
+  .item.top{border-color:var(--accent)}
+  .head{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:8px}
+  .name{font-weight:650;font-size:17px}
+  .stars{font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+  .badge{font-size:12px;padding:2px 8px;border-radius:99px;
+         background:var(--bg);border:1px solid var(--line);color:var(--muted)}
+  .badge.hot{background:var(--accent);border-color:var(--accent);color:#fff}
+  p{margin:0 0 10px}
+  .why{font-size:14.5px}
+  .why b{color:var(--accent)}
+  a{color:var(--accent);text-decoration:none;word-break:break-all;font-size:13.5px}
+  a:hover{text-decoration:underline}
+  ol.plain{margin:0;padding-left:0;list-style:none}
+  .caveat{font-size:13.5px;color:var(--muted);line-height:1.7}
+  .caveat li{margin-bottom:6px}
+  table{width:100%;border-collapse:collapse;font-size:14px;margin:12px 0}
+  th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{color:var(--muted);font-weight:600;font-size:12.5px;
+     text-transform:uppercase;letter-spacing:.06em}
+  td:last-child{white-space:nowrap;color:var(--muted);font-variant-numeric:tabular-nums}
+  .steps{margin:10px 0 0;padding-left:20px;font-size:14.5px}
+  .steps li{margin-bottom:5px}
+  code{background:var(--bg);border:1px solid var(--line);border-radius:4px;
+       padding:1px 5px;font-size:13px}
+  footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--line);
+         font-size:13px;color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>Jev Atlas — 適合你的專案</h1>
+  <div class="sub">索引共 236 個專案（Tools 80 / Other 72 / Research 22 / Browser 18 / Coding Agents 18 / Agents 12 / Routing 8 / Context 6）· 篩選日期 2026-09-26</div>
+
+  <div class="note">
+    <strong>先講可信度：</strong>這份索引的 <code>description</code> 欄位有 <strong>207/236 是模板生成</strong>的（<code>"X is a Jev-based &lt;category&gt; project for &lt;tags&gt;"</code>），幾乎沒有資訊量，判斷只能靠名稱、tags 與 GitHub 上的真實描述。我另外抽驗了 7 個 repo 的 GitHub API，<strong>全部真實存在</strong>、星數與建立日相符。生態極新（多數 repo 建立於 2026-09-16～09-20），API 與穩定性都可能變動。
+  </div>
+
+  <h2>最契合你的</h2>
+
+  <ol class="plain">
+
+    <li class="item top">
+      <div class="head">
+        <span class="badge hot">最痛點</span>
+        <span class="name">fast-jev-compaction</span>
+        <span class="stars">6,876 ★ · TypeScript</span>
+      </div>
+      <p class="why">Claude Code plugin，用 Jev 取代 compaction 的摘要機制，逐筆評分工具呼叫並丟棄過時的。→ <b>直接打你最大的痛點：token 與 context 成本。</b>你已經被 context 爆量困擾過（曾達 9.6MB），這是唯一直接對症的。</p>
+      <a href="https://github.com/tamaratran/fast-jev-compaction">github.com/tamaratran/fast-jev-compaction</a>
+    </li>
+
+    <li class="item top">
+      <div class="head">
+        <span class="badge hot">量身打造</span>
+        <span class="name">hermes-jev-skills</span>
+        <span class="stars">830 ★ · Python</span>
+      </div>
+      <p class="why">Jev 驅動的 model routing／memory／compaction／skill selection／browser+computer use，為 <b>Hermes</b> agent 設計（也支援 Claude Code）。→ 你同時在跑 Hermes 本地模型與 ccr 路由，又是 Python，幾乎是為你這種組合寫的。</p>
+      <a href="https://github.com/kerpopule/hermes-jev-skills">github.com/kerpopule/hermes-jev-skills</a>
+    </li>
+
+    <li class="item top">
+      <div class="head">
+        <span class="badge hot">補你的鏈路</span>
+        <span class="name">typesafe-jev-bridge</span>
+        <span class="stars">3 ★ · JS</span>
+      </div>
+      <p class="why">零依賴的 OpenAI-compatible bridge，把 Jev 接進 Claude Code／Cursor／Cline／9Router。→ <b>這正是你 ccr 鏈路在做的事</b>，可直接掛，拿來對照你目前的作法是怎麼接的。</p>
+      <a href="https://github.com/RevocGG/typesafe-jev-bridge">github.com/RevocGG/typesafe-jev-bridge</a>
+    </li>
+
+    <li class="item">
+      <div class="head">
+        <span class="badge">打包版</span>
+        <span class="name">jev-judgment</span>
+        <span class="stars">5 ★ · Python</span>
+      </div>
+      <p class="why">Agent Skill：把封閉式的 coding-agent 判斷送給 Jev。→ 你已經在用 Jev 做 claim verification，這是把它變成可重用 skill 的打包版，可以省下自己維護。</p>
+      <a href="https://github.com/HyunjunJeon/jev-judgment">github.com/HyunjunJeon/jev-judgment</a>
+    </li>
+
+    <li class="item">
+      <div class="head">
+        <span class="badge">終端機</span>
+        <span class="name">typesafe-cli</span>
+        <span class="stars">4 ★ · Python</span>
+      </div>
+      <p class="why">Typed Choice／Score／Noul 判斷的 CLI 加上 agent skill。→ 貼合你「非開發者但熟悉終端機」的使用習慣，不必寫 Python 就能下判斷。</p>
+      <a href="https://github.com/geilt/typesafe-cli">github.com/geilt/typesafe-cli</a>
+    </li>
+
+    <li class="item">
+      <div class="head">
+        <span class="badge">管線</span>
+        <span class="name">llm-typesafe</span>
+        <span class="stars">14 ★ · Python</span>
+      </div>
+      <p class="why">simonw 的 <code>llm</code> CLI 的 Jev plugin。→ 可以把 Jev 判斷塞進 shell 管線，跟你現有的一堆 shell 自動化很好搭。</p>
+      <a href="https://github.com/simonw/llm-typesafe">github.com/simonw/llm-typesafe</a>
+    </li>
+
+  </ol>
+
+  <h2>深入：前三名實際上怎麼運作</h2>
+
+  <div class="item top">
+    <div class="head"><span class="name">fast-jev-compaction — 它不摘要，只刪</span></div>
+    <p class="why">傳統 compaction 是叫 LLM 把舊對話「總結」，但摘要有損：一個檔案路徑、精確錯誤訊息、某個約束條件，可能在後面還需要時就消失了。這個專案的做法是 <b>只刪除、不改寫任何一個字</b>。</p>
+    <ol class="steps">
+      <li>每個 <code>tool_use</code> 與 <code>tool_result</code> 用 <code>tool_use_id</code> 配對；第一則訊息與最新 N 則釘住不動。</li>
+      <li>送給 Jev 的是<b>整段對話</b>（工具結果換成短註記如 <code>ok, 4213 chars (omitted)</code>），不摘要任何東西。</li>
+      <li>對每個未釘住的呼叫問 Jev <b>兩個是非題</b>：這個<em>呼叫</em>還值得留嗎？這個<em>結果</em>還需要逐字保留嗎？</li>
+      <li>三種結局：結果分數夠 → 全留；否則呼叫分數夠 → 留呼叫但截斷結果；再否則 → 呼叫與結果一起刪。</li>
+      <li>使用者與助理的文字<b>永遠逐字保留、維持順序</b>。狀態塞不進 <code>maxStateTokens</code>（預設 25k）時才分階段壓縮。</li>
+    </ol>
+    <p class="why" style="margin-top:12px"><b>要留意：</b>每次請求都<b>重送完整 state</b>（並行送多個請求分攤），成本隨「對話長度 × 請求數」成長。失敗時它是 <b>throw</b> 而非優雅降級，你得自己設 fallback。裝了會<b>取代</b>你原本的 compaction。</p>
+  </div>
+
+  <div class="item top">
+    <div class="head"><span class="name">hermes-jev-skills — 10 個 SKILL.md，純檔案</span></div>
+    <p class="why">不只 Hermes，Claude Code 也能吃。把 agent 一天當中的「小決定」全交給 Jev：</p>
+    <table>
+      <thead><tr><th>Jev 決定什麼</th><th>實測</th></tr></thead>
+      <tbody>
+        <tr><td>這輪該用哪個模型（model routing）</td><td>~0.4s/輪</td></tr>
+        <tr><td>檢索結果哪些值得打開、證據是否足夠</td><td>~1.9s/輪</td></tr>
+        <tr><td>記憶：哪些段落值得讀、<b>哪些含隱藏指令</b>（注入防護，Jev 掛掉時仍本地跑）</td><td>60 段/請求</td></tr>
+        <tr><td><b>377 個 skill 裡這輪需要哪個</b></td><td>~2.8s</td></tr>
+        <tr><td>訊息急迫度與分類</td><td>~0.4s，$0.00006</td></tr>
+        <tr><td>收件匣分派</td><td>~$0.00002/封</td></tr>
+        <tr><td>下一個 GUI／瀏覽器動作</td><td>~0.4–0.5s/步</td></tr>
+      </tbody>
+    </table>
+    <p class="why"><b>最關鍵：</b>它把 <b>shadow mode 當一等公民</b> —— <code>jev routing shadow</code>「決定並記錄，但不切換任何東西」。README 原話：<em>"Start in shadow mode. It is the honest way to see what Jev would do before it does anything."</em> 這正是你現在跑的模式。</p>
+    <p class="why">它還有一個誠實的發現：用 Jev 的 keep／summarize／drop 摘要寫出的 handoff，<b>recall 反而比直接給原始逐字稿低</b>（58.7% vs 75%），所以最後出貨的是完整對話。會實測後否決自己想法的專案，通常比較可信。</p>
+    <a href="https://github.com/kerpopule/hermes-jev-skills">github.com/kerpopule/hermes-jev-skills</a>
+  </div>
+
+  <div class="item">
+    <div class="head"><span class="name">typesafe-jev-bridge — 對照你的 ccr 鏈路</span></div>
+    <p class="why">零依賴 Node bridge，讓 Jev 講 OpenAI API 協議，可掛進 Claude Code／9Router／任何 OpenAI SDK。有個聰明的設計細節：<b>低信心時 exit code 3</b>，讓 shell script 能據此反應，而不是硬給答案。它明講自己是<b>非官方社群專案</b>，需要自備 TypeSafe key。</p>
+    <a href="https://github.com/RevocGG/typesafe-jev-bridge">github.com/RevocGG/typesafe-jev-bridge</a>
+  </div>
+
+  <div class="note" style="margin-top:24px">
+    <strong>共通點：</strong>你的 <code>CLAUDE.md</code> 已經寫下原則「封閉判斷、不需文字解釋 → 交給 Jev」。這三個 repo 是同一套思路的<b>產品化版本</b> —— 把 Jev 當「便宜、約 0.4 秒、帶校準機率」的決策層，墊在昂貴模型前面。你不是在學新東西，是在看別人怎麼把你在做的事包成可安裝的形式。
+    <br><br>
+    <strong>建議先後：</strong>先試 <code>hermes-jev-skills</code> 的 SKILL.md（風險最低，純檔案、可 <code>--uninstall</code>），它補上你目前沒有的<b>skill selection 與 model routing</b>。再考慮 <code>fast-jev-compaction</code>（打你最痛的點，但會取代現有 compaction、失敗是 throw、成本隨長度成長，裝前先確認跟既有 hooks 不打架）。
+  </div>
+
+  <h2>值得掃的整類</h2>
+
+  <ol class="plain">
+    <li class="item">
+      <div class="head">
+        <span class="name">browser-agent 類（約 8 個）</span>
+      </div>
+      <p class="why">代表作 <b>browser-use/jev-ultrafast</b>（20,297 ★ · Python）— 號稱最快最便宜的 web agent。→ 你大量用 Playwright 做自動化又對成本敏感，這類值得整批看。另有 <b>jev-browser</b>（89 ★）是 library + CLI + MCP server，你重度用 MCP 可優先看。</p>
+      <a href="https://github.com/browser-use/jev-ultrafast">github.com/browser-use/jev-ultrafast</a>
+    </li>
+    <li class="item">
+      <div class="head">
+        <span class="name">省 token／上下文壓縮類（約 5–6 個）</span>
+      </div>
+      <p class="why">除上面第一名的 fast-jev-compaction 外，同類還有 jev-recall 等。→ 這是你最該整批掃的一類。</p>
+    </li>
+    <li class="item">
+      <div class="head">
+        <span class="name">本地可訓練決策模型</span>
+        <span class="stars">7,060 ★</span>
+      </div>
+      <p class="why"><b>jaredpalmer/kev</b> — 基於 Qwen3.5/3.8 的 Jev-like 決策模型家族，可自行訓練、本地跑。→ 你跑 MLX／Qwen 想省 API 成本，方向對。<b>但下載前務必先驗證模型尺寸</b>：你的 M4/16GB 天花板約 9B，而且你有白載 429GB 跑不動的教訓。</p>
+      <a href="https://github.com/jaredpalmer/kev">github.com/jaredpalmer/kev</a>
+    </li>
+  </ol>
+
+  <h2>資料品質觀察</h2>
+  <ul class="caveat">
+    <li><code>description</code>：207/236 為模板生成，零資訊量；GitHub API 抓回的真實描述則具體可用。</li>
+    <li><code>source_quality</code>：adequate 193／strong 42／weak 1。<code>confidence</code>：verified 200／probable 36。<code>published</code>：200／未發布 36。</li>
+    <li><b>82%（196/236）只有 X 貼文、沒有 repo</b>，無法用 API 驗證；可用 <code>jevable.com/project/&lt;id&gt;</code> 查。</li>
+    <li>生態極新：repo 建立日集中在 2026-09-16～09-20，卻已有 2 萬／7 千星，屬病毒式發布 —— 全部早期，API 可能隨時改動。</li>
+    <li>另有交易／訊號類（Monad 鏈上、Danish stock backtest、News-driven stock research 等），但<b>全都不是台股市場</b>，不建議直接用；「每根 K 棒用 Jev 做一次決策」的模式則可借鏡你的台股訊號。</li>
+  </ul>
+
+  <footer>
+    索引來源：darkseagreen-pelican-791373.hostingersite.com/data/projects.json（236 筆）· 抽驗 7 個 GitHub repo 全數為真<br>
+    產生於 2026-09-26
+  </footer>
+
+</div>
+</body>
+</html>
