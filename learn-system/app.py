@@ -1,8 +1,11 @@
+import logging
 import threading
 
 from flask import Flask, jsonify, render_template, request
 
 from learn_system import db, tutor
+
+logger = logging.getLogger(__name__)
 
 # create_app 指定的資料庫路徑。背景執行緒不在 app context 內，且測試替身以
 # 單一參數呼叫 _generate_map，故以模組層變數記住，None 代表用 config.DB_PATH。
@@ -18,22 +21,34 @@ def _mastery_pct(conn, domain_id):
 
 
 def _generate_map(domain_id):
+    """背景生成智識地圖。任何失敗都必須讓狀態停在 failed。
+
+    這條執行緒一旦讓例外逃出去就會直接死亡，資料列將永遠停在 schema 預設的
+    generating，前端會無止境地輪詢且沒有錯誤狀態可顯示，故除了可預期的
+    TutorError 之外，任何非預期例外（Agent 回傳非物件 JSON、concepts 非序列、
+    sqlite 錯誤等）也一律標記 failed。
+    """
     conn = db.connect(_DB_PATH)
     try:
-        domain = db.get_domain(conn, domain_id)
         try:
+            domain = db.get_domain(conn, domain_id)
+            if domain is None:
+                return
             result = tutor.generate_map(domain["name"], domain["goals"], bool(domain["verify_sources"]))
-        except tutor.TutorError:
+            concepts = result["concepts"]
+            if not concepts:
+                raise tutor.TutorError("Agent 未產出任何概念")
+            db.set_domain_executable(conn, domain_id, result["executable"])
+            for c in concepts:
+                db.create_concept(conn, domain_id, c["name"], c["section"], c.get("description"))
+        except tutor.TutorError as e:
+            logger.warning("智識地圖生成失敗：domain %s：%s", domain_id, e)
             db.set_domain_status(conn, domain_id, "failed")
-            return
-        concepts = result["concepts"]
-        if not concepts:
+        except Exception:
+            logger.exception("智識地圖生成非預期失敗：domain %s", domain_id)
             db.set_domain_status(conn, domain_id, "failed")
-            return
-        db.set_domain_executable(conn, domain_id, result["executable"])
-        for c in concepts:
-            db.create_concept(conn, domain_id, c["name"], c["section"], c.get("description"))
-        db.set_domain_status(conn, domain_id, "ready")
+        else:
+            db.set_domain_status(conn, domain_id, "ready")
     finally:
         conn.close()
 
