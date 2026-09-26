@@ -1,21 +1,22 @@
-# Claude Handoff 20260926_2239
-> 自動生成於 2026-09-26 22:39
+# Claude Handoff 20260926_2348
+> 自動生成於 2026-09-26 23:48
 
 ## 未提交的檔案異動
 ```
-M chip-tracker/chip.db
- M gemma_work/latest.md
+M gemma_work/latest.md
+ M learn-system/.gitignore
  M scripts/auto_investigate_state.json
- M shopee-boost/data/last_success.json
+?? learn-system/README.md
+?? learn-system/run.sh
 ```
 
 ## 近期 Commits
 ```
-d500897d fix(learn-system): 批改改以 pytest 實跑、環境失敗不計對錯、圍欄全保留
-d9c66789 feat(learn-system): 作答批改（write 題實跑測試）與掌握度更新
-c2f49b3a fix(learn-system): 出題的格式防護、圍欄剝除與子行程環境淨化
-4c750989 feat(learn-system): 出題端點與題目有效性執行驗證
-21335c06 fix(learn-system): 地圖生成任何失敗都收斂為 failed，不再卡在 generating
+6539bd52 docs: 更正 Jev Atlas 報告 — fast-jev-compaction 不再是首選（已有自建且更好的版本）
+baca1711 fix(learn-system): 領域頁出題／批改加上 in-flight 守衛，並修正回饋來源
+b3a8bde5 feat(learn-system): 領域頁 — 智識地圖、工作區、對話抽屜、進度
+d92c3594 fix(learn-system): 首頁輪詢加上 in-flight 守衛與錯誤處理
+e178ba44 feat(learn-system): 首頁領域清單與新增領域對話框
 ```
 
 ## 給 Hermes 的備註
