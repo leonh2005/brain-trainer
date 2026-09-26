@@ -158,3 +158,32 @@ def test_auth_settings_is_none_when_helper_absent(monkeypatch, tmp_path):
 def test_auth_settings_survives_missing_file(monkeypatch, tmp_path):
     monkeypatch.setattr(tutor, "USER_SETTINGS_PATH", tmp_path / "nope.json")
     assert tutor._auth_settings() is None
+
+
+def test_generate_write_question(monkeypatch):
+    payload = {
+        "prompt": "寫一個計數器",
+        "payload": {"starter_code": "", "test_code": "from solution import counter\nassert counter()() == 1"},
+        "reference_answer": "def counter(): ...",
+    }
+    monkeypatch.setattr(tutor, "_call_agent", lambda *a, **k: (json.dumps(payload), None))
+    q = tutor.generate_question("python", "閉包", "說明", "write", executable=True)
+    assert q["payload"]["test_code"].startswith("from solution")
+
+
+def test_generate_read_question_requires_fixed_code(monkeypatch):
+    payload = {"prompt": "找 bug", "payload": {"code_snippet": "x=1"}, "reference_answer": "少了 fixed_code"}
+    monkeypatch.setattr(tutor, "_call_agent", lambda *a, **k: (json.dumps(payload), None))
+    with pytest.raises(tutor.TutorError):
+        tutor.generate_question("python", "閉包", "說明", "read", executable=True)
+
+
+def test_generate_read_question_ok_with_fixed_code(monkeypatch):
+    payload = {
+        "prompt": "找 bug",
+        "payload": {"code_snippet": "print(1)", "fixed_code": "print(2)", "bug_description": "值錯了"},
+        "reference_answer": "值錯了",
+    }
+    monkeypatch.setattr(tutor, "_call_agent", lambda *a, **k: (json.dumps(payload), None))
+    q = tutor.generate_question("python", "閉包", "說明", "read", executable=True)
+    assert q["payload"]["fixed_code"] == "print(2)"

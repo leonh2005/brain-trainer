@@ -4,6 +4,7 @@ import threading
 from flask import Flask, jsonify, render_template, request
 
 from learn_system import db, tutor
+from learn_system.executor import run_python
 
 logger = logging.getLogger(__name__)
 
@@ -55,6 +56,33 @@ def _generate_map(domain_id):
 
 def _spawn_map_generation(app, domain_id):
     threading.Thread(target=_generate_map, args=(domain_id,), daemon=True).start()
+
+
+def _validate_question(q, goal_type):
+    """確認題目本身有效：write 題的參考解要能過測試，
+    read 題的原版與修正版行為必須不同，且修正版真的通過。
+
+    read 題只比對「原版是否拋錯」是不夠的——bug 若是「輸出錯誤值」，
+    原版仍會 ok=True，會被誤判成無效題，故改以行為差異為判準。
+    """
+    payload = q["payload"]
+    if goal_type == "write":
+        code = q.get("reference_answer") or payload.get("starter_code") or ""
+        if not code.strip():
+            return False
+        combined = code + "\n\n" + payload.get("test_code", "")
+        return run_python(combined)["ok"]
+
+    if goal_type == "read":
+        original = run_python(payload["code_snippet"])
+        fixed = run_python(payload["fixed_code"])
+        differs = (original["stdout"] != fixed["stdout"]) or (original["ok"] != fixed["ok"])
+        return differs and fixed["ok"]
+
+    if goal_type == "principle":
+        return bool(payload.get("code_snippet", "").strip())
+
+    return True
 
 
 def create_app(db_path=None):
@@ -143,6 +171,36 @@ def create_app(db_path=None):
         finally:
             conn.close()
         return jsonify(ok=True)
+
+    @app.post("/api/concepts/<int:concept_id>/questions")
+    def create_question(concept_id):
+        body = request.get_json(force=True)
+        goal_type = body.get("goal_type")
+        if goal_type not in ("write", "read", "principle", "exam"):
+            return jsonify(error="未知的題型"), 400
+
+        conn = db.connect(db_path)
+        try:
+            concept = db.get_concept(conn, concept_id)
+            if not concept:
+                return jsonify(error="找不到概念"), 404
+            domain = db.get_domain(conn, concept["domain_id"])
+            executable = bool(domain["executable"])
+
+            try:
+                q = tutor.generate_question(domain["name"], concept["name"],
+                                            concept["description"], goal_type, executable)
+            except tutor.TutorError as e:
+                return jsonify(error=str(e)), 502
+
+            if executable and not _validate_question(q, goal_type):
+                return jsonify(error="題目無效：執行驗證未通過，請重試"), 422
+
+            qid = db.create_question(conn, concept_id, goal_type, q["prompt"], q["payload"], q["reference_answer"])
+            saved = db.get_question(conn, qid)
+            return jsonify(question=saved)
+        finally:
+            conn.close()
 
     return app
 

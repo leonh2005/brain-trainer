@@ -161,3 +161,46 @@ def generate_map(domain_name, goals, verify_sources):
             raise TutorError("概念缺少名稱")
 
     return {"executable": bool(data.get("executable", True)), "concepts": concepts}
+
+
+QUESTION_PROMPT = """你是嚴謹的學科導師，要替學習者出一題來檢驗他是否「真正理解」而非死記。
+
+學習領域：{domain}
+正在練的概念：{concept}
+概念說明：{description}
+題型：{goal_type}
+
+題型定義：
+- write：給規格讓學習者寫出程式。payload 需含 {{"starter_code": "...", "test_code": "..."}}，
+  test_code 是會以 `from solution import ...` 匯入學習者程式碼的 pytest 斷言。
+- read：給一段有 bug 的程式讓學習者找出問題並說明。payload 需含
+  {{"code_snippet": "有 bug 的版本", "fixed_code": "修正後版本", "bug_description": "標準答案"}}。
+  code_snippet 必須真的會出錯或輸出錯誤結果，fixed_code 必須真的能修正它。
+- principle：給一段程式讓學習者預測輸出並解釋原因。payload 需含 {{"code_snippet": "..."}}。
+- exam：模擬檢定考題。payload 為 {{}}。
+
+只回傳 JSON，不要任何其他文字：
+{{"prompt": "題目敘述", "payload": {{...}}, "reference_answer": "標準答案或參考解法"}}"""
+
+
+def generate_question(domain_name, concept_name, concept_description, goal_type, executable):
+    prompt = QUESTION_PROMPT.format(
+        domain=domain_name, concept=concept_name,
+        description=concept_description or "（尚未生成）", goal_type=goal_type,
+    )
+    text, _ = _call_agent(prompt)
+    data = _extract_json(text)
+
+    payload = data.get("payload") or {}
+    if not data.get("prompt"):
+        raise TutorError("題目缺少敘述")
+    if goal_type == "write" and executable and not payload.get("test_code"):
+        raise TutorError("write 題缺少 test_code")
+    if goal_type == "read" and executable:
+        if not payload.get("code_snippet") or not payload.get("fixed_code"):
+            raise TutorError("read 題缺少 code_snippet 或 fixed_code")
+    if goal_type == "principle" and executable and not payload.get("code_snippet"):
+        raise TutorError("principle 題缺少 code_snippet")
+
+    return {"prompt": data["prompt"], "payload": payload,
+            "reference_answer": data.get("reference_answer", "")}
