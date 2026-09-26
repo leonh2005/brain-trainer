@@ -254,10 +254,10 @@ def create_app(db_path=None):
                 if result["env_error"]:
                     return jsonify(error="執行環境錯誤，不計入對錯，請稍後重試"), 503
                 verdict = "correct" if result["ok"] else "wrong"
-                # pytest 把失敗報告寫在 stdout，stderr 只在環境層級錯誤時才有內容
-                # （而那條路徑已在前面的 503 返回）；只讀 stderr 會讓每次答錯都只
-                # 顯示「測試失敗：」後面空一片，學習者拿不到任何線索。
-                detail = result["stderr"] or result["stdout"]
+                # pytest 把失敗報告寫在 stdout，stderr 只在極少數情況有內容（實測是
+                # 學習者的程式碼觸發 SystemExit 時的一行 mainloop 訊息）。兩者都有
+                # 內容時必須以 stdout 為準，否則學習者只看得到那行雜訊而不是報告。
+                detail = result["stdout"] or result["stderr"]
                 feedback = "測試通過" if result["ok"] else f"測試失敗：\n{detail[-800:]}"
                 root_cause = None if result["ok"] else "程式未通過測試"
             else:

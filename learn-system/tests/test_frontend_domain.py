@@ -20,9 +20,11 @@ def _html(name):
     return (TEMPLATES / name).read_text(encoding="utf-8")
 
 
-def _function_body(src, name):
-    """以括號配對取出具名函式本體，用來斷言「這件事不在這條路徑上」。"""
-    start = src.index(f"function {name}(")
+def _block(src, start):
+    """從 start 之後的第一個 { 起做括號配對，取出整個區塊。
+
+    本檔的模板字串裡 ${...} 的括號成對，故直接數括號是安全的。
+    """
     i = src.index("{", start)
     depth = 0
     for j in range(i, len(src)):
@@ -32,7 +34,17 @@ def _function_body(src, name):
             depth -= 1
             if depth == 0:
                 return src[i:j]
-    raise AssertionError(f"找不到 {name} 的函式本體")
+    raise AssertionError("括號沒有配對")
+
+
+def _function_body(src, name):
+    """以括號配對取出具名函式本體，用來斷言「這件事不在這條路徑上」。"""
+    return _block(src, src.index(f"function {name}("))
+
+
+def _handler_body(src, element_id):
+    """取出某個元素的 onclick 處理函式本體。"""
+    return _block(src, src.index(f"getElementById('{element_id}').onclick"))
 
 
 def test_domain_js_never_uses_innerhtml():
@@ -73,7 +85,7 @@ def test_late_agent_responses_are_dropped_when_the_concept_changed():
     """
     src = _static("domain.js")
     assert "isCurrent" in _function_body(src, "selectConcept")
-    assert "isCurrent" in src.split("ask-question")[1]
+    assert "isCurrent" in _handler_body(src, "ask-question")
 
 
 def test_user_visible_error_paths_are_surfaced():
@@ -95,6 +107,26 @@ def test_poll_is_guarded_and_self_healing():
     assert "inflight" in src
     assert "catch" in src
     assert "finally" in src
+
+
+def test_post_buttons_are_disabled_while_their_request_is_in_flight():
+    """出題與批改都要跑 Agent（數秒到十幾秒），按鈕不關掉時第二次點擊會再送一個 POST。
+
+    exam／read／principle 題的後果不只是白花錢：兩次批改會落兩筆 attempt，而
+    mastery.compute_status 只看最近 5 筆，重複的那筆會直接扭曲掌握度，也會在
+    錯題本裡出現兩次。故兩顆按鈕在請求期間都必須關掉，並在 finally 放回來
+    （成功、失敗、提早 return 三條路徑都會經過）。
+    """
+    src = _static("domain.js")
+    for element_id in ("ask-question", "submit-answer"):
+        body = _handler_body(src, element_id)
+        assert "disabled = true" in body, element_id
+        assert "finally" in body, element_id
+
+
+def test_disabled_buttons_look_disabled():
+    """關掉卻看不出來，使用者只會以為壞掉而猛點。"""
+    assert re.search(r"button:disabled\b", _static("style.css"))
 
 
 def test_page_keeps_polling_until_the_map_is_ready():
