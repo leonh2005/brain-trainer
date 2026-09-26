@@ -3,6 +3,7 @@ import re
 import subprocess
 import sys
 import tempfile
+import textwrap
 from pathlib import Path
 
 DEFAULT_TIMEOUT = 5.0
@@ -13,6 +14,9 @@ DEFAULT_TIMEOUT = 5.0
 # 真的通過的測試數，且沒有 failed/error/skipped——跳過的測試什麼都沒驗證。
 PYTEST_PASSED_RE = re.compile(r"(\d+) passed")
 PYTEST_NOT_PASSED_RE = re.compile(r"(\d+) (failed|error|errors|skipped)")
+# pytest 只收集測試函式；模組層級的 assert 不會被執行，一個測試都沒有。
+TEST_FUNC_RE = re.compile(r"^\s*(?:async\s+)?def\s+test", re.M)
+MODULE_ASSERT_RE = re.compile(r"^\s*assert\b", re.M)
 
 
 def _child_env(tmp):
@@ -42,6 +46,33 @@ def _pytest_ok(returncode, stdout):
     if not passed or int(passed.group(1)) < 1:
         return False
     return not PYTEST_NOT_PASSED_RE.search(stdout)
+
+
+def _nothing_ran(stdout):
+    """pytest 連一個測試的結果都沒報（不是「失敗」，是「根本沒跑」）。"""
+    return not (PYTEST_PASSED_RE.search(stdout) or PYTEST_NOT_PASSED_RE.search(stdout))
+
+
+def _bare_assert_script(test_code):
+    """判斷 test_code 是不是「模組層級的裸 assert」而不是測試函式。
+
+    這種寫法 pytest 一個測試都不會收集。它是提示詞的自然讀法（改版前的
+    提示詞正是這樣寫的），所以值得包成測試函式再跑一次，否則每一題 write
+    都會在建立時被 422 擋掉。
+
+    但「沒有測試函式」本身不足以斷定：`x = 1` 這種沒有任何斷言的內容包起來
+    也只會變成「什麼都沒驗證的測試」，會把它從 422 變成通過——那是更糟的
+    誤判方向。故要求確實存在模組層級的 assert。
+    """
+    if TEST_FUNC_RE.search(test_code):
+        return False
+    return bool(MODULE_ASSERT_RE.search(test_code))
+
+
+def _wrap_as_test(test_code):
+    """把模組層級的程式碼包成單一測試函式。"""
+    body = textwrap.indent(textwrap.dedent(test_code), "    ")
+    return f"def test_auto():\n{body}\n"
 
 
 def _execute(files, argv, timeout, ok_fn=None):
@@ -105,6 +136,15 @@ def run_python(code, timeout=DEFAULT_TIMEOUT):
     return _execute({"solution.py": code}, [sys.executable, "solution.py"], timeout)
 
 
+def _pytest_run(solution_code, test_code, timeout):
+    return _execute(
+        {"solution.py": solution_code, "test_solution.py": test_code},
+        [sys.executable, "-m", "pytest", "test_solution.py", "-q", "-p", "no:cacheprovider"],
+        timeout,
+        ok_fn=_pytest_ok,
+    )
+
+
 def run_pytest(solution_code, test_code, timeout=DEFAULT_TIMEOUT):
     """以 pytest 執行學習者的 solution.py 對 test_solution.py。
 
@@ -117,10 +157,14 @@ def run_pytest(solution_code, test_code, timeout=DEFAULT_TIMEOUT):
     通過 0、有測試失敗 1、學習者程式碼匯入時語法錯誤 2、匯入時 SystemExit 3、
     未收集到任何測試 5；但結束碼不能單獨採信（見 PYTEST_PASSED_RE），
     故另外要求輸出中真的有通過的測試。
+
+    模組層級的裸 assert（`from solution import add` 後直接 assert）pytest 不會
+    收集，會讓每一題 write 在建立時被 422 擋掉。這種形狀只在「真的什麼都沒
+    跑」且確實含有 assert 時，改包成單一測試函式再跑一次（見
+    `_bare_assert_script`）；有測試函式的 test_code 一律原樣執行。
     """
-    return _execute(
-        {"solution.py": solution_code, "test_solution.py": test_code},
-        [sys.executable, "-m", "pytest", "test_solution.py", "-q", "-p", "no:cacheprovider"],
-        timeout,
-        ok_fn=_pytest_ok,
-    )
+    result = _pytest_run(solution_code, test_code, timeout)
+    if (not result["ok"] and _nothing_ran(result["stdout"])
+            and _bare_assert_script(test_code)):
+        return _pytest_run(solution_code, _wrap_as_test(test_code), timeout)
+    return result

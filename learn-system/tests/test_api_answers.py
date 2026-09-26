@@ -49,6 +49,22 @@ def test_write_answer_wrong_when_test_fails(ctx, monkeypatch):
     assert r.get_json()["attempt"]["verdict"] == "wrong"
 
 
+def test_bare_assert_test_code_grades_both_ways(ctx, monkeypatch):
+    """模組層級的裸 assert 是提示詞的自然讀法，也是本任務 brief 的寫法。
+
+    pytest 不會收集模組層級的 assert，若不處理，write 題會在建立時全數被
+    422 擋掉；包成測試函式後兩種寫法都要能正常批改。
+    """
+    client, did, cid = ctx
+    qid = make_question(client, cid, monkeypatch, "write",
+                        {"starter_code": "", "test_code": "from solution import add\nassert add(1, 2) == 3"},
+                        CORRECT_ANSWER)
+    right = client.post(f"/api/questions/{qid}/answer", json={"answer": CORRECT_ANSWER})
+    assert right.get_json()["attempt"]["verdict"] == "correct"
+    wrong = client.post(f"/api/questions/{qid}/answer", json={"answer": WRONG_ANSWER})
+    assert wrong.get_json()["attempt"]["verdict"] == "wrong"
+
+
 def test_write_answer_that_exits_the_process_is_not_correct(ctx, monkeypatch):
     """結束碼不可信：這些答案的行程結束碼都是 0，斷言一次都沒跑。
 
