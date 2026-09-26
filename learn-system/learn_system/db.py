@@ -192,9 +192,13 @@ def list_attempts_for_concept(conn, concept_id, limit=5):
         " WHERE q.concept_id = ? ORDER BY a.id DESC LIMIT ?", (concept_id, limit)))
 
 
-def list_attempts_for_domain(conn, domain_id):
-    return _rows(conn.execute(
-        "SELECT a.*, q.concept_id, c.name AS concept_name FROM attempts a"
-        " JOIN questions q ON q.id = a.question_id"
-        " JOIN concepts c ON c.id = q.concept_id"
-        " WHERE c.domain_id = ? ORDER BY a.id DESC", (domain_id,)))
+def list_attempts_for_domain(conn, domain_id, limit=None):
+    sql = ("SELECT a.*, q.concept_id, c.name AS concept_name FROM attempts a"
+           " JOIN questions q ON q.id = a.question_id"
+           " JOIN concepts c ON c.id = q.concept_id"
+           " WHERE c.domain_id = ? ORDER BY a.id DESC")
+    params = [domain_id]
+    if limit is not None:
+        sql += " LIMIT ?"
+        params.append(limit)
+    return _rows(conn.execute(sql, params))
