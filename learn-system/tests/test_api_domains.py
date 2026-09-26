@@ -54,6 +54,15 @@ def test_generation_failure_marks_failed(client, monkeypatch):
     assert client.get(f"/api/domains/{did}").get_json()["domain"]["status"] == "failed"
 
 
+def test_unexpected_generation_error_marks_failed(client, monkeypatch):
+    def boom(*a, **k):
+        raise ValueError("非 TutorError 的意外錯誤")
+
+    monkeypatch.setattr(tutor, "generate_map", boom)
+    did = client.post("/api/domains", json={"name": "python", "goals": ["write"], "verify_sources": False}).get_json()["id"]
+    assert client.get(f"/api/domains/{did}").get_json()["domain"]["status"] == "failed"
+
+
 def test_empty_concepts_marks_failed(client, monkeypatch):
     monkeypatch.setattr(tutor, "generate_map", lambda *a, **k: {"executable": True, "concepts": []})
     did = client.post("/api/domains", json={"name": "x", "goals": ["write"], "verify_sources": False}).get_json()["id"]
