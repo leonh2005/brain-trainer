@@ -1,24 +1,70 @@
 import asyncio
 import json
 import re
+from pathlib import Path
 
 VALID_SECTIONS = {"consensus", "dispute", "frontier"}
 AGENT_TIMEOUT = 180.0
+
+PROJECT_DIR = Path(__file__).resolve().parent.parent
+READ_TOOLS = ["Read", "Grep"]
+WEB_TOOLS = ["WebSearch", "WebFetch"]
+BLOCKED_TOOLS = ["Bash", "Write", "Edit", "NotebookEdit"]
 
 
 class TutorError(Exception):
     """Agent 呼叫或回應解析失敗。"""
 
 
-async def _call_agent_async(prompt, allow_web=False):
-    from claude_agent_sdk import ClaudeAgentOptions, query, AssistantMessage, TextBlock
+def _build_options(allow_web=False, session_id=None):
+    """建立本模組唯一的能力邊界。
 
-    tools = ["Read", "Grep"]
+    幾個都必須同時成立才擋得住，任一單獨用都是名存實亡：
+
+    - `allowed_tools` 只是「免詢問核准清單」不是限制；`tools` 才是限定可用
+      基礎工具集的地方。
+    - `bypassPermissions` 會在諮詢任何 callback 前放行所有工具，故改用
+      `dontAsk`（未預先核准者一律拒絕），核准清單才成為真正的白名單。
+    - `strict_mcp_config=True` 擋掉使用者/專案/外掛設定帶進來的 MCP 伺服器
+      （否則全機的 playwright／context7 等工具會整批注入，等同網路與 RCE）。
+    - 讀取與搜尋以 `Read(//<專案>/**)`、`Grep(//<專案>/**)` 規則限定在專案內，
+      避免注入的 prompt 讀到 `~/.ssh`、`.secrets` 等專案外檔案。
+
+    `allow_web=False` 時網路工具既不在 tools 也被列入 disallowed，完全不可達。
+    `setting_sources` 不可設為 `[]`（SDK 隔離模式）——那會連 apiKeyHelper
+    也一併停用而使身分驗證失敗。
+    """
+    from claude_agent_sdk import ClaudeAgentOptions
+
+    tools = list(READ_TOOLS)
     if allow_web:
-        tools += ["WebSearch", "WebFetch"]
-    options = ClaudeAgentOptions(allowed_tools=tools, permission_mode="bypassPermissions")
+        tools += WEB_TOOLS
+
+    scope = f"//{PROJECT_DIR}/**"
+    allowed = [f"Read({scope})", f"Grep({scope})"]
+    if allow_web:
+        allowed += WEB_TOOLS
+
+    blocked = list(BLOCKED_TOOLS)
+    if not allow_web:
+        blocked += WEB_TOOLS
+
+    return ClaudeAgentOptions(
+        tools=tools,
+        allowed_tools=allowed,
+        disallowed_tools=blocked,
+        permission_mode="dontAsk",
+        strict_mcp_config=True,
+        resume=session_id,
+    )
+
+
+async def _call_agent_async(prompt, allow_web=False, session_id=None):
+    from claude_agent_sdk import query, AssistantMessage, TextBlock
+
+    options = _build_options(allow_web=allow_web, session_id=session_id)
     text = []
-    session_id = None
+    observed_session = session_id
     async for msg in query(prompt=prompt, options=options):
         if isinstance(msg, AssistantMessage):
             for block in msg.content:
@@ -26,14 +72,14 @@ async def _call_agent_async(prompt, allow_web=False):
                     text.append(block.text)
         sid = getattr(msg, "session_id", None)
         if sid:
-            session_id = sid
-    return "".join(text), session_id
+            observed_session = sid
+    return "".join(text), observed_session
 
 
 def _call_agent(prompt, allow_web=False, session_id=None):
     """與 SDK 的唯一接縫，測試會 monkeypatch 這個函式。"""
     try:
-        return asyncio.run(_call_agent_async(prompt, allow_web=allow_web))
+        return asyncio.run(_call_agent_async(prompt, allow_web=allow_web, session_id=session_id))
     except Exception as e:
         raise TutorError(f"Agent 呼叫失敗：{e}") from e
 
