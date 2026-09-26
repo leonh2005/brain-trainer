@@ -147,11 +147,13 @@ def test_run_pytest_cannot_be_fooled_by_writing_the_pass_marker_to_stdout():
     assert run_pytest(forged, TEST_CODE)["ok"] is False
 
 
-def test_run_pytest_result_path_is_not_visible_to_learner_code():
-    """結果檔路徑以環境變數傳入，外掛一載入就把它從環境移除。
+def test_run_pytest_removes_the_result_path_from_the_childs_environ():
+    """結果檔路徑不留在子行程的 `os.environ` 裡（外掛載入時 pop 掉）。
 
-    test_solution.py 匯入 solution.py（學習者的程式碼）發生在外掛載入之後，
-    屆時環境裡已經沒有那個變數；下面的答案只有讀不到路徑時才會通過。
+    擋的是最直覺的一步：學習者讀 `os.environ` 拿路徑、自己寫一份結果檔。
+    這不是安全邊界——行程的 envp 仍帶著該變數（實測 `ps eww <pid>` 看得到），
+    同 uid 的程式碼另有辦法取得路徑（見 `_verdict_ok` 的說明）。下面的答案
+    只有 `os.environ` 裡讀不到路徑時才會通過。
     """
     solution = ("import os\ndef seen():\n"
                 "    return os.environ.get('LEARN_PYTEST_RESULT', 'POPPED')")
