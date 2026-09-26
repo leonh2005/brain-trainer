@@ -272,3 +272,15 @@ def test_strip_fence_keeps_indentation_after_blank_line():
 def test_strip_fence_handles_single_line_fence_without_tag():
     # 無標籤的單行圍欄：開頭的 x 曾被當成語言標籤吃掉
     assert tutor._strip_fence("```x = 1```") == "x = 1"
+
+
+def test_question_prompt_example_is_not_indented():
+    """提示詞裡的範例必須從第 0 欄開始。
+
+    範例若跟著 bullet 的縮排，模型照抄又漏了圍欄時，`_strip_fence` 只會做
+    strip（dedent 只在有圍欄時走），內部那兩格縮排會留著 → SyntaxError →
+    「1 error」→ 題目在建立時被 422，整個 write 題型都出不了題。
+    """
+    prompt = tutor.QUESTION_PROMPT
+    assert "\nfrom solution import add\n" in prompt
+    assert "\ndef test_add():\n" in prompt

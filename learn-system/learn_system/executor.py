@@ -16,7 +16,11 @@ PYTEST_PASSED_RE = re.compile(r"(\d+) passed")
 PYTEST_NOT_PASSED_RE = re.compile(r"(\d+) (failed|error|errors|skipped)")
 # pytest 只收集測試函式；模組層級的 assert 不會被執行，一個測試都沒有。
 TEST_FUNC_RE = re.compile(r"^\s*(?:async\s+)?def\s+test", re.M)
-MODULE_ASSERT_RE = re.compile(r"^\s*assert\b", re.M)
+# 必須是第 0 欄的 assert，不能寫成 `^\s*assert`：縮排的 assert 代表它躲在某個
+# 函式、類別或分支裡，包成測試函式之後同樣不會被執行——`def helper(): assert …`
+# 包起來只會得到一個「什麼都沒驗證、卻一定會通過」的 test_auto，於是任何答案
+# 都變成 correct。只認第 0 欄，才真的等於「模組層級的裸 assert」。
+MODULE_ASSERT_RE = re.compile(r"^assert\b", re.M)
 
 
 def _child_env(tmp):
@@ -62,7 +66,12 @@ def _bare_assert_script(test_code):
 
     但「沒有測試函式」本身不足以斷定：`x = 1` 這種沒有任何斷言的內容包起來
     也只會變成「什麼都沒驗證的測試」，會把它從 422 變成通過——那是更糟的
-    誤判方向。故要求確實存在模組層級的 assert。
+    誤判方向。故要求確實存在**第 0 欄**的 assert。
+
+    「第 0 欄」不是吹毛求疵：`def helper(): assert …`、`class TestAdd:` 裡的方法、
+    `if False:` 底下的 assert 都是第 0 欄以外，它們包進 test_auto 後仍然不會被
+    執行，test_auto 卻會通過——那等於讓任何答案都判 correct。這種 test_code
+    應該維持不通過（題目在建立時被 422 擋掉），不是被救回來。
     """
     if TEST_FUNC_RE.search(test_code):
         return False

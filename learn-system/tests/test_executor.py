@@ -148,18 +148,40 @@ def test_run_pytest_handles_bare_module_level_asserts():
 
 
 def test_bare_assert_detection_distinguishes_junk_from_asserts():
-    """包裝只適用於「含有 assert 的裸腳本」。
+    """包裝只適用於「第 0 欄有 assert 的裸腳本」。
 
     沒有 assert 可言的 test_code 包起來只會變成「什麼都沒驗證的測試」，
     那就把 422 變成了通過——比擋掉更糟。
     """
     assert executor._bare_assert_script("from solution import add\nassert add(1, 2) == 3")
-    assert executor._bare_assert_script("from solution import add\nif True:\n    assert add(1, 2) == 3")
     # 已經是測試函式：原樣執行，不能包（包了內層測試函式不會被收集）
     assert not executor._bare_assert_script(TEST_CODE)
     # 沒有任何斷言：不包，維持不通過
     assert not executor._bare_assert_script("from solution import add\nx = 1")
     assert not executor._bare_assert_script("")
+
+
+def test_bare_assert_detection_rejects_nested_asserts():
+    """縮排的 assert 不算數，否則會開出一條新的假通過路徑。
+
+    這些 assert 全都躲在某個函式、類別或死分支裡，包進 test_auto 之後依然
+    不會被執行，但 test_auto 本身會「通過」——於是任何答案都變成 correct。
+    這種 test_code 必須維持不通過（題目建立時被 422 擋掉）。
+    """
+    for test_code in (
+        "from solution import add\n\ndef helper():\n    assert add(1, 2) == 3",
+        "from solution import add\n\nclass TestAdd:\n    def check(self):\n        assert add(1, 2) == 3",
+        "from solution import add\nif False:\n    assert False",
+        "from solution import add\nif True:\n    assert add(1, 2) == 3",
+    ):
+        assert not executor._bare_assert_script(test_code), test_code
+
+
+def test_run_pytest_does_not_rescue_nested_asserts():
+    # 沒被執行的 assert 不是判準，不能因為它存在就判通過
+    nested = "from solution import add\n\ndef helper():\n    assert add(1, 2) == 3"
+    assert run_pytest(WRONG, nested)["ok"] is False
+    assert run_pytest(CORRECT, nested)["ok"] is False
 
 
 def test_run_pytest_bare_asserts_are_still_not_fooled_by_exiting():
