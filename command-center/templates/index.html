@@ -370,6 +370,7 @@ const LIFE=[
   {id:'dsa',ic:'🧠', title:'AI選股歷史', span:'wide', url:'/api/life/daily-stock-analysis', render:renderDSA, site:'/svc/5650/'},
   {id:'market-cycle',ic:'🌀', title:'景氣週期位置', span:'wide', url:'/api/life/market-cycle', render:renderMarketCycle, site:'/svc/5905/'},
   {id:'guru-tracker',ic:'👴', title:'投資大老持股', span:'wide', url:'/api/life/guru-tracker', render:renderGuruTracker, site:'/svc/5910/'},
+  {id:'learn-system',ic:'📚', title:'學習系統', span:'wide', url:'/api/life/learn-system', render:renderLearnSystem, site:'/svc/5990/'},
 ];
 
 const CARD_POLL_MS=60000;
@@ -969,6 +970,27 @@ function renderMarketCycle(d){
     const row=el('div','row');
     const col=stageCol[c.stage]||'var(--muted)';
     row.innerHTML=`<span class="tk" style="font-weight:500">${esc(c.name)}</span><span class="spacer"></span><span class="chg" style="font-size:11px;color:${col}">${esc(c.stage)}</span>`;
+    box.appendChild(row);
+  });
+  return box;
+}
+function renderLearnSystem(d){
+  const ds=Array.isArray(d)?d:[];
+  if(!ds.length)return el('div','empty','尚無領域');
+  const box=el('div');
+  const label={generating:'生成中',failed:'生成失敗'};
+  ds.forEach(x=>{
+    const row=el('div','row');
+    let right;
+    if(label[x.status]){
+      const cn=x.status==='failed'?'chg down':'chg';
+      const col=x.status==='failed'?'':'color:var(--muted)';
+      right=`<span class="${cn}" style="font-size:11px;${col}">${esc(label[x.status])}</span>`;
+    }else{
+      right=`<span class="mini">${esc(x.concept_count)} 個概念</span>`+
+            `<span class="chg" style="font-size:11px;margin-left:8px;color:var(--muted)">掌握 ${esc(x.mastery_pct)}%</span>`;
+    }
+    row.innerHTML=`<span class="tk" style="font-weight:500">${esc(x.name)}</span><span class="spacer"></span>${right}`;
     box.appendChild(row);
   });
   return box;
