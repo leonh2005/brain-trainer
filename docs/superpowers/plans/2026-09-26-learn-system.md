@@ -742,15 +742,34 @@ class TutorError(Exception):
     """Agent 呼叫或回應解析失敗。"""
 
 
-async def _call_agent_async(prompt, allow_web=False):
-    from claude_agent_sdk import ClaudeAgentOptions, query, AssistantMessage, TextBlock
+# 【執行後修訂 2026-09-26】能力邊界集中在 `_build_options(allow_web, session_id)`，
+# 完整實作見 `learn_system/tutor.py`。**不要**退回以下寫法：
+#     ClaudeAgentOptions(allowed_tools=..., permission_mode="bypassPermissions")
+# 因為 `allowed_tools` 只是「免詢問核准清單」而非限制，`bypassPermissions` 會在
+# 諮詢任何 callback 前放行所有工具——兩者相加等於完全沒有邊界（實測：Bash/Write/
+# WebSearch 全部可達且免確認，且 `verify_sources=False` 並不會關掉網路工具）。
+#
+# 邊界必須同時滿足下列每一條，任一單獨用都名存實亡：
+#   - `tools` 限定基礎工具集（Read/Grep，allow_web 時加 WebSearch/WebFetch）
+#   - `permission_mode="dontAsk"` 使核准清單成為真正的白名單
+#   - `disallowed_tools` 硬性封鎖 Bash/Write/Edit/NotebookEdit（allow_web=False 再加網路工具）
+#   - `strict_mcp_config=True`——否則本機 MCP 工具會整批注入（實測 84 項，
+#     含 `mcp__playwright__browser_run_code_unsafe`，等同 RCE）
+#   - `cwd=PROJECT_DIR` **必須明設**；不設時子行程沿用啟動目錄，讀取邊界會隨
+#     「從哪裡啟動」飄移（實測：從 repo 根啟動可讀到 `.secrets/telegram_token.txt`）
+#   - `extra_args={"restricted": None}` 並以 `--settings` 只帶 apiKeyHelper：
+#     `--restricted` 把檔案工具鎖在工作目錄內**且**忽略 user/project/local settings，
+#     因為 settings 的 allow 規則與 `allowed_tools` 是**相加**的，會逕行放行專案外讀取
+#   - 路徑限縮規則 `Read(//<專案>/**)` 實測**無效**，不要採用
+#
+# 另註：`setting_sources=[]`（SDK 隔離模式）同樣會停用 apiKeyHelper 而導致
+# "Not logged in"，且沒有補救途徑，不可使用。
+async def _call_agent_async(prompt, allow_web=False, session_id=None):
+    from claude_agent_sdk import query, AssistantMessage, TextBlock
 
-    tools = ["Read", "Grep"]
-    if allow_web:
-        tools += ["WebSearch", "WebFetch"]
-    options = ClaudeAgentOptions(allowed_tools=tools, permission_mode="bypassPermissions")
+    options = _build_options(allow_web=allow_web, session_id=session_id)
     text = []
-    session_id = None
+    observed_session = session_id
     async for msg in query(prompt=prompt, options=options):
         if isinstance(msg, AssistantMessage):
             for block in msg.content:
@@ -758,14 +777,14 @@ async def _call_agent_async(prompt, allow_web=False):
                     text.append(block.text)
         sid = getattr(msg, "session_id", None)
         if sid:
-            session_id = sid
-    return "".join(text), session_id
+            observed_session = sid
+    return "".join(text), observed_session
 
 
 def _call_agent(prompt, allow_web=False, session_id=None):
     """與 SDK 的唯一接縫，測試會 monkeypatch 這個函式。"""
     try:
-        return asyncio.run(_call_agent_async(prompt, allow_web=allow_web))
+        return asyncio.run(_call_agent_async(prompt, allow_web=allow_web, session_id=session_id))
     except Exception as e:
         raise TutorError(f"Agent 呼叫失敗：{e}") from e
 
@@ -1702,36 +1721,16 @@ def chat(domain_name, concept_name, message, session_id):
     return text.strip(), new_session
 ```
 
-**注意**：`_call_agent` 目前的簽章是 `(prompt, allow_web=False, session_id=None)`，但它尚未把 `session_id` 傳給 SDK。本任務需補上 resume 支援：
+**【執行後修訂 2026-09-26】** session resume 已提前在 Task 4 完成——`_call_agent` 現已把 `session_id` 傳入 `_build_options`，後者設定 `resume=session_id`（`None` 時不帶 `--resume`）。**本任務不需要再改 `_call_agent_async` 或 `_call_agent`**，直接呼叫即可：
 
 ```python
-async def _call_agent_async(prompt, allow_web=False, session_id=None):
-    from claude_agent_sdk import ClaudeAgentOptions, query, AssistantMessage, TextBlock
+def chat(domain_name, concept_name, message, session_id):
+    prompt = CHAT_SYSTEM.format(domain=domain_name, concept=concept_name or "（未指定）") + "\n\n" + message
+    text, new_session = _call_agent(prompt, session_id=session_id)
+    return text.strip(), new_session
+```
 
-    tools = ["Read", "Grep"]
-    if allow_web:
-        tools += ["WebSearch", "WebFetch"]
-    options = ClaudeAgentOptions(allowed_tools=tools, permission_mode="bypassPermissions")
-    if session_id:
-        options.resume = session_id
-    text = []
-    new_session = session_id
-    async for msg in query(prompt=prompt, options=options):
-        if isinstance(msg, AssistantMessage):
-            for block in msg.content:
-                if isinstance(block, TextBlock):
-                    text.append(block.text)
-        sid = getattr(msg, "session_id", None)
-        if sid:
-            new_session = sid
-    return "".join(text), new_session
-
-
-def _call_agent(prompt, allow_web=False, session_id=None):
-    try:
-        return asyncio.run(_call_agent_async(prompt, allow_web=allow_web, session_id=session_id))
-    except Exception as e:
-        raise TutorError(f"Agent 呼叫失敗：{e}") from e
+**切勿**另行建構 `ClaudeAgentOptions`——能力邊界集中於 `_build_options`，繞過它會失去唯讀限制（詳見 Task 4 Step 3 的執行後修訂說明）。
 ```
 
 （`ClaudeAgentOptions` 的 resume 欄位名稱請以實際安裝版本的 API 為準；若不同，以 `./venv/bin/python -c "from claude_agent_sdk import ClaudeAgentOptions; print(ClaudeAgentOptions.__doc__)"` 確認後調整。）
