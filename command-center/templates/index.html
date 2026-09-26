@@ -370,7 +370,9 @@ const LIFE=[
   {id:'dsa',ic:'🧠', title:'AI選股歷史', span:'wide', url:'/api/life/daily-stock-analysis', render:renderDSA, site:'/svc/5650/'},
   {id:'market-cycle',ic:'🌀', title:'景氣週期位置', span:'wide', url:'/api/life/market-cycle', render:renderMarketCycle, site:'/svc/5905/'},
   {id:'guru-tracker',ic:'👴', title:'投資大老持股', span:'wide', url:'/api/life/guru-tracker', render:renderGuruTracker, site:'/svc/5910/'},
-  {id:'learn-system',ic:'📚', title:'學習系統', span:'wide', url:'/api/life/learn-system', render:renderLearnSystem, site:'/svc/5990/'},
+  // learn-system 沒有 site：5990 不在後端 PROXY_PORTS 內（它的作答端點會執行送進去的
+  // 程式碼，不能轉發；見 app.py 的 PROXY_PORTS 說明），只在本機 http://127.0.0.1:5990/ 服務。
+  {id:'learn-system',ic:'📚', title:'學習系統', span:'wide', url:'/api/life/learn-system', render:renderLearnSystem},
 ];
 
 const CARD_POLL_MS=60000;

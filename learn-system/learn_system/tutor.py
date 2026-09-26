@@ -8,6 +8,7 @@ from pathlib import Path
 logger = logging.getLogger(__name__)
 
 VALID_SECTIONS = {"consensus", "dispute", "frontier"}
+# 每次 Agent 呼叫的牆鐘上限，由 `_call_agent` 以 asyncio.wait_for 強制。
 AGENT_TIMEOUT = 180.0
 
 PROJECT_DIR = Path(__file__).resolve().parent.parent
@@ -103,9 +104,20 @@ async def _call_agent_async(prompt, allow_web=False, session_id=None):
 
 
 def _call_agent(prompt, allow_web=False, session_id=None):
-    """與 SDK 的唯一接縫，測試會 monkeypatch 這個函式。"""
+    """與 SDK 的唯一接縫，測試會 monkeypatch 這個函式。
+
+    一定要有牆鐘逾時：`query()` 本身沒有逾時，agent 卡住就是永遠卡住，而
+    app.py 對「生成失敗」的保證是 `domains.status` 落到 failed——卡住不是
+    例外，狀態會停在 generating，前端輪詢到天荒地老。逾時轉成 TutorError，
+    走既有那條 failed 的路。
+    """
     try:
-        return asyncio.run(_call_agent_async(prompt, allow_web=allow_web, session_id=session_id))
+        return asyncio.run(asyncio.wait_for(
+            _call_agent_async(prompt, allow_web=allow_web, session_id=session_id),
+            AGENT_TIMEOUT,
+        ))
+    except asyncio.TimeoutError as e:
+        raise TutorError(f"Agent 逾時（超過 {AGENT_TIMEOUT:.0f} 秒）") from e
     except Exception as e:
         raise TutorError(f"Agent 呼叫失敗：{e}") from e
 
@@ -150,6 +162,12 @@ def _extract_json(text):
     raise TutorError("Agent 回應不是合法 JSON")
 
 
+# executable 的語意是「這個領域的動手實作練習就是寫 Python」。本系統的執行驗證
+# 只有一種：把學習者的答案當成 solution.py，用 pytest 跑題目的 test_code（見
+# executor.run_pytest）。沒有 JS／C／Rust 的執行器，QUESTION_PROMPT 也只出
+# `from solution import ...` 的 Python 測試。判斷寫成「可不可以執行驗證」會讓
+# JavaScript 這類領域被判成 true，然後**每一題** write 都在 _validate_question
+# 被 422 擋掉、訊息還要使用者「重試」——永遠出不了題。
 MAP_PROMPT = """你是一位嚴謹的學科導師，專長是替學習者建立「智識地圖」。
 
 學習領域：{domain}
@@ -160,7 +178,11 @@ MAP_PROMPT = """你是一位嚴謹的學科導師，專長是替學習者建立�
 2. dispute（分歧）：專家之間最激烈的 3 個爭議點。這標示出「已確定基礎」與「高價值探索區」的分界。
 3. frontier（探索區）：2 個尚未有定論的前沿問題。
 
-另外判斷一件事：這個領域的「動手實作」是否可以由程式碼執行來客觀驗證（例如程式語言可以，經濟學不行）。
+另外判斷一件事：這個領域的「動手實作」練習是否就是寫 **Python** 程式？
+本系統的執行驗證只支援 Python——學習者的答案會被當成一個 Python 模組，用
+pytest 執行。其他程式語言（JavaScript、C、Rust…）與非程式領域（經濟學、
+歷史、法律…）一律回傳 false，不要因為「寫程式可以客觀驗證」就回傳 true。
+回傳 true 但實際上做不到，會讓這個領域的實作題永遠出不出來。
 
 只回傳 JSON，不要任何其他文字：
 {{
