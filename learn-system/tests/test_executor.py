@@ -1,3 +1,6 @@
+import subprocess
+
+from learn_system import executor
 from learn_system.executor import run_python
 
 
@@ -31,6 +34,48 @@ def test_reading_stdin_does_not_hang():
     r = run_python("input()", timeout=0.5)
     assert r["timed_out"] is False
     assert r["ok"] is False
+    assert "EOFError" in r["stderr"]
+
+
+def test_stdin_is_devnull_for_the_child(monkeypatch):
+    """移除 stdin=subprocess.DEVNULL 時，只有這個測試會失敗。
+
+    test_reading_stdin_does_not_hang 做不到：pytest 底下 fd 0 本身就是個
+    EOF 檔，子行程即使沿用繼承的 stdin 也照樣拿到 EOFError，
+    因此只能直接檢查傳給 subprocess 的參數。
+    """
+    captured = {}
+    real_run = subprocess.run
+
+    def spy(*args, **kwargs):
+        captured.update(kwargs)
+        return real_run(*args, **kwargs)
+
+    monkeypatch.setattr(executor.subprocess, "run", spy)
+    run_python("print('x')")
+    assert captured["stdin"] is subprocess.DEVNULL
+
+
+def test_non_utf8_output_does_not_raise():
+    # 子行程輸出非 UTF-8 位元組時，不能讓 UnicodeDecodeError 穿出。
+    r = run_python("import sys; sys.stdout.buffer.write(bytes([255, 254]))")
+    assert set(r) == {"ok", "stdout", "stderr", "timed_out"}
+    assert isinstance(r["stdout"], str)
+    # 子行程正常結束（returncode 0），依規格 ok 應為 True。
+    assert r["ok"] is True
+    assert r["timed_out"] is False
+
+
+def test_infrastructure_error_returns_dict(monkeypatch):
+    # 執行環境失敗要回傳 dict（非預期錯誤不計入對錯），不能拋例外。
+    def boom(*args, **kwargs):
+        raise OSError("no space left on device")
+
+    monkeypatch.setattr(executor.subprocess, "run", boom)
+    r = run_python("print('hello')")
+    assert r["ok"] is False
+    assert r["timed_out"] is False
+    assert "執行環境錯誤" in r["stderr"]
 
 
 def test_assertion_failure_reported():
