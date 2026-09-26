@@ -29,7 +29,7 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
 LOGIN_PASSWORD = os.getenv('LOGIN_PASSWORD', 'momo2026')
-TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN', '')
+TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN', open(os.path.expanduser("~/CCProject/.secrets/telegram_token.txt")).read().strip())
 TELEGRAM_CHAT_ID = os.getenv('TELEGRAM_CHAT_ID', '')
 
 

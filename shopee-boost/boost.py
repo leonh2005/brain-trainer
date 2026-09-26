@@ -36,7 +36,7 @@ PRODUCTS = [
     '宜康寵物製氧機',  # 宜康寵物製氧機 3L，商品ID 46017697143
 ]
 
-TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN', '')
+TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN', open(os.path.expanduser("~/CCProject/.secrets/telegram_token.txt")).read().strip())
 TELEGRAM_CHAT_ID = os.getenv('TELEGRAM_CHAT_ID', '')
 
 
