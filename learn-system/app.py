@@ -3,7 +3,7 @@ import threading
 
 from flask import Flask, jsonify, render_template, request
 
-from learn_system import db, tutor
+from learn_system import db, mastery, tutor
 from learn_system.executor import run_python
 
 logger = logging.getLogger(__name__)
@@ -199,6 +199,46 @@ def create_app(db_path=None):
             qid = db.create_question(conn, concept_id, goal_type, q["prompt"], q["payload"], q["reference_answer"])
             saved = db.get_question(conn, qid)
             return jsonify(question=saved)
+        finally:
+            conn.close()
+
+    @app.post("/api/questions/<int:question_id>/answer")
+    def answer_question(question_id):
+        body = request.get_json(force=True)
+        answer = body.get("answer", "")
+        conn = db.connect(db_path)
+        try:
+            question = db.get_question(conn, question_id)
+            if not question:
+                return jsonify(error="找不到題目"), 404
+            concept = db.get_concept(conn, question["concept_id"])
+            domain = db.get_domain(conn, concept["domain_id"])
+            executable = bool(domain["executable"])
+            goal_type = question["goal_type"]
+
+            # write 題有客觀判準（測試跑不跑得過），直接執行答案加測試，
+            # 不經過模型；其餘題型才交由 Agent 批改。
+            if goal_type == "write" and executable:
+                result = run_python(answer + "\n\n" + question["payload"].get("test_code", ""))
+                # 逾時是「沒跑完」而非「寫錯」，判成 wrong 會污染掌握度，
+                # 故以 408 回報且不留下 attempt。
+                if result["timed_out"]:
+                    return jsonify(error="執行逾時（超過 5 秒），不計入對錯，請修改後重試"), 408
+                verdict = "correct" if result["ok"] else "wrong"
+                feedback = "測試通過" if result["ok"] else f"測試失敗：\n{result['stderr'][-800:]}"
+                root_cause = None if result["ok"] else "程式未通過測試"
+            else:
+                try:
+                    graded = tutor.grade_answer(domain["name"], concept["name"], question, answer, executable)
+                except tutor.TutorError as e:
+                    return jsonify(error=str(e)), 502
+                verdict, feedback, root_cause = graded["verdict"], graded["feedback"], graded["root_cause"]
+
+            db.create_attempt(conn, question_id, answer, verdict, feedback, root_cause)
+            status = mastery.compute_status(db.list_attempts_for_concept(conn, concept["id"]))
+            db.set_concept_status(conn, concept["id"], status)
+            attempts = db.list_attempts_for_concept(conn, concept["id"], limit=1)
+            return jsonify(attempt=attempts[0], concept_status=status)
         finally:
             conn.close()
 
