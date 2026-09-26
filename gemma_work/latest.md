@@ -1,28 +1,21 @@
-# Claude Handoff 20260926_1605
-> 自動生成於 2026-09-26 16:05
+# Claude Handoff 20260926_2239
+> 自動生成於 2026-09-26 22:39
 
 ## 未提交的檔案異動
 ```
 M chip-tracker/chip.db
  M gemma_work/latest.md
- M logs/pullback_daily_scan.err
- M market-dashboard/alert_grid.json
- M market-dashboard/bb_cache.json
- M market-dashboard/index.html
- M market-dashboard/sp_state.json
  M scripts/auto_investigate_state.json
  M shopee-boost/data/last_success.json
-?? reports/gaba-glycine-2026-09-26.html
-?? reports/zinc-15mg-2026-09-26.html
 ```
 
 ## 近期 Commits
 ```
-a73f8774 docs: Jev Atlas 適合專案分析報告（236 筆篩選）
-c0ab1edb fix: Telegram token 統一讀 .secrets，修復 .env 副本造成的持續 401
-758c4a3e chore: 自動同步 2026-09-26 07:40
-eb2bf4c8 chore: 更新 log 掃描報告與 auto_investigate 狀態
-84aab041 chore: 自動同步 2026-09-26 02:40
+d500897d fix(learn-system): 批改改以 pytest 實跑、環境失敗不計對錯、圍欄全保留
+d9c66789 feat(learn-system): 作答批改（write 題實跑測試）與掌握度更新
+c2f49b3a fix(learn-system): 出題的格式防護、圍欄剝除與子行程環境淨化
+4c750989 feat(learn-system): 出題端點與題目有效性執行驗證
+21335c06 fix(learn-system): 地圖生成任何失敗都收斂為 failed，不再卡在 generating
 ```
 
 ## 給 Hermes 的備註
