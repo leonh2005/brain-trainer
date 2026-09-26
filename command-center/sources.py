@@ -662,6 +662,12 @@ def guru_tracker():
     }, datetime.now().strftime('%Y-%m-%d %H:%M')
 
 
+@_wrap
+def learn_system():
+    d = _proxy('http://localhost:5990/api/domains', ttl=120)
+    return d.get('domains', []), datetime.now().strftime('%Y-%m-%d %H:%M')
+
+
 SIGNALS = {
     'daytrade': daytrade, 'swing': swing, 'intraday': intraday, 'ma': ma,
     'chips': chips, 'news': news, 'market-fear': market_fear,
