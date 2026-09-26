@@ -59,7 +59,7 @@
 <div class="wrap">
 
   <h1>Jev Atlas — 適合你的專案</h1>
-  <div class="sub">索引共 236 個專案（Tools 80 / Other 72 / Research 22 / Browser 18 / Coding Agents 18 / Agents 12 / Routing 8 / Context 6）· 篩選日期 2026-09-26</div>
+  <div class="sub">索引共 236 個專案（Tools 80 / Other 72 / Research 22 / Browser 18 / Coding Agents 18 / Agents 12 / Routing 8 / Context 6）· 篩選日期 2026-09-26 · <b>已更正：fast-jev-compaction 不再是首選</b></div>
 
   <div class="note">
     <strong>先講可信度：</strong>這份索引的 <code>description</code> 欄位有 <strong>207/236 是模板生成</strong>的（<code>"X is a Jev-based &lt;category&gt; project for &lt;tags&gt;"</code>），幾乎沒有資訊量，判斷只能靠名稱、tags 與 GitHub 上的真實描述。我另外抽驗了 7 個 repo 的 GitHub API，<strong>全部真實存在</strong>、星數與建立日相符。生態極新（多數 repo 建立於 2026-09-16～09-20），API 與穩定性都可能變動。
@@ -69,13 +69,14 @@
 
   <ol class="plain">
 
-    <li class="item top">
+    <li class="item">
       <div class="head">
-        <span class="badge hot">最痛點</span>
+        <span class="badge">⚠️ 更正：你已經自己做過，且更好</span>
         <span class="name">fast-jev-compaction</span>
         <span class="stars">6,876 ★ · TypeScript</span>
       </div>
-      <p class="why">Claude Code plugin，用 Jev 取代 compaction 的摘要機制，逐筆評分工具呼叫並丟棄過時的。→ <b>直接打你最大的痛點：token 與 context 成本。</b>你已經被 context 爆量困擾過（曾達 9.6MB），這是唯一直接對症的。</p>
+      <p class="why">Claude Code plugin，用 Jev 取代 compaction 的摘要機制 —— 機制與你自建的 <code>~/CCProject/jev-compaction/</code> 同源。<b>你已經有更好的版本，不建議採用這個。</b></p>
+      <p class="why">你的版本<b>有去識別化層</b>（此套件把原文直接送出）、插點<b>涵蓋整條 ccr 鏈路</b>（不只 Claude Code 的壓縮時機）、且已用真實流量驗證過。詳見下方〈更正說明〉。</p>
       <a href="https://github.com/tamaratran/fast-jev-compaction">github.com/tamaratran/fast-jev-compaction</a>
     </li>
 
@@ -133,9 +134,13 @@
 
   <h2>深入：前三名實際上怎麼運作</h2>
 
-  <div class="item top">
-    <div class="head"><span class="name">fast-jev-compaction — 它不摘要，只刪</span></div>
-    <p class="why">傳統 compaction 是叫 LLM 把舊對話「總結」，但摘要有損：一個檔案路徑、精確錯誤訊息、某個約束條件，可能在後面還需要時就消失了。這個專案的做法是 <b>只刪除、不改寫任何一個字</b>。</p>
+  <div class="item">
+    <div class="head"><span class="name">fast-jev-compaction — 機制解說（但你不該用）</span></div>
+    <div class="note" style="margin:2px 0 14px">
+      <strong>更正說明（2026-09-26）：</strong>本報告原先把它列為第一順位、標為「最痛點」。但查證後發現 <b>你早已自建同機制的 proxy</b>（<code>~/CCProject/jev-compaction/</code>，port 8788），而且更好：<b>有去識別化層</b>（此套件無，原文直接送出）、插點是<b>每個 request 都先剪一遍</b>（此套件只在 compaction 那一刻動作）、涵蓋整條 ccr 鏈路。已於 2026-09-26 正式啟用。<br><br>
+      環境可行性仍實測通過（Claude Code 2.1.283 ≥ 需求 2.1.274、<code>plugin validate</code> 通過、live demo 省 87.1% 字元、258ms），<b>結論是不採用 —— 重複造輪子</b>。
+    </div>
+    <p class="why">以下機制說明仍值得看，可用來<b>對照你自己的實作</b>：傳統 compaction 是叫 LLM 把舊對話「總結」，但摘要有損：一個檔案路徑、精確錯誤訊息、某個約束條件，可能在後面還需要時就消失了。這個專案的做法是 <b>只刪除、不改寫任何一個字</b>。</p>
     <ol class="steps">
       <li>每個 <code>tool_use</code> 與 <code>tool_result</code> 用 <code>tool_use_id</code> 配對；第一則訊息與最新 N 則釘住不動。</li>
       <li>送給 Jev 的是<b>整段對話</b>（工具結果換成短註記如 <code>ok, 4213 chars (omitted)</code>），不摘要任何東西。</li>
@@ -143,7 +148,7 @@
       <li>三種結局：結果分數夠 → 全留；否則呼叫分數夠 → 留呼叫但截斷結果；再否則 → 呼叫與結果一起刪。</li>
       <li>使用者與助理的文字<b>永遠逐字保留、維持順序</b>。狀態塞不進 <code>maxStateTokens</code>（預設 25k）時才分階段壓縮。</li>
     </ol>
-    <p class="why" style="margin-top:12px"><b>要留意：</b>每次請求都<b>重送完整 state</b>（並行送多個請求分攤），成本隨「對話長度 × 請求數」成長。失敗時它是 <b>throw</b> 而非優雅降級，你得自己設 fallback。裝了會<b>取代</b>你原本的 compaction。</p>
+    <p class="why" style="margin-top:12px"><b>值得借鏡的一點：</b>它<b>釘住最新 N 則訊息</b>（預設 6）與第一則。你的 proxy 是掃「舊 tool 輸出」，可以對照檢查有沒有等價的保護。</p>
   </div>
 
   <div class="item top">
@@ -175,7 +180,7 @@
   <div class="note" style="margin-top:24px">
     <strong>共通點：</strong>你的 <code>CLAUDE.md</code> 已經寫下原則「封閉判斷、不需文字解釋 → 交給 Jev」。這三個 repo 是同一套思路的<b>產品化版本</b> —— 把 Jev 當「便宜、約 0.4 秒、帶校準機率」的決策層，墊在昂貴模型前面。你不是在學新東西，是在看別人怎麼把你在做的事包成可安裝的形式。
     <br><br>
-    <strong>建議先後：</strong>先試 <code>hermes-jev-skills</code> 的 SKILL.md（風險最低，純檔案、可 <code>--uninstall</code>），它補上你目前沒有的<b>skill selection 與 model routing</b>。再考慮 <code>fast-jev-compaction</code>（打你最痛的點，但會取代現有 compaction、失敗是 throw、成本隨長度成長，裝前先確認跟既有 hooks 不打架）。
+    <strong>建議先後：</strong>首選仍是 <code>hermes-jev-skills</code> 的 SKILL.md（風險最低，純檔案、可 <code>--uninstall</code>），它補上你目前沒有的<b>skill selection 與 model routing</b>（已於 2026-09-26 裝上 Hermes）。至於 <code>fast-jev-compaction</code>：<b>不用裝，你自己那套已經涵蓋且有去識別化層</b>。
   </div>
 
   <h2>值得掃的整類</h2>
@@ -192,7 +197,7 @@
       <div class="head">
         <span class="name">省 token／上下文壓縮類（約 5–6 個）</span>
       </div>
-      <p class="why">除上面第一名的 fast-jev-compaction 外，同類還有 jev-recall 等。→ 這是你最該整批掃的一類。</p>
+      <p class="why">同類還有 jev-recall 等。→ <b>但這類你已經自己做過了</b>（見上方更正說明），別再重複投入。</p>
     </li>
     <li class="item">
       <div class="head">
