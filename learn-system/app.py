@@ -252,6 +252,51 @@ def create_app(db_path=None):
         finally:
             conn.close()
 
+    @app.post("/api/concepts/<int:concept_id>/explain")
+    def explain(concept_id):
+        conn = db.connect(db_path)
+        try:
+            concept = db.get_concept(conn, concept_id)
+            if not concept:
+                return jsonify(error="找不到概念"), 404
+            if concept["description"]:
+                return jsonify(description=concept["description"])
+            domain = db.get_domain(conn, concept["domain_id"])
+            try:
+                text = tutor.explain_concept(domain["name"], concept["name"],
+                                             concept["section"], bool(domain["verify_sources"]))
+            except tutor.TutorError as e:
+                return jsonify(error=str(e)), 502
+            db.set_concept_description(conn, concept_id, text)
+            return jsonify(description=text)
+        finally:
+            conn.close()
+
+    @app.post("/api/domains/<int:domain_id>/chat")
+    def chat(domain_id):
+        body = request.get_json(force=True)
+        message = (body.get("message") or "").strip()
+        if not message:
+            return jsonify(error="訊息不可為空"), 400
+        conn = db.connect(db_path)
+        try:
+            domain = db.get_domain(conn, domain_id)
+            if not domain:
+                return jsonify(error="找不到領域"), 404
+            concept_name = None
+            if body.get("concept_id"):
+                concept = db.get_concept(conn, body["concept_id"])
+                concept_name = concept["name"] if concept else None
+            try:
+                reply, new_session = tutor.chat(domain["name"], concept_name, message, domain["chat_session_id"])
+            except tutor.TutorError as e:
+                return jsonify(error=str(e)), 502
+            if new_session and new_session != domain["chat_session_id"]:
+                db.set_domain_chat_session(conn, domain_id, new_session)
+            return jsonify(reply=reply)
+        finally:
+            conn.close()
+
     return app
 
 

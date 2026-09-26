@@ -307,3 +307,34 @@ def grade_answer(domain_name, concept_name, question, answer, executable):
         raise TutorError(f"未知的批改結果：{verdict}")
     return {"verdict": verdict, "feedback": data.get("feedback", ""),
             "root_cause": data.get("root_cause")}
+
+
+EXPLAIN_PROMPT = """你是嚴謹的學科導師。學習者正在學「{domain}」，現在點開了概念「{concept}」（分類：{section}）。
+
+請產出一段說明，包含：
+1. 這個概念在解決什麼問題（為什麼存在）
+2. 一個具體、可檢驗的例子
+3. 常見的誤解
+
+直接寫說明文字，不要客套開場。控制在 300 字內。"""
+
+
+def explain_concept(domain_name, concept_name, section, verify_sources):
+    prompt = EXPLAIN_PROMPT.format(domain=domain_name, concept=concept_name, section=section)
+    if verify_sources:
+        prompt += "\n\n請先查證權威來源再作答，若有引用請附上來源網址。"
+    text, _ = _call_agent(prompt, allow_web=verify_sources)
+    if not text.strip():
+        raise TutorError("說明生成失敗（空回應）")
+    return text.strip()
+
+
+CHAT_SYSTEM = """你是學習者「{domain}」領域的私人導師，目前正在練概念「{concept}」。
+用對話幫他釐清疑惑、追問錯因。不要直接給答案，用提問引導他自己想通。
+"""
+
+
+def chat(domain_name, concept_name, message, session_id):
+    prompt = CHAT_SYSTEM.format(domain=domain_name, concept=concept_name or "（未指定）") + "\n\n" + message
+    text, new_session = _call_agent(prompt, session_id=session_id)
+    return text.strip(), new_session
