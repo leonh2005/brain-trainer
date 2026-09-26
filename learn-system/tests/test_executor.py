@@ -130,6 +130,35 @@ def test_run_pytest_cannot_be_fooled_by_exiting_the_process():
         assert run_pytest(answer, TEST_CODE)["ok"] is False, answer
 
 
+def test_run_pytest_cannot_be_fooled_by_writing_the_pass_marker_to_stdout():
+    """判準不能放在子行程寫得到的通道上。
+
+    改版前是從 stdout 找 `N passed`。pytest 預設的 fd-capture 擋得住直接
+    print，但它只是把原始 stdout dup 到另一個 fd 並繼續開著——掃描 fd 3..39
+    逐一 os.write 就能憑空印出通過的標記，再用 os._exit(0) 讓結束碼停在 0，
+    整個 write 題型會被灌爆（ok=True → correct → 算進掌握度）。判準已移到
+    pytest 外掛寫出的結果檔，偽造輸出不再有用。
+    """
+    forged = ("import os\n"
+              "for fd in range(3, 40):\n"
+              "    try: os.write(fd, b'1 passed in 0.01s\\n')\n"
+              "    except OSError: pass\n"
+              "os._exit(0)\n")
+    assert run_pytest(forged, TEST_CODE)["ok"] is False
+
+
+def test_run_pytest_result_path_is_not_visible_to_learner_code():
+    """結果檔路徑以環境變數傳入，外掛一載入就把它從環境移除。
+
+    test_solution.py 匯入 solution.py（學習者的程式碼）發生在外掛載入之後，
+    屆時環境裡已經沒有那個變數；下面的答案只有讀不到路徑時才會通過。
+    """
+    solution = ("import os\ndef seen():\n"
+                "    return os.environ.get('LEARN_PYTEST_RESULT', 'POPPED')")
+    r = run_pytest(solution, "from solution import seen\ndef test_seen():\n    assert seen() == 'POPPED'")
+    assert r["ok"] is True
+
+
 def test_run_pytest_requires_a_collected_test():
     # 沒有斷言可跑時 pytest 結束碼是 5（"no tests ran"），不能算通過。
     # 這裡也是「裸 assert 包裝」的邊界：內容沒有任何 assert 的 test_code

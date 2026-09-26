@@ -21,8 +21,16 @@ import sources
 
 # 卡片連結透過 /svc/<port>/... 走反向代理，讓外網（Cloudflare Tunnel）也連得到
 # 各服務的本機頁面，不必各自對外開洞。僅白名單內的 port 可被代理。
+#
+# 5990（learn-system）刻意不在名單內：它的 POST /api/questions/<id>/answer 會把
+# 請求內容當程式碼執行，而這裡會轉發所有方法（含 POST）。本服務綁 0.0.0.0 且
+# BasicAuthMiddleware 對私有來源 IP 跳過驗證（見該類別說明），一旦可被代理，
+# 內網任何一台機器都能送程式碼進來執行——它是這份名單裡唯一會執行呼叫者程式碼
+# 的服務，其餘都是唯讀資訊卡。該服務只在本機 http://127.0.0.1:5990/ 提供；
+# command-center 的學習系統卡片仍以伺服器端的 sources._proxy 讀它的
+# /api/domains，不受影響（見 sources.py 的 learn_system）。
 PROXY_PORTS = {5070, 5100, 5250, 5300, 5350, 5400, 5460, 5500, 5501,
-               5650, 5750, 5800, 5810, 5850, 5905, 5910, 5960, 5970, 5980, 5990,
+               5650, 5750, 5800, 5810, 5850, 5905, 5910, 5960, 5970, 5980,
                7799, 8188}
 _PROXY_HOP_HEADERS = {
     'connection', 'keep-alive', 'proxy-authenticate', 'proxy-authorization',

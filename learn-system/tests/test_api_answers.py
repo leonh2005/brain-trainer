@@ -101,10 +101,18 @@ def test_write_answer_that_exits_the_process_is_not_correct(ctx, monkeypatch):
     """結束碼不可信：這些答案的行程結束碼都是 0，斷言一次都沒跑。
 
     `sys.exit(0)`／`raise SystemExit(0)` 會被 pytest 判成 INTERNALERROR，
-    但 `os._exit(0)` 直接結束行程、pytest 來不及回報，結束碼就是 0。
+    但 `os._exit(0)` 直接結束行程、pytest 來不及回報，結束碼就是 0。最後一個
+    更進一步偽造 stdout 的通過標記——判準已移到 pytest 外掛寫出的結果檔
+    （見 executor._verdict_ok），故一併在這裡擋住：五個這種答案曾能湊出
+    「已掌握」。
     """
     client, did, cid = ctx
-    for answer in ("import sys\nsys.exit(0)", "import os\nos._exit(0)", "raise SystemExit(0)"):
+    forged = ("import os\n"
+              "for fd in range(3, 40):\n"
+              "    try: os.write(fd, b'1 passed in 0.01s\\n')\n"
+              "    except OSError: pass\n"
+              "os._exit(0)\n")
+    for answer in ("import sys\nsys.exit(0)", "import os\nos._exit(0)", "raise SystemExit(0)", forged):
         qid = make_question(client, cid, monkeypatch, "write",
                             {"starter_code": "", "test_code": TEST_CODE}, CORRECT_ANSWER)
         r = client.post(f"/api/questions/{qid}/answer", json={"answer": answer})

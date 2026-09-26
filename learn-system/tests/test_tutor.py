@@ -1,3 +1,4 @@
+import asyncio
 import json
 
 import pytest
@@ -82,6 +83,22 @@ def test_call_agent_forwards_default_session_id(monkeypatch):
     monkeypatch.setattr(tutor, "_call_agent_async", fake)
     tutor._call_agent("prompt")
     assert seen["session_id"] is None
+
+
+def test_call_agent_times_out_into_tutor_error(monkeypatch):
+    """卡住的 agent 必須以 TutorError 收斂，不能永遠等下去。
+
+    SDK 的 query() 本身沒有逾時；逾時若不以例外收斂，app._generate_map 會停在
+    domains.status='generating'，前端輪詢不到任何結果，也不會有重試鈕。
+    """
+    async def slow(prompt, allow_web=False, session_id=None):
+        await asyncio.sleep(5)
+        return "{}", None
+
+    monkeypatch.setattr(tutor, "_call_agent_async", slow)
+    monkeypatch.setattr(tutor, "AGENT_TIMEOUT", 0.05)
+    with pytest.raises(tutor.TutorError):
+        tutor._call_agent("prompt")
 
 
 def test_options_resume_carries_session_id():
@@ -327,3 +344,16 @@ def test_question_prompt_example_is_not_indented():
     prompt = tutor.QUESTION_PROMPT
     assert "\nfrom solution import add\n" in prompt
     assert "\ndef test_add():\n" in prompt
+
+
+def test_map_prompt_asks_for_python_only_executability():
+    """executable 的語意只能是「這個領域的動手實作就是寫 Python」。
+
+    提示詞若問成「可否由程式碼執行來客觀驗證」，JavaScript 這類領域會拿到
+    executable=true，接著每一題 write 都在 _validate_question 被 422 擋掉
+    （執行器與 QUESTION_PROMPT 都只認 Python/pytest），永遠出不了題。
+    """
+    prompt = tutor.MAP_PROMPT
+    assert "Python" in prompt
+    assert "JavaScript" in prompt
+    assert "是否可以由程式碼執行來客觀驗證" not in prompt
