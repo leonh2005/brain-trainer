@@ -251,3 +251,38 @@ def generate_question(domain_name, concept_name, concept_description, goal_type,
         reference_answer = _strip_fence(reference_answer)
     return {"prompt": data["prompt"], "payload": payload,
             "reference_answer": reference_answer}
+
+
+GRADE_PROMPT = """你是嚴謹的學科導師，要批改學習者的作答。
+
+學習領域：{domain}
+概念：{concept}
+題目：{prompt}
+標準答案：{reference}
+學習者的作答：
+{answer}
+
+請判斷這份作答是「真正理解」還是「死記硬背／似懂非懂」，並回傳 JSON：
+{{"verdict": "correct|partial|wrong",
+  "feedback": "針對這份作答的具體回饋",
+  "root_cause": "若未完全正確，指出根本的錯誤認知；全對則為 null"}}
+
+判斷原則：能推導、能解釋為什麼，才算 correct；只覆述結論或答對但理由錯誤算 partial。"""
+
+
+def grade_answer(domain_name, concept_name, question, answer, executable):
+    prompt = GRADE_PROMPT.format(
+        domain=domain_name, concept=concept_name, prompt=question["prompt"],
+        reference=question.get("reference_answer") or "（無）", answer=answer,
+    )
+    text, _ = _call_agent(prompt)
+    data = _extract_json(text)
+    # 與 generate_question 同理：合法 JSON 也可能是純量或陣列，直接 .get()
+    # 會讓 AttributeError 穿出，端點只攔 TutorError，前端將拿到 500。
+    if not isinstance(data, dict):
+        raise TutorError("Agent 回應不是物件")
+    verdict = data.get("verdict")
+    if verdict not in ("correct", "partial", "wrong"):
+        raise TutorError(f"未知的批改結果：{verdict}")
+    return {"verdict": verdict, "feedback": data.get("feedback", ""),
+            "root_cause": data.get("root_cause")}
