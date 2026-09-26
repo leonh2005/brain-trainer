@@ -187,3 +187,59 @@ def test_generate_read_question_ok_with_fixed_code(monkeypatch):
     monkeypatch.setattr(tutor, "_call_agent", lambda *a, **k: (json.dumps(payload), None))
     q = tutor.generate_question("python", "閉包", "說明", "read", executable=True)
     assert q["payload"]["fixed_code"] == "print(2)"
+
+
+def test_generate_question_rejects_non_object_json(monkeypatch):
+    # 合法 JSON 不等於是物件；純量或陣列直接 .get() 會拋 AttributeError，
+    # 端點只攔 TutorError，前端就會拿到 500。
+    monkeypatch.setattr(tutor, "_call_agent", lambda *a, **k: ("[1, 2, 3]", None))
+    with pytest.raises(tutor.TutorError):
+        tutor.generate_question("python", "閉包", "說明", "exam", executable=True)
+
+
+def test_generate_question_rejects_non_object_payload(monkeypatch):
+    payload = {"prompt": "q", "payload": [1, 2], "reference_answer": "a"}
+    monkeypatch.setattr(tutor, "_call_agent", lambda *a, **k: (json.dumps(payload), None))
+    with pytest.raises(tutor.TutorError):
+        tutor.generate_question("python", "閉包", "說明", "exam", executable=True)
+
+
+def test_generate_question_treats_non_string_code_field_as_missing(monkeypatch):
+    # 非字串的 test_code 若留著，執行驗證會以 TypeError 變成 500
+    payload = {"prompt": "q", "payload": {"test_code": ["assert 1 == 1"]}, "reference_answer": "x"}
+    monkeypatch.setattr(tutor, "_call_agent", lambda *a, **k: (json.dumps(payload), None))
+    with pytest.raises(tutor.TutorError):
+        tutor.generate_question("python", "閉包", "說明", "write", executable=True)
+
+
+def test_generate_question_treats_non_string_reference_answer_as_empty(monkeypatch):
+    payload = {"prompt": "q", "payload": {"starter_code": "x = 1", "test_code": "assert x == 1"},
+               "reference_answer": {"code": "x = 1"}}
+    monkeypatch.setattr(tutor, "_call_agent", lambda *a, **k: (json.dumps(payload), None))
+    q = tutor.generate_question("python", "閉包", "說明", "write", executable=True)
+    assert q["reference_answer"] == ""
+
+
+def test_generate_question_strips_code_fences(monkeypatch):
+    # Agent 習慣把程式碼包在 ``` 裡；留著會讓之後的執行驗證變 SyntaxError
+    payload = {
+        "prompt": "寫一個回傳 1 的函式",
+        "payload": {"starter_code": "", "test_code": "```python\nassert 1 == 1\n```"},
+        "reference_answer": "```python\ndef counter():\n    return 1\n```",
+    }
+    monkeypatch.setattr(tutor, "_call_agent", lambda *a, **k: (json.dumps(payload), None))
+    q = tutor.generate_question("python", "閉包", "說明", "write", executable=True)
+    assert q["payload"]["test_code"] == "assert 1 == 1"
+    assert q["reference_answer"] == "def counter():\n    return 1"
+
+
+def test_generate_question_strips_prose_around_fenced_code(monkeypatch):
+    payload = {
+        "prompt": "找 bug",
+        "payload": {"code_snippet": "以下是程式：\n```python\nraise ValueError('bug')\n```\n請找出問題",
+                    "fixed_code": "print('ok')", "bug_description": "不該拋錯"},
+        "reference_answer": "不該拋錯",
+    }
+    monkeypatch.setattr(tutor, "_call_agent", lambda *a, **k: (json.dumps(payload), None))
+    q = tutor.generate_question("python", "閉包", "說明", "read", executable=True)
+    assert q["payload"]["code_snippet"] == "raise ValueError('bug')"

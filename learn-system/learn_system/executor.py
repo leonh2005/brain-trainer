@@ -1,9 +1,29 @@
+import os
 import subprocess
 import sys
 import tempfile
 from pathlib import Path
 
 DEFAULT_TIMEOUT = 5.0
+
+
+def _child_env(tmp):
+    """子行程的最小環境，只留啟動直譯器與輸出所需者。
+
+    被執行的程式碼來自模型或學習者。繼承整個環境等於把本機的 token 與
+    金鑰一併交出去（實測原本外洩 76 個變數，含
+    CLAUDE_CODE_MESSAGING_TOKEN），而 HOME 指向真實家目錄，`.secrets`
+    等憑證可被程式自行讀取。故 HOME/TMPDIR 改指暫存目錄，其餘不繼承。
+
+    這不是沙箱（無容器、無 seccomp、無資源限制）；第二道防線仍是既有的
+    逾時與暫存目錄。
+    """
+    return {
+        "PATH": os.environ.get("PATH", "/usr/bin:/bin"),
+        "HOME": tmp,
+        "TMPDIR": tmp,
+        "LANG": os.environ.get("LANG", "C.UTF-8"),
+    }
 
 
 def run_python(code, timeout=DEFAULT_TIMEOUT):
@@ -25,6 +45,7 @@ def run_python(code, timeout=DEFAULT_TIMEOUT):
                     timeout=timeout,
                     stdin=subprocess.DEVNULL,
                     cwd=tmp,
+                    env=_child_env(tmp),
                 )
             except subprocess.TimeoutExpired as e:
                 return {

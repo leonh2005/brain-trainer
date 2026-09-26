@@ -1,3 +1,4 @@
+import os
 import subprocess
 
 from learn_system import executor
@@ -82,3 +83,22 @@ def test_assertion_failure_reported():
     r = run_python("assert 1 == 2, 'nope'")
     assert r["ok"] is False
     assert "nope" in r["stderr"]
+
+
+def test_child_does_not_inherit_parent_environment(monkeypatch):
+    # 被執行的程式碼來自模型/學習者，繼承整個環境等於把本機 token 一起交出去
+    monkeypatch.setenv("LEARN_SYSTEM_SECRET_TOKEN", "leak-me")
+    r = run_python("import os; print(os.environ.get('LEARN_SYSTEM_SECRET_TOKEN', 'ABSENT'))")
+    assert "ABSENT" in r["stdout"]
+    assert "leak-me" not in r["stdout"]
+
+
+def test_child_home_is_not_the_real_home():
+    # HOME 若指向真實家目錄，程式碼可自行讀取 ~/.secrets 等憑證
+    r = run_python("import os; print(os.environ.get('HOME'))")
+    assert r["stdout"].strip() != os.path.expanduser("~")
+
+
+def test_child_keeps_path_so_subprocesses_work():
+    r = run_python("import os; print(bool(os.environ.get('PATH')))")
+    assert "True" in r["stdout"]
