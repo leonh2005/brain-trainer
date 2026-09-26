@@ -182,11 +182,12 @@ QUESTION_PROMPT = """你是嚴謹的學科導師，要替學習者出一題來�
 - write：給規格讓學習者寫出程式。payload 需含 {{"starter_code": "...", "test_code": "..."}}，
   test_code 是會以 `from solution import ...` 匯入學習者程式碼的 pytest 測試檔，
   必須寫成測試函式（pytest 只收集測試函式，散在模組層級的 assert 不會被執行）。
-  範例：
-  from solution import add
+  範例（以下每一行都從第 0 欄開始，不要跟著本行的縮排）：
 
-  def test_add():
-      assert add(1, 2) == 3
+from solution import add
+
+def test_add():
+    assert add(1, 2) == 3
 - read：給一段有 bug 的程式讓學習者找出問題並說明。payload 需含
   {{"code_snippet": "有 bug 的版本", "fixed_code": "修正後版本", "bug_description": "標準答案"}}。
   code_snippet 必須真的會出錯或輸出錯誤結果，fixed_code 必須真的能修正它。
