@@ -1,1 +1,36 @@
-<h1>學習系統</h1>
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>學習系統</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<header>
+  <h1>學習系統</h1>
+  <button id="new-domain">＋ 新領域</button>
+</header>
+<main class="cards" id="cards"></main>
+
+<dialog id="new-dialog">
+  <form id="create-form" method="dialog">
+    <label>領域名稱</label>
+    <input type="text" id="name" placeholder="python" required>
+
+    <label>學習目標（可多選）</label>
+    <label><input type="checkbox" name="goal" value="write"> 能自己寫出來</label>
+    <label><input type="checkbox" name="goal" value="read"> 能看懂並改動別人的程式</label>
+    <label><input type="checkbox" name="goal" value="principle"> 懂底層原理</label>
+    <label><input type="checkbox" name="goal" value="exam"> 能通過檢定</label>
+
+    <label><input type="checkbox" id="verify"> 需要查證外部來源</label>
+
+    <div style="margin-top:16px"><button type="submit">建立</button></div>
+  </form>
+</dialog>
+
+<script src="/static/escape.js"></script>
+<script src="/static/index.js"></script>
+</body>
+</html>
