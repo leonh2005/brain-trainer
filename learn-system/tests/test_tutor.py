@@ -243,3 +243,32 @@ def test_generate_question_strips_prose_around_fenced_code(monkeypatch):
     monkeypatch.setattr(tutor, "_call_agent", lambda *a, **k: (json.dumps(payload), None))
     q = tutor.generate_question("python", "閉包", "說明", "read", executable=True)
     assert q["payload"]["code_snippet"] == "raise ValueError('bug')"
+
+
+def test_strip_fence_keeps_every_block(monkeypatch):
+    """兩個圍欄區塊要全部保留。
+
+    只留第一個會靜默丟掉斷言：模型給「匯入」與「測試」兩塊時，留下的
+    `from solution import add` 會在任何定義得出 add 的答案上都通過。
+    """
+    two = ("```python\nfrom solution import add\n```\n\n"
+           "```python\ndef test_add():\n    assert add(1, 2) == 3\n```")
+    stripped = tutor._strip_fence(two)
+    assert "from solution import add" in stripped
+    assert "assert add(1, 2) == 3" in stripped
+
+
+def test_strip_fence_ignores_space_separated_language_tag():
+    # ` ``` python ` 的 python 曾被留在程式碼裡變成 SyntaxError
+    assert tutor._strip_fence("``` python\nassert 1 == 1\n```") == "assert 1 == 1"
+
+
+def test_strip_fence_keeps_indentation_after_blank_line():
+    # 空行後的縮排曾被 \s* 吃掉，讓縮排更深的下一行變成 IndentationError
+    text = "```python\n\n    def f():\n        pass\n```"
+    assert tutor._strip_fence(text) == "def f():\n    pass"
+
+
+def test_strip_fence_handles_single_line_fence_without_tag():
+    # 無標籤的單行圍欄：開頭的 x 曾被當成語言標籤吃掉
+    assert tutor._strip_fence("```x = 1```") == "x = 1"

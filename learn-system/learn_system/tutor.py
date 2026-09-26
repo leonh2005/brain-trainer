@@ -1,6 +1,7 @@
 import asyncio
 import json
 import re
+import textwrap
 from pathlib import Path
 
 VALID_SECTIONS = {"consensus", "dispute", "frontier"}
@@ -190,7 +191,10 @@ QUESTION_PROMPT = """你是嚴謹的學科導師，要替學習者出一題來�
 {{"prompt": "題目敘述", "payload": {{...}}, "reference_answer": "標準答案或參考解法"}}"""
 
 
-FENCE_RE = re.compile(r"```[a-zA-Z0-9_+-]*\s*\n?(.*?)```", re.S)
+# 語言標籤只在自成一行時才算標籤。用 `[^\S\n]`（水平空白）而非 `\s*` 是必要的：
+# `\s*` 會連下一個換行的縮排一起吃光，第一行的相對縮排就沒了。標籤後必須緊接
+# 換行，` ```x = 1``` ` 這種單行無標籤圍欄才不會把開頭的 `x` 當成標籤吃掉。
+FENCE_RE = re.compile(r"```[^\S\n]*(?:[a-zA-Z0-9_+#-]+[^\S\n]*\n)?(.*?)```", re.S)
 CODE_FIELDS = ("starter_code", "test_code", "code_snippet", "fixed_code")
 
 
@@ -198,14 +202,24 @@ def _strip_fence(text):
     """取出 markdown 圍欄內的程式碼，並丟掉圍欄外的解說文字。
 
     Agent 習慣把程式碼包在 ``` 裡（`_extract_json` 得處理同一習慣），但
-    payload 的程式碼欄位之後要直接餵給 `run_python` 執行，圍欄留著就是
-    SyntaxError，會讓好題目被驗證誤判為無效——Task 7 拿 test_code 批改
-    學習者答案時，圍欄沒去掉更會讓每一份答案都被判錯。
+    payload 的程式碼欄位之後要直接餵給 `run_pytest` 執行，圍欄留著就是
+    SyntaxError，會讓好題目被驗證誤判為無效——批改學習者答案時，圍欄沒去掉
+    更會讓每一份答案都被判錯。
+
+    所有圍欄區塊都會保留並串接，不是只取第一個：模型同時給「起始碼」與
+    「測試碼」兩個區塊時，只留第一個會靜默丟掉斷言，於是任何定義得出符號的
+    答案都判為正確——實測 `from solution import add` 被留下、`assert add(1, 2)
+    == 3` 被丟掉後，寫錯的答案照樣拿到 correct。
+
+    每一塊以 dedent 而非 strip 處理：strip 會把第一行的縮排連同前置空行一起
+    吃掉，讓縮排更深的後續行變成 IndentationError。
     """
     if not isinstance(text, str):
         return text
-    fenced = FENCE_RE.search(text)
-    return (fenced.group(1) if fenced else text).strip()
+    blocks = FENCE_RE.findall(text)
+    if not blocks:
+        return text.strip()
+    return "\n\n".join(textwrap.dedent(block).strip("\n") for block in blocks)
 
 
 def generate_question(domain_name, concept_name, concept_description, goal_type, executable):

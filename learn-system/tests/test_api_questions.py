@@ -97,7 +97,8 @@ def test_write_question_accepts_valid_reference_answer(ctx, monkeypatch):
     client, did, cid = ctx
     payload = {
         "prompt": "寫一個回傳 1 的函式",
-        "payload": {"starter_code": "", "test_code": "from solution import counter\nassert counter() == 1"},
+        "payload": {"starter_code": "",
+                    "test_code": "from solution import counter\ndef test_counter():\n    assert counter() == 1"},
         "reference_answer": "def counter():\n    return 1",
     }
     monkeypatch.setattr(tutor, "_call_agent", lambda *a, **k: (json.dumps(payload), None))
@@ -111,7 +112,7 @@ def test_fenced_reference_answer_is_accepted_and_stored_clean(ctx, monkeypatch):
     payload = {
         "prompt": "寫一個回傳 1 的函式",
         "payload": {"starter_code": "",
-                    "test_code": "```python\nfrom solution import counter\nassert counter() == 1\n```"},
+                    "test_code": "```python\nfrom solution import counter\ndef test_counter():\n    assert counter() == 1\n```"},
         "reference_answer": "```python\ndef counter():\n    return 1\n```",
     }
     monkeypatch.setattr(tutor, "_call_agent", lambda *a, **k: (json.dumps(payload), None))
