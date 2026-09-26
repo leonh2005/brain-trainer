@@ -1,3 +1,5 @@
+import json
+
 import app as app_module
 import pytest
 
@@ -81,6 +83,44 @@ def test_unknown_goal_type_is_rejected(ctx, monkeypatch):
     client, did, cid = ctx
     r = client.post(f"/api/concepts/{cid}/questions", json={"goal_type": "亂寫"})
     assert r.status_code == 400
+
+
+def test_non_object_json_returns_502(ctx, monkeypatch):
+    client, did, cid = ctx
+    # 合法 JSON 但不是物件：上游壞掉 → 502，絕不能讓 AttributeError 變成 500
+    monkeypatch.setattr(tutor, "_call_agent", lambda *a, **k: ("[1, 2, 3]", None))
+    r = client.post(f"/api/concepts/{cid}/questions", json={"goal_type": "exam"})
+    assert r.status_code == 502
+
+
+def test_write_question_accepts_valid_reference_answer(ctx, monkeypatch):
+    client, did, cid = ctx
+    payload = {
+        "prompt": "寫一個回傳 1 的函式",
+        "payload": {"starter_code": "", "test_code": "from solution import counter\nassert counter() == 1"},
+        "reference_answer": "def counter():\n    return 1",
+    }
+    monkeypatch.setattr(tutor, "_call_agent", lambda *a, **k: (json.dumps(payload), None))
+    r = client.post(f"/api/concepts/{cid}/questions", json={"goal_type": "write"})
+    assert r.status_code == 200
+    assert r.get_json()["question"]["prompt"] == "寫一個回傳 1 的函式"
+
+
+def test_fenced_reference_answer_is_accepted_and_stored_clean(ctx, monkeypatch):
+    client, did, cid = ctx
+    payload = {
+        "prompt": "寫一個回傳 1 的函式",
+        "payload": {"starter_code": "",
+                    "test_code": "```python\nfrom solution import counter\nassert counter() == 1\n```"},
+        "reference_answer": "```python\ndef counter():\n    return 1\n```",
+    }
+    monkeypatch.setattr(tutor, "_call_agent", lambda *a, **k: (json.dumps(payload), None))
+    r = client.post(f"/api/concepts/{cid}/questions", json={"goal_type": "write"})
+    assert r.status_code == 200
+    # Task 7 拿 payload["test_code"] 批改學習者答案，圍欄必須在入庫前清掉
+    saved = r.get_json()["question"]
+    assert "```" not in saved["payload"]["test_code"]
+    assert saved["payload"]["test_code"].startswith("from solution")
 
 
 def test_question_is_persisted(ctx, monkeypatch):

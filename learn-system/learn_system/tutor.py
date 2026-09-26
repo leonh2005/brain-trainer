@@ -107,6 +107,13 @@ def _call_agent(prompt, allow_web=False, session_id=None):
 
 
 def _extract_json(text):
+    # 先試原文。payload 裡的程式碼欄位常被 ``` 包住，若直接剝圍欄就會從
+    # 程式碼那個 ``` 開始截，截出半個 JSON；原文本身合法時不該去動它。
+    try:
+        return json.loads(text.strip())
+    except json.JSONDecodeError:
+        pass
+
     fenced = re.search(r"```(?:json)?\s*(.*?)```", text, re.S)
     candidate = fenced.group(1) if fenced else text
     try:
@@ -183,6 +190,24 @@ QUESTION_PROMPT = """你是嚴謹的學科導師，要替學習者出一題來�
 {{"prompt": "題目敘述", "payload": {{...}}, "reference_answer": "標準答案或參考解法"}}"""
 
 
+FENCE_RE = re.compile(r"```[a-zA-Z0-9_+-]*\s*\n?(.*?)```", re.S)
+CODE_FIELDS = ("starter_code", "test_code", "code_snippet", "fixed_code")
+
+
+def _strip_fence(text):
+    """取出 markdown 圍欄內的程式碼，並丟掉圍欄外的解說文字。
+
+    Agent 習慣把程式碼包在 ``` 裡（`_extract_json` 得處理同一習慣），但
+    payload 的程式碼欄位之後要直接餵給 `run_python` 執行，圍欄留著就是
+    SyntaxError，會讓好題目被驗證誤判為無效——Task 7 拿 test_code 批改
+    學習者答案時，圍欄沒去掉更會讓每一份答案都被判錯。
+    """
+    if not isinstance(text, str):
+        return text
+    fenced = FENCE_RE.search(text)
+    return (fenced.group(1) if fenced else text).strip()
+
+
 def generate_question(domain_name, concept_name, concept_description, goal_type, executable):
     prompt = QUESTION_PROMPT.format(
         domain=domain_name, concept=concept_name,
@@ -190,8 +215,24 @@ def generate_question(domain_name, concept_name, concept_description, goal_type,
     )
     text, _ = _call_agent(prompt)
     data = _extract_json(text)
+    # _extract_json 只保證是合法 JSON，純量或陣列也能過；直接 .get() 會讓
+    # AttributeError 穿出，端點只攔 TutorError，前端將拿到 500。
+    if not isinstance(data, dict):
+        raise TutorError("Agent 回應不是物件")
 
-    payload = data.get("payload") or {}
+    raw_payload = data.get("payload") or {}
+    if not isinstance(raw_payload, dict):
+        raise TutorError("題目 payload 不是物件")
+    payload = {}
+    for key, value in raw_payload.items():
+        if key in CODE_FIELDS:
+            # 程式碼欄位非字串（模型有時包成物件）一律視同沒給：留著會在
+            # 執行驗證時以 TypeError/AttributeError 變成 500
+            if not isinstance(value, str):
+                continue
+            value = _strip_fence(value)
+        payload[key] = value
+
     if not data.get("prompt"):
         raise TutorError("題目缺少敘述")
     if goal_type == "write" and executable and not payload.get("test_code"):
@@ -202,5 +243,11 @@ def generate_question(domain_name, concept_name, concept_description, goal_type,
     if goal_type == "principle" and executable and not payload.get("code_snippet"):
         raise TutorError("principle 題缺少 code_snippet")
 
+    reference_answer = data.get("reference_answer") or ""
+    if not isinstance(reference_answer, str):
+        reference_answer = ""
+    if goal_type == "write":
+        # write 題的 reference_answer 會被當成程式碼執行（見 app._validate_question）
+        reference_answer = _strip_fence(reference_answer)
     return {"prompt": data["prompt"], "payload": payload,
-            "reference_answer": data.get("reference_answer", "")}
+            "reference_answer": reference_answer}
