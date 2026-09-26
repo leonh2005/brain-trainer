@@ -1,22 +1,20 @@
-# Claude Handoff 20260926_2348
-> 自動生成於 2026-09-26 23:48
+# Claude Handoff 20260927_0029
+> 自動生成於 2026-09-27 00:29
 
 ## 未提交的檔案異動
 ```
 M gemma_work/latest.md
- M learn-system/.gitignore
  M scripts/auto_investigate_state.json
-?? learn-system/README.md
-?? learn-system/run.sh
+ M shopee-boost/data/last_success.json
 ```
 
 ## 近期 Commits
 ```
-6539bd52 docs: 更正 Jev Atlas 報告 — fast-jev-compaction 不再是首選（已有自建且更好的版本）
-baca1711 fix(learn-system): 領域頁出題／批改加上 in-flight 守衛，並修正回饋來源
-b3a8bde5 feat(learn-system): 領域頁 — 智識地圖、工作區、對話抽屜、進度
-d92c3594 fix(learn-system): 首頁輪詢加上 in-flight 守衛與錯誤處理
-e178ba44 feat(learn-system): 首頁領域清單與新增領域對話框
+57243efc docs(learn-system): 更正 Fix 1 的殘留偽造說明，不再宣稱結果檔無法偽造
+98c585c9 fix(learn-system): 批改判準搬離 stdout、Agent 牆鐘逾時、executable 限定 Python；command-center 不再轉發 5990
+643a3681 fix(learn-system): run.sh 還原 ANTHROPIC_MODEL，對齊服務與互動 session 的模型
+69ba119a fix(learn-system): _extract_json 接受字面換行、逐塊嘗試並回掃原文
+fd64818d feat(learn-system): LaunchAgent 常駐、README 與 command-center 卡片
 ```
 
 ## 給 Hermes 的備註
