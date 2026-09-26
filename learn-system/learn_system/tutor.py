@@ -7,6 +7,7 @@ VALID_SECTIONS = {"consensus", "dispute", "frontier"}
 AGENT_TIMEOUT = 180.0
 
 PROJECT_DIR = Path(__file__).resolve().parent.parent
+USER_SETTINGS_PATH = Path.home() / ".claude" / "settings.json"
 READ_TOOLS = ["Read", "Grep"]
 WEB_TOOLS = ["WebSearch", "WebFetch"]
 BLOCKED_TOOLS = ["Bash", "Write", "Edit", "NotebookEdit"]
@@ -16,23 +17,46 @@ class TutorError(Exception):
     """Agent 呼叫或回應解析失敗。"""
 
 
+def _auth_settings():
+    """只帶回身分驗證設定，供 `--restricted` 使用。
+
+    `--restricted` 會忽略 user/project/local 設定檔（專案 settings.local.json
+    裡 38 條 allow 規則，含 `Read(//Users/steven/youtube-monitor/**)`，就是靠
+    這個關掉的），但連 `~/.claude/settings.json` 的 apiKeyHelper 一起停用會導致
+    "Not logged in"。`--settings` 在 restricted 模式下仍會生效，故以它單獨注入。
+    """
+    try:
+        data = json.loads(USER_SETTINGS_PATH.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return None
+    helper = data.get("apiKeyHelper")
+    return json.dumps({"apiKeyHelper": helper}) if helper else None
+
+
 def _build_options(allow_web=False, session_id=None):
-    """建立本模組唯一的能力邊界。
+    """建立本模組唯一的能力邊界。每一條都必須真的會綁，任一單獨用都名存實亡：
 
-    幾個都必須同時成立才擋得住，任一單獨用都是名存實亡：
-
-    - `allowed_tools` 只是「免詢問核准清單」不是限制；`tools` 才是限定可用
-      基礎工具集的地方。
-    - `bypassPermissions` 會在諮詢任何 callback 前放行所有工具，故改用
-      `dontAsk`（未預先核准者一律拒絕），核准清單才成為真正的白名單。
+    - `tools` 才是限定可用工具集的地方；`allowed_tools` 只是「免詢問核准清單」，
+      本身不限制任何東西。
+    - `permission_mode="dontAsk"` 讓核准清單成為真正的白名單；`bypassPermissions`
+      會在諮詢任何 callback 前放行一切。
+    - `disallowed_tools` 為硬性封鎖下限，不依賴上述兩者被正確理解。
     - `strict_mcp_config=True` 擋掉使用者/專案/外掛設定帶進來的 MCP 伺服器
-      （否則全機的 playwright／context7 等工具會整批注入，等同網路與 RCE）。
-    - 讀取與搜尋以 `Read(//<專案>/**)`、`Grep(//<專案>/**)` 規則限定在專案內，
-      避免注入的 prompt 讀到 `~/.ssh`、`.secrets` 等專案外檔案。
+      （否則本機的 playwright／context7 等 84 項工具會整批注入，等同網路與 RCE）。
+    - `cwd=PROJECT_DIR` + `--restricted` 把檔案工具限制在工作目錄內。**cwd 必須
+      明設**：不設時子行程沿用啟動時的目錄，邊界會隨「從哪裡啟動」飄移。
+    - `--restricted` 同時忽略 user/project/local 設定檔——這是必要的，因為
+      allow 規則與 `--allowedTools` 是**相加**的，專案 settings.local.json 的
+      allow 能逕行放行專案外的讀取。
+    - `--settings` 只帶 apiKeyHelper（見 `_auth_settings`）。
 
-    `allow_web=False` 時網路工具既不在 tools 也被列入 disallowed，完全不可達。
-    `setting_sources` 不可設為 `[]`（SDK 隔離模式）——那會連 apiKeyHelper
-    也一併停用而使身分驗證失敗。
+    注意（實測）：把 `Read(//<專案>/**)` 這類路徑限縮規則放進 `allowed_tools`
+    是**無效的**——真正的讀取邊界來自工作目錄而非該規則，故不採用。
+    `setting_sources=[]`（SDK 隔離模式）與 `--restricted` 一樣會停用
+    apiKeyHelper，差別是前者沒有補救途徑，直接 "Not logged in"。
+
+    `allow_web=False` 時網路工具既不在 tools、也被列入 disallowed；`--restricted`
+    同樣會移除 WebFetch，除非 tools 指明——兩者一致。
     """
     from claude_agent_sdk import ClaudeAgentOptions
 
@@ -40,21 +64,19 @@ def _build_options(allow_web=False, session_id=None):
     if allow_web:
         tools += WEB_TOOLS
 
-    scope = f"//{PROJECT_DIR}/**"
-    allowed = [f"Read({scope})", f"Grep({scope})"]
-    if allow_web:
-        allowed += WEB_TOOLS
-
     blocked = list(BLOCKED_TOOLS)
     if not allow_web:
         blocked += WEB_TOOLS
 
     return ClaudeAgentOptions(
         tools=tools,
-        allowed_tools=allowed,
+        allowed_tools=tools,
         disallowed_tools=blocked,
         permission_mode="dontAsk",
         strict_mcp_config=True,
+        cwd=str(PROJECT_DIR),
+        settings=_auth_settings(),
+        extra_args={"restricted": None},
         resume=session_id,
     )
 

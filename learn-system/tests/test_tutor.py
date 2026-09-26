@@ -95,8 +95,8 @@ def test_options_disable_web_when_allow_web_false():
     assert "WebFetch" not in opts.tools
     assert "WebSearch" in opts.disallowed_tools
     assert "WebFetch" in opts.disallowed_tools
-    assert not any("WebSearch" in rule for rule in opts.allowed_tools)
-    assert not any("WebFetch" in rule for rule in opts.allowed_tools)
+    assert "WebSearch" not in opts.allowed_tools
+    assert "WebFetch" not in opts.allowed_tools
 
 
 def test_options_enable_web_when_allow_web_true():
@@ -126,12 +126,35 @@ def test_options_isolate_mcp_servers():
     assert tutor._build_options(allow_web=True).strict_mcp_config is True
 
 
-def test_options_scope_reads_and_greps_to_the_project():
-    scope = f"//{tutor.PROJECT_DIR}/**"
+def test_options_pin_the_working_directory():
+    # 讀取邊界來自工作目錄；未明設就會隨啟動目錄飄移
     for allow_web in (False, True):
-        allowed = tutor._build_options(allow_web=allow_web).allowed_tools
-        assert f"Read({scope})" in allowed
-        assert f"Grep({scope})" in allowed
-        # 不可有無範圍的整支工具規則，否則等於全機可讀
-        assert "Read" not in allowed
-        assert "Grep" not in allowed
+        assert tutor._build_options(allow_web=allow_web).cwd == str(tutor.PROJECT_DIR)
+
+
+def test_options_enable_restricted_mode():
+    # --restricted 才讓工作目錄成為硬邊界，並忽略 user/project/local 設定
+    # （後者會以相加的 allow 規則放行專案外讀取）
+    for allow_web in (False, True):
+        assert tutor._build_options(allow_web=allow_web).extra_args == {"restricted": None}
+
+
+def test_options_carry_only_auth_settings(monkeypatch, tmp_path):
+    settings_file = tmp_path / "settings.json"
+    settings_file.write_text('{"apiKeyHelper": "/bin/helper", "model": "x"}', encoding="utf-8")
+    monkeypatch.setattr(tutor, "USER_SETTINGS_PATH", settings_file)
+    settings = tutor._build_options().settings
+    assert json.loads(settings) == {"apiKeyHelper": "/bin/helper"}
+
+
+def test_auth_settings_is_none_when_helper_absent(monkeypatch, tmp_path):
+    settings_file = tmp_path / "settings.json"
+    settings_file.write_text('{"model": "x"}', encoding="utf-8")
+    monkeypatch.setattr(tutor, "USER_SETTINGS_PATH", settings_file)
+    assert tutor._auth_settings() is None
+    assert tutor._build_options().settings is None
+
+
+def test_auth_settings_survives_missing_file(monkeypatch, tmp_path):
+    monkeypatch.setattr(tutor, "USER_SETTINGS_PATH", tmp_path / "nope.json")
+    assert tutor._auth_settings() is None
