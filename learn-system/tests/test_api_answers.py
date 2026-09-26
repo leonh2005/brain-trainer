@@ -63,6 +63,24 @@ def test_wrong_write_answer_feedback_shows_the_failure(ctx, monkeypatch):
     assert "test_add" in attempt["feedback"]
 
 
+def test_pytest_stderr_noise_does_not_hide_the_report(ctx, monkeypatch):
+    """stderr 有內容時仍要顯示 stdout 的報告，不能被 stderr 蓋掉。
+
+    pytest 預設連 fd 一起捕捉，所以學習者自己 print(..., file=sys.stderr) 不會
+    讓 stderr 有內容（實測 5 種答錯形狀）。唯一會有的情況是學習者的程式碼觸發
+    SystemExit：stderr 只有一行 "mainloop: caught unexpected SystemExit!"，
+    真正的報告（指到學習者那一行、以及「沒有測試跑過」）在 stdout。若讓 stderr
+    優先，學習者就只看到那一行雜訊。
+    """
+    client, did, cid = ctx
+    qid = make_question(client, cid, monkeypatch, "write",
+                        {"starter_code": "", "test_code": TEST_CODE}, CORRECT_ANSWER)
+    attempt = client.post(f"/api/questions/{qid}/answer",
+                          json={"answer": "import sys\nsys.exit(0)"}).get_json()["attempt"]
+    assert attempt["verdict"] == "wrong"
+    assert "no tests ran" in attempt["feedback"]
+
+
 def test_bare_assert_test_code_grades_both_ways(ctx, monkeypatch):
     """模組層級的裸 assert 是提示詞的自然讀法，也是本任務 brief 的寫法。
 

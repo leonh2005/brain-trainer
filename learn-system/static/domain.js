@@ -126,7 +126,13 @@ document.getElementById('retry-hint').onclick = () => location.reload();
 
 document.getElementById('ask-question').onclick = async () => {
   const status = document.getElementById('answer-status');
+  const button = document.getElementById('ask-question');
   const conceptId = state.current.id;
+  // 出題與批改都要跑 Agent（數秒到十幾秒），按鈕不關掉時第二次點擊會再送一個
+  // POST。exam／read／principle 題的後果不只白花錢：兩次批改落兩筆 attempt，
+  // 而掌握度只看最近 5 筆、錯題本也會重複兩列。disabled 期間瀏覽器不派送 click，
+  // finally 負責放回來（成功、失敗、提早 return 三條路徑都會經過）。
+  button.disabled = true;
   status.textContent = '出題中…';
   try {
     const { question } = await api(`/api/concepts/${conceptId}/questions`, {
@@ -148,12 +154,16 @@ document.getElementById('ask-question').onclick = async () => {
   } catch (e) {
     // 422（題目沒過執行驗證）、502（Agent 掛掉）等都在這裡以訊息呈現
     status.textContent = `出題失敗：${e.message}`;
+  } finally {
+    button.disabled = false;
   }
 };
 
 document.getElementById('submit-answer').onclick = async () => {
   const status = document.getElementById('answer-status');
+  const button = document.getElementById('submit-answer');
   const question = state.question;
+  button.disabled = true;
   status.textContent = '批改中…';
   let graded;
   try {
@@ -167,6 +177,8 @@ document.getElementById('submit-answer').onclick = async () => {
     // 這三種都不算答錯、不落 attempt，直接顯示原文才不會誤導。
     if (state.question === question) status.textContent = `批改失敗：${e.message}`;
     return;
+  } finally {
+    button.disabled = false;
   }
   if (state.question !== question) return;  // 批改期間已換概念，結果不屬於現在的工作區
 
