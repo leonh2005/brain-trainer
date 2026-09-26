@@ -274,6 +274,49 @@ def test_strip_fence_handles_single_line_fence_without_tag():
     assert tutor._strip_fence("```x = 1```") == "x = 1"
 
 
+def test_extract_json_accepts_literal_newline_in_string():
+    """字串值裡的字面換行必須能解析。
+
+    `json.loads` 預設 strict=True 會以 "Invalid control character" 拒絕，但模型
+    輸出多行 test_code 時就是這樣寫的——write 題因此整批 502，map/explain
+    因為沒有程式碼欄位所以踩不到。
+    """
+    text = '{"test_code":"assert x\n\nassert y"}'
+    assert tutor._extract_json(text) == {"test_code": "assert x\n\nassert y"}
+
+
+def test_extract_json_accepts_literal_newline_inside_fence():
+    text = '```json\n{"test_code":"assert x\n\nassert y"}\n```'
+    assert tutor._extract_json(text)["test_code"] == "assert x\n\nassert y"
+
+
+def test_generate_write_question_with_multiline_test_code(monkeypatch):
+    """真實失敗情境：模型直接吐多行 test_code（字面換行，非跳脫）。"""
+    raw = ('```json\n{"prompt":"寫一個計數器","payload":{'
+           '"starter_code":"def counter():\n    raise NotImplementedError",'
+           '"test_code":"from solution import counter\n\n\ndef test_it():\n    assert counter()() == 1"},'
+           '"reference_answer":"def counter():\n    return lambda: 1"}\n```')
+    monkeypatch.setattr(tutor, "_call_agent", lambda *a, **k: (raw, None))
+    q = tutor.generate_question("python", "閉包", "說明", "write", executable=True)
+    assert q["prompt"] == "寫一個計數器"
+    assert "assert counter()() == 1" in q["payload"]["test_code"]
+
+
+def test_extract_json_handles_fence_inside_a_string_value():
+    """字串值自己帶 ``` 時，非貪婪的圍欄 regex 會先配對到那個假圍欄而截斷。"""
+    text = '```json\n{"code_snippet":"print(1) ```x``` ok"}\n```'
+    assert tutor._extract_json(text) == {"code_snippet": "print(1) ```x``` ok"}
+
+
+def test_extract_json_falls_back_to_the_original_text():
+    """可解析的 JSON 在第一個圍欄之外時，仍要回頭掃原文。
+
+    只在圍欄取出的內容裡找大括號，會讓「原文其實可解析」的情況整個漏掉。
+    """
+    text = "前言 ```code``` {\"a\": 1}"
+    assert tutor._extract_json(text) == {"a": 1}
+
+
 def test_question_prompt_example_is_not_indented():
     """提示詞裡的範例必須從第 0 欄開始。
 

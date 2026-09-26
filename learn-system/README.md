@@ -15,7 +15,8 @@
 設定檔：本目錄的 `com.steven.learn-system.plist`（安裝時複製到 `~/Library/LaunchAgents/`）。
 
 ```bash
-cp com.steven.learn-system.plist ~/Library/LaunchAgents/                       # 安裝
+mkdir -p logs                                                  # plist 的 log 路徑在此目錄下
+cp com.steven.learn-system.plist ~/Library/LaunchAgents/       # 安裝
 launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.steven.learn-system.plist
 launchctl kickstart -k gui/$(id -u)/com.steven.learn-system   # 重啟
 curl http://127.0.0.1:5990/api/health                          # 健康檢查

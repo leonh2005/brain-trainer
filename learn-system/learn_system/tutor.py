@@ -1,8 +1,11 @@
 import asyncio
 import json
+import logging
 import re
 import textwrap
 from pathlib import Path
+
+logger = logging.getLogger(__name__)
 
 VALID_SECTIONS = {"consensus", "dispute", "frontier"}
 AGENT_TIMEOUT = 180.0
@@ -107,27 +110,43 @@ def _call_agent(prompt, allow_web=False, session_id=None):
         raise TutorError(f"Agent 呼叫失敗：{e}") from e
 
 
-def _extract_json(text):
-    # 先試原文。payload 裡的程式碼欄位常被 ``` 包住，若直接剝圍欄就會從
-    # 程式碼那個 ``` 開始截，截出半個 JSON；原文本身合法時不該去動它。
-    try:
-        return json.loads(text.strip())
-    except json.JSONDecodeError:
-        pass
+JSON_FENCE_RE = re.compile(r"```(?:json)?\s*(.*?)```", re.S)
 
-    fenced = re.search(r"```(?:json)?\s*(.*?)```", text, re.S)
-    candidate = fenced.group(1) if fenced else text
-    try:
-        return json.loads(candidate.strip())
-    except json.JSONDecodeError:
-        # 嘗試抓出第一個完整物件
+
+def _extract_json(text):
+    """從模型回應取出 JSON。
+
+    兩個實測會讓 write 出題整批失敗的坑（map/explain 沒有程式碼欄位，踩不到）：
+
+    1. `json.loads` 預設 strict=True 不接受字串值裡的**字面換行**，但模型輸出
+       多行 test_code/starter_code 時正是這樣寫。strict=False 接受。
+    2. 取圍欄的 regex 是非貪婪的，字串值自己帶了 ``` 就會先配對到那個假圍欄
+       而截斷；故逐塊嘗試，且最後一定要回頭掃**原文**——只在圍欄內容裡找大括
+       號，會讓「原文其實可解析」的情況整個漏掉。
+
+    先試原文、再試各圍欄：payload 的程式碼欄位常被 ``` 包住，直接剝圍欄會從
+    程式碼那個 ``` 開始截，截出半個 JSON；原文本身合法時不該去動它。
+    """
+    candidates = [text.strip(), *JSON_FENCE_RE.findall(text)]
+    for candidate in candidates:
+        try:
+            return json.loads(candidate.strip(), strict=False)
+        except json.JSONDecodeError:
+            pass
+
+    for candidate in candidates:
+        # 退一步：抓出最外層大括號
         start = candidate.find("{")
         end = candidate.rfind("}")
         if start != -1 and end > start:
             try:
-                return json.loads(candidate[start:end + 1])
+                return json.loads(candidate[start:end + 1], strict=False)
             except json.JSONDecodeError:
                 pass
+
+    # 解析失敗時留下原始回應，否則下一次再發生仍然無從診斷（只會看到一句
+    # 「不是合法 JSON」）。截斷避免把整包程式碼倒進 log。
+    logger.warning("Agent 回應不是合法 JSON，原始回應前 500 字：%s", text[:500])
     raise TutorError("Agent 回應不是合法 JSON")
 
 
