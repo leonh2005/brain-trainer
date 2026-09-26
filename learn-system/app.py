@@ -4,7 +4,7 @@ import threading
 from flask import Flask, jsonify, render_template, request
 
 from learn_system import db, mastery, tutor
-from learn_system.executor import run_python
+from learn_system.executor import run_pytest, run_python
 
 logger = logging.getLogger(__name__)
 
@@ -68,10 +68,13 @@ def _validate_question(q, goal_type):
     payload = q["payload"]
     if goal_type == "write":
         code = q.get("reference_answer") or payload.get("starter_code") or ""
-        if not code.strip():
+        test_code = payload.get("test_code", "")
+        if not code.strip() or not test_code.strip():
             return False
-        combined = code + "\n\n" + payload.get("test_code", "")
-        return run_python(combined)["ok"]
+        # 參考解必須真的讓測試通過。用 run_pytest 而非 run_python：test_code
+        # 當純腳本跑時 `def test_x(): ...` 從不被呼叫，任何參考解都會「通過」，
+        # 這種永遠不會失敗的測試等於沒有測試。
+        return run_pytest(code, test_code)["ok"]
 
     if goal_type == "read":
         original = run_python(payload["code_snippet"])
@@ -216,14 +219,21 @@ def create_app(db_path=None):
             executable = bool(domain["executable"])
             goal_type = question["goal_type"]
 
-            # write 題有客觀判準（測試跑不跑得過），直接執行答案加測試，
+            # write 題有客觀判準（測試跑不跑得過），直接執行答案對測試，
             # 不經過模型；其餘題型才交由 Agent 批改。
             if goal_type == "write" and executable:
-                result = run_python(answer + "\n\n" + question["payload"].get("test_code", ""))
-                # 逾時是「沒跑完」而非「寫錯」，判成 wrong 會污染掌握度，
-                # 故以 408 回報且不留下 attempt。
+                test_code = question["payload"].get("test_code", "")
+                # 題目可能是在「不可執行」時生成（驗證被跳過），之後才用
+                # override_executable 翻成可執行；這種題目沒有任何判準。
+                if not test_code.strip():
+                    return jsonify(error="題目無效：缺少 test_code，請重新出題"), 422
+                result = run_pytest(answer, test_code)
+                # 逾時與執行環境失敗都是「沒跑完」而非「寫錯」，判成 wrong 會
+                # 污染掌握度，故回報錯誤且不留下 attempt。
                 if result["timed_out"]:
                     return jsonify(error="執行逾時（超過 5 秒），不計入對錯，請修改後重試"), 408
+                if result["env_error"]:
+                    return jsonify(error="執行環境錯誤，不計入對錯，請稍後重試"), 503
                 verdict = "correct" if result["ok"] else "wrong"
                 feedback = "測試通過" if result["ok"] else f"測試失敗：\n{result['stderr'][-800:]}"
                 root_cause = None if result["ok"] else "程式未通過測試"

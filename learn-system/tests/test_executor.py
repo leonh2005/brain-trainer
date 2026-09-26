@@ -2,7 +2,11 @@ import os
 import subprocess
 
 from learn_system import executor
-from learn_system.executor import run_python
+from learn_system.executor import run_pytest, run_python
+
+TEST_CODE = "from solution import add\ndef test_add():\n    assert add(1, 2) == 3"
+CORRECT = "def add(a, b):\n    return a + b"
+WRONG = "def add(a, b):\n    return a - b"
 
 
 def test_successful_run():
@@ -60,7 +64,7 @@ def test_stdin_is_devnull_for_the_child(monkeypatch):
 def test_non_utf8_output_does_not_raise():
     # 子行程輸出非 UTF-8 位元組時，不能讓 UnicodeDecodeError 穿出。
     r = run_python("import sys; sys.stdout.buffer.write(bytes([255, 254]))")
-    assert set(r) == {"ok", "stdout", "stderr", "timed_out"}
+    assert set(r) == {"ok", "stdout", "stderr", "timed_out", "env_error"}
     assert isinstance(r["stdout"], str)
     # 子行程正常結束（returncode 0），依規格 ok 應為 True。
     assert r["ok"] is True
@@ -76,6 +80,8 @@ def test_infrastructure_error_returns_dict(monkeypatch):
     r = run_python("print('hello')")
     assert r["ok"] is False
     assert r["timed_out"] is False
+    # 呼叫端靠這個旗標把「環境出錯」與「學習者寫錯」分開，兩者都不計入對錯
+    assert r["env_error"] is True
     assert "執行環境錯誤" in r["stderr"]
 
 
@@ -102,3 +108,46 @@ def test_child_home_is_not_the_real_home():
 def test_child_keeps_path_so_subprocesses_work():
     r = run_python("import os; print(bool(os.environ.get('PATH')))")
     assert "True" in r["stdout"]
+
+
+def test_run_pytest_grades_by_test_outcome():
+    assert run_pytest(CORRECT, TEST_CODE)["ok"] is True
+    assert run_pytest(WRONG, TEST_CODE)["ok"] is False
+
+
+def test_run_pytest_cannot_be_fooled_by_exiting_the_process():
+    """結束碼不足以判定成敗：這些答案的行程結束碼都是 0。
+
+    `sys.exit(0)` 其實會被 pytest 判成 INTERNALERROR（結束碼 3），但
+    `os._exit(0)` 直接結束行程、pytest 來不及回報，結束碼就是 0；
+    在 atexit 註冊 os._exit(0) 更能把「1 failed」洗成 0。故 ok 必須另外
+    確認輸出裡真的有通過的測試。
+    """
+    for answer in ("import sys\nsys.exit(0)",
+                   "import os\nos._exit(0)",
+                   "raise SystemExit(0)",
+                   "import atexit, os\natexit.register(lambda: os._exit(0))\n" + WRONG):
+        assert run_pytest(answer, TEST_CODE)["ok"] is False, answer
+
+
+def test_run_pytest_requires_a_collected_test():
+    # 沒有斷言可跑時 pytest 結束碼是 5（"no tests ran"），不能算通過
+    assert run_pytest(CORRECT, "from solution import add\nx = 1")["ok"] is False
+    assert run_pytest(CORRECT, "")["ok"] is False
+    # 被跳過的測試什麼都沒驗證，同樣不算通過
+    assert run_pytest(CORRECT, "import pytest\ndef test_x():\n    pytest.skip('nope')")["ok"] is False
+
+
+def test_run_pytest_times_out():
+    r = run_pytest("while True: pass", TEST_CODE, timeout=0.5)
+    assert r["timed_out"] is True
+    assert r["ok"] is False
+
+
+def test_run_pytest_child_does_not_inherit_parent_environment(monkeypatch):
+    # run_pytest 必須沿用同一套環境淨化，否則學習者程式碼照樣讀得到金鑰
+    monkeypatch.setenv("LEARN_SYSTEM_SECRET_TOKEN", "leak-me")
+    solution = ("import os\ndef leak():\n"
+                "    return os.environ.get('LEARN_SYSTEM_SECRET_TOKEN', 'ABSENT')")
+    r = run_pytest(solution, "from solution import leak\ndef test_leak():\n    assert leak() == 'ABSENT'")
+    assert r["ok"] is True
