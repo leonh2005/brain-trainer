@@ -131,11 +131,41 @@ def test_run_pytest_cannot_be_fooled_by_exiting_the_process():
 
 
 def test_run_pytest_requires_a_collected_test():
-    # 沒有斷言可跑時 pytest 結束碼是 5（"no tests ran"），不能算通過
+    # 沒有斷言可跑時 pytest 結束碼是 5（"no tests ran"），不能算通過。
+    # 這裡也是「裸 assert 包裝」的邊界：內容沒有任何 assert 的 test_code
+    # 不會被包成測試函式，否則 422 會變成通過。空字串同理。
     assert run_pytest(CORRECT, "from solution import add\nx = 1")["ok"] is False
     assert run_pytest(CORRECT, "")["ok"] is False
     # 被跳過的測試什麼都沒驗證，同樣不算通過
     assert run_pytest(CORRECT, "import pytest\ndef test_x():\n    pytest.skip('nope')")["ok"] is False
+
+
+def test_run_pytest_handles_bare_module_level_asserts():
+    """pytest 只收集測試函式；模組層級的 assert 要包成測試函式才會被執行。"""
+    bare = "from solution import add\nassert add(1, 2) == 3"
+    assert run_pytest(CORRECT, bare)["ok"] is True
+    assert run_pytest(WRONG, bare)["ok"] is False
+
+
+def test_bare_assert_detection_distinguishes_junk_from_asserts():
+    """包裝只適用於「含有 assert 的裸腳本」。
+
+    沒有 assert 可言的 test_code 包起來只會變成「什麼都沒驗證的測試」，
+    那就把 422 變成了通過——比擋掉更糟。
+    """
+    assert executor._bare_assert_script("from solution import add\nassert add(1, 2) == 3")
+    assert executor._bare_assert_script("from solution import add\nif True:\n    assert add(1, 2) == 3")
+    # 已經是測試函式：原樣執行，不能包（包了內層測試函式不會被收集）
+    assert not executor._bare_assert_script(TEST_CODE)
+    # 沒有任何斷言：不包，維持不通過
+    assert not executor._bare_assert_script("from solution import add\nx = 1")
+    assert not executor._bare_assert_script("")
+
+
+def test_run_pytest_bare_asserts_are_still_not_fooled_by_exiting():
+    # 包裝路徑必須沿用同一套結束碼防線
+    bare = "from solution import add\nassert add(1, 2) == 3"
+    assert run_pytest("import os\nos._exit(0)", bare)["ok"] is False
 
 
 def test_run_pytest_times_out():
