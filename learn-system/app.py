@@ -25,40 +25,59 @@ def _mastery_pct(conn, domain_id):
     return round(mastered * 100 / len(concepts))
 
 
+def _mark_failed(domain_id):
+    """以獨立連線把領域標成 failed。
+
+    生成失敗時原本那條連線可能根本沒建立起來、或已經壞掉，故不能拿它來寫狀態，
+    必須另開一條。連這條都失敗（資料庫整體不可用）時至少留下 log——那種情況下
+    整個服務都讀不到資料，不只是這個領域的問題。
+    """
+    try:
+        conn = db.connect(_DB_PATH)
+    except Exception:
+        logger.exception("資料庫無法連線，domain %s 的狀態無法標記", domain_id)
+        return
+    try:
+        db.set_domain_status(conn, domain_id, "failed")
+    except Exception:
+        logger.exception("標記 domain %s 為 failed 時失敗", domain_id)
+    finally:
+        conn.close()
+
+
 def _generate_map(domain_id):
     """背景生成智識地圖。任何失敗都必須讓狀態停在 failed。
 
     這條執行緒一旦讓例外逃出去就會直接死亡，資料列將永遠停在 schema 預設的
-    generating，前端會無止境地輪詢且沒有錯誤狀態可顯示，故除了可預期的
-    TutorError 之外，任何非預期例外（Agent 回傳非物件 JSON、concepts 非序列、
-    sqlite 錯誤等）也一律標記 failed。
+    generating，前端會無止境地輪詢且沒有錯誤狀態可顯示。故連線的建立、所有寫入，
+    以至於最後標記 ready，全部都在保護區內：任何一步失敗都收斂成 failed。
     """
-    conn = db.connect(_DB_PATH)
+    conn = None
     try:
-        try:
-            domain = db.get_domain(conn, domain_id)
-            if domain is None:
-                return
-            result = tutor.generate_map(domain["name"], domain["goals"], bool(domain["verify_sources"]))
-            concepts = result["concepts"]
-            if not concepts:
-                raise tutor.TutorError("Agent 未產出任何概念")
-            verify = bool(domain["verify_sources"])
-            db.set_domain_executable(conn, domain_id, result["executable"])
-            for c in concepts:
-                # source_urls 只在查證模式下入庫（見 tutor.generate_map 的清理）
-                db.create_concept(conn, domain_id, c["name"], c["section"], c.get("description"),
-                                  source_urls=c.get("source_urls") if verify else None)
-        except tutor.TutorError as e:
-            logger.warning("智識地圖生成失敗：domain %s：%s", domain_id, e)
-            db.set_domain_status(conn, domain_id, "failed")
-        except Exception:
-            logger.exception("智識地圖生成非預期失敗：domain %s", domain_id)
-            db.set_domain_status(conn, domain_id, "failed")
-        else:
-            db.set_domain_status(conn, domain_id, "ready")
+        conn = db.connect(_DB_PATH)
+        domain = db.get_domain(conn, domain_id)
+        if domain is None:
+            return
+        result = tutor.generate_map(domain["name"], domain["goals"], bool(domain["verify_sources"]))
+        concepts = result["concepts"]
+        if not concepts:
+            raise tutor.TutorError("Agent 未產出任何概念")
+        verify = bool(domain["verify_sources"])
+        db.set_domain_executable(conn, domain_id, result["executable"])
+        for c in concepts:
+            # source_urls 只在查證模式下入庫（見 tutor.generate_map 的清理）
+            db.create_concept(conn, domain_id, c["name"], c["section"], c.get("description"),
+                              source_urls=c.get("source_urls") if verify else None)
+        db.set_domain_status(conn, domain_id, "ready")
+    except tutor.TutorError as e:
+        logger.warning("智識地圖生成失敗：domain %s：%s", domain_id, e)
+        _mark_failed(domain_id)
+    except Exception:
+        logger.exception("智識地圖生成非預期失敗：domain %s", domain_id)
+        _mark_failed(domain_id)
     finally:
-        conn.close()
+        if conn is not None:
+            conn.close()
 
 
 def _spawn_map_generation(app, domain_id):
