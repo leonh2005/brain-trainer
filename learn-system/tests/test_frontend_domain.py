@@ -137,8 +137,64 @@ def test_disabled_buttons_look_disabled():
     assert re.search(r"button:disabled\b", _static("style.css"))
 
 
-def test_page_keeps_polling_until_the_map_is_ready():
-    assert re.search(r"status\s*!==\s*'ready'", _static("domain.js"))
+def test_page_polls_only_while_the_map_is_generating():
+    """failed 是終態（要靠「重新生成」離開），ready 也沒有東西會再變。
+
+    原本的條件是 `status !== 'ready'`，對 failed 的領域永遠成立——每 3 秒白打
+    一次後端，直到分頁關掉為止。
+    """
+    src = _static("domain.js")
+    assert re.search(r"status\s*===\s*'generating'\s*\)\s*poll\(\)", src)
+    assert not re.search(r"status\s*!==\s*'ready'", src)
+
+
+def test_failed_map_offers_regeneration():
+    """生成失敗要看得見，而且要能重試（spec §5.2），不是只能重新載入整頁。"""
+    assert 'id="regenerate"' in _html("domain.html")
+    assert 'id="map-failed"' in _html("domain.html")
+    src = _static("domain.js")
+    assert re.search(r"status\s*!==\s*'failed'", _function_body(src, "renderMap"))
+    body = _handler_body(src, "regenerate")
+    assert "/regenerate" in body
+    assert "method: 'POST'" in body
+    # 後端已把狀態寫回 generating，本機快取不改就永遠不會再輪詢
+    assert re.search(r"status\s*=\s*'generating'", body)
+
+
+def test_first_load_failure_is_visible():
+    """首次載入失敗（領域被刪、後端掛掉）不能留一片空白。
+
+    輪詢路徑刻意吞掉錯誤是對的（停在最後一次成功的畫面），但「從未成功過」
+    時吞掉錯誤的結果是整頁空白、沒有任何線索。
+    """
+    assert 'id="load-error"' in _html("domain.html")
+    src = _static("domain.js")
+    body = _function_body(src, "poll")
+    assert "load-error" in body
+    assert "loaded" in body
+
+
+def test_untrusted_source_urls_are_only_linked_when_http():
+    """source_urls 來自模型，是不可信輸入。
+
+    `javascript:` 會在點擊時執行腳本、`data:` 能載入任意內容，兩者都不能進
+    href；只有真的解析成 http/https 的才升級成連結，其餘原樣以文字呈現。
+    """
+    src = _static("domain.js")
+    guard = _function_body(src, "httpUrlOrNull")
+    assert "'http:'" in guard
+    assert "'https:'" in guard
+    render = _function_body(src, "renderSources")
+    assert "httpUrlOrNull" in render
+    # 進 href 的必須是通過檢查的那個值（不是原始字串）
+    assert "a.href = safe" in render
+    assert "innerHTML" not in src
+
+
+def test_concept_sources_are_rendered_next_to_the_explanation():
+    assert 'id="concept-sources"' in _html("domain.html")
+    src = _static("domain.js")
+    assert "renderSources" in _function_body(src, "selectConcept")
 
 
 def test_chat_is_scoped_to_the_selected_concept():

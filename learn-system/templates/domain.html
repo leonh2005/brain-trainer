@@ -19,11 +19,16 @@
 </header>
 
 <main class="workspace">
+  <div id="load-error" hidden></div>
   <section class="map">
     <div id="map-sections"></div>
     <div id="map-empty" hidden>
-      <p>智識地圖還沒生成好，或生成失敗了。</p>
-      <button id="retry-hint">重新載入</button>
+      <p>智識地圖生成中…</p>
+    </div>
+    <div id="map-failed" hidden>
+      <p>智識地圖生成失敗。</p>
+      <button id="regenerate">重新生成</button>
+      <span id="regenerate-status" class="dim"></span>
     </div>
   </section>
 
@@ -32,6 +37,7 @@
     <div id="work-body" hidden>
       <h2 id="concept-name"></h2>
       <div id="concept-desc" class="dim"></div>
+      <div id="concept-sources" class="sources" hidden></div>
       <div class="row">
         <select id="goal-type"></select>
         <button id="ask-question">出題</button>

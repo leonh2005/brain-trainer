@@ -147,6 +147,16 @@ def get_concept(conn, concept_id):
     return _concept_out(_row(conn.execute("SELECT * FROM concepts WHERE id = ?", (concept_id,))))
 
 
+def delete_concepts(conn, domain_id):
+    """清掉某個領域的所有概念（題目／作答由 FK cascade 連帶刪除）。
+
+    重新生成地圖前必須先呼叫：上一次中斷留下的半套概念若留著，新的地圖會疊在
+    舊的上面，前端也分不出哪一筆是這次生成的。
+    """
+    conn.execute("DELETE FROM concepts WHERE domain_id = ?", (domain_id,))
+    conn.commit()
+
+
 def set_concept_description(conn, concept_id, description):
     conn.execute("UPDATE concepts SET description = ? WHERE id = ?", (description, concept_id))
     conn.commit()

@@ -368,3 +368,94 @@ def test_map_prompt_asks_for_python_only_executability():
     assert "Python" in prompt
     assert "JavaScript" in prompt
     assert "是否可以由程式碼執行來客觀驗證" not in prompt
+
+
+def _map_agent(monkeypatch, concepts):
+    """把模型回應換成指定的 concepts，並回傳收集到的提示詞清單。"""
+    prompts = []
+    raw = json.dumps({"executable": True, "concepts": concepts})
+
+    def fake_agent(prompt, **kwargs):
+        prompts.append(prompt)
+        return raw, None
+
+    monkeypatch.setattr(tutor, "_call_agent", fake_agent)
+    return prompts
+
+
+def _grade_agent(monkeypatch):
+    """收集批改提示詞，並回一份合法的批改結果。"""
+    prompts = []
+
+    def fake_agent(prompt, **kwargs):
+        prompts.append(prompt)
+        return json.dumps({"verdict": "correct", "feedback": "f", "root_cause": None}), None
+
+    monkeypatch.setattr(tutor, "_call_agent", fake_agent)
+    return prompts
+
+
+def test_generate_map_forwards_source_urls_when_verifying(monkeypatch):
+    """勾了「需要查證來源」時，模型給的出處要原樣帶回，不能被丟掉。
+
+    這些網址是「模型有沒有胡說」的憑據，前端要顯示；提示詞也必須明確要求，
+    否則模型沒有理由回傳它們。
+    """
+    prompts = _map_agent(monkeypatch, [{
+        "name": "GIL", "section": "consensus", "description": "d",
+        "source_urls": ["https://docs.python.org/3/glossary.html#term-GIL"],
+    }])
+    result = tutor.generate_map("python", ["write"], verify_sources=True)
+    assert result["concepts"][0]["source_urls"] == [
+        "https://docs.python.org/3/glossary.html#term-GIL"]
+    assert "source_urls" in prompts[0]
+
+
+def test_generate_map_drops_non_string_source_urls(monkeypatch):
+    """模型回傳的形狀不可控；非字串項進到前端會讓渲染路徑擲出例外。"""
+    _map_agent(monkeypatch, [{
+        "name": "GIL", "section": "consensus", "description": "d",
+        "source_urls": ["https://a", 123, None, {"url": "https://b"}],
+    }])
+    result = tutor.generate_map("python", ["write"], verify_sources=True)
+    assert result["concepts"][0]["source_urls"] == ["https://a"]
+
+
+def test_generate_map_drops_source_urls_when_not_verifying(monkeypatch):
+    """沒勾查證時，DB 的 source_urls 必須留空、提示詞也不得提到它。"""
+    prompts = _map_agent(monkeypatch, [{
+        "name": "GIL", "section": "consensus", "description": "d",
+        "source_urls": ["https://模型自己多給的"],
+    }])
+    result = tutor.generate_map("python", ["write"], verify_sources=False)
+    assert "source_urls" not in result["concepts"][0]
+    assert "source_urls" not in prompts[0]
+
+
+def test_grade_answer_includes_the_observed_output(monkeypatch):
+    """principle 題的真實輸出要進批改提示詞，並註明它優先於標準答案。"""
+    prompts = _grade_agent(monkeypatch)
+    tutor.grade_answer("python", "閉包", {"prompt": "q", "reference_answer": "3"},
+                       "2", True, observed_output="2\n")
+    prompt = prompts[0]
+    assert "取得的真實輸出（這是事實，不是參考答案）：\n2\n" in prompt
+    assert "標準答案：3" in prompt
+
+
+def test_grade_answer_treats_an_empty_observed_output_as_a_fact(monkeypatch):
+    """空字串是真實輸出（程式什麼都沒印），不是「沒有錨點」。
+
+    判斷若寫成真值判斷（`if observed_output:`），這個 case 會靜默退回沒有錨點
+    的老路——正是 Gap 1 想消滅的東西。
+    """
+    prompts = _grade_agent(monkeypatch)
+    tutor.grade_answer("python", "閉包", {"prompt": "q", "reference_answer": "something"},
+                       "something", True, observed_output="")
+    assert "取得的真實輸出（這是事實，不是參考答案）：\n\n" in prompts[0]
+
+
+def test_grade_answer_without_observed_output_keeps_the_old_prompt(monkeypatch):
+    """沒有錨點時（非程式領域）提示詞不得多出「真實輸出」那一段。"""
+    prompts = _grade_agent(monkeypatch)
+    tutor.grade_answer("econ", "供需", {"prompt": "q", "reference_answer": "a"}, "x", False)
+    assert "真實輸出" not in prompts[0]
