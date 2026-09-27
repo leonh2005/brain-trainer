@@ -40,7 +40,9 @@ function renderSources(urls) {
   for (const raw of urls) {
     const safe = httpUrlOrNull(raw);
     if (!safe) { box.append(el('span', 'source', String(raw))); continue; }
-    const a = el('a', 'source', raw);
+    // 顯示用正規化後的值：原始字串可能與實際指向不同（例如夾了控制字元或
+    // 前後空白），顯示與目標一致才不會騙人。
+    const a = el('a', 'source', safe);
     a.href = safe;
     a.target = '_blank';
     a.rel = 'noopener noreferrer';
@@ -161,6 +163,10 @@ async function selectConcept(id) {
 document.getElementById('regenerate').onclick = async () => {
   const button = document.getElementById('regenerate');
   const status = document.getElementById('regenerate-status');
+  // failed 的領域不一定沒有練習紀錄：生成跑到一半失敗會留下已建立的概念，而
+  // 那些概念在 failed 狀態下照樣畫得出來、點得開、答得了，重新生成會把它們
+  // 連同作答一起清掉。破壞性動作一律先確認（與刪除領域同一條規則）。
+  if (!confirm('重新生成會清掉現有概念與其作答紀錄，確定要繼續嗎？')) return;
   button.disabled = true;
   status.textContent = '重新生成中…';
   try {

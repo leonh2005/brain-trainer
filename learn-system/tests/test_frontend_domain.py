@@ -161,6 +161,17 @@ def test_failed_map_offers_regeneration():
     assert re.search(r"status\s*=\s*'generating'", body)
 
 
+def test_regeneration_asks_for_confirmation():
+    """重新生成是破壞性動作：failed 的領域可能已經有練習紀錄。
+
+    生成是一個概念一個概念 commit 的，跑到一半失敗會讓領域停在 failed 卻留下
+    已建立的概念，而那些概念在 failed 狀態下照樣畫得出來、可以作答。
+    """
+    body = _handler_body(_static("domain.js"), "regenerate")
+    assert "confirm(" in body
+    assert body.index("confirm(") < body.index("/regenerate")
+
+
 def test_first_load_failure_is_visible():
     """首次載入失敗（領域被刪、後端掛掉）不能留一片空白。
 

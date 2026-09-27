@@ -219,14 +219,23 @@ def create_app(db_path=None):
 
     @app.post("/api/domains/<int:domain_id>/regenerate")
     def regenerate_domain(domain_id):
-        """重新生成智識地圖——failed 領域的復原路徑（spec §5.2 的重試鈕）。
+        """重新生成智識地圖——**只給 failed 領域用**的復原路徑（spec §5.2 的重試鈕）。
 
-        先清掉既有概念再重跑：中斷留下的半套概念若留著，新的地圖會疊在舊的
-        上面。對 ready 的領域也可安全呼叫，語意就是「這張地圖重生成一次」；
-        它的概念會被換成新的一份（舊概念與其作答一併消失，故前端只在 failed
-        時提供按鈕）。生成中的領域一律拒絕：再起一條執行緒會讓兩邊同時寫入
-        概念（疊成兩份），而且舊的那條最後還會把狀態寫回 ready，蓋掉新的
-        generating——留下的是一個沒有任何東西在跑的「生成中」。
+        這個動作是破壞性的，先說清楚它做什麼：清掉該領域**所有**概念
+        （`delete_concepts`），它們的題目與作答再被 FK cascade 帶走，而重跑的
+        生成會覆蓋 `override_executable` 手動調整過的 executable。所以除了
+        failed 以外的狀態一律拒絕，**連 ready 也拒絕**——「前端只在 failed 時畫
+        按鈕」不是保證，端點自己才是。ready 的概念清單看起來完好，那正是使用者
+        的練習紀錄，沒有理由讓一個 API 呼叫把它們清掉。
+
+        failed 但已經有概念是正常情況：`_generate_map` 是一個概念一個概念 commit
+        的，跑到一半失敗會讓領域停在 failed 卻留下已建立的概念，而 renderMap
+        在 failed 時照樣把概念畫出來——那些概念可以點開、可以作答，是真的會被
+        這個動作丟掉的練習紀錄（前端因此必須先確認）。
+
+        generating 同樣拒絕，理由不同：再起第二條執行緒會讓兩邊同時寫入概念
+        （疊成兩份），而且舊的那條最後還會把狀態寫回 ready，蓋掉新的 generating
+        ——留下的是一個沒有任何東西在跑的「生成中」。
         """
         conn = db.connect(db_path)
         try:
@@ -234,7 +243,11 @@ def create_app(db_path=None):
             if domain is None:
                 return jsonify(error="找不到領域"), 404
             if domain["status"] == "generating":
+                # 執行緒還在跑，不是「可以重來」的狀態
                 return jsonify(error="智識地圖正在生成中，請稍候"), 409
+            if domain["status"] != "failed":
+                # 生成已成功，重新生成會清掉概念與其練習紀錄，不提供
+                return jsonify(error="這個領域的地圖已經生成完成，重新生成會清掉現有概念與作答紀錄"), 409
             db.delete_concepts(conn, domain_id)
             db.set_domain_status(conn, domain_id, "generating")
         finally:
