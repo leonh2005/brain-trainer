@@ -17,6 +17,7 @@ import os
 
 import agent as agent_mod
 import jobs as jobs_mod
+import route_planner
 import sources
 
 # 卡片連結透過 /svc/<port>/... 走反向代理，讓外網（Cloudflare Tunnel）也連得到
@@ -239,6 +240,13 @@ def life_market_cycle():
 @app.get('/api/life/learn-system')
 def life_learn_system():
     return sources.learn_system()
+
+
+@app.get('/api/route/plan')
+def route_plan(dest: str, arrive: str, origin: str = '', day: str = '', buffer: int = 10):
+    """大眾運輸路線查詢（出發地預設住家）。同步查詢約 3-5 秒，故不進 60 秒輪詢。"""
+    return route_planner.plan(origin=origin, dest=dest, arrive=arrive,
+                              day=day or None, buffer_min=buffer)
 
 
 @app.get('/api/jobs')

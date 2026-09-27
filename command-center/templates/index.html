@@ -252,6 +252,34 @@ a.tk:hover .code{color:var(--accent-soft)}
 .support-level:last-child{border-bottom:none}
 .support-price{font-family:var(--mono);font-size:14px;color:var(--fg)}
 .support-src{font-size:11px;color:var(--muted);margin-top:3px}
+/* ── 出門路線卡 ── */
+.rt-form{display:flex; flex-wrap:wrap; gap:7px 8px; align-items:center}
+.rt-form label{font-size:10.5px; color:var(--faint); font-family:var(--mono)}
+.rt-form input,.rt-form select{
+  background:var(--bg); border:1px solid var(--border-soft); border-radius:var(--radius-sm);
+  color:var(--fg); padding:8px 10px; font-size:12.5px; outline:none; font-family:var(--mono);
+}
+.rt-form input:focus,.rt-form select:focus{border-color:var(--accent)}
+#rt-origin{flex:1 1 220px; min-width:0}
+#rt-dest{flex:2 1 240px; min-width:0}
+.rt-chips{display:flex; flex-wrap:wrap; gap:6px; margin-top:9px; align-items:center}
+.rt-chip{
+  background:var(--bg-soft); border:1px solid var(--border-soft); border-radius:20px;
+  padding:4px 10px; font-size:11px; color:var(--muted); cursor:pointer;
+}
+.rt-chip:hover{border-color:var(--accent); color:var(--fg)}
+.rt-route{border:1px solid var(--border-soft); border-radius:9px; padding:10px 12px; margin-top:10px}
+.rt-route.best{border-color:var(--accent)}
+.rt-sum{display:flex; flex-wrap:wrap; gap:9px; align-items:baseline; font-family:var(--mono); font-size:12px}
+.rt-sum b{color:var(--accent); font-size:13px}
+.rt-sum .tag{font-size:10px; color:var(--faint); border:1px solid var(--border-soft); border-radius:5px; padding:1px 6px}
+.rt-leg{display:flex; gap:8px; align-items:baseline; font-size:11.5px; padding:2.5px 0; font-family:var(--mono)}
+.rt-leg .t{color:var(--faint); width:38px; flex:none}
+.rt-leg .mb{flex:none; border-radius:5px; padding:1px 6px; font-size:10.5px; border:1px solid var(--border)}
+.rt-leg.walk .mb{color:var(--faint); border-color:var(--border-soft)}
+.rt-leg .ln{color:var(--accent-soft); flex:none}
+.rt-leg .path{color:var(--muted); min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.rt-leg .dur{margin-left:auto; color:var(--faint); flex:none}
 </style>
 </head>
 <body>
@@ -273,6 +301,10 @@ a.tk:hover .code{color:var(--accent-soft)}
       <span class="hb-title">服務狀態</span>
       <span class="pill"><span class="dot"></span>載入中…</span>
     </div>
+
+    <!-- 出門路線 -->
+    <div class="sec-label">🚉 出門路線</div>
+    <div class="grid" id="route"></div>
 
     <!-- 訊號牆 -->
     <div class="sec-label">今日訊號牆</div>
@@ -1152,9 +1184,92 @@ function mountTools(defs){
   wrap.querySelectorAll('.btn[data-tool-job]').forEach(b=>b.addEventListener('click',()=>runJob(b, b.dataset.toolJob)));
   applySavedSizes(wrap,'cc-order-tools');
 }
+/* ── 出門路線卡（自行 mount：不進 60 秒輪詢，否則填到一半的表單會被重繪清空）── */
+const RT_HOME='新北市樹林區復興路295巷13號';
+const RT_RECENT_KEY='cc-route-recent';
+const RT_PREC={house:'門牌級',poi:'地標級',street:'街道級（約略）'};
+function rtEsc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function rtDate(d){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
+function rtClock(d){return `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`}
+function rtRecent(){try{return JSON.parse(localStorage.getItem(RT_RECENT_KEY))||[]}catch{return[]}}
+function rtRenderChips(){
+  const box=$('#rt-recent');if(!box)return;
+  const list=rtRecent();
+  box.innerHTML=list.length?'<span class="mini">常用：</span>'+list.map(d=>`<span class="rt-chip">${rtEsc(d)}</span>`).join(''):'';
+  box.querySelectorAll('.rt-chip').forEach(b=>b.addEventListener('click',()=>{$('#rt-dest').value=b.textContent}));
+}
+function rtSave(dest){
+  const list=[dest,...rtRecent().filter(x=>x!==dest)].slice(0,5);
+  try{localStorage.setItem(RT_RECENT_KEY,JSON.stringify(list))}catch{}
+  rtRenderChips();
+}
+function rtLeg(l){
+  return `<div class="rt-leg${l.walk?' walk':''}"><span class="t">${rtEsc(l.start)}</span>`+
+    `<span class="mb">${rtEsc(l.mode)}</span>${l.line?`<span class="ln">${rtEsc(l.line)}</span>`:''}`+
+    `<span class="path">${rtEsc(l.from)} → ${rtEsc(l.to)}</span><span class="dur">${l.min}分</span></div>`;
+}
+function rtRender(d){
+  const src=d.source==='transitous'?'Transitous 即時路徑':'台鐵班表（備援）';
+  let h=`<div class="mini" style="margin-top:9px">目標 <b>${rtEsc(d.target)}</b> 前抵達`+
+    `（要到 ${rtEsc(d.arrive.split(' ')[1])}，提前 ${d.buffer_min} 分）· ${rtEsc(src)}</div>`+
+    `<div class="mini">目的地定位：${rtEsc(RT_PREC[d.dest.precision]||d.dest.precision)}`+
+    ` ${d.dest.lat}, ${d.dest.lon}</div>`;
+  if(d.notice)h+=`<div class="mini" style="color:var(--amber);margin-top:6px">${rtEsc(d.notice)}</div>`;
+  d.routes.forEach((r,i)=>{
+    h+=`<div class="rt-route${i===0?' best':''}"><div class="rt-sum">`+
+      `<b>${rtEsc(r.start)} 出門</b><span>→</span><b>${rtEsc(r.end)} 抵達</b>`+
+      `<span class="tag">全程 ${r.min} 分</span><span class="tag">步行 ${r.walk_min} 分</span>`+
+      `<span class="tag">轉乘 ${r.transfers} 次</span>`+
+      (i===0?'<span class="tag" style="color:var(--accent);border-color:var(--accent)">推薦</span>':'')+
+      `</div>`+r.legs.map(rtLeg).join('')+`</div>`;
+  });
+  $('#rt-result').innerHTML=h;
+}
+function rtGo(){
+  const origin=$('#rt-origin').value.trim(),dest=$('#rt-dest').value.trim();
+  const arrive=$('#rt-arrive').value,buffer=$('#rt-buffer').value;
+  if(!dest){toast('請輸入目的地');return}
+  if(!arrive){toast('請選擇抵達時間');return}
+  const now=new Date();let day=$('#rt-day').value||rtDate(now);
+  if(day===rtDate(now)&&arrive<=rtClock(now))day=rtDate(new Date(now.getTime()+86400000));
+  $('#rt-day').value=day;
+  const btn=$('#rt-go'),old=btn.innerHTML;
+  btn.disabled=true;btn.innerHTML='<span class="k">⏳</span>查詢中…';
+  $('#rt-result').innerHTML='<div class="skel" style="width:60%"></div><div class="skel" style="width:40%"></div>';
+  fetch('/api/route/plan?'+new URLSearchParams({origin,dest,arrive,day,buffer}))
+    .then(r=>r.json()).then(res=>{
+      if(!res.ok)throw new Error((res.error||'查詢失敗').replace(/^\w*Error:\s*/,''));
+      rtRender(res.data);rtSave(dest);
+    })
+    .catch(e=>{$('#rt-result').innerHTML=`<div class="err">${rtEsc(e.message)}</div>`})
+    .finally(()=>{btn.disabled=false;btn.innerHTML=old});
+}
+function mountRoute(){
+  const wrap=$('#route'),now=new Date();
+  const c=el('div','card fade-in full');
+  c.dataset.id='route';
+  c.innerHTML=`<div class="card-head"><span class="ic">🚉</span><h3>大眾運輸路線</h3>`+
+    `<span class="ts">台鐵・捷運・公車・從住家出發</span></div><div class="card-body">`+
+    `<div class="rt-form">`+
+    `<label>出發地</label><input id="rt-origin" value="${rtEsc(RT_HOME)}">`+
+    `<label>目的地</label><input id="rt-dest" placeholder="地址或地標，例：中壢監理站">`+
+    `<label>幾點要到</label><input type="time" id="rt-arrive" value="${rtClock(new Date(now.getTime()+7200000))}">`+
+    `<label>日期</label><input type="date" id="rt-day" value="${rtDate(now)}">`+
+    `<label>提前</label><select id="rt-buffer">`+
+    [0,5,10,15,20,30].map(n=>`<option value="${n}"${n===10?' selected':''}>${n} 分</option>`).join('')+
+    `</select><button class="btn" id="rt-go"><span class="k">🔍</span>查路線</button></div>`+
+    `<div class="rt-chips" id="rt-recent"></div><div id="rt-result"></div></div>`;
+  wrap.appendChild(c);
+  addResizeBtn(c,'cc-route');
+  applySavedSizes(wrap,'cc-route');
+  rtRenderChips();
+  $('#rt-go').addEventListener('click',rtGo);
+  $('#rt-dest').addEventListener('keydown',e=>{if(e.key==='Enter')rtGo()});
+}
 mount('#signals',applySavedOrder('cc-order-signals',CARDS,d=>d.id),'cc-order-signals');
 mount('#life',applySavedOrder('cc-order-life',LIFE,d=>d.id),'cc-order-life');
 mountTools(applySavedOrder('cc-order-tools',TOOLS,t=>t.title));
+mountRoute();
 enableSort('#signals','cc-order-signals');
 enableSort('#life','cc-order-life');
 enableSort('#tools','cc-order-tools');
