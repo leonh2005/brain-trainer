@@ -16,7 +16,7 @@
   .sub { color: #8b949e; font-size: 12.5px; margin-bottom: 20px; }
   .summary {
     background: #161b22; border: 1px solid #30363d; border-radius: 10px;
-    padding: 16px; margin-bottom: 20px; display: flex; gap: 32px;
+    padding: 16px; margin-bottom: 20px; display: flex; flex-wrap: wrap; gap: 32px;
   }
   .summary .k { font-size: 12px; color: #8b949e; }
   .summary .v { font-size: 22px; font-weight: 800; margin-top: 2px; }
@@ -33,13 +33,18 @@
 <body>
 <div class="wrap">
   <h1>隔日沖候選命中歷史</h1>
-  <div class="sub">telebot/screener.py 每天選出的候選股，隔天 09:40 自動比對是否上漲（check_swing_track.py）</div>
+  <div class="sub">telebot/screener.py 每天選出的候選股，隔天 09:40 自動比對是否上漲（check_swing_track.py）<br>
+    R 倍數＝淨損益 ÷ 停損出場會虧掉的金額（進場金額 × {{ '%g'|format(stop_pct) }}% 加手續費與交易稅）；1R 為風險單位定義，未實際掛停損單</div>
 
   <div class="summary">
     <div><div class="k">累積命中</div><div class="v">{{ total_hits }} / {{ total_picks }}</div></div>
     <div><div class="k">命中率</div><div class="v">{{ hit_rate if hit_rate is not none else '--' }}{{ '%' if hit_rate is not none else '' }}</div></div>
     <div><div class="k">追蹤天數</div><div class="v">{{ days|length }}</div></div>
     <div><div class="k">累積淨損益（每日100萬元平分候選股）</div><div class="v {{ 'pos-up' if total_net_pnl >= 0 else 'pos-down' }}">{{ '%+d'|format(total_net_pnl) }}</div></div>
+    {% if avg_r is defined and avg_r is not none %}
+    <div><div class="k">平均 R（期望值，{{ r_count }} 筆）</div><div class="v {{ 'pos-up' if avg_r >= 0 else 'pos-down' }}">{{ '%+.2f'|format(avg_r) }}R</div></div>
+    {% endif %}
+    <div><div class="k">最高連敗</div><div class="v">{{ max_loss_streak }} 天</div></div>
   </div>
 
   {% if not days %}
@@ -62,7 +67,7 @@
             {% for r in d.results %}
             <div class="stock-row">
               <span>{{ r.code }} {{ r.name }}</span>
-              <span class="{{ 'pos-up' if r.up else 'pos-down' }}">{{ r.baseline }} → {{ r.check_price }}（{{ '✅ 漲' if r.up else '❌ 跌' }}）{% if r.net_pnl is defined and r.net_pnl is not none %} 淨損益 {{ '%+d'|format(r.net_pnl) }}{% endif %}</span>
+              <span class="{{ 'pos-up' if r.up else 'pos-down' }}">{{ r.baseline }} → {{ r.check_price }}（{{ '✅ 漲' if r.up else '❌ 跌' }}）{% if r.net_pnl is defined and r.net_pnl is not none %} 淨損益 {{ '%+d'|format(r.net_pnl) }}{% endif %}{% if r.r_multiple is defined and r.r_multiple is not none %} ({{ '%+.2f'|format(r.r_multiple) }}R){% endif %}</span>
             </div>
             {% endfor %}
           {% endif %}

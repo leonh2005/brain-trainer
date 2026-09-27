@@ -10,6 +10,12 @@ import support as support_mod
 
 CC = '/Users/steven/CCProject'
 
+# 隔日沖進場停損設定，作為 R 倍數的 1R 基準
+SWING_STOP_PCT = 0.02
+# 費率與 telebot/check_swing_track.py 一致（net_pnl 就是用這組費率算出來的）
+FEE_RATE = 0.001425
+TAX_RATE = 0.003
+
 # ── 共用工具 ─────────────────────────────────────
 
 _cache: dict = {}
@@ -310,19 +316,36 @@ def pullback():
     return d, d.get('date', _mtime(p))
 
 
-def _track_history(track_path: str):
-    """通用歷史紀錄整理：依日期新到舊排序 + 累積命中率 + 累積損益（供 swing/daytrade history 共用）。"""
+def _stop_loss_amount(baseline: float, shares: float, stop_pct: float) -> float:
+    """停損出場時實際會虧掉的金額（價格損失 + 手續費 + 交易稅），即 R 倍數的 1R。"""
+    stop_price = baseline * (1 - stop_pct)
+    price_loss = (baseline - stop_price) * shares
+    cost = (baseline * FEE_RATE + stop_price * FEE_RATE + stop_price * TAX_RATE) * shares
+    return price_loss + cost
+
+
+def _track_history(track_path: str, r_stop_pct: float | None = None):
+    """通用歷史紀錄整理：依日期新到舊排序 + 累積命中率 + 累積損益（供 swing/daytrade history 共用）。
+
+    r_stop_pct 提供時，為每筆結果附上 R 倍數（淨損益 ÷ 停損出場實際虧損）。
+    """
     if not os.path.exists(track_path):
-        return {'days': [], 'total_hits': 0, 'total_picks': 0, 'hit_rate': None, 'total_net_pnl': 0}
+        return {'days': [], 'total_hits': 0, 'total_picks': 0, 'hit_rate': None,
+                'total_net_pnl': 0, 'avg_r': None, 'r_count': 0, 'max_loss_streak': 0}
     with open(track_path, encoding='utf-8') as f:
         track = json.load(f)
 
     days = []
     total_hits = total_picks = 0
     total_net_pnl = 0
+    total_r = r_count = 0
     for dt in sorted(track, reverse=True):
         entry = track[dt]
         results = entry.get('track_results', [])
+        if r_stop_pct:
+            for r in results:
+                risk = _stop_loss_amount(r['baseline'], r['buy_shares'], r_stop_pct) if r.get('net_pnl') is not None and r.get('buy_shares') else None
+                r['r_multiple'] = round(r['net_pnl'] / risk, 2) if risk else None
         hits = sum(1 for r in results if r.get('up'))
         day_net_pnl = sum(r['net_pnl'] for r in results if r.get('net_pnl') is not None)
         day_cost = sum(r['baseline'] * r['buy_shares'] for r in results if r.get('net_pnl') is not None and 'buy_shares' in r)
@@ -336,14 +359,28 @@ def _track_history(track_path: str):
             total_hits += hits
             total_picks += len(results)
             total_net_pnl += day_net_pnl
+            total_r += sum(r['r_multiple'] for r in results if r.get('r_multiple') is not None)
+            r_count += sum(1 for r in results if r.get('r_multiple') is not None)
     hit_rate = round(total_hits / total_picks * 100, 1) if total_picks else None
+    avg_r = round(total_r / r_count, 2) if r_count else None
+    # 最高連敗天數：當日淨損益為負算一敗；空手日與未比對日都不是虧損，中斷連敗
+    max_streak = streak = 0
+    for day in reversed(days):  # days 為新到舊，反轉成時間正序
+        if day['checked'] and day['net_pnl'] < 0:
+            streak += 1
+            max_streak = max(max_streak, streak)
+        else:
+            streak = 0
     return {'days': days, 'total_hits': total_hits, 'total_picks': total_picks,
-            'hit_rate': hit_rate, 'total_net_pnl': total_net_pnl}
+            'hit_rate': hit_rate, 'total_net_pnl': total_net_pnl, 'avg_r': avg_r,
+            'r_count': r_count, 'max_loss_streak': max_streak}
 
 
 def swing_history():
-    """隔日沖候選歷史命中紀錄，供 /swing-history 頁面複查用。回傳依日期新到舊排序的清單 + 整體命中率 + 累積損益。"""
-    return _track_history(f'{CC}/telebot/data/swing_track.json')
+    """隔日沖候選歷史命中紀錄，供 /swing-history 頁面複查用。回傳依日期新到舊排序的清單 + 整體命中率 + 累積損益 + 每筆 R 倍數。"""
+    d = _track_history(f'{CC}/telebot/data/swing_track.json', r_stop_pct=SWING_STOP_PCT)
+    d['stop_pct'] = SWING_STOP_PCT * 100
+    return d
 
 
 def daytrade_history():
