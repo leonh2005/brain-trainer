@@ -119,6 +119,9 @@ def create_app(db_path=None):
     app.config["DB_PATH"] = db_path
     conn = db.connect(db_path)
     db.init_db(conn)
+    # 上一次行程在生成途中被重啟時，會留下永遠停在 generating 的領域（執行緒已死）。
+    # 開機時把它們標成 failed，regenerate 端點才收得下——那是唯一的復原路徑。
+    db.fail_stale_generating_domains(conn)
     conn.close()
 
     @app.get("/api/health")

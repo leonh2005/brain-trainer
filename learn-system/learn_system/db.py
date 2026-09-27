@@ -102,6 +102,19 @@ def set_domain_status(conn, domain_id, status):
     conn.commit()
 
 
+def fail_stale_generating_domains(conn):
+    """把還停在 generating 的領域標成 failed——上次中斷留下的殘骸。
+
+    生成跑在 app.py 起的背景執行緒上，行程一結束那條執行緒就消失，資料列卻留在
+    generating。這個狀態的領域在 regenerate 端點被擋（409），刪除是唯一出路；
+    標成 failed 才讓它回到「重新生成」這條復原路徑。開機時呼叫一次即可：本服務
+    是單一行程（LaunchAgent 重啟就是新行程），此刻不可能有別人在生成，還標著
+    generating 的列後面沒有任何執行緒，斷言「執行緒都不在了」不會誤殺。
+    """
+    conn.execute("UPDATE domains SET status = 'failed' WHERE status = 'generating'")
+    conn.commit()
+
+
 def set_domain_executable(conn, domain_id, executable):
     conn.execute("UPDATE domains SET executable = ? WHERE id = ?", (int(bool(executable)), domain_id))
     conn.commit()
