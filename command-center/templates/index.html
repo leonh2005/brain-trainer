@@ -120,6 +120,10 @@ header{display:flex; align-items:center; gap:16px; margin-bottom:22px}
 body.sortable-mode .card{cursor:grab; outline:1.5px dashed var(--accent); outline-offset:-1px}
 body.sortable-mode .card:active{cursor:grabbing}
 .card.dragging{opacity:.35}
+body.sortable-mode .sec-label{cursor:grab; outline:1.5px dashed var(--accent); outline-offset:-1px}
+body.sortable-mode .sec-label:active{cursor:grabbing}
+body.sortable-mode .sec-label.dragging{opacity:.35}
+body.sortable-mode #route .card{cursor:default; outline:none}
 .card.resizing{resize:both; overflow:auto; min-width:240px; min-height:110px; transform:none!important; border-color:var(--accent); box-shadow:0 0 0 2px var(--accent)}
 .card-head{display:flex; align-items:center; gap:8px; margin-bottom:12px}
 .card-head .ic{font-size:14px}
@@ -519,10 +523,67 @@ function enableSort(containerSel,key){
     saveOrder(container,key);
   });
 }
+/* ── 區塊排序（拖曳 sec-label 移動整個區塊）── */
+let blockDragSrc=null;
+const BLOCK_ORDER_KEY='cc-block-order';
+function blockContainer(label){return label.nextElementSibling}
+function blockId(label){const c=blockContainer(label);return c?c.id:null}
+function saveBlockOrder(){
+  const ids=[...document.querySelectorAll('.sec-label')].map(blockId).filter(Boolean);
+  localStorage.setItem(BLOCK_ORDER_KEY,JSON.stringify(ids));
+}
+function applyBlockOrder(){
+  let saved; try{saved=JSON.parse(localStorage.getItem(BLOCK_ORDER_KEY));}catch{saved=null}
+  if(!Array.isArray(saved)||!saved.length)return;
+  const idx=new Map(saved.map((id,i)=>[id,i]));
+  const labels=[...document.querySelectorAll('.sec-label')].sort((a,b)=>{
+    const ai=idx.has(blockId(a))?idx.get(blockId(a)):Infinity;
+    const bi=idx.has(blockId(b))?idx.get(blockId(b)):Infinity;
+    return ai-bi;
+  });
+  let anchor=$('.health-bar');
+  labels.forEach(l=>{
+    const c=blockContainer(l);
+    if(!c)return;
+    anchor.after(l); l.after(c); anchor=c;
+  });
+}
+function enableBlockSort(){
+  const main=$('.main');
+  main.addEventListener('dragstart',e=>{
+    const label=e.target.closest('.sec-label');
+    if(!label||!document.body.classList.contains('sortable-mode'))return;
+    blockDragSrc=label; label.classList.add('dragging');
+    e.dataTransfer.effectAllowed='move'; e.dataTransfer.setData('text/plain','');
+  });
+  main.addEventListener('dragover',e=>{
+    if(!blockDragSrc)return;
+    e.preventDefault();
+    const target=e.target.closest('.sec-label');
+    if(!target||target===blockDragSrc)return;
+    const rect=target.getBoundingClientRect();
+    const before=(e.clientY-rect.top)<rect.height/2;
+    const srcContainer=blockContainer(blockDragSrc);
+    if(before){
+      target.parentNode.insertBefore(blockDragSrc,target);
+      blockDragSrc.after(srcContainer);
+    }else{
+      blockContainer(target).after(blockDragSrc);
+      blockDragSrc.after(srcContainer);
+    }
+  });
+  main.addEventListener('dragend',()=>{
+    if(!blockDragSrc)return;
+    blockDragSrc.classList.remove('dragging');
+    blockDragSrc=null;
+    saveBlockOrder();
+  });
+}
 $('#reorder-toggle').addEventListener('click',()=>{
   const on=document.body.classList.toggle('sortable-mode');
   $('#reorder-toggle').classList.toggle('busy',on);
-  toast(on?'拖曳卡片調整順序，完成後再點一次關閉':'已關閉排序模式');
+  document.querySelectorAll('.sec-label').forEach(l=>l.draggable=on);
+  toast(on?'拖曳卡片排卡片、拖曳區塊標題排區塊，完成後再點一次關閉':'已關閉排序模式');
 });
 
 /* ── renderers ── */
@@ -1273,6 +1334,8 @@ mountRoute();
 enableSort('#signals','cc-order-signals');
 enableSort('#life','cc-order-life');
 enableSort('#tools','cc-order-tools');
+applyBlockOrder();
+enableBlockSort();
 </script>
 </body>
 </html>
