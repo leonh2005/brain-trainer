@@ -1,20 +1,21 @@
-# Claude Handoff 20260927_0029
-> 自動生成於 2026-09-27 00:29
+# Claude Handoff 20260927_1245
+> 自動生成於 2026-09-27 12:45
 
 ## 未提交的檔案異動
 ```
 M gemma_work/latest.md
  M scripts/auto_investigate_state.json
+ M scripts/notebooklm_cleanup_state.json
  M shopee-boost/data/last_success.json
 ```
 
 ## 近期 Commits
 ```
-57243efc docs(learn-system): 更正 Fix 1 的殘留偽造說明，不再宣稱結果檔無法偽造
-98c585c9 fix(learn-system): 批改判準搬離 stdout、Agent 牆鐘逾時、executable 限定 Python；command-center 不再轉發 5990
-643a3681 fix(learn-system): run.sh 還原 ANTHROPIC_MODEL，對齊服務與互動 session 的模型
-69ba119a fix(learn-system): _extract_json 接受字面換行、逐塊嘗試並回掃原文
-fd64818d feat(learn-system): LaunchAgent 常駐、README 與 command-center 卡片
+ee35ad2f docs(learn-system): 講明開機對帳的前提是單一行程
+6aba5a67 fix(learn-system): 開機時把卡住的 generating 領域標成 failed
+2bd3cebb fix(learn-system): regenerate 只放行 failed，並讓重試先確認
+3396bd07 feat(learn-system): 補上 principle 執行錨點、出處連結與 failed 重試
+cb6e8431 feat(learn-system): 新增領域刪除，並修正 executable 預設與結果檔解析
 ```
 
 ## 給 Hermes 的備註
