@@ -199,24 +199,38 @@ def test_regenerate_unknown_domain_404s(client):
     assert "error" in r.get_json()
 
 
-def test_regenerate_on_a_ready_domain_keeps_one_map(client, monkeypatch):
-    """對 ready 的領域呼叫也要安全：概念是換成新的一份，不是變成兩份。
+def test_regenerate_is_rejected_on_a_ready_domain(client, monkeypatch, tmp_path):
+    """ready 一律拒絕：這個動作會清掉概念、題目、作答，還會蓋掉 executable 覆寫。
 
-    以 id 全換過來斷言「真的重新生成過」——只比對名稱的話，端點整個 404 也
-    會通過（原本那份地圖本來就叫 c0/c1/c2）。
+    這些都是使用者的練習紀錄，不能靠「前端只畫給 failed 的按鈕」來保護——端點
+    自己才是那個保證。原本這條測試斷言回 200，等於把破壞性行為寫成了規格。
     """
     monkeypatch.setattr(tutor, "generate_map", lambda *a, **k: fake_map(n=3))
     did = client.post("/api/domains", json={"name": "python", "goals": ["write"],
                                             "verify_sources": False}).get_json()["id"]
-    before = [c["id"] for c in client.get(f"/api/domains/{did}").get_json()["concepts"]]
+    client.post(f"/api/domains/{did}/override_executable", json={"executable": False})
+
+    conn = db.connect(tmp_path / "t.db")
+    try:
+        cid = db.list_concepts(conn, did)[0]["id"]
+        qid = db.create_question(conn, cid, "exam", "問題", {}, "答案")
+        db.create_attempt(conn, qid, "作答", "wrong", "回饋")
+    finally:
+        conn.close()
 
     r = client.post(f"/api/domains/{did}/regenerate")
-    assert r.status_code == 200
+    assert r.status_code == 409
+    assert "error" in r.get_json()
+
     body = client.get(f"/api/domains/{did}").get_json()
     assert body["domain"]["status"] == "ready"
-    after = [c["id"] for c in body["concepts"]]
     assert [c["name"] for c in body["concepts"]] == ["c0", "c1", "c2"]
-    assert not set(before) & set(after)
+    assert body["domain"]["executable"] == 0
+    conn = db.connect(tmp_path / "t.db")
+    try:
+        assert conn.execute("SELECT COUNT(*) FROM attempts").fetchone()[0] == 1
+    finally:
+        conn.close()
 
 
 def test_override_executable(client, monkeypatch):
