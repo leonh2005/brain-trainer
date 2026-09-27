@@ -19,6 +19,9 @@ button { background: var(--accent); color: #06203f; border: 0; border-radius: 8p
   padding: 8px 14px; font-weight: 600; cursor: pointer; }
 /* 出題／批改進行中會把按鈕關掉；看不出來的話使用者只會以為壞掉而猛點 */
 button:disabled { opacity: .5; cursor: default; }
+/* 刪除是破壞性動作，不能和一般按鈕長得一樣 */
+button.danger { background: transparent; color: var(--bad); border: 1px solid var(--bad);
+  margin-top: 8px; }
 dialog { background: var(--panel); color: var(--fg); border: 1px solid var(--line);
   border-radius: 12px; padding: 20px; width: min(420px, 90vw); }
 label { display: block; margin: 10px 0 4px; color: var(--dim); font-size: 13px; }

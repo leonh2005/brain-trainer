@@ -1,7 +1,7 @@
 import app as app_module
 import pytest
 
-from learn_system import tutor
+from learn_system import db, tutor
 
 
 @pytest.fixture
@@ -78,6 +78,44 @@ def test_list_domains_reports_mastery(client, monkeypatch):
     assert len(domains) == 1
     assert domains[0]["mastery_pct"] == 0
     assert domains[0]["concept_count"] == 3
+
+
+def test_delete_domain_removes_it_and_its_children(client, monkeypatch, tmp_path):
+    """刪除領域後，它的概念／題目／作答都要一起消失（schema 的 cascade）。
+
+    直接查資料庫，因為端點只回 404——光是 404 分不出「子資料真的刪了」與
+    「母列刪了、子列變成孤兒」。
+    """
+    monkeypatch.setattr(tutor, "generate_map", lambda *a, **k: fake_map())
+    did = client.post("/api/domains", json={"name": "python", "goals": ["write"], "verify_sources": False}).get_json()["id"]
+
+    conn = db.connect(tmp_path / "t.db")
+    try:
+        concept_id = db.list_concepts(conn, did)[0]["id"]
+        question_id = db.create_question(conn, concept_id, "exam", "問題", {}, "答案")
+        db.create_attempt(conn, question_id, "作答", "wrong", "回饋")
+    finally:
+        conn.close()
+
+    r = client.delete(f"/api/domains/{did}")
+    assert r.status_code == 200
+    assert r.get_json() == {"ok": True}
+    assert client.get(f"/api/domains/{did}").status_code == 404
+    assert client.get("/api/domains").get_json()["domains"] == []
+
+    conn = db.connect(tmp_path / "t.db")
+    try:
+        counts = {t: conn.execute(f"SELECT COUNT(*) FROM {t}").fetchone()[0]
+                  for t in ("concepts", "questions", "attempts")}
+    finally:
+        conn.close()
+    assert counts == {"concepts": 0, "questions": 0, "attempts": 0}
+
+
+def test_delete_unknown_domain_404s(client):
+    r = client.delete("/api/domains/9999")
+    assert r.status_code == 404
+    assert "error" in r.get_json()
 
 
 def test_override_executable(client, monkeypatch):

@@ -72,6 +72,14 @@ def test_mistakes_are_loaded_from_the_endpoint():
     assert "/mistakes" in _static("domain.js")
 
 
+def test_domain_page_has_a_guarded_delete_affordance():
+    """刪除是唯一會摧毀資料的動作，必須先過確認，且真的送 DELETE。"""
+    assert 'id="delete-domain"' in _html("domain.html")
+    body = _handler_body(_static("domain.js"), "delete-domain")
+    assert "confirm(" in body
+    assert "method: 'DELETE'" in body
+
+
 def test_goal_type_options_come_from_the_domain_not_a_fixed_list():
     """領域只有某些目標時，題型下拉不該列出它沒有的。"""
     src = _static("domain.js")

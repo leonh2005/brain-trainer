@@ -1,3 +1,4 @@
+import json
 import os
 import subprocess
 
@@ -120,8 +121,9 @@ def test_run_pytest_cannot_be_fooled_by_exiting_the_process():
 
     `sys.exit(0)` 其實會被 pytest 判成 INTERNALERROR（結束碼 3），但
     `os._exit(0)` 直接結束行程、pytest 來不及回報，結束碼就是 0；
-    在 atexit 註冊 os._exit(0) 更能把「1 failed」洗成 0。故 ok 必須另外
-    確認輸出裡真的有通過的測試。
+    在 atexit 註冊 os._exit(0) 更能把「1 failed」洗成 0。故成敗改以 pytest
+    外掛寫出的結果檔為準（見 `executor._verdict_ok`）：行程提早結束就沒有
+    結果檔，而沒有結果檔一律不算通過。
     """
     for answer in ("import sys\nsys.exit(0)",
                    "import os\nos._exit(0)",
@@ -145,6 +147,23 @@ def test_run_pytest_cannot_be_fooled_by_writing_the_pass_marker_to_stdout():
               "    except OSError: pass\n"
               "os._exit(0)\n")
     assert run_pytest(forged, TEST_CODE)["ok"] is False
+
+
+def test_verdict_ok_rejects_malformed_verdict_files(tmp_path):
+    """結果檔壞掉只能回 False，不能讓例外穿出 run_pytest 變成 500。
+
+    兩種漏網之魚：非 UTF-8 位元組在 read_text 就拋 UnicodeDecodeError（不是
+    JSONDecodeError）；合法 JSON 但非物件（[]、123、null）會讓 .get 拋
+    AttributeError。
+    """
+    path = tmp_path / "verdict.json"
+    for content in (b"\xff\xfe", b"[]", b"123", b"null", b'"passed"', b"not json", b"{}"):
+        path.write_bytes(content)
+        assert executor._verdict_ok(0, path) is False, content
+
+    # 對照組：形狀正確的結果檔仍要判通過，否則上面的 False 可能只是恆真
+    path.write_text(json.dumps({"collected": 1, "passed": 1}), encoding="utf-8")
+    assert executor._verdict_ok(0, path) is True
 
 
 def test_run_pytest_removes_the_result_path_from_the_childs_environ():

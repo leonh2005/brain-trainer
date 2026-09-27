@@ -41,6 +41,17 @@ def test_generate_map_rejects_empty_concepts(monkeypatch):
         tutor.generate_map("python", ["write"], False)
 
 
+def test_generate_map_defaults_to_not_executable_when_field_missing(monkeypatch):
+    """executable 缺席時要降級成 False（交給 Claude 批改），不能沿用 True。
+
+    提示詞已要求模型明確判斷；沿用 True 會讓非 Python 領域變成 executable=true，
+    接著每一題 write 都在 _validate_question 被 422 擋掉，永遠出不了題。
+    """
+    payload = {"concepts": [{"name": "x", "section": "consensus", "description": "d"}]}
+    monkeypatch.setattr(tutor, "_call_agent", lambda *a, **k: (json.dumps(payload), None))
+    assert tutor.generate_map("python", ["write"], False)["executable"] is False
+
+
 def test_generate_map_rejects_bad_section(monkeypatch):
     payload = {"executable": True, "concepts": [{"name": "x", "section": "亂寫", "description": "d"}]}
     monkeypatch.setattr(tutor, "_call_agent", lambda *a, **k: (json.dumps(payload), None))
