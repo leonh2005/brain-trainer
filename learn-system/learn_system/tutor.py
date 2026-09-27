@@ -193,10 +193,31 @@ pytest 執行。其他程式語言（JavaScript、C、Rust…）與非程式領�
 }}"""
 
 
+# verify_sources=true 時追加到地圖提示詞。每個概念的 source_urls 是「需要引用
+# 出處」的憑據：學習者在概念說明旁看得到實際來源，才能自己核對模型有沒有胡說。
+SOURCE_URLS_INSTRUCTION = """
+每個概念都要附上 source_urls 欄位，列出你確實查證過、支持該概念的權威來源網址
+（官方文件、規格書、經典教材）。只放真的查證過的網址，不要憑印象編造。"""
+
+
+def _clean_source_urls(value):
+    """只保留字串項。這個欄位的契約是「網址字串的陣列」，模型卻可能把整包
+    回成字串、物件或混入數字，非字串項入庫後只會在畫面上變成無意義的雜訊。
+
+    **刻意不在這裡過濾 http(s)**：這些網址來自模型，是不可信輸入，安全邊界在
+    渲染端（domain.js 只把 http/https 升級成連結，其餘只顯示文字），資料層
+    過濾只是把同一件事做兩次，還會讓「非 http 的網址」在 DB 裡憑空消失。
+    """
+    if not isinstance(value, list):
+        return []
+    return [u for u in value if isinstance(u, str)]
+
+
 def generate_map(domain_name, goals, verify_sources):
     prompt = MAP_PROMPT.format(domain=domain_name, goals="、".join(goals))
     if verify_sources:
         prompt += "\n\n請先查證權威來源（官方文件、經典教材）再作答，並在必要時修正你的敘述。"
+        prompt += SOURCE_URLS_INSTRUCTION
     text, _ = _call_agent(prompt, allow_web=verify_sources)
     data = _extract_json(text)
 
@@ -208,6 +229,12 @@ def generate_map(domain_name, goals, verify_sources):
             raise TutorError(f"未知的 section：{c.get('section')}")
         if not c.get("name"):
             raise TutorError("概念缺少名稱")
+        # 沒要求查證時，模型若仍自己帶了網址也一併丟掉：DB 的 source_urls
+        # 只代表「查證過」，前端也只在這個前提下顯示。
+        if verify_sources:
+            c["source_urls"] = _clean_source_urls(c.get("source_urls"))
+        else:
+            c.pop("source_urls", None)
 
     # 預設 False：提示詞已經要求模型明確判斷，欄位缺席代表它沒回答這個問題。
     # 若沿用 True，非 Python 領域會拿到 executable=true，每一題 write 都在
@@ -336,11 +363,27 @@ GRADE_PROMPT = """你是嚴謹的學科導師，要批改學習者的作答。
 判斷原則：能推導、能解釋為什麼，才算 correct；只覆述結論或答對但理由錯誤算 partial。"""
 
 
-def grade_answer(domain_name, concept_name, question, answer, executable):
+# 有客觀錨點時（principle 題在可執行領域）追加。少了這段，學習者的預測是對照
+# 模型「聲稱」的 reference_answer——模型講錯輸出時，答對的人會被判錯，答錯的人
+# 會被判對。真實輸出才是判準。
+OBSERVED_OUTPUT_PROMPT = """
+
+實際執行題目程式碼取得的真實輸出（這是事實，不是參考答案）：
+{output}
+
+學習者的預測要對照上面這份真實輸出，不是對照「標準答案」；兩者矛盾時一律以
+真實輸出為準，並在 feedback 中指出標準答案錯在哪裡。"""
+
+
+def grade_answer(domain_name, concept_name, question, answer, executable, observed_output=None):
     prompt = GRADE_PROMPT.format(
         domain=domain_name, concept=concept_name, prompt=question["prompt"],
         reference=question.get("reference_answer") or "（無）", answer=answer,
     )
+    # `is not None` 而非真值判斷：輸出可以是空字串（程式什麼都沒印），那同樣
+    # 是事實，不該退回「沒有錨點」的批改方式。
+    if observed_output is not None:
+        prompt += OBSERVED_OUTPUT_PROMPT.format(output=observed_output)
     text, _ = _call_agent(prompt)
     data = _extract_json(text)
     # 與 generate_question 同理：合法 JSON 也可能是純量或陣列，直接 .get()

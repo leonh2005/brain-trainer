@@ -79,6 +79,54 @@ def test_read_question_accepts_wrong_value_bug(ctx, monkeypatch):
     assert r.status_code == 200
 
 
+def test_principle_question_accepts_a_runnable_snippet(ctx, monkeypatch):
+    """可執行的程式碼才有真實輸出可當批改錨點（見 answer 端點）。"""
+    client, did, cid = ctx
+    monkeypatch.setattr(tutor, "generate_question", lambda *a, **k: {
+        "prompt": "預測輸出", "payload": {"code_snippet": "print(1 + 1)"}, "reference_answer": "2"})
+    r = client.post(f"/api/concepts/{cid}/questions", json={"goal_type": "principle"})
+    assert r.status_code == 200
+
+
+def test_principle_question_with_unrunnable_snippet_is_rejected(ctx, monkeypatch):
+    """跑不動的程式碼沒有「真實輸出」可對照，學習者的預測無從批改。
+
+    write／read 題在建立時都會真的跑一次，principle 題同樣必須。
+    """
+    client, did, cid = ctx
+    monkeypatch.setattr(tutor, "generate_question", lambda *a, **k: {
+        "prompt": "預測輸出", "payload": {"code_snippet": "print(1 +"}, "reference_answer": "3"})
+    r = client.post(f"/api/concepts/{cid}/questions", json={"goal_type": "principle"})
+    assert r.status_code == 422
+    assert "題目無效" in r.get_json()["error"]
+
+
+def test_principle_question_accepts_a_raising_snippet(ctx, monkeypatch):
+    """「這段程式會拋出什麼例外」是有效的 principle 題。
+
+    拋例外是「執行了然後失敗」，不是「跑不動」——stderr 的 traceback 就是可
+    對照的真實輸出（見 answer 端點的 stdout or stderr）。若建立時要求結束碼
+    為 0，這一類題目會永遠出不出來，與批改端互相矛盾。
+    """
+    client, did, cid = ctx
+    monkeypatch.setattr(tutor, "generate_question", lambda *a, **k: {
+        "prompt": "預測結果", "payload": {"code_snippet": "print(1 / 0)"}, "reference_answer": "會拋錯"})
+    r = client.post(f"/api/concepts/{cid}/questions", json={"goal_type": "principle"})
+    assert r.status_code == 200
+
+
+def test_principle_question_without_snippet_is_rejected(ctx, monkeypatch):
+    """走正式路徑（真 generate_question）：缺 code_snippet 的 principle 題在
+    出題階段就會被 tutor 擋下，端點回 502，不會入庫。
+    """
+    client, did, cid = ctx
+    monkeypatch.setattr(tutor, "_call_agent", lambda *a, **k: (
+        json.dumps({"prompt": "預測輸出", "payload": {}, "reference_answer": "3"}), None))
+    r = client.post(f"/api/concepts/{cid}/questions", json={"goal_type": "principle"})
+    assert r.status_code == 502
+    assert "code_snippet" in r.get_json()["error"]
+
+
 def test_unknown_goal_type_is_rejected(ctx, monkeypatch):
     client, did, cid = ctx
     r = client.post(f"/api/concepts/{cid}/questions", json={"goal_type": "亂寫"})

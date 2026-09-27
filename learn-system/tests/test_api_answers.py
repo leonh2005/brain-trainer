@@ -1,3 +1,5 @@
+import json
+
 import app as app_module
 import pytest
 
@@ -31,6 +33,18 @@ def make_question(client, cid, monkeypatch, goal_type, payload, reference):
     monkeypatch.setattr(tutor, "generate_question", lambda *a, **k: {
         "prompt": "q", "payload": payload, "reference_answer": reference})
     return client.post(f"/api/concepts/{cid}/questions", json={"goal_type": goal_type}).get_json()["question"]["id"]
+
+
+def _capture_grade_prompts(monkeypatch):
+    """讓批改真的走完 tutor.grade_answer（提示詞真的被組出來），並回傳提示詞清單。"""
+    prompts = []
+
+    def fake_agent(prompt, **kwargs):
+        prompts.append(prompt)
+        return json.dumps({"verdict": "correct", "feedback": "f", "root_cause": None}), None
+
+    monkeypatch.setattr(tutor, "_call_agent", fake_agent)
+    return prompts
 
 
 def test_write_answer_graded_by_real_execution(ctx, monkeypatch):
@@ -135,6 +149,109 @@ def test_write_question_without_test_code_is_rejected(ctx, monkeypatch):
     attempts = db.list_attempts_for_concept(conn, cid)
     conn.close()
     assert attempts == []
+
+
+def test_principle_answer_is_graded_against_the_real_output(ctx, monkeypatch):
+    """學習者的預測要對照程式**真的**印出什麼，不是對照模型聲稱的標準答案。
+
+    這裡刻意不替換 grade_answer，讓批改提示詞真的被組出來，才能斷言真實輸出
+    進得了提示詞——模型說「輸出 3」而程式實際印 2 時，批改依據必須是 2。
+    """
+    client, did, cid = ctx
+    qid = make_question(client, cid, monkeypatch, "principle",
+                        {"code_snippet": "print(1 + 1)"}, "3")
+    prompts = _capture_grade_prompts(monkeypatch)
+    r = client.post(f"/api/questions/{qid}/answer", json={"answer": "2"})
+    assert r.get_json()["attempt"]["verdict"] == "correct"
+    assert "標準答案：3" in prompts[0]                       # 模型聲稱的輸出仍在
+    assert "取得的真實輸出（這是事實，不是參考答案）：\n2\n" in prompts[0]
+
+
+def test_principle_answer_without_executable_falls_back_to_claude(ctx, monkeypatch):
+    """非程式領域（executable=0）沒有執行器可用，一律回 Claude 批改。"""
+    client, did, cid = ctx
+    client.post(f"/api/domains/{did}/override_executable", json={"executable": False})
+    qid = make_question(client, cid, monkeypatch, "principle",
+                        {"code_snippet": "print(1 / 0)"}, "會拋錯")
+
+    def boom(*a, **k):
+        raise AssertionError("不可執行領域不該執行學習者的題目程式碼")
+
+    monkeypatch.setattr(app_module, "run_python", boom)
+    monkeypatch.setattr(tutor, "grade_answer", lambda *a, **k: {
+        "verdict": "correct", "feedback": "ok", "root_cause": None})
+    r = client.post(f"/api/questions/{qid}/answer", json={"answer": "會拋錯"})
+    assert r.get_json()["attempt"]["verdict"] == "correct"
+
+
+def test_principle_answer_falls_back_to_stderr_when_nothing_was_printed(ctx, monkeypatch):
+    """程式什麼都沒印（拋例外）時，traceback 本身就是可對照的真實輸出。
+
+    少了這條 fallback，「預測會拋出什麼例外」的題目會變成對著空字串批改。
+    """
+    client, did, cid = ctx
+    qid = make_question(client, cid, monkeypatch, "principle",
+                        {"code_snippet": "print(1 / 0)"}, "會拋錯")
+    prompts = _capture_grade_prompts(monkeypatch)
+    client.post(f"/api/questions/{qid}/answer", json={"answer": "ZeroDivisionError"})
+    assert "ZeroDivisionError" in prompts[0]
+
+
+def test_principle_question_without_snippet_is_rejected_at_answer_time(ctx, monkeypatch):
+    """題目可能是「不可執行」時生成的，之後才被 override 翻成可執行。
+
+    這種題目連程式碼都沒有，無從錨定——比照 write 題缺 test_code 的處理，
+    回 422 且不留 attempt。
+    """
+    client, did, cid = ctx
+    client.post(f"/api/domains/{did}/override_executable", json={"executable": False})
+    qid = make_question(client, cid, monkeypatch, "principle", {"code_snippet": ""}, "1")
+    client.post(f"/api/domains/{did}/override_executable", json={"executable": True})
+    # 哨兵：真的走到批改就會擲出（而不是打真 API），錯誤的路徑因此會回 500
+    monkeypatch.setattr(tutor, "grade_answer",
+                        lambda *a, **k: (_ for _ in ()).throw(AssertionError("不該進到批改")))
+    r = client.post(f"/api/questions/{qid}/answer", json={"answer": "1"})
+    assert r.status_code == 422
+    conn = db.connect(client.application.config["DB_PATH"])
+    assert db.list_attempts_for_concept(conn, cid) == []
+    conn.close()
+
+
+def test_principle_env_failure_is_not_counted_as_wrong(ctx, monkeypatch):
+    """執行環境失敗與 write 題同一條規則：不是「答錯」，不落 attempt。"""
+    client, did, cid = ctx
+    qid = make_question(client, cid, monkeypatch, "principle", {"code_snippet": "print(1)"}, "1")
+    monkeypatch.setattr(app_module, "run_python",
+                        lambda *a, **k: {"ok": False, "stdout": "", "stderr": "執行環境錯誤：x",
+                                         "timed_out": False, "env_error": True})
+    # 哨兵：真的走到批改就會擲出（而不是打真 API），錯誤的路徑因此會回 500
+    monkeypatch.setattr(tutor, "grade_answer",
+                        lambda *a, **k: (_ for _ in ()).throw(AssertionError("不該進到批改")))
+    r = client.post(f"/api/questions/{qid}/answer", json={"answer": "1"})
+    assert r.status_code == 503
+    conn = db.connect(client.application.config["DB_PATH"])
+    assert db.list_attempts_for_concept(conn, cid) == []
+    conn.close()
+
+
+def test_principle_timeout_is_not_counted_as_wrong(ctx, monkeypatch):
+    """逾時是「沒跑完」不是「答錯」，判成 wrong 會污染掌握度。
+
+    題目先以正常片段建立（建立時也要真的跑得動），再把執行器換成逾時。
+    """
+    client, did, cid = ctx
+    qid = make_question(client, cid, monkeypatch, "principle", {"code_snippet": "print(1)"}, "1")
+    monkeypatch.setattr(app_module, "run_python",
+                        lambda *a, **k: {"ok": False, "stdout": "", "stderr": "",
+                                         "timed_out": True, "env_error": False})
+    # 哨兵：真的走到批改就會擲出（而不是打真 API），錯誤的路徑因此會回 500
+    monkeypatch.setattr(tutor, "grade_answer",
+                        lambda *a, **k: (_ for _ in ()).throw(AssertionError("不該進到批改")))
+    r = client.post(f"/api/questions/{qid}/answer", json={"answer": "1"})
+    assert r.status_code == 408
+    conn = db.connect(client.application.config["DB_PATH"])
+    assert db.list_attempts_for_concept(conn, cid) == []
+    conn.close()
 
 
 def test_exam_answer_graded_by_claude(ctx, monkeypatch):

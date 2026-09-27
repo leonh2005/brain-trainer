@@ -18,6 +18,36 @@ function isCurrent(conceptId) {
   return state.current !== null && state.current.id === conceptId;
 }
 
+// 概念出處是模型產生的網址，一律當成不可信輸入。只有真的解析得出 http/https
+// 的才升級成連結：`javascript:` 會在點擊時執行腳本，`data:` 能載入任意內容，
+// 兩者都不能進 href。解析不出來的原樣以文字顯示，仍看得到模型給了什麼。
+function httpUrlOrNull(value) {
+  let parsed;
+  try {
+    parsed = new URL(value);
+  } catch {
+    return null;
+  }
+  return parsed.protocol === 'http:' || parsed.protocol === 'https:' ? parsed.href : null;
+}
+
+function renderSources(urls) {
+  const box = document.getElementById('concept-sources');
+  box.replaceChildren();
+  if (!urls || !urls.length) { box.hidden = true; return; }
+  box.hidden = false;
+  box.append(el('span', 'dim', '出處：'));
+  for (const raw of urls) {
+    const safe = httpUrlOrNull(raw);
+    if (!safe) { box.append(el('span', 'source', String(raw))); continue; }
+    const a = el('a', 'source', raw);
+    a.href = safe;
+    a.target = '_blank';
+    a.rel = 'noopener noreferrer';
+    box.append(a);
+  }
+}
+
 async function api(path, opts) {
   const res = await fetch(path, opts);
   const body = await res.json().catch(() => ({}));
@@ -30,6 +60,7 @@ async function refresh() {
   state.domain = data.domain;
   state.concepts = data.concepts;
 
+  document.getElementById('load-error').hidden = true;
   document.getElementById('domain-name').textContent = data.domain.name;
   document.getElementById('domain-meta').textContent =
     `目標 ${data.domain.goals.map(g => GOAL_LABELS[g] || g).join('／')} · 掌握 ${data.progress.mastery_pct}%`;
@@ -42,9 +73,13 @@ async function refresh() {
 function renderMap() {
   const wrap = document.getElementById('map-sections');
   wrap.replaceChildren();
-  const empty = document.getElementById('map-empty');
-  if (!state.concepts.length) { empty.hidden = false; return; }
-  empty.hidden = true;
+  // 首次載入失敗時 state.domain 還是 null，一律當成「生成中」處理，真正的
+  // 錯誤由 #load-error 顯示。
+  const status = state.domain ? state.domain.status : 'generating';
+  const hasConcepts = state.concepts.length > 0;
+  document.getElementById('map-empty').hidden = status !== 'generating' || hasConcepts;
+  document.getElementById('map-failed').hidden = status !== 'failed';
+  if (!hasConcepts) return;
 
   for (const section of ['consensus', 'dispute', 'frontier']) {
     const items = state.concepts.filter(c => c.section === section);
@@ -100,6 +135,7 @@ async function selectConcept(id) {
   document.getElementById('concept-name').textContent = state.current.name;
   document.getElementById('verdict').hidden = true;
   document.getElementById('question-area').hidden = true;
+  renderSources(state.current.source_urls);
 
   // 說明第一次要跑 Agent（慢且貴），所以只在使用者點開這個概念時才要，
   // 之後後端走快取。放在 refresh 的輪詢路徑上會每次輪詢都打一次。
@@ -122,7 +158,25 @@ async function selectConcept(id) {
   }
 }
 
-document.getElementById('retry-hint').onclick = () => location.reload();
+document.getElementById('regenerate').onclick = async () => {
+  const button = document.getElementById('regenerate');
+  const status = document.getElementById('regenerate-status');
+  button.disabled = true;
+  status.textContent = '重新生成中…';
+  try {
+    await api(`/api/domains/${DOMAIN_ID}/regenerate`, { method: 'POST' });
+  } catch (e) {
+    status.textContent = `重新生成失敗：${e.message}`;
+    button.disabled = false;
+    return;
+  }
+  status.textContent = '';
+  button.disabled = false;
+  // 後端已把狀態寫回 generating，但輪詢條件是「只在 generating 時輪詢」，
+  // 本機快取還停在 failed——不先改掉就永遠不會再輪詢。
+  if (state.domain) state.domain.status = 'generating';
+  poll();
+};
 
 document.getElementById('delete-domain').onclick = async () => {
   // 領域名是伺服器資料。confirm 收的是字串、不解析 HTML，故直接內插即可；
@@ -248,18 +302,29 @@ document.getElementById('chat-form').onsubmit = async (e) => {
 // 每 3 秒一輪，此時後端正忙著跑 Agent、SQLite 也可能被寫入鎖住，沒有守衛請求
 // 會一路堆積；finally 負責放掉守衛，否則一次失敗就讓輪詢永久停擺。
 let inflight = false;
+let loaded = false;
 
 async function poll() {
   if (inflight) return;
   inflight = true;
   try {
     await refresh();
-  } catch {
-    // 服務重啟中或連不上：這次完全不動畫面，停在最後一次成功的狀態，下一輪再試。
+    loaded = true;
+  } catch (e) {
+    // 服務重啟中或連不上：已載入過就完全不動畫面，停在最後一次成功的狀態，
+    // 下一輪再試。**首次載入就失敗不能吞掉**（領域被刪或後端掛掉），否則整頁
+    // 空白卻沒有任何訊息，看起來像壞掉。
+    if (!loaded) {
+      const box = document.getElementById('load-error');
+      box.textContent = `載入失敗：${e.message}`;
+      box.hidden = false;
+    }
   } finally {
     inflight = false;
   }
 }
 
 poll();
-setInterval(() => { if (!state.domain || state.domain.status !== 'ready') poll(); }, 3000);
+// 只在生成中輪詢：failed 是終態（要靠「重新生成」離開），ready 也沒有東西會再變，
+// 繼續輪詢等於每 3 秒白打一次後端。
+setInterval(() => { if (!state.domain || state.domain.status === 'generating') poll(); }, 3000);

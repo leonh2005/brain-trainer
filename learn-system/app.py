@@ -1,3 +1,4 @@
+import ast
 import logging
 import threading
 
@@ -42,9 +43,12 @@ def _generate_map(domain_id):
             concepts = result["concepts"]
             if not concepts:
                 raise tutor.TutorError("Agent 未產出任何概念")
+            verify = bool(domain["verify_sources"])
             db.set_domain_executable(conn, domain_id, result["executable"])
             for c in concepts:
-                db.create_concept(conn, domain_id, c["name"], c["section"], c.get("description"))
+                # source_urls 只在查證模式下入庫（見 tutor.generate_map 的清理）
+                db.create_concept(conn, domain_id, c["name"], c["section"], c.get("description"),
+                                  source_urls=c.get("source_urls") if verify else None)
         except tutor.TutorError as e:
             logger.warning("智識地圖生成失敗：domain %s：%s", domain_id, e)
             db.set_domain_status(conn, domain_id, "failed")
@@ -63,7 +67,8 @@ def _spawn_map_generation(app, domain_id):
 
 def _validate_question(q, goal_type):
     """確認題目本身有效：write 題的參考解要能過測試，
-    read 題的原版與修正版行為必須不同，且修正版真的通過。
+    read 題的原版與修正版行為必須不同，且修正版真的通過，
+    principle 題的程式碼必須真的跑得動（跑不動就沒有可對照的真實輸出）。
 
     read 題只比對「原版是否拋錯」是不夠的——bug 若是「輸出錯誤值」，
     原版仍會 ok=True，會被誤判成無效題，故改以行為差異為判準。
@@ -86,7 +91,22 @@ def _validate_question(q, goal_type):
         return differs and fixed["ok"]
 
     if goal_type == "principle":
-        return bool(payload.get("code_snippet", "").strip())
+        snippet = payload.get("code_snippet", "")
+        if not snippet.strip():
+            return False
+        # 「跑不動」與「跑起來之後拋例外」是兩件事，不能混為一談：
+        # - 解析不了（語法錯誤）＝模型給的程式碼本身是壞的，學習者無從預測 → 作廢
+        # - 執行逾時／環境失敗＝拿不到輸出，同樣沒有錨點 → 作廢
+        # - 跑起來但拋例外＝**是有效的題**（「這段程式會丟出什麼例外」），真實輸出
+        #   就是 stderr 的 traceback，批改端以 `stdout or stderr` 取用
+        #   （見 answer_question）。若在這裡要求結束碼為 0，這一類題目會永遠
+        #   出不出來——與批改端的行為互相矛盾。
+        try:
+            ast.parse(snippet)
+        except (SyntaxError, ValueError):
+            return False
+        result = run_python(snippet)
+        return not result["timed_out"] and not result["env_error"]
 
     return True
 
@@ -197,6 +217,31 @@ def create_app(db_path=None):
         finally:
             conn.close()
 
+    @app.post("/api/domains/<int:domain_id>/regenerate")
+    def regenerate_domain(domain_id):
+        """重新生成智識地圖——failed 領域的復原路徑（spec §5.2 的重試鈕）。
+
+        先清掉既有概念再重跑：中斷留下的半套概念若留著，新的地圖會疊在舊的
+        上面。對 ready 的領域也可安全呼叫，語意就是「這張地圖重生成一次」；
+        它的概念會被換成新的一份（舊概念與其作答一併消失，故前端只在 failed
+        時提供按鈕）。生成中的領域一律拒絕：再起一條執行緒會讓兩邊同時寫入
+        概念（疊成兩份），而且舊的那條最後還會把狀態寫回 ready，蓋掉新的
+        generating——留下的是一個沒有任何東西在跑的「生成中」。
+        """
+        conn = db.connect(db_path)
+        try:
+            domain = db.get_domain(conn, domain_id)
+            if domain is None:
+                return jsonify(error="找不到領域"), 404
+            if domain["status"] == "generating":
+                return jsonify(error="智識地圖正在生成中，請稍候"), 409
+            db.delete_concepts(conn, domain_id)
+            db.set_domain_status(conn, domain_id, "generating")
+        finally:
+            conn.close()
+        _spawn_map_generation(app, domain_id)
+        return jsonify(ok=True)
+
     @app.post("/api/domains/<int:domain_id>/override_executable")
     def override_executable(domain_id):
         body = request.get_json(force=True)
@@ -274,8 +319,31 @@ def create_app(db_path=None):
                 feedback = "測試通過" if result["ok"] else f"測試失敗：\n{detail[-800:]}"
                 root_cause = None if result["ok"] else "程式未通過測試"
             else:
+                # principle 題同樣有客觀錨點：真實輸出由執行取得，不由模型聲稱。
+                # 沒有這一步，學習者的預測是對照模型「以為」的輸出，模型講錯就
+                # 判錯人（read/write 已有各自的執行錨點，principle 是唯一缺的）。
+                observed = None
+                if goal_type == "principle" and executable:
+                    snippet = question["payload"].get("code_snippet", "")
+                    # 題目可能是「不可執行」時生成、之後才被翻成可執行的，這種題目
+                    # 連程式碼都沒有，無從錨定。
+                    if not snippet.strip():
+                        return jsonify(error="題目無效：缺少 code_snippet，請重新出題"), 422
+                    result = run_python(snippet)
+                    # 與 write 題同一條規則：逾時／執行環境失敗都是「沒跑完」而非
+                    # 「答錯」，判成 wrong 會污染掌握度，故回報錯誤且不留 attempt。
+                    if result["timed_out"]:
+                        return jsonify(error="執行逾時（超過 5 秒），不計入對錯，請稍後重試"), 408
+                    if result["env_error"]:
+                        return jsonify(error="執行環境錯誤，不計入對錯，請稍後重試"), 503
+                    # stdout 為空時（題目是「會拋出什麼例外」這類）錯誤訊息本身就是
+                    # 真實輸出，與 write 題顯示報告的取捨同一個道理。
+                    # 只留尾端 800 字：與 write 題的失敗報告同一個上限，程式碼是
+                    # 模型給的，不能假設它不會噴出上萬行把 prompt 灌爆。
+                    observed = (result["stdout"] or result["stderr"])[-800:]
                 try:
-                    graded = tutor.grade_answer(domain["name"], concept["name"], question, answer, executable)
+                    graded = tutor.grade_answer(domain["name"], concept["name"], question, answer,
+                                                executable, observed_output=observed)
                 except tutor.TutorError as e:
                     return jsonify(error=str(e)), 502
                 verdict, feedback, root_cause = graded["verdict"], graded["feedback"], graded["root_cause"]

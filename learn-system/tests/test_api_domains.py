@@ -118,6 +118,107 @@ def test_delete_unknown_domain_404s(client):
     assert "error" in r.get_json()
 
 
+def test_source_urls_are_persisted_when_verifying(client, monkeypatch):
+    """勾了查證時，_generate_map 要把模型給的出處寫進 concepts.source_urls。
+
+    在此之前這個欄位只有一個測試在寫，生成路徑整條都沒有碰它——「需要引用
+    出處」於是只等於提示詞多一句話，前端什麼都看不到。
+    """
+    monkeypatch.setattr(tutor, "generate_map", lambda *a, **k: {
+        "executable": True,
+        "concepts": [{"name": "GIL", "section": "consensus", "description": "d",
+                      "source_urls": ["https://docs.python.org/3/"]}]})
+    did = client.post("/api/domains", json={"name": "python", "goals": ["write"],
+                                            "verify_sources": True}).get_json()["id"]
+    assert client.get(f"/api/domains/{did}").get_json()["concepts"][0]["source_urls"] == [
+        "https://docs.python.org/3/"]
+
+
+def test_source_urls_stay_empty_without_verification(client, monkeypatch):
+    """沒勾查證時行為不變：沒有出處、DB 欄位是 NULL。"""
+    monkeypatch.setattr(tutor, "generate_map", lambda *a, **k: {
+        "executable": True,
+        "concepts": [{"name": "GIL", "section": "consensus", "description": "d",
+                      "source_urls": ["https://模型自己多給的"]}]})
+    did = client.post("/api/domains", json={"name": "python", "goals": ["write"],
+                                            "verify_sources": False}).get_json()["id"]
+    assert client.get(f"/api/domains/{did}").get_json()["concepts"][0]["source_urls"] is None
+
+
+def test_regenerate_clears_partial_concepts_and_ends_ready(client, monkeypatch, tmp_path):
+    """failed 不是終態：中斷後可以重試，而且不從頭疊上去。
+
+    上一次跑到一半留下的概念必須先清掉，否則新地圖會疊在舊的上面。
+    """
+    def boom(*a, **k):
+        raise tutor.TutorError("壞掉了")
+
+    monkeypatch.setattr(tutor, "generate_map", boom)
+    did = client.post("/api/domains", json={"name": "python", "goals": ["write"],
+                                            "verify_sources": False}).get_json()["id"]
+    assert client.get(f"/api/domains/{did}").get_json()["domain"]["status"] == "failed"
+
+    conn = db.connect(tmp_path / "t.db")
+    try:
+        db.create_concept(conn, did, "半套的概念", "consensus")
+    finally:
+        conn.close()
+
+    monkeypatch.setattr(tutor, "generate_map", lambda *a, **k: fake_map(n=3))
+    r = client.post(f"/api/domains/{did}/regenerate")
+    assert r.status_code == 200
+    assert r.get_json() == {"ok": True}
+    body = client.get(f"/api/domains/{did}").get_json()
+    assert body["domain"]["status"] == "ready"
+    assert [c["name"] for c in body["concepts"]] == ["c0", "c1", "c2"]
+
+
+def test_regenerate_is_rejected_while_generating(client, monkeypatch, tmp_path):
+    """生成中再觸發一次會起第二條執行緒：兩邊同時寫入概念（疊成兩份），而且舊的
+    那條最後把狀態寫回 ready，蓋掉新的 generating。前端按鈕雖然關著，但直呼
+    API（或舊分頁）到得了，故在後端擋。
+    """
+    monkeypatch.setattr(tutor, "generate_map", lambda *a, **k: fake_map(n=2))
+    did = client.post("/api/domains", json={"name": "python", "goals": ["write"],
+                                            "verify_sources": False}).get_json()["id"]
+    conn = db.connect(tmp_path / "t.db")
+    try:
+        db.set_domain_status(conn, did, "generating")
+    finally:
+        conn.close()
+
+    r = client.post(f"/api/domains/{did}/regenerate")
+    assert r.status_code == 409
+    body = client.get(f"/api/domains/{did}").get_json()
+    assert len(body["concepts"]) == 2  # 原本那份沒被清掉
+
+
+def test_regenerate_unknown_domain_404s(client):
+    r = client.post("/api/domains/9999/regenerate")
+    assert r.status_code == 404
+    assert "error" in r.get_json()
+
+
+def test_regenerate_on_a_ready_domain_keeps_one_map(client, monkeypatch):
+    """對 ready 的領域呼叫也要安全：概念是換成新的一份，不是變成兩份。
+
+    以 id 全換過來斷言「真的重新生成過」——只比對名稱的話，端點整個 404 也
+    會通過（原本那份地圖本來就叫 c0/c1/c2）。
+    """
+    monkeypatch.setattr(tutor, "generate_map", lambda *a, **k: fake_map(n=3))
+    did = client.post("/api/domains", json={"name": "python", "goals": ["write"],
+                                            "verify_sources": False}).get_json()["id"]
+    before = [c["id"] for c in client.get(f"/api/domains/{did}").get_json()["concepts"]]
+
+    r = client.post(f"/api/domains/{did}/regenerate")
+    assert r.status_code == 200
+    body = client.get(f"/api/domains/{did}").get_json()
+    assert body["domain"]["status"] == "ready"
+    after = [c["id"] for c in body["concepts"]]
+    assert [c["name"] for c in body["concepts"]] == ["c0", "c1", "c2"]
+    assert not set(before) & set(after)
+
+
 def test_override_executable(client, monkeypatch):
     monkeypatch.setattr(tutor, "generate_map", lambda *a, **k: fake_map(executable=False))
     did = client.post("/api/domains", json={"name": "econ", "goals": ["principle"], "verify_sources": False}).get_json()["id"]
