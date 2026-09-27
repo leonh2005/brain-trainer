@@ -209,7 +209,11 @@ def generate_map(domain_name, goals, verify_sources):
         if not c.get("name"):
             raise TutorError("概念缺少名稱")
 
-    return {"executable": bool(data.get("executable", True)), "concepts": concepts}
+    # 預設 False：提示詞已經要求模型明確判斷，欄位缺席代表它沒回答這個問題。
+    # 若沿用 True，非 Python 領域會拿到 executable=true，每一題 write 都在
+    # _validate_question 被 422 擋掉（見上方註解）。缺席時降級成 Claude 批改，
+    # 最壞情況是少一層執行驗證，不會讓整個題型永久出不了題。
+    return {"executable": bool(data.get("executable", False)), "concepts": concepts}
 
 
 QUESTION_PROMPT = """你是嚴謹的學科導師，要替學習者出一題來檢驗他是否「真正理解」而非死記。

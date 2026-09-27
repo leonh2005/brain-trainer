@@ -107,6 +107,13 @@ def set_domain_executable(conn, domain_id, executable):
     conn.commit()
 
 
+def delete_domain(conn, domain_id):
+    """刪除領域。concepts／questions／attempts 由 FK 的 ON DELETE CASCADE 連帶
+    刪除（connect() 已開 PRAGMA foreign_keys）。"""
+    conn.execute("DELETE FROM domains WHERE id = ?", (domain_id,))
+    conn.commit()
+
+
 def set_domain_chat_session(conn, domain_id, session_id):
     conn.execute("UPDATE domains SET chat_session_id = ? WHERE id = ?", (session_id, domain_id))
     conn.commit()

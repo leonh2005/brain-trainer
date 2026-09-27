@@ -57,22 +57,35 @@ def _verdict_ok(returncode, verdict_path):
     就能憑空印出 `1 passed in 0.01s` 騙過判定（`ok=True` → 記一筆 correct →
     算進掌握度）。標準輸出／標準錯誤都是子行程能寫的通道，不能當判準。
 
-    結果檔改由外掛在 `pytest_sessionfinish` 寫出，路徑由執行器以環境變數傳入且
-    位於學習者工作目錄之外。**檔案不存在一律視為未通過**：學習者若在測試中途
-    `os._exit(0)`，pytest 來不及寫檔——而「來不及寫檔」正是「斷言一次都沒跑」。
+    結果檔改由外掛在 `pytest_sessionfinish` 寫出，路徑由執行器以環境變數傳入。
+    **檔案不存在一律視為未通過**：學習者若在測試中途 `os._exit(0)`，pytest
+    來不及寫檔——而「來不及寫檔」正是「斷言一次都沒跑」。
 
     結束碼仍然保留為額外條件（`sys.exit(0)` 會讓 pytest 以 3 結束）。
 
-    **這裡保證的只是「判準不再是 stdout/stderr」，不是「結果檔無法偽造」。**
-    同一個 uid、同一個行程內的學習者程式碼仍可：(1) 從 `sys.modules` 或行程
-    envp 取得外掛的路徑，在 `atexit` 裡覆寫結果檔；(2) 直接換掉外掛的
-    `pytest_sessionfinish`。要擋住這一類攻擊只有把子行程隔離到另一個身分
-    （容器／沙箱），不在本系統範圍內（見 `_child_env`）。相對改版前真正被關掉的
-    是「偽造輸出」與「提早結束行程」——這兩條不需要知道任何路徑就成立。
+    **這裡保證的只是「判準不再是子行程自己寫得到的 stdout/stderr」，不是「結果檔
+    無法偽造」。** 把結果檔放在學習者工作目錄之外、目錄名用隨機字串，都不構成
+    保護：該目錄位於父行程的共用暫存根目錄（`tempfile.gettempdir()`）底下，與
+    子行程同一個 uid，而前綴 `learn-verdict-` 是原始碼可見的固定常數。子行程
+    只要用這個前綴 glob 那個根目錄就能找到結果檔（實測在 macOS 上
+    `glob('/private/var/folders/*/*/T/learn-verdict-*')` 命中），接著在 `atexit`
+    裡改寫成「全過」再 `os._exit(0)`，錯誤的答案就會拿到 ok=True。
+
+    同一行程另有兩條不必先找路徑的路：(1) 從 `sys.modules` 或行程 envp 取得外掛
+    檔案的路徑；(2) 直接換掉外掛的 `pytest_sessionfinish`。要真的擋住這一類
+    攻擊，只有把子行程隔離到另一個身分（不同 uid 的容器／沙箱），不在本系統
+    範圍內（見 `_child_env`）。相對改版前真正被關掉的，是「偽造輸出」與「提早
+    結束行程」這兩條不必知道任何路徑的攻擊。
     """
     try:
         verdict = json.loads(verdict_path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError):
+    # UnicodeDecodeError：結果檔含非 UTF-8 位元組（讀檔就拋，非 JSONDecodeError）。
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError):
+        return False
+    # 合法 JSON 也可能是純量或陣列（`[]`、`123`、`null`），.get 會拋
+    # AttributeError——它不在上面的 except 內，會一路穿出 run_pytest 變成 500。
+    # 與 tutor 解析 Agent 回應同一個模式。
+    if not isinstance(verdict, dict):
         return False
     if returncode != 0:
         return False
@@ -214,8 +227,9 @@ def run_python(code, timeout=DEFAULT_TIMEOUT):
 def _pytest_run(solution_code, test_code, timeout):
     """跑一次 pytest，判準是外掛寫出的結果檔（見 `_verdict_ok`）。
 
-    結果檔放在另一個暫存目錄，刻意不在學習者的工作目錄底下（目錄名隨機，且
-    子行程的 TMPDIR 指向它自己的工作目錄，不會從 TMPDIR 洩漏路徑）。
+    結果檔放在學習者的工作目錄之外，只是為了與被測檔案分開。**這不是保護**：
+    目錄名雖然隨機，前綴卻是固定的常數，且目錄就在父行程的共用暫存根目錄裡
+    （與子行程同一個 uid），子行程以該前綴 glob 就找得到——詳見 `_verdict_ok`。
     """
     with tempfile.TemporaryDirectory(prefix="learn-verdict-") as verdict_dir:
         verdict_path = Path(verdict_dir, "verdict.json")

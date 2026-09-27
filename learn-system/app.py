@@ -168,6 +168,19 @@ def create_app(db_path=None):
         finally:
             conn.close()
 
+    @app.delete("/api/domains/<int:domain_id>")
+    def delete_domain(domain_id):
+        """刪除領域。子資料（概念／題目／作答）由 schema 的 cascade 連帶刪除，
+        不另外清除；先確認存在才刪，未知的 id 一律 404。"""
+        conn = db.connect(db_path)
+        try:
+            if db.get_domain(conn, domain_id) is None:
+                return jsonify(error="找不到領域"), 404
+            db.delete_domain(conn, domain_id)
+        finally:
+            conn.close()
+        return jsonify(ok=True)
+
     @app.get("/api/domains/<int:domain_id>/mistakes")
     def list_mistakes(domain_id):
         """錯題本：這個領域所有非 correct 的作答，新的在前。

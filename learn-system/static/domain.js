@@ -124,6 +124,24 @@ async function selectConcept(id) {
 
 document.getElementById('retry-hint').onclick = () => location.reload();
 
+document.getElementById('delete-domain').onclick = async () => {
+  // 領域名是伺服器資料。confirm 收的是字串、不解析 HTML，故直接內插即可；
+  // 仍先判空，重新載入失敗時 state.domain 會是 null，不能讓它擲出例外。
+  const name = state.domain ? state.domain.name : '';
+  if (!confirm(`確定要刪除「${name}」？這個動作無法復原。`)) return;
+  const button = document.getElementById('delete-domain');
+  button.disabled = true;
+  try {
+    await api(`/api/domains/${DOMAIN_ID}`, { method: 'DELETE' });
+  } catch (e) {
+    button.disabled = false;
+    document.getElementById('domain-meta').textContent = `刪除失敗：${e.message}`;
+    return;
+  }
+  // 刪掉之後這個頁面的每一個請求都會 404，只能回首頁
+  location.href = '/';
+};
+
 document.getElementById('ask-question').onclick = async () => {
   const status = document.getElementById('answer-status');
   const button = document.getElementById('ask-question');
