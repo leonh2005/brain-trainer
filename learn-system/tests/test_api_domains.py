@@ -1,3 +1,5 @@
+import sqlite3
+
 import app as app_module
 import pytest
 
@@ -274,3 +276,39 @@ def test_override_executable(client, monkeypatch):
     assert client.get(f"/api/domains/{did}").get_json()["domain"]["executable"] == 0
     client.post(f"/api/domains/{did}/override_executable", json={"executable": True})
     assert client.get(f"/api/domains/{did}").get_json()["domain"]["executable"] == 1
+
+
+def test_generation_marks_failed_when_connect_fails(tmp_path, monkeypatch):
+    """連線建立失敗也必須收斂成 failed。
+
+    原本 db.connect 在 try 之外，連線一失敗例外就逃出執行緒，資料列永遠停在
+    schema 預設的 generating，前端會無限輪詢且沒有錯誤狀態可顯示。
+    """
+    import app as app_module
+
+    db_file = tmp_path / "t.db"
+    conn = db.connect(db_file)
+    db.init_db(conn)
+    did = db.create_domain(conn, "python", ["write"], False)
+    conn.close()
+
+    real_connect = db.connect
+    calls = {"n": 0}
+
+    def flaky_connect(db_path=None):
+        calls["n"] += 1
+        # 第一次（生成執行緒的那次）失敗，之後恢復，讓 _mark_failed 寫得進去
+        if calls["n"] == 1:
+            raise sqlite3.OperationalError("unable to open database file")
+        return real_connect(db_path)
+
+    monkeypatch.setattr(app_module, "_DB_PATH", db_file)
+    monkeypatch.setattr(app_module.db, "connect", flaky_connect)
+
+    app_module._generate_map(did)  # 不得拋出
+
+    conn = real_connect(db_file)
+    try:
+        assert db.get_domain(conn, did)["status"] == "failed"
+    finally:
+        conn.close()
