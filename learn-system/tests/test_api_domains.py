@@ -199,6 +199,41 @@ def test_regenerate_unknown_domain_404s(client):
     assert "error" in r.get_json()
 
 
+def test_startup_reconciles_domains_stuck_in_generating(tmp_path, monkeypatch):
+    """行程重啟後，卡在 generating 的領域要被標成 failed。
+
+    生成執行緒隨行程死亡，資料列卻留在 generating；這個狀態在 regenerate 端點被擋
+    （409），刪除成了唯一出路。開機時把這種殘骸標成 failed，使用者才能按「重新生成」
+    復原。ready 的領域不受影響——它沒有卡住的執行緒，動它就是摧毀練習紀錄。
+    """
+    db_path = tmp_path / "t.db"
+    conn = db.connect(db_path)
+    db.init_db(conn)
+    try:
+        stuck = db.create_domain(conn, "python", ["write"], False)  # 預設就是 generating
+        ready = db.create_domain(conn, "econ", ["principle"], False)
+        db.set_domain_status(conn, ready, "ready")
+    finally:
+        conn.close()
+
+    # 生成改為同步執行，讓 regenerate 的後續斷言可預期
+    monkeypatch.setattr(
+        app_module,
+        "_spawn_map_generation",
+        lambda flask_app, domain_id: app_module._generate_map(domain_id),
+    )
+    monkeypatch.setattr(tutor, "generate_map", lambda *a, **k: fake_map(n=1))
+    flask_app = app_module.create_app(db_path=db_path)
+    flask_app.config["TESTING"] = True
+    c = flask_app.test_client()
+
+    assert c.get(f"/api/domains/{stuck}").get_json()["domain"]["status"] == "failed"
+    assert c.get(f"/api/domains/{ready}").get_json()["domain"]["status"] == "ready"
+    # 被救回來之後，復原路徑真的走得通
+    assert c.post(f"/api/domains/{stuck}/regenerate").status_code == 200
+    assert c.get(f"/api/domains/{stuck}").get_json()["domain"]["status"] == "ready"
+
+
 def test_regenerate_is_rejected_on_a_ready_domain(client, monkeypatch, tmp_path):
     """ready 一律拒絕：這個動作會清掉概念、題目、作答，還會蓋掉 executable 覆寫。
 
