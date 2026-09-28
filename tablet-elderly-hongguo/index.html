@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>安卓平板選物報告 — 長輩看紅果短劇</title>
+<style>
+  :root{
+    --bg:#f6f5f2; --surface:#fff; --surface-2:#fbfaf8;
+    --ink:#17181c; --ink-2:#3d4148; --muted:#70757e;
+    --line:#e4e1da; --line-2:#efece6;
+    --accent:#1f5fd0; --accent-soft:#eef3fd;
+    --gold:#9a6a00; --gold-soft:#fdf6e6;
+    --danger:#b3261e; --danger-soft:#fdeceb;
+    --ok:#1a7f4b; --ok-soft:#eaf6ef;
+    --radius:14px;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif;
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){
+      --bg:#131419; --surface:#1b1d23; --surface-2:#20232a;
+      --ink:#eceef2; --ink-2:#c6cad2; --muted:#9198a3;
+      --line:#2b2e36; --line-2:#25282f;
+      --accent:#6fa2f5; --accent-soft:#1a2333;
+      --gold:#e0b34e; --gold-soft:#2a2415;
+      --danger:#f08379; --danger-soft:#2e1c1a;
+      --ok:#5cc48d; --ok-soft:#152618;
+    }
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:var(--sans); font-size:16px; line-height:1.75;
+    letter-spacing:.01em; -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:960px; margin:0 auto; padding:0 20px 96px}
+  a{color:var(--accent); text-decoration:none; border-bottom:1px solid color-mix(in srgb,var(--accent) 35%,transparent)}
+  a:hover{border-bottom-color:var(--accent)}
+
+  header.hero{
+    padding:56px 0 32px; border-bottom:1px solid var(--line); margin-bottom:36px;
+  }
+  .kicker{
+    font-size:12.5px; letter-spacing:.16em; text-transform:uppercase;
+    color:var(--muted); font-weight:600; margin-bottom:14px;
+  }
+  h1{font-size:clamp(28px,4.6vw,40px); line-height:1.25; margin:0 0 16px; letter-spacing:-.02em}
+  .lede{font-size:17px; color:var(--ink-2); margin:0; max-width:64ch}
+  .meta{
+    margin-top:22px; display:flex; flex-wrap:wrap; gap:8px;
+  }
+  .chip{
+    font-size:13px; padding:5px 12px; border-radius:999px;
+    background:var(--surface); border:1px solid var(--line); color:var(--ink-2);
+  }
+
+  h2{
+    font-size:23px; margin:56px 0 18px; letter-spacing:-.01em;
+    padding-bottom:10px; border-bottom:1px solid var(--line);
+  }
+  h3{font-size:18.5px; margin:32px 0 10px; letter-spacing:-.005em}
+  h4{font-size:15.5px; margin:20px 0 6px; color:var(--ink-2)}
+  p{margin:0 0 14px}
+  ul,ol{margin:0 0 16px; padding-left:1.35em}
+  li{margin-bottom:7px}
+  strong{font-weight:650}
+  code{
+    font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:.9em;
+    background:var(--surface-2); border:1px solid var(--line-2);
+    padding:1px 5px; border-radius:5px;
+  }
+
+  .callout{
+    border-radius:var(--radius); padding:22px 24px; margin:26px 0;
+    border:1px solid var(--line); background:var(--surface);
+  }
+  .callout.warn{background:var(--gold-soft); border-color:color-mix(in srgb,var(--gold) 35%,transparent)}
+  .callout.danger{background:var(--danger-soft); border-color:color-mix(in srgb,var(--danger) 35%,transparent)}
+  .callout.ok{background:var(--ok-soft); border-color:color-mix(in srgb,var(--ok) 30%,transparent)}
+  .callout .label{
+    font-size:12.5px; font-weight:700; letter-spacing:.1em; text-transform:uppercase;
+    margin-bottom:10px; display:block;
+  }
+  .callout.warn .label{color:var(--gold)}
+  .callout.danger .label{color:var(--danger)}
+  .callout.ok .label{color:var(--ok)}
+  .callout > :last-child{margin-bottom:0}
+
+  .table-scroll{overflow-x:auto; margin:20px 0; border:1px solid var(--line); border-radius:var(--radius); background:var(--surface)}
+  table{border-collapse:collapse; width:100%; font-size:14.5px; min-width:660px}
+  th,td{padding:12px 15px; text-align:left; border-bottom:1px solid var(--line-2); vertical-align:top}
+  thead th{
+    background:var(--surface-2); font-size:12.5px; letter-spacing:.05em;
+    text-transform:uppercase; color:var(--muted); font-weight:700; white-space:nowrap;
+  }
+  tbody tr:last-child td{border-bottom:none}
+  td.num{white-space:nowrap; font-variant-numeric:tabular-nums}
+
+  .card{
+    border:1px solid var(--line); border-radius:var(--radius);
+    background:var(--surface); padding:26px 28px; margin:22px 0;
+  }
+  .card.rank-1{border-color:color-mix(in srgb,var(--gold) 45%,transparent); box-shadow:0 1px 0 color-mix(in srgb,var(--gold) 20%,transparent)}
+  .card-head{display:flex; align-items:baseline; gap:12px; flex-wrap:wrap; margin-bottom:6px}
+  .rank{
+    font-size:12.5px; font-weight:700; letter-spacing:.08em;
+    padding:4px 10px; border-radius:999px; background:var(--accent-soft);
+    color:var(--accent); border:1px solid color-mix(in srgb,var(--accent) 25%,transparent);
+    white-space:nowrap;
+  }
+  .rank.gold{background:var(--gold-soft); color:var(--gold); border-color:color-mix(in srgb,var(--gold) 35%,transparent)}
+  .card h3{margin:0; font-size:20px}
+  .sub{color:var(--muted); font-size:14px; margin:0 0 16px}
+
+  .cols{display:grid; grid-template-columns:1fr 1fr; gap:20px}
+  @media (max-width:640px){ .cols{grid-template-columns:1fr} }
+
+  .pros-cons{display:grid; grid-template-columns:1fr 1fr; gap:16px; margin:14px 0}
+  @media (max-width:640px){ .pros-cons{grid-template-columns:1fr} }
+  .pros-cons ul{list-style:none; padding:0; margin:0; font-size:14.5px}
+  .pros-cons li{padding-left:20px; position:relative; margin-bottom:6px}
+  .pros li::before{content:"＋"; position:absolute; left:0; color:var(--ok); font-weight:700}
+  .cons li::before{content:"−"; position:absolute; left:2px; color:var(--danger); font-weight:700}
+
+  .price-list{list-style:none; padding:0; margin:8px 0 0; font-size:14.5px}
+  .price-list li{
+    display:flex; justify-content:space-between; gap:14px;
+    padding:8px 0; border-bottom:1px dashed var(--line-2);
+  }
+  .price-list li:last-child{border-bottom:none}
+  .price-list .p{font-variant-numeric:tabular-nums; font-weight:650; white-space:nowrap}
+  .price-list .p.best{color:var(--gold)}
+
+  .badge{
+    display:inline-block; font-size:11.5px; font-weight:700; padding:2px 8px;
+    border-radius:5px; margin-left:6px; vertical-align:1px;
+  }
+  .badge.hot{background:var(--gold-soft); color:var(--gold)}
+  .badge.stop{background:var(--danger-soft); color:var(--danger)}
+
+  .src{font-size:13px; color:var(--muted)}
+  .src a{color:var(--muted); border-bottom-color:var(--line)}
+  .src a:hover{color:var(--accent); border-bottom-color:var(--accent)}
+
+  footer{
+    margin-top:64px; padding-top:24px; border-top:1px solid var(--line);
+    font-size:13.5px; color:var(--muted);
+  }
+  .note{font-size:13.5px; color:var(--muted); margin-top:10px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="hero">
+  <div class="kicker">選物報告 · Choose-Product</div>
+  <h1>給長輩看紅果短劇的安卓平板</h1>
+  <p class="lede">
+    條件：10–11 吋、可插 SIM 卡（4G/5G 通話）、保固盡量長且維修率低、預算 NT$7,000–15,000。
+    這份報告先講一件比選機更重要的事，再給三個候選。
+  </p>
+  <div class="meta">
+    <span class="chip">資料日期 2026-09-28</span>
+    <span class="chip">PTT 原文 · Dcard/Mobile01 摘要</span>
+    <span class="chip">Notebookcheck / Techadvisor 實測</span>
+    <span class="chip">通路現貨比價</span>
+  </div>
+</header>
+
+<div class="callout danger">
+  <span class="label">先讀這段 — 可能推翻整個前提</span>
+  <p><strong>紅果短劇在台灣的門檻不是硬體，是地區限制。</strong>硬體需求低到不可思議（Android 5.0+、arm64-v8a、約 283MB），下面每一台平板都遠遠超過它的要求。真正的變數是：內容僅對中國大陸開放，App 會即時校驗網路出口 IP，偵測到海外 IP 就可能出現<strong>黑屏轉圈、片庫大面積變灰、搜不到劇、彈幕消失</strong>。台灣、新加坡、馬來西亞是回報最集中的地區。</p>
+  <p>網路上的解法是<strong>「回國加速器」</strong>（Sixfast、SpeedX、QuickFox 這類），而且<strong>一般國際 VPN 無效</strong>——因為它需要把流量導「入」中國，通用 VPN 是導出。這種東西長輩幾乎不可能自己操作，斷線時也沒能力排除。</p>
+  <p style="margin-bottom:0"><strong>務實建議：先拿你手上任何一台 Android 手機裝起來實測，確認台灣 IP 能不能正常播完整一集，再決定要不要花這筆錢。</strong>如果實測能看，那下面的選擇才有意義；如果實測不能看，買哪一台都一樣。</p>
+</div>
+
+<p class="note">
+  註：關於「台灣到底能不能直接用」的資料互相矛盾。2026 年台灣獨立評測（maplefeather）實測 <em>iOS</em> 台灣商店可直接下載、不需改地區、還在娛樂類免費榜第 2 名；日本部落格也記錄 2026/05「終於可在 Play Store 與 App Store 下載」。但主張需跨區的來源多為 2025 年文章或 VPN 廠商部落格。Android 端另有海外版套件 <code>com.phoenix.read.oversea.gp</code>（2026/04/27 全球發行、2026/09 更新、台灣為熱門國家首位）。我三次嘗試讀取 Google Play 商店頁都被截斷，<strong>無法從官方頁面證實</strong>，因此列為待實測項目。官方國際版 Melolo 已上架 17 國，<strong>不含台灣與日本</strong>。
+</p>
+
+<h2>另一個容易被忽略的前提：它是簡體、而且是手機介面</h2>
+<div class="callout warn">
+  <span class="label">使用體驗</span>
+  <ul style="margin-bottom:0">
+    <li><strong>介面只有簡體中文</strong>，商店語言欄沒有繁體。對簡體閱讀吃力的長輩，這一欄比任何規格都重要。</li>
+    <li><strong>沒有平板專屬版本</strong>，在平板上是「手機介面放大」，可能出現介面錯位、播放區受限、操作遲滯。畫質設定藏在<em>播放頁 → 齒輪 → 畫面比例</em>，出問題時可試「退出重進」或關閉系統的「兼容模式／強制手機介面」。</li>
+    <li><strong>短劇是直式拍攝，無法強制橫屏全螢幕。</strong>所以長輩應該<strong>直拿平板</strong>看，畫面才最大；橫拿只會左右兩條大黑邊。實務上 11 吋直放的影片高度，比橫放舒服得多。</li>
+    <li>對長輩友善的部分：App 內建<strong>字體大小（標準／大）</strong>與<strong>字幕大小／顏色／底色</strong>可調，聽力不好的長輩可以靠加大字幕理解劇情。</li>
+    <li>商業模式為免費看廣告解鎖，另有 VIP 去廣告。商店內購名稱用人民幣但實際扣新台幣，價格與名稱不一定對應。</li>
+  </ul>
+</div>
+
+<h2>候選總表</h2>
+<div class="table-scroll">
+<table>
+  <thead>
+    <tr>
+      <th>型號／配置</th><th>螢幕</th><th>記憶體</th><th>電池／充電</th><th>通路最低價</th><th>高頻毛病</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Galaxy Tab A11+ 5G</strong><br><span class="src">X236 · 6G/128G · 11″</span></td>
+      <td>1920×1200 90Hz<br><span class="src">206 PPI</span></td>
+      <td>6GB / 128GB<br><span class="src">UFS 3.1</span></td>
+      <td>7040mAh<br>25W</td>
+      <td class="num"><strong>NT$8,588</strong></td>
+      <td>無普遍性災情回報<br><span class="src">螢幕色偏、僅 Wi-Fi 5、無指紋</span></td>
+    </tr>
+    <tr>
+      <td><strong>Galaxy Tab S10 Lite 5G</strong><br><span class="src">X406 · 6G/128G · 10.9″</span></td>
+      <td>2112×1320 90Hz</td>
+      <td>6GB / 128GB</td>
+      <td>8000mAh<br>25W</td>
+      <td class="num"><strong>NT$10,700</strong></td>
+      <td>Exynos 1380 卡頓（評測指「偷工減料」）、零星空機無法開機、524g 偏重</td>
+    </tr>
+    <tr>
+      <td><strong>Galaxy Tab S10 FE 5G</strong><br><span class="src">X526 · 8G/128G · 10.9″</span></td>
+      <td>2304×1440 90Hz<br><span class="src">249 PPI · 800nits</span></td>
+      <td>8GB / 128GB</td>
+      <td>8000mAh<br>45W</td>
+      <td class="num"><strong>NT$14,880</strong><br><span class="src">福利品</span></td>
+      <td>觸控失靈／部分區域無法點擊（多筆）、非全貼合反光螢幕</td>
+    </tr>
+    <tr>
+      <td><strong>REDMI Pad 2 9.7 4G</strong><br><span class="src">4G/128G · 9.7″ · 對照</span></td>
+      <td>2048×1280 120Hz</td>
+      <td>4GB / 128GB</td>
+      <td>7600mAh<br>18W</td>
+      <td class="num"><strong>NT$6,290</strong></td>
+      <td>4GB RAM 卡頓、<strong>無聽筒</strong>、喇叭降級為 2 顆、實測亮度僅約 400nits</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+<p class="note">價格為 2026-09-28 通路快照的空機價、不含運費與電信綁約，實際以結帳頁為準。三星三台在台灣都只有「Wi-Fi 版」與「5G 版（可通話＋4G LTE）」兩種；要插 SIM 講電話就是認 <strong>5G</strong> 那個型號。</p>
+
+<h2>🥇 候選一：Galaxy Tab A11+ 5G（X236）</h2>
+<div class="card rank-1">
+  <div class="card-head">
+    <span class="rank gold">首選</span>
+    <h3>6GB / 128GB · 11 吋 · NT$8,588 起</h3>
+  </div>
+  <p class="sub">2025/11 上市 · MT8775（實為天璣 7300）· Android 16 · 更新支援至 2032</p>
+
+  <p><strong>推薦理由：</strong>它剛好把前一代 A9+ 最被詬病的兩個問題修掉了——RAM 從 4GB 拉到 <strong>6GB</strong>（直接消除「4GB 卡頓」這個明確高頻抱怨），充電從 15W 拉到 <strong>25W</strong>。更關鍵的是：台灣傑昇通信的災情彙整明確指出「<strong>目前網路上並無出現 Galaxy Tab A11+ 的普遍性災情回報</strong>」，國際評測（Notebookcheck）也沒出現硬體故障類回報——它的缺點全部屬於<strong>規格妥協</strong>，不是故障。對「維修率低」這個要求來說，這是最乾淨的一台。</p>
+
+  <div class="pros-cons">
+    <div>
+      <h4>主要優點</h4>
+      <ul class="pros">
+        <li><strong>四顆立體聲喇叭 + Dolby Atmos</strong>——三台中唯一四喇叭，對重聽長輩最友善</li>
+        <li>11 吋是三者中最大，直放看短劇畫面最爽</li>
+        <li>6GB RAM + UFS 3.1 儲存，同價位少見</li>
+        <li>7 年系統與安全更新（到 2032），長輩不用換機</li>
+        <li>3.5mm 耳機孔、support DeX、IP52、保留 microSD 獨立卡槽（最高 2TB）</li>
+        <li>台灣維修體系最強：三星服務中心＋智慧館＋免費到府收送</li>
+      </ul>
+    </div>
+    <div>
+      <h4>主要缺點</h4>
+      <ul class="cons">
+        <li>螢幕素質平庸：TFT LCD 可視角差、側視偏色、色準偏差（Techadvisor 形容「washed out」），戶外約 480nits 不夠亮</li>
+        <li><strong>只有 Wi-Fi 5</strong>，不支援 Wi-Fi 6</li>
+        <li>無指紋辨識（只有臉部辨識）</li>
+        <li>25W 充滿約 1 小時 43 分，且盒裝不附充電器</li>
+        <li>預裝廣告軟體（Temu 等）需手動移除</li>
+        <li>處理器屬入門級，重度多工會掉幀——但看劇完全不受影響</li>
+      </ul>
+    </div>
+  </div>
+
+  <h4>差評歸因</h4>
+  <ul>
+    <li><strong>系統偶爾卡頓／觸控反應遲鈍</strong>（多來源）→ <span class="src"><a href="https://www.jyes.com.tw/news.php?act=view&amp;id=13865">傑昇通信災情彙整</a></span></li>
+    <li><strong>Wi-Fi 連線不穩</strong>（多來源）→ <span class="src"><a href="https://www.digitec.ch/en/productrating/gut-10389281">Digitec 用戶評價</a></span></li>
+    <li><strong>預裝廣告軟體、機身接縫處理不佳</strong> → <span class="src"><a href="https://www.galaxus.it/en/s1/product/ratings/samsung-galaxy-tab-a11-5g-11-256-gb-silver-tablets-62588265">Galaxus 評價</a></span></li>
+    <li><strong>螢幕色準與可視角</strong> → <span class="src"><a href="https://www.techadvisor.com/article/3014414">Techadvisor</a>、<a href="https://www.01net.com/tests/test-samsung-galaxy-tab-a11-plus-avis.html">01net</a></span></li>
+  </ul>
+  <p class="note">台灣本地電商評價區因為平台限制沒能自動抓取（PChome 該商品未開放評論、蝦皮禁止自動化進站），以上改以台灣災情彙整＋國際評測用戶評論補足。</p>
+
+  <h4>最低購買價格</h4>
+  <ul class="price-list">
+    <li><span>Yahoo 購物中心 <span class="badge hot">最低</span></span><span class="p best">NT$8,588</span></li>
+    <li><span>百利市購物中心</span><span class="p">NT$9,490</span></li>
+    <li><span>iOPEN Mall</span><span class="p">NT$9,790</span></li>
+    <li><span>蝦皮商城 / momo / 東森</span><span class="p">NT$9,888–9,990</span></li>
+    <li><span>PChome 24h</span><span class="p">NT$10,688</span></li>
+  </ul>
+  <p class="note">建議售價 NT$9,490。SOGI 在 2026/04 曾記錄通路最低 NT$7,790——下單前值得先問問通訊行是否還有這個價。</p>
+</div>
+
+<h2>🥈 候選二：Galaxy Tab S10 Lite 5G（X406）</h2>
+<div class="card">
+  <div class="card-head">
+    <span class="rank">進階</span>
+    <h3>6GB / 128GB · 10.9 吋 · NT$10,700 起</h3>
+  </div>
+  <p class="sub">2025/09 上市 · Exynos 1380 · 隨附 S Pen · IP42 · 524g</p>
+
+  <p><strong>推薦理由：</strong>比 A11+ 貴約兩千，換到更細緻的螢幕（2112×1320）、更大的 8000mAh 電池、Wi-Fi 6、隨附 S Pen、以及更新支援到 2032 年的保證。如果你希望這台機器用得比 A11+ 更久、螢幕看得更舒服，這是合理的加價。</p>
+
+  <div class="pros-cons">
+    <div>
+      <h4>主要優點</h4>
+      <ul class="pros">
+        <li>螢幕解析度較高，字體邊緣更銳利，對老花眼有實質幫助</li>
+        <li>8000mAh 大電池，續航優於 A11+</li>
+        <li>支援 Wi-Fi 6、藍牙 5.3</li>
+        <li>盒裝附 S Pen 與保護套</li>
+      </ul>
+    </div>
+    <div>
+      <h4>主要缺點</h4>
+      <ul class="cons">
+        <li><strong>Exynos 1380 效能偏弱</strong>——Notebookcheck 標題直接寫「三星在 Galaxy Tab S10 Lite 上偷工減料」，實測出現卡頓、運行不完全流暢</li>
+        <li>機身 524g，比 A11+ 重 40g 以上，長輩手持更累</li>
+        <li>無指紋辨識、USB 2.0</li>
+        <li>只支援單卡 nano SIM，無 eSIM</li>
+      </ul>
+    </div>
+  </div>
+
+  <h4>差評歸因</h4>
+  <ul>
+    <li><strong>系統卡頓、不流暢</strong>（最集中）→ <span class="src"><a href="https://www.notebookcheck-cn.com/Galaxy-Tab-S10-Lite.1130651.0.html">Notebookcheck 評測</a>、<a href="https://r2.community.samsung.com/t5/Tablets/Just-Updated-My-Samsung-Tab-S10-Lite/td-p/22294311">三星官方社群</a></span></li>
+    <li><strong>螢幕閃爍、約一個月後完全無法開機</strong>（單筆個案）→ <span class="src"><a href="https://business.walmart.com/reviews/product/16913906387">Walmart 評論</a></span></li>
+    <li><strong>手寫與 App 延遲</strong>（GoodNotes 筆跡慢半拍）→ <span class="src"><a href="https://www.lider.cl/opiniones/productos/00880609767179">Lider 用戶評價</a></span></li>
+    <li>螢幕偏暗、色彩校準不準 → <span class="src">Notebookcheck</span></li>
+  </ul>
+
+  <h4>最低購買價格</h4>
+  <ul class="price-list">
+    <li><span>ePrice 最新報價 <span class="badge hot">最低</span></span><span class="p best">NT$10,700</span></li>
+    <li><span>SOGI 2026/03 通路最低</span><span class="p">NT$11,490</span></li>
+    <li><span>建議售價</span><span class="p">NT$13,900</span></li>
+  </ul>
+</div>
+
+<h2>🥉 候選三：Galaxy Tab S10 FE 5G（X526）</h2>
+<div class="card">
+  <div class="card-head">
+    <span class="rank">攻頂</span>
+    <h3>8GB / 128GB · 10.9 吋 · NT$14,880 起</h3>
+  </div>
+  <p class="sub">Exynos 1580 · 45W 快充 · IP68 · 指紋辨識 · 800nits · 隨附 S Pen · 497g</p>
+
+  <p><strong>推薦理由：</strong>規格全面勝出——8GB RAM、45W 快充（1 小時內充飽）、IP68 防塵防水、指紋辨識、249 PPI 最銳利、戶外 800nits 最亮、Wi-Fi 6。機身反而比 S10 Lite 輕（497g）。<strong>但兩個保留：</strong>一是全新品最低約 NT$15,511，<strong>已略微超出你的 15,000 上限</strong>（14,880 是拆封福利品）；二是它的負評集中在<strong>觸控失靈</strong>，這對長輩是相對難自行排除的故障類型。</p>
+
+  <div class="pros-cons">
+    <div>
+      <h4>主要優點</h4>
+      <ul class="pros">
+        <li>三台中唯一 8GB RAM 與 IP68</li>
+        <li>45W 快充，8000mAh 一小時內充飽</li>
+        <li>249 PPI 最銳利、戶外 800nits 最亮、有指紋辨識</li>
+        <li>Wi-Fi 6、機身 497g 比 S10 Lite 輕</li>
+        <li>13MP 後鏡頭／12MP 前鏡頭，視訊通話畫質最好</li>
+      </ul>
+    </div>
+    <div>
+      <h4>主要缺點</h4>
+      <ul class="cons">
+        <li><strong>觸控失靈、部分區域無法點擊</strong>——三星官方社群與土耳其投訴平台都有多筆，且有送修未解決的案例</li>
+        <li>全新品約 NT$15,511，超出 15,000 預算</li>
+        <li>PTT 對 FE 系列評價偏負面：非全貼合、反光、易入塵的 LCD</li>
+        <li>立體聲雙喇叭（非四喇叭），音訊表現中等</li>
+      </ul>
+    </div>
+  </div>
+
+  <h4>差評歸因</h4>
+  <ul>
+    <li><strong>觸控靈敏度下降、部分區域無法點擊</strong>（智慧拖放 bug）→ <span class="src"><a href="https://m.samsungmembers.cn/thread-3810089-416-664.html">Samsung Members 官方社群</a></span></li>
+    <li><strong>自動鎖定當機、觸控完全失效、輕觸即關機、指紋失效</strong>（8 件螢幕投訴）→ <span class="src"><a href="https://www.sikayetvar.com/samsung-telefon/galaxy-tab-s10-fe/tablet-ekran">Şikayetvar 投訴平台</a></span></li>
+    <li><strong>螢幕非全貼合、反光、易入塵</strong> → <span class="src"><a href="https://pttweb.tw/MobileComm/M.1742055391.A.2F2">PTT MobileComm 討論串</a></span></li>
+  </ul>
+
+  <h4>最低購買價格</h4>
+  <ul class="price-list">
+    <li><span>Yahoo 購物中心（拆封福利品）</span><span class="p best">NT$14,880</span></li>
+    <li><span>飛比價格（全新）</span><span class="p">NT$15,511</span></li>
+    <li><span>ePrice 最新報價</span><span class="p">NT$13,700</span> <span class="src">（疑為通訊行破盤，需確認全新）</span></li>
+    <li><span>ETMall / myfone</span><span class="p">NT$16,762–16,990</span></li>
+  </ul>
+</div>
+
+<h2>被排除的選項，以及為什麼</h2>
+<div class="table-scroll">
+<table>
+  <thead><tr><th>機型</th><th>價格</th><th>排除理由</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><strong>Galaxy Tab A9+ 5G</strong><br><span class="src">4G/64G · 11″</span></td>
+      <td class="num">NT$7,890</td>
+      <td><strong>4GB RAM 就是 A11+ 存在的理由。</strong>4GB 版卡頓是明確的高頻抱怨，且充電只有 15W。台灣 5G 版只進 4GB/64G 一種，8G/128G 在台灣官方根本沒賣（看到的 8G/128G 是福利品）。省下的錢不值得換來一台會卡三年的機器。</td>
+    </tr>
+    <tr>
+      <td><strong>REDMI Pad 2 9.7 4G</strong><br><span class="src">4G/128G · 9.7″</span></td>
+      <td class="num">NT$6,290</td>
+      <td>最便宜，螢幕規格（2K 120Hz、護眼認證）也漂亮，但<strong>4GB RAM 導致的卡頓是它最集中的負評</strong>；<strong>沒有聽筒</strong>，通話只能擴音或藍牙，長輩在公共場合接電話很尷尬；喇叭從前代 4 顆降級為 2 顆且最大音量偏小；實測峰值亮度僅約 400nits 且有 PWM 閃爍。加上小米平板台灣保固僅 1 年、服務據點少。若預算真的必須壓到七千以下再考慮。</td>
+    </tr>
+    <tr>
+      <td><strong>Acer Iconia Tab M10 LTE</strong><br><span class="src">4G/64G · 10.1″</span></td>
+      <td class="num">NT$7,990</td>
+      <td>保固體系其實不錯（1 年、全台 23 個服務據點、到府收送），但它是這批裡<strong>唯一有明確功能性硬體故障回報</strong>的：Amazon 評論指出螢幕反應不佳、需大力按壓或多次點擊、甚至亂點失控。台灣只進 4GB/64GB 單一規格。</td>
+    </tr>
+    <tr>
+      <td><strong>Lenovo Tab M10 Plus 3rd Gen LTE</strong><br><span class="src">10.6″</span></td>
+      <td class="num">約 NT$5,000–7,000</td>
+      <td>標準保固只有 1 年且不可延長，<strong>平行輸入（水貨）不適用台灣官方保固</strong>——系統會依序號中的銷售區域代碼判定，非台灣區域直接判「保固外」，連自費維修都可能因零件不同被退件。你的「保固長」需求直接出局。</td>
+    </tr>
+    <tr>
+      <td><strong>酷比魔方 iPlay 系列、台電、各類淘寶通話平板</strong></td>
+      <td class="num">NT$3,000–5,000</td>
+      <td>PTT 上確實有人推（「4000 有找」），CP 值極高。但這是<strong>水貨，台灣沒有官方保固</strong>，壞了只能找第三方維修。與「保固盡量長、維修率低」完全衝突，不列入。</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<h2>保固：這題的真正決勝點</h2>
+<div class="callout ok">
+  <span class="label">三星在這一項完勝</span>
+  <ul style="margin-bottom:0">
+    <li><strong>標準保固 1 年</strong>，但於<strong>三星智慧館／三星商城</strong>購買並在<strong>發票日起 60 天內完成登錄</strong>，可延長至<strong>共 2 年</strong>（PTT 上 A11+ 預購討論也提到「有兩年保」）。每台限登錄一次，福利品不適用。</li>
+    <li><strong>可加購 Samsung Care+</strong>：月繳 NT$109 起、保障 2 年期，涵蓋意外損壞（摔裂、泡水）、竊盜、延長保固，並提供<strong>免費到府收送</strong>；繳費滿 18 個月可<strong>無條件免費換一次電池</strong>。</li>
+    <li><strong>維修網絡最密</strong>：三星服務中心、全台三星智慧館／體驗館、線上預約到府收送三種送修方式。對不方便出門的長輩，到府收送是實質加分。</li>
+    <li>對照組：小米平板 1 年（據點少）、Lenovo 1 年、Acer 1 年（23 據點＋到府收送，體系不錯但機型有觸控故障回報）。</li>
+  </ul>
+</div>
+
+<h2>買回來之後：讓長輩真的用得順</h2>
+<ol>
+  <li><strong>開「簡易模式」</strong>：設定 → 顯示 → 簡易模式。會放大文字與圖示、簡化主畫面、延長長按辨識時間、提供高對比鍵盤與常用聯絡人頁面。（注意：開關簡易模式時主畫面小工具不會保留。）</li>
+  <li><strong>字體再放大一級</strong>：設定 → 顯示 → 字體大小與樣式；想更清楚可開 設定 → 輔助功能 → 可見性增強 → <strong>高對比字體</strong>（文字加輪廓）。</li>
+  <li><strong>進紅果短劇調字</strong>：我的 → 設定 → 字體大小 → 選「大」。播放頁點螢幕 → 齒輪 → 字幕大小／顏色／底色，一併調到長輩看得清楚。</li>
+  <li><strong>買一個可直立的書本式保護套或立架</strong>。短劇是直式的，直放畫面最大；而且 11 吋約 480g，長輩不可能一直手持。這筆小錢對體驗的影響比升級規格大。</li>
+  <li><strong>桌面只留 4–6 個 App</strong>：紅果、LINE、YouTube、相簿、電話。其餘全部收進資料夾或移除。這是效果最明顯、也最常被忽略的一步。</li>
+  <li><strong>先移除預裝廣告 App</strong>（三星機型會有 Temu 之類），免得長輩誤點。</li>
+</ol>
+
+<h2>總結建議</h2>
+<div class="callout">
+  <p><strong>買 Galaxy Tab A11+ 5G 6G/128G，約 NT$8,588。</strong></p>
+  <p>理由是它同時滿足你三個非功能性的硬需求，而且不必付溢價：</p>
+  <ul>
+    <li><strong>維修率低</strong>——台灣端查不到普遍性災情，國際評測也沒有硬體故障回報，缺點全是規格取捨而非故障。</li>
+    <li><strong>保固可以拉到 2 年</strong>——走三星智慧館或三星商城購買＋60 天內登錄，再加 Samsung Care+ 就有到府收送與意外險。</li>
+    <li><strong>適合長輩</strong>——四顆喇叭是三者中最大聲，11 吋是三者中最大，6GB RAM 不卡，7 年更新讓它不會三年後就變孤兒機。</li>
+  </ul>
+  <p style="margin-bottom:0">至於「順跑」——紅果短劇只要 Android 5.0，A11+ 的天璣 7300 看 1080p 直式影片是殺雞用牛刀。<strong>效能完全不是這題的重點。</strong></p>
+</div>
+
+<p><strong>什麼情況下該改選別台：</strong></p>
+<ul>
+  <li><strong>你很在意螢幕銳利度、也願意多花兩千</strong> → 選 <strong>Tab S10 Lite 5G</strong>（NT$10,700）。螢幕更細、電池更大，代價是評測明確點名的卡頓風險與更重的機身。</li>
+  <li><strong>你想一次買到最好、預算可以鬆動到 15,500</strong> → 選 <strong>Tab S10 FE 5G</strong>（NT$15,511）。規格全面勝出，但請把「觸控失靈」的多筆投訴納入考慮，買回後前 30 天密集測試觸控。</li>
+  <li><strong>預算必須壓到七千以下</strong> → <strong>REDMI Pad 2 9.7 4G</strong>（NT$6,290）是目前唯一值得的選擇，但要接受 4GB RAM、沒有聽筒、喇叭較弱、以及小米 1 年保固。</li>
+</ul>
+
+<div class="callout danger">
+  <span class="label">下單前請先做這一件事</span>
+  <p style="margin-bottom:0">用你現有的 Android 手機，從 APKPure 下載 <code>com.phoenix.read.oversea.gp</code>（或先試 Google Play 搜尋「紅果短劇」），在台灣的網路環境下<strong>實際播完一集</strong>。能播，這份報告的建議就成立；不能播、需要回國加速器，那這筆錢應該先緩一緩——因為那不是換一台平板能解決的問題。</p>
+</div>
+
+<h2>降價追蹤</h2>
+<p>這份報告不建立自動排程。若想自己盯價，各平台設定方式如下：</p>
+<div class="table-scroll">
+<table>
+  <thead><tr><th>平台</th><th>設定方式</th></tr></thead>
+  <tbody>
+    <tr><td>比價王 BigGo</td><td>商品頁設「降價通知」，可跨平台比價並推播</td></tr>
+    <tr><td>PCHome 24h</td><td>商品頁「降價通知我」按鈕</td></tr>
+    <tr><td>momo</td><td>加入「我的追蹤」，降價推播</td></tr>
+    <tr><td>蝦皮</td><td>商品頁按「❤ 關注」，降價時 App 推播</td></tr>
+  </tbody>
+</table>
+</div>
+<p class="note">若你要的是自動盯價（每日查價、降到目標價推播），那要另外寫 cron 腳本，不在此 skill 範圍。</p>
+
+<footer>
+  <p>報告產出 2026-09-28。價格為當日通路快照，變動頻繁，下單前請以結帳頁確認。所有負評皆附可點回的原出處連結；查不到資料的項目已誠實標示為「未取得」而非推測。</p>
+  <p>主要來源：Samsung 台灣官方新聞稿與支援頁、SOGI 手機王、ePrice 比價王、傑昇通信災情彙整、PTT MobileComm、Notebookcheck、Techadvisor、01net、Şikayetvar 投訴平台、Walmart / Amazon / Lider 用戶評論、BigGo 比價、Sensor Tower。</p>
+</footer>
+
+</div>
+</body>
+</html>
