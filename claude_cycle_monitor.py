@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Claude usage 週期監測 - 每5小時提醒 + 結束前自動同步"""
+"""Claude usage 週期監測 - 每5小時週期結束前自動同步（不推播）"""
 
-import os, time, subprocess, requests
+import os, time, subprocess
 from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 from dotenv import load_dotenv
@@ -14,9 +14,6 @@ CYCLE = 5 * 3600  # 5小時
 # 參考重置點（2026-03-28 21:00，之後每5小時遞推）
 REFERENCE = datetime(2026, 3, 28, 21, 0, 0, tzinfo=TZ)
 
-BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN', open(os.path.expanduser("~/CCProject/.secrets/telegram_token.txt")).read().strip())
-CHAT_ID   = os.getenv('TELEGRAM_CHAT_ID', '7556217543')
-
 REPOS = [
     os.path.expanduser('~/CCProject'),
     os.path.expanduser('~/youtube-monitor'),
@@ -26,49 +23,14 @@ VM_HOST = '161.33.6.190'
 VM_KEY  = os.path.expanduser('~/.ssh/oracle_line_bot')
 
 
-def send_telegram(msg: str):
-    try:
-        requests.post(
-            f'https://api.telegram.org/bot{BOT_TOKEN}/sendMessage',
-            json={'chat_id': CHAT_ID, 'text': msg},
-            timeout=10
-        )
-    except Exception as e:
-        print(f"Telegram 失敗: {e}")
-
-
-def get_cycle_times(now: datetime):
+def get_next_sync_time(now: datetime) -> datetime:
+    """本次週期第 4 小時 40 分（重置前 20 分鐘）的同步時間"""
     elapsed = (now - REFERENCE).total_seconds() % CYCLE
     cycle_start = now - timedelta(seconds=elapsed)
-    midpoint   = cycle_start + timedelta(hours=2, minutes=30)
-    end_warn   = cycle_start + timedelta(hours=4, minutes=40)
-    next_reset = cycle_start + timedelta(hours=5)
-    return midpoint, end_warn, next_reset
-
-
-def check_services() -> str:
-    lines = []
-    r = subprocess.run(['pgrep', '-f', 'youtube_monitor.py'], capture_output=True)
-    lines.append("✅ youtube-monitor 運行中" if r.returncode == 0 else "❌ youtube-monitor 未運行")
-
-    today = datetime.now(TZ).strftime('%Y-%m-%d')
-    summary_dir = os.path.expanduser(f'~/youtube-monitor/summaries/{today}')
-    if os.path.exists(summary_dir):
-        count = len([f for f in os.listdir(summary_dir)
-                     if f.endswith('.txt') and not f.endswith('.transcript.txt')])
-        lines.append(f"📄 今日摘要：{count} 支")
-
-    try:
-        r = subprocess.run(
-            ['ssh', '-i', VM_KEY, '-o', 'ConnectTimeout=5', '-o', 'BatchMode=yes',
-             f'{VM_USER}@{VM_HOST}', 'echo ok'],
-            capture_output=True, timeout=10
-        )
-        lines.append("✅ Oracle VM 正常" if r.returncode == 0 else "❌ Oracle VM 無回應")
-    except Exception:
-        lines.append("❌ Oracle VM 連線失敗")
-
-    return '\n'.join(lines)
+    target = cycle_start + timedelta(hours=4, minutes=40)
+    if now >= target - timedelta(seconds=30):
+        target += timedelta(hours=5)
+    return target
 
 
 def git_commit_push(repo: str) -> str:
@@ -205,41 +167,13 @@ def main():
 
     while True:
         now = datetime.now(TZ)
-        midpoint, end_warn, next_reset = get_cycle_times(now)
-
-        if now < midpoint - timedelta(seconds=30):
-            target, action = midpoint, 'midpoint'
-        elif now < end_warn - timedelta(seconds=30):
-            target, action = end_warn, 'end_warn'
-        else:
-            target, action = midpoint + timedelta(hours=5), 'midpoint'
-
+        target = get_next_sync_time(now)
         wait = (target - now).total_seconds()
-        print(f"[{now.strftime('%H:%M')}] 下一事件：{action} @ {target.strftime('%H:%M')}（{wait/60:.0f} 分鐘後）")
+        print(f"[{now.strftime('%H:%M')}] 下一同步 @ {target.strftime('%H:%M')}（{wait/60:.0f} 分鐘後）")
         time.sleep(max(wait, 1))
 
-        now = datetime.now(TZ)
-        _, _, next_reset = get_cycle_times(now)
-
-        if action == 'midpoint':
-            remaining_min = int((next_reset - now).total_seconds() / 60)
-            send_telegram(
-                f"⏰ Claude Usage 中點提醒\n"
-                f"距重置還有 {remaining_min // 60}h{remaining_min % 60:02d}m\n"
-                f"重置時間：{next_reset.strftime('%H:%M')}"
-            )
-
-        elif action == 'end_warn':
-            send_telegram(f"🔄 Claude Usage 剩 20 分鐘，開始自動同步...")
-            sync_result = run_auto_session_end()
-            service_status = check_services()
-            send_telegram(
-                f"✅ 自動同步完成（重置：{next_reset.strftime('%H:%M')}）\n\n"
-                f"【同步結果】\n{sync_result}\n\n"
-                f"【服務狀態】\n{service_status}"
-            )
-            print(f"[{now.strftime('%H:%M')}] 自動同步完成")
-
+        result = run_auto_session_end()
+        print(f"[{datetime.now(TZ).strftime('%H:%M')}] 自動同步完成\n{result}", flush=True)
         time.sleep(60)
 
 
