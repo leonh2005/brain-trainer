@@ -1,6 +1,6 @@
 {
-  "scanned_at": "2026-09-29 03:00:26",
-  "since": "2026-09-28 03:00:00",
+  "scanned_at": "2026-09-30 03:00:27",
+  "since": "2026-09-29 03:00:00",
   "results": {
     "市場儀表板": {
       "exists": true,
@@ -34,9 +34,9 @@
     },
     "川普監測": {
       "exists": true,
-      "errors": 0,
-      "last_error": null,
-      "fix": null
+      "errors": 1,
+      "last_error": "2026-09-29 08:30:03,711 WARNING 分析失敗：Experts worry about Nvidia’s AI chip sales in Chin — 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reaso",
+      "fix": "尚無對應建議，需人工判斷"
     },
     "持倉新聞(台股)": {
       "exists": true,
