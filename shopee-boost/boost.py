@@ -25,6 +25,9 @@ logger = logging.getLogger('shopee_boost')
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 STATE_FILE = os.path.join(BASE_DIR, 'data', 'last_success.json')
 COOLDOWN = timedelta(hours=4)
+# cron 固定在 :19:00 觸發，但上次成功可能落在 :19:16，elapsed 會差十幾秒不滿 4 小時，
+# 因而整整跳過一小時（歷史上一律變成 5 小時一輪）。給 60 秒容差視為已滿。
+COOLDOWN_TOLERANCE = timedelta(seconds=60)
 
 FIREFOX_PROFILE = os.path.expanduser(
     '~/Library/Application Support/Firefox/Profiles/ro7nczf2.default-release'
@@ -99,6 +102,28 @@ def load_shopee_cookies() -> list:
     return cookies
 
 
+def dismiss_ai_tour(page) -> bool:
+    """關閉蝦皮在商品列表頁推出的「AI 商品優化」導覽浮層（#aiOptimizerTour）。
+
+    浮層外層容器本身回報不可見，但子元素 .step-mask／.step-container 是可見的、
+    覆蓋整個商品列表並攔截所有點擊，害「更多」按鈕點不到而 TimeoutError。
+    按「跳過」後浮層節點會整個消失。找不到浮層時什麼都不做。
+    """
+    skip_btn = page.locator('#aiOptimizerTour button:has-text("跳過")')
+    if skip_btn.count() == 0:
+        return False
+    # 浮層可能在 count() 與 click() 之間消失，此時預設的 30 秒重試會拋錯並中止整輪，
+    # 所以縮短 timeout 且吞掉例外——這裡只是清理動作，失敗不該讓整輪掛掉。
+    try:
+        skip_btn.first.click(timeout=5000)
+    except Exception as e:
+        logger.warning(f'關閉「AI 商品優化」導覽浮層失敗，略過：{e}')
+        return False
+    logger.info('已關閉「AI 商品優化」導覽浮層')
+    page.wait_for_timeout(500)
+    return True
+
+
 def run():
     all_success = load_last_success()
     now = datetime.now()
@@ -107,7 +132,7 @@ def run():
         last = all_success.get(keyword)
         if last is not None:
             elapsed = now - datetime.fromisoformat(last)
-            if elapsed < COOLDOWN:
+            if elapsed < COOLDOWN - COOLDOWN_TOLERANCE:
                 logger.info(f'「{keyword}」距上次成功僅 {elapsed}，未滿4小時，跳過（還需等 {COOLDOWN - elapsed}）')
                 continue
         pending.append(keyword)
@@ -133,6 +158,8 @@ def run():
             logger.error('cookie 失效，被導回登入頁')
             browser.close()
             return
+
+        dismiss_ai_tour(page)
 
         # 商品資訊表與操作按鈕表是兩張分開的 <table>（同步捲動用，欄位用 row index 對齊）
         # 頁面偶爾要超過3秒才把表格資料載完（曾偶發誤判成「頁面結構改變」），改成輪詢最多15秒再放棄
@@ -177,6 +204,8 @@ def run():
             except Exception:
                 page.keyboard.press('Escape')
                 page.wait_for_timeout(500)
+
+            dismiss_ai_tour(page)
 
             more_btn = action_table.locator('tbody tr').nth(target_idx).locator('button:has-text("更多")')
             more_btn.click()
