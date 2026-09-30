@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 當沖候選推播 — 週間 09:19 執行
-資料來源：永豐金 Shioaji snapshots（主，即時）+ TWSE 公開 API（輔）+ FinMind（三大法人現貨）
+資料來源：永豐金 Shioaji snapshots（個股即時 + 加權指數）+ TWSE 公開 API（輔）+ FinMind（三大法人現貨參考）
 """
 
 import requests
@@ -49,7 +49,7 @@ try:
     finmind.login_by_token(api_token=TOKEN)
 except Exception as e:
     print(f'[finmind] 登入失敗，改用降級模式: {e}')
-    send_telegram(f"⚠️ {TODAY} 當沖掃描：FinMind 連線失敗（{type(e).__name__}），改用降級模式繼續（無三大法人方向/FinMind均量備援）")
+    send_telegram(f"⚠️ {TODAY} 當沖掃描：FinMind 連線失敗（{type(e).__name__}），改用降級模式繼續（無前一日法人參考/FinMind均量備援）")
     finmind = None
 
 # ── Shioaji 連線（singleton）─────────────────────
@@ -195,6 +195,20 @@ def get_institutional_net():
         return 0, ''
 
 
+def get_index_intraday():
+    """加權指數即時漲跌幅（%）。走 Shioaji gateway（5455，常駐單一連線）。
+    回傳 (漲跌幅, 指數值)，失敗回傳 (None, 0.0)"""
+    try:
+        r = requests.get('http://localhost:5455/snapshot',
+                         params={'codes': 'IX0001'}, timeout=8)
+        d = r.json().get('data', {}).get('IX0001')
+        if d and d.get('change_rate') is not None:
+            return round(float(d['change_rate']), 2), float(d['close'])
+    except Exception as e:
+        print(f'[gateway] 加權指數查詢失敗: {e}')
+    return None, 0.0
+
+
 def get_stock_sector(code: str) -> str:
     """從 FinMind TaiwanStockInfo 取股票產業別，供推播分族群顯示（/tmp 快取避免重複打 API）"""
     import json as _json
@@ -254,18 +268,25 @@ for row in top20:
         })
 
 inst_net, inst_date = get_institutional_net()
-mkt_dir = "偏多 ↑" if inst_net > 0 else "偏空 ↓"
+idx_chg, idx_val = get_index_intraday()
 
-# 三大法人現貨合計賣超超過 300 億時，統計上勝率大幅下降（大盤逆風19.4% vs順風47.6%），跳過不推播候選
-mkt_bearish_skip = inst_net <= -300
+# 大盤即時跌逾 0.5% 時跳過推播。實測「當日開盤跳空」對當日報酬相關性 0.72，
+# 遠優於前一日三大法人買賣超的 0.05，故改用即時指數而非落後一日的法人資料。
+SKIP_THRESHOLD = -0.5
+mkt_bearish_skip = idx_chg is not None and idx_chg <= SKIP_THRESHOLD
 if mkt_bearish_skip and candidates:
-    print(f'[daytrade] 三大法人賣超 {inst_net:+,.1f} 億（逾300億），跳過本日{len(candidates)}檔候選')
+    print(f'[daytrade] 大盤即時 {idx_chg:+.2f}%（跌逾 {abs(SKIP_THRESHOLD)}%），跳過本日{len(candidates)}檔候選')
     candidates = []
 
 # ── 組訊息 ────────────────────────────────────────
 
 lines = [f"📊 <b>當沖候選</b>｜{TODAY} 09:10\n"]
-lines.append(f"🌐 三大法人現貨（{inst_date}）：{mkt_dir}（買賣超 {inst_net:+,.1f} 億）\n")
+if idx_chg is not None:
+    lines.append(f"🌐 大盤即時：{idx_val:,.2f}（{idx_chg:+.2f}%）\n")
+else:
+    lines.append("🌐 大盤即時：資料取得失敗\n")
+if inst_date:
+    lines.append(f"　前一日三大法人現貨：買賣超 {inst_net:+,.1f} 億（{inst_date}）\n")
 lines.append("📋 <b>篩選條件</b>")
 lines.append("今日量前20（Shioaji即時）＋ 振幅&gt;3% ＋ 近5均量&gt;3000張 ＋ 漲幅&gt;1.5%\n")
 
@@ -300,7 +321,7 @@ if candidates:
     lines.append("⚡ 進場參考：開盤後5~15分鐘確認方向再進")
     lines.append("🛑 停損：跌破進場價 -1.5% 出清")
 elif mkt_bearish_skip:
-    lines.append("🌧️ 三大法人賣超逾300億，今日跳過推播（大盤逆風時歷史勝率明顯偏低）")
+    lines.append(f"🌧️ 大盤即時跌逾 0.5%（{idx_chg:+.2f}%），今日跳過推播")
 else:
     lines.append("❌ 今日無符合當沖條件標的\n建議觀望或等待盤中突破訊號")
 
