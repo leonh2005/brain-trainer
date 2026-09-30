@@ -1,6 +1,6 @@
 {
-  "scanned_at": "2026-09-30 03:00:27",
-  "since": "2026-09-29 03:00:00",
+  "scanned_at": "2026-10-01 03:00:27",
+  "since": "2026-09-30 03:00:01",
   "results": {
     "市場儀表板": {
       "exists": true,
@@ -28,14 +28,14 @@
     },
     "財經新聞分析": {
       "exists": true,
-      "errors": 0,
-      "last_error": null,
-      "fix": null
+      "errors": 9,
+      "last_error": "2026-10-01 01:16:42,891 [WARNING] fetcher.ptt_fetcher: PTT article fetch failed https://www.ptt.cc/bbs/Stock/M.1790748002.A.707.html: HTTPSConnectionPool(host='www.ptt.cc', port=443): Read timed out. (read timeout=10)",
+      "fix": "網路逾時 → 確認目標服務可達，或增加 timeout 設定"
     },
     "川普監測": {
       "exists": true,
-      "errors": 1,
-      "last_error": "2026-09-29 08:30:03,711 WARNING 分析失敗：Experts worry about Nvidia’s AI chip sales in Chin — 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reaso",
+      "errors": 2,
+      "last_error": "2026-09-30 13:00:04,896 WARNING 分析失敗：Trump Doing 'Free PR' For AI Bosses, Says Ro Khann — 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reaso",
       "fix": "尚無對應建議，需人工判斷"
     },
     "持倉新聞(台股)": {
