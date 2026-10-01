@@ -513,7 +513,10 @@ function enableSort(containerSel,key){
     const target=e.target.closest('.card');
     if(!target||target===dragSrc||target.parentElement!==container)return;
     const rect=target.getBoundingClientRect();
-    const before=(e.clientX-rect.left)<rect.width/2;
+    const srect=dragSrc.getBoundingClientRect();
+    // 卡片左右範圍重疊＝垂直堆疊，改用上下判定；wide 卡片每行僅一張，用水平判定會讓「往上拖」被誤判成插到目標後方
+    const stacked=(Math.min(rect.right,srect.right)-Math.max(rect.left,srect.left))>Math.min(rect.width,srect.width)*0.6;
+    const before=stacked?(e.clientY-rect.top)<rect.height/2:(e.clientX-rect.left)<rect.width/2;
     container.insertBefore(dragSrc,before?target:target.nextSibling);
   });
   container.addEventListener('dragend',e=>{
