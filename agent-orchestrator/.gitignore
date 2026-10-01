@@ -1,0 +1,7 @@
+queue.db
+queue.db-wal
+queue.db-shm
+*.log
+__pycache__/
+.pytest_cache/
+venv/
