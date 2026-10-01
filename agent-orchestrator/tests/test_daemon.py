@@ -59,3 +59,14 @@ def test_tick_does_not_rerun_done_task(tmp_path):
     # 再跑一輪不應重跑已完成的任務
     assert daemon.tick(conn, claude_bin=fake, timeout=10) == 0
     assert tq.get_task(conn, tid)["status"] == "done"
+
+
+def test_safe_tick_swallows_exception(tmp_path, monkeypatch):
+    """常駐迴圈不能因為一輪的意外例外就整個死掉。"""
+    conn = _conn(tmp_path)
+
+    def boom(*args, **kwargs):
+        raise RuntimeError("unexpected")
+
+    monkeypatch.setattr(daemon, "tick", boom)
+    assert daemon._tick_safe(conn) == 0  # 不該把例外穿出去

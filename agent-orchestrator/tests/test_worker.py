@@ -1,4 +1,5 @@
 import stat
+import time
 
 import taskqueue as tq
 import worker
@@ -81,3 +82,45 @@ def test_run_task_timeout_marks_failed(tmp_path):
     got = tq.get_task(conn, tid)
     assert got["status"] == "failed"
     assert "逾時" in got["error"] or "timeout" in got["error"]
+
+
+def test_run_task_rejects_missing_cwd(tmp_path):
+    """沒指定 cwd 的任務不能默默在 daemon 所在目錄跑。"""
+    conn = _conn(tmp_path)
+    fake = _fake_claude(tmp_path, 'exit 0\n')
+    tid = tq.add_task(conn, "t", "spec")  # 不給 cwd
+    ok, _ = worker.run_task(conn, tq.get_task(conn, tid), claude_bin=fake, timeout=10)
+    assert not ok
+    assert tq.get_task(conn, tid)["status"] == "failed"
+
+
+def test_run_task_permission_denied_fails_cleanly(tmp_path):
+    """執行檔存在但不可執行 → 收斂成 failed，不要讓例外穿出去打死 daemon。"""
+    conn = _conn(tmp_path)
+    noexec = tmp_path / "noexec"
+    noexec.write_text("#!/bin/bash\necho hi\n")
+    noexec.chmod(0o644)
+    tid = tq.add_task(conn, "t", "spec", cwd=str(tmp_path))
+    ok, _ = worker.run_task(conn, tq.get_task(conn, tid), claude_bin=str(noexec), timeout=10)
+    assert not ok
+    assert tq.get_task(conn, tid)["status"] == "failed"
+
+
+def test_run_task_timeout_kills_children(tmp_path):
+    """逾時要殺掉整個 process group，孫行程不能活下來繼續跑。"""
+    conn = _conn(tmp_path)
+    marker = tmp_path / "grandchild.txt"
+    fake = _fake_claude(tmp_path, f'(sleep 3; echo alive > {marker}) &\nsleep 30\n')
+    tid = tq.add_task(conn, "t", "spec", cwd=str(tmp_path))
+    ok, _ = worker.run_task(conn, tq.get_task(conn, tid), claude_bin=fake, timeout=2)
+    assert not ok
+    time.sleep(4)  # 超過孫行程原本要寫檔的時間
+    assert not marker.exists(), "孫行程應已被殺，不該寫出檔案"
+
+
+def test_run_task_records_worker_pid(tmp_path):
+    conn = _conn(tmp_path)
+    fake = _fake_claude(tmp_path, 'sleep 30\n')
+    tid = tq.add_task(conn, "t", "spec", cwd=str(tmp_path))
+    worker.run_task(conn, tq.get_task(conn, tid), claude_bin=fake, timeout=2)
+    assert tq.get_task(conn, tid)["worker_pid"] is not None

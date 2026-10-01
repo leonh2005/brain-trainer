@@ -1,4 +1,5 @@
 """常駐排程：收割逾時任務、認領可跑的任務、交給 worker。"""
+import sys
 import time
 
 import taskqueue as tq
@@ -29,11 +30,20 @@ def tick(conn, claude_bin="claude", timeout=3600):
     return 1
 
 
+def _tick_safe(conn, **kwargs):
+    """包住 tick：任何意外例外都吞掉並回 0，讓常駐迴圈活著。"""
+    try:
+        return tick(conn, **kwargs)
+    except Exception as exc:  # 常駐服務不可因單輪失敗而死
+        print(f"[daemon] tick 失敗：{exc!r}", file=sys.stderr, flush=True)
+        return 0
+
+
 def main_loop(claude_bin="claude", timeout=3600, poll=5, db_path="queue.db"):
     conn = tq.connect(db_path)
     tq.init_db(conn)
     while True:
-        if tick(conn, claude_bin=claude_bin, timeout=timeout) == 0:
+        if _tick_safe(conn, claude_bin=claude_bin, timeout=timeout) == 0:
             time.sleep(poll)
 
 

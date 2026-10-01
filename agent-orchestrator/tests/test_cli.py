@@ -58,3 +58,15 @@ def test_cli_runs_as_script(tmp_path):
         capture_output=True, text=True,
     )
     assert task_id in ls.stdout
+
+
+def test_cmd_add_normalizes_relative_cwd(tmp_path, capsys, monkeypatch):
+    """相對 --cwd 要用 add 當下的目錄解析成絕對路徑，否則 daemon 會解到錯的目錄。"""
+    db = str(tmp_path / "t.db")
+    work = tmp_path / "work"
+    work.mkdir()
+    monkeypatch.chdir(tmp_path)
+    cli.cmd_add(argparse.Namespace(db=db, title="r", spec="s", cwd="work"))
+    tid = capsys.readouterr().out.strip()
+    conn = tq.connect(db)
+    assert tq.get_task(conn, tid)["cwd"] == str(work)
