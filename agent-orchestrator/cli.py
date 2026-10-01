@@ -1,5 +1,6 @@
 """終端機入口：orch add / ls / log。"""
 import argparse
+import os
 
 import taskqueue as tq
 
@@ -9,7 +10,9 @@ DEFAULT_DB = "queue.db"
 def cmd_add(args):
     conn = tq.connect(args.db)
     tq.init_db(conn)
-    task_id = tq.add_task(conn, args.title, args.spec or args.title, cwd=args.cwd)
+    # 相對路徑要用 add 當下的目錄解析；否則 daemon 會在自己的 cwd 下解到錯的位置
+    cwd = os.path.abspath(args.cwd) if args.cwd else None
+    task_id = tq.add_task(conn, args.title, args.spec or args.title, cwd=cwd)
     print(task_id)
 
 
