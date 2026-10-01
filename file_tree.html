@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CCProject 檔案結構圖</title>
+<style>
+  :root {
+    --bg: #f6f7f9;
+    --ink: #2c3e50;
+    --muted: #8a94a6;
+    --accent: #e5a36b;
+  }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro SC", "Microsoft JhengHei", sans-serif;
+    margin: 24px;
+    padding: 20px;
+  }
+  h1 {
+    font-size: 26px;
+    font-weight: 700;
+    margin: 0 0 4px;
+  }
+  .sub {
+    color: var(--muted);
+    margin-bottom: 18px;
+    font-size: 13px;
+  }
+  #tree {
+    font-size: 14px;
+    line-height: 1.7;
+  }
+  .root { color: var(--accent); font-weight: 700; }
+  .folder { color: var(--ink); font-weight: 600; }
+  .file { color: var(--ink); font-weight: 400; }
+  .ico-dir::before { content: "📁 "; font-size: 13px; }
+  .ico-file::before { content: "📄 "; font-size: 13px; }
+  .count { color: var(--muted); font-size: 11px; margin-left: 6px; }
+  .bar {
+    height: 3px;
+    margin: 10px 0 22px;
+    background: linear-gradient(90deg, #e5a36b, #e37934, #e5a36b);
+  }
+  /* 資料夾用三角形，檔案用圓方，方便辨識 */
+  .box { padding-left: 20px; }
+</style>
+</head>
+<body>
+  <h1>CCProject 檔案結構圖</h1>
+  <div class="sub">共 <span id="total">0</span> 筆（<span id="dirs">0</span> 資料夾 · <span id="files">0</span> 檔案）　· 路徑：CCProject</div>
+  <div class="bar"></div>
+
+  <div id="tree"></div>
+
+  <script>
+    /* 資料夾清單（含路徑，根是 CCProject） */
+    const DIRS = ['.', './__pycache__', './.claude', './.claude/agents', './.claude/skills', './.claude/worktrees', './.code-review-graph', './.git', './.playwright-mcp', './.pytest_cache', './.secrets', './.secrets/vault_backups', './.superpowers', './.superpowers/brainstorm', './.superpowers/sdd', './ai-broadcast', './awesome-design-md', './awesome-design-md/.git', './awesome-design-md/.github', './awesome-design-md/design-md', './balcony-plants', './balcony-plants/photos', './chip-tracker', './chip-tracker/__pycache__', './chip-tracker/.pytest_cache', './chip-tracker/templates', './chip-tracker/tests', './command-center', './command-center/__pycache__', './command-center/logs', './command-center/scratch', './command-center/templates', './command-center/venv', './controller-media', './controller-media/__pycache__', './controller-media/templates', './controller-media/venv', './cube-portrait-test', './cube-portrait-test/output', './cube-portrait-test/source', './cube-portrait-test/venv', './daily-stock-analysis', './daily-stock-analysis/__pycache__', './daily-stock-analysis/.claude', './daily-stock-analysis/.code-review-graph', './daily-stock-analysis/.git', './daily-stock-analysis/.github', './daily-stock-analysis/.pytest_cache', './daily-stock-analysis/.venv', './daily-stock-analysis/api', './daily-stock-analysis/apps', './daily-stock-analysis/bot', './daily-stock-analysis/data', './daily-stock-analysis/data_provider', './daily-stock-analysis/docker', './daily-stock-analysis/docs', './daily-stock-analysis/logs', './daily-stock-analysis/patch', './daily-stock-analysis/reports', './daily-stock-analysis/scripts', './daily-stock-analysis/sources', './daily-stock-analysis/src', './daily-stock-analysis/static', './daily-stock-analysis/strategies', './daily-stock-analysis/templates', './daily-stock-analysis/tests', './daily-stock-analysis/venv', './dan-koe-restart', './dashboard', './dashboard/__pycache__', './dashboard/templates', './daytrade-replay', './daytrade-replay/__pycache__', './daytrade-replay/static', './daytrade-replay/templates', './daytrade-replay/venv', './daytrade-sim', './daytrade-sim/__pycache__', './daytrade-sim/static', './daytrade-sim/templates', './daytrade-sim/venv', './docs', './docs/superpowers', './edible_plants_tw', './edible_plants_tw/.dart_tool', './edible_plants_tw/.idea', './edible_plants_tw/android', './edible_plants_tw/build', './edible_plants_tw/lib', './edible_plants_tw/test', './edible-plants-api', './edible-plants-api/uploads', './edible-plants-tw', './edible-plants-tw/.code-review-graph', './edible-plants-tw/.git', './edible-plants-tw/api', './edible-plants-tw/app', './finmind', './finmind/__pycache__', './finmind/venv', './finmind/venv_py314_backup', './gemma_work', './gesture-toolkit', './gesture-toolkit/.gradle', './gesture-toolkit/.kotlin', './gesture-toolkit/app', './gesture-toolkit/gradle', './guru-tracker', './guru-tracker/__pycache__', './guru-tracker/.pytest_cache', './guru-tracker/templates', './guru-tracker/tests', './guru-tracker/venv', './hermes-config', './hermes-training', './hermes-training/__pycache__', './hermes-training/.pytest_cache', './hermes-training/logs', './hermes-training/node_modules', './hermes-training/tests', './hola-quant', './jev-compaction', './jev-compaction/__pycache__', './jev-compaction/.pytest_cache', './jev-compaction/ccr-backup', './last30days-web', './last30days-web/__pycache__', './last30days-web/corpus', './last30days-web/templates', './learn-system', './learn-system/__pycache__', './learn-system/.pytest_cache', './learn-system/learn_system', './learn-system/logs', './learn-system/static', './learn-system/templates', './learn-system/tests', './learn-system/venv', './line-claude-bot', './line-claude-bot/logs', './logs', './lotto649', './macross7-nes', './macross7-nes/audio', './macross7-nes/build', './macross7-nes/gfx', './macross7-nes/neslib-master', './macross7-nes/src', './macross7-nes/tools', './market-analysis', './market-analysis/__pycache__', './market-analysis/templates', './market-analysis/venv', './market-cycle-chart', './market-cycle-chart/__pycache__', './market-cycle-chart/.pytest_cache', './market-cycle-chart/data', './market-cycle-chart/static', './market-cycle-chart/templates', './market-cycle-chart/tests', './market-cycle-chart/venv', './market-dashboard', './market-dashboard/__pycache__', './mkdir', './momo-3d', './momo-3d/logs', './momo-3d/output', './momo-3d/source', './momo-3d/work', './news-analyzer', './news-analyzer/__pycache__', './news-analyzer/.pytest_cache', './news-analyzer/.venv', './news-analyzer/fetcher', './news-analyzer/templates', './news-analyzer/tests', './news-analyzer/venv', './personal-knowledge-base', './personal-knowledge-base/facebook', './personal-knowledge-base/line', './personal-knowledge-base/threads', './plant-quiz', './portfolio-analyzer', './portfolio-analyzer/__pycache__', './portfolio-analyzer/static', './portfolio-analyzer/templates', './portfolio-analyzer/venv', './portfolio-news', './portfolio-news/__pycache__', './portfolio-news/.venv', './pullback-buy-screener', './pullback-buy-screener/__pycache__', './pullback-buy-screener/templates', './rabbit-care', './rabbit-care/__pycache__', './rabbit-care/.pytest_cache', './rabbit-care/static', './rabbit-care/templates', './rabbit-care/tests', './rabbit-care/uploads', './rabbit-care/venv', './reports', './roar-score', './roar-score/__pycache__', './roar-score/templates', './roar-score/venv', './scripts', './scripts/__pycache__', './scripts/hay', './scripts/hay-venv', './shioaji-gateway', './shioaji-gateway/__pycache__', './shioaji-gateway/venv', './shioaji-test', './shopee-boost', './shopee-boost/__pycache__', './shopee-boost/data', './shopee-boost/logs', './shulin-invoice-audit', './sim-invest', './sim-invest/__pycache__', './sim-invest/.pytest_cache', './sim-invest/jobs', './sim-invest/templates', './sim-invest/tests', './sim-invest/venv', './skill-tree', './skill-tree/__pycache__', './skill-tree/.pytest_cache', './skill-tree/scripts', './skill-tree/static', './skill-tree/templates', './skill-tree/tests', './skill-tree/venv', './sl_vn_demo', './sl_vn_demo/game', './stock_analyzer', './stock_analyzer/__pycache__', './stock_analyzer/templates', './stock_analyzer/venv', './stock-screener-ai', './stock-screener-ai/__pycache__', './stock-screener-ai/.code-review-graph', './stock-screener-ai/.git', './stock-screener-ai/.pytest_cache', './stock-screener-ai/docs', './stock-screener-ai/eval_results', './stock-screener-ai/templates', './stock-screener-ai/tests', './stock-screener-ai/venv', './tablet-elderly-hongguo', './telebot', './telebot/__pycache__', './telebot/.code-review-graph', './telebot/.git', './telebot/data', './telebot/logs', './telebot/static', './telebot/venv', './telebot/venv', './tg-claude', './tg-claude/__pycache__', './tg-claude/venv', './thinking-proxy', './thinking-proxy/__pycache__', './threads-daily', './threads-daily/__pycache__', './threads-daily/.claude', './threads-daily/.git', './threads-daily/__pycache__', './threads-daily/templates', './threads-daily/tests', './threads-daily/venv', './threads-daily/venv', './TradingAgents', './TradingAgents/.code-review-graph', './TradingAgents/.git', './TradingAgents/.github', './TradingAgents/assets', './TradingAgents/build', './TradingAgents/cli', './TradingAgents/scripts', './TradingAgents/tests', './TradingAgents/tradingagents', './TradingAgents/tradingagents.egg-info', './TradingAgents/venv', './triz-solver', './triz-solver/__pycache__', './triz-solver/static', './triz-solver/templates', './triz-solver/venv', './tw-coverage', './tw-coverage/.claude', './tw-coverage/.git', './tw-coverage/network', './tw-coverage/Pilot_Reports', './tw-coverage/scripts', './tw-coverage/themes'];
+
+    /* 各資料夾內檔案數量 */
+    const COUNTS = {
+      '.': 0,
+      './__pycache__': 3,
+      './.claude': 15,
+      './.code-review-graph': 1,
+      './.git': 32,
+      './.playwright-mcp': 1,
+      './.pytest_cache': 3,
+      './.secrets': 17,
+      './.superpowers': 2,
+      './ai-broadcast': 5,
+      './awesome-design-md': 11,
+      './balcony-plants': 10,
+      './chip-tracker': 21,
+      './command-center': 32,
+      './controller-media': 13,
+      './cube-portrait-test': 27,
+      './daily-stock-analysis': 327,
+      './dan-koe-restart': 1,
+      './dashboard': 4,
+      './daytrade-replay': 15,
+      './daytrade-sim': 10,
+      './docs': 0,
+      './edible_plants_tw': 26,
+      './edible-plants-api': 0,
+      './edible-plants-tw': 22,
+      './finmind': 19,
+      './gemma_work': 141,
+      './gesture-toolkit': 9,
+      './guru-tracker': 26,
+      './hermes-config': 4,
+      './hermes-training': 158,
+      './last30days-web': 44,
+      './learn-system': 41,
+      './line-claude-bot': 2,
+      './lotto649': 1,
+      './macross7-nes': 47,
+      './market-analysis': 21,
+      './market-cycle-chart': 31,
+      './market-dashboard': 13,
+      './mkdir': 0,
+      './momo-3d': 46,
+      './news-analyzer': 56,
+      './personal-knowledge-base': 2,
+      './plant-quiz': 2,
+      './portfolio-analyzer': 20,
+      './portfolio-news': 8,
+      './pullback-buy-screener': 11,
+      './rabbit-care': 43,
+      './reports': 6,
+      './roar-score': 8,
+      './scripts': 34,
+      './shioaji-gateway': 7,
+      './shioaji-test': 2,
+      './shopee-boost': 8,
+      './shulin-invoice-audit': 1,
+      './sim-invest': 32,
+      './skill-tree': 18,
+      './sl_vn_demo': 17,
+      './stock-analyzer': 9,
+      './stock-screener-ai': 37,
+      './tablet-elderly-hongguo': 1,
+      './telebot': 78,
+      './tg-claude': 7,
+      './thinking-proxy': 6,
+      './threads-daily': 18,
+      './TradingAgents': 105,
+      './triz-solver': 14,
+      './tw-coverage': 47,
+    };
+
+    function esc(s) {
+      return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/</g, '&gt;');
+    }
+
+    /* 統計總檔案數（所有資料夾內） */
+    const totalFiles = Object.values(COUNTS).reduce((a, b) => a + b, 0);
+
+    document.getElementById('total').textContent = (Object.keys(COUNTS).length) + ' 筆';
+    document.getElementById('dirs').textContent = Object.keys(COUNTS).length + ' 資料夾';
+    document.getElementById('files').textContent = totalFiles + ' 檔案';
+
+    const root = document.createElement('div');
+    root.style.display = 'flex';
+    root.style.gap = '16px';
+    root.style.alignItems = 'flex-start';
+    const dirNode = document.createElement('div');
+    dirNode.className = 'root ico-dir';
+    dirNode.textContent = 'CCProject';
+    root.appendChild(dirNode);
+    const tree = document.getElementById('tree');
+    document.body.appendChild(root);
+    document.body.appendChild(tree);
+
+    /* 繪製每個資料夾：折行顯示，附檔案 */
+    DIRS.forEach((d) => {
+      const line = document.createElement('div');
+      line.className = 'box';
+      line.style.paddingLeft = (d === '.') ? '0' : '24px';
+
+      const folderName = d.replace(/^\.\//, '');
+
+      const folderEl = document.createElement('div');
+      folderEl.className = 'folder ico-dir';
+      folderEl.textContent = '📁 ' + folderName + (d !== '.' ? '　(' + (COUNTS[d] || 0) + ' 檔案)' : '');
+
+      const countEl = document.createElement('div');
+      const count = COUNTS[d] || 0;
+      countEl.className = 'count';
+      countEl.textContent = count + ' 檔案';
+
+      const folderCount = document.createElement('div');
+      folderCount.style.paddingLeft = '28px';
+
+      line.appendChild(folderEl);
+      line.appendChild(countEl);
+      tree.appendChild(line);
+      folderCount.appendChild(line);
+    });
+
+    /* 產生一個綜合檔列出所有資料夾及檔案數，方便複製 */
+    const combined = document.createElement('pre');
+    combined.style.position = 'static';
+    combined.style.marginTop = '16px';
+    combined.style.background = '#fff';
+    combined.style.padding = '12px 16px';
+    combined.style.borderRadius = '8px';
+    combined.style.boxShadow = '0 1px 3px rgba(0,0,0,0.1)';
+    combined.style.fontSize = '12px';
+    combined.style.whiteSpace = 'pre';
+    combined.style.maxHeight = '220px';
+    combined.style.overflow = 'auto';
+    combined.style.paddingLeft = '16px';
+    const text = DIRS.map((d) => `${d.replace(/^\.\//, '')} (${COUNTS[d] || 0})`).join('\n');
+    combined.textContent = text;
+    document.body.appendChild(combined);
+  </script>
+</body>
+</html>

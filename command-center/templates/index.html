@@ -514,9 +514,12 @@ function enableSort(containerSel,key){
     if(!target||target===dragSrc||target.parentElement!==container)return;
     const rect=target.getBoundingClientRect();
     const srect=dragSrc.getBoundingClientRect();
-    // 卡片左右範圍重疊＝垂直堆疊，改用上下判定；wide 卡片每行僅一張，用水平判定會讓「往上拖」被誤判成插到目標後方
+    // 左右範圍重疊＝垂直堆疊，改用上下判定，否則「往上拖」會被誤判成插到目標後方
     const stacked=(Math.min(rect.right,srect.right)-Math.max(rect.left,srect.left))>Math.min(rect.width,srect.width)*0.6;
-    const before=stacked?(e.clientY-rect.top)<rect.height/2:(e.clientX-rect.left)<rect.width/2;
+    let before=stacked?(e.clientY-rect.top)<rect.height/2:(e.clientX-rect.left)<rect.width/2;
+    // 目標正好是拖曳卡片的前/後鄰居時翻轉判定；否則拖到目標正中央會算成「原地不動」，使用者會以為拖曳失效
+    if(!before&&target.nextElementSibling===dragSrc)before=true;
+    else if(before&&target.previousElementSibling===dragSrc)before=false;
     container.insertBefore(dragSrc,before?target:target.nextSibling);
   });
   container.addEventListener('dragend',e=>{

@@ -1,29 +1,24 @@
-# Claude Handoff 20261001_1412
-> 自動生成於 2026-10-01 14:12
+# Claude Handoff 20261001_2236
+> 自動生成於 2026-10-01 22:36
 
 ## 未提交的檔案異動
 ```
 M chip-tracker/chip.db
  M command-center/templates/index.html
  M gemma_work/latest.md
- M logs/pullback_daily_scan.err
- M market-dashboard/alert_grid.json
- M market-dashboard/bb_cache.json
- M market-dashboard/fg_history.json
- M market-dashboard/index.html
- M market-dashboard/margin_cache.json
- M market-dashboard/sp_state.json
- M news-analyzer/trump_seen.json
  M scripts/auto_investigate_state.json
+ M shopee-boost/data/last_success.json
+?? docs/superpowers/specs/2026-10-01-agent-orchestrator-design.md
+?? file_tree.html
 ```
 
 ## 近期 Commits
 ```
+b922a826 fix: 隔日沖歷史頁出場時間文字 09:40 → 09:05
+f3dc0981 chore: 自動同步 2026-10-01 17:40
 9c90fe53 chore: 自動同步 2026-10-01 12:40
 7e676447 chore: 自動同步 2026-10-01 07:40
 8d487c09 chore: 自動同步 2026-10-01 02:40
-7044f6da chore: 每晚同步 2026-09-30 23:50
-9f1746e6 chore: 自動同步 2026-09-30 21:40
 ```
 
 ## 給 Hermes 的備註
