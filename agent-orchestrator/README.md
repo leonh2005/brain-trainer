@@ -33,6 +33,24 @@ python3 cli.py confirm <母任務 id>
 python3 -m pytest -v
 ```
 
+## Telegram
+
+**推播已可用**：daemon 在任務結束時會推 ✅／❌ 給你。
+
+**收訊息的 bot 需要一個獨立的 bot token。** 目前的 `telegram_token.txt`（`CcagentForsteven_bot`）已被既有服務以 **webhook** 佔用 —— 同一個 bot 不能同時用 `getUpdates`（會回 409）。要啟用：
+
+1. 用 @BotFather 建一個新 bot
+2. 把 token 存成 `~/CCProject/.secrets/orchestrator_token.txt`
+3. 把 `notify.TOKEN_FILE` 指向它
+
+指令（`/help` 看全部）：
+
+```
+/plan <絕對路徑> :: <大任務>     系統拆解，之後 /confirm
+/add  <絕對路徑> :: <任務>      直接排隊
+/ls    /log <id>    /confirm <id>
+```
+
 ## 邊界
 
 - **可並行**：daemon 一次最多跑 3 個任務（`daemon.MAX_PARALLEL`）；獨立的任務自然並行，有依賴的排隊。
