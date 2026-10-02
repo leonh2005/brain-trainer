@@ -13,6 +13,9 @@ CLAUDE_ARGS = [
     "--output-format", "text",
 ]
 
+MAX_RETRIES = 2
+BACKOFF_BASE = 30  # 秒；退避為 BACKOFF_BASE * 2**retries
+
 
 def invoke_claude(prompt, cwd, claude_bin="claude", timeout=3600):
     """跑一次 claude -p；回傳 (returncode, stdout, stderr)。不碰 DB。
@@ -67,9 +70,16 @@ def run_task(conn, task, claude_bin="claude", timeout=3600):
 
 
 def _fail(conn, task, error, retryable):
-    """失敗收尾。Phase 2 Task 5 會擴充成含重試；目前一律標 failed。"""
-    tq.set_status(conn, task["id"], "failed",
-                  error=(error or "未知錯誤")[:2000], finished_at=time.time())
+    """失敗收尾：可重試且未達上限 → 退回 pending 並排下次時間；否則標 failed。"""
+    error = (error or "未知錯誤")[:2000]
+    if retryable and task["retries"] < MAX_RETRIES:
+        delay = BACKOFF_BASE * (2 ** task["retries"])
+        tq.set_status(conn, task["id"], "pending",
+                      retries=task["retries"] + 1,
+                      next_attempt_at=time.time() + delay,
+                      error=error, started_at=None, worker_pid=None)
+    else:
+        tq.set_status(conn, task["id"], "failed", error=error, finished_at=time.time())
 
 
 def _kill_tree(proc):
