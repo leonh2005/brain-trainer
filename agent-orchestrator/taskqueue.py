@@ -21,7 +21,9 @@ CREATE TABLE IF NOT EXISTS tasks (
     created_at   REAL NOT NULL,
     started_at   REAL,
     finished_at  REAL,
-    heartbeat_at REAL
+    heartbeat_at REAL,
+    kind           TEXT NOT NULL DEFAULT 'task',
+    next_attempt_at REAL
 );
 CREATE INDEX IF NOT EXISTS idx_tasks_status ON tasks(status);
 """
@@ -40,14 +42,24 @@ def connect(db_path):
 
 def init_db(conn):
     conn.executescript(SCHEMA)
+    _migrate(conn)
 
 
-def add_task(conn, title, spec, cwd=None, depends_on=None, source="cli"):
+def _migrate(conn):
+    """就地把舊 DB 補上新欄位（idempotent）。"""
+    cols = {row[1] for row in conn.execute("PRAGMA table_info(tasks)")}
+    if "kind" not in cols:
+        conn.execute("ALTER TABLE tasks ADD COLUMN kind TEXT NOT NULL DEFAULT 'task'")
+    if "next_attempt_at" not in cols:
+        conn.execute("ALTER TABLE tasks ADD COLUMN next_attempt_at REAL")
+
+
+def add_task(conn, title, spec, cwd=None, depends_on=None, source="cli", kind="task"):
     task_id = uuid.uuid4().hex[:12]
     conn.execute(
-        "INSERT INTO tasks (id, title, spec, status, depends_on, cwd, source, created_at)"
-        " VALUES (?, ?, ?, 'pending', ?, ?, ?, ?)",
-        (task_id, title, spec, json.dumps(depends_on or []), cwd, source, time.time()),
+        "INSERT INTO tasks (id, title, spec, status, depends_on, cwd, source, kind, created_at)"
+        " VALUES (?, ?, ?, 'pending', ?, ?, ?, ?, ?)",
+        (task_id, title, spec, json.dumps(depends_on or []), cwd, source, kind, time.time()),
     )
     return task_id
 
@@ -85,7 +97,10 @@ def claim_next(conn):
     conn.execute("BEGIN IMMEDIATE")
     try:
         rows = conn.execute(
-            "SELECT * FROM tasks WHERE status = 'pending' ORDER BY created_at"
+            "SELECT * FROM tasks WHERE status = 'pending'"
+            " AND (next_attempt_at IS NULL OR next_attempt_at <= ?)"
+            " ORDER BY created_at",
+            (time.time(),),
         ).fetchall()
         for row in rows:
             deps = json.loads(row["depends_on"])
