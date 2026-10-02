@@ -1,7 +1,9 @@
 """執行單一任務：spawn claude -p，把結果寫回 DB。"""
+import json
 import os
 import signal
 import subprocess
+import threading
 import time
 
 import taskqueue as tq
@@ -15,14 +17,25 @@ CLAUDE_ARGS = [
 
 MAX_RETRIES = 2
 BACKOFF_BASE = 30  # 秒；退避為 BACKOFF_BASE * 2**retries
+IDLE_TIMEOUT = 600  # 秒；閒置超過此秒數沒有輸出即判定卡住
+
+# 去掉 CLAUDE_ARGS 末尾的 ["--output-format", "text"]，換成 stream-json
+STREAM_ARGS = [*CLAUDE_ARGS[:-2], "--output-format", "stream-json", "--verbose"]
 
 
-def invoke_claude(prompt, cwd, claude_bin="claude", timeout=3600):
+def invoke_claude(prompt, cwd, claude_bin="claude", timeout=3600, idle_timeout=None):
     """跑一次 claude -p；回傳 (returncode, stdout, stderr)。不碰 DB。
 
-    returncode 為 -1 代表逾時（已終止整個 process group）；
-    為 127 代表執行檔起不來。
+    idle_timeout 給定時改用 stream-json 逐行讀取，超過該秒數沒有新輸出即殺掉整個
+    process group 並回 -1。其他情況 -1 代表總時長逾時、127 代表執行檔起不來。
     """
+    if idle_timeout is None:
+        return _invoke_text(prompt, cwd, claude_bin, timeout)
+    return _invoke_streaming(prompt, cwd, claude_bin, timeout, idle_timeout)
+
+
+def _invoke_text(prompt, cwd, claude_bin, timeout):
+    """--output-format text：一次收完。"""
     try:
         proc = subprocess.Popen(
             [claude_bin, "-p", prompt, *CLAUDE_ARGS],
@@ -40,7 +53,53 @@ def invoke_claude(prompt, cwd, claude_bin="claude", timeout=3600):
     return proc.returncode, stdout or "", stderr or ""
 
 
-def run_task(conn, task, claude_bin="claude", timeout=3600):
+def _invoke_streaming(prompt, cwd, claude_bin, timeout, idle_timeout):
+    """stream-json：逐行讀取以偵測進展；回傳最終 result 文字。"""
+    try:
+        proc = subprocess.Popen(
+            [claude_bin, "-p", prompt, *STREAM_ARGS],
+            cwd=cwd, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+            text=True, start_new_session=True,
+        )
+    except OSError as exc:
+        return 127, "", f"無法啟動 {claude_bin}：{exc}"
+
+    state = {"last": time.time(), "result": None, "is_error": False}
+
+    def _reader():
+        for line in proc.stdout:
+            state["last"] = time.time()  # 收到任何一行都算有進展
+            try:
+                ev = json.loads(line)
+            except (ValueError, TypeError):
+                continue
+            if isinstance(ev, dict) and ev.get("type") == "result":
+                state["result"] = ev.get("result") or ""
+                state["is_error"] = bool(ev.get("is_error"))
+
+    reader = threading.Thread(target=_reader, daemon=True)
+    reader.start()
+
+    started = time.time()
+    while proc.poll() is None:
+        time.sleep(0.5)
+        now = time.time()
+        if now - state["last"] > idle_timeout:
+            _kill_tree(proc)
+            return -1, "", f"閒置逾時（超過 {idle_timeout} 秒沒有輸出）"
+        if now - started > timeout:
+            _kill_tree(proc)
+            return -1, "", f"逾時（超過 {timeout} 秒）"
+
+    reader.join(timeout=5)
+    if state["result"] is None:
+        return 1, "", "claude 結束但沒有 result 事件"
+    if state["is_error"]:
+        return 1, state["result"], "claude 回報 is_error"
+    return 0, state["result"], ""
+
+
+def run_task(conn, task, claude_bin="claude", timeout=3600, idle_timeout=None):
     """執行一個任務；回傳 (ok, output)。無論成敗都會把狀態寫回 DB。"""
     task_id = task["id"]
     cwd = task.get("cwd")
@@ -50,7 +109,8 @@ def run_task(conn, task, claude_bin="claude", timeout=3600):
         return False, ""
 
     tq.set_status(conn, task_id, "running", worker_pid=os.getpid())
-    code, out, err = invoke_claude(task["spec"], cwd, claude_bin, timeout)
+    code, out, err = invoke_claude(task["spec"], cwd, claude_bin, timeout,
+                                   idle_timeout=idle_timeout)
 
     if code == -1:
         _fail(conn, task, err, retryable=True)

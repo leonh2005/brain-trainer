@@ -167,3 +167,54 @@ def test_run_task_retries_on_timeout(tmp_path):
     tid = tq.add_task(conn, "t", "s", cwd=str(tmp_path))
     worker.run_task(conn, tq.get_task(conn, tid), claude_bin=fake, timeout=1)
     assert tq.get_task(conn, tid)["status"] == "pending"
+
+
+def test_invoke_claude_streaming_returns_result(tmp_path):
+    fake = _fake_claude(
+        tmp_path,
+        "echo '{\"type\":\"result\",\"result\":\"完成了\",\"is_error\":false}'\n")
+    code, out, err = worker.invoke_claude("do it", str(tmp_path),
+                                          claude_bin=fake, timeout=10, idle_timeout=5)
+    assert code == 0
+    assert out == "完成了"
+
+
+def test_invoke_claude_streaming_marks_error(tmp_path):
+    fake = _fake_claude(
+        tmp_path,
+        "echo '{\"type\":\"result\",\"result\":\"壞了\",\"is_error\":true}'\n")
+    code, out, err = worker.invoke_claude("do it", str(tmp_path),
+                                          claude_bin=fake, timeout=10, idle_timeout=5)
+    assert code != 0
+
+
+def test_invoke_claude_idle_timeout_kills(tmp_path):
+    """一直不輸出（不吐 stream 行）→ 閒置逾時殺掉。"""
+    fake = _fake_claude(tmp_path, "sleep 30\n")
+    code, out, err = worker.invoke_claude("do it", str(tmp_path),
+                                          claude_bin=fake, timeout=60, idle_timeout=2)
+    assert code == -1
+    assert "閒置" in err
+
+
+def test_invoke_claude_long_output_before_idle_is_survived(tmp_path):
+    """有持續輸出就不該被 idle 誤殺。"""
+    fake = _fake_claude(
+        tmp_path,
+        "for i in 1 2 3 4; do "
+        "echo '{\"type\":\"system\",\"subtype\":\"x\"}'; sleep 1; done\n"
+        "echo '{\"type\":\"result\",\"result\":\"ok\",\"is_error\":false}'\n")
+    code, out, err = worker.invoke_claude("do it", str(tmp_path),
+                                          claude_bin=fake, timeout=60, idle_timeout=2)
+    assert code == 0
+    assert out == "ok"
+
+
+def test_run_task_passes_idle_timeout(tmp_path):
+    conn = _conn(tmp_path)
+    fake = _fake_claude(tmp_path, "sleep 30\n")
+    tid = tq.add_task(conn, "t", "s", cwd=str(tmp_path))
+    worker.run_task(conn, tq.get_task(conn, tid), claude_bin=fake,
+                    timeout=60, idle_timeout=2)
+    got = tq.get_task(conn, tid)
+    assert got["error"] and "閒置" in got["error"]
