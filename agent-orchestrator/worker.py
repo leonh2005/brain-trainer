@@ -14,46 +14,62 @@ CLAUDE_ARGS = [
 ]
 
 
+def invoke_claude(prompt, cwd, claude_bin="claude", timeout=3600):
+    """跑一次 claude -p；回傳 (returncode, stdout, stderr)。不碰 DB。
+
+    returncode 為 -1 代表逾時（已終止整個 process group）；
+    為 127 代表執行檔起不來。
+    """
+    try:
+        proc = subprocess.Popen(
+            [claude_bin, "-p", prompt, *CLAUDE_ARGS],
+            cwd=cwd, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+            text=True, start_new_session=True,
+        )
+    except OSError as exc:
+        return 127, "", f"無法啟動 {claude_bin}：{exc}"
+
+    try:
+        stdout, stderr = proc.communicate(timeout=timeout)
+    except subprocess.TimeoutExpired:
+        _kill_tree(proc)
+        return -1, "", f"逾時（超過 {timeout} 秒）"
+    return proc.returncode, stdout or "", stderr or ""
+
+
 def run_task(conn, task, claude_bin="claude", timeout=3600):
     """執行一個任務；回傳 (ok, output)。無論成敗都會把狀態寫回 DB。"""
     task_id = task["id"]
     cwd = task.get("cwd")
 
     if not cwd or not os.path.isdir(cwd):
-        tq.set_status(conn, task_id, "failed",
-                      error=f"工作目錄不存在或未指定：{cwd}", finished_at=time.time())
+        _fail(conn, task, f"工作目錄不存在或未指定：{cwd}", retryable=False)
         return False, ""
 
-    try:
-        proc = subprocess.Popen(
-            [claude_bin, "-p", task["spec"], *CLAUDE_ARGS],
-            cwd=cwd, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-            text=True, start_new_session=True,
-        )
-    except OSError as exc:
-        tq.set_status(conn, task_id, "failed",
-                      error=f"無法啟動 {claude_bin}：{exc}", finished_at=time.time())
+    tq.set_status(conn, task_id, "running", worker_pid=os.getpid())
+    code, out, err = invoke_claude(task["spec"], cwd, claude_bin, timeout)
+
+    if code == -1:
+        _fail(conn, task, err, retryable=True)
+        return False, ""
+    if code == 127:
+        _fail(conn, task, err, retryable=False)
         return False, ""
 
-    tq.set_status(conn, task_id, "running", worker_pid=proc.pid)
-
-    try:
-        stdout, stderr = proc.communicate(timeout=timeout)
-    except subprocess.TimeoutExpired:
-        _kill_tree(proc)
-        tq.set_status(conn, task_id, "failed",
-                      error=f"逾時（超過 {timeout} 秒）", finished_at=time.time())
-        return False, ""
-
-    out = (stdout or "").strip()
-    if proc.returncode == 0:
+    out = out.strip()
+    if code == 0:
         tq.set_status(conn, task_id, "done", result=out,
                       error=None, finished_at=time.time())
         return True, out
 
-    err = (stderr or "").strip() or f"exit code {proc.returncode}"
-    tq.set_status(conn, task_id, "failed", error=err[:2000], finished_at=time.time())
+    _fail(conn, task, err.strip() or f"exit code {code}", retryable=True)
     return False, out
+
+
+def _fail(conn, task, error, retryable):
+    """失敗收尾。Phase 2 Task 5 會擴充成含重試；目前一律標 failed。"""
+    tq.set_status(conn, task["id"], "failed",
+                  error=(error or "未知錯誤")[:2000], finished_at=time.time())
 
 
 def _kill_tree(proc):
