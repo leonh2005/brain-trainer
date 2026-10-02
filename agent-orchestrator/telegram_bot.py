@@ -2,6 +2,7 @@
 import json
 import os
 import time
+import urllib.error
 import urllib.request
 
 import notify
@@ -38,6 +39,11 @@ def _require_cwd(cwd):
     return cwd if os.path.isdir(cwd) else None
 
 
+def _is_permanent(exc):
+    """永久性錯誤（token 無效／被 webhook 佔用）——重試一萬次也不會好。"""
+    return isinstance(exc, urllib.error.HTTPError) and exc.code in (401, 403, 409)
+
+
 def handle(text, conn, chat_id):
     """處理一則訊息，回傳要回覆的字串（非授權來源回空字串）。"""
     if chat_id != CHAT_ID:
@@ -57,7 +63,8 @@ def handle(text, conn, chat_id):
         if not cwd:
             return f"工作目錄不存在：{parts[0]}"
         kind = "orchestrator" if cmd == "/plan" else "task"
-        tid = tq.add_task(conn, parts[1][:60], parts[1], cwd=cwd, kind=kind)
+        tid = tq.add_task(conn, parts[1][:60], parts[1], cwd=cwd, kind=kind,
+                          source="telegram")
         if kind == "orchestrator":
             return f"已建立拆解任務 {tid}；daemon 拆完會回報，再 /confirm {tid}"
         return f"已排入 {tid}"
@@ -84,9 +91,18 @@ def handle(text, conn, chat_id):
             n = orchestrator.confirm(conn, rest)
         except ValueError as exc:
             return str(exc)
+        if n == 0:
+            return "沒有可放行的子任務（可能還在拆解中，稍後再試）"
         return f"已放行 {n} 個子任務"
 
     return "不認得的指令，/help 看用法"
+
+
+def _dispatch(upd, conn):
+    """把一個 update 轉成回覆字串（不碰網路）。非訊息型別／非授權來源回 ""。"""
+    msg = upd.get("message") or {}
+    chat_id = str((msg.get("chat") or {}).get("id", ""))
+    return handle(msg.get("text", ""), conn, chat_id)
 
 
 def get_updates(token, offset, timeout=POLL_TIMEOUT):
@@ -96,23 +112,42 @@ def get_updates(token, offset, timeout=POLL_TIMEOUT):
         return json.loads(resp.read()).get("result", [])
 
 
+def _drain(token, fetch=None, timeout=1):
+    """丟棄積壓的 update，回傳下一個要用的 offset。
+
+    不做這件事的話，bot 停機一天後重啟會把期間的每個指令重播一次（重複建任務、重複花錢）。"""
+    fetch = fetch or get_updates
+    offset = 0
+    while True:
+        ups = fetch(token, offset, timeout)
+        if not ups:
+            return offset
+        offset = max(u["update_id"] for u in ups) + 1
+
+
 def main_loop(db_path=DEFAULT_DB, poll=POLL_TIMEOUT):
     token = notify._token()
     if not token:
-        raise SystemExit("找不到 Telegram token，bot 未啟動")
+        print("[bot] 找不到 Telegram token，未啟動（見 README）", flush=True)
+        return
     conn = tq.connect(db_path)
     tq.init_db(conn)
-    offset = 0
+    offset = _drain(token)
     while True:
         try:
             for upd in get_updates(token, offset, poll):
                 offset = upd["update_id"] + 1
-                msg = upd.get("message") or {}
-                chat_id = str((msg.get("chat") or {}).get("id", ""))
-                reply = handle(msg.get("text", ""), conn, chat_id)
+                try:
+                    reply = _dispatch(upd, conn)
+                except Exception as exc:  # 單則失敗不可吃掉整個迴圈
+                    reply = f"處理失敗：{exc}"[:200]
                 if reply:
-                    notify.send(reply, chat_id=chat_id)
-        except Exception as exc:  # 網路錯誤不該讓 bot 死掉
+                    notify.send(reply, chat_id=CHAT_ID)
+        except Exception as exc:
+            if _is_permanent(exc):
+                print(f"[bot] 永久性錯誤（{exc}）：token 無效或被 webhook 佔用，見 README",
+                      flush=True)
+                return
             print(f"[bot] 輪詢失敗：{exc!r}", flush=True)
             time.sleep(5)
 

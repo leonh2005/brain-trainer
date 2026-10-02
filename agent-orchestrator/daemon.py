@@ -33,6 +33,7 @@ def _summarize_thread(db_path, parent_id, claude_bin, timeout):
         parent = tq.get_task(conn, parent_id)
         if parent:
             orchestrator.summarize(conn, parent, claude_bin=claude_bin, timeout=timeout)
+            _notify_result(conn, parent_id)  # 彙整完成也要推（否則手機看不到報告）
     finally:
         conn.close()
         _SUMMARIZING.discard(parent_id)
@@ -100,19 +101,36 @@ def _tick_safe(conn, **kwargs):
 MAX_PARALLEL = 3
 
 
+def _notify(line):
+    """送推播；失敗要留下痕跡（否則「手機很安靜」無從診斷），但絕不拋。"""
+    try:
+        if not notify.send(line):
+            print(f"[daemon] 推播失敗：{line[:80]}", file=sys.stderr, flush=True)
+    except Exception as exc:
+        print(f"[daemon] 推播例外：{exc!r}", file=sys.stderr, flush=True)
+
+
 def _notify_result(conn, task_id):
-    """任務結束時推播；任何失敗都不影響任務本身。"""
+    """任務結束、或母任務剛拆解完時推播；任何失敗都不影響任務本身。"""
     try:
         task = tq.get_task(conn, task_id)
         if not task:
             return
-        icon = {"done": "✅", "failed": "❌"}.get(task["status"])
-        if not icon:
+        status = task["status"]
+        if status in ("done", "failed"):
+            icon = "✅" if status == "done" else "❌"
+            line = f"{icon} {task['title']}（{task['id']}）"
+            if task["error"]:
+                line += f"\n{task['error'][:500]}"
+            elif task["result"]:
+                line += f"\n{task['result'][:1500]}"
+        elif task.get("kind") == "orchestrator" and status == "blocked":
+            n = len(orchestrator.children_of(conn, task_id))
+            line = (f"🧩 {task['title']}（{task['id']}）已拆解成 {n} 個子任務，"
+                    f"看過後 /confirm {task['id']} 放行")
+        else:
             return
-        line = f"{icon} {task['title']}（{task['id']}）"
-        if task["error"]:
-            line += f"\n{task['error'][:500]}"
-        notify.send(line)
+        _notify(line)
     except Exception:
         pass
 

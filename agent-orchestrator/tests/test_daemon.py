@@ -253,6 +253,31 @@ def test_run_worker_notifies_on_completion(tmp_path, monkeypatch):
     assert any(tid in s for s in sent)
 
 
+def test_notify_result_pushes_decomposed_parent(tmp_path, monkeypatch):
+    """拆解完成的母任務（blocked）也要推播，否則使用者等不到回報。"""
+    conn = _conn(tmp_path)
+    sent = []
+    monkeypatch.setattr(daemon.notify, "send",
+                        lambda text, **kw: sent.append(text) or True)
+    pid = tq.add_task(conn, "大任務", "x", kind="orchestrator")
+    tq.add_task(conn, "子", "s", status="blocked", parent_id=pid)
+    tq.set_status(conn, pid, "blocked")
+    daemon._notify_result(conn, pid)
+    assert any("拆解" in s for s in sent)
+
+
+def test_notify_result_includes_result_text(tmp_path, monkeypatch):
+    """✅ 訊息要帶結果，否則手機上只看得到「完成了」卻看不到做了什麼。"""
+    conn = _conn(tmp_path)
+    sent = []
+    monkeypatch.setattr(daemon.notify, "send",
+                        lambda text, **kw: sent.append(text) or True)
+    tid = tq.add_task(conn, "t", "s")
+    tq.set_status(conn, tid, "done", result="產出：一份報告")
+    daemon._notify_result(conn, tid)
+    assert any("一份報告" in s for s in sent)
+
+
 def test_notify_failure_does_not_break_task(tmp_path, monkeypatch):
     conn = _conn(tmp_path)
     db = str(tmp_path / "t.db")
