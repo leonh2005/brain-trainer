@@ -37,7 +37,15 @@ python3 -m pytest -v
 
 **推播與收訊息都已可用**（bot：`@multiagents2026bot`，token 在 `~/.secrets/orchestrator_token.txt`）。
 
-常駐：`python3 telegram_bot.py`（另開一個終端機跑 `python3 daemon.py`）。
+**已設 LaunchAgent 常駐**（`com.steven.agent-orchestrator-daemon` / `-bot`），開機自動跑。
+
+手動操作（除錯用）：
+
+```bash
+launchctl kickstart -k gui/$(id -u)/com.steven.agent-orchestrator-daemon
+launchctl kickstart -k gui/$(id -u)/com.steven.agent-orchestrator-bot
+# 或直接前景跑：python3 daemon.py / python3 telegram_bot.py
+```
 
 > ⚠️ 不要拿 `telegram_token.txt` 跑 `getUpdates` —— 那顆 bot 已被別的服務以 webhook 佔用，會回 409。
 
