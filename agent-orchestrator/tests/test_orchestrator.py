@@ -159,3 +159,41 @@ def test_decompose_rejects_missing_cwd(tmp_path):
     got = tq.get_task(conn, pid)
     assert got["status"] == "failed"
     assert "工作目錄" in got["error"]
+
+
+def test_decompose_retries_then_succeeds(tmp_path):
+    """第一次呼叫失敗、第二次成功 → 母任務正常拆解。"""
+    conn = _conn(tmp_path)
+    counter = tmp_path / "n"
+    fake = _fake_claude(
+        tmp_path,
+        f'n=$(cat {counter} 2>/dev/null || echo 0); n=$((n+1)); echo $n > {counter}\n'
+        f'if [ "$n" -lt 2 ]; then exit 1; fi\n'
+        f"echo '{GOOD_JSON}'\n")
+    pid = tq.add_task(conn, "大任務", "x", cwd=str(tmp_path), kind="orchestrator")
+    orchestrator.decompose(conn, tq.get_task(conn, pid), claude_bin=fake, timeout=10)
+    assert tq.get_task(conn, pid)["status"] == "blocked"
+
+
+def test_decompose_gives_up_after_retries(tmp_path):
+    conn = _conn(tmp_path)
+    fake = _fake_claude(tmp_path, "exit 1\n")
+    pid = tq.add_task(conn, "大任務", "x", cwd=str(tmp_path), kind="orchestrator")
+    orchestrator.decompose(conn, tq.get_task(conn, pid), claude_bin=fake, timeout=10)
+    got = tq.get_task(conn, pid)
+    assert got["status"] == "failed"
+    assert "拆解失敗" in got["error"]
+
+
+def test_decompose_retry_does_not_duplicate_children(tmp_path):
+    """重試成功後只會有一批子任務，不會因為重試而累積。"""
+    conn = _conn(tmp_path)
+    counter = tmp_path / "n"
+    fake = _fake_claude(
+        tmp_path,
+        f'n=$(cat {counter} 2>/dev/null || echo 0); n=$((n+1)); echo $n > {counter}\n'
+        f'if [ "$n" -lt 2 ]; then exit 1; fi\n'
+        f"echo '{GOOD_JSON}'\n")
+    pid = tq.add_task(conn, "大任務", "x", cwd=str(tmp_path), kind="orchestrator")
+    orchestrator.decompose(conn, tq.get_task(conn, pid), claude_bin=fake, timeout=10)
+    assert len(orchestrator.children_of(conn, pid)) == 2  # GOOD_JSON 有 2 個

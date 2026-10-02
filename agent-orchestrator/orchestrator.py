@@ -24,6 +24,22 @@ PLAN_PROMPT = """你是任務規劃器。把下面這個任務拆解成 2 到 5 
 """
 
 
+RETRY = 2
+ORCH_RETRY_DELAY = 5  # 秒
+
+
+def _invoke_with_retry(prompt, cwd, claude_bin, timeout, attempts=RETRY):
+    """呼叫 claude，失敗（code != 0）時重試；回傳最後一次的 (code, out, err)。"""
+    last = None
+    for i in range(attempts + 1):
+        last = worker.invoke_claude(prompt, cwd, claude_bin, timeout)
+        if last[0] == 0:
+            return last
+        if i < attempts:
+            time.sleep(ORCH_RETRY_DELAY)
+    return last
+
+
 def parse_subtasks(text):
     """從 claude 的輸出取出 subtasks 清單；格式不對就丟 ValueError。"""
     cleaned = text.strip()
@@ -84,7 +100,7 @@ def decompose(conn, parent, claude_bin="claude", timeout=600):
                       error=f"工作目錄不存在或未指定：{cwd}", finished_at=time.time())
         return []
     prompt = PLAN_PROMPT.format(spec=parent["spec"], cwd=cwd)
-    code, out, err = worker.invoke_claude(prompt, cwd, claude_bin, timeout)
+    code, out, err = _invoke_with_retry(prompt, cwd, claude_bin, timeout)
 
     if code != 0:
         tq.set_status(conn, parent["id"], "failed",
@@ -167,7 +183,7 @@ def summarize(conn, parent, claude_bin="claude", timeout=600):
                       error=f"工作目錄不存在或未指定：{cwd}", finished_at=time.time())
         return False
     prompt = SUMMARIZE_PROMPT.format(spec=parent["spec"], parts=parts)
-    code, out, err = worker.invoke_claude(prompt, cwd, claude_bin, timeout)
+    code, out, err = _invoke_with_retry(prompt, cwd, claude_bin, timeout)
     if code != 0:
         tq.set_status(conn, parent["id"], "failed",
                       error=(err.strip() or f"彙整失敗 exit={code}")[:2000],
