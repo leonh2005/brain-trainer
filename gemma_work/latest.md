@@ -1,30 +1,21 @@
-# Claude Handoff 20261002_1820
-> 自動生成於 2026-10-02 18:20
+# Claude Handoff 20261002_2257
+> 自動生成於 2026-10-02 22:57
 
 ## 未提交的檔案異動
 ```
 M chip-tracker/chip.db
  M gemma_work/latest.md
- M logs/pullback_daily_scan.err
- M market-analysis/hit_counts.json
- M market-dashboard/alert_grid.json
- M market-dashboard/bb_cache.json
- M market-dashboard/fg_history.json
- M market-dashboard/index.html
- M market-dashboard/margin_cache.json
- M market-dashboard/sp_state.json
  M scripts/auto_investigate_state.json
  M shopee-boost/data/last_success.json
-?? docs/superpowers/plans/2026-10-02-agent-orchestrator-phase4.md
 ```
 
 ## 近期 Commits
 ```
-b569fbf6 feat: 學習系統卡片加上本機連結(5990)；外部 http 連結改開新分頁
-05dcc88d fix: 修審查發現的 4 Important + 4 Minor
-4f5f3dbb docs: Telegram 入口用法與 bot token 限制（Phase 4）
-e83d6160 feat: daemon 任務結束推播 Telegram
-c498e51d feat: Telegram 入口（收訊息、放行確認）
+d58999f4 fix: rotate_token.sh 用 ${TARGET} 展開（全形括號被 bash 當成變數名的一部分）
+0bd1040a feat: 排序改後端後，加一次性遷移把舊 localStorage 順序搬上來
+04c681b3 feat: LaunchAgent 常駐（daemon + bot 開機自動跑）
+dea41510 feat: 接上獨立的 Telegram bot（orchestrator_token）
+e632eeea feat: 卡片/區塊排序改存後端檔案（跨裝置、不怕清快取）
 ```
 
 ## 給 Hermes 的備註
