@@ -83,7 +83,8 @@ def _run_worker(db_path, task_id, claude_bin, timeout):
         if task.get("kind") == "orchestrator":
             orchestrator.decompose(conn, task, claude_bin=claude_bin, timeout=timeout)
         else:
-            worker.run_task(conn, task, claude_bin=claude_bin, timeout=timeout)
+            worker.run_task(conn, task, claude_bin=claude_bin, timeout=timeout,
+                            idle_timeout=worker.IDLE_TIMEOUT)
     finally:
         conn.close()
 

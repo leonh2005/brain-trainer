@@ -4,6 +4,7 @@ import time
 
 import daemon
 import taskqueue as tq
+import worker as w
 
 
 def _conn(tmp_path):
@@ -143,8 +144,28 @@ def test_worker_thread_marks_task_done(tmp_path):
     """背景執行真的會把任務跑完（不是只有啟動）。"""
     conn = _conn(tmp_path)
     db = str(tmp_path / "t.db")
-    fake = _fake_claude(tmp_path, 'echo ok\nexit 0\n')
+    # _run_worker 走 stream-json 路徑，假 claude 要吐 result 事件
+    fake = _fake_claude(
+        tmp_path,
+        "echo '{\"type\":\"result\",\"result\":\"ok\",\"is_error\":false}'\n")
     tid = tq.add_task(conn, "t", "spec", cwd=str(tmp_path))
     tq.set_status(conn, tid, "running")
     daemon._run_worker(db, tid, fake, 10)
     assert tq.get_task(conn, tid)["status"] == "done"
+
+
+def test_run_worker_uses_idle_timeout(tmp_path):
+    """並行路徑要啟用閒置偵測（卡住的任務會被殺，不是等滿總時長）。"""
+    conn = _conn(tmp_path)
+    db = str(tmp_path / "t.db")
+    fake = _fake_claude(tmp_path, "sleep 30\n")
+    tid = tq.add_task(conn, "t", "s", cwd=str(tmp_path))
+    tq.set_status(conn, tid, "running")
+    original = w.IDLE_TIMEOUT
+    w.IDLE_TIMEOUT = 2  # 縮短以利測試
+    try:
+        daemon._run_worker(db, tid, fake, 60)
+    finally:
+        w.IDLE_TIMEOUT = original
+    got = tq.get_task(conn, tid)
+    assert got["error"] and "閒置" in got["error"]
