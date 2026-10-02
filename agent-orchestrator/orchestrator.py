@@ -1,5 +1,6 @@
 """把一個大任務拆解成子任務。"""
 import json
+import os
 import re
 import time
 
@@ -16,6 +17,7 @@ PLAN_PROMPT = """你是任務規劃器。把下面這個任務拆解成 2 到 5 
 - 每個子任務都要有完整、可獨立執行的描述（不要寫「同上」這種）
 - 若某個子任務需要其他子任務先完成，用 depends_on 標明（填子任務索引，從 0 開始）
 - 彼此獨立的子任務不要互相依賴，讓它們能並行
+- 子任務要能被安全地重複執行（系統可能因失敗而重跑），避免不可逆的副作用
 
 只輸出 JSON，不要任何其他文字或解說：
 {{"subtasks": [{{"title": "短標題", "spec": "完整描述", "cwd": "{cwd}", "depends_on": []}}]}}
@@ -37,19 +39,50 @@ def parse_subtasks(text):
         raise ValueError("拆解結果缺少有效的 subtasks 陣列")
 
     n = len(subs)
-    for sub in subs:
+    for i, sub in enumerate(subs):
+        if not isinstance(sub, dict):
+            raise ValueError(f"子任務 {i} 不是物件：{sub!r}")
+        if not str(sub.get("spec") or sub.get("title") or "").strip():
+            raise ValueError(f"子任務 {i} 缺少 spec 或 title")
         deps = sub.get("depends_on") or []
         if not isinstance(deps, list):
             raise ValueError(f"depends_on 不是陣列：{deps!r}")
         for d in deps:
-            if not isinstance(d, int) or d < 0 or d >= n:
+            # bool 是 int 的子類，True/False 要擋掉
+            if isinstance(d, bool) or not isinstance(d, int) or d < 0 or d >= n:
                 raise ValueError(f"depends_on 索引越界：{d!r}")
+            if d == i:
+                raise ValueError(f"子任務 {i} 依賴自己")
+    _check_acyclic(subs)
     return subs
+
+
+def _check_acyclic(subs):
+    """depends_on 不得形成循環（循環會讓子任務永遠挑不到）。"""
+    n = len(subs)
+    state = [0] * n  # 0=未訪, 1=訪問中, 2=完成
+
+    def visit(i):
+        if state[i] == 1:
+            raise ValueError(f"depends_on 形成循環（涉及子任務 {i}）")
+        if state[i] == 2:
+            return
+        state[i] = 1
+        for d in subs[i].get("depends_on") or []:
+            visit(d)
+        state[i] = 2
+
+    for i in range(n):
+        visit(i)
 
 
 def decompose(conn, parent, claude_bin="claude", timeout=600):
     """呼叫 claude 拆解 parent，建立 blocked 子任務，parent 轉 blocked。回傳子任務 id 清單。"""
-    cwd = parent.get("cwd") or "."
+    cwd = parent.get("cwd")
+    if not cwd or not os.path.isdir(cwd):
+        tq.set_status(conn, parent["id"], "failed",
+                      error=f"工作目錄不存在或未指定：{cwd}", finished_at=time.time())
+        return []
     prompt = PLAN_PROMPT.format(spec=parent["spec"], cwd=cwd)
     code, out, err = worker.invoke_claude(prompt, cwd, claude_bin, timeout)
 
@@ -61,9 +94,11 @@ def decompose(conn, parent, claude_bin="claude", timeout=600):
 
     try:
         subs = parse_subtasks(out)
-    except ValueError as exc:
+    except Exception as exc:  # 模型輸出千奇百怪，一律收斂成可診斷的 failed
+        detail = (out or "").strip()[:500]
         tq.set_status(conn, parent["id"], "failed",
-                      error=f"拆解結果無法解析：{exc}"[:2000], finished_at=time.time())
+                      error=f"拆解結果無法解析：{exc}｜原始輸出：{detail}"[:2000],
+                      finished_at=time.time())
         return []
 
     id_by_index = {}
@@ -126,8 +161,12 @@ def summarize(conn, parent, claude_bin="claude", timeout=600):
     parts = "\n\n".join(
         f"### {c['title']}\n{(c.get('result') or '(無產出)')[:2000]}" for c in children
     )
+    cwd = parent.get("cwd")
+    if not cwd or not os.path.isdir(cwd):
+        tq.set_status(conn, parent["id"], "failed",
+                      error=f"工作目錄不存在或未指定：{cwd}", finished_at=time.time())
+        return False
     prompt = SUMMARIZE_PROMPT.format(spec=parent["spec"], parts=parts)
-    cwd = parent.get("cwd") or "."
     code, out, err = worker.invoke_claude(prompt, cwd, claude_bin, timeout)
     if code != 0:
         tq.set_status(conn, parent["id"], "failed",

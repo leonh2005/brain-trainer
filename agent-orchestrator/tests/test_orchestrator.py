@@ -123,3 +123,39 @@ def test_summarize_fails_parent_when_child_failed(tmp_path):
     tq.set_status(conn, c1, "failed", error="壞了", parent_id=pid)
     orchestrator.summarize(conn, tq.get_task(conn, pid), claude_bin=fake, timeout=10)
     assert tq.get_task(conn, pid)["status"] == "failed"
+
+
+def test_parse_subtasks_rejects_self_dependency():
+    bad = '{"subtasks": [{"title": "a", "spec": "s", "depends_on": [0]}]}'
+    with pytest.raises(ValueError):
+        orchestrator.parse_subtasks(bad)
+
+
+def test_parse_subtasks_rejects_cycle():
+    bad = ('{"subtasks": ['
+           '{"title": "a", "spec": "s", "depends_on": [1]},'
+           '{"title": "b", "spec": "s", "depends_on": [0]}]}')
+    with pytest.raises(ValueError):
+        orchestrator.parse_subtasks(bad)
+
+
+def test_parse_subtasks_rejects_non_dict_entries():
+    bad = '{"subtasks": ["do a", "do b"]}'
+    with pytest.raises(ValueError):
+        orchestrator.parse_subtasks(bad)
+
+
+def test_parse_subtasks_rejects_missing_spec_and_title():
+    bad = '{"subtasks": [{"depends_on": []}]}'
+    with pytest.raises(ValueError):
+        orchestrator.parse_subtasks(bad)
+
+
+def test_decompose_rejects_missing_cwd(tmp_path):
+    conn = _conn(tmp_path)
+    fake = _fake_claude(tmp_path, f"echo '{GOOD_JSON}'\n")
+    pid = tq.add_task(conn, "大任務", "x", kind="orchestrator")  # 沒給 cwd
+    orchestrator.decompose(conn, tq.get_task(conn, pid), claude_bin=fake, timeout=10)
+    got = tq.get_task(conn, pid)
+    assert got["status"] == "failed"
+    assert "工作目錄" in got["error"]

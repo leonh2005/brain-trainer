@@ -82,7 +82,8 @@ def build_parser():
 
     pl = sub.add_parser("plan", help="丟一個大任務，讓系統拆解")
     pl.add_argument("spec")
-    pl.add_argument("--cwd", help="工作目錄")
+    pl.add_argument("--cwd", required=True,
+                    help="工作目錄（必填：拆出的子任務會在此執行）")
     pl.set_defaults(func=cmd_plan)
 
     cf = sub.add_parser("confirm", help="確認拆解、放行子任務")
