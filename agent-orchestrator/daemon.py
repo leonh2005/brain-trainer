@@ -4,6 +4,7 @@ import sys
 import threading
 import time
 
+import notify
 import orchestrator
 import taskqueue as tq
 import worker
@@ -99,6 +100,23 @@ def _tick_safe(conn, **kwargs):
 MAX_PARALLEL = 3
 
 
+def _notify_result(conn, task_id):
+    """任務結束時推播；任何失敗都不影響任務本身。"""
+    try:
+        task = tq.get_task(conn, task_id)
+        if not task:
+            return
+        icon = {"done": "✅", "failed": "❌"}.get(task["status"])
+        if not icon:
+            return
+        line = f"{icon} {task['title']}（{task['id']}）"
+        if task["error"]:
+            line += f"\n{task['error'][:500]}"
+        notify.send(line)
+    except Exception:
+        pass
+
+
 def _run_worker(db_path, task_id, claude_bin, timeout):
     """背景 thread 的進入點：用自己的 DB 連線跑一個任務。"""
     conn = tq.connect(db_path)
@@ -119,6 +137,7 @@ def _run_worker(db_path, task_id, claude_bin, timeout):
         except Exception:
             pass
     finally:
+        _notify_result(conn, task_id)  # 例外路徑（worker 崩潰）也要推播
         conn.close()
 
 

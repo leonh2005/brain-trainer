@@ -236,3 +236,35 @@ def test_daemon_singleton_replaces_stale_lock(tmp_path):
         fh.write("999999")  # 幾乎不可能存在的 pid
     daemon._acquire_singleton(db)  # 不該炸
     assert open(db + ".daemon.lock").read().strip() == str(os.getpid())
+
+
+def test_run_worker_notifies_on_completion(tmp_path, monkeypatch):
+    conn = _conn(tmp_path)
+    db = str(tmp_path / "t.db")
+    fake = _fake_claude(
+        tmp_path,
+        "echo '{\"type\":\"result\",\"result\":\"ok\",\"is_error\":false}'\n")
+    sent = []
+    monkeypatch.setattr(daemon.notify, "send",
+                        lambda text, **kw: sent.append(text) or True)
+    tid = tq.add_task(conn, "t", "s", cwd=str(tmp_path))
+    tq.set_status(conn, tid, "running")
+    daemon._run_worker(db, tid, fake, 10)
+    assert any(tid in s for s in sent)
+
+
+def test_notify_failure_does_not_break_task(tmp_path, monkeypatch):
+    conn = _conn(tmp_path)
+    db = str(tmp_path / "t.db")
+    fake = _fake_claude(
+        tmp_path,
+        "echo '{\"type\":\"result\",\"result\":\"ok\",\"is_error\":false}'\n")
+
+    def boom(*args, **kwargs):
+        raise RuntimeError("boom")
+
+    monkeypatch.setattr(daemon.notify, "send", boom)
+    tid = tq.add_task(conn, "t", "s", cwd=str(tmp_path))
+    tq.set_status(conn, tid, "running")
+    daemon._run_worker(db, tid, fake, 10)  # 不該把例外穿出去
+    assert tq.get_task(conn, tid)["status"] == "done"
