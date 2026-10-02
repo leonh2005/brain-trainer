@@ -107,3 +107,44 @@ def test_parent_fails_when_child_fails_with_dependent_pending(tmp_path):
     daemon.tick(conn, claude_bin=fake, timeout=10)
     assert tq.get_task(conn, pid)["status"] == "failed"
     assert tq.get_task(conn, b)["status"] == "failed"  # 孤兒被標掉，不留在 pending
+
+
+def test_start_ready_respects_parallel_limit(tmp_path, monkeypatch):
+    conn = _conn(tmp_path)
+    db = str(tmp_path / "t.db")
+    monkeypatch.setattr(daemon, "_run_worker", lambda *a: None)
+    for i in range(5):
+        tq.add_task(conn, f"t{i}", "s", cwd=str(tmp_path))
+    started = daemon.start_ready(conn, db, parallel=2)
+    assert len(started) == 2
+    assert len(tq.list_tasks(conn, status="running")) == 2
+
+
+def test_start_ready_counts_existing_running(tmp_path, monkeypatch):
+    conn = _conn(tmp_path)
+    db = str(tmp_path / "t.db")
+    monkeypatch.setattr(daemon, "_run_worker", lambda *a: None)
+    a = tq.add_task(conn, "a", "s", cwd=str(tmp_path))
+    tq.set_status(conn, a, "running")  # 已經有一個在跑
+    tq.add_task(conn, "b", "s", cwd=str(tmp_path))
+    started = daemon.start_ready(conn, db, parallel=2)
+    assert len(started) == 1  # 只剩一個名額
+
+
+def test_start_ready_returns_empty_when_full(tmp_path, monkeypatch):
+    conn = _conn(tmp_path)
+    monkeypatch.setattr(daemon, "_run_worker", lambda *a: None)
+    a = tq.add_task(conn, "a", "s", cwd=str(tmp_path))
+    tq.set_status(conn, a, "running")
+    assert daemon.start_ready(conn, str(tmp_path / "t.db"), parallel=1) == []
+
+
+def test_worker_thread_marks_task_done(tmp_path):
+    """背景執行真的會把任務跑完（不是只有啟動）。"""
+    conn = _conn(tmp_path)
+    db = str(tmp_path / "t.db")
+    fake = _fake_claude(tmp_path, 'echo ok\nexit 0\n')
+    tid = tq.add_task(conn, "t", "spec", cwd=str(tmp_path))
+    tq.set_status(conn, tid, "running")
+    daemon._run_worker(db, tid, fake, 10)
+    assert tq.get_task(conn, tid)["status"] == "done"

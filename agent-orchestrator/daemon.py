@@ -1,5 +1,6 @@
 """常駐排程：收割逾時任務、認領可跑的任務、交給 worker。"""
 import sys
+import threading
 import time
 
 import orchestrator
@@ -69,12 +70,53 @@ def _tick_safe(conn, **kwargs):
         return 0
 
 
-def main_loop(claude_bin="claude", timeout=3600, poll=5, db_path="queue.db"):
+MAX_PARALLEL = 3
+
+
+def _run_worker(db_path, task_id, claude_bin, timeout):
+    """背景 thread 的進入點：用自己的 DB 連線跑一個任務。"""
+    conn = tq.connect(db_path)
+    try:
+        task = tq.get_task(conn, task_id)
+        if not task:
+            return
+        if task.get("kind") == "orchestrator":
+            orchestrator.decompose(conn, task, claude_bin=claude_bin, timeout=timeout)
+        else:
+            worker.run_task(conn, task, claude_bin=claude_bin, timeout=timeout)
+    finally:
+        conn.close()
+
+
+def start_ready(conn, db_path, claude_bin="claude", timeout=3600, parallel=MAX_PARALLEL):
+    """把可跑的任務填滿到 parallel 上限，背景執行。回傳本輪啟動的 task id 清單。"""
+    running = len(tq.list_tasks(conn, status="running"))
+    slots = max(0, parallel - running)
+    started = []
+    for _ in range(slots):
+        task = tq.claim_next(conn)
+        if not task:
+            break
+        threading.Thread(target=_run_worker,
+                         args=(db_path, task["id"], claude_bin, timeout),
+                         daemon=True).start()
+        started.append(task["id"])
+    return started
+
+
+def main_loop(claude_bin="claude", timeout=3600, poll=5, db_path="queue.db",
+              parallel=MAX_PARALLEL):
     conn = tq.connect(db_path)
     tq.init_db(conn)
     while True:
-        if _tick_safe(conn, claude_bin=claude_bin, timeout=timeout) == 0:
-            time.sleep(poll)
+        try:
+            reap_timed_out(conn, timeout)
+            finalize_parents(conn, claude_bin=claude_bin, timeout=timeout)
+            start_ready(conn, db_path, claude_bin=claude_bin, timeout=timeout,
+                        parallel=parallel)
+        except Exception as exc:  # 常駐服務不可因單輪失敗而死
+            print(f"[daemon] 迴圈失敗：{exc!r}", file=sys.stderr, flush=True)
+        time.sleep(poll)
 
 
 if __name__ == "__main__":
