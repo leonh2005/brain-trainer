@@ -1,3 +1,5 @@
+import time
+
 import pytest
 
 import taskqueue as tq
@@ -74,3 +76,48 @@ def test_claim_next_marks_running_atomically(tmp_path):
     t = tq.get_task(conn, tid)
     assert t["status"] == "running"
     assert t["started_at"] is not None
+
+
+def test_new_task_has_kind_and_next_attempt(tmp_path):
+    conn = _conn(tmp_path)
+    tid = tq.add_task(conn, "t", "s")
+    t = tq.get_task(conn, tid)
+    assert t["kind"] == "task"
+    assert t["next_attempt_at"] is None
+
+
+def test_add_task_accepts_orchestrator_kind(tmp_path):
+    conn = _conn(tmp_path)
+    tid = tq.add_task(conn, "plan", "big", kind="orchestrator")
+    assert tq.get_task(conn, tid)["kind"] == "orchestrator"
+
+
+def test_init_db_migrates_legacy_table(tmp_path):
+    """既有的舊 DB（沒有 kind 欄位）能就地升級，不需重建。"""
+    db = str(tmp_path / "legacy.db")
+    conn = tq.connect(db)
+    conn.execute(
+        "CREATE TABLE tasks ("
+        "id TEXT PRIMARY KEY, title TEXT, spec TEXT, status TEXT, "
+        "depends_on TEXT, created_at REAL)"
+    )
+    conn.execute(
+        "INSERT INTO tasks VALUES ('old1', 'legacy', 's', 'pending', '[]', 1.0)")
+    tq.init_db(conn)  # 不該炸，且要補上欄位
+    cols = {r[1] for r in conn.execute("PRAGMA table_info(tasks)")}
+    assert "kind" in cols and "next_attempt_at" in cols
+    assert tq.get_task(conn, "old1")["kind"] == "task"
+
+
+def test_claim_next_skips_task_before_next_attempt(tmp_path):
+    conn = _conn(tmp_path)
+    tid = tq.add_task(conn, "t", "s")
+    tq.set_status(conn, tid, "pending", next_attempt_at=time.time() + 3600)
+    assert tq.claim_next(conn) is None  # 還沒到重試時間
+
+
+def test_claim_next_takes_task_whose_next_attempt_passed(tmp_path):
+    conn = _conn(tmp_path)
+    tid = tq.add_task(conn, "t", "s")
+    tq.set_status(conn, tid, "pending", next_attempt_at=time.time() - 1)
+    assert tq.claim_next(conn)["id"] == tid
