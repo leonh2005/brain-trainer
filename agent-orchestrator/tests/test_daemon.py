@@ -1,3 +1,4 @@
+import json
 import stat
 import time
 
@@ -91,3 +92,18 @@ def test_tick_summarizes_when_children_done(tmp_path):
     tq.set_status(conn, pid, "blocked")
     daemon.tick(conn, claude_bin=fake, timeout=10)  # 沒有 pending 任務，但要觸發彙整
     assert tq.get_task(conn, pid)["status"] == "done"
+
+
+def test_parent_fails_when_child_fails_with_dependent_pending(tmp_path):
+    """子任務失敗、有依賴它的手足還在等 → 母任務要收尾成 failed，不能永遠卡 blocked。"""
+    conn = _conn(tmp_path)
+    fake = _fake_claude(tmp_path, "echo '不該被呼叫'\n")
+    pid = tq.add_task(conn, "母", "x", cwd=str(tmp_path), kind="orchestrator")
+    a = tq.add_task(conn, "甲", "sa", cwd=str(tmp_path))
+    b = tq.add_task(conn, "乙", "sb", cwd=str(tmp_path))
+    tq.set_status(conn, a, "failed", error="甲壞了", parent_id=pid)
+    tq.set_status(conn, b, "pending", parent_id=pid, depends_on=json.dumps([a]))
+    tq.set_status(conn, pid, "blocked")
+    daemon.tick(conn, claude_bin=fake, timeout=10)
+    assert tq.get_task(conn, pid)["status"] == "failed"
+    assert tq.get_task(conn, b)["status"] == "failed"  # 孤兒被標掉，不留在 pending

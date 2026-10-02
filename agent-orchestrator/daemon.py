@@ -22,7 +22,7 @@ def reap_timed_out(conn, timeout):
 
 
 def finalize_parents(conn, claude_bin="claude", timeout=3600):
-    """把『子任務全部結束』的 blocked orchestrator 母任務收尾（彙整或標失敗）。回傳處理數。"""
+    """收尾 blocked orchestrator 母任務：任一子任務失敗即收尾；全部完成才彙整。回傳處理數。"""
     done = 0
     for parent in tq.list_tasks(conn, status="blocked"):
         if parent.get("kind") != "orchestrator":
@@ -30,7 +30,16 @@ def finalize_parents(conn, claude_bin="claude", timeout=3600):
         children = orchestrator.children_of(conn, parent["id"])
         if not children:
             continue  # 還沒拆解
-        if all(c["status"] in ("done", "failed") for c in children):
+        if any(c["status"] == "failed" for c in children):
+            # 依賴失敗者的手足會永遠 pending（claim_next 不放行），母任務就永遠卡 blocked；
+            # 這裡把它們標掉，也讓 ls 誠實。
+            for c in children:
+                if c["status"] in ("pending", "blocked"):
+                    tq.set_status(conn, c["id"], "failed",
+                                  error="前置任務失敗，已跳過", finished_at=time.time())
+            orchestrator.summarize(conn, parent, claude_bin=claude_bin, timeout=timeout)
+            done += 1
+        elif all(c["status"] == "done" for c in children):
             orchestrator.summarize(conn, parent, claude_bin=claude_bin, timeout=timeout)
             done += 1
     return done
