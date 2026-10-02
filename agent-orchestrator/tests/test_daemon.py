@@ -84,20 +84,26 @@ def test_tick_decomposes_orchestrator_task(tmp_path):
     assert tq.get_task(conn, pid)["status"] == "blocked"
 
 
-def test_tick_summarizes_when_children_done(tmp_path):
+def test_finalize_summarizes_when_children_done(tmp_path):
     conn = _conn(tmp_path)
-    fake = _fake_claude(tmp_path, "echo '彙整完成'\n")
+    db = str(tmp_path / "t.db")
+    fake = _fake_claude(tmp_path, "echo '彙整完成'\n")  # 彙整走 text 模式（無 idle_timeout）
     pid = tq.add_task(conn, "大任務", "x", cwd=str(tmp_path), kind="orchestrator")
     c1 = tq.add_task(conn, "子1", "s1", cwd=str(tmp_path))
     tq.set_status(conn, c1, "done", result="子一完成", parent_id=pid)
     tq.set_status(conn, pid, "blocked")
-    daemon.tick(conn, claude_bin=fake, timeout=10)  # 沒有 pending 任務，但要觸發彙整
+    daemon.finalize_parents(conn, db, claude_bin=fake, timeout=10)
+    for _ in range(40):  # 彙整在背景跑
+        if tq.get_task(conn, pid)["status"] == "done":
+            break
+        time.sleep(0.5)
     assert tq.get_task(conn, pid)["status"] == "done"
 
 
 def test_parent_fails_when_child_fails_with_dependent_pending(tmp_path):
     """子任務失敗、有依賴它的手足還在等 → 母任務要收尾成 failed，不能永遠卡 blocked。"""
     conn = _conn(tmp_path)
+    db = str(tmp_path / "t.db")
     fake = _fake_claude(tmp_path, "echo '不該被呼叫'\n")
     pid = tq.add_task(conn, "母", "x", cwd=str(tmp_path), kind="orchestrator")
     a = tq.add_task(conn, "甲", "sa", cwd=str(tmp_path))
@@ -105,7 +111,11 @@ def test_parent_fails_when_child_fails_with_dependent_pending(tmp_path):
     tq.set_status(conn, a, "failed", error="甲壞了", parent_id=pid)
     tq.set_status(conn, b, "pending", parent_id=pid, depends_on=json.dumps([a]))
     tq.set_status(conn, pid, "blocked")
-    daemon.tick(conn, claude_bin=fake, timeout=10)
+    daemon.finalize_parents(conn, db, claude_bin=fake, timeout=10)
+    for _ in range(40):
+        if tq.get_task(conn, pid)["status"] == "failed":
+            break
+        time.sleep(0.5)
     assert tq.get_task(conn, pid)["status"] == "failed"
     assert tq.get_task(conn, b)["status"] == "failed"  # 孤兒被標掉，不留在 pending
 
@@ -169,3 +179,41 @@ def test_run_worker_uses_idle_timeout(tmp_path):
         w.IDLE_TIMEOUT = original
     got = tq.get_task(conn, tid)
     assert got["error"] and "閒置" in got["error"]
+
+
+def test_finalize_parents_does_not_block(tmp_path):
+    """彙整要在背景跑，不能卡住主迴圈（否則並行形同關閉）。"""
+    conn = _conn(tmp_path)
+    db = str(tmp_path / "t.db")
+    fake = _fake_claude(tmp_path, "sleep 2\necho '總結完成'\n")
+    pid = tq.add_task(conn, "母", "x", cwd=str(tmp_path), kind="orchestrator")
+    c1 = tq.add_task(conn, "子", "s", cwd=str(tmp_path))
+    tq.set_status(conn, c1, "done", result="完成", parent_id=pid)
+    tq.set_status(conn, pid, "blocked")
+
+    t0 = time.time()
+    daemon.finalize_parents(conn, db, claude_bin=str(fake), timeout=30)
+    elapsed = time.time() - t0
+    assert elapsed < 1.0, f"finalize 不該阻塞（花了 {elapsed:.1f}s）"
+    for _ in range(40):  # 背景彙整完成
+        if tq.get_task(conn, pid)["status"] == "done":
+            break
+        time.sleep(0.5)
+    assert tq.get_task(conn, pid)["status"] == "done"
+
+
+def test_run_worker_survives_exception(tmp_path, monkeypatch):
+    """worker thread 內部例外不能讓任務卡在 running。"""
+    conn = _conn(tmp_path)
+    db = str(tmp_path / "t.db")
+    tid = tq.add_task(conn, "t", "s", cwd=str(tmp_path))
+    tq.set_status(conn, tid, "running")
+
+    def boom(*args, **kwargs):
+        raise RuntimeError("模擬 worker 內部錯誤")
+
+    monkeypatch.setattr(w, "run_task", boom)
+    daemon._run_worker(db, tid, "claude", 10)  # 不該把例外穿出去
+    got = tq.get_task(conn, tid)
+    assert got["status"] == "failed"
+    assert "worker 例外" in got["error"]

@@ -30,7 +30,8 @@ def test_full_flow_add_run_inspect(tmp_path):
 
 def test_orchestrator_end_to_end(tmp_path):
     """plan → 拆解 → confirm → 子任務執行 → 自動彙整。"""
-    conn = tq.connect(str(tmp_path / "t.db"))
+    db = str(tmp_path / "t.db")
+    conn = tq.connect(db)
     tq.init_db(conn)
 
     children_json = (
@@ -57,8 +58,13 @@ def test_orchestrator_end_to_end(tmp_path):
     daemon.tick(conn, claude_bin=str(fake), timeout=10)  # 拆解
     assert tq.get_task(conn, pid)["status"] == "blocked"
     orchestrator.confirm(conn, pid)  # 放行
-    for _ in range(4):  # 跑子任務直到沒有 pending，最後觸發彙整
+    for _ in range(4):  # 跑子任務
         daemon.tick(conn, claude_bin=str(fake), timeout=10)
+    daemon.finalize_parents(conn, db, claude_bin=str(fake), timeout=10)  # 彙整（背景）
+    for _ in range(40):
+        if tq.get_task(conn, pid)["status"] == "done":
+            break
+        time.sleep(0.5)
     assert tq.get_task(conn, pid)["status"] == "done"
     assert "總結" in tq.get_task(conn, pid)["result"]
 

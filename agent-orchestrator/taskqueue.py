@@ -54,12 +54,19 @@ def _migrate(conn):
         conn.execute("ALTER TABLE tasks ADD COLUMN next_attempt_at REAL")
 
 
-def add_task(conn, title, spec, cwd=None, depends_on=None, source="cli", kind="task"):
+def add_task(conn, title, spec, cwd=None, depends_on=None, source="cli", kind="task",
+             status="pending", parent_id=None):
+    """建立任務。status 與 parent_id 可在插入時就指定 —— 拆解出的子任務必須一次
+    寫成 blocked，否則並行的 daemon 會在「先 pending 再改」的窗口把它搶去執行。"""
+    if status not in VALID_STATUS:
+        raise ValueError(f"invalid status: {status}")
     task_id = uuid.uuid4().hex[:12]
     conn.execute(
-        "INSERT INTO tasks (id, title, spec, status, depends_on, cwd, source, kind, created_at)"
-        " VALUES (?, ?, ?, 'pending', ?, ?, ?, ?, ?)",
-        (task_id, title, spec, json.dumps(depends_on or []), cwd, source, kind, time.time()),
+        "INSERT INTO tasks (id, title, spec, status, depends_on, cwd, source, kind,"
+        " parent_id, created_at)"
+        " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        (task_id, title, spec, status, json.dumps(depends_on or []), cwd, source,
+         kind, parent_id, time.time()),
     )
     return task_id
 
@@ -89,6 +96,25 @@ def set_status(conn, task_id, status, **fields):
         vals.append(val)
     vals.append(task_id)
     conn.execute(f"UPDATE tasks SET {', '.join(cols)} WHERE id = ?", vals)
+
+
+def finish_if_running(conn, task_id, started_at, status, **fields):
+    """只有當任務仍是「這次執行」（status='running' 且 started_at 相符）時才寫入。
+    回傳是否寫入 —— False 表示它已被 reap 或其他流程改過，不該覆蓋。"""
+    if status not in VALID_STATUS:
+        raise ValueError(f"invalid status: {status}")
+    cols = ["status = ?"]
+    vals = [status]
+    for key, val in fields.items():
+        cols.append(f"{key} = ?")
+        vals.append(val)
+    vals.extend([task_id, started_at])
+    cur = conn.execute(
+        f"UPDATE tasks SET {', '.join(cols)}"
+        " WHERE id = ? AND status = 'running' AND started_at = ?",
+        vals,
+    )
+    return cur.rowcount > 0
 
 
 def claim_next(conn):

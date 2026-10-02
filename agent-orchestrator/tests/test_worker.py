@@ -218,3 +218,26 @@ def test_run_task_passes_idle_timeout(tmp_path):
                     timeout=60, idle_timeout=2)
     got = tq.get_task(conn, tid)
     assert got["error"] and "閒置" in got["error"]
+
+
+def test_run_task_does_not_overwrite_reaped_task(tmp_path):
+    """任務被 daemon 收割（標 failed）後，worker 完成不得把它覆蓋成 done。"""
+    conn = _conn(tmp_path)
+    fake = _fake_claude(tmp_path, 'echo ok\nexit 0\n')
+    tid = tq.add_task(conn, "t", "s", cwd=str(tmp_path))
+    claimed = tq.claim_next(conn)               # 取得這次執行的 started_at
+    tq.set_status(conn, tid, "failed", error="被收割")   # 模擬 reap
+    worker.run_task(conn, claimed, claude_bin=fake, timeout=10)
+    assert tq.get_task(conn, tid)["status"] == "failed"
+
+
+def test_invoke_streaming_drains_large_stderr(tmp_path):
+    """stderr 大量輸出不能讓子行程卡死（管線緩衝滿）。"""
+    fake = _fake_claude(
+        tmp_path,
+        "head -c 200000 /dev/zero | tr '\\0' 'x' >&2\n"
+        "echo '{\"type\":\"result\",\"result\":\"ok\",\"is_error\":false}'\n")
+    code, out, err = worker.invoke_claude("do it", str(tmp_path),
+                                          claude_bin=fake, timeout=30, idle_timeout=10)
+    assert code == 0
+    assert out == "ok"

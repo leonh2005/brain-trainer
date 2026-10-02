@@ -197,3 +197,38 @@ def test_decompose_retry_does_not_duplicate_children(tmp_path):
     pid = tq.add_task(conn, "大任務", "x", cwd=str(tmp_path), kind="orchestrator")
     orchestrator.decompose(conn, tq.get_task(conn, pid), claude_bin=fake, timeout=10)
     assert len(orchestrator.children_of(conn, pid)) == 2  # GOOD_JSON 有 2 個
+
+
+def test_decompose_children_not_claimable_before_confirm(tmp_path):
+    """拆解完的子任務在使用者 confirm 前，一個都不能被 claim_next 搶走。"""
+    conn = _conn(tmp_path)
+    fake = _fake_claude(tmp_path, f"echo '{GOOD_JSON}'\n")
+    pid = tq.add_task(conn, "大任務", "x", cwd=str(tmp_path), kind="orchestrator")
+    children = orchestrator.decompose(conn, tq.get_task(conn, pid),
+                                      claude_bin=fake, timeout=10)
+    assert tq.claim_next(conn) is None
+    for cid in children:
+        assert tq.get_task(conn, cid)["status"] == "blocked"
+
+
+def test_decompose_no_orphan_when_child_creation_fails(tmp_path, monkeypatch):
+    """建立子任務中途失敗 → 不留可被認領的孤兒，母任務標 failed 不卡 running。"""
+    conn = _conn(tmp_path)
+    fake = _fake_claude(tmp_path, f"echo '{GOOD_JSON}'\n")
+    pid = tq.add_task(conn, "大任務", "x", cwd=str(tmp_path), kind="orchestrator")
+
+    real_add = tq.add_task
+    calls = {"n": 0}
+
+    def flaky_add(*args, **kwargs):
+        calls["n"] += 1
+        if calls["n"] == 2:
+            raise RuntimeError("模擬建立子任務失敗")
+        return real_add(*args, **kwargs)
+
+    monkeypatch.setattr(tq, "add_task", flaky_add)
+    orchestrator.decompose(conn, tq.get_task(conn, pid), claude_bin=fake, timeout=10)
+    monkeypatch.undo()
+
+    assert tq.claim_next(conn) is None                    # 沒有孤兒可被認領
+    assert tq.get_task(conn, pid)["status"] == "failed"   # 母任務沒卡在 running
