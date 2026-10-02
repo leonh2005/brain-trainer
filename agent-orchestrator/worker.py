@@ -41,7 +41,8 @@ def _invoke_text(prompt, cwd, claude_bin, timeout):
     try:
         proc = subprocess.Popen(
             [claude_bin, "-p", prompt, *CLAUDE_ARGS],
-            cwd=cwd, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+            cwd=cwd, stdin=subprocess.DEVNULL,
+            stdout=subprocess.PIPE, stderr=subprocess.PIPE,
             text=True, start_new_session=True,
         )
     except OSError as exc:
@@ -60,24 +61,29 @@ def _invoke_streaming(prompt, cwd, claude_bin, timeout, idle_timeout):
     try:
         proc = subprocess.Popen(
             [claude_bin, "-p", prompt, *STREAM_ARGS],
-            cwd=cwd, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+            cwd=cwd, stdin=subprocess.DEVNULL,
+            stdout=subprocess.PIPE, stderr=subprocess.PIPE,
             text=True, start_new_session=True,
         )
     except OSError as exc:
         return 127, "", f"無法啟動 {claude_bin}：{exc}"
 
-    state = {"last": time.time(), "result": None, "is_error": False}
+    state = {"last": time.time(), "result": None, "is_error": False, "saw_result": False}
 
     def _reader():
-        for line in proc.stdout:
-            state["last"] = time.time()  # 收到任何一行都算有進展
-            try:
-                ev = json.loads(line)
-            except (ValueError, TypeError):
-                continue
-            if isinstance(ev, dict) and ev.get("type") == "result":
-                state["result"] = ev.get("result") or ""
-                state["is_error"] = bool(ev.get("is_error"))
+        try:
+            for line in proc.stdout:
+                state["last"] = time.time()  # 收到任何一行都算有進展
+                try:
+                    ev = json.loads(line)
+                except (ValueError, TypeError):
+                    continue
+                if isinstance(ev, dict) and ev.get("type") == "result":
+                    state["saw_result"] = True  # 與「result 是空字串」區分
+                    state["result"] = ev.get("result") or ""
+                    state["is_error"] = bool(ev.get("is_error"))
+        except Exception:
+            pass  # 解碼等錯誤不可讓 reader 靜默死掉、拖垮整個任務
 
     err_lines = []
 
@@ -102,7 +108,7 @@ def _invoke_streaming(prompt, cwd, claude_bin, timeout, idle_timeout):
             return -1, "", f"逾時（超過 {timeout} 秒）"
 
     reader.join(timeout=5)
-    if state["result"] is None:
+    if not state["saw_result"]:
         detail = "".join(err_lines).strip()[:500]
         return 1, "", f"claude 結束但沒有 result 事件｜stderr：{detail}"
     if state["is_error"]:

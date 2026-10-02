@@ -1,6 +1,9 @@
 import json
+import os
 import stat
 import time
+
+import pytest
 
 import daemon
 import taskqueue as tq
@@ -217,3 +220,19 @@ def test_run_worker_survives_exception(tmp_path, monkeypatch):
     got = tq.get_task(conn, tid)
     assert got["status"] == "failed"
     assert "worker 例外" in got["error"]
+
+
+def test_daemon_singleton_rejects_second_instance(tmp_path):
+    db = str(tmp_path / "t.db")
+    with open(db + ".daemon.lock", "w") as fh:
+        fh.write(str(os.getpid()))  # 自己 = 活著
+    with pytest.raises(RuntimeError):
+        daemon._acquire_singleton(db)
+
+
+def test_daemon_singleton_replaces_stale_lock(tmp_path):
+    db = str(tmp_path / "t.db")
+    with open(db + ".daemon.lock", "w") as fh:
+        fh.write("999999")  # 幾乎不可能存在的 pid
+    daemon._acquire_singleton(db)  # 不該炸
+    assert open(db + ".daemon.lock").read().strip() == str(os.getpid())
