@@ -1,7 +1,8 @@
-"""終端機入口：orch add / ls / log。"""
+"""終端機入口：orch add / ls / log / plan / confirm。"""
 import argparse
 import os
 
+import orchestrator
 import taskqueue as tq
 
 DEFAULT_DB = "queue.db"
@@ -41,6 +42,25 @@ def cmd_log(args):
         print(t["error"])
 
 
+def cmd_plan(args):
+    conn = tq.connect(args.db)
+    tq.init_db(conn)
+    cwd = os.path.abspath(args.cwd) if args.cwd else None
+    task_id = tq.add_task(conn, args.spec[:60], args.spec, cwd=cwd, kind="orchestrator")
+    print(task_id)
+
+
+def cmd_confirm(args):
+    conn = tq.connect(args.db)
+    tq.init_db(conn)
+    try:
+        n = orchestrator.confirm(conn, args.id)
+    except ValueError as exc:
+        print(f"無法確認：{exc}")
+        return
+    print(f"已放行 {n} 個子任務")
+
+
 def build_parser():
     p = argparse.ArgumentParser(prog="orch", description="任務佇列")
     p.add_argument("--db", default=DEFAULT_DB, help="queue.db 路徑")
@@ -59,6 +79,15 @@ def build_parser():
     g = sub.add_parser("log", help="看單一任務")
     g.add_argument("id")
     g.set_defaults(func=cmd_log)
+
+    pl = sub.add_parser("plan", help="丟一個大任務，讓系統拆解")
+    pl.add_argument("spec")
+    pl.add_argument("--cwd", help="工作目錄")
+    pl.set_defaults(func=cmd_plan)
+
+    cf = sub.add_parser("confirm", help="確認拆解、放行子任務")
+    cf.add_argument("id")
+    cf.set_defaults(func=cmd_confirm)
     return p
 
 

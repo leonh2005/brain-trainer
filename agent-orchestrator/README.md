@@ -19,6 +19,12 @@ python3 cli.py log <task id>
 
 # 啟動 daemon（常駐，會依序執行 pending 任務）
 python3 daemon.py
+
+# 丟一個大任務，讓系統拆解（daemon 會把它拆成子任務）
+python3 cli.py plan "研究 X 並整理成報告" --cwd /path/to/工作目錄
+
+# daemon 拆完後 ls 看得到子任務；看過確認沒問題再放行
+python3 cli.py confirm <母任務 id>
 ```
 
 ## 測試

@@ -70,3 +70,27 @@ def test_cmd_add_normalizes_relative_cwd(tmp_path, capsys, monkeypatch):
     tid = capsys.readouterr().out.strip()
     conn = tq.connect(db)
     assert tq.get_task(conn, tid)["cwd"] == str(work)
+
+
+def test_cmd_plan_creates_orchestrator_task(tmp_path, capsys):
+    db = str(tmp_path / "t.db")
+    work = tmp_path / "w"
+    work.mkdir()
+    cli.cmd_plan(argparse.Namespace(db=db, spec="研究並報告", cwd=str(work)))
+    tid = capsys.readouterr().out.strip()
+    conn = tq.connect(db)
+    got = tq.get_task(conn, tid)
+    assert got["kind"] == "orchestrator"
+    assert got["cwd"] == str(work)
+
+
+def test_cmd_confirm_releases_children(tmp_path, capsys):
+    db = str(tmp_path / "t.db")
+    conn = tq.connect(db)
+    tq.init_db(conn)
+    pid = tq.add_task(conn, "母", "x", kind="orchestrator")
+    c1 = tq.add_task(conn, "子", "s")
+    tq.set_status(conn, c1, "blocked", parent_id=pid)
+    tq.set_status(conn, pid, "blocked")
+    cli.cmd_confirm(argparse.Namespace(db=db, id=pid))
+    assert tq.get_task(conn, c1)["status"] == "pending"
