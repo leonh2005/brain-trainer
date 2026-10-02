@@ -252,6 +252,7 @@ a.tk:hover .code{color:var(--accent-soft)}
 .modal-box{background:var(--card);border:1px solid var(--border);border-radius:var(--radius,10px);max-width:620px;width:90%;max-height:80vh;overflow-y:auto;padding:16px}
 .modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;font-weight:600}
 .modal-close{cursor:pointer;color:var(--muted)}
+.support-candle-info{margin-bottom:12px;font-family:var(--mono);font-size:12px;color:var(--text-dim);min-height:16px}
 .support-level{padding:8px 0;border-bottom:1px solid var(--border-soft)}
 .support-level:last-child{border-bottom:none}
 .support-price{font-family:var(--mono);font-size:14px;color:var(--fg)}
@@ -616,8 +617,10 @@ function supportBtn(code){
   if(!code)return '';
   return ` <span style="cursor:pointer;font-size:11px" onclick="openSupportModal('${code}')" title="查看支撐位">📊</span>`;
 }
+let supportBars=[];
 function renderSupportChart(bars, levels){
   if(!bars||bars.length<2)return '';
+  supportBars=bars;
   const W=600, H=220, PAD_L=8, PAD_R=66, PAD_T=10, PAD_B=22;
   const plotW=W-PAD_L-PAD_R, plotH=H-PAD_T-PAD_B, n=bars.length;
   const prices=bars.flatMap(b=>[b.high,b.low]).concat(levels.map(lv=>lv.price));
@@ -632,8 +635,13 @@ function renderSupportChart(bars, levels){
     const x=cx(i);
     const top=y(Math.max(b.open,b.close)), bot=y(Math.min(b.open,b.close));
     const bodyH=Math.max(1,bot-top);
-    return `<line x1="${x}" y1="${y(b.high)}" x2="${x}" y2="${y(b.low)}" stroke="${color}" stroke-width="1"/>`+
-           `<rect x="${x-bodyW/2}" y="${top}" width="${bodyW}" height="${bodyH}" fill="${color}"/>`;
+    const slotX=PAD_L+slotW*i;
+    return `<g class="candle" data-i="${i}">`+
+           `<rect class="candle-hl" x="${slotX}" y="${PAD_T}" width="${slotW}" height="${plotH}" fill="var(--accent)" opacity="0"/>`+
+           `<line x1="${x}" y1="${y(b.high)}" x2="${x}" y2="${y(b.low)}" stroke="${color}" stroke-width="1"/>`+
+           `<rect x="${x-bodyW/2}" y="${top}" width="${bodyW}" height="${bodyH}" fill="${color}"/>`+
+           `<rect class="candle-hit" x="${slotX}" y="${PAD_T}" width="${slotW}" height="${plotH}" fill="transparent" style="cursor:pointer" onclick="selectCandle(${i})"/>`+
+           `</g>`;
   }).join('');
   const lines=levels.map(lv=>{
     const ly=y(lv.price);
@@ -645,7 +653,17 @@ function renderSupportChart(bars, levels){
   const dateLabels=`<text x="${PAD_L}" y="${H-6}" font-size="10" fill="var(--muted)">${dLabel(0)}</text>`+
     `<text x="${PAD_L+plotW/2}" y="${H-6}" font-size="10" fill="var(--muted)" text-anchor="middle">${dLabel(Math.floor((n-1)/2))}</text>`+
     `<text x="${PAD_L+plotW}" y="${H-6}" font-size="10" fill="var(--muted)" text-anchor="end">${dLabel(n-1)}</text>`;
-  return `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;display:block;margin-bottom:12px">${candles}${lines}${dateLabels}</svg>`;
+  return `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;display:block;margin-bottom:6px">${candles}${lines}${dateLabels}</svg>`+
+         `<div id="support-candle-info" class="support-candle-info">點 K 棒看日期</div>`;
+}
+function selectCandle(i){
+  const b=supportBars[i]; if(!b)return;
+  const info=$('#support-candle-info');
+  if(info) info.textContent=`${b.date}　開 ${fmt(b.open)}　高 ${fmt(b.high)}　低 ${fmt(b.low)}　收 ${fmt(b.close)}`;
+  const body=$('#support-modal-body');
+  body.querySelectorAll('.candle-hl').forEach(r=>r.setAttribute('opacity','0'));
+  const hl=body.querySelector(`.candle[data-i="${i}"] .candle-hl`);
+  if(hl) hl.setAttribute('opacity','0.16');
 }
 function openSupportModal(code){
   const overlay=$('#support-modal-overlay');
