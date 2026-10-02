@@ -1353,6 +1353,19 @@ function mountRoute(){
 (async function boot(){
   let order={};
   try{ order=await (await fetch('/api/card-order')).json(); }catch(e){}
+  // 一次性遷移：排序原本存 localStorage，2026-10-02 改存後端。若後端缺某 key 而
+  // localStorage 有，就搬上來並寫回後端，讓改版前拖好的順序不會白費。
+  const LEGACY={signals:'cc-order-signals',life:'cc-order-life',tools:'cc-order-tools',blocks:'cc-block-order'};
+  for(const k in LEGACY){
+    if(Array.isArray(order[k]))continue;
+    try{
+      const v=JSON.parse(localStorage.getItem(LEGACY[k]));
+      if(Array.isArray(v)&&v.length){
+        order[k]=v;
+        fetch('/api/card-order',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({key:k,ids:v})}).catch(()=>{});
+      }
+    }catch(e){}
+  }
   mount('#signals',applySavedOrder(order,'signals',CARDS,d=>d.id),'cc-order-signals');
   mount('#life',applySavedOrder(order,'life',LIFE,d=>d.id),'cc-order-life');
   mountTools(applySavedOrder(order,'tools',TOOLS,t=>t.title));
