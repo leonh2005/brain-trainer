@@ -117,21 +117,30 @@ def decompose(conn, parent, claude_bin="claude", timeout=600):
                       finished_at=time.time())
         return []
 
-    id_by_index = {}
-    for i, sub in enumerate(subs):
-        tid = tq.add_task(
-            conn,
-            title=sub.get("title") or f"子任務 {i + 1}",
-            spec=sub.get("spec") or sub.get("title") or "",
-            cwd=sub.get("cwd") or cwd,
-            source=parent.get("source", "cli"),
-        )
-        tq.set_status(conn, tid, "blocked", parent_id=parent["id"])
-        id_by_index[i] = tid
-
-    for i, sub in enumerate(subs):  # 依賴要等 id 都建好才能映射
-        deps = [id_by_index[d] for d in (sub.get("depends_on") or [])]
-        tq.set_status(conn, id_by_index[i], "blocked", depends_on=json.dumps(deps))
+    try:
+        conn.execute("BEGIN IMMEDIATE")
+        id_by_index = {}
+        for i, sub in enumerate(subs):
+            # 一次就寫成 blocked + parent_id：不留「先 pending」的可搶窗口，
+            # 也保證中途失敗時整批 rollback、不會留下孤兒
+            id_by_index[i] = tq.add_task(
+                conn,
+                title=sub.get("title") or f"子任務 {i + 1}",
+                spec=sub.get("spec") or sub.get("title") or "",
+                cwd=sub.get("cwd") or cwd,
+                source=parent.get("source", "cli"),
+                status="blocked",
+                parent_id=parent["id"],
+            )
+        for i, sub in enumerate(subs):  # 依賴要等 id 都建好才能映射
+            deps = [id_by_index[d] for d in (sub.get("depends_on") or [])]
+            tq.set_status(conn, id_by_index[i], "blocked", depends_on=json.dumps(deps))
+        conn.execute("COMMIT")
+    except Exception as exc:
+        conn.execute("ROLLBACK")
+        tq.set_status(conn, parent["id"], "failed",
+                      error=f"建立子任務失敗：{exc}"[:2000], finished_at=time.time())
+        return []
 
     tq.set_status(conn, parent["id"], "blocked", finished_at=None)
     return list(id_by_index.values())

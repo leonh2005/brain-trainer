@@ -17,7 +17,9 @@ CLAUDE_ARGS = [
 
 MAX_RETRIES = 2
 BACKOFF_BASE = 30  # 秒；退避為 BACKOFF_BASE * 2**retries
-IDLE_TIMEOUT = 600  # 秒；閒置超過此秒數沒有輸出即判定卡住
+# 秒；閒置超過此秒數沒有輸出即判定卡住。刻意拉長：一條跑超過 10 分鐘的單一
+# tool call（測試、下載、推論）中途不會有任何 stream 輸出，太短會誤殺正常任務。
+IDLE_TIMEOUT = 1800
 
 # 去掉 CLAUDE_ARGS 末尾的 ["--output-format", "text"]，換成 stream-json
 STREAM_ARGS = [*CLAUDE_ARGS[:-2], "--output-format", "stream-json", "--verbose"]
@@ -77,8 +79,16 @@ def _invoke_streaming(prompt, cwd, claude_bin, timeout, idle_timeout):
                 state["result"] = ev.get("result") or ""
                 state["is_error"] = bool(ev.get("is_error"))
 
+    err_lines = []
+
+    def _read_err():
+        for line in proc.stderr:
+            err_lines.append(line)
+
     reader = threading.Thread(target=_reader, daemon=True)
     reader.start()
+    # stderr 必須同時排空：滿了會讓子行程卡在 write、stdout 再也不出東西
+    threading.Thread(target=_read_err, daemon=True).start()
 
     started = time.time()
     while proc.poll() is None:
@@ -93,7 +103,8 @@ def _invoke_streaming(prompt, cwd, claude_bin, timeout, idle_timeout):
 
     reader.join(timeout=5)
     if state["result"] is None:
-        return 1, "", "claude 結束但沒有 result 事件"
+        detail = "".join(err_lines).strip()[:500]
+        return 1, "", f"claude 結束但沒有 result 事件｜stderr：{detail}"
     if state["is_error"]:
         return 1, state["result"], "claude 回報 is_error"
     return 0, state["result"], ""
@@ -103,43 +114,56 @@ def run_task(conn, task, claude_bin="claude", timeout=3600, idle_timeout=None):
     """執行一個任務；回傳 (ok, output)。無論成敗都會把狀態寫回 DB。"""
     task_id = task["id"]
     cwd = task.get("cwd")
+    expected = task.get("started_at")  # 這次執行的識別；被收割後就不該再寫入
 
     if not cwd or not os.path.isdir(cwd):
-        _fail(conn, task, f"工作目錄不存在或未指定：{cwd}", retryable=False)
+        _fail(conn, task, f"工作目錄不存在或未指定：{cwd}", retryable=False,
+              expected_started=expected)
         return False, ""
 
-    tq.set_status(conn, task_id, "running", worker_pid=os.getpid())
+    _finish(conn, task_id, expected, "running", worker_pid=os.getpid())
     code, out, err = invoke_claude(task["spec"], cwd, claude_bin, timeout,
                                    idle_timeout=idle_timeout)
 
     if code == -1:
-        _fail(conn, task, err, retryable=True)
+        _fail(conn, task, err, retryable=True, expected_started=expected)
         return False, ""
     if code == 127:
-        _fail(conn, task, err, retryable=False)
+        _fail(conn, task, err, retryable=False, expected_started=expected)
         return False, ""
 
     out = out.strip()
     if code == 0:
-        tq.set_status(conn, task_id, "done", result=out,
-                      error=None, finished_at=time.time())
+        _finish(conn, task_id, expected, "done", result=out,
+                error=None, finished_at=time.time())
         return True, out
 
-    _fail(conn, task, err.strip() or f"exit code {code}", retryable=True)
+    _fail(conn, task, err.strip() or f"exit code {code}", retryable=True,
+          expected_started=expected)
     return False, out
 
 
-def _fail(conn, task, error, retryable):
-    """失敗收尾：可重試且未達上限 → 退回 pending 並排下次時間；否則標 failed。"""
+def _finish(conn, task_id, expected_started, status, **fields):
+    """寫入狀態。若任務已被收割／改過就不覆蓋（expected_started 為 None 時無條件寫）。"""
+    if expected_started is not None:
+        tq.finish_if_running(conn, task_id, expected_started, status, **fields)
+        return
+    tq.set_status(conn, task_id, status, **fields)
+
+
+def _fail(conn, task, error, retryable, expected_started=None):
+    """失敗收尾：可重試且未達上限 → 退回 pending 並排下次時間；否則標 failed。
+    任務若已被收割／改過則不覆蓋。"""
     error = (error or "未知錯誤")[:2000]
     if retryable and task["retries"] < MAX_RETRIES:
         delay = BACKOFF_BASE * (2 ** task["retries"])
-        tq.set_status(conn, task["id"], "pending",
-                      retries=task["retries"] + 1,
-                      next_attempt_at=time.time() + delay,
-                      error=error, started_at=None, worker_pid=None)
+        _finish(conn, task["id"], expected_started, "pending",
+                retries=task["retries"] + 1,
+                next_attempt_at=time.time() + delay,
+                error=error, started_at=None, worker_pid=None)
     else:
-        tq.set_status(conn, task["id"], "failed", error=error, finished_at=time.time())
+        _finish(conn, task["id"], expected_started, "failed",
+                error=error, finished_at=time.time())
 
 
 def _kill_tree(proc):

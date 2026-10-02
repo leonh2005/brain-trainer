@@ -22,34 +22,59 @@ def reap_timed_out(conn, timeout):
     return n
 
 
-def finalize_parents(conn, claude_bin="claude", timeout=3600):
-    """收尾 blocked orchestrator 母任務：任一子任務失敗即收尾；全部完成才彙整。回傳處理數。"""
+_SUMMARIZING = set()  # 已在背景彙整中的母任務 id（避免重複派工）
+
+
+def _summarize_thread(db_path, parent_id, claude_bin, timeout):
+    conn = tq.connect(db_path)
+    try:
+        parent = tq.get_task(conn, parent_id)
+        if parent:
+            orchestrator.summarize(conn, parent, claude_bin=claude_bin, timeout=timeout)
+    finally:
+        conn.close()
+        _SUMMARIZING.discard(parent_id)
+
+
+def finalize_parents(conn, db_path, claude_bin="claude", timeout=3600):
+    """收尾 blocked orchestrator 母任務：任一子任務失敗即收尾；全部完成才彙整。
+
+    彙整是 30–120 秒的 LLM 呼叫，丟到背景跑 —— 否則主迴圈會停擺、並行形同關閉。
+    回傳本輪派出的彙整數。"""
     done = 0
     for parent in tq.list_tasks(conn, status="blocked"):
         if parent.get("kind") != "orchestrator":
             continue
+        if parent["id"] in _SUMMARIZING:
+            continue  # 已經在背景彙整中
         children = orchestrator.children_of(conn, parent["id"])
         if not children:
             continue  # 還沒拆解
-        if any(c["status"] == "failed" for c in children):
+        has_failed = any(c["status"] == "failed" for c in children)
+        all_done = all(c["status"] == "done" for c in children)
+        if not (has_failed or all_done):
+            continue
+        if has_failed:
             # 依賴失敗者的手足會永遠 pending（claim_next 不放行），母任務就永遠卡 blocked；
-            # 這裡把它們標掉，也讓 ls 誠實。
+            # 先把這些孤兒標掉（快，留在主執行緒），再背景彙整。
             for c in children:
                 if c["status"] in ("pending", "blocked"):
                     tq.set_status(conn, c["id"], "failed",
                                   error="前置任務失敗，已跳過", finished_at=time.time())
-            orchestrator.summarize(conn, parent, claude_bin=claude_bin, timeout=timeout)
-            done += 1
-        elif all(c["status"] == "done" for c in children):
-            orchestrator.summarize(conn, parent, claude_bin=claude_bin, timeout=timeout)
-            done += 1
+        _SUMMARIZING.add(parent["id"])
+        threading.Thread(target=_summarize_thread,
+                         args=(db_path, parent["id"], claude_bin, timeout),
+                         daemon=True).start()
+        done += 1
     return done
 
 
 def tick(conn, claude_bin="claude", timeout=3600):
-    """跑一輪：收割逾時 → 收尾已完成的母任務 → 認領並執行一個任務。"""
+    """同步跑一輪：收割逾時 → 認領並執行一個任務。回傳執行數（0 或 1）。
+
+    只供測試與單任務模式；常駐請用 main_loop（它另外負責收尾母任務，且 worker 走
+    stream-json／idle-timeout、彙整走背景）。"""
     reap_timed_out(conn, timeout)
-    finalize_parents(conn, claude_bin=claude_bin, timeout=timeout)
 
     task = tq.claim_next(conn)
     if not task:
@@ -85,6 +110,13 @@ def _run_worker(db_path, task_id, claude_bin, timeout):
         else:
             worker.run_task(conn, task, claude_bin=claude_bin, timeout=timeout,
                             idle_timeout=worker.IDLE_TIMEOUT)
+    except Exception as exc:  # thread 不可因單次失敗而死，否則任務卡在 running 佔名額
+        print(f"[daemon] worker {task_id} 失敗：{exc!r}", file=sys.stderr, flush=True)
+        try:
+            tq.set_status(conn, task_id, "failed",
+                          error=f"worker 例外：{exc}"[:2000], finished_at=time.time())
+        except Exception:
+            pass
     finally:
         conn.close()
 
@@ -112,7 +144,7 @@ def main_loop(claude_bin="claude", timeout=3600, poll=5, db_path="queue.db",
     while True:
         try:
             reap_timed_out(conn, timeout)
-            finalize_parents(conn, claude_bin=claude_bin, timeout=timeout)
+            finalize_parents(conn, db_path, claude_bin=claude_bin, timeout=timeout)
             start_ready(conn, db_path, claude_bin=claude_bin, timeout=timeout,
                         parallel=parallel)
         except Exception as exc:  # 常駐服務不可因單輪失敗而死
