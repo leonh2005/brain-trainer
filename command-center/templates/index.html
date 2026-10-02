@@ -719,7 +719,7 @@ function renderTrackGrouped(box,track,headText){
     const mark=r.up?'✅':'❌';
     const pct=r.pct;
     const icons=[mktIcon(r),sectorIcon(r)].filter(Boolean).join(' ');
-    row.innerHTML=`<span>${mark} ${tkLink(r.name,r.code)}${icons?' '+icons:''}</span><span class="spacer"></span>`
+    row.innerHTML=`<span>${mark} ${tkLink(r.name,r.code)}${supportBtn(r.code)}${icons?' '+icons:''}</span><span class="spacer"></span>`
       +`<span class="chg ${r.up?'up':'down'}">${pct!=null?fmt(pct)+'%':'—'}</span>`;
     box.appendChild(row);
   });
@@ -868,7 +868,7 @@ function renderIntraday(d){
   sg.slice(-9).reverse().forEach(s=>{
     const row=el('div','row');
     const cls=s.side==='多方'?'long':'short';
-    row.innerHTML=`<span class="badge ${cls}">${s.side}</span>${tkLink(s.name,s.code)}<span class="spacer"></span><span class="mini">信心 ${s.confidence}%</span><span class="mini" style="margin-left:8px">${s.at||''}</span>`;
+    row.innerHTML=`<span class="badge ${cls}">${s.side}</span>${tkLink(s.name,s.code)}${supportBtn(s.code)}<span class="spacer"></span><span class="mini">信心 ${s.confidence}%</span><span class="mini" style="margin-left:8px">${s.at||''}</span>`;
     box.appendChild(row);
   });
   return box;
@@ -939,7 +939,7 @@ function renderChips(d){
   hs.slice(0,7).forEach(h=>{
     const row=el('div','row');
     const fn=h.foreign_net;
-    row.innerHTML=`${tkLink(h.name,h.code)}<span class="mini" style="margin-left:8px;font-weight:600;color:var(--fg)">${h.close!=null?fmt(h.close):'—'}</span><span class="chg ${chgCls(h.change_pct)}" style="margin-left:6px;font-size:11px">${arrow(h.change_pct)}${fmt(h.change_pct)}%</span><span class="spacer"></span><span class="mini">外資 <b style="color:${fn>0?'var(--up)':'var(--down)'}">${fn>0?'+':''}${fmt(fn)}</b></span>`;
+    row.innerHTML=`${tkLink(h.name,h.code)}${supportBtn(h.code)}<span class="mini" style="margin-left:8px;font-weight:600;color:var(--fg)">${h.close!=null?fmt(h.close):'—'}</span><span class="chg ${chgCls(h.change_pct)}" style="margin-left:6px;font-size:11px">${arrow(h.change_pct)}${fmt(h.change_pct)}%</span><span class="spacer"></span><span class="mini">外資 <b style="color:${fn>0?'var(--up)':'var(--down)'}">${fn>0?'+':''}${fmt(fn)}</b></span>`;
     box.appendChild(row);
   });
   return box;
@@ -979,7 +979,7 @@ function renderDisposition(d){
     box.appendChild(head);
     appendExpandableRows(box, exit, 8, x=>{
       const row=el('div','row');
-      row.innerHTML=`${tkLink(x.name,x.code)}<span class="mini" style="margin-left:6px">${x.market}</span><span class="spacer"></span><span class="mini">${esc(x.reason||'')}</span><span class="mini" style="margin-left:8px">${x.exit_date.slice(5)}出關</span>`;
+      row.innerHTML=`${tkLink(x.name,x.code)}${supportBtn(x.code)}<span class="mini" style="margin-left:6px">${x.market}</span><span class="spacer"></span><span class="mini">${esc(x.reason||'')}</span><span class="mini" style="margin-left:8px">${x.exit_date.slice(5)}出關</span>`;
       return row;
     });
   }
@@ -990,7 +990,7 @@ function renderDisposition(d){
     box.appendChild(head2);
     appendExpandableRows(box, recent, 8, r=>{
       const row=el('div','row');
-      row.innerHTML=`${tkLink(r.name,r.code)}<span class="mini" style="margin-left:6px">${r.market}</span><span class="spacer"></span><span class="mini">${r.start.slice(5)}~${r.end.slice(5)}處置，${r.exit_date.slice(5)}出關</span>`;
+      row.innerHTML=`${tkLink(r.name,r.code)}${supportBtn(r.code)}<span class="mini" style="margin-left:6px">${r.market}</span><span class="spacer"></span><span class="mini">${r.start.slice(5)}~${r.end.slice(5)}處置，${r.exit_date.slice(5)}出關</span>`;
       return row;
     });
   }
@@ -1023,7 +1023,7 @@ function renderPortfolio(d){
   p.positions.slice(0,6).forEach(pos=>{
     const row=el('div','row');
     const isTw=(pos.ticker||'').endsWith('.TW'), code=(pos.ticker||'').replace('.TW','');
-    const nameCell=isTw?tkLink(pos.name,code):`<span class="tk"><span class="code">${code}</span>${pos.name}</span>`;
+    const nameCell=isTw?tkLink(pos.name,code)+supportBtn(code):`<span class="tk"><span class="code">${code}</span>${pos.name}</span>`;
     row.innerHTML=`${nameCell}<span class="spacer"></span><span class="mini">${fmt(pos.weight)}%</span><span class="chg" style="font-size:11px;margin-left:10px;color:var(--muted)">${fmt(pos.value_twd)}</span>`;
     box.appendChild(row);
   });
@@ -1076,7 +1076,7 @@ function renderDSA(d){
   const adviceCls=a=>a==='买入'?'up':(a==='观望'?'':'down');
   arr.forEach(r=>{
     const row=el('div','row');
-    row.innerHTML=`${tkLink(r.stock_name,r.stock_code)}<span class="spacer"></span><span class="mini">情緒 ${fmt(r.sentiment_score)}</span><span class="chg ${adviceCls(r.operation_advice)}" style="margin-left:8px;font-size:11px">${r.operation_advice||'—'}</span>`;
+    row.innerHTML=`${tkLink(r.stock_name,r.stock_code)}${supportBtn(r.stock_code)}<span class="spacer"></span><span class="mini">情緒 ${fmt(r.sentiment_score)}</span><span class="chg ${adviceCls(r.operation_advice)}" style="margin-left:8px;font-size:11px">${r.operation_advice||'—'}</span>`;
     box.appendChild(row);
   });
   return box;
