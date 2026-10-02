@@ -1,4 +1,5 @@
 """常駐排程：收割逾時任務、認領可跑的任務、交給 worker。"""
+import os
 import sys
 import threading
 import time
@@ -137,8 +138,30 @@ def start_ready(conn, db_path, claude_bin="claude", timeout=3600, parallel=MAX_P
     return started
 
 
+def _acquire_singleton(db_path):
+    """確保同一個佇列只有一支 daemon —— 否則兩支各自數 running，實際並行會翻倍。"""
+    lock = db_path + ".daemon.lock"
+    if os.path.exists(lock):
+        try:
+            pid = int(open(lock).read().strip())
+        except (OSError, ValueError):
+            pid = None
+        if pid:
+            try:
+                os.kill(pid, 0)  # 還活著
+            except ProcessLookupError:
+                pass  # 舊的、已死 → 接手
+            except OSError:
+                pass
+            else:
+                raise RuntimeError(f"已有 daemon 在跑（pid {pid}）")
+    with open(lock, "w") as fh:
+        fh.write(str(os.getpid()))
+
+
 def main_loop(claude_bin="claude", timeout=3600, poll=5, db_path="queue.db",
               parallel=MAX_PARALLEL):
+    _acquire_singleton(db_path)
     conn = tq.connect(db_path)
     tq.init_db(conn)
     while True:
