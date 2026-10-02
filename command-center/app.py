@@ -14,6 +14,7 @@ from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.responses import Response
 import uvicorn
 import os
+import json
 
 import agent as agent_mod
 import jobs as jobs_mod
@@ -40,6 +41,9 @@ _PROXY_HOP_HEADERS = {
 
 app = FastAPI(title='command-center')
 templates = Jinja2Templates(directory='templates')
+
+# 卡片／區塊排序存後端檔案（原本在瀏覽器 localStorage，換裝置或清快取就還原）
+_CARD_ORDER_FILE = f'{sources.CC}/command-center/card_order.json'
 
 _AUTH_USER, _AUTH_PASS = open(
     f'{sources.CC}/.secrets/command_center_auth.txt', encoding='utf-8'
@@ -282,6 +286,38 @@ def support_query(symbol: str):
     if not (symbol.isdigit() and 4 <= len(symbol) <= 6):
         raise HTTPException(400, 'invalid symbol')
     return sources.support(symbol)
+
+
+class CardOrder(BaseModel):
+    key: str
+    ids: list[str]
+
+
+@app.get('/api/card-order')
+def get_card_order():
+    try:
+        with open(_CARD_ORDER_FILE, encoding='utf-8') as f:
+            return json.load(f)
+    except Exception:
+        return {}
+
+
+@app.post('/api/card-order')
+def set_card_order(req: CardOrder):
+    if req.key not in ('signals', 'life', 'tools', 'blocks'):
+        raise HTTPException(400, f'unknown key: {req.key}')
+    data = {}
+    try:
+        with open(_CARD_ORDER_FILE, encoding='utf-8') as f:
+            data = json.load(f)
+    except Exception:
+        pass
+    data[req.key] = [str(x) for x in req.ids][:300]
+    tmp = _CARD_ORDER_FILE + '.tmp'
+    with open(tmp, 'w', encoding='utf-8') as f:
+        json.dump(data, f, ensure_ascii=False)
+    os.replace(tmp, _CARD_ORDER_FILE)
+    return {'ok': True}
 
 
 class ChatRequest(BaseModel):

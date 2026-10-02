@@ -486,9 +486,9 @@ function addResizeBtn(card,key){
 
 /* ── 卡片排序（拖曳）── */
 let dragSrc=null;
-function applySavedOrder(key,defs,idFn){
-  let saved; try{saved=JSON.parse(localStorage.getItem(key));}catch{saved=null}
-  if(!saved||!Array.isArray(saved))return defs;
+function applySavedOrder(order,key,defs,idFn){
+  const saved=order?order[key]:null;
+  if(!Array.isArray(saved))return defs;
   const idx=new Map(saved.map((id,i)=>[id,i]));
   return defs.slice().sort((a,b)=>{
     const ai=idx.has(idFn(a))?idx.get(idFn(a)):Infinity;
@@ -498,7 +498,7 @@ function applySavedOrder(key,defs,idFn){
 }
 function saveOrder(container,key){
   const ids=[...container.querySelectorAll('.card')].map(c=>c.dataset.id);
-  localStorage.setItem(key,JSON.stringify(ids));
+  fetch('/api/card-order',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({key,ids})}).catch(()=>{});
 }
 function enableSort(containerSel,key){
   const container=$(containerSel);
@@ -532,15 +532,14 @@ function enableSort(containerSel,key){
 }
 /* ── 區塊排序（拖曳 sec-label 移動整個區塊）── */
 let blockDragSrc=null;
-const BLOCK_ORDER_KEY='cc-block-order';
 function blockContainer(label){return label.nextElementSibling}
 function blockId(label){const c=blockContainer(label);return c?c.id:null}
 function saveBlockOrder(){
   const ids=[...document.querySelectorAll('.sec-label')].map(blockId).filter(Boolean);
-  localStorage.setItem(BLOCK_ORDER_KEY,JSON.stringify(ids));
+  fetch('/api/card-order',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({key:'blocks',ids})}).catch(()=>{});
 }
-function applyBlockOrder(){
-  let saved; try{saved=JSON.parse(localStorage.getItem(BLOCK_ORDER_KEY));}catch{saved=null}
+function applyBlockOrder(order){
+  const saved=order?order.blocks:null;
   if(!Array.isArray(saved)||!saved.length)return;
   const idx=new Map(saved.map((id,i)=>[id,i]));
   const labels=[...document.querySelectorAll('.sec-label')].sort((a,b)=>{
@@ -1351,15 +1350,19 @@ function mountRoute(){
   $('#rt-go').addEventListener('click',rtGo);
   $('#rt-dest').addEventListener('keydown',e=>{if(e.key==='Enter')rtGo()});
 }
-mount('#signals',applySavedOrder('cc-order-signals',CARDS,d=>d.id),'cc-order-signals');
-mount('#life',applySavedOrder('cc-order-life',LIFE,d=>d.id),'cc-order-life');
-mountTools(applySavedOrder('cc-order-tools',TOOLS,t=>t.title));
-mountRoute();
-enableSort('#signals','cc-order-signals');
-enableSort('#life','cc-order-life');
-enableSort('#tools','cc-order-tools');
-applyBlockOrder();
-enableBlockSort();
+(async function boot(){
+  let order={};
+  try{ order=await (await fetch('/api/card-order')).json(); }catch(e){}
+  mount('#signals',applySavedOrder(order,'signals',CARDS,d=>d.id),'cc-order-signals');
+  mount('#life',applySavedOrder(order,'life',LIFE,d=>d.id),'cc-order-life');
+  mountTools(applySavedOrder(order,'tools',TOOLS,t=>t.title));
+  mountRoute();
+  enableSort('#signals','signals');
+  enableSort('#life','life');
+  enableSort('#tools','tools');
+  applyBlockOrder(order);
+  enableBlockSort();
+})();
 </script>
 </body>
 </html>
