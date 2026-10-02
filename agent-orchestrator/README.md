@@ -35,13 +35,11 @@ python3 -m pytest -v
 
 ## Telegram
 
-**推播已可用**：daemon 在任務結束時會推 ✅／❌ 給你。
+**推播與收訊息都已可用**（bot：`@multiagents2026bot`，token 在 `~/.secrets/orchestrator_token.txt`）。
 
-**收訊息的 bot 需要一個獨立的 bot token。** 目前的 `telegram_token.txt`（`CcagentForsteven_bot`）已被既有服務以 **webhook** 佔用 —— 同一個 bot 不能同時用 `getUpdates`（會回 409）。要啟用：
+常駐：`python3 telegram_bot.py`（另開一個終端機跑 `python3 daemon.py`）。
 
-1. 用 @BotFather 建一個新 bot
-2. 把 token 存成 `~/CCProject/.secrets/orchestrator_token.txt`
-3. 把 `notify.TOKEN_FILE` 指向它
+> ⚠️ 不要拿 `telegram_token.txt` 跑 `getUpdates` —— 那顆 bot 已被別的服務以 webhook 佔用，會回 409。
 
 指令（`/help` 看全部）：
 

@@ -4,7 +4,7 @@ import urllib.parse
 import urllib.request
 from pathlib import Path
 
-TOKEN_FILE = Path.home() / "CCProject" / ".secrets" / "telegram_token.txt"
+TOKEN_FILE = Path.home() / "CCProject" / ".secrets" / "orchestrator_token.txt"
 CHAT_ID = "7556217543"
 
 
