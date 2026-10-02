@@ -1,6 +1,6 @@
 # agent-orchestrator
 
-常駐 agent 編排系統 — Phase 1（佇列 + 單一 worker + 終端機入口）。
+常駐 agent 編排系統 — Phase 1–3（佇列 + worker + daemon + CLI + orchestrator 拆解／確認／彙整 + 並行 + 重試）。
 
 設計文件：`../docs/superpowers/specs/2026-10-01-agent-orchestrator-design.md`
 
@@ -17,7 +17,7 @@ python3 cli.py ls --status done
 # 看某個任務的狀態與產出
 python3 cli.py log <task id>
 
-# 啟動 daemon（常駐，會依序執行 pending 任務）
+# 啟動 daemon（常駐，最多同時跑 3 個 pending 任務）
 python3 daemon.py
 
 # 丟一個大任務，讓系統拆解（daemon 會把它拆成子任務）
@@ -33,8 +33,9 @@ python3 cli.py confirm <母任務 id>
 python3 -m pytest -v
 ```
 
-## Phase 1 的邊界
+## 邊界
 
-- **一次只跑一個任務**（序列）。並行與依賴鏈是 Phase 3。
-- 逾時用「總時長」（預設 3600 秒），逾時即 `failed` 並終止。
+- **可並行**：daemon 一次最多跑 3 個任務（`daemon.MAX_PARALLEL`）；獨立的任務自然並行，有依賴的排隊。
+- **兩層逾時**：總時長 3600 秒；閒置超過 600 秒（沒有輸出）也會被判定卡住並終止。
+- 失敗自動重試（上限 2 次）；拆解與彙整也各自重試。
 - worker 能讀寫、能執行，**權限等同你本人**（含 Bash，不受目錄限制）。`--cwd` 只是「工作起點」，**不是權限邊界** —— 只丟你信任的任務描述，跟對待你現有的 headless 腳本一樣。

@@ -1,4 +1,5 @@
 import stat
+import time
 
 import daemon
 import orchestrator
@@ -60,3 +61,31 @@ def test_orchestrator_end_to_end(tmp_path):
         daemon.tick(conn, claude_bin=str(fake), timeout=10)
     assert tq.get_task(conn, pid)["status"] == "done"
     assert "總結" in tq.get_task(conn, pid)["result"]
+
+
+def test_parallel_run_finishes_all_tasks(tmp_path):
+    """多個獨立任務並行跑完，且每個只跑一次。"""
+    conn = tq.connect(str(tmp_path / "t.db"))
+    tq.init_db(conn)
+    db = str(tmp_path / "t.db")
+    ran = tmp_path / "ran"
+    fake = tmp_path / "fake_claude"
+    fake.write_text(
+        "#!/bin/bash\n"
+        f'echo "$2" >> {ran}\n'
+        "sleep 1\n"
+        "echo '{\"type\":\"result\",\"result\":\"ok\",\"is_error\":false}'\n"
+    )
+    fake.chmod(fake.stat().st_mode | stat.S_IEXEC)
+
+    for i in range(3):
+        tq.add_task(conn, f"t{i}", f"job-{i}", cwd=str(tmp_path))
+    daemon.start_ready(conn, db, claude_bin=str(fake), timeout=30, parallel=3)
+    for _ in range(60):  # 等背景 thread 收工
+        if all(t["status"] == "done" for t in tq.list_tasks(conn)):
+            break
+        time.sleep(0.5)
+    tasks = tq.list_tasks(conn)
+    assert all(t["status"] == "done" for t in tasks)
+    lines = ran.read_text().splitlines()
+    assert sorted(lines) == ["job-0", "job-1", "job-2"]  # 每個只跑一次
