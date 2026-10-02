@@ -70,3 +70,24 @@ def test_safe_tick_swallows_exception(tmp_path, monkeypatch):
 
     monkeypatch.setattr(daemon, "tick", boom)
     assert daemon._tick_safe(conn) == 0  # 不該把例外穿出去
+
+
+def test_tick_decomposes_orchestrator_task(tmp_path):
+    conn = _conn(tmp_path)
+    body = ('echo \'{"subtasks": [{"title": "a", "spec": "sa", '
+            '"cwd": "%s", "depends_on": []}]}\'\n' % tmp_path)
+    fake = _fake_claude(tmp_path, body)
+    pid = tq.add_task(conn, "大任務", "x", cwd=str(tmp_path), kind="orchestrator")
+    assert daemon.tick(conn, claude_bin=fake, timeout=10) == 1
+    assert tq.get_task(conn, pid)["status"] == "blocked"
+
+
+def test_tick_summarizes_when_children_done(tmp_path):
+    conn = _conn(tmp_path)
+    fake = _fake_claude(tmp_path, "echo '彙整完成'\n")
+    pid = tq.add_task(conn, "大任務", "x", cwd=str(tmp_path), kind="orchestrator")
+    c1 = tq.add_task(conn, "子1", "s1", cwd=str(tmp_path))
+    tq.set_status(conn, c1, "done", result="子一完成", parent_id=pid)
+    tq.set_status(conn, pid, "blocked")
+    daemon.tick(conn, claude_bin=fake, timeout=10)  # 沒有 pending 任務，但要觸發彙整
+    assert tq.get_task(conn, pid)["status"] == "done"

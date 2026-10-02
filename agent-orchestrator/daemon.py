@@ -2,6 +2,7 @@
 import sys
 import time
 
+import orchestrator
 import taskqueue as tq
 import worker
 
@@ -20,13 +21,33 @@ def reap_timed_out(conn, timeout):
     return n
 
 
+def finalize_parents(conn, claude_bin="claude", timeout=3600):
+    """把『子任務全部結束』的 blocked orchestrator 母任務收尾（彙整或標失敗）。回傳處理數。"""
+    done = 0
+    for parent in tq.list_tasks(conn, status="blocked"):
+        if parent.get("kind") != "orchestrator":
+            continue
+        children = orchestrator.children_of(conn, parent["id"])
+        if not children:
+            continue  # 還沒拆解
+        if all(c["status"] in ("done", "failed") for c in children):
+            orchestrator.summarize(conn, parent, claude_bin=claude_bin, timeout=timeout)
+            done += 1
+    return done
+
+
 def tick(conn, claude_bin="claude", timeout=3600):
-    """跑一輪：先收割逾時，再認領並執行一個任務。回傳本輪執行的任務數（0 或 1）。"""
+    """跑一輪：收割逾時 → 收尾已完成的母任務 → 認領並執行一個任務。"""
     reap_timed_out(conn, timeout)
+    finalize_parents(conn, claude_bin=claude_bin, timeout=timeout)
+
     task = tq.claim_next(conn)
     if not task:
         return 0
-    worker.run_task(conn, task, claude_bin=claude_bin, timeout=timeout)
+    if task.get("kind") == "orchestrator":
+        orchestrator.decompose(conn, task, claude_bin=claude_bin, timeout=timeout)
+    else:
+        worker.run_task(conn, task, claude_bin=claude_bin, timeout=timeout)
     return 1
 
 
