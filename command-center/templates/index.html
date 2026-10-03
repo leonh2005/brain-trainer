@@ -410,6 +410,7 @@ const LIFE=[
   // 5990 不走 /svc/ 代理（作答端點會執行送進去的程式碼，不能轉發；見 app.py 的 PROXY_PORTS
   // 說明），故 site 用本機絕對網址直接連，不經 command-center。
   {id:'learn-system',ic:'📚', title:'學習系統', span:'wide', url:'/api/life/learn-system', render:renderLearnSystem, site:'http://127.0.0.1:5990/'},
+  {id:'orchestrator',ic:'🤖', title:'Agent 編排', span:'wide', url:'/api/life/orchestrator', render:renderOrchestrator, site:'https://t.me/multiagents2026bot'},
 ];
 
 const CARD_POLL_MS=60000;
@@ -1109,6 +1110,27 @@ function renderLearnSystem(d){
             `<span class="chg" style="font-size:11px;margin-left:8px;color:var(--muted)">掌握 ${esc(x.mastery_pct)}%</span>`;
     }
     row.innerHTML=`<span class="tk" style="font-weight:500">${esc(x.name)}</span><span class="spacer"></span>${right}`;
+    box.appendChild(row);
+  });
+  return box;
+}
+function renderOrchestrator(d){
+  if(!d||!d.counts)return el('div','empty','無資料');
+  const box=el('div');
+  const c=d.counts;
+  const mg=el('div','mg');mg.style.marginBottom='13px';
+  [['待處理',c.pending,'var(--muted)'],['執行中',c.running,'var(--accent-soft)'],
+   ['等確認',c.blocked,'var(--muted)'],['完成',c.done,'var(--up)'],['失敗',c.failed,'var(--down)']]
+    .forEach(([k,v,col])=>{const m=el('div','m');
+      m.innerHTML=`<span class="k">${k}</span><span class="v" style="color:${col}">${v}</span>`;
+      mg.appendChild(m)});
+  box.appendChild(mg);
+  const arr=Array.isArray(d.recent)?d.recent:[];
+  if(!arr.length)return box;
+  const ic={pending:'⏳',running:'▶',blocked:'⏸',done:'✅',failed:'❌'};
+  arr.forEach(t=>{
+    const row=el('div','row');
+    row.innerHTML=`<span class="tk" style="font-weight:500">${ic[t.status]||'•'} ${esc(t.title)}</span><span class="spacer"></span><span class="mini">${esc(t.ago)}</span>`;
     box.appendChild(row);
   });
   return box;

@@ -48,6 +48,18 @@ def _mtime(path: str) -> str:
         return ''
 
 
+def _ago(sec: float) -> str:
+    """把『幾秒前』轉成中文相對時間。"""
+    sec = max(sec, 0)
+    if sec < 60:
+        return '剛剛'
+    if sec < 3600:
+        return f'{int(sec // 60)} 分前'
+    if sec < 86400:
+        return f'{int(sec // 3600)} 小時前'
+    return f'{int(sec // 86400)} 天前'
+
+
 def _wrap(fn):
     """統一回傳 {ok, data|error, updated}"""
     def inner(*a, **kw):
@@ -703,6 +715,31 @@ def guru_tracker():
 def learn_system():
     d = _proxy('http://localhost:5990/api/domains', ttl=120)
     return d.get('domains', []), datetime.now().strftime('%Y-%m-%d %H:%M')
+
+
+@_wrap
+def orchestrator():
+    """agent-orchestrator 任務佇列（唯讀 queue.db，不碰 orchestrator 任何檔案）。"""
+    p = f'{CC}/agent-orchestrator/queue.db'
+    con = _ro_db(p)
+    counts = {r[0]: r[1] for r in
+              con.execute('SELECT status, COUNT(*) FROM tasks GROUP BY status')}
+    rows = con.execute(
+        "SELECT title, status, created_at, started_at, finished_at FROM tasks"
+        " ORDER BY CASE status WHEN 'running' THEN 0 WHEN 'blocked' THEN 1"
+        " WHEN 'pending' THEN 2 ELSE 3 END, created_at DESC LIMIT 8"
+    ).fetchall()
+    con.close()
+    now = time.time()
+    recent = []
+    for title, status, created, started, finished in rows:
+        ts = started if status == 'running' else (
+            finished if status in ('done', 'failed') else created)
+        recent.append({'title': title, 'status': status,
+                       'ago': _ago(now - (ts or created))})
+    return {'counts': {s: counts.get(s, 0) for s in
+                       ('pending', 'running', 'blocked', 'done', 'failed')},
+            'recent': recent}, _mtime(p)
 
 
 SIGNALS = {
