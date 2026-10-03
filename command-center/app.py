@@ -246,6 +246,11 @@ def life_learn_system():
     return sources.learn_system()
 
 
+@app.get('/api/life/orchestrator')
+def life_orchestrator():
+    return sources.orchestrator()
+
+
 @app.get('/api/route/plan')
 def route_plan(dest: str, arrive: str, origin: str = '', day: str = '', buffer: int = 10):
     """大眾運輸路線查詢（出發地預設住家）。同步查詢約 3-5 秒，故不進 60 秒輪詢。"""
