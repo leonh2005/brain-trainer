@@ -59,3 +59,6 @@ command-center/card_order.json
 
 # ccr 設定備份含 API key，絕不可進 repo（2026-09-24 外洩事件）
 jev-compaction/ccr-backup/
+
+# 本機專用調查文件（含具名指控），不進公開 repo（2026-10-04）
+reports/jingwen-watch-tw-reviews.html
