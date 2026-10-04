@@ -1,16 +1,25 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Ollama 前處理進度浮窗。
+"""Ollama 前處理進度浮窗（隨需啟動版）。
 
-被動 tail Ollama 的 log，解析前處理（prompt processing）進度，
-在 DSH 送出請求時浮出一個置頂小視窗顯示進度，完成後自動隱藏。
+被動 tail Ollama 的 log，解析前處理（prompt processing）進度；DSH 一送出請求
+就浮出置頂小視窗顯示進度，完成後自動隱藏。
+
+生命週期（要點）：
+    平常「不存在」——由 LaunchAgent 的 WatchPaths 監看 ollama.log，
+    有寫入才把本行程叫起來；沒有對話時行程自己結束，
+    因此 Dock 上不會有一個常駐的 Python App。
+
+    行程啟動 →（headless，不建 GUI）讀 log 尾巴補回目前狀態
+        ├─ 沒有進行中的請求 → 十幾秒後直接結束（全程不建 GUI、不註冊成 App）
+        └─ 有請求 → 這時才建立視窗、顯示進度 → 閒置一段時間後結束行程
 
 架構：
     Ollama ──寫──▶ ollama.log ──tail（唯讀）──▶ overlay.py（tkinter 浮窗）
+    程式掛掉不影響 DSH：本程式不擋在 DSH 與 Ollama 之間。
 
 純標準庫。用 /opt/homebrew/bin/python3（3.14 + Tk 9.1；需先 `brew install python-tk`，
 系統 /usr/bin/python3 的 Tk 8.5 無邊框視窗不會顯示）。
-程式掛掉不影響 DSH：本程式不擋在 DSH 與 Ollama 之間。
 """
 
 import faulthandler
@@ -26,11 +35,16 @@ import tkinter as tk
 LOG_PATH = "/opt/homebrew/var/log/ollama.log"
 
 IDLE_HIDE_DELAY = 4.0      # 收到 idle 後，幾秒才隱藏（避免一閃一閃）
+IDLE_EXIT_SEC = 90.0       # 建立 GUI 後，閒置這麼久就結束行程（App 從 Dock 消失）
+HEADLESS_EXIT_SEC = 20.0   # 沒建立 GUI 前，等這麼久沒事就結束（避免空轉留一個行程）
 POLL_MS = 150              # tkinter 迴圈輪詢佇列的頻率
 TAIL_SLEEP = 0.2           # tail 執行緒沒讀到新行時的休眠
 PREFILL_RATE_EST = 180.0   # 前處理速率估計（tok/s，實測約 186）；用於介於 log 樣本之間的時間內插
-PREFILL_STALE_SEC = 120.0  # 前處理階段多久沒新事件就判定卡住並收掉視窗
+# 各階段「多久沒新事件就判定卡住」的逾時（秒）。前處理的 log 很密，120s 沒動就代表卡住；
+# 生成階段 log 很稀疏（llama.cpp 不在逐 token 印），故給寬鬆值。
+STALE_SEC = {"prefill": 120.0, "gen": 600.0}
 DRIFT_WARN_LINES = 500     # 連讀這麼多行都解析不出事件 → 疑似 log 格式漂移，警告一次
+PRIME_BYTES = 65536        # 啟動時回頭讀多少 bytes 補狀態
 
 WIN_W, WIN_H = 300, 92
 BAR_W, BAR_H = 264, 10
@@ -99,7 +113,27 @@ def parse_line(line):
     return None
 
 
-def tail_lines(path, q, stop):
+def prime_state(path, q):
+    """啟動時回頭讀 log 尾巴，把事件補進 queue（補回被叫起來前已發生的請求狀態）。
+    回傳讀到的結尾 offset，讓 tail 從那裡接著讀，避免重複。"""
+    try:
+        size = os.path.getsize(path)
+        with open(path, "rb") as f:
+            f.seek(max(0, size - PRIME_BYTES))
+            data = f.read().decode("utf-8", "replace")
+    except OSError as e:
+        log.warning("無法讀取 log 尾巴補狀態：%s", e)
+        return None
+    for line in data.split("\n")[1:]:   # 第一行多半被切斷，丟掉
+        if not line:
+            continue
+        ev = parse_line(line)
+        if ev:
+            q.put(ev)
+    return size
+
+
+def tail_lines(path, q, stop, start_offset=None):
     """追蹤 log 檔，把新行的解析結果丟進 queue。應付檔案被截斷／重建。"""
     fh = None
     inode = None
@@ -114,7 +148,11 @@ def tail_lines(path, q, stop):
                 if fh is not None:
                     fh.close()
                 fh = open(path, "r", errors="replace")
-                fh.seek(0, os.SEEK_END)  # 只讀新內容
+                if start_offset is not None:
+                    fh.seek(min(start_offset, st.st_size))   # 從補狀態讀到的位置接續
+                    start_offset = None
+                else:
+                    fh.seek(0, os.SEEK_END)                  # 只讀新內容
                 inode = st.st_ino
                 log.info("開始追蹤 %s", path)
             pos = fh.tell()
@@ -166,71 +204,66 @@ def fmt_tok(n):
 class Overlay:
     def __init__(self, q):
         self.q = q
+        self.root = None             # GUI 延後建立：沒有要顯示的東西就不建，免註冊成 Python App
+        self._visible = False
+        self._exiting = False
         # 狀態
         self.phase = "idle"          # idle | prefill | gen
         self.total = 0
         self.processed = 0
         self.progress = 0.0
         self.gen_tokens = 0
-        self.t0 = 0.0                # 本次請求開始時間
+        self.t0 = 0.0
         self.task = None             # 目前追蹤的 task id（過濾交錯請求）
         self.idle_since = None
-        self.last_event_at = 0.0
+        self.last_event_at = time.time()
 
-        self.root = tk.Tk()
-        self.root.title("Ollama")
-        self.root.overrideredirect(True)
-        self.root.attributes("-topmost", True)
-        self.root.attributes("-alpha", 0.0)
-        self.root.configure(bg=BG)
-
-        sw = self.root.winfo_screenwidth()
-        sh = self.root.winfo_screenheight()
-        x = sw - WIN_W - MARGIN_RIGHT
-        y = sh - WIN_H - MARGIN_BOTTOM
-        self.shown_geom = "{}x{}+{}+{}".format(WIN_W, WIN_H, x, y)
-        self.root.geometry(self.shown_geom)
-
-        pad = tk.Frame(self.root, bg=BG)
-        pad.pack(fill="both", expand=True, padx=14, pady=12)
-
-        self.head = tk.Label(
-            pad, text="● 前處理中", bg=BG, fg=FG,
-            font=("Helvetica Neue", 13, "bold"), anchor="w",
-        )
-        self.head.pack(fill="x")
-        self.pct = tk.Label(
-            pad, text="0%", bg=BG, fg=ACCENT,
-            font=("Helvetica Neue", 13, "bold"), anchor="e",
-        )
-        self.pct.place(relx=1.0, rely=0.0, anchor="ne")
-
-        self.canvas = tk.Canvas(
-            pad, width=BAR_W, height=BAR_H, bg=BAR_BG,
-            highlightthickness=0, bd=0,
-        )
-        self.canvas.pack(fill="x", pady=(8, 6))
-        self.bar = self.canvas.create_rectangle(0, 0, 0, BAR_H, fill=ACCENT, width=0)
-        self.canvas.bind("<Configure>", lambda e: self._redraw_bar())
-
-        self.detail = tk.Label(
-            pad, text="", bg=BG, fg=MUTED,
-            font=("Helvetica Neue", 11), anchor="w",
-        )
-        self.detail.pack(fill="x")
-
-        self._bind_drag(self.root)
-        self._visible = False
+    # ── GUI 建立（第一次真正要顯示時才做） ──
+    def _ensure_gui(self):
+        if self.root is not None:
+            return
         # macOS/Tk 9 三個實測坑：
         #   1. 建立時指定的位置會被忽略（一律跑到左上角）→ 必須 map 之後再設一次。
         #   2. map 之後設位置會讓「無邊框」失效（跑出標題列）→ 先重斷言 overrideredirect。
         #   3. 但重斷言又會把位置重置 → 正確順序：update → overrideredirect → geometry。
         # 另：隱藏不能用 withdraw()/deiconify()（deiconify 每次都會搶焦點，實測）。
-        self.root.update()
-        self.root.overrideredirect(True)
-        self.root.geometry(self.shown_geom)
-        self.root.update()
-        self.root.after(POLL_MS, self._tick)
+        root = tk.Tk()
+        root.title("Ollama")
+        root.overrideredirect(True)
+        root.attributes("-topmost", True)
+        root.attributes("-alpha", 0.0)
+        root.configure(bg=BG)
+        sw, sh = root.winfo_screenwidth(), root.winfo_screenheight()
+        self.shown_geom = "{}x{}+{}+{}".format(
+            WIN_W, WIN_H, sw - WIN_W - MARGIN_RIGHT, sh - WIN_H - MARGIN_BOTTOM)
+        root.geometry(self.shown_geom)
+
+        pad = tk.Frame(root, bg=BG)
+        pad.pack(fill="both", expand=True, padx=14, pady=12)
+        self.head = tk.Label(pad, text="● 前處理中", bg=BG, fg=FG,
+                             font=("Helvetica Neue", 13, "bold"), anchor="w")
+        self.head.pack(fill="x")
+        self.pct = tk.Label(pad, text="0%", bg=BG, fg=ACCENT,
+                            font=("Helvetica Neue", 13, "bold"), anchor="e")
+        self.pct.place(relx=1.0, rely=0.0, anchor="ne")
+        self.canvas = tk.Canvas(pad, width=BAR_W, height=BAR_H, bg=BAR_BG,
+                                highlightthickness=0, bd=0)
+        self.canvas.pack(fill="x", pady=(8, 6))
+        self.bar = self.canvas.create_rectangle(0, 0, 0, BAR_H, fill=ACCENT, width=0)
+        self.canvas.bind("<Configure>", lambda e: self._redraw_bar())
+        self.detail = tk.Label(pad, text="", bg=BG, fg=MUTED,
+                               font=("Helvetica Neue", 11), anchor="w")
+        self.detail.pack(fill="x")
+        self._bind_drag(root)
+
+        root.update()
+        root.overrideredirect(True)
+        root.geometry(self.shown_geom)
+        root.update()
+        self.root = root
+        log.info("建立 GUI")
+        self._render()
+        root.after(POLL_MS, self._tick)
 
     def _bind_drag(self, w):
         w.bind("<ButtonPress-1>", self._drag_start)
@@ -249,13 +282,13 @@ class Overlay:
         self.canvas.coords(self.bar, 0, 0, int(w * self.progress), BAR_H)
 
     def _show(self):
+        self._ensure_gui()
         if self._visible:
             return
         self._visible = True
         log.info("show 視窗 (phase=%s total=%s)", self.phase, self.total)
         # 用 lift() 抬升，**不要**在這裡重設 -topmost：實測重設 -topmost 會把 Python app
         # 喚到前景（使用者看到「python app 一直被打開」、搶走選單列）；lift() 不會。
-        # -topmost 只在建立時設一次（見 __init__）即可維持浮動層級。
         self.root.attributes("-alpha", ALPHA_SHOWN)
         self.root.lift()
 
@@ -268,10 +301,14 @@ class Overlay:
 
     def _set_bar(self, frac):
         self.progress = max(0.0, min(1.0, frac))
+        if self.root is None:
+            return
         w = self.canvas.winfo_width() or BAR_W
         self.canvas.coords(self.bar, 0, 0, int(w * self.progress), BAR_H)
 
     def _render(self):
+        if self.root is None:
+            return
         if self.phase == "prefill":
             # Ollama 的 progress 行很稀疏（長 prompt 每 512 tok 一次，短 prompt 可能只印一次），
             # 故以「log 給的進度」與「已耗時/估計總時」取較大者，讓進度條會走。
@@ -291,21 +328,21 @@ class Overlay:
             self.pct.config(text="100%")
             self.detail.config(text="前處理完成 · 文字會直接出現在對話框")
 
+    def _drain(self):
+        try:
+            while True:
+                self._apply(self.q.get_nowait())
+        except queue.Empty:
+            pass
+
     def _tick(self):
         try:
-            dirty = False
-            try:
-                while True:
-                    ev = self.q.get_nowait()
-                    if self._apply(ev):
-                        dirty = True
-            except queue.Empty:
-                pass
+            self._drain()
 
-            # 前處理階段若太久沒有新事件 → 判定卡住（例如請求失敗），強制收掉，避免視窗永久卡住
-            if (self.phase == "prefill" and self._visible
-                    and time.time() - self.last_event_at >= PREFILL_STALE_SEC):
-                log.warning("前處理已 %.0f 秒無進展，強制隱藏", PREFILL_STALE_SEC)
+            # 階段太久沒有新事件 → 判定卡住（例如請求失敗），強制收掉，避免視窗永久卡住
+            stale = STALE_SEC.get(self.phase)
+            if stale and self._visible and time.time() - self.last_event_at >= stale:
+                log.warning("%s 階段已 %.0f 秒無進展，強制隱藏", self.phase, stale)
                 self.phase = "idle"
                 self._hide()
 
@@ -313,12 +350,20 @@ class Overlay:
                 if time.time() - self.idle_since >= IDLE_HIDE_DELAY:
                     self._hide()
                     self.idle_since = None
-            if dirty or self.phase == "prefill":   # prefill 期間持續重繪，讓時間內插的進度條會走
-                self._render()
+
+            # 閒置夠久 → 結束行程（App 從 Dock 消失）；之後有寫入時 WatchPaths 會再叫起來
+            if self.phase == "idle" and time.time() - self.last_event_at >= IDLE_EXIT_SEC:
+                log.info("閒置 %.0f 秒，結束行程", IDLE_EXIT_SEC)
+                self._exiting = True
+                self.root.quit()
+                return
+
+            self._render()
         except Exception:  # noqa: BLE001 - 單次例外不可讓 after 迴圈斷掉（否則畫面永久凍結）
             log.exception("tick 異常")
         finally:
-            self.root.after(POLL_MS, self._tick)
+            if not self._exiting:
+                self.root.after(POLL_MS, self._tick)
 
     def _apply(self, ev):
         t = ev["type"]
@@ -367,6 +412,14 @@ class Overlay:
         return True
 
     def run(self):
+        """headless 階段先跑：只有真的需要顯示時才建立 GUI 並進入 tkinter 迴圈。"""
+        deadline = time.time() + HEADLESS_EXIT_SEC
+        while self.root is None:
+            self._drain()
+            if time.time() > deadline:
+                log.info("無進行中的請求，結束（未建立 GUI）")
+                return
+            time.sleep(POLL_MS / 1000.0)
         self.root.mainloop()
 
 
@@ -391,7 +444,9 @@ def main():
     if "--demo" in sys.argv:
         threading.Thread(target=demo, args=(q,), daemon=True).start()
     else:
-        threading.Thread(target=tail_lines, args=(LOG_PATH, q, stop), daemon=True).start()
+        primed_to = prime_state(LOG_PATH, q)
+        threading.Thread(target=tail_lines, args=(LOG_PATH, q, stop, primed_to),
+                         daemon=True).start()
     try:
         Overlay(q).run()
     finally:
