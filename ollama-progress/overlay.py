@@ -253,8 +253,11 @@ class Overlay:
             return
         self._visible = True
         log.info("show 視窗 (phase=%s total=%s)", self.phase, self.total)
+        # 用 lift() 抬升，**不要**在這裡重設 -topmost：實測重設 -topmost 會把 Python app
+        # 喚到前景（使用者看到「python app 一直被打開」、搶走選單列）；lift() 不會。
+        # -topmost 只在建立時設一次（見 __init__）即可維持浮動層級。
         self.root.attributes("-alpha", ALPHA_SHOWN)
-        self.root.attributes("-topmost", True)
+        self.root.lift()
 
     def _hide(self):
         if not self._visible:
