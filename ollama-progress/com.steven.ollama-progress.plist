@@ -10,9 +10,11 @@
 		<string>/Users/steven/CCProject/ollama-progress/overlay.py</string>
 	</array>
 	<key>RunAtLoad</key>
-	<true/>
-	<key>KeepAlive</key>
-	<true/>
+	<false/>
+	<key>WatchPaths</key>
+	<array>
+		<string>/opt/homebrew/var/log/ollama.log</string>
+	</array>
 	<key>ThrottleInterval</key>
 	<integer>10</integer>
 	<key>LimitLoadToSessionType</key>
