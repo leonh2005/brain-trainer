@@ -50,7 +50,10 @@ def git_commit_push(repo: str) -> str:
 
         if changed:
             ts = datetime.now(TZ).strftime('%Y-%m-%d %H:%M')
-            subprocess.run(['git', 'add', '-A'], cwd=repo, check=True)
+            # 只用 -u（已追蹤檔）＋明確目錄，不用 -A：未追蹤的敏感檔案會被掃進公開 repo
+            subprocess.run(['git', 'add', '-u'], cwd=repo, check=True)
+            for extra in ('.claude/', 'scripts/'):
+                subprocess.run(['git', 'add', extra], cwd=repo, capture_output=True)
             subprocess.run(
                 ['git', 'commit', '-m', f'chore: 自動同步 {ts}'],
                 cwd=repo, check=True, capture_output=True
