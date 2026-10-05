@@ -26,6 +26,7 @@ import argparse
 import json
 import os
 import re
+import shutil
 import sys
 import time
 
@@ -34,9 +35,14 @@ from selenium import webdriver
 from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.firefox.options import Options
 
-PROFILE = os.path.expanduser(
+# 真實 profile（已登入蝦皮）與掃描用的固定工作副本。
+# 註：若用 Options.profile 指定，Selenium 每次啟動都會把整個 profile（約 1.2G）
+#     複製到 TMPDIR，跑多次會把磁碟塞爆（曾累積 55G）。改用 Firefox 的
+#     -profile 參數指向同一份工作副本，就只複製一次、不再堆積。
+PROFILE_SRC = os.path.expanduser(
     '~/Library/Application Support/Firefox/Profiles/ro7nczf2.default-release'
 )
+PROFILE_WORK = '/tmp/ff_scan_profile'
 STATE = os.path.expanduser('~/CCProject/.shopee_taxid_state.json')
 OUT = os.path.expanduser('~/CCProject/shopee_taxid_result.json')
 
@@ -44,7 +50,7 @@ DEFAULT_KEYWORDS = [
     '寵物用品', '手機殼', '保養品', '女裝',
     '零食', '收納', '藍牙耳機', '居家清潔',
 ]
-GAP_DEFAULT = 300      # 每個關鍵字之間的間隔(秒)
+GAP_DEFAULT = 15       # 每個關鍵字之間的間隔(秒)；已確認非頻率限制，僅溫和間隔
 RETRY_DEFAULT = 2      # 每個關鍵字失敗後重試次數
 LIMIT = 60             # 單次搜尋筆數；太高實測容易被 tarpit，先用 60 觀察
 TIMEOUT = 45           # 單次請求最長等待(秒)
@@ -54,7 +60,8 @@ def search_once(keyword):
     """開一個新 session，對搜尋 API 發一次請求。回傳 item_basic 清單或 None。"""
     opts = Options()
     opts.add_argument('--headless')
-    opts.profile = PROFILE
+    opts.add_argument('-profile')
+    opts.add_argument(PROFILE_WORK)
     driver = webdriver.Firefox(options=opts)
     driver.set_window_size(1440, 900)
     driver.set_page_load_timeout(TIMEOUT)
@@ -65,13 +72,16 @@ def search_once(keyword):
         url = ('/api/v4/search/search_items?by=relevancy&keyword='
                + requests.utils.quote(keyword)
                + f'&limit={LIMIT}&newest=0&order=desc&page_type=search&version=2')
-        raw = driver.execute_async_script("""
-          const cb = arguments[0], u = arguments[1];
-          fetch(u, {credentials: 'include'})
+        # 關鍵：URL 必須寫死在 JS 字串裡。透過 arguments 傳入會被蝦皮 anti-bot
+        # 擋掉（請求掛住不回應），實測差異極其明確。
+        script = """
+          const cb = arguments[0];
+          fetch('__URL__', {credentials: 'include'})
             .then(x => x.text())
             .then(t => cb(t))
             .catch(() => cb(''));
-        """, url)
+        """.replace('__URL__', url)
+        raw = driver.execute_async_script(script)
         if not raw or not raw.strip().startswith('{'):
             return None
         data = json.loads(raw)
@@ -85,6 +95,17 @@ def search_once(keyword):
             driver.quit()
         except Exception:
             pass
+
+
+def ensure_profile():
+    """準備掃描用的 profile 工作副本（只複製一次），並清掉上次殘留的鎖定檔。"""
+    if not os.path.isdir(PROFILE_WORK):
+        print(f'建立 profile 工作副本 → {PROFILE_WORK}（約 1.2G，只做一次）', flush=True)
+        shutil.copytree(PROFILE_SRC, PROFILE_WORK)
+    for lock in ('lock', '.parentlock'):
+        p = os.path.join(PROFILE_WORK, lock)
+        if os.path.exists(p):
+            os.remove(p)
 
 
 def load_state():
@@ -179,8 +200,9 @@ def main():
     ap.add_argument('--keywords', nargs='*', default=DEFAULT_KEYWORDS)
     args = ap.parse_args()
 
-    if not os.path.isdir(PROFILE):
-        sys.exit(f'找不到 Firefox profile: {PROFILE}')
+    if not os.path.isdir(PROFILE_SRC):
+        sys.exit(f'找不到 Firefox profile: {PROFILE_SRC}')
+    ensure_profile()
 
     state = load_state()
     todo = [k for k in args.keywords if k not in state['collected']]
