@@ -251,7 +251,9 @@ for row in top20:
     if avg5 == 0:
         avg5 = get_avg5_finmind(code)
 
-    if row['amp_pct'] >= 3 and avg5 >= 3000 and row['chg_pct'] >= 1.5:
+    # 2026-10 回測（3~10月、911檔次）：振幅 8-12% 組平均 -1.61%、3-5% 組 -0.69%，
+    # 加振幅上限是唯一跨月穩定有效的修改，故設 3%~5%
+    if 3 <= row['amp_pct'] < 5 and avg5 >= 3000 and row['chg_pct'] >= 1.5:
         streak = get_price_streak(code)
         if streak < 0:
             print(f'[daytrade] {code} {row["name"]} 連跌{-streak}天，排除')
@@ -288,7 +290,7 @@ else:
 if inst_date:
     lines.append(f"　前一日三大法人現貨：買賣超 {inst_net:+,.1f} 億（{inst_date}）\n")
 lines.append("📋 <b>篩選條件</b>")
-lines.append("今日量前20（Shioaji即時）＋ 振幅&gt;3% ＋ 近5均量&gt;3000張 ＋ 漲幅&gt;1.5%\n")
+lines.append("今日量前20（Shioaji即時）＋ 3%≤振幅&lt;5% ＋ 近5均量&gt;3000張 ＋ 漲幅&gt;1.5%\n")
 
 if candidates:
     lines.append(f"✅ 符合 {len(candidates)} 檔：\n")
@@ -335,7 +337,7 @@ print(msg)
 import json
 candidate_list = [{
     'code': c['code'], 'name': c['name'], 'close': c['close'],
-    'checks': {'量前20': True, '振幅≥3%': True, '近5日均量≥3000張': True, '漲幅≥1.5%': True},  # 單一AND篩選，能列入候選就是全通過
+    'checks': {'量前20': True, '3%≤振幅<5%': True, '近5日均量≥3000張': True, '漲幅≥1.5%': True},  # 單一AND篩選，能列入候選就是全通過
 } for c in candidates]
 with open(os.path.join(os.path.dirname(__file__), '..', 'telebot', 'data', 'daytrade_candidates.json'), 'w') as f:
     json.dump(candidate_list, f, ensure_ascii=False)
