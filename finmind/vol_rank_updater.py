@@ -1,75 +1,50 @@
 #!/usr/bin/env python3
 """
 每 30 分鐘執行一次，取全市場成交量排名並快取到 /tmp/intraday_vol_rank_cache.json
-intraday_monitor.py 讀此快取判斷 top30 條件。
+daytrade-sim 的 /api/movers 讀此快取（依 details[code].total_vol 門檻篩選）。
+
+資料源走 shioaji-gateway(5455)，不自行 login——多支腳本各自直連會互搶 Shioaji
+單帳號連線額度，曾導致 451 Too Many Connections（2026-07-27、2026-10-05）。
 
 crontab：
-*/30 9-13 * * 1-5 /Users/steven/CCProject/finmind/venv/bin/python3 /Users/steven/CCProject/finmind/vol_rank_updater.py >> /tmp/vol_rank_updater.log 2>&1
+*/30 9-13 * * 1-5 /Users/steven/CCProject/finmind/venv/bin/python3 /Users/steven/CCProject/finmind/vol_rank_updater.py >> /Users/steven/CCProject/logs/vol_rank_updater.log 2>&1
 """
 
 import json
-import os
-import time
 import warnings
 from datetime import datetime
 
 warnings.filterwarnings('ignore')
 
-from dotenv import load_dotenv
-load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
-
 VOL_RANK_CACHE = '/tmp/intraday_vol_rank_cache.json'
-MAX_WAIT = 30       # 最多等幾秒讓 Shioaji session 暖機
+GATEWAY = 'http://localhost:5455'
 RANK_TOP_N = 50     # 存前 50 名，給 monitor 查 top30 用
 
 
-def fetch_via_shioaji() -> dict | None:
-    """用 Shioaji 取全市場快照，回傳 {code: total_vol} 或 None"""
+def fetch_via_gateway() -> dict | None:
+    """走 shioaji-gateway 取全市場即時快照，回傳 {code: {'name','total_vol'}} 或 None。
+    只取上市(.TW)，與舊版直接列舉 TSE 合約的行為一致。"""
     try:
-        import shioaji as sj
-        api = sj.Shioaji(simulation=False)
-        api.login(
-            api_key=os.environ['SHIOAJI_API_KEY'],
-            secret_key=os.environ['SHIOAJI_SECRET_KEY'],
-        )
-        # 暖機：等到有快照回來或超時
-        all_contracts = [
-            c for c in api.Contracts.Stocks.TSE
-            if hasattr(c, 'code') and c.code.isdigit() and len(c.code) == 4
-        ]
-        cmap = {c.code: c for c in all_contracts}
-
-        for wait in range(1, MAX_WAIT + 1):
-            time.sleep(1)
-            chunk = all_contracts[:20]
-            snaps = api.snapshots(chunk)
-            if snaps:
-                print(f'[shioaji] session 暖機完成（{wait}s）')
-                break
-        else:
-            print('[shioaji] 暖機逾時，快照仍為空')
+        import requests
+        r = requests.get(f'{GATEWAY}/market_snapshot', timeout=120)
+        r.raise_for_status()
+        data = r.json()
+        if not data.get('ok'):
+            print(f"[gateway] 失敗: {data.get('error')}")
             return None
-
-        # 分批取所有快照
-        all_vols = {}
-        batch = 200
-        for i in range(0, len(all_contracts), batch):
-            chunk = all_contracts[i:i + batch]
-            try:
-                snaps = api.snapshots(chunk)
-                for s in snaps:
-                    all_vols[s.code] = {
-                        'name': getattr(cmap.get(s.code), 'name', s.code),
-                        'total_vol': int(s.total_volume),
-                    }
-            except Exception as e:
-                print(f'[shioaji] batch {i} 失敗: {e}')
-
-        print(f'[shioaji] 取得 {len(all_vols)} 筆快照')
-        return all_vols if all_vols else None
-
+        result = {}
+        for s in data.get('items', []):
+            code = s.get('code', '')
+            if s.get('suffix') != '.TW' or not (code.isdigit() and len(code) == 4):
+                continue
+            result[code] = {
+                'name': s.get('name') or code,
+                'total_vol': int(s.get('total_volume') or 0),
+            }
+        print(f'[gateway] 取得 {len(result)} 筆快照')
+        return result if result else None
     except Exception as e:
-        print(f'[shioaji] 失敗: {e}')
+        print(f'[gateway] 失敗: {e}')
         return None
 
 
@@ -126,9 +101,9 @@ def main():
     now = datetime.now()
     print(f"[{now.strftime('%H:%M:%S')}] vol_rank_updater 開始")
 
-    all_vols = fetch_via_shioaji()
+    all_vols = fetch_via_gateway()
     if not all_vols:
-        print('[fallback] Shioaji 失敗，改用 TWSE openapi')
+        print('[fallback] gateway 失敗，改用 TWSE openapi')
         all_vols = fetch_via_twse()
 
     if not all_vols:
@@ -141,4 +116,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-    os._exit(0)  # 跳過 GC teardown，避免 shioaji C extension 引發 SIGSEGV

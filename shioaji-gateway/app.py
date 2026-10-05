@@ -7,8 +7,9 @@
   GET /health                              -> {status, logged_in}
   GET /snapshot?codes=IX0001,2330,2454     -> {ok, data:{code:{close,change_price,change_rate}}}
   GET /kbars?code=2330&days=30             -> {ok, closes:[...]}  (與 api.kbars(...).Close 相同)
-  GET /intraday?code=IX0001[&date=2026-08-14] -> {ok, points:[{t:"09:01",price:23458.1},...]}  (指定日1分鐘走勢，預設當日)
-  GET /scanner?date=2026-08-28&count=2000     -> {ok, items:[{code,name,close,change_price,pct},...]}  (全市場漲跌幅排行)
+  GET /intraday?code=IX0001[&date=2026-08-14] -> {ok, points:[{t:"09:01",price,high,low,volume},...]}  (指定日1分鐘走勢，預設當日)
+  GET /scanner?date=2026-08-28&count=200 -> {ok, items:[{code,name,close,change_price,pct},...]}  (漲跌幅排行，count上限200)
+  GET /market_snapshot                     -> {ok, items:[{code,name,suffix,close,high,low,change_rate,total_volume},...]}  (全市場TSE+OTC即時快照)
 """
 import heapq
 import itertools
@@ -283,13 +284,19 @@ def intraday():
             contract = _resolve_contract(api, code)
             kb = api.kbars(contract=contract, start=target_date, end=target_date)
             points = []
-            for ts, close, volume in zip(kb.ts, kb.Close, kb.Volume):
+            for ts, high, low, close, volume in zip(kb.ts, kb.High, kb.Low, kb.Close, kb.Volume):
                 if close is None:
                     continue
                 # kb.ts 是「台灣本地時間」數值但以 epoch 秒編碼（非真正 UTC），
                 # 用 utcfromtimestamp 直接取數值對應的時鐘時間，避免 fromtimestamp 多轉一次時區造成 +8 小時位移
                 t = datetime.fromtimestamp(ts / 1e9, tz=timezone.utc)
-                points.append({"t": t.strftime("%H:%M"), "price": float(close), "volume": int(volume)})
+                points.append({
+                    "t": t.strftime("%H:%M"),
+                    "price": float(close),
+                    "high": float(high) if high is not None else None,
+                    "low": float(low) if low is not None else None,
+                    "volume": int(volume),
+                })
             return points
         return jsonify({"ok": True, "points": _run(work)})
     except Exception as e:
@@ -298,11 +305,11 @@ def intraday():
 
 @app.get("/scanner")
 def scanner():
-    """漲跌幅排行掃描（跨全市場，非單檔查詢）。
-    GET /scanner?date=2026-08-28&count=2000&ascending=false -> {ok, items:[{code,name,close,change_price,pct},...]}"""
+    """漲跌幅排行掃描（跨全市場，非單檔查詢）。count 上限 200（Shioaji 限制）。
+    GET /scanner?date=2026-08-28&count=200&ascending=false -> {ok, items:[{code,name,close,change_price,pct},...]}"""
     import shioaji as sj
     target_date = request.args.get("date") or date.today().strftime("%Y-%m-%d")
-    count = int(request.args.get("count", "500"))
+    count = int(request.args.get("count", "200"))
     ascending = request.args.get("ascending", "false").lower() == "true"
     try:
         def work(api):
@@ -314,10 +321,55 @@ def scanner():
             for it in items:
                 prev_close = it.close - it.change_price
                 pct = (it.change_price / prev_close * 100) if prev_close else None
-                out.append({"code": it.code, "name": it.name, "close": float(it.close),
+                out.append({"code": it.code, "name": it.name.strip(), "close": float(it.close),
                             "change_price": float(it.change_price), "pct": pct})
             return out
         return jsonify({"ok": True, "items": _run(work)})
+    except Exception as e:
+        return jsonify({"ok": False, "error": str(e)})
+
+
+@app.get("/market_snapshot")
+def market_snapshot():
+    """全市場即時快照（上市 TSE + 上櫃 OTC 4 碼個股），供全市場初篩與量能排名使用。
+    priority 給 1（低於預設 0），讓 ma_monitor 等短查詢優先取用連線。
+    GET /market_snapshot -> {ok, items:[{code,name,suffix,close,high,low,change_rate,total_volume}]}"""
+    def work(api):
+        items = []
+        for market, suffix in (("TSE", ".TW"), ("OTC", ".TWO")):
+            try:
+                board = getattr(api.Contracts.Stocks, market)
+                contracts = [c for c in board
+                             if getattr(c, "code", "").isdigit() and len(c.code) == 4]
+            except Exception:
+                continue
+            cmap = {c.code: c for c in contracts}
+            for i in range(0, len(contracts), 200):
+                try:
+                    snaps = api.snapshots(contracts[i:i + 200])
+                except Exception:
+                    continue  # 單批失敗不影響其他批次；全部失敗會在下面拋出讓 _run 重登重試
+                for s in snaps:
+                    try:  # 單筆髒資料（停牌/None）只跳過，勿讓整批或整個市場失敗
+                        name = getattr(cmap.get(s.code), "name", s.code)
+                        items.append({
+                            "code": s.code,
+                            "name": (name or s.code).strip(),
+                            "suffix": suffix,
+                            "close": float(s.close) if s.close else None,
+                            "high": float(s.high) if s.high is not None else None,
+                            "low": float(s.low) if s.low is not None else None,
+                            "change_rate": float(s.change_rate) if s.change_rate is not None else None,
+                            "total_volume": int(s.total_volume) if s.total_volume else 0,
+                        })
+                    except Exception:
+                        continue
+        if not items:
+            # 不可把空清單當成功回傳：呼叫端會誤判成「市場沒資料」而非「抓取失敗」
+            raise RuntimeError('全市場快照為空（session 失效或非交易日）')
+        return items
+    try:
+        return jsonify({"ok": True, "items": _run(work, priority=1)})
     except Exception as e:
         return jsonify({"ok": False, "error": str(e)})
 
