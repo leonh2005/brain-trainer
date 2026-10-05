@@ -711,3 +711,9 @@ if __name__ == '__main__':
             recompute_technical_cache()
         volume_check()
         _time.sleep(5)
+
+    try:
+        _api.logout()
+        print('[shutdown] Shioaji 已登出，釋放連線額度')
+    except Exception:
+        pass
