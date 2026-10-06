@@ -77,6 +77,13 @@ check_launchagent() {
     local age=$(( $(date +%s) - $(stat -f %m "$lock_file" 2>/dev/null || echo 0) ))
     [ "$age" -lt 1800 ] && return
   fi
+  # 重開機後、使用者登入前 gui domain 不存在，kickstart 會回 125 而誤判失敗；
+  # 此時 LaunchAgent 的 RunAtLoad 會在登入後自行啟動，直接跳過即可
+  if ! launchctl print "gui/$(id -u)" > /dev/null 2>&1; then
+    log "SKIP $name — 尚無 GUI session（未登入），待登入後由 LaunchAgent 啟動"
+    return
+  fi
+
   log "KICKSTART $name (port $port)"
   touch "$lock_file"
   launchctl kickstart -k "gui/$(id -u)/$label"
@@ -121,10 +128,8 @@ check_and_restart "dashboard"         5600 \
   "/Users/steven/CCProject/dashboard" \
   "/Users/steven/CCProject/dashboard/dashboard.log"
 
-check_and_restart "dsa-webui"         5650 \
-  "/opt/homebrew/bin/python3.14 main.py --webui-only --port 5650" \
-  "/Users/steven/CCProject/daily-stock-analysis" \
-  "/Users/steven/CCProject/logs/dsa-webui.log"
+# dsa-webui 由 LaunchAgent 管理（venv/bin/python），不可用 nohup + homebrew python3.14 重啟
+check_launchagent "dsa-webui" 5650 "com.steven.daily-stock-analysis"
 
 check_and_restart "dsa-backend"       8000 \
   "venv/bin/python main.py --serve" \
