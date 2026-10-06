@@ -62,3 +62,8 @@ jev-compaction/ccr-backup/
 
 # 本機專用調查文件（含具名指控），不進公開 repo（2026-10-04）
 reports/jingwen-watch-tw-reviews.html
+
+# 蝦皮「未揭露統編」掃描（含具名賣場名單，屬待查證指控，不進公開 repo）（2026-10-06）
+shopee_taxid_result.json
+.shopee_taxid_state.json
+shopee_taxid_report.html

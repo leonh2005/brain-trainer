@@ -36,13 +36,17 @@ from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.firefox.options import Options
 
 # 真實 profile（已登入蝦皮）與掃描用的固定工作副本。
-# 註：若用 Options.profile 指定，Selenium 每次啟動都會把整個 profile（約 1.2G）
-#     複製到 TMPDIR，跑多次會把磁碟塞爆（曾累積 55G）。改用 Firefox 的
-#     -profile 參數指向同一份工作副本，就只複製一次、不再堆積。
+# 註1：若用 Options.profile 指定，Selenium 每次啟動都會把整個 profile（約 1.2G）
+#      複製到 TMPDIR，跑多次會把磁碟塞爆（曾累積 55G）。改用 Firefox 的
+#      -profile 參數指向同一份工作副本，就只複製一次、不再堆積。
+# 註2：-profile 會讓 Firefox 把該路徑以 Locked=1 寫進 installs.ini/profiles.ini。
+#      工作副本放 /tmp 時，重開機被清空後 Firefox 會顯示「遺失設定檔」而打不開，
+#      故改放持久目錄，並在掃描前後備份/還原這兩份 ini（見 backup/restore_firefox_ini）。
 PROFILE_SRC = os.path.expanduser(
     '~/Library/Application Support/Firefox/Profiles/ro7nczf2.default-release'
 )
-PROFILE_WORK = '/tmp/ff_scan_profile'
+PROFILE_WORK = os.path.expanduser('~/Library/Caches/ff_scan_profile')
+FIREFOX_DIR = os.path.expanduser('~/Library/Application Support/Firefox')
 STATE = os.path.expanduser('~/CCProject/.shopee_taxid_state.json')
 OUT = os.path.expanduser('~/CCProject/shopee_taxid_result.json')
 
@@ -106,6 +110,29 @@ def ensure_profile():
         p = os.path.join(PROFILE_WORK, lock)
         if os.path.exists(p):
             os.remove(p)
+
+
+_INI_NAMES = ('profiles.ini', 'installs.ini')
+
+
+def backup_firefox_ini():
+    """備份 Firefox 設定，供掃描後還原 -profile 造成的改寫。
+    已有備份時不覆蓋：上次若被強制中斷而殘留 .scanbak，那是最早的乾淨版，
+    不能拿這次（可能已被 -profile 污染）的 ini 把它蓋掉。"""
+    for name in _INI_NAMES:
+        src = os.path.join(FIREFOX_DIR, name)
+        bak = src + '.scanbak'
+        if os.path.exists(src) and not os.path.exists(bak):
+            shutil.copy2(src, bak)
+
+
+def restore_firefox_ini():
+    """還原掃描前的 Firefox 設定，避免安裝被永久鎖定到掃描用的工作副本。"""
+    for name in _INI_NAMES:
+        bak = os.path.join(FIREFOX_DIR, name + '.scanbak')
+        if os.path.exists(bak):
+            shutil.copy2(bak, os.path.join(FIREFOX_DIR, name))
+            os.remove(bak)
 
 
 def load_state():
@@ -203,30 +230,34 @@ def main():
     if not os.path.isdir(PROFILE_SRC):
         sys.exit(f'找不到 Firefox profile: {PROFILE_SRC}')
     ensure_profile()
+    backup_firefox_ini()
 
     state = load_state()
     todo = [k for k in args.keywords if k not in state['collected']]
     print(f'待抓關鍵字 {len(todo)}/{len(args.keywords)}（已有 {len(state["collected"])} 個完成）')
 
-    for kw in todo:
-        got = None
-        for attempt in range(args.retry + 1):
-            print(f'  [{kw}] 第 {attempt + 1} 次嘗試...', flush=True)
-            items = search_once(kw)
-            if items:
-                got = items
-                break
-            print(f'  [{kw}] 失敗（被擋或逾時）', flush=True)
-            if attempt < args.retry:
-                print(f'  [{kw}] 等 {args.gap}s 後重試', flush=True)
-                time.sleep(args.gap)
-        if got:
-            state['collected'][kw] = got
-            save_state(state)
-            print(f'  [{kw}] ✓ 取得 {len(got)} 筆（已存斷點）', flush=True)
-        else:
-            print(f'  [{kw}] ✗ 放棄', flush=True)
-        time.sleep(args.gap)
+    try:
+        for kw in todo:
+            got = None
+            for attempt in range(args.retry + 1):
+                print(f'  [{kw}] 第 {attempt + 1} 次嘗試...', flush=True)
+                items = search_once(kw)
+                if items:
+                    got = items
+                    break
+                print(f'  [{kw}] 失敗（被擋或逾時）', flush=True)
+                if attempt < args.retry:
+                    print(f'  [{kw}] 等 {args.gap}s 後重試', flush=True)
+                    time.sleep(args.gap)
+            if got:
+                state['collected'][kw] = got
+                save_state(state)
+                print(f'  [{kw}] ✓ 取得 {len(got)} 筆（已存斷點）', flush=True)
+            else:
+                print(f'  [{kw}] ✗ 放棄', flush=True)
+            time.sleep(args.gap)
+    finally:
+        restore_firefox_ini()
 
     if not state['collected']:
         sys.exit('完全取不到資料，風控可能仍未解除，建議改天再試。')
