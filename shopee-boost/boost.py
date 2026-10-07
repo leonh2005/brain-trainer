@@ -24,6 +24,7 @@ logger = logging.getLogger('shopee_boost')
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 STATE_FILE = os.path.join(BASE_DIR, 'data', 'last_success.json')
+MISSING_STATE_FILE = os.path.join(BASE_DIR, 'data', 'missing.json')
 COOLDOWN = timedelta(hours=4)
 # cron 固定在 :19:00 觸發，但上次成功可能落在 :19:16，elapsed 會差十幾秒不滿 4 小時，
 # 因而整整跳過一小時（歷史上一律變成 5 小時一輪）。給 60 秒容差視為已滿。
@@ -56,6 +57,19 @@ def save_last_success(all_success: dict):
     os.makedirs(os.path.dirname(STATE_FILE), exist_ok=True)
     with open(STATE_FILE, 'w', encoding='utf-8') as f:
         json.dump(all_success, f)
+
+
+def load_missing() -> set:
+    if not os.path.exists(MISSING_STATE_FILE):
+        return set()
+    with open(MISSING_STATE_FILE, encoding='utf-8') as f:
+        return set(json.load(f))
+
+
+def save_missing(missing: set):
+    os.makedirs(os.path.dirname(MISSING_STATE_FILE), exist_ok=True)
+    with open(MISSING_STATE_FILE, 'w', encoding='utf-8') as f:
+        json.dump(sorted(missing), f)
 
 
 def notify(msg: str):
@@ -187,6 +201,7 @@ def run():
             return
 
         info_rows = info_table.locator('tbody tr')
+        missing_now = set()
         for keyword in pending:
             target_idx = None
             for i in range(info_rows.count()):
@@ -194,6 +209,7 @@ def run():
                     target_idx = i
                     break
             if target_idx is None:
+                missing_now.add(keyword)
                 logger.warning(f'商品列表找不到「{keyword}」，可能尚未過審／已下架，跳過')
                 continue
 
@@ -233,6 +249,13 @@ def run():
             save_last_success(all_success)
             logger.info(f'「{keyword}」已點擊置頂推廣，記錄成功時間')
             notify(f'✅ 蝦皮置頂推廣：「{keyword}」已成功置頂，下次約4小時後再試')
+
+        # 只在「新變成找不到」時通知一次，避免已下架商品每小時洗版
+        newly_missing = missing_now - load_missing()
+        if newly_missing:
+            notify('⚠️ 蝦皮置頂推廣：找不到以下商品（可能已下架／未過審），本輪已跳過：'
+                   + '、'.join(sorted(newly_missing)) + '。若已賣出請更新 boost.py 的 PRODUCTS 清單。')
+        save_missing(missing_now)
 
         browser.close()
 
