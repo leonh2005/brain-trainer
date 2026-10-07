@@ -2,6 +2,7 @@
 import ipaddress
 import re
 import secrets
+import tempfile
 
 import httpx
 from fastapi import FastAPI, HTTPException
@@ -367,22 +368,27 @@ def get_ma_watchlist():
 
 @app.post('/api/ma-watchlist')
 def set_ma_watchlist(req: MaWatchlist):
+    if not req.stocks:
+        raise HTTPException(400, '追蹤清單不可為空（要暫停監控請停用排程）')
+    if len(req.stocks) > 50:
+        raise HTTPException(400, '追蹤清單最多 50 支')
     stocks, seen = [], set()
-    for s in req.stocks[:50]:
+    for s in req.stocks:
         code = s.code.strip()
-        if not re.fullmatch(r'\d{4}', code) or code in seen:
+        # 用 [0-9] 而非 \d：後者含全形與阿拉伯-印度數字，會寫進查無資料的代號
+        if not re.fullmatch(r'[0-9]{4}', code) or code in seen:
             raise HTTPException(400, f'無效或重複的股票代號：{code}')
         seen.add(code)
         stocks.append({
             'code': code,
-            'name': s.name.strip() or code,
+            'name': s.name.strip()[:40] or code,
             'exchange': s.exchange if s.exchange in ('TSE', 'OTC') else 'TSE',
         })
-    tmp = _MA_WATCHLIST_FILE + '.tmp'
-    with open(tmp, 'w', encoding='utf-8') as f:
+    fd, tmp = tempfile.mkstemp(dir=os.path.dirname(_MA_WATCHLIST_FILE), suffix='.tmp')
+    with os.fdopen(fd, 'w', encoding='utf-8') as f:
         json.dump({'stocks': stocks}, f, ensure_ascii=False, indent=2)
     os.replace(tmp, _MA_WATCHLIST_FILE)
-    sources._ma_names_cache = None   # 清快取，讓卡片名稱立即更新
+    sources.invalidate_ma_names_cache()
     return {'ok': True, 'stocks': stocks}
 
 
