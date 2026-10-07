@@ -60,7 +60,7 @@
         <td>{{ d.date }}</td>
         <td>
           {% if not d.candidates %}<span class="pending">（無候選）</span>{% endif %}
-          {% for c in d.candidates %}<div>{{ c.code }} {{ c.name }} @ {{ c.close }}{% if c.close_source == 'intraday' %}<sup class="approx" title="無當時掃描價位可還原，以當天 13:00 分K 近似">≈</sup>{% endif %}</div>{% endfor %}
+          {% for c in d.candidates %}<div>{{ c.code }} {{ c.name }} @ {{ c.close }}{% if c.close_source in ('intraday', 'unknown') %}<sup class="approx" title="無當時的掃描價位可還原，此起始價非精確值">≈</sup>{% endif %}</div>{% endfor %}
         </td>
         <td>
           {% if not d.checked %}<span class="pending">尚未比對</span>
