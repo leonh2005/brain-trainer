@@ -69,3 +69,8 @@ shopee_taxid_result.json
 .shopee_taxid_state.json
 shopee_taxid_report.html
 shopee_taxid_report.orig.html
+shopee_cat_report.html
+shopee_top300_taxid.html
+.shopee_cat_state.json
+.shopee_cats.json
+.shopee_top300_taxid.json

@@ -1,24 +1,35 @@
-# Claude Handoff 20261007_1303
-> 自動生成於 2026-10-07 13:03
+# Claude Handoff 20261007_1819
+> 自動生成於 2026-10-07 18:19
 
 ## 未提交的檔案異動
 ```
 M .gitignore
+ M chip-tracker/chip.db
  M gemma_work/latest.md
- M news-analyzer/trump_seen.json
+ M logs/pullback_daily_scan.err
+ M market-analysis/hit_counts.json
+ M market-dashboard/alert_grid.json
+ M market-dashboard/bb_cache.json
+ M market-dashboard/fg_history.json
+ M market-dashboard/index.html
+ M market-dashboard/margin_cache.json
+ M market-dashboard/sp_state.json
  M scripts/auto_investigate_state.json
- M scripts/ma_monitor_state.json
- M shopee-boost/data/last_success.json
+?? .shopee_taxid_state.prev.json
 ?? reports/tax-whistleblower-rewards.html
+?? shopee_category_analyze.py
+?? shopee_category_scan.py
+?? shopee_shop_taxid_fetch.py
+?? shopee_top300_output.py
 ```
 
 ## 近期 Commits
 ```
+d0d5e6de feat(shopee-boost): 商品找不到時發 Telegram 通知（僅狀態變化時）
+dbdf2d9a fix(shopee-boost): 置頂推廣清單移除已下架商品並加入寵物背包
+a10d3d94 chore: 自動同步 2026-10-07 13:40
 1c7a28fb fix: 修正 ma-watchlist API 的 review 發現（無 CRITICAL/HIGH）
 485985ab feat: 均線追蹤標的改讀共用設定檔，並加可編輯頁
-1719bfd4 fix(command-center): swing-history 的 ≈ 標記納入 close_source='unknown'
-456992f9 feat(command-center): swing-history 標記分K 近似的起始價
-d9f2a895 fix: ma_monitor 補防護與測試，並修正 daytrade-replay 假日表
 ```
 
 ## 給 Hermes 的備註
