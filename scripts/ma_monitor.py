@@ -5,6 +5,7 @@
 """
 import fcntl
 import json
+import math
 import os
 from datetime import datetime, time
 from pathlib import Path
@@ -36,7 +37,7 @@ HISTORY_DAYS    = MAX_MA + 1 + 10   # 需 MAX_MA 根已收盤日K + 今日，再
 
 # 2026 台灣國定假日（週間休市）。來源：行政院人事行政總處行事曆
 # （ruyut/TaiwanCalendar 開放資料），每年初需更新。
-# 假日 gateway 會用 yfinance 補一根幽靈日K，必須擋掉才不會產生假訊號。
+# 假日整批不執行：休市期間 snapshot 是前收舊價，對歷史均線比對會誤判。
 TW_HOLIDAYS = {
     "2026-01-01",  # 開國紀念日
     "2026-02-16", "2026-02-17", "2026-02-18", "2026-02-19", "2026-02-20",  # 農曆春節
@@ -71,11 +72,13 @@ def is_trading_hours() -> bool:
 
 def send_telegram(msg: str) -> None:
     try:
-        requests.post(
+        r = requests.post(
             f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage",
             data={"chat_id": TELEGRAM_CHAT_ID, "text": msg},
             timeout=10,
         )
+        if not r.ok:
+            log(f"Telegram 發送失敗 HTTP {r.status_code}: {r.text[:200]}")
     except Exception as e:
         log(f"Telegram 發送失敗: {e}")
 
@@ -107,30 +110,40 @@ def gw_bars(sid: str, days: int = 30) -> list[dict]:
 
 
 def gw_price(sid: str) -> float | None:
-    """向 gateway 取現價(snapshot close)。"""
+    """向 gateway 取現價(snapshot close)；非正數或 NaN 視為無效。"""
     try:
         j = requests.get(f"{GATEWAY}/snapshot", params={"codes": sid}, timeout=15).json()
         if j.get("ok") and sid in j.get("data", {}):
-            return float(j["data"][sid]["close"])
+            p = float(j["data"][sid]["close"])
+            if p > 0 and not math.isnan(p):
+                return p
+            log(f"{sid}: snapshot 價格異常（{p}）")
     except Exception as e:
         log(f"gateway snapshot 失敗 {sid}: {e}")
     return None
 
 
-def analyze(sid: str, name: str, state: dict) -> None:
+def closed_closes(bars: list[dict], today: str) -> list[float]:
+    """取「已收盤」日K的收盤價，排除 date >= today（gateway 用 yfinance 補的今日合成K）。
+
+    用日期而非位置切片，因此不論 gateway 有沒有補今日那根，結果都一致。
+    """
+    return [float(b["close"]) for b in bars if b.get("date", "") < today]
+
+
+def analyze(sid: str, name: str, state: dict) -> bool:
+    """回傳 True 表示本檔正常處理；False 表示資料或取價失敗。"""
     today = datetime.now().date().isoformat()
     bars = gw_bars(sid, days=HISTORY_DAYS)
-    # 只取「已收盤」日K：gateway 用 yfinance 補的今日那根日期等於今日，一律排除，
-    # 因此不受它補成功與否影響；MA 全來自歷史收盤價，與 Shioaji snapshot 現價同源
-    hist = [float(b["close"]) for b in bars if b.get("date", "") < today]
+    hist = closed_closes(bars, today)
     if len(hist) < MAX_MA:
         log(f"{name}: 歷史資料不足（{len(hist)} 筆）")
-        return
+        return False
 
     current = gw_price(sid)
     if current is None:
         log(f"{name}: snapshot 取價失敗，跳過")
-        return
+        return False
 
     alerts = []
     for n in MA_PERIODS:
@@ -159,6 +172,7 @@ def analyze(sid: str, name: str, state: dict) -> None:
         msg  = f"{icon} {name}（{sid}）\n" + "\n".join(alerts)
         send_telegram(msg)
         log(f"通知送出：{name} {alerts}")
+    return True
 
 
 def main() -> None:
@@ -175,12 +189,18 @@ def main() -> None:
         return
     try:
         state = load_state()
+        total = ok = 0
         for sid, (exchange, name) in STOCKS.items():
+            total += 1
             try:
-                analyze(sid, name, state)
+                if analyze(sid, name, state):
+                    ok += 1
             except Exception as e:
                 log(f"{name}({sid}) 發生錯誤: {e}")
         save_state(state)
+        if total and ok == 0:
+            log(f"本輪 {total} 檔全部取價/資料失敗")
+            send_telegram(f"⚠️ ma_monitor：{total} 檔全部取價失敗，監控可能已失效（檢查 shioaji-gateway）")
     finally:
         fcntl.flock(lock_f, fcntl.LOCK_UN)
         lock_f.close()
