@@ -38,6 +38,7 @@ timesfm/model/*.safetensors
 scripts/hay-venv/
 scripts/hay_current.json
 scripts/hay_seen.json
+scripts/ma_monitor.lock
 sim-invest/sim.db
 sim-invest/.coverage
 shioaji-gateway/venv/
