@@ -28,13 +28,15 @@
   .pending { color: #8b949e; font-style: italic; }
   .empty { color: #8b949e; text-align: center; padding: 24px 0; }
   .stock-row { display: flex; justify-content: space-between; gap: 12px; }
+  .approx { color: #d29922; cursor: help; margin-left: 1px; }
 </style>
 </head>
 <body>
 <div class="wrap">
   <h1>隔日沖候選命中歷史</h1>
   <div class="sub">telebot/screener.py 每天選出的候選股，隔天 09:05 自動比對是否上漲（check_swing_track.py）<br>
-    R 倍數＝淨損益 ÷ 停損出場會虧掉的金額（進場金額 × {{ '%g'|format(stop_pct) }}% 加手續費與交易稅）；1R 為風險單位定義，未實際掛停損單</div>
+    R 倍數＝淨損益 ÷ 停損出場會虧掉的金額（進場金額 × {{ '%g'|format(stop_pct) }}% 加手續費與交易稅）；1R 為風險單位定義，未實際掛停損單<br>
+    起始價後標 <sup class="approx">≈</sup> 者：該筆無當時的掃描價位可還原（推播訊息缺漏或未記錄），改以當天 13:00 分K 近似</div>
 
   <div class="summary">
     <div><div class="k">累積命中</div><div class="v">{{ total_hits }} / {{ total_picks }}</div></div>
@@ -58,7 +60,7 @@
         <td>{{ d.date }}</td>
         <td>
           {% if not d.candidates %}<span class="pending">（無候選）</span>{% endif %}
-          {% for c in d.candidates %}<div>{{ c.code }} {{ c.name }} @ {{ c.close }}</div>{% endfor %}
+          {% for c in d.candidates %}<div>{{ c.code }} {{ c.name }} @ {{ c.close }}{% if c.close_source == 'intraday' %}<sup class="approx" title="無當時掃描價位可還原，以當天 13:00 分K 近似">≈</sup>{% endif %}</div>{% endfor %}
         </td>
         <td>
           {% if not d.checked %}<span class="pending">尚未比對</span>
