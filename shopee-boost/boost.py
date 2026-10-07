@@ -34,9 +34,8 @@ FIREFOX_PROFILE = os.path.expanduser(
 )
 PRODUCT_URL = 'https://seller.shopee.tw/portal/product/list/live/all'
 PRODUCTS = [
-    '恩雅',  # 全新恩雅 Enya Inspire電吉他 特價，商品ID 57064166103
-    'steamdeck oled 2T',  # 商品ID 50267678070
     '宜康寵物製氧機',  # 宜康寵物製氧機 3L，商品ID 46017697143
+    'IBIYAYA',  # 強力磁吸扣版 IBIYAYA依比呀呀 愛的抱抱敞篷寵物背包，商品ID 54767799663
 ]
 
 TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN', open(os.path.expanduser("~/CCProject/.secrets/telegram_token.txt")).read().strip())
