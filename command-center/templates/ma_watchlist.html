@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>均線追蹤標的</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: #0d1117; color: #e6edf3; padding: 20px;
+    font-family: -apple-system, "PingFang TC", "Microsoft JhengHei", sans-serif; font-size: 14px;
+  }
+  .wrap { max-width: 640px; margin: 0 auto; }
+  h1 { font-size: 18px; margin: 0 0 4px; }
+  .sub { color: #8b949e; font-size: 12.5px; line-height: 1.6; margin-bottom: 20px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th { text-align: left; color: #8b949e; font-weight: 600; padding: 8px; border-bottom: 1px solid #30363d; }
+  td { padding: 6px 8px; border-bottom: 1px solid #21262d; }
+  input, select {
+    background: #161b22; color: #e6edf3; border: 1px solid #30363d; border-radius: 6px;
+    padding: 6px 8px; font-size: 13px; width: 100%; font-family: inherit;
+  }
+  input:focus, select:focus { outline: none; border-color: #388bfd; }
+  .code { width: 90px; font-variant-numeric: tabular-nums; }
+  .ex { width: 78px; }
+  .del {
+    background: none; border: none; color: #8b949e; cursor: pointer; font-size: 16px;
+    padding: 4px 8px; border-radius: 6px; line-height: 1;
+  }
+  .del:hover { background: #21262d; color: #f85149; }
+  .actions { display: flex; align-items: center; gap: 10px; margin-top: 16px; }
+  .actions .spacer { flex: 1; }
+  button.act {
+    background: #21262d; color: #e6edf3; border: 1px solid #30363d; border-radius: 6px;
+    padding: 8px 16px; font-size: 13px; cursor: pointer; font-family: inherit;
+  }
+  button.act:hover { background: #30363d; }
+  button.primary { background: #238636; border-color: #2ea043; font-weight: 600; }
+  button.primary:hover { background: #2ea043; }
+  button:disabled { opacity: .5; cursor: default; }
+  .msg { font-size: 12.5px; color: #8b949e; }
+  .msg.ok { color: #3fb950; }
+  .msg.err { color: #f85149; }
+  .hint { font-size: 11px; color: #6e7681; margin-top: 3px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>均線追蹤標的</h1>
+  <div class="sub">
+    均線監控（ma_monitor）每 5 分鐘檢查這些股票的 5／10／20 日均線，跌破或接近時推 Telegram。<br>
+    代號輸入 4 位數字後會自動帶入名稱；存檔後下次排程（最多 5 分鐘）自動生效。
+  </div>
+
+  <table>
+    <thead><tr><th style="width:90px">代號</th><th>名稱</th><th style="width:78px">市場</th><th style="width:36px"></th></tr></thead>
+    <tbody id="rows"></tbody>
+  </table>
+
+  <div class="actions">
+    <button class="act" id="add">＋ 新增標的</button>
+    <span class="spacer"></span>
+    <span class="msg" id="msg"></span>
+    <button class="act primary" id="save">儲存</button>
+  </div>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+
+function mkRow(s) {
+  s = s || { code: '', name: '', exchange: 'TSE' };
+  const tr = document.createElement('tr');
+
+  const tdCode = document.createElement('td');
+  const code = document.createElement('input');
+  code.className = 'code';
+  code.value = s.code;
+  code.placeholder = '2330';
+  code.inputMode = 'numeric';
+  code.maxLength = 4;
+  tdCode.appendChild(code);
+
+  const tdName = document.createElement('td');
+  const name = document.createElement('input');
+  name.value = s.name;
+  name.placeholder = '台積電';
+  tdName.appendChild(name);
+
+  const tdEx = document.createElement('td');
+  const ex = document.createElement('select');
+  ex.className = 'ex';
+  ['TSE', 'OTC'].forEach(v => {
+    const o = document.createElement('option');
+    o.value = v; o.textContent = v === 'TSE' ? '上市' : '上櫃';
+    if (v === s.exchange) o.selected = true;
+    ex.appendChild(o);
+  });
+  tdEx.appendChild(ex);
+
+  const tdDel = document.createElement('td');
+  const del = document.createElement('button');
+  del.className = 'del'; del.textContent = '✕'; del.title = '刪除';
+  del.onclick = () => tr.remove();
+  tdDel.appendChild(del);
+
+  // 輸入 4 位代號後自動查名稱
+  code.addEventListener('blur', async () => {
+    const c = code.value.trim();
+    if (!/^\d{4}$/.test(c)) return;
+    try {
+      const r = await fetch('/api/stock-lookup?q=' + encodeURIComponent(c));
+      const d = await r.json();
+      const hit = (d.results || []).find(x => x.code === c);
+      if (hit) {
+        if (!name.value.trim()) name.value = hit.name;
+      }
+    } catch (e) { /* 查不到就讓使用者自己填 */ }
+  });
+
+  tr.append(tdCode, tdName, tdEx, tdDel);
+  tr._fields = { code, name, ex };
+  return tr;
+}
+
+function addRow(s) { $('rows').appendChild(mkRow(s)); }
+
+async function load() {
+  try {
+    const d = await (await fetch('/api/ma-watchlist')).json();
+    (d.stocks || []).forEach(addRow);
+  } catch (e) {
+    setMsg('讀取失敗：' + e.message, 'err');
+  }
+}
+
+function setMsg(t, cls) {
+  const m = $('msg'); m.textContent = t; m.className = 'msg' + (cls ? ' ' + cls : '');
+}
+
+async function save() {
+  const stocks = [];
+  for (const tr of $('rows').children) {
+    const { code, name, ex } = tr._fields;
+    const c = code.value.trim();
+    if (!c) continue;
+    if (!/^\d{4}$/.test(c)) { setMsg('代號 ' + c + ' 必須是 4 位數字', 'err'); return; }
+    stocks.push({ code: c, name: name.value.trim(), exchange: ex.value });
+  }
+  const btn = $('save'); btn.disabled = true;
+  try {
+    const r = await fetch('/api/ma-watchlist', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ stocks }),
+    });
+    const d = await r.json();
+    if (!r.ok) { setMsg(d.detail || '儲存失敗', 'err'); return; }
+    setMsg('已儲存 ' + d.stocks.length + ' 支', 'ok');
+  } catch (e) {
+    setMsg('儲存失敗：' + e.message, 'err');
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+$('add').onclick = () => addRow();
+$('save').onclick = save;
+load();
+</script>
+</body>
+</html>

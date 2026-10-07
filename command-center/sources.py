@@ -438,15 +438,15 @@ def intraday():
 _ma_names_cache = None
 
 def _ma_names():
-    """從 ma_monitor.py 的 STOCKS 定義解析 代碼→中文名（不 import，避免 shioaji 依賴）"""
+    """從共用設定檔 config/ma_watchlist.json 取 代碼→中文名。"""
     global _ma_names_cache
     if _ma_names_cache is None:
         _ma_names_cache = {}
         try:
-            txt = open(f'{CC}/scripts/ma_monitor.py').read()
-            for code, name in re.findall(r'"(\d{4})":\s*\("[^"]*",\s*"([^"]+)"\)', txt):
-                _ma_names_cache[code] = name
-        except OSError:
+            with open(f'{CC}/config/ma_watchlist.json', encoding='utf-8') as f:
+                for s in json.load(f).get('stocks', []):
+                    _ma_names_cache[s['code']] = s['name']
+        except (OSError, ValueError):
             pass
     return _ma_names_cache
 

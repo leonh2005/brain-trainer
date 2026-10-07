@@ -1,0 +1,24 @@
+{
+  "stocks": [
+    {
+      "code": "2327",
+      "name": "國巨",
+      "exchange": "TSE"
+    },
+    {
+      "code": "1303",
+      "name": "南亞",
+      "exchange": "TSE"
+    },
+    {
+      "code": "3706",
+      "name": "神達",
+      "exchange": "TSE"
+    },
+    {
+      "code": "6907",
+      "name": "雅特力-KY",
+      "exchange": "OTC"
+    }
+  ]
+}
