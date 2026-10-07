@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>檢舉逃漏稅獎金案例</title>
+<style>
+  :root{
+    --bg:#f7f8fa; --panel:#ffffff; --ink:#1b1f24; --muted:#5c6773;
+    --line:#e3e7ec; --accent:#0b6bcb; --warn:#b7791f; --danger:#b42318; --ok:#17683f;
+    --chip:#eef2f7; --shadow:0 1px 2px rgba(16,24,40,.06),0 1px 3px rgba(16,24,40,.08);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#0f1216; --panel:#161b22; --ink:#e6edf3; --muted:#9aa7b4;
+      --line:#26303a; --accent:#5aa7f0; --warn:#e0b155; --danger:#f0736a; --ok:#5cc894;
+      --chip:#1d242c; --shadow:0 1px 2px rgba(0,0,0,.4);
+    }
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
+    -webkit-font-smoothing:antialiased}
+  .wrap{max-width:900px;margin:0 auto;padding:32px 16px 64px}
+  header h1{font-size:26px;margin:0 0 6px;letter-spacing:.5px}
+  header p.sub{margin:0;color:var(--muted);font-size:14px}
+  .note{margin:20px 0 28px;padding:14px 16px;background:var(--panel);border:1px solid var(--line);
+    border-left:4px solid var(--accent);border-radius:8px;font-size:14px;color:var(--muted)}
+  .note strong{color:var(--ink)}
+  h2{font-size:17px;margin:34px 0 12px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:18px 0 4px}
+  .stat{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:12px 14px}
+  .stat .n{font-size:20px;font-weight:700}
+  .stat .l{font-size:12px;color:var(--muted);margin-top:2px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;
+    padding:14px 16px;margin:12px 0;box-shadow:var(--shadow)}
+  .card.rank{display:grid;grid-template-columns:104px 1fr;gap:14px}
+  @media(max-width:560px){.card.rank{grid-template-columns:1fr}}
+  .date{font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+  .amt{font-size:22px;font-weight:800;letter-spacing:.5px}
+  .amt.small{color:var(--danger)} .amt.big{color:var(--ok)}
+  .amt.mid{color:var(--warn)}
+  .ttl{font-weight:600;margin:2px 0 6px}
+  .desc{font-size:14px;color:var(--muted)}
+  .chips{margin-top:8px;display:flex;flex-wrap:wrap;gap:6px}
+  .chip{font-size:12px;padding:2px 8px;border-radius:999px;background:var(--chip);color:var(--muted)}
+  .chip.t-self{background:#e6f0fb;color:#0b4f96}
+  .chip.t-official{background:#e7f6ee;color:#14663f}
+  .chip.t-court{background:#fdeee0;color:#8a4b13}
+  .chip.t-talk{background:#eee9fb;color:#4b3a91}
+  .chip.t-related{background:#f0f1f3;color:#555}
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]) .chip.t-self{background:#12314f;color:#8fc2f5}
+    :root:not([data-theme="light"]) .chip.t-official{background:#123526;color:#79d3a8}
+    :root:not([data-theme="light"]) .chip.t-court{background:#3a2a12;color:#e7b678}
+    :root:not([data-theme="light"]) .chip.t-talk{background:#241f3d;color:#b7a9f0}
+    :root:not([data-theme="light"]) .chip.t-related{background:#22282e;color:#9aa7b4}
+  }
+  a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
+  .src{font-size:12.5px;margin-top:8px;color:var(--muted);word-break:break-all}
+  table{width:100%;border-collapse:collapse;font-size:14px;margin-top:10px}
+  th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{color:var(--muted);font-weight:600;font-size:13px}
+  .foot{margin-top:40px;font-size:13px;color:var(--muted);border-top:1px solid var(--line);padding-top:16px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>台灣「檢舉逃漏稅」成功案例與獎金分享彙整</h1>
+  <p class="sub">2016-10-07 ～ 2026-10-07（近十年）· 依時間新→舊排列 · 蒐集日期 2026-10-07</p>
+</header>
+
+<div class="note">
+  <strong>先講結論：</strong>台灣網路上「親自檢舉、公開分享領到多少錢」的文章非常少，而且<b>金額落差極大</b>——
+  佔多數的親身分享是 <b>5 元</b>、<b>8 元</b>、<b>15 元</b>、<b>不到 1 元</b>；
+  少數高額的是 Dcard 網友檢舉房東「約 3 萬」、Mobile01 一則「扣稅後八百多」(2013)。
+  真正上萬元且可查證的案例，幾乎都是<b>國稅局釋出的制式案例、法院判決或監察院文件</b>（最高 997,500 元）。
+  獎金法定公式為「罰鍰金額的 20%，每案上限 480 萬元」，但能否領到、領多少，取決於檢舉方式與證據強度。
+</div>
+
+<div class="stats">
+  <div class="stat"><div class="n">26 筆</div><div class="l">近十年相關條目</div></div>
+  <div class="stat"><div class="n">5／8／15 元</div><div class="l">網友實領最低（單筆未開發票）</div></div>
+  <div class="stat"><div class="n">997,500 元</div><div class="l">近十年最高（法院判准）</div></div>
+  <div class="stat"><div class="n">480 萬元</div><div class="l">法定上限（近十年未見實領）</div></div>
+</div>
+
+<h2>一、個人親自檢舉並分享領到金額</h2>
+
+<div class="card rank">
+  <div class="date">2026-03-13</div>
+  <div>
+    <div class="amt small">15 元</div>
+    <div class="ttl">Threads 網友：檢舉態度差的店家未開發票</div>
+    <div class="desc">花時間蒐證、寄兩次信並配合調查，國稅局確認「檢舉成立、對方確實違章漏稅」，獎金卻只有 15 元，比掛號郵資還少；領獎還得寄回收據、切結書、身分證與存摺影本。原PO質疑「是在鼓勵檢舉，還是在嘲諷正義感」。串中內行網友指出：只檢舉單筆，國稅局只能罰一次；應蒐證「整段期間達門檻卻漏開發票」，以整期漏稅額 20% 計算，獎金可差約 130 倍（每月至少約 2,000 元）。</div>
+    <div class="chips"><span class="chip t-self">個人分享</span><span class="chip">Threads</span></div>
+    <div class="src">原始 Threads 貼文網址未被媒體引用，需登入才可搜尋 → 報導：
+      <a href="https://rwdnews.sanlih.com.tw/news/1806953">三立新聞</a> ·
+      <a href="https://www.chinatimes.com/realtimenews/20260313001411-260405">中時</a> ·
+      <a href="https://www.4gtv.tv/article/2026031411000013">四季線上</a></div>
+  </div>
+</div>
+
+<div class="card rank">
+  <div class="date">2025-02-10</div>
+  <div>
+    <div class="amt small">5 元</div>
+    <div class="ttl">Mobile01 閒聊板：轉貼爆料公社「檢舉獎金 5 元」</div>
+    <div class="desc">網友（轉貼爆料公社 oyce Lai Lai）檢舉店家逃漏稅，收到一張 <b>5 元</b>的檢舉獎金支票，抱怨「随便檢舉亂丟菸蒂獎金都還有幾百塊，這種落差感比沒中樂透還糟糕」。這是 Mobile01 近十年<b>唯一</b>一筆有明確金額的逃漏稅檢舉獎金討論（當事人經歷轉貼自爆料公社）。</div>
+    <div class="chips"><span class="chip t-self">個人分享</span><span class="chip">Mobile01</span></div>
+    <div class="src"><a href="https://www.mobile01.com/topicdetail.php?f=37&amp;t=7082201">mobile01.com/topicdetail.php?f=37&amp;t=7082201</a></div>
+  </div>
+</div>
+
+<div class="card rank">
+  <div class="date">2023-11-26</div>
+  <div>
+    <div class="amt small">8 元</div>
+    <div class="ttl">PTT 八卦板 [問卦] 有沒有檢舉逃漏稅獎金廢到笑的八卦？</div>
+    <div class="desc">因火鍋店不開發票而檢舉，原以為可拿罰鍰 20%、最高 480 萬，結果收到的檢舉回函獎金只有 8 元（推算只檢舉到漏開 800 元那筆：800×5%×20%＝8）。推文嘲諷「比我開一鍋的費用還少」「業者根本賺爛」。</div>
+    <div class="chips"><span class="chip t-self">個人分享</span><span class="chip">PTT Gossiping</span></div>
+    <div class="src"><a href="https://www.pttweb.cc/bbs/Gossiping/M.1700941720.A.821">pttweb.cc/bbs/Gossiping/M.1700941720.A.821</a></div>
+  </div>
+</div>
+
+<div class="card rank">
+  <div class="date">約 2016<span style="font-size:11px">（日期待確認）</span></div>
+  <div>
+    <div class="amt small">不到 1 元</div>
+    <div class="ttl">新北蘆洲男子：檢舉五金行長期未開發票</div>
+    <div class="desc">以 20 元、30 元（合計 50 元）消費為證檢舉，國稅局以貢獻度極低回覆獎金不到 1 元、無法核發。（頁面未明確標示日期，可能落在十年邊緣）</div>
+    <div class="chips"><span class="chip t-self">個人分享</span><span class="chip">新聞</span></div>
+    <div class="src"><a href="https://tw.news.yahoo.com/%E4%B9%9F%E5%A4%AA%E5%B0%91-%E6%AA%A2%E8%88%89%E4%BA%94%E9%87%91%E8%A1%8C%E9%80%83%E6%BC%8F%E7%A8%85-%E7%8D%8E%E9%87%91%E4%B8%8D%E5%88%B0-1%E5%85%83-103530831.html">Yahoo 新聞</a></div>
+  </div>
+</div>
+
+<div class="card rank">
+  <div class="date">約 2021<span style="font-size:11px">（ID 推估，未證實）</span></div>
+  <div>
+    <div class="amt big">約 3 萬元</div>
+    <div class="ttl">Dcard 心情板／淡江大學板：搬家順便檢舉房東租屋逃漏稅</div>
+    <div class="desc">作者建議在畢業或租約到期搬家時順便檢舉房東逃漏稅，「成功還有獎金可以拿（<b>約 3 萬</b>）」，並說檢舉沒成功也不會有損失。這是本次蒐集中<b>金額最高的網友親身分享</b>。</div>
+    <div class="chips"><span class="chip t-self">個人分享</span><span class="chip">Dcard</span></div>
+    <div class="src"><a href="https://www.dcard.tw/f/mood/p/236377806">dcard.tw/f/mood/p/236377806</a>（Dcard 全站擋自動化，僅取得搜尋摘要；確切日期無法證實，金額為原文所述）</div>
+  </div>
+</div>
+
+<h2>二、官方與法院實際核發案例（有明確金額）</h2>
+
+<div class="card rank">
+  <div class="date">2025-03-14</div>
+  <div>
+    <div class="amt mid">55,407 元（後被追回）</div>
+    <div class="ttl">高雄高等行政法院 113 年度簡字第 234 號</div>
+    <div class="desc">檢舉祖父經營的「合發行」逃漏營業稅、營所稅與股東綜所稅，2023-08 核發 69,258 元（扣繳 20% 後實領 55,407 元）。後查出檢舉資料實際來自具「稅務人員」身分的姑姑（三親等親屬），依法不得領取，國稅局通知繳回，法院判檢舉人敗訴。</div>
+    <div class="chips"><span class="chip t-court">法院判決</span><span class="chip">追回案例</span></div>
+    <div class="src"><a href="https://taiwanopendata.com/law/fW127Ku373qByD8894An0Oi67.html">判決全文（taiwanopendata）</a></div>
+  </div>
+</div>
+
+<div class="card rank">
+  <div class="date">2025-02-27</div>
+  <div>
+    <div class="amt big">997,500 元</div>
+    <div class="ttl">最高行政法院 112 年度上字第 767 號（原審：北高行 112 訴 200）</div>
+    <div class="desc">檢舉他人逃漏「特種貨物及勞務稅」，罰鍰 4,987,500 元確定並繳清，國稅局原核定獎金即罰鍰 20%＝997,500 元，後以檢舉人具公務員身分否准。北高行撤銷原處分並命核發，最高行政法院駁回國稅局上訴，<b>維持准予核發 997,500 元</b>。近十年公開可見的最高金額。</div>
+    <div class="chips"><span class="chip t-court">法院判決</span><span class="chip">近十年最高</span></div>
+    <div class="src"><a href="https://judgment.judicial.gov.tw/FILES/TPAA/112%2C%E4%B8%8A%2C767%2C20250227%2C1.pdf">司法院判決 PDF</a></div>
+  </div>
+</div>
+
+<div class="card rank">
+  <div class="date">2020-12-30</div>
+  <div>
+    <div class="amt big">100,000 元（繼承人實領 80,000）</div>
+    <div class="ttl">財政部北區國稅局案例</div>
+    <div class="desc">國稅局發函通知檢舉人黃先生領取 10 萬元檢舉獎金，因黃先生已於 2020-10-25 過世，由其子領取；給付時扣繳 20%（2 萬元）。官方藉此說明「檢舉獎金可繼承、給付須扣繳 20%」。</div>
+    <div class="chips"><span class="chip t-official">官方案例</span></div>
+    <div class="src"><a href="https://www.smartcpa.tw/contents/frontend/assets/pdf/601a20bd17340.pdf">會計師事務所轉載（SmartCPA）</a></div>
+  </div>
+</div>
+
+<div class="card rank">
+  <div class="date">2019-08-12</div>
+  <div>
+    <div class="amt big">113,100 元（實領 90,480）</div>
+    <div class="ttl">財政部中區國稅局案例</div>
+    <div class="desc">檢舉人提供具體事證，檢舉納稅義務人 2018 年短漏報所得、逃漏稅捐，經查獲補稅加罰 565,503 元，依罰鍰 20% 核發獎金 113,100 元，扣繳 20%（22,620 元）後實領 90,480 元。</div>
+    <div class="chips"><span class="chip t-official">官方案例</span></div>
+    <div class="src"><a href="https://www.jfcpa.com.tw/news_main/10991">會計師事務所轉載</a></div>
+  </div>
+</div>
+
+<div class="card rank">
+  <div class="date">約 2024-07</div>
+  <div>
+    <div class="amt">金額未載明</div>
+    <div class="ttl">監察院：中區國稅局苗栗分局遲未核發檢舉獎金案</div>
+    <div class="desc">陳情人 2013 年檢舉某空間設計公司長期逃漏營業稅，2014 年即裁罰，但獎金遲至 2023 年底仍未核發，經監察院督促財政部查處後，才依稅捐稽徵法第 49 條之 1 發放並兩度通知申領。</div>
+    <div class="chips"><span class="chip t-official">監察院</span><span class="chip">程序爭議</span></div>
+    <div class="src"><a href="https://www-ws.cy.gov.tw/Download.ashx?u=LzAwMS9VcGxvYWQvMy9yZWxmaWxlLzg5MTUvMzE0NTgvMWMzZjk1ZTctM2ZjNC00NzE5LTk4MjctM2MyMjhjOTczNTU2LnBkZg%3d%3d">監察院新聞稿 PDF</a></div>
+  </div>
+</div>
+
+<h2>三、檢舉但被認定「貢獻度不足／未成案」</h2>
+
+<div class="card rank">
+  <div class="date">2024-12-11</div>
+  <div>
+    <div class="amt small">未成案（上限 480 萬飛了）</div>
+    <div class="ttl">新竹市民檢舉鄰居開美容工作室逃漏稅</div>
+    <div class="desc">僅附網路截圖、未補現場照片等具體事證，經通知限期補件逾期未補，未成案、領不到獎金。稅務局藉此說明：公開資訊（網路截圖、FB 團購喊單、IG 代購截圖）不足以作為檢舉事證。</div>
+    <div class="chips"><span class="chip t-court">未成案</span><span class="chip">新聞</span></div>
+    <div class="src"><a href="https://news.housefun.com.tw/news/article/193135447781.html">好房網 News</a></div>
+  </div>
+</div>
+
+<h2>四、租客／承租人檢舉房東（金額未載明）</h2>
+<div class="card">
+  <div class="ttl">2025-02-05 · 好房網：檢舉房東逃漏稅 SOP 大公開，還能獲 20% 獎金</div>
+  <div class="desc">北區國稅局說明：需具名並提供租約影本、租金支付證明（匯款紀錄／現金簽收）等；核課期間 5 或 7 年；獎金為罰鍰 20%、上限 480 萬。文中<b>未提供實際領獎個案金額</b>。</div>
+  <div class="src"><a href="https://news.housefun.com.tw/news/article/210364454059.html">好房網 News</a> ·
+    <a href="https://mrjoewang.com/landlord-not-reporting-income/">喬王投資理財筆記（2024-06-17）</a></div>
+</div>
+<div class="card">
+  <div class="ttl">其他二手提及（無明確金額與原始出處）</div>
+  <div class="desc">媒體與教學文中常引述「有學生檢舉房東、收到為數不少的獎金」「朋友跟房東起糾紛直接檢舉，賺了一筆檢舉獎金」，但皆無日期、無原始連結、無具體金額，僅供參考。</div>
+</div>
+
+<h2>五、制度討論串（無實際領取金額，但可見風向）</h2>
+<table>
+  <thead><tr><th>日期</th><th>看板／標題</th><th>重點</th></tr></thead>
+  <tbody>
+    <tr><td>2026-09-09</td><td>PTT tax [新聞] IG 賣家粉絲破萬、團購一排+1…</td><td>國稅局：只憑截圖不能當檢舉事證</td></tr>
+    <tr><td>2026-06-23</td><td>PTT Gossiping [問卦] 政府提供檢舉房東逃漏稅獎金會怎樣？</td><td>討論熱烈，無金額分享</td></tr>
+    <tr><td>2026-01-24</td><td>PTT Gossiping [問卦] 早餐店不開發票逃漏稅是常態？</td><td>免用統一發票門檻、118 年新制討論</td></tr>
+    <tr><td>2025-08-21</td><td>PTT tax [問題] 檢舉逃漏稅的獎金是怎麼算的？</td><td>推文：裁罰繳清後的 20%；只給你舉證的部分</td></tr>
+    <tr><td>2024-03-29</td><td>PTT Gossiping [問卦] 一堆店家逃漏稅 我專職檢舉有賺頭嗎？</td><td>推文：獎金只給檢舉的那一筆</td></tr>
+    <tr><td>2021-10-28</td><td>PTT home-sale [心得] 該檢舉逃漏稅和 ab 約嗎？</td><td>推文：「檢舉有獎金但沒成沒有」</td></tr>
+    <tr><td>2017-11-26</td><td>PTT Gossiping Re: 檢舉別人沒開發票 是什麼心態</td><td>舉例：檢舉 100 元發票→營業稅 5 元→獎金 1 元</td></tr>
+    <tr><td>2017-08-09</td><td>高雄國稅局：檢舉逃漏稅，未必有獎金可拿</td><td>憑公開資訊檢舉，查到漏稅也沒獎金</td></tr>
+    <tr><td>2020-05-13</td><td>PTT tax [問題] 公司多報我檢舉有獎金嗎？</td><td>要有罰鍰才有獎金；公司先更正通常不罰</td></tr>
+  </tbody>
+</table>
+
+<h2>六、量化背景</h2>
+<div class="card">
+  <div class="desc">
+    <b>官方統計（100–102 年度，供制度量級參考）：</b>各地區國稅局平均每年接獲檢舉約 <b>29,481 件</b>，
+    查獲違章約 <b>5,528 件（18.8%）</b>，實際發放獎金約 <b>2,173 件、合計約 5,244 萬元</b>，
+    <b>平均每件約 2.4 萬元</b>。<br><br>
+    <b>法定公式：</b>《稅捐稽徵法》第 49 條之 1——經查明屬實、裁罰確定並收到罰鍰後，以罰鍰金額
+    <b>20%</b> 核發，<b>每案上限 480 萬元</b>；給付時扣繳 20% 稅款，不併入綜所稅。
+    以下身分不得領取：稅務人員、稅賦查核人員之配偶或三親等內親屬、依法執行職務發現的公務員、
+    經上述人員告知或提供資料而舉報者、參與該逃漏稅行為者；匿名檢舉亦不核發。
+  </div>
+</div>
+
+<h2>七、相關但屬「不同制度」（避免混淆）</h2>
+<table>
+  <thead><tr><th>日期</th><th>制度</th><th>金額</th></tr></thead>
+  <tbody>
+    <tr><td>2023-11-13</td><td>法務部行政執行署「檢舉欠稅大戶行蹤／財產」</td><td>20 年累計發 388 萬元；一名檢舉達人 2008–2010 年賺進至少 123 萬元；單案最高 200 萬元</td></tr>
+    <tr><td>2024-02</td><td>內政部「不動產炒作違規」檢舉獎金</td><td>18 件成立、發給 93 萬元；上限 1,000 萬元（按實收罰鍰 30%）</td></tr>
+  </tbody>
+</table>
+
+<div class="foot">
+  <b>資料來源與方法：</b>PTT 站內搜尋（tax／Gossiping／home-sale／rent-exp／Salary 等）＋ pttweb 鏡像站全文與推文；
+  司法院判決書檢索系統；監察院新聞稿；財政部與各地國稅局公告；經濟日報等媒體（經會計師事務所轉載）；
+  WebSearch 多語句交叉檢索。<br>
+  <b>可信度：</b>法院判決、國稅局案例、監察院文件為一手來源（高）；媒體轉載的網友分享原始貼文多已無法查證（中）；
+  「檢舉欠稅大戶」與「不動產炒作」屬不同獎勵制度，已分開列出。<br>
+  <b>Mobile01／Dcard：</b>Mobile01 近十年「檢舉逃漏稅且寫出具體獎金金額」僅 1 篇（5 元、且為轉貼爆料公社）；
+  Dcard 因全站 Cloudflare 封鎖自動化，只能取得搜尋引擎摘要，「約 3 萬」該篇無法載入全文與確切日期。兩平台這類文章以「要怎麼檢舉」「房東會知道嗎」的提問為大宗。<br>
+  <b>範圍外參考（2016-10 之前，僅供對照）：</b>Mobile01 2013-10-24〈這就是國稅局?〉——檢舉吃到飽火鍋店未開發票，9 個多月後領到「扣稅後八百多」；
+  BabyHome 約 2010 年「我具名檢舉一家公司逃漏稅，收到獎金好幾百元」。
+</div>
+</div>
+</body>
+</html>
