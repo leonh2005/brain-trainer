@@ -1,21 +1,24 @@
-# Claude Handoff 20261007_0258
-> 自動生成於 2026-10-07 02:58
+# Claude Handoff 20261007_1303
+> 自動生成於 2026-10-07 13:03
 
 ## 未提交的檔案異動
 ```
-M gemma_work/latest.md
+M .gitignore
+ M gemma_work/latest.md
+ M news-analyzer/trump_seen.json
  M scripts/auto_investigate_state.json
-?? m01-search1.yml
+ M scripts/ma_monitor_state.json
+ M shopee-boost/data/last_success.json
 ?? reports/tax-whistleblower-rewards.html
 ```
 
 ## 近期 Commits
 ```
-ed435e8b chore: 每晚同步 2026-10-06 23:50
-2da9ead0 chore: 自動同步 2026-10-06 22:40
-6bda6305 chore: 自動同步 2026-10-06 17:40
-8dd2391c chore: 自動同步 2026-10-06 12:40
-ae128db9 chore: 蝦皮統編掃描結果移出公開追蹤並修復 Firefox profile 污染
+1c7a28fb fix: 修正 ma-watchlist API 的 review 發現（無 CRITICAL/HIGH）
+485985ab feat: 均線追蹤標的改讀共用設定檔，並加可編輯頁
+1719bfd4 fix(command-center): swing-history 的 ≈ 標記納入 close_source='unknown'
+456992f9 feat(command-center): swing-history 標記分K 近似的起始價
+d9f2a895 fix: ma_monitor 補防護與測試，並修正 daytrade-replay 假日表
 ```
 
 ## 給 Hermes 的備註
