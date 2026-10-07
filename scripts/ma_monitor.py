@@ -5,6 +5,7 @@
 """
 import os
 
+import fcntl
 import json
 from datetime import datetime, time
 from pathlib import Path
@@ -15,6 +16,7 @@ TELEGRAM_TOKEN  = open(os.path.expanduser("~/CCProject/.secrets/telegram_token.t
 TELEGRAM_CHAT_ID = "7556217543"
 GATEWAY = "http://127.0.0.1:5455"   # shioaji-gateway：共用單一 Shioaji 連線
 STATE_FILE = Path(__file__).parent / "ma_monitor_state.json"
+LOCK_FILE  = Path(__file__).parent / "ma_monitor.lock"
 LOG_FILE   = Path(__file__).parent.parent / "logs" / "ma_monitor.log"
 
 # stock_id → (exchange, name)
@@ -30,6 +32,17 @@ STOCKS = {
 MA_PERIODS      = [5, 10, 20]
 ALERT_THRESHOLD = 1.0   # 距均線 ≤1% 就通知
 CLEAR_THRESHOLD = 2.0   # 距均線 >2% 才解除通知狀態
+MAX_MA          = max(MA_PERIODS)
+HISTORY_DAYS    = MAX_MA + 1 + 10   # 需 MAX_MA 根已收盤日K + 今日，再留緩衝
+
+# 2026 台灣國定假日（市場休市）。假日 gateway 會用 yfinance 補一根幽靈日K，
+# 必須擋掉才不會產生假訊號。與 daytrade-replay/data.py 的 _TW_HOLIDAYS 同步。
+TW_HOLIDAYS = {
+    "2026-01-01", "2026-01-26", "2026-01-27", "2026-01-28",
+    "2026-01-29", "2026-01-30", "2026-02-28", "2026-04-03",
+    "2026-04-04", "2026-04-05", "2026-05-01", "2026-06-19",
+    "2026-09-04", "2026-10-09", "2026-10-10",
+}
 
 
 def log(msg: str) -> None:
@@ -43,6 +56,8 @@ def log(msg: str) -> None:
 def is_trading_hours() -> bool:
     now = datetime.now()
     if now.weekday() >= 5:
+        return False
+    if now.date().isoformat() in TW_HOLIDAYS:
         return False
     t = now.time()
     return time(9, 0) <= t <= time(13, 35)
@@ -97,9 +112,12 @@ def gw_price(sid: str) -> float | None:
 
 
 def analyze(sid: str, name: str, state: dict) -> None:
-    closes = gw_closes(sid, days=40)
-    if len(closes) < 20:
-        log(f"{name}: 歷史資料不足（{len(closes)} 筆）")
+    closes = gw_closes(sid, days=HISTORY_DAYS)
+    # 最後一根是 gateway 補的「今日」（盤中可能來自 yfinance）；現價改用 Shioaji
+    # snapshot，故 MA 只取已收盤的歷史日K，兩者同源、不混用
+    hist = closes[:-1]
+    if len(hist) < MAX_MA:
+        log(f"{name}: 歷史資料不足（{len(hist)} 筆）")
         return
 
     current = gw_price(sid)
@@ -108,9 +126,9 @@ def analyze(sid: str, name: str, state: dict) -> None:
 
     alerts = []
     for n in MA_PERIODS:
-        if len(closes) < n:
+        if len(hist) < n:
             continue
-        ma_val = sum(closes[-n:]) / n
+        ma_val = sum(hist[-n:]) / n
         key    = f"{sid}_{n}MA"
         dist   = (current - ma_val) / ma_val * 100  # 正=在線上，負=跌破
 
@@ -142,13 +160,24 @@ def main() -> None:
         log("非交易時間，略過")
         return
 
-    state = load_state()
-    for sid, (exchange, name) in STOCKS.items():
-        try:
-            analyze(sid, name, state)
-        except Exception as e:
-            log(f"{name}({sid}) 發生錯誤: {e}")
-    save_state(state)
+    lock_f = open(LOCK_FILE, "w")
+    try:
+        fcntl.flock(lock_f, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except BlockingIOError:
+        log("上一輪尚未結束，略過本輪")
+        lock_f.close()
+        return
+    try:
+        state = load_state()
+        for sid, (exchange, name) in STOCKS.items():
+            try:
+                analyze(sid, name, state)
+            except Exception as e:
+                log(f"{name}({sid}) 發生錯誤: {e}")
+        save_state(state)
+    finally:
+        fcntl.flock(lock_f, fcntl.LOCK_UN)
+        lock_f.close()
 
 
 if __name__ == "__main__":

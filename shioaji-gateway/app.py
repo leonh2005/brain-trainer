@@ -6,7 +6,7 @@
 端點：
   GET /health                              -> {status, logged_in}
   GET /snapshot?codes=IX0001,2330,2454     -> {ok, data:{code:{close,change_price,change_rate}}}
-  GET /kbars?code=2330&days=30             -> {ok, closes:[...]}  (與 api.kbars(...).Close 相同)
+  GET /kbars?code=2330&days=30             -> {ok, closes:[...]}  (⚠️分K Close，非日K；日K請用 /daily_ohlcv)
   GET /intraday?code=IX0001[&date=2026-08-14] -> {ok, points:[{t:"09:01",price,high,low,volume},...]}  (指定日1分鐘走勢，預設當日)
   GET /scanner?date=2026-08-28&count=200 -> {ok, items:[{code,name,close,change_price,pct},...]}  (漲跌幅排行，count上限200)
   GET /market_snapshot                     -> {ok, items:[{code,name,suffix,close,high,low,change_rate,total_volume},...]}  (全市場TSE+OTC即時快照)
@@ -182,6 +182,7 @@ def stock_search():
 
 @app.get("/kbars")
 def kbars():
+    """回傳 Shioaji **分K** 的 Close 序列（不是日K）。需要日K請用 /daily_ohlcv。"""
     code = request.args.get("code", "")
     days = int(request.args.get("days", "30"))
     if not code:
