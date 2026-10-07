@@ -60,3 +60,27 @@ def test_tw_holidays_match_open_data(mm):
 )
 def test_closed_closes(mm, bars, today, expected):
     assert mm.closed_closes(bars, today) == expected
+
+
+def test_load_watchlist_from_shared_config(mm):
+    """load_watchlist() 從共用設定檔讀出 {code: (exchange, name)}。"""
+    wl = mm.load_watchlist()
+    assert wl, "共用設定檔讀不到或為空"
+    for code, (ex, name) in wl.items():
+        assert len(code) == 4 and code.isdigit()
+        assert ex in ("TSE", "OTC")
+        assert name
+
+
+def test_load_watchlist_missing_file_returns_empty(mm, monkeypatch, tmp_path):
+    """設定檔不存在時回空 dict，不可拋例外。"""
+    monkeypatch.setattr(mm, "WATCHLIST_FILE", tmp_path / "nope.json")
+    assert mm.load_watchlist() == {}
+
+
+def test_load_watchlist_bad_json_returns_empty(mm, monkeypatch, tmp_path):
+    """設定檔格式錯誤時回空 dict，不可拋例外。"""
+    p = tmp_path / "bad.json"
+    p.write_text("{ not valid json", encoding="utf-8")
+    monkeypatch.setattr(mm, "WATCHLIST_FILE", p)
+    assert mm.load_watchlist() == {}

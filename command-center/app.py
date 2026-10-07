@@ -45,6 +45,9 @@ templates = Jinja2Templates(directory='templates')
 # 卡片／區塊排序存後端檔案（原本在瀏覽器 localStorage，換裝置或清快取就還原）
 _CARD_ORDER_FILE = f'{sources.CC}/command-center/card_order.json'
 
+# 均線監控追蹤標的（與 scripts/ma_monitor.py 共用的設定檔；可用 /ma-watchlist 編輯）
+_MA_WATCHLIST_FILE = f'{sources.CC}/config/ma_watchlist.json'
+
 _AUTH_USER, _AUTH_PASS = open(
     f'{sources.CC}/.secrets/command_center_auth.txt', encoding='utf-8'
 ).read().strip().split(':', 1)
@@ -166,6 +169,24 @@ def swing_history(request: Request):
 def daytrade_history(request: Request):
     """當沖候選歷史命中率複查頁。"""
     return templates.TemplateResponse(request, 'daytrade_history.html', sources.daytrade_history())
+
+
+@app.get('/ma-watchlist', response_class=HTMLResponse)
+def ma_watchlist_page(request: Request):
+    """均線監控追蹤標的編輯頁。"""
+    return templates.TemplateResponse(request, 'ma_watchlist.html', {})
+
+
+@app.get('/api/stock-lookup')
+def stock_lookup(q: str = ''):
+    """代號／名稱模糊查詢，轉發 shioaji-gateway /stock_search（編輯追蹤清單用）。"""
+    if not q.strip():
+        return {'results': []}
+    try:
+        r = httpx.get('http://127.0.0.1:5455/stock_search', params={'q': q}, timeout=5)
+        return r.json()
+    except Exception:
+        return {'results': []}
 
 
 @app.get('/market-dashboard')
@@ -323,6 +344,46 @@ def set_card_order(req: CardOrder):
         json.dump(data, f, ensure_ascii=False)
     os.replace(tmp, _CARD_ORDER_FILE)
     return {'ok': True}
+
+
+class WatchlistStock(BaseModel):
+    code: str
+    name: str
+    exchange: str = 'TSE'
+
+
+class MaWatchlist(BaseModel):
+    stocks: list[WatchlistStock]
+
+
+@app.get('/api/ma-watchlist')
+def get_ma_watchlist():
+    try:
+        with open(_MA_WATCHLIST_FILE, encoding='utf-8') as f:
+            return json.load(f)
+    except Exception:
+        return {'stocks': []}
+
+
+@app.post('/api/ma-watchlist')
+def set_ma_watchlist(req: MaWatchlist):
+    stocks, seen = [], set()
+    for s in req.stocks[:50]:
+        code = s.code.strip()
+        if not re.fullmatch(r'\d{4}', code) or code in seen:
+            raise HTTPException(400, f'無效或重複的股票代號：{code}')
+        seen.add(code)
+        stocks.append({
+            'code': code,
+            'name': s.name.strip() or code,
+            'exchange': s.exchange if s.exchange in ('TSE', 'OTC') else 'TSE',
+        })
+    tmp = _MA_WATCHLIST_FILE + '.tmp'
+    with open(tmp, 'w', encoding='utf-8') as f:
+        json.dump({'stocks': stocks}, f, ensure_ascii=False, indent=2)
+    os.replace(tmp, _MA_WATCHLIST_FILE)
+    sources._ma_names_cache = None   # 清快取，讓卡片名稱立即更新
+    return {'ok': True, 'stocks': stocks}
 
 
 class ChatRequest(BaseModel):

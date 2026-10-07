@@ -19,15 +19,7 @@ STATE_FILE = Path(__file__).parent / "ma_monitor_state.json"
 LOCK_FILE  = Path(__file__).parent / "ma_monitor.lock"
 LOG_FILE   = Path(__file__).parent.parent / "logs" / "ma_monitor.log"
 
-# stock_id → (exchange, name)
-STOCKS = {
-    "2327": ("TSE", "國巨"),
-    "4906": ("TSE", "正文"),
-    "2317": ("TSE", "鴻海"),
-    "2344": ("TSE", "華邦電"),
-    "2301": ("TSE", "光寶科"),
-    "1785": ("OTC", "光洋科"),
-}
+WATCHLIST_FILE = Path(__file__).parent.parent / "config" / "ma_watchlist.json"
 
 MA_PERIODS      = [5, 10, 20]
 ALERT_THRESHOLD = 1.0   # 距均線 ≤1% 就通知
@@ -81,6 +73,16 @@ def send_telegram(msg: str) -> None:
             log(f"Telegram 發送失敗 HTTP {r.status_code}: {r.text[:200]}")
     except Exception as e:
         log(f"Telegram 發送失敗: {e}")
+
+
+def load_watchlist() -> dict[str, tuple[str, str]]:
+    """讀共用設定檔 config/ma_watchlist.json，回傳 {code: (exchange, name)}。"""
+    try:
+        data = json.loads(WATCHLIST_FILE.read_text(encoding="utf-8"))
+        return {s["code"]: (s.get("exchange", "TSE"), s["name"]) for s in data["stocks"]}
+    except Exception as e:
+        log(f"讀取 watchlist 失敗（{WATCHLIST_FILE}）：{e}")
+        return {}
 
 
 def load_state() -> dict:
@@ -188,9 +190,13 @@ def main() -> None:
         lock_f.close()
         return
     try:
+        watchlist = load_watchlist()
+        if not watchlist:
+            log("watchlist 為空或讀取失敗，跳過本輪")
+            return
         state = load_state()
         total = ok = 0
-        for sid, (exchange, name) in STOCKS.items():
+        for sid, (exchange, name) in watchlist.items():
             total += 1
             try:
                 if analyze(sid, name, state):
