@@ -437,17 +437,24 @@ def intraday():
 
 _ma_names_cache = None
 
+def invalidate_ma_names_cache():
+    """清掉代號→名稱快取（設定檔改動後由呼叫方觸發）。"""
+    global _ma_names_cache
+    _ma_names_cache = None
+
+
 def _ma_names():
     """從共用設定檔 config/ma_watchlist.json 取 代碼→中文名。"""
     global _ma_names_cache
     if _ma_names_cache is None:
-        _ma_names_cache = {}
+        names = {}
         try:
             with open(f'{CC}/config/ma_watchlist.json', encoding='utf-8') as f:
                 for s in json.load(f).get('stocks', []):
-                    _ma_names_cache[s['code']] = s['name']
-        except (OSError, ValueError):
+                    names[s['code']] = s['name']
+        except Exception:
             pass
+        _ma_names_cache = names   # 組完才指派，避免例外留下半滿快取
     return _ma_names_cache
 
 
