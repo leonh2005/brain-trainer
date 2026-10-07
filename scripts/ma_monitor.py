@@ -35,7 +35,6 @@ CLEAR_THRESHOLD = 2.0   # 距均線 >2% 才解除通知狀態
 def log(msg: str) -> None:
     ts = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     line = f"[{ts}] {msg}"
-    print(line)
     LOG_FILE.parent.mkdir(parents=True, exist_ok=True)
     with open(LOG_FILE, "a") as f:
         f.write(line + "\n")
@@ -74,12 +73,15 @@ def save_state(state: dict) -> None:
 
 
 def gw_closes(sid: str, days: int = 30) -> list[float]:
-    """向 gateway 取收盤序列（等同原 api.kbars(...).Close）。"""
+    """向 gateway 取「日K」收盤序列（/daily_ohlcv，非分K）。"""
     try:
-        j = requests.get(f"{GATEWAY}/kbars", params={"code": sid, "days": days}, timeout=30).json()
-        return [float(c) for c in j.get("closes", [])] if j.get("ok") else []
+        j = requests.get(f"{GATEWAY}/daily_ohlcv", params={"code": sid, "days": days}, timeout=30).json()
+        if not j.get("ok"):
+            log(f"gateway daily_ohlcv 非 ok {sid}: {j.get('error')}")
+            return []
+        return [float(b["close"]) for b in j.get("bars", [])]
     except Exception as e:
-        log(f"gateway kbars 失敗 {sid}: {e}")
+        log(f"gateway daily_ohlcv 失敗 {sid}: {e}")
         return []
 
 
@@ -95,7 +97,7 @@ def gw_price(sid: str) -> float | None:
 
 
 def analyze(sid: str, name: str, state: dict) -> None:
-    closes = gw_closes(sid, days=25)
+    closes = gw_closes(sid, days=40)
     if len(closes) < 20:
         log(f"{name}: 歷史資料不足（{len(closes)} 筆）")
         return
