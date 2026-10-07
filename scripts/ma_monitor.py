@@ -3,10 +3,9 @@
 每 5 分鐘執行，台股交易時間 09:00-13:35
 接近 1% 或跌破均線時推 Telegram
 """
-import os
-
 import fcntl
 import json
+import os
 from datetime import datetime, time
 from pathlib import Path
 
@@ -35,13 +34,20 @@ CLEAR_THRESHOLD = 2.0   # 距均線 >2% 才解除通知狀態
 MAX_MA          = max(MA_PERIODS)
 HISTORY_DAYS    = MAX_MA + 1 + 10   # 需 MAX_MA 根已收盤日K + 今日，再留緩衝
 
-# 2026 台灣國定假日（市場休市）。假日 gateway 會用 yfinance 補一根幽靈日K，
-# 必須擋掉才不會產生假訊號。與 daytrade-replay/data.py 的 _TW_HOLIDAYS 同步。
+# 2026 台灣國定假日（週間休市）。來源：行政院人事行政總處行事曆
+# （ruyut/TaiwanCalendar 開放資料），每年初需更新。
+# 假日 gateway 會用 yfinance 補一根幽靈日K，必須擋掉才不會產生假訊號。
 TW_HOLIDAYS = {
-    "2026-01-01", "2026-01-26", "2026-01-27", "2026-01-28",
-    "2026-01-29", "2026-01-30", "2026-02-28", "2026-04-03",
-    "2026-04-04", "2026-04-05", "2026-05-01", "2026-06-19",
-    "2026-09-04", "2026-10-09", "2026-10-10",
+    "2026-01-01",  # 開國紀念日
+    "2026-02-16", "2026-02-17", "2026-02-18", "2026-02-19", "2026-02-20",  # 農曆春節
+    "2026-02-27",  # 補假
+    "2026-04-03", "2026-04-06",  # 清明節／補假
+    "2026-05-01",  # 勞動節
+    "2026-06-19",  # 端午節
+    "2026-09-25",  # 中秋節
+    "2026-09-28",  # 教師節
+    "2026-10-09", "2026-10-26",  # 國慶日／補假
+    "2026-12-25",  # 行憲紀念日
 }
 
 
@@ -87,14 +93,14 @@ def save_state(state: dict) -> None:
     STATE_FILE.write_text(json.dumps(state, ensure_ascii=False, indent=2))
 
 
-def gw_closes(sid: str, days: int = 30) -> list[float]:
-    """向 gateway 取「日K」收盤序列（/daily_ohlcv，非分K）。"""
+def gw_bars(sid: str, days: int = 30) -> list[dict]:
+    """向 gateway 取「日K」bars（/daily_ohlcv，非分K），每筆含 date/close。"""
     try:
         j = requests.get(f"{GATEWAY}/daily_ohlcv", params={"code": sid, "days": days}, timeout=30).json()
         if not j.get("ok"):
             log(f"gateway daily_ohlcv 非 ok {sid}: {j.get('error')}")
             return []
-        return [float(b["close"]) for b in j.get("bars", [])]
+        return j.get("bars", [])
     except Exception as e:
         log(f"gateway daily_ohlcv 失敗 {sid}: {e}")
         return []
@@ -112,22 +118,22 @@ def gw_price(sid: str) -> float | None:
 
 
 def analyze(sid: str, name: str, state: dict) -> None:
-    closes = gw_closes(sid, days=HISTORY_DAYS)
-    # 最後一根是 gateway 補的「今日」（盤中可能來自 yfinance）；現價改用 Shioaji
-    # snapshot，故 MA 只取已收盤的歷史日K，兩者同源、不混用
-    hist = closes[:-1]
+    today = datetime.now().date().isoformat()
+    bars = gw_bars(sid, days=HISTORY_DAYS)
+    # 只取「已收盤」日K：gateway 用 yfinance 補的今日那根日期等於今日，一律排除，
+    # 因此不受它補成功與否影響；MA 全來自歷史收盤價，與 Shioaji snapshot 現價同源
+    hist = [float(b["close"]) for b in bars if b.get("date", "") < today]
     if len(hist) < MAX_MA:
         log(f"{name}: 歷史資料不足（{len(hist)} 筆）")
         return
 
     current = gw_price(sid)
     if current is None:
-        current = closes[-1]
+        log(f"{name}: snapshot 取價失敗，跳過")
+        return
 
     alerts = []
     for n in MA_PERIODS:
-        if len(hist) < n:
-            continue
         ma_val = sum(hist[-n:]) / n
         key    = f"{sid}_{n}MA"
         dist   = (current - ma_val) / ma_val * 100  # 正=在線上，負=跌破
@@ -160,7 +166,7 @@ def main() -> None:
         log("非交易時間，略過")
         return
 
-    lock_f = open(LOCK_FILE, "w")
+    lock_f = open(LOCK_FILE, "a")
     try:
         fcntl.flock(lock_f, fcntl.LOCK_EX | fcntl.LOCK_NB)
     except BlockingIOError:
