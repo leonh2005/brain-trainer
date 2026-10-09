@@ -1,20 +1,19 @@
-# Claude Handoff 20261008_2214
-> 自動生成於 2026-10-08 22:14
+# Claude Handoff 20261009_1306
+> 自動生成於 2026-10-09 13:06
 
 ## 未提交的檔案異動
 ```
-M chip-tracker/chip.db
- M gemma_work/latest.md
+M news-analyzer/trump_seen.json
  M scripts/auto_investigate_state.json
 ```
 
 ## 近期 Commits
 ```
-b18f1b16 chore: 自動同步 2026-10-08 19:40
-b8fcd2ae chore: 自動同步 2026-10-08 14:40
-8835bd60 chore: 自動同步 2026-10-08 09:40
-c567dda2 chore: 自動同步 2026-10-08 04:40
-e9f0ea28 chore: 自動同步 2026-10-07 23:40
+d3e55846 feat: 持倉新聞標的清單網頁化管理 + locale 分軌抓取
+7d7b6b00 docs: 持倉標的清單網頁管理設計文件
+3376af89 chore: 自動同步 2026-10-09 10:40
+a5b1bd4d chore: 自動同步 2026-10-09 05:40
+c92975fe chore: 自動同步 2026-10-09 00:40
 ```
 
 ## 給 Hermes 的備註
