@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>持倉新聞監控標的</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: #0d1117; color: #e6edf3; padding: 20px;
+    font-family: -apple-system, "PingFang TC", "Microsoft JhengHei", sans-serif; font-size: 14px;
+  }
+  .wrap { max-width: 1000px; margin: 0 auto; }
+  h1 { font-size: 18px; margin: 0 0 4px; }
+  .sub { color: #8b949e; font-size: 12.5px; line-height: 1.7; margin-bottom: 22px; }
+  .sub code { background: #161b22; padding: 1px 5px; border-radius: 4px; font-size: 12px; }
+  .sec { margin-bottom: 30px; }
+  .sec-head { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+  .sec-head h2 { font-size: 14px; margin: 0; }
+  .sec-head .count { color: #6e7681; font-size: 12px; }
+  .sec-head .spacer { flex: 1; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th { text-align: left; color: #8b949e; font-weight: 600; padding: 8px; border-bottom: 1px solid #30363d; font-size: 12px; }
+  td { padding: 6px 8px; border-bottom: 1px solid #21262d; vertical-align: top; }
+  input, select, textarea {
+    background: #161b22; color: #e6edf3; border: 1px solid #30363d; border-radius: 6px;
+    padding: 6px 8px; font-size: 13px; width: 100%; font-family: inherit;
+  }
+  textarea { resize: vertical; line-height: 1.5; min-height: 46px; }
+  input:focus, select:focus, textarea:focus { outline: none; border-color: #388bfd; }
+  .code { width: 82px; font-variant-numeric: tabular-nums; }
+  .loc { width: 96px; }
+  .ind { width: 46px; text-align: center; }
+  .ind input { width: auto; }
+  .btn-col { width: 62px; }
+  .del-col { width: 34px; }
+  .del {
+    background: none; border: none; color: #8b949e; cursor: pointer; font-size: 16px;
+    padding: 4px 6px; border-radius: 6px; line-height: 1;
+  }
+  .del:hover { background: #21262d; color: #f85149; }
+  button.act {
+    background: #21262d; color: #e6edf3; border: 1px solid #30363d; border-radius: 6px;
+    padding: 5px 11px; font-size: 12.5px; cursor: pointer; font-family: inherit; white-space: nowrap;
+  }
+  button.act:hover { background: #30363d; }
+  button.primary { background: #238636; border-color: #2ea043; font-weight: 600; padding: 8px 18px; }
+  button.primary:hover { background: #2ea043; }
+  button:disabled { opacity: .5; cursor: default; }
+  .actions { display: flex; align-items: center; gap: 10px; margin-top: 18px; position: sticky; bottom: 0;
+             background: linear-gradient(transparent, #0d1117 30%); padding: 14px 0 4px; }
+  .actions .spacer { flex: 1; }
+  .msg { font-size: 12.5px; color: #8b949e; }
+  .msg.ok { color: #3fb950; }
+  .msg.err { color: #f85149; }
+  tr.result > td { background: #10151c; border-bottom: 1px solid #30363d; padding: 10px 12px; }
+  .loc-box { margin-bottom: 10px; }
+  .loc-box:last-child { margin-bottom: 0; }
+  .loc-head { font-size: 12px; color: #8b949e; margin-bottom: 5px; font-variant-numeric: tabular-nums; }
+  .loc-head b { color: #e6edf3; }
+  .loc-head .z { color: #6e7681; }
+  .nt { font-size: 12.5px; color: #c9d1d9; padding: 2px 0 2px 10px; text-indent: -10px; line-height: 1.55; }
+  .nt .age { color: #6e7681; }
+  .none { font-size: 12.5px; color: #6e7681; padding-left: 10px; }
+  .busy { font-size: 12.5px; color: #8b949e; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>持倉新聞監控標的</h1>
+  <div class="sub">
+    portfolio-news 每日 <b>08:30</b>（台股）／<b>21:00</b>（美股）推播這些標的的新聞多空判斷。<br>
+    <b>地區</b>決定用哪一版 Google News 搜尋。英文關鍵字必須用 <code>en-US</code> —— 拿英文詞去搜台灣版只會
+    索引到極少且過期的來源，24 小時內全被濾掉，看起來就像「完全沒有相關新聞」。<br>
+    改完關鍵字按「測試」可立刻看到兩個地區各抓到幾則，不必等隔天推播。<b>存檔後下次排程自動生效。</b>
+  </div>
+
+  <div id="sections"></div>
+
+  <div class="actions">
+    <span class="spacer"></span>
+    <span class="msg" id="msg"></span>
+    <button class="act primary" id="save">儲存</button>
+  </div>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+
+const SECTIONS = [
+  { key: 'tw', label: '台股', defLocale: 'zh-TW', hasIndividual: true },
+  { key: 'us', label: '美股', defLocale: 'en-US', hasIndividual: false },
+];
+
+const LOCALES = [
+  { v: 'en-US', t: 'en-US 美國版' },
+  { v: 'zh-TW', t: 'zh-TW 台灣版' },
+];
+
+function mkRow(s, sec) {
+  s = Object.assign({ code: '', name: '', locale: sec.defLocale, individual: false, queries: [] }, s);
+  const tr = document.createElement('tr');
+
+  const tdCode = document.createElement('td');
+  const code = document.createElement('input');
+  code.className = 'code';
+  code.value = s.code;
+  code.placeholder = sec.key === 'tw' ? '2330' : 'NVDA';
+  tdCode.appendChild(code);
+
+  const tdName = document.createElement('td');
+  const name = document.createElement('input');
+  name.value = s.name;
+  name.placeholder = sec.key === 'tw' ? '台積電' : 'NVIDIA';
+  tdName.appendChild(name);
+
+  const tdQ = document.createElement('td');
+  const queries = document.createElement('textarea');
+  queries.rows = 2;
+  queries.value = (s.queries || []).join('\n');
+  queries.placeholder = '一行一組關鍵字，例如\nNVIDIA NVDA stock AI chip earnings';
+  tdQ.appendChild(queries);
+
+  const tdLoc = document.createElement('td');
+  const loc = document.createElement('select');
+  loc.className = 'loc';
+  LOCALES.forEach(o => {
+    const opt = document.createElement('option');
+    opt.value = o.v; opt.textContent = o.t;
+    if (o.v === s.locale) opt.selected = true;
+    loc.appendChild(opt);
+  });
+  tdLoc.appendChild(loc);
+
+  const cells = [tdCode, tdName, tdQ, tdLoc];
+
+  if (sec.hasIndividual) {
+    const tdInd = document.createElement('td');
+    tdInd.className = 'ind';
+    const ind = document.createElement('input');
+    ind.type = 'checkbox';
+    ind.checked = !!s.individual;
+    ind.title = '追蹤三大法人買賣超（台股個股適用）';
+    tdInd.appendChild(ind);
+    cells.push(tdInd);
+    tr._individual = ind;
+  }
+
+  const tdTest = document.createElement('td');
+  tdTest.className = 'btn-col';
+  const testBtn = document.createElement('button');
+  testBtn.className = 'act'; testBtn.textContent = '測試';
+  testBtn.onclick = () => runTest(tr, testBtn);
+  tdTest.appendChild(testBtn);
+  cells.push(tdTest);
+
+  const tdDel = document.createElement('td');
+  tdDel.className = 'del-col';
+  const del = document.createElement('button');
+  del.className = 'del'; del.textContent = '✕'; del.title = '刪除';
+  del.onclick = () => {
+    const sec = currentSec(tr);
+    const res = tr.nextElementSibling;
+    if (res && res.classList.contains('result')) res.remove();
+    tr.remove();
+    updateCount(sec);
+  };
+  tdDel.appendChild(del);
+  cells.push(tdDel);
+
+  cells.forEach(c => tr.appendChild(c));
+  tr._fields = { code, name, queries, loc };
+  return tr;
+}
+
+function colCount(sec) { return sec.hasIndividual ? 7 : 6; }
+
+async function runTest(tr, btn) {
+  const { queries } = tr._fields;
+  const qs = queries.value.split('\n').map(s => s.trim()).filter(Boolean);
+  if (!qs.length) { setMsg('請先填寫關鍵字再測試', 'err'); return; }
+
+  let res = tr.nextElementSibling;
+  if (!res || !res.classList.contains('result')) {
+    res = document.createElement('tr');
+    res.className = 'result';
+    const td = document.createElement('td');
+    td.colSpan = colCount(currentSec(tr));
+    res.appendChild(td);
+    tr.after(res);
+  }
+  const td = res.firstChild;
+  td.textContent = '';
+  const busy = document.createElement('div');
+  busy.className = 'busy';
+  busy.textContent = '抓取中，約需數秒…';
+  td.appendChild(busy);
+
+  btn.disabled = true;
+  try {
+    const r = await fetch('/api/portfolio-test', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ queries: qs }),
+    });
+    const d = await r.json();
+    if (!r.ok) {
+      td.textContent = '';
+      const err = document.createElement('div');
+      err.className = 'msg err';
+      err.textContent = d.detail || '測試失敗';
+      td.appendChild(err);
+      return;
+    }
+    renderResult(td, d);
+  } catch (e) {
+    td.textContent = '';
+    const err = document.createElement('div');
+    err.className = 'msg err';
+    err.textContent = '測試失敗：' + e.message;
+    td.appendChild(err);
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+function renderResult(td, data) {
+  td.textContent = '';
+  ['en-US', 'zh-TW'].forEach(loc => {
+    const d = data[loc];
+    if (!d) return;
+    const box = document.createElement('div');
+    box.className = 'loc-box';
+
+    const head = document.createElement('div');
+    head.className = 'loc-head';
+    const hit = d.within_24h > 0;
+    head.innerHTML = `<b style="color:${hit ? '#3fb950' : '#8b949e'}">${loc}</b> — 24 小時內 ` +
+      `<b style="color:${hit ? '#3fb950' : '#f85149'}">${d.within_24h}</b> 則` +
+      ` <span class="z">／ 48 小時內 ${d.within_48h} 則</span>`;
+    box.appendChild(head);
+
+    if (d.titles && d.titles.length) {
+      d.titles.forEach(t => {
+        const row = document.createElement('div');
+        row.className = 'nt';
+        row.textContent = '• ' + t.title;
+        const age = document.createElement('span');
+        age.className = 'age';
+        age.textContent = t.age_hours < 24
+          ? `（${Math.round(t.age_hours)} 小時前）`
+          : `（${Math.round(t.age_hours / 24)} 天前）`;
+        row.appendChild(age);
+        box.appendChild(row);
+      });
+    } else {
+      const none = document.createElement('div');
+      none.className = 'none';
+      none.textContent = '（72 小時內沒有任何結果，建議換關鍵字）';
+      box.appendChild(none);
+    }
+    td.appendChild(box);
+  });
+}
+
+function currentSec(tr) {
+  return SECTIONS.find(s => s.key === tr.closest('section').dataset.key);
+}
+
+function addRow(tbody, sec, s) {
+  tbody.appendChild(mkRow(s, sec));
+  updateCount(sec);
+}
+
+function updateCount(sec) {
+  const sec_el = document.querySelector(`section[data-key="${sec.key}"]`);
+  const n = sec_el.querySelectorAll('tbody > tr:not(.result)').length;
+  sec_el.querySelector('.count').textContent = n + ' 檔';
+}
+
+function buildSections() {
+  SECTIONS.forEach(sec => {
+    const el = document.createElement('section');
+    el.className = 'sec';
+    el.dataset.key = sec.key;
+
+    const head = document.createElement('div');
+    head.className = 'sec-head';
+    const h2 = document.createElement('h2');
+    h2.textContent = sec.label;
+    const count = document.createElement('span');
+    count.className = 'count';
+    const spacer = document.createElement('span');
+    spacer.className = 'spacer';
+    const add = document.createElement('button');
+    add.className = 'act';
+    add.textContent = '＋ 新增標的';
+    head.append(h2, count, spacer, add);
+
+    const table = document.createElement('table');
+    const thead = document.createElement('thead');
+    const htr = document.createElement('tr');
+    const heads = ['代號', '名稱', '關鍵字（一行一組）', '地區'];
+    if (sec.hasIndividual) heads.push('法人');
+    heads.push('', '');
+    heads.forEach((t, i) => {
+      const th = document.createElement('th');
+      th.textContent = t;
+      if (i === 2) th.style.minWidth = '280px';
+      htr.appendChild(th);
+    });
+    thead.appendChild(htr);
+    const tbody = document.createElement('tbody');
+    table.append(thead, tbody);
+
+    el.append(head, table);
+    $('sections').appendChild(el);
+
+    add.onclick = () => addRow(tbody, sec);
+    sec._tbody = tbody;
+  });
+}
+
+async function load() {
+  try {
+    const r = await fetch('/api/portfolio-holdings');
+    const d = await r.json();
+    if (!r.ok) { setMsg(d.detail || '讀取失敗', 'err'); return; }
+    SECTIONS.forEach(sec => {
+      (d[sec.key] || []).forEach(s => addRow(sec._tbody, sec, s));
+    });
+  } catch (e) {
+    setMsg('讀取失敗：' + e.message, 'err');
+  }
+}
+
+function setMsg(t, cls) {
+  const m = $('msg'); m.textContent = t; m.className = 'msg' + (cls ? ' ' + cls : '');
+}
+
+function collect(sec) {
+  // 跳過測試結果列：它們沒有 _fields，且不是標的
+  const rows = sec._tbody.querySelectorAll('tr:not(.result)');
+  const out = [];
+  for (const tr of rows) {
+    const { code, name, queries, loc } = tr._fields;
+    const c = code.value.trim();
+    if (!c) continue;
+    const qs = queries.value.split('\n').map(s => s.trim()).filter(Boolean);
+    const item = { code: c, name: name.value.trim(), locale: loc.value, queries: qs };
+    if (sec.hasIndividual) item.individual = tr._individual.checked;
+    out.push(item);
+  }
+  return out;
+}
+
+async function save() {
+  const btn = $('save'); btn.disabled = true;
+  try {
+    const payload = { tw: collect(SECTIONS[0]), us: collect(SECTIONS[1]) };
+    if (!payload.tw.length && !payload.us.length) {
+      setMsg('台股與美股清單不可同時為空', 'err'); return;
+    }
+    const r = await fetch('/api/portfolio-holdings', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    const d = await r.json();
+    if (!r.ok) { setMsg(d.detail || '儲存失敗', 'err'); return; }
+    setMsg(`已儲存：台股 ${payload.tw.length} 檔、美股 ${payload.us.length} 檔`, 'ok');
+  } catch (e) {
+    setMsg('儲存失敗：' + e.message, 'err');
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+buildSections();
+$('save').onclick = save;
+load();
+</script>
+</body>
+</html>
