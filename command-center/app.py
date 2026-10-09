@@ -16,6 +16,7 @@ from starlette.responses import Response
 import uvicorn
 import os
 import json
+import subprocess
 
 import agent as agent_mod
 import jobs as jobs_mod
@@ -48,6 +49,11 @@ _CARD_ORDER_FILE = f'{sources.CC}/command-center/card_order.json'
 
 # 均線監控追蹤標的（與 scripts/ma_monitor.py 共用的設定檔；可用 /ma-watchlist 編輯）
 _MA_WATCHLIST_FILE = f'{sources.CC}/config/ma_watchlist.json'
+
+# 持倉新聞監控的標的清單（與 portfolio-news/portfolio_news.py 共用的設定檔）
+_HOLDINGS_FILE = f'{sources.CC}/config/portfolio_holdings.json'
+_HOLDINGS_PROBE = (f'{sources.CC}/portfolio-news/.venv/bin/python',
+                   f'{sources.CC}/portfolio-news/portfolio_news.py')
 
 _AUTH_USER, _AUTH_PASS = open(
     f'{sources.CC}/.secrets/command_center_auth.txt', encoding='utf-8'
@@ -176,6 +182,12 @@ def daytrade_history(request: Request):
 def ma_watchlist_page(request: Request):
     """均線監控追蹤標的編輯頁。"""
     return templates.TemplateResponse(request, 'ma_watchlist.html', {})
+
+
+@app.get('/portfolio-holdings', response_class=HTMLResponse)
+def portfolio_holdings_page(request: Request):
+    """持倉新聞監控標的編輯頁。"""
+    return templates.TemplateResponse(request, 'portfolio_holdings.html', {})
 
 
 @app.get('/api/stock-lookup')
@@ -390,6 +402,96 @@ def set_ma_watchlist(req: MaWatchlist):
     os.replace(tmp, _MA_WATCHLIST_FILE)
     sources.invalidate_ma_names_cache()
     return {'ok': True, 'stocks': stocks}
+
+
+class HoldingItem(BaseModel):
+    code: str
+    name: str
+    locale: str = 'en-US'
+    individual: bool = False
+    queries: list[str]
+
+
+class PortfolioHoldings(BaseModel):
+    tw: list[HoldingItem]
+    us: list[HoldingItem]
+
+
+def _norm_holdings(items: list[HoldingItem], keep_individual: bool) -> list[dict]:
+    """驗證並正規化單一清單，回傳要寫入設定檔的結構。"""
+    out, seen = [], set()
+    for it in items:
+        code = it.code.strip()
+        if not code:
+            raise HTTPException(400, '有標的的代號是空的')
+        if code in seen:
+            raise HTTPException(400, f'代號重複：{code}')
+        seen.add(code)
+        if it.locale not in ('en-US', 'zh-TW'):
+            raise HTTPException(400, f'{code} 的地區設定無效：{it.locale}')
+        queries = [q.strip() for q in it.queries if q.strip()]
+        if not queries or len(queries) > 5:
+            raise HTTPException(400, f'{code} 的關鍵字需 1～5 組')
+        row = {'code': code, 'name': it.name.strip()[:40] or code, 'locale': it.locale}
+        if keep_individual:
+            row['individual'] = it.individual
+        row['queries'] = queries
+        out.append(row)
+    return out
+
+
+@app.get('/api/portfolio-holdings')
+def get_portfolio_holdings():
+    """持倉新聞監控的標的清單。"""
+    try:
+        with open(_HOLDINGS_FILE, encoding='utf-8') as f:
+            return json.load(f)
+    except FileNotFoundError:
+        return {'tw': [], 'us': []}
+    except json.JSONDecodeError as e:
+        # 不吞成空清單：否則使用者看到空畫面一按儲存，就真的把清單清掉了
+        raise HTTPException(500, f'標的清單設定檔格式錯誤：{e}')
+
+
+@app.post('/api/portfolio-holdings')
+def set_portfolio_holdings(req: PortfolioHoldings):
+    if not req.tw and not req.us:
+        raise HTTPException(400, '台股與美股清單不可同時為空')
+    if len(req.tw) > 50 or len(req.us) > 50:
+        raise HTTPException(400, '單一清單最多 50 檔')
+    data = {'tw': _norm_holdings(req.tw, True), 'us': _norm_holdings(req.us, False)}
+    fd, tmp = tempfile.mkstemp(dir=os.path.dirname(_HOLDINGS_FILE), suffix='.tmp')
+    with os.fdopen(fd, 'w', encoding='utf-8') as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
+        f.write('\n')
+    os.replace(tmp, _HOLDINGS_FILE)
+    return {'ok': True}
+
+
+class ProbeRequest(BaseModel):
+    queries: list[str]
+
+
+@app.post('/api/portfolio-test')
+def portfolio_test(req: ProbeRequest):
+    """試抓一組關鍵字在兩個地區各有幾則新聞（呼叫 portfolio-news 的 probe 子命令）。"""
+    queries = [q.strip() for q in req.queries if q.strip()]
+    if not queries or len(queries) > 5:
+        raise HTTPException(400, '關鍵字需 1～5 組')
+    try:
+        proc = subprocess.run(
+            [*_HOLDINGS_PROBE, 'probe'],
+            input=json.dumps({'queries': queries}),
+            capture_output=True, text=True, timeout=90,
+        )
+    except subprocess.TimeoutExpired:
+        raise HTTPException(504, '抓取逾時，請稍後再試')
+    if proc.returncode != 0:
+        raise HTTPException(500, f'抓取失敗：{proc.stderr.strip()[-300:]}')
+    try:
+        return json.loads(proc.stdout)
+    except json.JSONDecodeError:
+        raise HTTPException(500, '抓取結果格式錯誤')
 
 
 class ChatRequest(BaseModel):

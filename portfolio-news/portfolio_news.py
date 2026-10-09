@@ -9,6 +9,7 @@ import json
 import logging
 import os
 import re
+import sys
 from datetime import datetime, timedelta, timezone
 from difflib import SequenceMatcher
 from pathlib import Path
@@ -31,170 +32,44 @@ MAX_FETCH   = 50   # RSS 最多抓幾則
 MAX_SEND    = 20   # 去重後送 DeepSeek 上限
 SIMILAR_THR = 0.6  # 標題相似度閾值（超過視為重複）
 
-# ── 持倉定義 ──────────────────────────────────────────────────────────────────
+# ── 設定檔 ──────────────────────────────────────────────────────────────────
 
-TW_HOLDINGS = [
-    {
-        "code": "2330",
-        "name": "台積電",
-        "individual": True,
-        "queries": [
-            "台積電 TSMC",
-            "TSMC semiconductor earnings",
-        ],
-    },
-    {
-        "code": "6770",
-        "name": "力積電",
-        "individual": True,
-        "queries": [
-            "力積電 PSMC",
-            "Powerchip semiconductor",
-        ],
-    },
-    {
-        "code": "3189",
-        "name": "景碩",
-        "individual": True,
-        "queries": [
-            "景碩 ABF載板",
-            "Kinsus IC substrate",
-        ],
-    },
-    {
-        "code": "00635U",
-        "name": "元大S&P黃金",
-        "individual": True,
-        "queries": [
-            "黃金價格 金價",
-            "gold price COMEX",
-        ],
-    },
-    {
-        "code": "006208",
-        "name": "富邦台50",
-        "queries": [
-            "台股大盤 半導體",
-            "TAIEX Taiwan stock market",
-        ],
-    },
-    {
-        "code": "00881",
-        "name": "國泰永續高股息",
-        "queries": [
-            "台股 高股息 ETF",
-            "Taiwan dividend ETF",
-        ],
-    },
-]
+HOLDINGS_FILE = Path(__file__).parent.parent / "config" / "portfolio_holdings.json"
 
-US_HOLDINGS = [
-    {
-        "code": "NOW",
-        "name": "ServiceNow",
-        "queries": ["ServiceNow NOW stock earnings AI"],
-    },
-    {
-        "code": "CRM",
-        "name": "Salesforce",
-        "queries": ["Salesforce CRM stock earnings AI"],
-    },
-    {
-        "code": "NVDA",
-        "name": "NVIDIA",
-        "queries": ["NVIDIA NVDA stock AI chip earnings"],
-    },
-    {
-        "code": "ADBE",
-        "name": "Adobe",
-        "queries": ["Adobe ADBE stock earnings AI"],
-    },
-    {
-        "code": "AMZN",
-        "name": "Amazon",
-        "queries": ["Amazon AMZN stock earnings AWS"],
-    },
-    {
-        "code": "MSFT",
-        "name": "Microsoft",
-        "queries": ["Microsoft MSFT stock earnings AI cloud"],
-    },
-    {
-        "code": "MU",
-        "name": "美光",
-        "queries": ["Micron MU stock memory chip earnings"],
-    },
-    {
-        "code": "GOOG",
-        "name": "Alphabet",
-        "queries": ["Google Alphabet GOOG stock earnings"],
-    },
-    {
-        "code": "SNDK",
-        "name": "SanDisk",
-        "queries": ["SanDisk SNDK stock NAND flash memory"],
-    },
-    {
-        "code": "UKOIL",
-        "name": "布蘭特原油",
-        "queries": ["Brent crude oil price OPEC", "原油 布蘭特"],
-    },
-    {
-        "code": "GOLD",
-        "name": "黃金",
-        "queries": ["gold price XAU safe haven", "黃金 避險"],
-    },
-    {
-        "code": "XOVR",
-        "name": "XOVR ETF",
-        "queries": ["XOVR ETF"],
-    },
-    {
-        "code": "AGIX",
-        "name": "AGIX ETF",
-        "queries": ["AGIX ETF AI"],
-    },
-    {
-        "code": "EWJ",
-        "name": "日本股市（EWJ）",
-        "queries": ["Japan stock market Nikkei EWJ"],
-    },
-    {
-        "code": "AIPO",
-        "name": "AIPO ETF",
-        "queries": ["AIPO ETF"],
-    },
-    {
-        "code": "VWO",
-        "name": "新興市場（VWO）",
-        "queries": ["emerging markets VWO stock"],
-    },
-    {
-        "code": "EFV",
-        "name": "國際價值股（EFV）",
-        "queries": ["EAFE value stocks EFV international"],
-    },
-    {
-        "code": "XLU",
-        "name": "美國公用事業",
-        "queries": ["US utilities sector XLU energy regulation"],
-    },
-    {
-        "code": "XLP",
-        "name": "美國必需消費（XLP）",
-        "queries": ["US consumer staples sector XLP"],
-    },
-    {
-        "code": "SLVP",
-        "name": "白銀礦業（SLVP）",
-        "queries": ["silver mining SLVP silver price"],
-    },
-]
+# 各語系的 Google News RSS 參數 (hl, gl, ceid)
+LOCALES = {
+    "zh-TW": ("zh-TW", "TW", "TW:zh-Hant"),
+    "en-US": ("en-US", "US", "US:en"),
+}
+
+
+def load_holdings() -> dict:
+    """讀取標的清單設定檔（config/portfolio_holdings.json）。
+
+    檔案缺失或格式錯誤時明確報錯，不回傳空清單 —— 否則「設定檔壞了」與
+    「今天真的沒新聞」會產生完全相同的輸出，無從分辨。
+    """
+    if not HOLDINGS_FILE.exists():
+        raise FileNotFoundError(f"標的清單設定檔不存在：{HOLDINGS_FILE}")
+    try:
+        with open(HOLDINGS_FILE, encoding="utf-8") as f:
+            data = json.load(f)
+    except json.JSONDecodeError as e:
+        raise ValueError(f"標的清單設定檔格式錯誤：{HOLDINGS_FILE} — {e}") from e
+    for key in ("tw", "us"):
+        if not isinstance(data.get(key), list):
+            raise ValueError(f"標的清單設定檔缺少 '{key}' 陣列：{HOLDINGS_FILE}")
+    return data
 
 # ── 工具函式 ───────────────────────────────────────────────────────────────────
 
-def fetch_news(queries: list[str], hours: int = 24) -> list[dict]:
-    """從 Google News RSS 抓文章，過濾 hours 小時內，最多 MAX_FETCH 則。"""
+def fetch_news(queries: list[str], locale: str = "zh-TW", hours: int = 24) -> list[dict]:
+    """從 Google News RSS 抓文章，過濾 hours 小時內，最多 MAX_FETCH 則。
+
+    locale 決定 Google News 的地區版本。拿英文關鍵字去搜台灣版，索引到的
+    來源極少且偏舊（實測最新一則常在 100 小時前），24 小時窗一過濾就全空。
+    """
+    hl, gl, ceid = LOCALES.get(locale, LOCALES["zh-TW"])
     cutoff = datetime.now(timezone.utc) - timedelta(hours=hours)
     articles = []
     seen_ids = set()
@@ -202,7 +77,7 @@ def fetch_news(queries: list[str], hours: int = 24) -> list[dict]:
     for query in queries:
         url = (
             f"https://news.google.com/rss/search"
-            f"?q={requests.utils.quote(query)}&hl=zh-TW&gl=TW&ceid=TW:zh-Hant"
+            f"?q={requests.utils.quote(query)}&hl={hl}&gl={gl}&ceid={ceid}"
         )
         try:
             feed = feedparser.parse(url)
@@ -488,7 +363,7 @@ def run_session(holdings: list[dict], session_label: str):
     lines = []
 
     for h in holdings:
-        articles = fetch_news(h["queries"])
+        articles = fetch_news(h["queries"], h.get("locale", "zh-TW"))
         deduped  = deduplicate(articles)
         logger.info("%s：抓到 %d 則，去重後 %d 則", h["name"], len(articles), len(deduped))
 
@@ -550,30 +425,56 @@ def run():
 
     # 08:25–08:35 → 台股時段
     if 8 <= hour <= 8 and 25 <= minute <= 35:
-        run_session(TW_HOLDINGS, "台股開盤前")
+        session_key, label = "tw", "台股開盤前"
     # 21:00–21:10 → 美股時段
     elif hour == 21 and minute <= 10:
-        run_session(US_HOLDINGS, "美股盤前")
+        session_key, label = "us", "美股盤前"
     else:
         logger.info("非推播時段（%02d:%02d），略過", hour, minute)
+        return
+
+    try:
+        holdings = load_holdings()
+    except (FileNotFoundError, ValueError) as e:
+        logger.error("無法載入標的清單：%s", e)
+        sys.exit(1)
+    run_session(holdings[session_key], label)
+
+
+def probe(spec: dict) -> dict:
+    """同時以 en-US 與 zh-TW 抓取同一組關鍵字，回傳兩地區的結果。
+
+    供 command-center 的測試鈕使用：改完關鍵字立刻能看出該用哪個地區、
+    這組詞夠不夠力，不必等隔天推播才發現還是空白。
+    """
+    now = datetime.now(timezone.utc)
+    result = {}
+    for locale in LOCALES:
+        rows = [
+            {
+                "title": a["title"],
+                "age_hours": round((now - a["pub"]).total_seconds() / 3600, 1),
+            }
+            for a in fetch_news(spec["queries"], locale, hours=72)
+        ]
+        result[locale] = {
+            "within_24h": sum(1 for r in rows if r["age_hours"] <= 24),
+            "within_48h": sum(1 for r in rows if r["age_hours"] <= 48),
+            "titles": rows[:3],
+        }
+    return result
 
 
 if __name__ == "__main__":
-    import sys
-    if len(sys.argv) > 1:
-        if sys.argv[1] == "tw":
-            run_session(TW_HOLDINGS, "台股開盤前")
-        elif sys.argv[1] == "us":
-            run_session(US_HOLDINGS, "美股盤前")
-        elif sys.argv[1] == "test":
-            # 測試單一標的
-            h = TW_HOLDINGS[3]  # 黃金
-            arts = fetch_news(h["queries"])
-            deduped = deduplicate(arts)
-            print(f"抓到 {len(arts)} 則，去重後 {len(deduped)} 則")
-            for a in deduped[:5]:
-                print(f"  - {a['title']}")
-            result = analyze(h, deduped)
-            print("分析結果：", json.dumps(result, ensure_ascii=False, indent=2))
+    cmd = sys.argv[1] if len(sys.argv) > 1 else None
+    if cmd == "probe":
+        print(json.dumps(probe(json.load(sys.stdin)), ensure_ascii=False))
+    elif cmd in ("tw", "us"):
+        try:
+            holdings = load_holdings()
+        except (FileNotFoundError, ValueError) as e:
+            logger.error("無法載入標的清單：%s", e)
+            sys.exit(1)
+        run_session(holdings[cmd], "台股開盤前" if cmd == "tw" else "美股盤前")
     else:
         run()
