@@ -11,26 +11,6 @@
       ]
     },
     {
-      "code": "6770",
-      "name": "力積電",
-      "locale": "zh-TW",
-      "individual": true,
-      "queries": [
-        "力積電 PSMC",
-        "Powerchip semiconductor"
-      ]
-    },
-    {
-      "code": "3189",
-      "name": "景碩",
-      "locale": "zh-TW",
-      "individual": true,
-      "queries": [
-        "景碩 ABF載板",
-        "Kinsus IC substrate"
-      ]
-    },
-    {
       "code": "00635U",
       "name": "元大S&P黃金",
       "locale": "zh-TW",
@@ -44,20 +24,29 @@
       "code": "006208",
       "name": "富邦台50",
       "locale": "zh-TW",
-      "individual": false,
+      "individual": true,
       "queries": [
-        "台股大盤 半導體",
-        "TAIEX Taiwan stock market"
+        "006208"
       ]
     },
     {
       "code": "00881",
       "name": "國泰永續高股息",
       "locale": "zh-TW",
-      "individual": false,
+      "individual": true,
       "queries": [
-        "台股 高股息 ETF",
-        "Taiwan dividend ETF"
+        "00881"
+      ]
+    },
+    {
+      "code": "2327",
+      "name": "國巨",
+      "locale": "zh-TW",
+      "individual": true,
+      "queries": [
+        "國巨",
+        "MLCC",
+        "村田製作所"
       ]
     }
   ],
@@ -153,19 +142,11 @@
       ]
     },
     {
-      "code": "XOVR",
-      "name": "XOVR ETF",
+      "code": "VXUS",
+      "name": "VXUS ETF",
       "locale": "en-US",
       "queries": [
-        "XOVR ETF"
-      ]
-    },
-    {
-      "code": "AGIX",
-      "name": "AGIX ETF",
-      "locale": "en-US",
-      "queries": [
-        "AGIX ETF AI"
+        "VXUS ETF AI"
       ]
     },
     {
@@ -182,14 +163,6 @@
       "locale": "en-US",
       "queries": [
         "AIPO ETF"
-      ]
-    },
-    {
-      "code": "VWO",
-      "name": "新興市場（VWO）",
-      "locale": "en-US",
-      "queries": [
-        "emerging markets VWO stock"
       ]
     },
     {
@@ -217,11 +190,11 @@
       ]
     },
     {
-      "code": "SLVP",
-      "name": "白銀礦業（SLVP）",
+      "code": "SPRX",
+      "name": "自動化與機器人技術, spacex related",
       "locale": "en-US",
       "queries": [
-        "silver mining SLVP silver price"
+        "SPRX spacex"
       ]
     }
   ]
