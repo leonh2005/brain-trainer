@@ -1,6 +1,6 @@
 {
-  "scanned_at": "2026-10-10 03:00:30",
-  "since": "2026-10-09 03:00:00",
+  "scanned_at": "2026-10-11 03:00:30",
+  "since": "2026-10-10 03:00:00",
   "results": {
     "市場儀表板": {
       "exists": true,
@@ -34,9 +34,9 @@
     },
     "川普監測": {
       "exists": true,
-      "errors": 1,
-      "last_error": "2026-10-09 12:30:04,612 WARNING 分析失敗：investingLive Asia-Pacific market news: Oil eases  — 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reaso",
-      "fix": "尚無對應建議，需人工判斷"
+      "errors": 0,
+      "last_error": null,
+      "fix": null
     },
     "持倉新聞(台股)": {
       "exists": true,
