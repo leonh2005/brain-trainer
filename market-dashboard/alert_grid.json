@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-12 07:00",
+  "generated_at": "2026-10-12 14:01",
   "count": 4,
   "threshold": 6,
   "cells": [
@@ -26,7 +26,7 @@
     {
       "name": "台股 vs 200MA",
       "triggered": false,
-      "detail": "+24.96%（不納入警示）"
+      "detail": "+24.60%（不納入警示）"
     },
     {
       "name": "M1B比",
