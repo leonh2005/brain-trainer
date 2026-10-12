@@ -1,6 +1,6 @@
 {
-  "scanned_at": "2026-10-12 03:00:32",
-  "since": "2026-10-11 03:00:01",
+  "scanned_at": "2026-10-13 03:00:33",
+  "since": "2026-10-12 03:00:00",
   "results": {
     "市場儀表板": {
       "exists": true,
@@ -28,15 +28,15 @@
     },
     "財經新聞分析": {
       "exists": true,
-      "errors": 0,
-      "last_error": null,
-      "fix": null
+      "errors": 1,
+      "last_error": "2026-10-12 03:16:11,882 [WARNING] fetcher.reddit_fetcher: Reddit fetch failed for r/investing: HTTPSConnectionPool(host='www.reddit.com', port=443): Max retries exceeded with url: /r/investing/hot/.rss (Caused by NameResolutionError(\"HTTPSConnection(host='www.reddit.com', port=443): Failed to resolv",
+      "fix": "Port 被佔用或服務未啟動 → 檢查 LaunchAgent 是否正常載入"
     },
     "川普監測": {
       "exists": true,
-      "errors": 0,
-      "last_error": null,
-      "fix": null
+      "errors": 2,
+      "last_error": "2026-10-12 08:45:03,108 WARNING 分析失敗：Futures Rise Amid Trump Claims, Oil-Related News - — 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reaso",
+      "fix": "尚無對應建議，需人工判斷"
     },
     "持倉新聞(台股)": {
       "exists": true,
