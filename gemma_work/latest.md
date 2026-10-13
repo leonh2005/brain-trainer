@@ -1,18 +1,22 @@
-# Claude Handoff 20261009_1544
-> 自動生成於 2026-10-09 15:44
+# Claude Handoff 20261013_2331
+> 自動生成於 2026-10-13 23:31
 
 ## 未提交的檔案異動
 ```
-（無未提交變更）
+M chip-tracker/chip.db
+ M scripts/auto_investigate_state.json
+ M shopee-boost/data/last_success.json
+?? sleep-shorts/
+?? threads-daily/2026-10-11.md
 ```
 
 ## 近期 Commits
 ```
-b38db788 chore: 自動同步 2026-10-09 15:40
-d3e55846 feat: 持倉新聞標的清單網頁化管理 + locale 分軌抓取
-7d7b6b00 docs: 持倉標的清單網頁管理設計文件
-3376af89 chore: 自動同步 2026-10-09 10:40
-a5b1bd4d chore: 自動同步 2026-10-09 05:40
+8912c4ac chore: 自動同步 2026-10-13 19:40
+16162874 chore: 自動同步 2026-10-13 14:40
+adc2e5d4 chore: 自動同步 2026-10-13 09:40
+21875308 chore: 自動同步 2026-10-13 04:40
+a30ef82d chore: 自動同步 2026-10-12 23:40
 ```
 
 ## 給 Hermes 的備註
