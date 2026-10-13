@@ -1,6 +1,6 @@
 {
-  "scanned_at": "2026-10-13 03:00:33",
-  "since": "2026-10-12 03:00:00",
+  "scanned_at": "2026-10-14 03:00:34",
+  "since": "2026-10-13 03:00:00",
   "results": {
     "市場儀表板": {
       "exists": true,
@@ -28,14 +28,14 @@
     },
     "財經新聞分析": {
       "exists": true,
-      "errors": 1,
-      "last_error": "2026-10-12 03:16:11,882 [WARNING] fetcher.reddit_fetcher: Reddit fetch failed for r/investing: HTTPSConnectionPool(host='www.reddit.com', port=443): Max retries exceeded with url: /r/investing/hot/.rss (Caused by NameResolutionError(\"HTTPSConnection(host='www.reddit.com', port=443): Failed to resolv",
-      "fix": "Port 被佔用或服務未啟動 → 檢查 LaunchAgent 是否正常載入"
+      "errors": 7,
+      "last_error": "2026-10-13 23:45:40,809 [WARNING] fetcher.ptt_fetcher: PTT article fetch failed https://www.ptt.cc/bbs/Stock/M.1791889657.A.A47.html: HTTPSConnectionPool(host='www.ptt.cc', port=443): Read timed out. (read timeout=10)",
+      "fix": "網路逾時 → 確認目標服務可達，或增加 timeout 設定"
     },
     "川普監測": {
       "exists": true,
-      "errors": 2,
-      "last_error": "2026-10-12 08:45:03,108 WARNING 分析失敗：Futures Rise Amid Trump Claims, Oil-Related News - — 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reaso",
+      "errors": 1,
+      "last_error": "2026-10-13 11:30:03,795 WARNING 分析失敗：Trump Says He ‘May’ Meet Kim Jong Un on Asia Trip  — 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reaso",
       "fix": "尚無對應建議，需人工判斷"
     },
     "持倉新聞(台股)": {
