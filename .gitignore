@@ -75,3 +75,7 @@ shopee_top300_taxid.html
 .shopee_cats.json
 .shopee_top300_taxid.json
 .shopee_taxid_state.prev.json
+
+# 墨墨照護系統：2026-10-14 封存（墨墨 8/26 離世），不再運作。
+# app.py 與 start-tunnel.sh 內含硬編碼密碼（rabbit-care 登入、RTSP 攝影機），不可進公開 repo
+rabbit-care/
