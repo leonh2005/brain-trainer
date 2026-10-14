@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-14 07:00",
+  "generated_at": "2026-10-14 14:01",
   "count": 5,
   "threshold": 6,
   "cells": [
@@ -11,7 +11,7 @@
     {
       "name": "F&G",
       "triggered": true,
-      "detail": "44.7（<45 恐慌）"
+      "detail": "44.6（<45 恐慌）"
     },
     {
       "name": "CAPE",
@@ -26,17 +26,17 @@
     {
       "name": "台股 vs 200MA",
       "triggered": false,
-      "detail": "+24.60%（不納入警示）"
+      "detail": "+22.26%（不納入警示）"
     },
     {
       "name": "M1B比",
       "triggered": false,
-      "detail": "N/A（抓取失敗）"
+      "detail": "3.88%（>7% 偏熱）"
     },
     {
       "name": "融資市值比",
       "triggered": true,
-      "detail": "4.05%（>3.5%）"
+      "detail": "4.00%（>3.5%）"
     },
     {
       "name": "美銀牛熊",
