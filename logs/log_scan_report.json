@@ -1,6 +1,6 @@
 {
-  "scanned_at": "2026-10-14 03:00:34",
-  "since": "2026-10-13 03:00:00",
+  "scanned_at": "2026-10-15 03:00:34",
+  "since": "2026-10-14 03:00:00",
   "results": {
     "市場儀表板": {
       "exists": true,
@@ -28,15 +28,15 @@
     },
     "財經新聞分析": {
       "exists": true,
-      "errors": 7,
-      "last_error": "2026-10-13 23:45:40,809 [WARNING] fetcher.ptt_fetcher: PTT article fetch failed https://www.ptt.cc/bbs/Stock/M.1791889657.A.A47.html: HTTPSConnectionPool(host='www.ptt.cc', port=443): Read timed out. (read timeout=10)",
-      "fix": "網路逾時 → 確認目標服務可達，或增加 timeout 設定"
+      "errors": 4,
+      "last_error": "2026-10-15 01:30:09,283 [WARNING] fetcher.ptt_fetcher: PTT article fetch failed https://www.ptt.cc/bbs/Stock/M.1791998431.A.665.html: ('Connection aborted.', ConnectionResetError(54, 'Connection reset by peer'))",
+      "fix": "尚無對應建議，需人工判斷"
     },
     "川普監測": {
       "exists": true,
-      "errors": 1,
-      "last_error": "2026-10-13 11:30:03,795 WARNING 分析失敗：Trump Says He ‘May’ Meet Kim Jong Un on Asia Trip  — 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reaso",
-      "fix": "尚無對應建議，需人工判斷"
+      "errors": 0,
+      "last_error": null,
+      "fix": null
     },
     "持倉新聞(台股)": {
       "exists": true,
