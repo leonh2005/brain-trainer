@@ -75,3 +75,36 @@ def test_validate_rejects_negative_price(tmp_path):
     }]}
     with pytest.raises(ws.WaveScriptError):
         ws.load_scripts(_write(tmp_path, bad))
+
+
+def _one_script(id_="v0", label="l", date="2026-01", price=100):
+    return {"id": id_, "label": label, "source": "s",
+            "anchors": [{"wave": "w", "date": date, "price": price}], "targets": []}
+
+
+def test_save_script_appends_new_version_first(tmp_path):
+    p = _write(tmp_path, {"scripts": [_one_script("v0")]})
+    ws.save_script(_one_script("v9", "new", "2026-02", 200), path=p)
+    ids = [s["id"] for s in ws.load_scripts(p)]
+    assert ids[0] == "v9"
+    assert "v0" in ids
+
+
+def test_save_script_duplicate_without_overwrite_raises(tmp_path):
+    p = _write(tmp_path, {"scripts": [_one_script("v0")]})
+    with pytest.raises(ws.WaveScriptError):
+        ws.save_script(_one_script("v0", "dup"), path=p)
+
+
+def test_save_script_overwrite_replaces(tmp_path):
+    p = _write(tmp_path, {"scripts": [_one_script("v0")]})
+    ws.save_script(_one_script("v0", "new"), overwrite=True, path=p)
+    assert ws.get_script("v0", p)["label"] == "new"
+    assert len(ws.load_scripts(p)) == 1
+
+
+def test_save_script_rejects_invalid_draft(tmp_path):
+    p = _write(tmp_path, {"scripts": [_one_script("v0")]})
+    bad = {"id": "v9", "label": "b", "source": "s", "anchors": [], "targets": []}
+    with pytest.raises(ws.WaveScriptError):
+        ws.save_script(bad, path=p)

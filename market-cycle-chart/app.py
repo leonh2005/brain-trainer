@@ -8,11 +8,14 @@
 - /api/taiex           K線資料(timeframe=monthly|daily，日線含均線)
 """
 
+import re
+
 import pandas as pd
 
 import cycles
 import current_position
 import econ_cycles
+import research
 import taiex_data
 import wave_scripts
 from flask import Flask, jsonify, render_template, request
@@ -89,7 +92,7 @@ def _resolve_anchor_dates_to_week(anchors: list, last_week_of_ym: dict) -> list:
 
 @app.route("/api/chart-data")
 def chart_data():
-    script_id = request.args.get("script", "v1")
+    script_id = request.args.get("script", "v2")
     timeframe = request.args.get("timeframe", "monthly")  # monthly|weekly
     try:
         script = wave_scripts.get_script(script_id)
@@ -181,6 +184,60 @@ def taiex():
         "timeframe": timeframe,
         "rows": df.where(df.notna(), None).to_dict(orient="records"),
     })
+
+
+def _next_version_id() -> str:
+    """下一個版本編號(現有 v0/v1/v2 → v3)。"""
+    nums = [int(m.group(1)) for i in wave_scripts.list_script_ids()
+            if (m := re.match(r"v(\d+)$", i["id"]))]
+    return f"v{max(nums) + 1 if nums else 1}"
+
+
+def _prepare_draft(draft: dict) -> dict:
+    """把 AI 草稿整理成合法劇本：補 id 與缺欄位。格式仍由 save_script 驗證把關。"""
+    return {
+        "id": draft.get("id") or _next_version_id(),
+        "label": draft.get("label") or "未命名版本",
+        "source": draft.get("source") or "",
+        "source_date": draft.get("source_date") or "",
+        "description": draft.get("description") or "",
+        "anchors": draft.get("anchors") or [],
+        "targets": draft.get("targets") or [],
+        "retracements": draft.get("retracements") or [],
+        "projected": draft.get("projected") or [],
+    }
+
+
+@app.route("/api/refresh", methods=["POST"])
+def refresh():
+    """強制重抓台股日線(『刷新行情』按鈕)。"""
+    try:
+        return jsonify({"ok": True, **taiex_data.refresh_daily()})
+    except taiex_data.TaiexDataError as e:
+        return jsonify({"ok": False, "error": str(e)}), 502
+
+
+@app.route("/api/research-script", methods=["POST"])
+def research_script():
+    """查杜金龍最新說法並擷取成劇本草稿(不寫檔，待人工確認)。"""
+    query = (request.get_json(silent=True) or {}).get("query") or research.DEFAULT_QUERY
+    try:
+        result = research.research(query)
+    except research.ResearchError as e:
+        return jsonify({"ok": False, "error": str(e)}), 502
+    return jsonify({"ok": True, **result})
+
+
+@app.route("/api/apply-script", methods=["POST"])
+def apply_script():
+    """把草稿存成新劇本版本(寫入 wave_scripts.json)。"""
+    draft = request.get_json(silent=True) or {}
+    script = _prepare_draft(draft)
+    try:
+        wave_scripts.save_script(script)
+    except wave_scripts.WaveScriptError as e:
+        return jsonify({"ok": False, "error": str(e)}), 400
+    return jsonify({"ok": True, "id": script["id"], "label": script["label"]})
 
 
 if __name__ == "__main__":
