@@ -25,6 +25,7 @@ logger = logging.getLogger('shopee_boost')
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 STATE_FILE = os.path.join(BASE_DIR, 'data', 'last_success.json')
 MISSING_STATE_FILE = os.path.join(BASE_DIR, 'data', 'missing.json')
+FAILED_STATE_FILE = os.path.join(BASE_DIR, 'data', 'boost_failed.json')
 COOLDOWN = timedelta(hours=4)
 # cron 固定在 :19:00 觸發，但上次成功可能落在 :19:16，elapsed 會差十幾秒不滿 4 小時，
 # 因而整整跳過一小時（歷史上一律變成 5 小時一輪）。給 60 秒容差視為已滿。
@@ -70,6 +71,19 @@ def save_missing(missing: set):
     os.makedirs(os.path.dirname(MISSING_STATE_FILE), exist_ok=True)
     with open(MISSING_STATE_FILE, 'w', encoding='utf-8') as f:
         json.dump(sorted(missing), f)
+
+
+def load_failed() -> set:
+    if not os.path.exists(FAILED_STATE_FILE):
+        return set()
+    with open(FAILED_STATE_FILE, encoding='utf-8') as f:
+        return set(json.load(f))
+
+
+def save_failed(failed: set):
+    os.makedirs(os.path.dirname(FAILED_STATE_FILE), exist_ok=True)
+    with open(FAILED_STATE_FILE, 'w', encoding='utf-8') as f:
+        json.dump(sorted(failed), f)
 
 
 def notify(msg: str):
@@ -137,6 +151,30 @@ def dismiss_ai_tour(page) -> bool:
     return True
 
 
+def _is_boost_countdown(text) -> bool:
+    """判斷「置頂推廣」選單文字是否為冷卻倒數（HH:MM:SS）＝已置頂生效。"""
+    return bool(re.search(r'\d{2}:\d{2}:\d{2}', text or ''))
+
+
+def _open_boost_item(page, action_table, target_idx):
+    """開指定列的「更多」選單，回傳「置頂推廣」項目的 locator（找不到回 None）。
+
+    先按 Escape 關掉任何殘留選單再開新的。只能找「目前彈出、真的看得到」的那個選單
+    ——頁面上其他列隱藏的選單模板也含同樣字串，整頁搜尋會永遠誤判成冷卻中。
+    """
+    page.keyboard.press('Escape')
+    page.wait_for_timeout(400)
+    dismiss_ai_tour(page)
+    try:
+        action_table.locator('tbody tr').nth(target_idx).locator('button:has-text("更多")').click()
+    except Exception as e:
+        logger.warning(f'開「更多」選單失敗（略過此商品）：{e}')
+        return None
+    page.wait_for_timeout(800)
+    item = page.locator('ul.eds-dropdown-menu:visible li:has-text("置頂推廣")').first
+    return item if item.count() else None
+
+
 def run():
     all_success = load_last_success()
     now = datetime.now()
@@ -202,6 +240,7 @@ def run():
 
         info_rows = info_table.locator('tbody tr')
         missing_now = set()
+        failed_now = set()
         for keyword in pending:
             target_idx = None
             for i in range(info_rows.count()):
@@ -213,26 +252,11 @@ def run():
                 logger.warning(f'商品列表找不到「{keyword}」，可能尚未過審／已下架，跳過')
                 continue
 
-            # 上一輪的下拉選單若還沒關閉，會蓋住這一行的「更多」按鈕導致點擊被攔截，先確保沒有殘留選單
-            try:
-                page.locator('ul.eds-dropdown-menu:visible').wait_for(state='hidden', timeout=3000)
-            except Exception:
-                page.keyboard.press('Escape')
-                page.wait_for_timeout(500)
-
-            dismiss_ai_tour(page)
-
-            more_btn = action_table.locator('tbody tr').nth(target_idx).locator('button:has-text("更多")')
-            more_btn.click()
-            page.wait_for_timeout(800)
-
-            # 「置頂推廣」在下拉選單裡；頁面上其他商品列的隱藏選單模板也含「已被全部使用」提示字串，
-            # 所以只能在「目前彈出來、真的看得到的那個選單」裡找，不能整頁原始碼搜尋（否則永遠誤判成冷卻中）
-            visible_menu = page.locator('ul.eds-dropdown-menu:visible')
-            boost_item = visible_menu.locator('li:has-text("置頂推廣")').first
-            if boost_item.count() == 0:
+            # 上一輪的下拉選單若還沒關閉，會蓋住這一行的「更多」按鈕導致點擊被攔截，
+            # _open_boost_item 會先 Escape 清掉殘留選單。
+            boost_item = _open_boost_item(page, action_table, target_idx)
+            if boost_item is None:
                 logger.warning(f'「{keyword}」下拉選單找不到「置頂推廣」選項，UI可能改版了，跳過')
-                page.keyboard.press('Escape')
                 continue
 
             item_text = boost_item.inner_text()
@@ -244,11 +268,25 @@ def run():
                 continue
 
             boost_item.click()
-            page.wait_for_timeout(1500)
-            all_success[keyword] = datetime.now().isoformat()
-            save_last_success(all_success)
-            logger.info(f'「{keyword}」已點擊置頂推廣，記錄成功時間')
-            notify(f'✅ 蝦皮置頂推廣：「{keyword}」已成功置頂，下次約4小時後再試')
+            page.wait_for_timeout(2000)
+
+            # 關鍵：點擊後必須回讀選單確認真的進入冷卻倒數，否則會「假成功」——
+            # Shopee 有時不受理這次點擊，但 UI 不報錯、API 也照樣回 success，
+            # 只憑「已點擊」記成功會讓本地狀態與 Shopee 實際脫節（log 說成功、商品卻沒置頂）。
+            verify = _open_boost_item(page, action_table, target_idx)
+            verify_text = verify.inner_text() if verify is not None else None
+            page.keyboard.press('Escape')
+            if _is_boost_countdown(verify_text):
+                all_success[keyword] = datetime.now().isoformat()
+                save_last_success(all_success)
+                logger.info(f'「{keyword}」置頂成功，已確認冷卻倒數：{verify_text.strip()}')
+                notify(f'✅ 蝦皮置頂推廣：「{keyword}」已成功置頂，下次約4小時後再試')
+            else:
+                failed_now.add(keyword)
+                logger.warning(
+                    f'「{keyword}」點擊後未生效，回讀選單文字仍為 {verify_text!r}，不記錄成功（下一輪重試）')
+
+            page.wait_for_timeout(300)
 
         # 只在「新變成找不到」時通知一次，避免已下架商品每小時洗版
         newly_missing = missing_now - load_missing()
@@ -256,6 +294,14 @@ def run():
             notify('⚠️ 蝦皮置頂推廣：找不到以下商品（可能已下架／未過審），本輪已跳過：'
                    + '、'.join(sorted(newly_missing)) + '。若已賣出請更新 boost.py 的 PRODUCTS 清單。')
         save_missing(missing_now)
+
+        # 置頂失敗只在「新變成失敗」時通知一次，避免 Shopee 持續不受理時每小時洗版；
+        # 失敗的商品不會更新 last_success，下一輪 cron 會自動重試，成功後即從此清單移除。
+        newly_failed = failed_now - load_failed()
+        if newly_failed:
+            notify('⚠️ 蝦皮置頂推廣：以下商品已點擊但 Shopee 未受理（會自動重試）：'
+                   + '、'.join(sorted(newly_failed)))
+        save_failed(failed_now)
 
         browser.close()
 
