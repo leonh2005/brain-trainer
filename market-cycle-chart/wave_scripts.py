@@ -47,6 +47,33 @@ def list_script_ids(path: str | None = None) -> list[dict]:
     return [{"id": s["id"], "label": s["label"]} for s in load_scripts(path)]
 
 
+def validate_script(s: dict) -> None:
+    """公開的格式驗證（供外部草稿檢查用）。"""
+    _validate_script(s)
+
+
+def save_script(script: dict, overwrite: bool = False, path: str | None = None) -> None:
+    """新增或取代一份劇本並寫回檔案：先驗證、再原子寫入。新版本排在最前面。"""
+    _validate_script(script)
+    p = path or _SCRIPTS_PATH
+    with open(p, encoding="utf-8") as f:
+        data = json.load(f)
+    scripts = data.get("scripts", [])
+    idx = next((i for i, s in enumerate(scripts) if s["id"] == script["id"]), None)
+    if idx is not None:
+        if not overwrite:
+            raise WaveScriptError(f"劇本 id 已存在: {script['id']}（如要取代請設 overwrite=True）")
+        scripts[idx] = script
+    else:
+        scripts.insert(0, script)
+    data["scripts"] = scripts
+    tmp = f"{p}.tmp"
+    with open(tmp, "w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
+        f.write("\n")
+    os.replace(tmp, p)
+
+
 def _validate_script(s: dict) -> None:
     missing = _REQUIRED_SCRIPT_KEYS - s.keys()
     if missing:

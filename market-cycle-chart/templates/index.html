@@ -35,6 +35,12 @@
   .src{font-size:11px;color:var(--muted);line-height:1.5;margin-top:6px}
   .src a{color:var(--accent)}
   #paramPanel.hidden{display:none}
+  #draftPanel{background:var(--bg);border:1px solid var(--accent);border-radius:8px;padding:12px;margin-bottom:14px}
+  #draftPanel h2{display:flex;justify-content:space-between;align-items:center}
+  #draftClose{cursor:pointer;color:var(--muted);font-size:14px}
+  #draftPanel h3{font-size:12px;color:var(--muted);margin:10px 0 4px}
+  .draft-actions{margin-top:12px}
+  .sep{width:1px;height:20px;background:var(--border);display:inline-block;margin:0 4px;vertical-align:middle}
   .err{color:var(--up);padding:20px}
 </style>
 </head>
@@ -48,12 +54,21 @@
     <button id="btnWeekly">週線(加大浪)</button>
     <button id="btnDaily">日線+均線</button>
     <button id="btnEcon">經濟背景層：關</button>
+    <span class="sep"></span>
+    <button id="btnRefresh">刷新行情</button>
+    <button id="btnResearch">查杜金龍最新</button>
   </div>
 </header>
 <div class="layout">
   <div id="chart"></div>
   <aside>
     <div id="sidebar"></div>
+    <div id="draftPanel" class="hidden">
+      <h2>杜金龍最新草稿<span id="draftClose" title="關閉">✕</span></h2>
+      <div id="draftBody"></div>
+      <div class="draft-actions"><button id="btnApply">採用為新劇本</button>
+        <span class="src" style="display:block;margin-top:6px">草稿來自新聞自動擷取，數字請自行核對再採用。</span></div>
+    </div>
     <div id="paramPanel">
       <h2>市場週期參數(可微調)</h2>
       <div id="cycleParams"></div>
@@ -90,7 +105,7 @@ function cycleParam(cy){
 }
 
 async function loadChartData(resetOverrides=true){
-  const id=document.getElementById('scriptSel').value||'v1';
+  const id=document.getElementById('scriptSel').value||'v2';
   const tf=VIEW_MODE==='weekly'?'weekly':'monthly';
   const r=await fetch('/api/chart-data?script='+id+'&timeframe='+tf);
   const d=await r.json();
@@ -270,6 +285,68 @@ function renderSidebar(){
   document.getElementById('sidebar').innerHTML=h;
 }
 
+// 資料更新：刷新行情 / 查杜金龍最新
+let DRAFT=null, DRAFT_NEWS=[];
+async function reloadScripts(selectId){
+  const r=await fetch('/api/scripts');const list=await r.json();
+  const sel=document.getElementById('scriptSel');sel.innerHTML='';
+  list.forEach(s=>{const o=document.createElement('option');o.value=s.id;o.textContent=s.label;sel.appendChild(o);});
+  if(selectId)sel.value=selectId;
+  loadChartData();
+}
+async function refreshData(){
+  const btn=document.getElementById('btnRefresh');const t0=btn.textContent;
+  btn.disabled=true;btn.textContent='刷新中…';
+  try{
+    const d=await (await fetch('/api/refresh',{method:'POST'})).json();
+    if(!d.ok){alert('刷新失敗：'+(d.error||''));}
+    else{
+      btn.textContent=d.refreshed?'✓ 已更新':'⚠ 沿用舊資料('+(d.fetched_date||'?')+')';
+      setTimeout(()=>btn.textContent=t0,2500);
+      await loadChartData(false);return;
+    }
+  }catch(e){alert('刷新失敗：'+e);}
+  btn.disabled=false;btn.textContent=t0;
+}
+async function researchScript(){
+  const btn=document.getElementById('btnResearch');const t0=btn.textContent;
+  btn.disabled=true;btn.textContent='查詢中…';
+  try{
+    const d=await (await fetch('/api/research-script',{method:'POST'})).json();
+    if(!d.ok){alert('查詢失敗：'+(d.error||''));}
+    else{DRAFT=d.draft;DRAFT_NEWS=d.news||[];showDraft();}
+  }catch(e){alert('查詢失敗：'+e);}
+  btn.disabled=false;btn.textContent=t0;
+}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function safeUrl(u){return /^https?:\/\//i.test(u||'')?u:'#';}
+function showDraft(){
+  document.getElementById('draftPanel').classList.remove('hidden');
+  const d=DRAFT||{};let h='';
+  h+=`<div class="kv"><span>版本名</span><span class="v">${esc(d.label||'—')}</span></div>`;
+  h+=`<div class="kv"><span>來源日</span><span class="v">${esc(d.source_date||'—')}</span></div>`;
+  if(d.description)h+=`<div class="src">${esc(d.description)}</div>`;
+  if((d.targets||[]).length){h+='<h3>目標</h3>';d.targets.forEach(t=>h+=`<div class="kv"><span>${esc(t.label)}</span><span class="v">${esc(t.price)}</span></div>`);}
+  if((d.anchors||[]).length){h+='<h3>錨點</h3>';d.anchors.forEach(a=>h+=`<div class="kv"><span>${esc(a.wave)} ${esc(a.date)}</span><span class="v">${esc(a.price)}</span></div>`);}
+  h+=`<h3>新聞來源(${DRAFT_NEWS.length})</h3>`;
+  DRAFT_NEWS.slice(0,6).forEach(n=>h+=`<div class="src">・<a href="${esc(safeUrl(n.link))}" target="_blank" rel="noopener">${esc(n.title)}</a></div>`);
+  document.getElementById('draftBody').innerHTML=h;
+}
+async function applyDraft(){
+  if(!DRAFT)return;
+  const btn=document.getElementById('btnApply');btn.disabled=true;
+  try{
+    const d=await (await fetch('/api/apply-script',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(DRAFT)})).json();
+    if(!d.ok){alert('採用失敗：'+(d.error||''));}
+    else{document.getElementById('draftPanel').classList.add('hidden');await reloadScripts(d.id);}
+  }catch(e){alert('採用失敗：'+e);}
+  btn.disabled=false;
+}
+document.getElementById('btnRefresh').onclick=refreshData;
+document.getElementById('btnResearch').onclick=researchScript;
+document.getElementById('btnApply').onclick=applyDraft;
+document.getElementById('draftClose').onclick=()=>document.getElementById('draftPanel').classList.add('hidden');
+
 // 事件
 function setView(mode){
   VIEW_MODE=mode;
@@ -286,12 +363,7 @@ document.getElementById('btnEcon').onclick=e=>{SHOW_ECON=!SHOW_ECON;e.target.tex
 document.getElementById('scriptSel').onchange=loadChartData;
 
 // 啟動
-(async()=>{
-  const r=await fetch('/api/scripts');const list=await r.json();
-  const sel=document.getElementById('scriptSel');
-  list.forEach(s=>{const o=document.createElement('option');o.value=s.id;o.textContent=s.label;sel.appendChild(o);});
-  loadChartData();
-})();
+reloadScripts();
 </script>
 </body>
 </html>

@@ -106,6 +106,24 @@ def add_moving_averages(df: pd.DataFrame, windows=(5, 20, 60)) -> pd.DataFrame:
     return out
 
 
+def refresh_daily() -> dict:
+    """強制重抓 TAIEX 日線並回傳結果狀態(供『刷新行情』按鈕)。
+
+    抓取失敗時 get_daily 會回退舊快取，此時 refreshed=False。
+    """
+    before = _load_cache()
+    before_date = before["fetched_date"] if before else None
+    df = get_daily(force_refresh=True)  # 失敗且無快取才會拋 TaiexDataError
+    after = _load_cache()
+    after_date = after["fetched_date"] if after else None
+    return {
+        "refreshed": after_date == _today(),
+        "fetched_date": after_date,
+        "changed": after_date != before_date,
+        "last_trading_date": df["date"].iloc[-1].strftime("%Y-%m-%d") if len(df) else None,
+    }
+
+
 def _load_cache() -> dict | None:
     try:
         with open(_CACHE_PATH) as f:
