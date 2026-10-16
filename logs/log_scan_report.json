@@ -1,6 +1,6 @@
 {
-  "scanned_at": "2026-10-16 03:00:35",
-  "since": "2026-10-15 03:00:00",
+  "scanned_at": "2026-10-17 03:00:36",
+  "since": "2026-10-16 03:00:00",
   "results": {
     "市場儀表板": {
       "exists": true,
@@ -28,8 +28,8 @@
     },
     "財經新聞分析": {
       "exists": true,
-      "errors": 9,
-      "last_error": "2026-10-16 00:17:26,736 [WARNING] fetcher.ptt_fetcher: PTT article fetch failed https://www.ptt.cc/bbs/Stock/M.1792044055.A.2E2.html: HTTPSConnectionPool(host='www.ptt.cc', port=443): Read timed out. (read timeout=10)",
+      "errors": 8,
+      "last_error": "2026-10-17 02:15:15,538 [WARNING] fetcher.ptt_fetcher: PTT article fetch failed https://www.ptt.cc/bbs/Stock/M.1792146377.A.3D8.html: HTTPSConnectionPool(host='www.ptt.cc', port=443): Read timed out. (read timeout=10)",
       "fix": "網路逾時 → 確認目標服務可達，或增加 timeout 設定"
     },
     "川普監測": {
