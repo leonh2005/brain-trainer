@@ -685,6 +685,16 @@ def market_cycle():
 
 
 @_wrap
+def foreign_return():
+    """外資回頭三訊號（scripts/foreign_return_monitor.py 盤後產生的狀態檔）。"""
+    try:
+        d = _read_json(f'{CC}/data/foreign_return_status.json')
+    except Exception:
+        return None, ''
+    return d, d.get('updated_at', '')
+
+
+@_wrap
 def market_analysis():
     analysis = _proxy('http://localhost:5350/api/analysis', ttl=300)
     live = _proxy('http://localhost:5350/api/live', ttl=60)

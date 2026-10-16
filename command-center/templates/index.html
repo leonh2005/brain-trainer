@@ -406,11 +406,13 @@ const LIFE=[
   {id:'market-analysis',ic:'📊', title:'市場分析', span:'wide', url:'/api/life/market-analysis', render:renderMarketAnalysis, site:'/svc/5350/'},
   {id:'dsa',ic:'🧠', title:'AI選股歷史', span:'wide', url:'/api/life/daily-stock-analysis', render:renderDSA, site:'/svc/5650/'},
   {id:'market-cycle',ic:'🌀', title:'景氣週期位置', span:'wide', url:'/api/life/market-cycle', render:renderMarketCycle, site:'/svc/5905/'},
+  {id:'foreign-return',ic:'💵', title:'外資回頭三訊號', span:'wide', url:'/api/life/foreign-return', render:renderForeignReturn},
   {id:'guru-tracker',ic:'👴', title:'投資大老持股', span:'wide', url:'/api/life/guru-tracker', render:renderGuruTracker, site:'/svc/5910/'},
   // 5990 不走 /svc/ 代理（作答端點會執行送進去的程式碼，不能轉發；見 app.py 的 PROXY_PORTS
   // 說明），故 site 用本機絕對網址直接連，不經 command-center。
   {id:'learn-system',ic:'📚', title:'學習系統', span:'wide', url:'/api/life/learn-system', render:renderLearnSystem, site:'http://127.0.0.1:5990/'},
   {id:'orchestrator',ic:'🤖', title:'Agent 編排', span:'wide', url:'/api/life/orchestrator', render:renderOrchestrator, site:'https://t.me/multiagents2026bot'},
+  {id:'youtube-channels',ic:'📺', title:'YouTube 追蹤頻道', span:'wide', url:'/api/life/youtube-channels', render:renderYouTubeChannels, site:'/youtube-channels'},
 ];
 
 const CARD_POLL_MS=60000;
@@ -1069,6 +1071,19 @@ function renderGuruTracker(d){
   box.appendChild(mg);
   return box;
 }
+function renderYouTubeChannels(d){
+  if(!d)return el('div','empty','無資料');
+  const box=el('div');
+  const mg=el('div','mg');mg.style.marginBottom='13px';
+  const items=[
+    ['追蹤頻道', `${d.channels} 個`],
+    ['今日新影片', `${d.today||0} 部`],
+    ['最近摘要', d.latest||'—'],
+  ];
+  items.forEach(([k,v])=>{const m=el('div','m');m.innerHTML=`<span class="k">${k}</span><span class="v">${v}</span>`;mg.appendChild(m)});
+  box.appendChild(mg);
+  return box;
+}
 function renderDSA(d){
   const arr=Array.isArray(d)?d:[];
   if(!arr.length)return el('div','empty','尚無分析紀錄');
@@ -1091,6 +1106,37 @@ function renderMarketCycle(d){
     row.innerHTML=`<span class="tk" style="font-weight:500">${esc(c.name)}</span><span class="spacer"></span><span class="chg" style="font-size:11px;color:${col}">${esc(c.stage)}</span>`;
     box.appendChild(row);
   });
+  return box;
+}
+function renderForeignReturn(d){
+  if(!d||!d.results)return el('div','empty','尚無資料（盤後產生）');
+  const box=el('div');
+  const R=d.results;
+  // 台股慣例：數值正=紅、負=綠
+  const c=v=>v>0?'var(--up)':(v<0?'var(--down)':'var(--muted)');
+  const n=(v,dec=0)=>{const x=Number(v)||0;return `<b style="color:${c(x)};font-weight:600">${x>0?'+':''}${x.toFixed(dec)}</b>`;};
+  const add=(title,ok,body)=>{
+    const row=el('div','row');
+    row.innerHTML=`<span class="tk" style="font-weight:500">${esc(title)}</span><span class="spacer"></span><span class="chg" style="font-size:11px;color:${ok?'var(--up)':'var(--muted)'}">${ok?'✅ 成立':'—'}</span>`;
+    box.appendChild(row);
+    const det=el('div','row');
+    det.innerHTML=`<span class="tk" style="font-size:11px;color:var(--muted)">${body}</span>`;
+    box.appendChild(det);
+  };
+  const f=R.futures||{};
+  add('① 外資淨空單連續減碼', f.ok,
+      `淨未沖銷 ${n((f.latest_net||0)/1000,1)} 千口　近3日變化 `+
+      ((f.recent_changes||[]).map(v=>n(v/1000,1)+'k').join('　')||'—'));
+  const v=R.volume||{};
+  const diff=(v.latest_amount&&v.ma20)?(v.latest_amount-v.ma20)/1e12:0;
+  add('② 成交量站上20日均量', v.ok,
+      `成交 ${((v.latest_amount||0)/1e12).toFixed(2)} 兆　均量 ${((v.ma20||0)/1e12).toFixed(2)} 兆　差 ${n(diff,2)} 兆`);
+  const x=R.fx||{};
+  add('③ 台幣連續升值', x.ok,
+      `USD/NTD ${(x.latest_rate||0).toFixed(3)}　台幣${(x.total_appreciation||0)>0?'升值':'貶值'} ${n(x.total_appreciation||0,3)} 元`);
+  const sum=el('div','row');
+  sum.innerHTML=`<span class="tk" style="font-size:11px;color:var(--muted)">成立 ${d.hit_count||0}/3　更新 ${esc((d.updated_at||'').slice(0,16))}</span>`;
+  box.appendChild(sum);
   return box;
 }
 function renderLearnSystem(d){
