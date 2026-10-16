@@ -17,6 +17,8 @@ import uvicorn
 import os
 import json
 import subprocess
+import time
+from datetime import datetime
 
 import agent as agent_mod
 import jobs as jobs_mod
@@ -54,6 +56,11 @@ _MA_WATCHLIST_FILE = f'{sources.CC}/config/ma_watchlist.json'
 _HOLDINGS_FILE = f'{sources.CC}/config/portfolio_holdings.json'
 _HOLDINGS_PROBE = (f'{sources.CC}/portfolio-news/.venv/bin/python',
                    f'{sources.CC}/portfolio-news/portfolio_news.py')
+
+# YouTube 追蹤頻道（與 ~/youtube-monitor/youtube_monitor.py 共用的設定檔）
+_YT_DIR = os.path.expanduser('~/youtube-monitor')
+_YT_CHANNELS_FILE = f'{_YT_DIR}/channels.json'
+_YT_CHANNEL_IDS_FILE = f'{_YT_DIR}/channel_ids.json'
 
 _AUTH_USER, _AUTH_PASS = open(
     f'{sources.CC}/.secrets/command_center_auth.txt', encoding='utf-8'
@@ -190,6 +197,12 @@ def portfolio_holdings_page(request: Request):
     return templates.TemplateResponse(request, 'portfolio_holdings.html', {})
 
 
+@app.get('/youtube-channels', response_class=HTMLResponse)
+def youtube_channels_page(request: Request):
+    """YouTube 追蹤頻道編輯頁。"""
+    return templates.TemplateResponse(request, 'youtube_channels.html', {})
+
+
 @app.get('/api/stock-lookup')
 def stock_lookup(q: str = ''):
     """代號／名稱模糊查詢，轉發 shioaji-gateway /stock_search（編輯追蹤清單用）。"""
@@ -275,6 +288,11 @@ def life_market_cycle():
     return sources.market_cycle()
 
 
+@app.get('/api/life/foreign-return')
+def life_foreign_return():
+    return sources.foreign_return()
+
+
 @app.get('/api/life/learn-system')
 def life_learn_system():
     return sources.learn_system()
@@ -283,6 +301,31 @@ def life_learn_system():
 @app.get('/api/life/orchestrator')
 def life_orchestrator():
     return sources.orchestrator()
+
+
+@app.get('/api/life/youtube-channels')
+def life_youtube_channels():
+    """YouTube 追蹤狀態：頻道數、當日抓到幾部、最近一次摘要時間。"""
+    try:
+        with open(_YT_CHANNELS_FILE, encoding='utf-8') as f:
+            n_channels = len(json.load(f).get('channels', []))
+    except (FileNotFoundError, json.JSONDecodeError):
+        n_channels = 0
+
+    today = datetime.now().strftime('%Y-%m-%d')
+    day_dir = f'{_YT_DIR}/summaries/{today}'
+    n_today, latest = 0, ''
+    if os.path.isdir(day_dir):
+        files = [f for f in os.listdir(day_dir)
+                 if f.endswith('.txt') and 'transcript' not in f]
+        n_today = len(files)
+        if files:
+            newest = max(os.path.getmtime(os.path.join(day_dir, f)) for f in files)
+            latest = datetime.fromtimestamp(newest).strftime('%m-%d %H:%M')
+
+    return {'ok': True, 'updated': datetime.now().strftime('%H:%M'),
+            'data': {'channels': n_channels, 'today': n_today,
+                     'latest': latest, 'date': today}}
 
 
 @app.get('/api/route/plan')
@@ -402,6 +445,118 @@ def set_ma_watchlist(req: MaWatchlist):
     os.replace(tmp, _MA_WATCHLIST_FILE)
     sources.invalidate_ma_names_cache()
     return {'ok': True, 'stocks': stocks}
+
+
+class YouTubeChannel(BaseModel):
+    url: str
+
+
+class YouTubeChannels(BaseModel):
+    channels: list[YouTubeChannel]
+
+
+# /@handle。handle 允許 Unicode（日文假名、中文等），故只排除斜線與空白。
+# 前端 youtube_channels.html 用同一條規則，避免前端過關、後端卻回 400。
+_YT_CHANNEL_RE = re.compile(r'https://www\.youtube\.com/@[^/\s]+$')
+
+
+def _load_yt_channel_ids() -> dict:
+    if os.path.exists(_YT_CHANNEL_IDS_FILE):
+        try:
+            with open(_YT_CHANNEL_IDS_FILE, encoding='utf-8') as f:
+                return json.load(f)
+        except json.JSONDecodeError:
+            return {}
+    return {}
+
+
+def _resolve_channel_ids(urls: list, total_timeout: int = 120) -> dict:
+    """用 yt-dlp 解析新頻道的 channel ID 與名稱，回傳 {url: {id, name}}。
+
+    有 ID 才能走較快的 RSS 路徑。解析失敗就略過——youtube_monitor 會自動
+    fallback 到較慢的 yt-dlp 抓法，不會因此壞掉。整批設總時限，避免一次
+    新增多個頻道時把 HTTP 請求拖到反向代理逾時。
+    """
+    out = {}
+    deadline = time.monotonic() + total_timeout
+    for url in urls:
+        remaining = deadline - time.monotonic()
+        if remaining <= 1:
+            break
+        try:
+            r = subprocess.run(
+                ['yt-dlp', '--playlist-items', '1', '--no-warnings',
+                 '--print', '%(channel_id)s|%(channel)s', url],
+                capture_output=True, text=True, timeout=min(60, remaining))
+        except (subprocess.TimeoutExpired, OSError):
+            continue
+        lines = (r.stdout or '').strip().splitlines()
+        if r.returncode == 0 and lines:
+            cid, _, name = lines[0].partition('|')
+            if cid.startswith('UC'):
+                out[url] = {'id': cid, 'name': name.strip()}
+    return out
+
+
+def _write_yt_json(path: str, data: dict):
+    fd, tmp = tempfile.mkstemp(dir=os.path.dirname(path), suffix='.tmp')
+    try:
+        with os.fdopen(fd, 'w', encoding='utf-8') as f:
+            json.dump(data, f, ensure_ascii=False, indent=2)
+            f.write('\n')
+        os.replace(tmp, path)
+    except Exception:
+        if os.path.exists(tmp):
+            os.unlink(tmp)
+        raise
+
+
+@app.get('/api/youtube-channels')
+def get_youtube_channels():
+    """YouTube 追蹤頻道清單。"""
+    try:
+        with open(_YT_CHANNELS_FILE, encoding='utf-8') as f:
+            data = json.load(f)
+    except FileNotFoundError:
+        return {'channels': []}
+    except json.JSONDecodeError as e:
+        # 不吞成空清單：否則使用者看到空畫面一按儲存，就真的把清單清掉了
+        raise HTTPException(500, f'頻道清單設定檔格式錯誤：{e}')
+    if not isinstance(data, dict) or not isinstance(data.get('channels'), list):
+        raise HTTPException(500, '頻道清單設定檔格式錯誤：最外層應為 {"channels": [...]}')
+    return {'channels': data['channels']}
+
+
+@app.post('/api/youtube-channels')
+def set_youtube_channels(req: YouTubeChannels):
+    if not req.channels:
+        raise HTTPException(400, '頻道清單不可為空（要暫停監控請停用排程）')
+    if len(req.channels) > 100:
+        raise HTTPException(400, '頻道清單最多 100 個')
+
+    ids = _load_yt_channel_ids()
+    channels, seen = [], set()
+    for c in req.channels:
+        url = c.url.strip().rstrip('/')
+        if not _YT_CHANNEL_RE.fullmatch(url):
+            raise HTTPException(400, f'不是有效的 YouTube 頻道網址：{url}')
+        if url.lower() in seen:   # YouTube handle 大小寫不敏感（@It-Coffee 等同 @it-coffee）
+            raise HTTPException(400, f'頻道重複：{url}')
+        seen.add(url.lower())
+        channels.append({'url': url, 'name': ids.get(url, {}).get('name', '')})
+
+    # 新頻道當場用 yt-dlp 解析 channel ID（有 ID 才能走較快的 RSS 路徑）
+    unknown = [c['url'] for c in channels if c['url'] not in ids]
+    resolved = _resolve_channel_ids(unknown) if unknown else {}
+    if resolved:
+        for c in channels:
+            if c['url'] in resolved:
+                c['name'] = resolved[c['url']]['name'] or c['name']
+        ids.update(resolved)
+        _write_yt_json(_YT_CHANNEL_IDS_FILE, ids)
+
+    _write_yt_json(_YT_CHANNELS_FILE, {'channels': channels})
+    return {'ok': True, 'channels': channels, 'resolved': len(resolved)}
 
 
 class HoldingItem(BaseModel):
