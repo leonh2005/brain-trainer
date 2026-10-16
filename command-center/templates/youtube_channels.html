@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>YouTube 追蹤頻道</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: #0d1117; color: #e6edf3; padding: 20px;
+    font-family: -apple-system, "PingFang TC", "Microsoft JhengHei", sans-serif; font-size: 14px;
+  }
+  .wrap { max-width: 720px; margin: 0 auto; }
+  h1 { font-size: 18px; margin: 0 0 4px; }
+  .sub { color: #8b949e; font-size: 12.5px; line-height: 1.6; margin-bottom: 20px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th { text-align: left; color: #8b949e; font-weight: 600; padding: 8px; border-bottom: 1px solid #30363d; }
+  td { padding: 6px 8px; border-bottom: 1px solid #21262d; }
+  input {
+    background: #161b22; color: #e6edf3; border: 1px solid #30363d; border-radius: 6px;
+    padding: 6px 8px; font-size: 13px; width: 100%; font-family: inherit;
+  }
+  input:focus { outline: none; border-color: #388bfd; }
+  .nm { color: #8b949e; font-size: 12.5px; }
+  .del {
+    background: none; border: none; color: #8b949e; cursor: pointer; font-size: 16px;
+    padding: 4px 8px; border-radius: 6px; line-height: 1;
+  }
+  .del:hover { background: #21262d; color: #f85149; }
+  .actions { display: flex; align-items: center; gap: 10px; margin-top: 16px; }
+  .actions .spacer { flex: 1; }
+  button.act {
+    background: #21262d; color: #e6edf3; border: 1px solid #30363d; border-radius: 6px;
+    padding: 8px 16px; font-size: 13px; cursor: pointer; font-family: inherit;
+  }
+  button.act:hover { background: #30363d; }
+  button.primary { background: #238636; border-color: #2ea043; font-weight: 600; }
+  button.primary:hover { background: #2ea043; }
+  button:disabled { opacity: .5; cursor: default; }
+  .msg { font-size: 12.5px; color: #8b949e; }
+  .msg.ok { color: #3fb950; }
+  .msg.err { color: #f85149; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>YouTube 追蹤頻道</h1>
+  <div class="sub">
+    youtube-monitor 每 4 小時檢查這些頻道有沒有新影片，有新的就摘要並寫進網頁／寄信。<br>
+    存檔後下次排程（最多 4 小時）自動生效。新增頻道第一次存檔會自動查詢 channel ID，約需數秒。
+  </div>
+
+  <table>
+    <thead><tr><th>頻道網址</th><th style="width:180px">頻道名稱</th><th style="width:36px"></th></tr></thead>
+    <tbody id="rows"></tbody>
+  </table>
+
+  <div class="actions">
+    <button class="act" id="add">＋ 新增頻道</button>
+    <span class="spacer"></span>
+    <span class="msg" id="msg"></span>
+    <button class="act primary" id="save">儲存</button>
+  </div>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+const RE = /^https:\/\/www\.youtube\.com\/@[^\/\s]+$/;
+
+function mkRow(c) {
+  c = c || { url: '', name: '' };
+  const tr = document.createElement('tr');
+
+  const tdUrl = document.createElement('td');
+  const url = document.createElement('input');
+  url.value = c.url;
+  url.placeholder = 'https://www.youtube.com/@it-coffee';
+  url.spellcheck = false;
+  tdUrl.appendChild(url);
+
+  const tdName = document.createElement('td');
+  const name = document.createElement('span');
+  name.className = 'nm';
+  name.textContent = c.name || '（存檔後自動帶入）';
+  tdName.appendChild(name);
+
+  const tdDel = document.createElement('td');
+  const del = document.createElement('button');
+  del.className = 'del'; del.textContent = '✕'; del.title = '刪除';
+  del.onclick = () => tr.remove();
+  tdDel.appendChild(del);
+
+  tr.append(tdUrl, tdName, tdDel);
+  tr._fields = { url, name };
+  return tr;
+}
+
+function addRow(c) { $('rows').appendChild(mkRow(c)); }
+
+function setMsg(t, cls) {
+  const m = $('msg'); m.textContent = t; m.className = 'msg' + (cls ? ' ' + cls : '');
+}
+
+async function load() {
+  $('rows').innerHTML = '';
+  try {
+    const d = await (await fetch('/api/youtube-channels')).json();
+    (d.channels || []).forEach(addRow);
+  } catch (e) {
+    setMsg('讀取失敗：' + e.message, 'err');
+  }
+}
+
+async function save() {
+  const channels = [];
+  for (const tr of $('rows').children) {
+    const u = tr._fields.url.value.trim().replace(/\/+$/, '');
+    if (!u) continue;
+    if (!RE.test(u)) { setMsg('不是有效的頻道網址：' + u, 'err'); return; }
+    channels.push({ url: u });
+  }
+  const btn = $('save'); btn.disabled = true;
+  setMsg('儲存中…');
+  try {
+    const r = await fetch('/api/youtube-channels', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ channels }),
+    });
+    const d = await r.json();
+    if (!r.ok) { setMsg(d.detail || '儲存失敗', 'err'); return; }
+    setMsg('已儲存 ' + d.channels.length + ' 個頻道'
+           + (d.resolved ? '，新解析 ' + d.resolved + ' 個 channel ID' : ''), 'ok');
+    await load();
+  } catch (e) {
+    setMsg('儲存失敗：' + e.message, 'err');
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+$('add').onclick = () => addRow();
+$('save').onclick = save;
+load();
+</script>
+</body>
+</html>
