@@ -16,6 +16,9 @@ REPEAT_SEC = 0.4
 DEBOUNCE_SEC = 0.15
 CONFIG_CHECK_SEC = 1
 AUTO_SWITCH_SEC = 2
+MOUSE_DEADZONE = 0.18
+MOUSE_SPEED_PPS = 900
+MOUSE_MAX_DT = 0.05
 
 DETECT_SCRIPT = '''
 tell application "System Events"
@@ -80,19 +83,22 @@ def write_state(last_action=None, connected=True, controller_name=""):
     STATE_PATH.write_text(json.dumps(data))
 
 
-MODIFIER_KEYCODES = {"shift": 56, "ctrl": 59, "alt": 58}
+MODIFIER_KEYCODES = {"shift": 56, "ctrl": 59, "alt": 58, "cmd": 55}
+MODIFIER_FLAGS = {
+    "shift": Quartz.kCGEventFlagMaskShift,
+    "ctrl": Quartz.kCGEventFlagMaskControl,
+    "alt": Quartz.kCGEventFlagMaskAlternate,
+    "cmd": Quartz.kCGEventFlagMaskCommand,
+}
 
 
-def tap_key(key, label, shift=False, ctrl=False, alt=False):
+def tap_key(key, label, shift=False, ctrl=False, alt=False, cmd=False):
     code = KEY[key]
-    modifiers = [name for name, held in (("shift", shift), ("ctrl", ctrl), ("alt", alt)) if held]
+    held = {"shift": shift, "ctrl": ctrl, "alt": alt, "cmd": cmd}
+    modifiers = [name for name, is_held in held.items() if is_held]
     flags = 0
-    if shift:
-        flags |= Quartz.kCGEventFlagMaskShift
-    if ctrl:
-        flags |= Quartz.kCGEventFlagMaskControl
-    if alt:
-        flags |= Quartz.kCGEventFlagMaskAlternate
+    for name in modifiers:
+        flags |= MODIFIER_FLAGS[name]
 
     for name in modifiers:
         mod_down = Quartz.CGEventCreateKeyboardEvent(None, MODIFIER_KEYCODES[name], True)
@@ -125,12 +131,47 @@ def do_volume(delta, label):
     write_state(last_action=label)
 
 
+def _cursor_position():
+    return Quartz.CGEventGetLocation(Quartz.CGEventCreate(None))
+
+
+def _post_mouse(mouse_type, position):
+    event = Quartz.CGEventCreateMouseEvent(None, mouse_type, position, Quartz.kCGMouseButtonLeft)
+    Quartz.CGEventPost(Quartz.kCGHIDEventTap, event)
+
+
+def move_mouse(dx, dy):
+    pos = _cursor_position()
+    _post_mouse(Quartz.kCGEventMouseMoved, (pos.x + dx, pos.y + dy))
+
+
+def do_mouse_click(label):
+    pos = _cursor_position()
+    _post_mouse(Quartz.kCGEventLeftMouseDown, pos)
+    _post_mouse(Quartz.kCGEventLeftMouseUp, pos)
+    print(f"[{time.strftime('%H:%M:%S')}] -> {label}", flush=True)
+    write_state(last_action=label)
+
+
+def rescale_stick(value):
+    if abs(value) <= MOUSE_DEADZONE:
+        return 0.0
+    sign = 1.0 if value > 0 else -1.0
+    return (value - sign * MOUSE_DEADZONE) / (1.0 - MOUSE_DEADZONE)
+
+
 def run_action(action_id):
     action = ACTIONS.get(action_id)
     if not action or action_id == "none":
         return
     if "key" in action:
-        tap_key(action["key"], action["label"], shift=action.get("shift", False), ctrl=action.get("ctrl", False), alt=action.get("alt", False))
+        tap_key(
+            action["key"], action["label"],
+            shift=action.get("shift", False), ctrl=action.get("ctrl", False),
+            alt=action.get("alt", False), cmd=action.get("cmd", False),
+        )
+    elif action.get("mouse_click"):
+        do_mouse_click(action["label"])
     elif "volume_delta" in action:
         do_volume(action["volume_delta"], action["label"])
 
@@ -165,9 +206,6 @@ last_rebind_check = 0.0
 def get_pressed(button_id):
     if button_id.startswith("dpad_"):
         return getattr(dpad, button_id.split("_", 1)[1])().isPressed()
-    if button_id.startswith("leftThumbstick_"):
-        direction = button_id.split("_", 1)[1]
-        return getattr(gp.leftThumbstick(), direction)().isPressed()
     if button_id.startswith("rightThumbstick_"):
         direction = button_id.split("_", 1)[1]
         return getattr(gp.rightThumbstick(), direction)().isPressed()
@@ -183,6 +221,7 @@ last_fire = {}
 last_heartbeat = 0.0
 last_config_check = 0.0
 last_auto_switch = 0.0
+last_mouse_move = 0.0
 
 while True:
     now = time.time()
@@ -222,12 +261,19 @@ while True:
             (not prev.get(button_id) and now - last_fire.get(button_id, 0) >= DEBOUNCE_SEC)
             or (repeatable and now - last_fire.get(button_id, 0) >= REPEAT_SEC)
         )
-        if button_id in ("rightTrigger", "buttonX", "leftThumbstick_left", "leftThumbstick_right") and pressed != prev.get(button_id):
-            print(f"[{time.strftime('%H:%M:%S')}] {button_id} pressed={pressed} should_control={should_control} fire={fire}", flush=True)
         if fire:
             run_action(action_id)
             last_fire[button_id] = now
         prev[button_id] = pressed
+
+    if should_control:
+        stick = gp.leftThumbstick()
+        dx = rescale_stick(stick.xAxis().value())
+        dy = rescale_stick(stick.yAxis().value())
+        if dx or dy:
+            dt = min(now - last_mouse_move, MOUSE_MAX_DT)
+            move_mouse(dx * MOUSE_SPEED_PPS * dt, -dy * MOUSE_SPEED_PPS * dt)
+    last_mouse_move = now
 
     if now - last_heartbeat >= HEARTBEAT_SEC:
         write_state(connected=True, controller_name=controller_name)
