@@ -60,7 +60,7 @@ def detect_profile():
     return None
 
 
-current_profile = None
+current_profile = DEFAULT_PROFILE
 
 
 def write_state(last_action=None, connected=True, controller_name=""):
