@@ -5,7 +5,7 @@ import secrets
 import tempfile
 
 import httpx
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, File, Form, UploadFile
 from fastapi.responses import HTMLResponse, StreamingResponse, FileResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -71,6 +71,9 @@ _YT_CHANNEL_IDS_FILE = f'{_YT_DIR}/channel_ids.json'
 
 # 陽台盆栽紀錄的資料檔（/balcony-plants/ 靜態頁的唯一資料來源）
 _PLANTS_FILE = f'{sources.CC}/balcony-plants/plants.json'
+_PLANTS_PHOTOS = f'{sources.CC}/balcony-plants/photos'
+_PHOTO_EXTS = {'.jpg', '.jpeg', '.png', '.webp', '.gif'}
+_PHOTO_MAX_BYTES = 10 * 1024 * 1024
 
 _AUTH_USER, _AUTH_PASS = open(
     f'{sources.CC}/.secrets/command_center_auth.txt', encoding='utf-8'
@@ -432,14 +435,26 @@ def _write_plants(plants):
     os.replace(tmp, _PLANTS_FILE)
 
 
-class NewPlant(BaseModel):
-    name: str
-    water_type: str
-    category: str = ''
-    traits: str = ''
-    light: str = ''
-    water: str = ''
-    notes: str = ''
+def _save_plant_photo(plant_id, upload):
+    """檔名由系統產生（plant_id + 白名單副檔名），不吃使用者給的路徑。"""
+    ext = os.path.splitext(upload.filename or '')[1].lower()
+    if ext == '.jpeg':
+        ext = '.jpg'
+    if ext not in _PHOTO_EXTS:
+        raise HTTPException(400, f'不支援的圖片格式「{ext or "未知"}」，可用 jpg/png/webp/gif')
+    too_big = f'照片超過 {_PHOTO_MAX_BYTES // (1024 * 1024)}MB'
+    if upload.size and upload.size > _PHOTO_MAX_BYTES:
+        raise HTTPException(400, too_big)
+    data = upload.file.read()
+    if not data:
+        raise HTTPException(400, '照片檔是空的')
+    if len(data) > _PHOTO_MAX_BYTES:
+        raise HTTPException(400, too_big)
+    os.makedirs(_PLANTS_PHOTOS, exist_ok=True)
+    filename = f'{plant_id}{ext}'
+    with open(os.path.join(_PLANTS_PHOTOS, filename), 'wb') as f:
+        f.write(data)
+    return f'photos/{filename}'
 
 
 @app.get('/api/balcony-plants')
@@ -448,22 +463,32 @@ def list_plants():
 
 
 @app.post('/api/balcony-plants')
-def add_plant(req: NewPlant):
-    name = req.name.strip()
+def add_plant(
+    name: str = Form(...),
+    water_type: str = Form(...),
+    category: str = Form(''),
+    traits: str = Form(''),
+    light: str = Form(''),
+    water: str = Form(''),
+    notes: str = Form(''),
+    photo: UploadFile | None = File(None),
+):
+    name = name.strip()
     if not name:
         raise HTTPException(400, '名稱不可空白')
     if len(name) > 100:
         raise HTTPException(400, '名稱過長')
-    if req.water_type not in ('dry', 'moist'):
-        raise HTTPException(400, f'unknown water_type: {req.water_type}')
-    fields = {'name': name, 'category': req.category, 'traits': req.traits,
-              'light': req.light, 'water': req.water, 'notes': req.notes}
+    if water_type not in ('dry', 'moist'):
+        raise HTTPException(400, f'unknown water_type: {water_type}')
+    fields = {'name': name, 'category': category, 'traits': traits,
+              'light': light, 'water': water, 'notes': notes}
     for key, value in fields.items():
         if len(value) > 1000:
             raise HTTPException(400, f'{key} 過長')
-    plant = {'water_type': req.water_type, 'id': f'p{int(time.time() * 1000)}',
-             'photo': '', **fields}
     plants = _read_plants()
+    plant_id = f'p{int(time.time() * 1000)}'
+    photo_path = _save_plant_photo(plant_id, photo) if photo and photo.filename else ''
+    plant = {'water_type': water_type, 'id': plant_id, 'photo': photo_path, **fields}
     plants.append(plant)
     _write_plants(plants)
     return plant
