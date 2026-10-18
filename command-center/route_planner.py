@@ -38,7 +38,22 @@ MODE_LABEL = {
     'AERIAL_LIFT': '纜車', 'GONDOLA': '纜車', 'TROLLEYBUS': '公車',
 }
 
+# 運具優先度：台鐵 > 捷運 > 公車。一條路線取途中最高的那個運具。
+# 高鐵未指定，歸在台鐵同級；輕軌歸在捷運同級。
+MODE_PRIORITY = {
+    'HIGHSPEED_RAIL': 0, 'LONG_DISTANCE': 0, 'REGIONAL_RAIL': 0,
+    'REGIONAL_FAST_RAIL': 0, 'SUBURBAN': 0,
+    'SUBWAY': 1, 'TRAM': 1,
+    'BUS': 2, 'COACH': 2, 'TROLLEYBUS': 2,
+}
+_MODE_FALLBACK_RANK = 9
+
 _MAX_ROUTES = 3
+
+
+def _mode_rank(modes) -> int:
+    return min((MODE_PRIORITY.get(m, _MODE_FALLBACK_RANK) for m in modes),
+               default=_MODE_FALLBACK_RANK)
 
 
 # ── HTTP ────────────────────────────────────────
@@ -217,12 +232,14 @@ def _name(end: dict) -> str:
 
 
 def _norm_itinerary(it: dict) -> dict:
-    legs, walk = [], 0
+    legs, walk, modes = [], 0, []
     for lg in it.get('legs', []):
         mode = lg.get('mode', '')
         dur = lg.get('duration') or 0
         if mode == 'WALK':
             walk += dur
+        else:
+            modes.append(mode)
         legs.append({
             'mode': MODE_LABEL.get(mode, mode),
             'line': _line_label(lg),
@@ -245,6 +262,7 @@ def _norm_itinerary(it: dict) -> dict:
         'min': round((it.get('duration') or 0) / 60),
         'walk_min': round(walk / 60),
         'transfers': it.get('transfers', 0),
+        'mode_rank': _mode_rank(modes),
         'legs': legs,
     }
 
@@ -255,7 +273,7 @@ def plan_via_transitous(o: tuple, d: tuple, arrive_iso: str) -> list:
         'toPlace': f'{d[0]},{d[1]}',
         'time': arrive_iso,
         'arriveBy': 'true',
-        'numItineraries': '8',
+        'numItineraries': '40',
         'transitModes': ','.join(TRANSIT_MODES),
     }
     js = _get(f'{TRANSITOUS}?' + urllib.parse.urlencode(params), timeout=30)
@@ -263,19 +281,21 @@ def plan_via_transitous(o: tuple, d: tuple, arrive_iso: str) -> list:
 
 
 def _rank(routes: list, target_min: int, now_min: int | None = None) -> tuple[list, bool]:
-    """①不遲到且最接近目標時刻 ②步行最少 ③總時間最短
+    """①運具優先度（台鐵 > 捷運 > 公車）②不遲到且最接近目標時刻 ③步行最少 ④總時間最短
 
     回傳 (前 N 條, 是否趕得上)。只按「總時間最短」排會挑到很早就到、在目的地空等的
-    班次（實測：目標 11:20 卻回 10:56 到），所以第一順位是「不遲到的最晚抵達」。
+    班次（實測：目標 11:20 卻回 10:56 到），所以沒有運具偏好時是「不遲到的最晚抵達」。
+    運具優先度是硬性的：有台鐵就排前面，即使要提早出門（實測同一趟差 40 分鐘以上）。
 
     now_min 給定時（查今天）會濾掉已經開走的班次——引擎的 arriveBy 不知道「現在」。
+    趕不上目標時（feasible 為空）不套用運具優先度，先求最快抵達。
     """
     if now_min is not None:
         ahead = [r for r in routes if r['start_min'] >= now_min]
         routes = ahead or routes
     feasible = [r for r in routes if r['end_min'] <= target_min]
     if feasible:
-        feasible.sort(key=lambda r: (-r['end_min'], r['walk_min'], r['min']))
+        feasible.sort(key=lambda r: (r['mode_rank'], -r['end_min'], r['walk_min'], r['min']))
         return feasible[:_MAX_ROUTES], True
     routes.sort(key=lambda r: (r['end_min'], r['walk_min']))
     return routes[:_MAX_ROUTES], False
@@ -344,6 +364,7 @@ def plan_via_tra_fallback(o: tuple, d: tuple, day: str, arrive: str,
     return [{
         'start': leave_hm, 'end': arr[:5], 'end_min': arr_min,
         'min': walk_o + ride + walk_d, 'walk_min': walk_o + walk_d, 'transfers': 0,
+        'mode_rank': MODE_PRIORITY['REGIONAL_RAIL'],
         'legs': [
             {'mode': '步行', 'line': '', 'from': '出發地', 'to': so[1],
              'start': leave_hm, 'end': dep[:5], 'min': walk_o, 'walk': True},
