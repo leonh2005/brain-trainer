@@ -33,13 +33,14 @@ h1{font-size:22px;margin-bottom:4px}
   border-radius:10px;box-shadow:0 12px 48px rgba(0,0,0,.5)}
 .thumb-ph{height:200px;display:grid;place-items:center;font-size:40px;
   background:linear-gradient(135deg,#efe9d8,#e4dcc6)}
-.card .del{
-  position:absolute;top:10px;right:10px;width:28px;height:28px;padding:0;
-  display:grid;place-items:center;line-height:1;font-size:13px;cursor:pointer;
-  border:1px solid rgba(0,0,0,.08);border-radius:8px;
-  background:rgba(255,255,255,.92);color:var(--danger);
+.card-actions{position:absolute;top:10px;right:10px;display:flex;gap:6px}
+.card-actions button{
+  width:28px;height:28px;padding:0;display:grid;place-items:center;line-height:1;
+  font-size:13px;cursor:pointer;border:1px solid rgba(0,0,0,.08);border-radius:8px;
+  background:rgba(255,255,255,.92);color:var(--fg);
 }
-.card .del:hover{background:#fff}
+.card-actions button:hover{background:#fff}
+.card-actions .del{color:var(--danger)}
 .card-body{padding:14px 16px}
 .card h2{font-size:16px;margin-bottom:2px}
 .cat{
@@ -59,6 +60,11 @@ h1{font-size:22px;margin-bottom:4px}
 .btn:hover{background:#fff}
 .btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
 .btn.primary:hover{filter:brightness(1.07)}
+.btn.small{font-size:12px;padding:3px 9px;border-radius:7px}
+.btn:disabled{opacity:.55;cursor:default}
+.form-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.form-head h2{font-size:15px}
+.name-row{display:flex;align-items:center;justify-content:space-between;gap:8px}
 #add-form{
   margin:14px 0 8px;padding:16px;background:var(--card);
   border:1px solid var(--border);border-radius:14px;
@@ -85,9 +91,13 @@ h1{font-size:22px;margin-bottom:4px}
   <button class="btn primary" id="toggle-form">＋ 新增盆栽</button>
 
   <form id="add-form" hidden>
+    <div class="form-head"><h2 id="form-title">新增盆栽</h2></div>
     <div class="form-grid">
       <div class="fld">
-        <label for="f-name">名稱（必填）</label>
+        <div class="name-row">
+          <label for="f-name">名稱（必填）</label>
+          <button type="button" class="btn small" id="ai-fill">🤖 AI 自動填入</button>
+        </div>
         <input id="f-name" name="name" required maxlength="100" placeholder="例：薄荷">
       </div>
       <div class="fld">
@@ -143,6 +153,7 @@ const meta = document.getElementById('meta');
 const form = document.getElementById('add-form');
 
 let plants = [];
+let editingId = null;
 
 const GROUPS = [
   {key: 'dry', label: '🌵 耐旱型（乾透澆透，忌積水）'},
@@ -158,7 +169,10 @@ function cardHtml(p){
     : '';
   return `
   <div class="card">
-    <button class="del" data-del="${esc(p.id)}" title="刪除">✕</button>
+    <div class="card-actions">
+      <button class="edit" data-edit="${esc(p.id)}" title="編輯">✏️</button>
+      <button class="del" data-del="${esc(p.id)}" title="刪除">✕</button>
+    </div>
     ${thumb}
     <div class="card-body">
       <h2>${esc(p.name)}</h2>
@@ -194,14 +208,75 @@ async function load(){
   }
 }
 
-document.getElementById('toggle-form').addEventListener('click', () => {
-  form.hidden = !form.hidden;
-  if (!form.hidden) document.getElementById('f-name').focus();
-});
+const FORM_FIELDS = ['name', 'category', 'water_type', 'traits', 'light', 'water', 'notes'];
 
-document.getElementById('cancel-form').addEventListener('click', () => {
+function setFormMode(plant){
+  editingId = plant ? plant.id : null;
+  document.getElementById('form-title').textContent = plant ? `編輯：${plant.name}` : '新增盆栽';
+  form.querySelector('button[type=submit]').textContent = plant ? '更新' : '儲存';
+}
+
+function openForm(plant){
+  form.reset();
+  if (plant) {
+    FORM_FIELDS.forEach(k => {
+      const el = form.querySelector(`[name="${k}"]`);
+      if (el) el.value = plant[k] || '';
+    });
+  }
+  setFormMode(plant || null);
+  form.hidden = false;
+  document.getElementById('f-name').focus();
+  form.scrollIntoView({behavior: 'smooth', block: 'center'});
+}
+
+function closeForm(){
   form.reset();
   form.hidden = true;
+  setFormMode(null);
+}
+
+document.getElementById('toggle-form').addEventListener('click', () => {
+  if (form.hidden) openForm(null);
+  else closeForm();
+});
+
+document.getElementById('cancel-form').addEventListener('click', closeForm);
+
+document.getElementById('ai-fill').addEventListener('click', async () => {
+  const nameEl = document.getElementById('f-name');
+  const name = nameEl.value.trim();
+  if (!name) {
+    alert('先輸入植物名稱，AI 才知道要查哪一種');
+    nameEl.focus();
+    return;
+  }
+  const btn = document.getElementById('ai-fill');
+  btn.disabled = true;
+  btn.textContent = '🤖 產生中…';
+  try {
+    const res = await fetch('/api/balcony-plants/suggest', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({name}),
+    });
+    if (!res.ok) throw new Error(await apiError(res));
+    const d = await res.json();
+    form.querySelector('[name="water_type"]').value = d.water_type;
+    let filled = 0;
+    ['category', 'traits', 'light', 'water', 'notes'].forEach(k => {
+      const el = form.querySelector(`[name="${k}"]`);
+      if (!el || el.value.trim()) return;
+      el.value = d[k] || '';
+      filled++;
+    });
+    if (!filled) alert('文字欄位都已有內容，沒有覆蓋（澆水分類已依 AI 判斷更新）。');
+  } catch (err) {
+    alert('AI 填入失敗：' + err.message);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '🤖 AI 自動填入';
+  }
 });
 
 async function apiError(res){
@@ -216,14 +291,16 @@ async function apiError(res){
 form.addEventListener('submit', async e => {
   e.preventDefault();
   const body = new FormData(form);
+  const url = editingId
+    ? '/api/balcony-plants/' + encodeURIComponent(editingId)
+    : '/api/balcony-plants';
   try {
-    const res = await fetch('/api/balcony-plants', {method: 'POST', body});
+    const res = await fetch(url, {method: editingId ? 'PUT' : 'POST', body});
     if (!res.ok) throw new Error(await apiError(res));
-    form.reset();
-    form.hidden = true;
+    closeForm();
     await load();
   } catch (err) {
-    alert('新增失敗：' + err.message);
+    alert((editingId ? '更新' : '新增') + '失敗：' + err.message);
   }
 });
 
@@ -241,6 +318,12 @@ sections.addEventListener('click', async e => {
     lightboxImg.src = img.src;
     lightboxImg.alt = img.alt;
     lightbox.hidden = false;
+    return;
+  }
+  const editBtn = e.target.closest('[data-edit]');
+  if (editBtn) {
+    const plant = plants.find(p => p.id === editBtn.dataset.edit);
+    if (plant) openForm(plant);
     return;
   }
   const btn = e.target.closest('[data-del]');
