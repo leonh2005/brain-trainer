@@ -69,6 +69,9 @@ _YT_DIR = os.path.expanduser('~/youtube-monitor')
 _YT_CHANNELS_FILE = f'{_YT_DIR}/channels.json'
 _YT_CHANNEL_IDS_FILE = f'{_YT_DIR}/channel_ids.json'
 
+# 陽台盆栽紀錄的資料檔（/balcony-plants/ 靜態頁的唯一資料來源）
+_PLANTS_FILE = f'{sources.CC}/balcony-plants/plants.json'
+
 _AUTH_USER, _AUTH_PASS = open(
     f'{sources.CC}/.secrets/command_center_auth.txt', encoding='utf-8'
 ).read().strip().split(':', 1)
@@ -407,6 +410,73 @@ def set_card_order(req: CardOrder):
         json.dump(data, f, ensure_ascii=False)
     os.replace(tmp, _CARD_ORDER_FILE)
     return {'ok': True}
+
+
+def _read_plants():
+    """檔案不存在當空清單；存在但壞掉時要拋錯，免得新增時把整份盆栽資料覆蓋掉。"""
+    try:
+        with open(_PLANTS_FILE, encoding='utf-8') as f:
+            data = json.load(f)
+    except FileNotFoundError:
+        return []
+    if not isinstance(data, list):
+        raise ValueError('plants.json 格式不是陣列')
+    return data
+
+
+def _write_plants(plants):
+    tmp = _PLANTS_FILE + '.tmp'
+    with open(tmp, 'w', encoding='utf-8') as f:
+        json.dump(plants, f, ensure_ascii=False, indent=2)
+        f.write('\n')
+    os.replace(tmp, _PLANTS_FILE)
+
+
+class NewPlant(BaseModel):
+    name: str
+    water_type: str
+    category: str = ''
+    traits: str = ''
+    light: str = ''
+    water: str = ''
+    notes: str = ''
+
+
+@app.get('/api/balcony-plants')
+def list_plants():
+    return _read_plants()
+
+
+@app.post('/api/balcony-plants')
+def add_plant(req: NewPlant):
+    name = req.name.strip()
+    if not name:
+        raise HTTPException(400, '名稱不可空白')
+    if len(name) > 100:
+        raise HTTPException(400, '名稱過長')
+    if req.water_type not in ('dry', 'moist'):
+        raise HTTPException(400, f'unknown water_type: {req.water_type}')
+    fields = {'name': name, 'category': req.category, 'traits': req.traits,
+              'light': req.light, 'water': req.water, 'notes': req.notes}
+    for key, value in fields.items():
+        if len(value) > 1000:
+            raise HTTPException(400, f'{key} 過長')
+    plant = {'water_type': req.water_type, 'id': f'p{int(time.time() * 1000)}',
+             'photo': '', **fields}
+    plants = _read_plants()
+    plants.append(plant)
+    _write_plants(plants)
+    return plant
+
+
+@app.delete('/api/balcony-plants/{plant_id}')
+def delete_plant(plant_id: str):
+    plants = _read_plants()
+    remaining = [p for p in plants if p.get('id') != plant_id]
+    if len(remaining) == len(plants):
+        raise HTTPException(404, f'plant not found: {plant_id}')
+    _write_plants(remaining)
+    return {'ok': True, 'removed': plant_id}
 
 
 class WatchlistStock(BaseModel):
