@@ -70,10 +70,12 @@ _YT_CHANNELS_FILE = f'{_YT_DIR}/channels.json'
 _YT_CHANNEL_IDS_FILE = f'{_YT_DIR}/channel_ids.json'
 
 # 陽台盆栽紀錄的資料檔（/balcony-plants/ 靜態頁的唯一資料來源）
-_PLANTS_FILE = f'{sources.CC}/balcony-plants/plants.json'
-_PLANTS_PHOTOS = f'{sources.CC}/balcony-plants/photos'
+_PLANTS_DIR = f'{sources.CC}/balcony-plants'
+_PLANTS_FILE = f'{_PLANTS_DIR}/plants.json'
+_PLANTS_PHOTOS = f'{_PLANTS_DIR}/photos'
 _PHOTO_EXTS = {'.jpg', '.jpeg', '.png', '.webp', '.gif'}
 _PHOTO_MAX_BYTES = 10 * 1024 * 1024
+_DEEPSEEK_KEY_FILE = f'{sources.CC}/.secrets/deepseek_key.txt'
 
 _AUTH_USER, _AUTH_PASS = open(
     f'{sources.CC}/.secrets/command_center_auth.txt', encoding='utf-8'
@@ -457,9 +459,92 @@ def _save_plant_photo(plant_id, upload):
     return f'photos/{filename}'
 
 
+def _drop_own_photo(plant_id, old_path, new_path):
+    """只刪本服務自己產生的 photos/{plant_id}.ext；手動命名（可能被共用）的一律不動。"""
+    if not old_path or old_path == new_path:
+        return
+    if os.path.dirname(old_path) != 'photos':
+        return
+    if os.path.splitext(os.path.basename(old_path))[0] != plant_id:
+        return
+    try:
+        os.remove(os.path.join(_PLANTS_DIR, old_path))
+    except OSError:
+        pass
+
+
+def _clean_plant_fields(name, water_type, category, traits, light, water, notes):
+    name = name.strip()
+    if not name:
+        raise HTTPException(400, '名稱不可空白')
+    if len(name) > 100:
+        raise HTTPException(400, '名稱過長')
+    if water_type not in ('dry', 'moist'):
+        raise HTTPException(400, f'unknown water_type: {water_type}')
+    fields = {'name': name, 'water_type': water_type, 'category': category,
+              'traits': traits, 'light': light, 'water': water, 'notes': notes}
+    for key, value in fields.items():
+        if len(value) > 1000:
+            raise HTTPException(400, f'{key} 過長')
+    return fields
+
+
+class PlantSuggestion(BaseModel):
+    name: str
+
+
+def _strip_json_fence(text):
+    text = text.strip()
+    if text.startswith('```'):
+        text = text.split('\n', 1)[1] if '\n' in text else ''
+    return text.rsplit('```', 1)[0].strip()
+
+
 @app.get('/api/balcony-plants')
 def list_plants():
     return _read_plants()
+
+
+@app.post('/api/balcony-plants/suggest')
+def suggest_plant(req: PlantSuggestion):
+    name = req.name.strip()
+    if not name:
+        raise HTTPException(400, '名稱不可空白')
+    try:
+        with open(_DEEPSEEK_KEY_FILE, encoding='utf-8') as f:
+            key = f.read().strip()
+    except OSError:
+        raise HTTPException(503, '找不到 DeepSeek 金鑰')
+    prompt = (
+        f'植物名稱：{name}\n'
+        '只輸出 JSON，不要其他文字或 markdown，欄位：'
+        'water_type（只能是 dry 或 moist）、category、traits、light、water、notes。\n'
+        'water_type 判斷這植物偏耐旱(dry)還是喜濕(moist)。'
+        '每個文字欄位 40-80 字繁體中文，針對台灣氣候的陽台盆栽寫照護重點。'
+    )
+    try:
+        res = httpx.post(
+            'https://api.deepseek.com/chat/completions',
+            json={'model': 'deepseek-chat', 'temperature': 0.3, 'messages': [
+                {'role': 'system', 'content': '你是台灣園藝顧問，回答務實、具體。'},
+                {'role': 'user', 'content': prompt},
+            ]},
+            headers={'Authorization': f'Bearer {key}'},
+            timeout=60,
+        )
+        res.raise_for_status()
+        content = res.json()['choices'][0]['message']['content']
+    except Exception as e:
+        raise HTTPException(502, f'AI 產生失敗：{e}')
+    try:
+        data = json.loads(_strip_json_fence(content))
+    except ValueError:
+        raise HTTPException(502, 'AI 回傳格式無法解析')
+    out = {k: str(data.get(k, '')).strip() for k in
+           ('water_type', 'category', 'traits', 'light', 'water', 'notes')}
+    if out['water_type'] not in ('dry', 'moist'):
+        out['water_type'] = 'moist'
+    return out
 
 
 @app.post('/api/balcony-plants')
@@ -473,25 +558,40 @@ def add_plant(
     notes: str = Form(''),
     photo: UploadFile | None = File(None),
 ):
-    name = name.strip()
-    if not name:
-        raise HTTPException(400, '名稱不可空白')
-    if len(name) > 100:
-        raise HTTPException(400, '名稱過長')
-    if water_type not in ('dry', 'moist'):
-        raise HTTPException(400, f'unknown water_type: {water_type}')
-    fields = {'name': name, 'category': category, 'traits': traits,
-              'light': light, 'water': water, 'notes': notes}
-    for key, value in fields.items():
-        if len(value) > 1000:
-            raise HTTPException(400, f'{key} 過長')
+    fields = _clean_plant_fields(name, water_type, category, traits, light, water, notes)
     plants = _read_plants()
     plant_id = f'p{int(time.time() * 1000)}'
     photo_path = _save_plant_photo(plant_id, photo) if photo and photo.filename else ''
-    plant = {'water_type': water_type, 'id': plant_id, 'photo': photo_path, **fields}
+    plant = {**fields, 'id': plant_id, 'photo': photo_path}
     plants.append(plant)
     _write_plants(plants)
     return plant
+
+
+@app.put('/api/balcony-plants/{plant_id}')
+def update_plant(
+    plant_id: str,
+    name: str = Form(...),
+    water_type: str = Form(...),
+    category: str = Form(''),
+    traits: str = Form(''),
+    light: str = Form(''),
+    water: str = Form(''),
+    notes: str = Form(''),
+    photo: UploadFile | None = File(None),
+):
+    fields = _clean_plant_fields(name, water_type, category, traits, light, water, notes)
+    plants = _read_plants()
+    target = next((p for p in plants if p.get('id') == plant_id), None)
+    if target is None:
+        raise HTTPException(404, f'plant not found: {plant_id}')
+    if photo and photo.filename:
+        old_path = target.get('photo', '')
+        target['photo'] = _save_plant_photo(plant_id, photo)
+        _drop_own_photo(plant_id, old_path, target['photo'])
+    target.update(fields)
+    _write_plants(plants)
+    return target
 
 
 @app.delete('/api/balcony-plants/{plant_id}')
