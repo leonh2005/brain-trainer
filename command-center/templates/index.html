@@ -1216,6 +1216,15 @@ function runJob(btn, jobId){
     poll(id,btn,orig,showModal?40:20,showModal);
   }).catch(e=>{toast('❌ '+e.message);btn.disabled=false;btn.classList.remove('busy');btn.innerHTML=orig});
 }
+function stopJob(btn,jobId){
+  const orig=btn.innerHTML;
+  btn.disabled=true;btn.classList.add('busy');btn.innerHTML='<span class="k">⏹</span>停止中…';
+  fetch(`/api/jobs/${jobId}/stop`,{method:'POST'}).then(r=>r.json()).then(res=>{
+    toast(res.stopped?'⏹ 已停止':'⚠️ '+(res.reason||'停止失敗'));
+  }).catch(e=>toast('❌ '+e.message)).finally(()=>{
+    btn.disabled=false;btn.classList.remove('busy');btn.innerHTML=orig;
+  });
+}
 function poll(id,btn,orig,maxAttempts,showModal){
   maxAttempts=maxAttempts||20;
   let n=0;const iv=setInterval(()=>{
@@ -1287,7 +1296,7 @@ function askChat(prompt){
 
 const TOOLS=[
   {ic:'📈', title:'回後買上漲選股', desc:'一鍵掃描全市場：多頭趨勢＋量縮回檔不破前低＋長紅突破昨高', site:'/svc/5960/', how:'開網站選掃描範圍，按「開始掃描」等進度跑完'},
-  {ic:'🎬', title:'ComfyUI（AI 影片生成）', desc:'本地 LTX Video 文生／圖生影片，裝在外接硬碟 1TOWC', site:'/svc/8188/', launch:'comfyui', how:'按「啟動」開服務，約 15 秒後點 ↗ 開介面（需插著 1TOWC 硬碟）'},
+  {ic:'🎬', title:'ComfyUI（AI 影片生成）', desc:'本地 LTX Video 文生／圖生影片，裝在外接硬碟 1TOWC', site:'/svc/8188/', launch:'comfyui', how:'按「啟動」開服務，約 15 秒後點 ↗ 開介面；不用時按「停止」關閉（需插著 1TOWC 硬碟）'},
   {ic:'🤖', title:'TradingAgents 多Agent分析', desc:'多個 AI Agent 深度分析個股：技術面／基本面／新聞面＋多空辯論', site:'/svc/5500/', how:'在 stock-screener-ai (5500) 的「多Agent深度分析」分頁使用'},
   {ic:'📚', title:'tw-coverage 台股研究報告', desc:'1735 家台股公司研究報告，wikilink 供應鏈搜尋', path:'~/CCProject/tw-coverage/', how:'用 Obsidian 或編輯器開啟資料夾查閱'},
   {ic:'🔎', title:'last30days 輿情研究', desc:'跨社群／市場／網路來源，搜尋近 30 天特定主題討論', site:'/svc/5750/', how:'服務常駐，開網站輸入主題即可查'},
@@ -1316,7 +1325,7 @@ function mountTools(defs){
   defs.forEach(t=>{
     const c=el('div','card fade-in');
     c.draggable=true; c.dataset.id=t.title;
-    c.innerHTML=`<div class="card-head"><span class="ic">${t.ic}</span><h3>${t.title}</h3>${t.site?`<a class="site-btn" href="${t.site}"${/^https?:/.test(t.site)?' target="_blank" rel="noopener"':''} title="開啟服務網站">↗</a>`:''}</div><div class="card-body"><div class="mini" style="line-height:1.7;color:var(--muted)">${t.desc}</div>${t.path?`<div class="mini" style="margin-top:8px">📁 ${t.path}</div>`:''}${t.how?`<div class="mini" style="margin-top:6px;color:var(--accent-soft)">▸ ${t.how}</div>`:''}${t.launch?`<button class="btn" data-tool-job="${t.launch}" style="margin-top:11px"><span class="k">▶</span>啟動</button>`:''}${t.broadcast?`<div class="bc-row" style="display:flex;gap:6px;margin-top:11px"><input class="bc-input" placeholder="輸入問題…同步發給四個 AI"><button class="btn bc-send"><span class="k">📡</span>送出</button></div>`:''}</div>`;
+    c.innerHTML=`<div class="card-head"><span class="ic">${t.ic}</span><h3>${t.title}</h3>${t.site?`<a class="site-btn" href="${t.site}"${/^https?:/.test(t.site)?' target="_blank" rel="noopener"':''} title="開啟服務網站">↗</a>`:''}</div><div class="card-body"><div class="mini" style="line-height:1.7;color:var(--muted)">${t.desc}</div>${t.path?`<div class="mini" style="margin-top:8px">📁 ${t.path}</div>`:''}${t.how?`<div class="mini" style="margin-top:6px;color:var(--accent-soft)">▸ ${t.how}</div>`:''}${t.launch?`<div style="display:flex;gap:8px;margin-top:11px"><button class="btn" data-tool-job="${t.launch}"><span class="k">▶</span>啟動</button><button class="btn" data-tool-stop="${t.launch}"><span class="k">⏹</span>停止</button></div>`:''}${t.broadcast?`<div class="bc-row" style="display:flex;gap:6px;margin-top:11px"><input class="bc-input" placeholder="輸入問題…同步發給四個 AI"><button class="btn bc-send"><span class="k">📡</span>送出</button></div>`:''}</div>`;
     wrap.appendChild(c);
     addResizeBtn(c,'cc-order-tools');
     if(t.broadcast){
@@ -1336,6 +1345,7 @@ function mountTools(defs){
     }
   });
   wrap.querySelectorAll('.btn[data-tool-job]').forEach(b=>b.addEventListener('click',()=>runJob(b, b.dataset.toolJob)));
+  wrap.querySelectorAll('.btn[data-tool-stop]').forEach(b=>b.addEventListener('click',()=>stopJob(b, b.dataset.toolStop)));
   applySavedSizes(wrap,'cc-order-tools');
 }
 /* ── 出門路線卡（自行 mount：不進 60 秒輪詢，否則填到一半的表單會被重繪清空）── */

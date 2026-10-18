@@ -123,6 +123,37 @@ def run(jid: str):
     return {'started': True}
 
 
+def stop(jid: str):
+    job = JOBS.get(jid)
+    if job is None:
+        raise KeyError(jid)
+    if 'server' not in job:
+        return {'stopped': False, 'reason': '此任務不支援停止'}
+    # 以 port 找監聽行程：手動啟動的服務也殺得到，不依賴 _running 記錄
+    try:
+        # 絕對路徑：LaunchAgent 的 PATH 不一定含 /usr/sbin
+        pids = subprocess.run(['/usr/sbin/lsof', '-ti', f'tcp:{job["port"]}', '-sTCP:LISTEN'],
+                              capture_output=True, text=True, timeout=10).stdout.split()
+    except (OSError, subprocess.TimeoutExpired):
+        pids = []
+    if not pids:
+        return {'stopped': False, 'reason': '服務未在執行'}
+    for pid in pids:
+        subprocess.run(['kill', '-TERM', pid], capture_output=True)
+    deadline = time.time() + 10
+    while time.time() < deadline:
+        if not _port_up(job['port']):
+            _running.pop(jid, None)
+            return {'stopped': True}
+        time.sleep(0.5)
+    for pid in pids:  # 10 秒內沒收乾淨就強制結束
+        subprocess.run(['kill', '-KILL', pid], capture_output=True)
+    time.sleep(1)
+    _running.pop(jid, None)
+    stopped = not _port_up(job['port'])
+    return {'stopped': stopped, 'reason': '' if stopped else '結束失敗（port 仍在使用）'}
+
+
 def status(jid: str):
     job = JOBS.get(jid)
     if job is None:

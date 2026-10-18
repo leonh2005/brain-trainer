@@ -363,6 +363,14 @@ def jobs_run(jid: str):
         raise HTTPException(404, f'unknown job: {jid}')
 
 
+@app.post('/api/jobs/{jid}/stop')
+def jobs_stop(jid: str):
+    try:
+        return jobs_mod.stop(jid)
+    except KeyError:
+        raise HTTPException(404, f'unknown job: {jid}')
+
+
 @app.get('/api/jobs/{jid}/status')
 def jobs_status(jid: str):
     try:
