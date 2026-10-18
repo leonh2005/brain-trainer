@@ -7,6 +7,7 @@ import tempfile
 import httpx
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import HTMLResponse, StreamingResponse, FileResponse, RedirectResponse
+from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from fastapi import Request
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
@@ -45,6 +46,12 @@ _PROXY_HOP_HEADERS = {
 
 app = FastAPI(title='command-center')
 templates = Jinja2Templates(directory='templates')
+
+# 陽台盆栽紀錄是專案外的靜態頁，頁面用相對路徑載 photos/，整包目錄掛起來卡片才能直接連。
+# check_dir=False：資料夾不見時只讓這張卡 404，不要讓整個指揮中心起不來。
+app.mount('/balcony-plants',
+          StaticFiles(directory=f'{sources.CC}/balcony-plants', html=True, check_dir=False),
+          name='balcony-plants')
 
 # 卡片／區塊排序存後端檔案（原本在瀏覽器 localStorage，換裝置或清快取就還原）
 _CARD_ORDER_FILE = f'{sources.CC}/command-center/card_order.json'
