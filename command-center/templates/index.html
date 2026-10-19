@@ -870,8 +870,13 @@ function renderDaytrade(d){
 }
 function renderIntraday(d){
   const sg=(d&&d.signals)||[];
-  if(!sg.length)return el('div','empty','今日尚無盤中訊號');
+  if(!sg.length)return el('div','empty',d&&d.stale?'資料已過期（盤中監控未執行）':'今日尚無盤中訊號');
   const box=el('div');
+  if(d.stale){
+    const w=el('div','row');
+    w.innerHTML='<span class="tk" style="font-size:11px;color:var(--down)">⚠ 以下非今日訊號，盤中監控可能未執行</span>';
+    box.appendChild(w);
+  }
   sg.slice(-9).reverse().forEach(s=>{
     const row=el('div','row');
     const cls=s.side==='多方'?'long':'short';
