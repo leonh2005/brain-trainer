@@ -408,11 +408,18 @@ def intraday():
         lines = f.readlines()[-20000:]
     # 每次啟動時 FinMind/shioaji 都會印出帶完整日期的 log（如 "2026-08-07 09:00:03..."），
     # 用今天最後一次這種行當分界，避免昨天殘留在同一份 log 裡的舊訊號被當成還沒更新。
+    # 優先認監控自己的啟動行：shioaji SDK 的 warning 也以日期開頭，若盤中才出現會把切點往後推，
+    # 讓當天稍早的訊號憑空消失。找不到才退回舊行為（任何以今日日期開頭的行）。
     today_str = str(date.today())
-    start_idx = 0
+    start_idx = -1
     for i, line in enumerate(lines):
-        if line.startswith(today_str):
+        if line.startswith(today_str) and 'intraday_monitor' in line:
             start_idx = i
+    if start_idx < 0:
+        start_idx = 0
+        for i, line in enumerate(lines):
+            if line.startswith(today_str):
+                start_idx = i
     lines = lines[start_idx:]
 
     signals = []
@@ -432,7 +439,12 @@ def intraday():
             signals.append({**pending, 'side': m.group(1), 'confidence': int(m.group(2)),
                             'at': last_check})
             pending = None
-    return {'signals': signals[-20:], 'last_check': last_check}, _mtime(p)
+    # 監控程式沒在跑時卡片會一直顯示舊 log，看不出是當天還是上個月的：明示過期
+    try:
+        stale = date.fromtimestamp(os.path.getmtime(p)) != date.today()
+    except OSError:
+        stale = True
+    return {'signals': signals[-20:], 'last_check': last_check, 'stale': stale}, _mtime(p)
 
 
 _ma_names_cache = None
