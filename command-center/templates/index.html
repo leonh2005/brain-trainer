@@ -428,6 +428,11 @@ function loadCard(d){
     catch(e){ body.innerHTML=`<div class="err">render: ${e.message}</div>`; }
   }).catch(e=>{$('#cb-'+d.id).innerHTML=`<div class="err">${e.message}</div>`});
 }
+/* 手動觸發的 job 完成後重載卡片（updated 有變才會重繪） */
+function refreshCard(id){
+  const d=[...CARDS,...LIFE].find(x=>x.id===id);
+  if(d)loadCard(d);
+}
 function mount(container,defs,sizeKey){
   const wrap=$(container);
   defs.forEach(d=>{
@@ -1135,8 +1140,9 @@ function renderForeignReturn(d){
   add('③ 台幣連續升值', x.ok,
       `USD/NTD ${(x.latest_rate||0).toFixed(3)}　台幣${(x.total_appreciation||0)>0?'升值':'貶值'} ${n(x.total_appreciation||0,3)} 元`);
   const sum=el('div','row');
-  sum.innerHTML=`<span class="tk" style="font-size:11px;color:var(--muted)">成立 ${d.hit_count||0}/3　更新 ${esc((d.updated_at||'').slice(0,16))}</span>`;
+  sum.innerHTML=`<span class="tk" style="font-size:11px;color:var(--muted)">成立 ${d.hit_count||0}/3　更新 ${esc((d.updated_at||'').slice(0,16))}</span><span class="spacer"></span><button class="btn" data-job="foreign-return-update" data-refresh-card="foreign-return" style="padding:4px 9px;font-size:11px"><span class="k">🔄</span>更新</button>`;
   box.appendChild(sum);
+  sum.querySelector('button').addEventListener('click',e=>runJob(e.currentTarget));
   return box;
 }
 function renderLearnSystem(d){
@@ -1233,6 +1239,7 @@ function poll(id,btn,orig,maxAttempts,showModal){
         clearInterval(iv);btn.disabled=false;btn.classList.remove('busy');btn.innerHTML=orig;
         if(!s.running){
           toast('✅ '+s.name+' 完成');
+          if(btn.dataset.refreshCard)refreshCard(btn.dataset.refreshCard);
           if(showModal)showJobResultModal(s.name,s.log_tail||'（無輸出）');
         }
       }
