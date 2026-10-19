@@ -62,6 +62,12 @@ JOBS = {
         'label': 'com.steven.market-dashboard',
         'log': f'{CC}/logs/market-dashboard.log',
     },
+    'foreign-return-update': {
+        'name': '更新外資回頭三訊號',
+        'cmd': ['/opt/homebrew/bin/python3', f'{CC}/scripts/foreign_return_monitor.py'],
+        'cwd': CC,
+        'log': f'{CC}/logs/foreign_return.log',
+    },
     'comfyui': {
         'name': '啟動 ComfyUI（AI 影片）',
         'server': [f'{COMFY}/venv/bin/python', 'main.py'],
