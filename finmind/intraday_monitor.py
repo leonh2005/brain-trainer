@@ -2,8 +2,9 @@
 """
 盤中主力發動偵測器（雙向）（09:05–13:30 交易時段）
 
-監控清單（2026-10-19 改動態）：每分鐘用 gateway 全市場快照挑「漲幅≥2% 且成交金額≥5 億」
-前 25 檔，新入選者訂閱即時 tick 並回補當日；成交金額是 close × total_volume(張) × 1000。
+監控清單（2026-10-19 改動態）：每分鐘用 gateway 全市場快照，從「漲幅≥2% 且成交金額≥5 億」
+的候選中，依「成交金額名次 + 漲幅名次」名次和取前 25 檔；新入選者訂閱即時 tick 並回補當日。
+成交金額是 close × total_volume(張) × 1000。
 
 資料層（2026-07-14 改訂閱制）：對監控股訂閱即時 tick 並本地累積，
 1 分鐘 K 棒由本地 tick 重算；中途加入或重啟以一次 api.ticks 回補當日。
@@ -164,9 +165,12 @@ def _backfill_code(api, contract, code: str) -> None:
 
 
 def pick_universe() -> dict:
-    """從 gateway 全市場快照挑監控清單：|漲幅| ≥MIN_CHG_PCT 且成交金額 ≥MIN_TURNOVER，取前 UNIVERSE_SIZE 檔。
+    """從 gateway 全市場快照挑監控清單。
 
-    股票代號與市場別都收（8358 金居是上櫃 .TWO），只排除 0 開頭 ETF。
+    候選池：|漲幅| ≥MIN_CHG_PCT 且成交金額 ≥MIN_TURNOVER。
+    排序：成交金額名次 + 漲幅名次，取名次和最小的 UNIVERSE_SIZE 檔。
+    只看成交金額會讓大型股佔滿名額（科嶠 4542 漲跌幅第 3、金額第 49 被擠掉）。
+    股票與市場別都收（8358 金居是上櫃 .TWO），只排除 0 開頭 ETF。
     """
     r = requests.get(f'{GATEWAY}/market_snapshot', timeout=30)
     r.raise_for_status()
@@ -174,7 +178,7 @@ def pick_universe() -> dict:
     if not data.get('ok'):
         raise RuntimeError(data.get('error') or 'market_snapshot 失敗')
 
-    ranked = []
+    candidates = []
     for s in data.get('items', []):
         code = s.get('code') or ''
         if not (code.isdigit() and len(code) == 4) or code.startswith('0'):
@@ -184,10 +188,17 @@ def pick_universe() -> dict:
             continue
         turnover = close * vol * 1000        # total_volume 單位是「張」
         if turnover >= MIN_TURNOVER and abs(chg) >= MIN_CHG_PCT:
-            ranked.append((turnover, code, (s.get('name') or code).strip()))
+            candidates.append((turnover, code, (s.get('name') or code).strip(), chg))
 
-    ranked.sort(reverse=True)
-    return {code: name for _, code, name in ranked[:UNIVERSE_SIZE]}
+    rank_sum: dict = {}
+    names: dict = {}
+    for i, (_, code, name, _) in enumerate(sorted(candidates, key=lambda x: -x[0])):
+        rank_sum[code] = i + 1
+        names[code] = name
+    for i, (_, code, _, _) in enumerate(sorted(candidates, key=lambda x: -abs(x[3]))):
+        rank_sum[code] += i + 1
+
+    return {code: names[code] for code in sorted(rank_sum, key=lambda c: rank_sum[c])[:UNIVERSE_SIZE]}
 
 
 def _subscribe(api, code: str, name: str, now: datetime) -> bool:
