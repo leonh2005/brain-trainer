@@ -398,6 +398,7 @@ const CARDS=[
   {id:'market',  ic:'🌡️', title:'市場恐慌指標', span:'wide', url:'/api/signals/market-fear', render:renderMarket, site:'/market-dashboard'},
   {id:'chips',   ic:'📊', title:'籌碼追蹤',   span:'wide', url:'/api/signals/chips', render:renderChips, site:'/svc/5850/'},
   {id:'ma',      ic:'📈', title:'均線警報',   span:'full', url:'/api/signals/ma', render:renderMA, site:'/ma-watchlist'},
+  {id:'futures', ic:'🧪', title:'期貨基差驗證', span:'', url:'/api/signals/futures', render:renderFutures},
 ];
 const LIFE=[
   {id:'portfolio',ic:'💼', title:'投資組合', span:'wide', url:'/api/portfolio', render:renderPortfolio, site:'/svc/5800/'},
@@ -730,6 +731,26 @@ function renderTrackGrouped(box,track,headText){
       +`<span class="chg ${r.up?'up':'down'}">${pct!=null?fmt(pct)+'%':'—'}</span>`;
     box.appendChild(row);
   });
+}
+function renderFutures(d){
+  const box=el('div');
+  const days=(d&&d.days)||0, target=(d&&d.target_days)||30, samples=(d&&d.samples)||0;
+  const pct=Math.min(100,Math.round(days/target*100));
+  const head=el('div','mini',`累積 ${days}/${target} 天 · 可對照樣本 ${samples} 筆`);
+  head.style.cssText='font-size:11.5px;color:var(--muted);margin-bottom:6px';
+  box.appendChild(head);
+  const bar=el('div'); bar.style.cssText='height:5px;background:var(--border);border-radius:3px;margin-bottom:10px;overflow:hidden';
+  const fill=el('div'); fill.style.cssText=`height:100%;width:${pct}%;background:var(--accent)`;
+  bar.appendChild(fill); box.appendChild(bar);
+  ((d&&d.groups)||[]).forEach(g=>{
+    const row=el('div');
+    row.style.cssText='display:flex;justify-content:space-between;font-size:11.5px;padding:3px 0';
+    const right=g.n?`${g.avg>0?'+':''}${g.avg}% · 勝率 ${g.win}% · n=${g.n}`:'—';
+    row.innerHTML=`<span style="color:var(--muted)">${g.label}</span><span>${right}</span>`;
+    box.appendChild(row);
+  });
+  box.appendChild(el('div','empty',(d&&d.ready)?'✅ 已達可判讀樣本':'樣本未達門檻，只顯示進度，不下結論'));
+  return box;
 }
 function renderSwing(d){
   const rs=(d&&d.results)||[];
