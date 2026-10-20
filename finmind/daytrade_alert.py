@@ -195,6 +195,29 @@ def get_institutional_net():
         return 0, ''
 
 
+def get_short_candidates():
+    """全市場掃空方觀察名單（2026-10 回測 221 檔次平均 -0.29%、7 個月全負，僅供參考）。
+    走 gateway /market_snapshot，不另開 Shioaji 直連。"""
+    try:
+        r = requests.get('http://localhost:5455/market_snapshot', timeout=40)
+        items = r.json().get('items', [])
+    except Exception as e:
+        print(f'[short] 全市場快照失敗: {e}')
+        return []
+    out = []
+    for s in items:
+        c, h, l = s.get('close'), s.get('high'), s.get('low')
+        ch, v = s.get('change_rate'), s.get('total_volume') or 0
+        if not c or not h or not l or l <= 0 or ch is None:
+            continue
+        amp = (h - l) / l * 100
+        if ch <= -1.5 and 3 <= amp < 5 and v >= 500:
+            out.append({'code': s['code'], 'name': s.get('name') or s['code'],
+                        'close': c, 'chg': ch, 'amp': amp, 'vol': v})
+    out.sort(key=lambda x: x['chg'])
+    return out
+
+
 def get_index_intraday():
     """加權指數即時漲跌幅（%）。走 Shioaji gateway（5455，常駐單一連線）。
     回傳 (漲跌幅, 指數值)，失敗回傳 (None, 0.0)"""
@@ -271,6 +294,7 @@ for row in top20:
 
 inst_net, inst_date = get_institutional_net()
 idx_chg, idx_val = get_index_intraday()
+short_list = get_short_candidates()
 
 # 大盤即時跌逾 0.5% 時跳過推播。實測「當日開盤跳空」對當日報酬相關性 0.72，
 # 遠優於前一日三大法人買賣超的 0.05，故改用即時指數而非落後一日的法人資料。
@@ -326,6 +350,13 @@ elif mkt_bearish_skip:
     lines.append(f"🌧️ 大盤即時跌逾 0.5%（{idx_chg:+.2f}%），今日跳過推播")
 else:
     lines.append("❌ 今日無符合當沖條件標的\n建議觀望或等待盤中突破訊號")
+
+# 空方觀察：回測無 edge，只列條件符合者，不列入候選、不追蹤
+if short_list:
+    lines.append("\n🔻 <b>空方觀察</b>（跌幅&gt;1.5%＋振幅3~5%＋量&gt;500張）")
+    for s in short_list[:10]:
+        lines.append(f"　{s['code']} {html.escape(s['name'])}  {s['close']:.1f}  {s['chg']:+.1f}%  振{s['amp']:.1f}%  量{s['vol']:,}張")
+    lines.append("⚠️ 此名單回測平均為負（7 個月全虧），僅供觀察，不建議交易")
 
 lines.append("\n⚠️ 數據參考，非投資建議，買賣自負")
 
