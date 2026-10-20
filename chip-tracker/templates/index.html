@@ -24,6 +24,20 @@ button:hover { border-color: var(--blue); }
 .sort-bar { display: flex; gap: 0.5rem; padding: 0 2rem 0.6rem; align-items: center; font-size: 0.8rem; color: var(--text-dim); }
 .sort-bar select { background: var(--card); border: 1px solid var(--border); color: var(--text); border-radius: 6px; padding: 0.3rem 0.5rem; }
 .msg { font-size: 0.8rem; color: var(--amber); }
+.job-bar { display: flex; gap: 0.5rem; padding: 0.2rem 2rem 0.6rem; align-items: center; flex-wrap: wrap; }
+.job-bar .hint { font-size: 0.75rem; color: var(--text-dim); }
+button:disabled { opacity: 0.45; cursor: not-allowed; }
+.cyq-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr)); gap: 0.5rem; margin-bottom: 10px; }
+.cyq-stat .k { font-size: 0.65rem; color: var(--text-dim); }
+.cyq-stat .v { font-family: var(--font-mono); font-size: 0.95rem; }
+.tbl-wrap { max-height: 420px; overflow: auto; border: 1px solid var(--border); border-radius: 8px; }
+table.strat { width: 100%; border-collapse: collapse; font-size: 0.78rem; }
+table.strat th, table.strat td { padding: 0.3rem 0.5rem; border-bottom: 1px solid var(--border); text-align: right; white-space: nowrap; }
+table.strat th:first-child, table.strat td:first-child { text-align: left; }
+table.strat thead th { position: sticky; top: 0; background: var(--card); }
+table.strat tr.grp td { background: rgba(59,130,246,0.08); font-weight: 600; }
+.signal-group { margin-bottom: 0.5rem; font-size: 0.82rem; }
+.signal-list { font-family: var(--font-mono); font-size: 0.82rem; }
 .section-label { padding: 1rem 2rem 0.4rem; font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-dim); display: flex; align-items: center; gap: 0.5rem; cursor: pointer; user-select: none; }
 .section-label .del-list { font-size: 0.85rem; background: none; border: none; padding: 0; color: var(--text-dim); cursor: pointer; text-transform: none; letter-spacing: normal; }
 .section-label .del-list:hover { color: var(--red); }
@@ -113,6 +127,17 @@ button:hover { border-color: var(--blue); }
 <div id="sections"></div>
 
 <div class="pattern-legend">
+  <div class="section-label">🧮 籌碼分佈 × 策略選股</div>
+  <div class="job-bar">
+    <button id="job-history">更新歷史資料</button>
+    <button id="job-cyq">重算 CYQ</button>
+    <button id="job-strategy">跑策略選股</button>
+    <span class="hint" id="job-msg">閒置</span>
+  </div>
+  <div id="strategy-section" class="signal-list">載入中…</div>
+</div>
+
+<div class="pattern-legend">
   <div class="section-label">📖 技術型態說明</div>
   <div class="legend-grid">
     <div class="legend-item"><span class="badge pattern-up">槌子線</span>下影線長、實體小的 K 棒，出現在跌勢末端常為止跌訊號</div>
@@ -154,7 +179,8 @@ function metricHtml(label, valueHtml, extraClass = "") {
 
 function supportBtn(code) {
   if (!code) return "";
-  return ` <span class="support-icon" onclick="openSupportModal('${code}')" title="查看支撐位">📊</span>`;
+  return ` <span class="support-icon" onclick="openSupportModal('${code}')" title="查看支撐位">📊</span>` +
+         ` <span class="support-icon" onclick="openCyqModal('${code}')" title="籌碼成本分佈">🧮</span>`;
 }
 
 let supportBars = [];
@@ -228,6 +254,54 @@ function openSupportModal(code) {
   }).catch(() => { document.getElementById("support-modal-body").innerHTML = '<div class="empty">讀取失敗</div>'; });
 }
 function closeSupportModal() { document.getElementById("support-modal-overlay").style.display = "none"; }
+
+function openCyqModal(code) {
+  const overlay = document.getElementById("support-modal-overlay");
+  document.getElementById("support-modal-title").textContent = code + " 籌碼成本分佈";
+  document.getElementById("support-modal-body").innerHTML = "載入中…";
+  overlay.style.display = "flex";
+  fetch("/api/cyq/" + encodeURIComponent(code)).then(r => r.json()).then(res => {
+    if (!res.ok) throw new Error(res.error || "載入失敗");
+    renderCyq(res.cyq);
+  }).catch(e => {
+    document.getElementById("support-modal-body").textContent = "載入失敗：" + e.message;
+  });
+}
+
+function renderCyq(c) {
+  const pct = v => v == null ? "—" : (v * 100).toFixed(1) + "%";
+  const price = v => v == null ? "—" : Number(v).toFixed(2);
+  const stats = [
+    ["現價", price(c.close)], ["平均成本", price(c.avg_cost)],
+    ["獲利比例", pct(c.benefit_part)], ["套牢比例", pct(c.overhead_ratio)],
+    ["下方籌碼高峰（支撐）", price(c.support_price)], ["上方籌碼高峰（解套壓力）", price(c.pressure_price)],
+    ["90% 成本區間", c.percent_chips["90"].price_range.map(price).join(" ~ ")],
+    ["90% 集中度", (c.percent_chips["90"].concentration * 100).toFixed(1) + "%"],
+  ];
+  const head = `<div class="cyq-stats">${stats.map(([k, v]) =>
+    `<div class="cyq-stat"><div class="k">${k}</div><div class="v">${v}</div></div>`).join("")}</div>`;
+
+  const bins = c.y.map((p, i) => ({ p, x: c.x[i] })).filter(b => b.x > 0.001).reverse();
+  const maxX = Math.max(...bins.map(b => b.x), 0.0001);
+  const rowH = 4, W = 600, H = bins.length * rowH + 26, left = 58, barW = W - left - 10;
+  const rects = bins.map((b, i) => {
+    const y = 18 + i * rowH;
+    const w = Math.max(0.6, b.x / maxX * barW);
+    const up = b.p > c.close;
+    const color = up ? "rgba(255,71,87,0.75)" : "rgba(0,214,143,0.7)";
+    return `<rect x="${left}" y="${y}" width="${w.toFixed(1)}" height="${rowH - 1}" fill="${color}"></rect>`;
+  }).join("");
+  const ticks = [];
+  for (let i = 0; i < bins.length; i += Math.max(1, Math.floor(bins.length / 10))) {
+    ticks.push(`<text x="${left - 5}" y="${18 + i * rowH + 3}" text-anchor="end" font-size="9" fill="#5a6a7e">${bins[i].p.toFixed(1)}</text>`);
+  }
+  const svg = `<svg viewBox="0 0 ${W} ${H}" width="100%" height="${H}" style="display:block">
+    ${rects}${ticks.join("")}
+    <text x="${left}" y="8" font-size="9" fill="#5a6a7e">紅=現價以上（套牢） 綠=現價以下（獲利）</text>
+  </svg>`;
+  document.getElementById("support-modal-body").innerHTML = head + svg;
+}
+
 
 function stockHtml(s) {
   const chg = s.change_pct == null ? "" :
@@ -499,7 +573,103 @@ document.getElementById("refresh").onclick = async () => {
   setTimeout(() => { clearInterval(poll); btn.textContent = "立即更新"; btn.disabled = false; load(); }, 120000);
 };
 
+// ── 長工作（更新歷史 / 重算 CYQ / 跑策略） ──────────────
+const JOB_BUTTONS = { history: "job-history", cyq: "job-cyq", strategy: "job-strategy" };
+const JOB_LABELS = { history: "更新歷史資料", cyq: "重算 CYQ", strategy: "跑策略選股" };
+let pollTimer = null;
+const prevStatus = {};
+
+function applyJobStatus(st) {
+  for (const [kind, btnId] of Object.entries(JOB_BUTTONS)) {
+    const s = st[kind], btn = document.getElementById(btnId);
+    btn.disabled = s.status === "running";
+    btn.textContent = s.status === "running" ? JOB_LABELS[kind] + "…" : JOB_LABELS[kind];
+  }
+  const running = Object.values(st).filter(s => s.status === "running");
+  document.getElementById("job-msg").textContent = running.length
+    ? running.map(s => `${s.label}：${s.message}`).join(" ｜ ")
+    : Object.values(st).map(s => `${s.label} ${s.status === "idle" ? "未執行"
+        : s.status === "done" ? "✓ " + (s.finished_at || "") : "✗ " + s.message}`).join(" ｜ ");
+}
+
+async function refreshJobs() {
+  const r = await fetch("/api/job_status");
+  const st = await r.json();
+  applyJobStatus(st);
+  for (const kind of Object.keys(st)) {
+    if (prevStatus[kind] === "running" && st[kind].status !== "running") {
+      if (st[kind].status === "done" && kind === "strategy") loadStrategies();
+      if (st[kind].status === "done" && kind === "history") load();
+    }
+    prevStatus[kind] = st[kind].status;
+  }
+  const anyRunning = Object.values(st).some(s => s.status === "running");
+  if (anyRunning && !pollTimer) pollTimer = setInterval(refreshJobs, 1500);
+  if (!anyRunning && pollTimer) { clearInterval(pollTimer); pollTimer = null; }
+}
+
+async function startJob(kind) {
+  const r = await fetch("/api/jobs/" + kind, { method: "POST" });
+  const d = await r.json();
+  if (!d.ok) document.getElementById("job-msg").textContent = d.message;
+  refreshJobs();
+}
+
+// ── 策略選股與回測 ──────────────────────────────────────
+async function loadStrategies() {
+  const r = await fetch("/api/strategies");
+  renderStrategies(await r.json());
+}
+
+function renderStrategies(d) {
+  const sig = d.signals || [];
+  let html = "";
+  if (!d.signals_run_at) {
+    html += `<div class="empty">尚未跑過策略選股</div>`;
+  } else {
+    html += `<div style="color:var(--text-dim);font-size:.75rem;margin-bottom:.5rem">
+      訊號時間 ${esc(d.signals_run_at)}　共 ${sig.length} 個</div>`;
+    const groups = {};
+    sig.forEach(s => (groups[s.strategy] ||= []).push(s));
+    const keys = Object.keys(groups);
+    html += keys.length
+      ? keys.map(n => `<div class="signal-group"><span class="badge">${esc(n)}</span>` +
+          groups[n].map(s => `${esc(s.code)} ${esc(s.name)} <span class="up">${s.close}</span>`).join("、") +
+          `</div>`).join("")
+      : `<div class="empty">該日無符合條件的標的</div>`;
+  }
+  if (d.backtest && d.backtest.length) html += backtestHtml(d);
+  document.getElementById("strategy-section").innerHTML = html;
+}
+
+function backtestHtml(d) {
+  const groups = {};
+  d.backtest.forEach(r => (groups[r.strategy] ||= []).push(r));
+  let rows = "";
+  for (const [name, list] of Object.entries(groups)) {
+    rows += `<tr class="grp"><td colspan="6">${esc(name)}</td></tr>`;
+    list.forEach(r => {
+      rows += `<tr><td>${r.hold_days} 日</td><td>${esc(r.year)}</td><td>${r.samples}</td>
+        <td>${r.win_rate.toFixed(1)}%</td>
+        <td class="${cls(r.avg_return)}">${r.avg_return > 0 ? "+" : ""}${r.avg_return.toFixed(2)}%</td>
+        <td class="down">${r.max_drawdown.toFixed(2)}%</td></tr>`;
+    });
+  }
+  return `<div style="display:flex;justify-content:space-between;align-items:baseline;margin:1rem 0 .4rem">
+      <span style="font-size:.8rem">3 年回測（訊號日隔日開盤進場；最大回撤＝單筆最差）</span>
+      <span style="color:var(--text-dim);font-size:.7rem">回測時間 ${esc(d.backtest_run_at)}</span></div>
+    <div class="tbl-wrap"><table class="strat"><thead><tr>
+      <th>持有</th><th>年度</th><th>樣本</th><th>勝率</th><th>平均報酬</th><th>最大回撤</th>
+    </tr></thead><tbody>${rows}</tbody></table></div>`;
+}
+
+document.getElementById("job-history").onclick = () => startJob("history");
+document.getElementById("job-cyq").onclick = () => startJob("cyq");
+document.getElementById("job-strategy").onclick = () => startJob("strategy");
+
 load();
+loadStrategies();
+refreshJobs();
 </script>
 </body>
 </html>

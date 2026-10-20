@@ -44,6 +44,40 @@ CREATE TABLE IF NOT EXISTS weekly_tdcc (
     UNIQUE(code, date)
 );
 CREATE TABLE IF NOT EXISTS meta (key TEXT PRIMARY KEY, value TEXT);
+CREATE TABLE IF NOT EXISTS daily_ext (
+    code      TEXT NOT NULL,
+    date      TEXT NOT NULL,
+    turnover  REAL,
+    amplitude REAL,
+    amount    REAL,
+    UNIQUE(code, date)
+);
+CREATE TABLE IF NOT EXISTS cyq_cache (
+    code       TEXT PRIMARY KEY,
+    date       TEXT NOT NULL,
+    payload    TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
+CREATE TABLE IF NOT EXISTS strategy_signals (
+    run_at     TEXT NOT NULL,
+    strategy   TEXT NOT NULL,
+    code       TEXT NOT NULL,
+    name       TEXT NOT NULL,
+    date       TEXT NOT NULL,
+    close      REAL,
+    PRIMARY KEY (run_at, strategy, code)
+);
+CREATE TABLE IF NOT EXISTS backtest_stats (
+    run_at      TEXT NOT NULL,
+    strategy    TEXT NOT NULL,
+    hold_days   INTEGER NOT NULL,
+    year        TEXT NOT NULL,
+    samples     INTEGER NOT NULL,
+    win_rate    REAL,
+    avg_return  REAL,
+    max_drawdown REAL,
+    PRIMARY KEY (run_at, strategy, hold_days, year)
+);
 """
 
 _DAILY_COLS = (
