@@ -1,5 +1,6 @@
 """常駐排程：收割逾時任務、認領可跑的任務、交給 worker。"""
 import os
+import shutil
 import sys
 import threading
 import time
@@ -8,6 +9,10 @@ import notify
 import orchestrator
 import taskqueue as tq
 import worker
+
+# LaunchAgent 的 PATH 只有 /usr/bin:/bin:/usr/sbin:/sbin，不含 ~/.local/bin，
+# 寫死 "claude" 會讓 worker 啟動失敗（Errno 2）
+CLAUDE_BIN = shutil.which("claude") or os.path.expanduser("~/.local/bin/claude")
 
 
 def reap_timed_out(conn, timeout):
@@ -39,7 +44,7 @@ def _summarize_thread(db_path, parent_id, claude_bin, timeout):
         _SUMMARIZING.discard(parent_id)
 
 
-def finalize_parents(conn, db_path, claude_bin="claude", timeout=3600):
+def finalize_parents(conn, db_path, claude_bin=CLAUDE_BIN, timeout=3600):
     """收尾 blocked orchestrator 母任務：任一子任務失敗即收尾；全部完成才彙整。
 
     彙整是 30–120 秒的 LLM 呼叫，丟到背景跑 —— 否則主迴圈會停擺、並行形同關閉。
@@ -72,7 +77,7 @@ def finalize_parents(conn, db_path, claude_bin="claude", timeout=3600):
     return done
 
 
-def tick(conn, claude_bin="claude", timeout=3600):
+def tick(conn, claude_bin=CLAUDE_BIN, timeout=3600):
     """同步跑一輪：收割逾時 → 認領並執行一個任務。回傳執行數（0 或 1）。
 
     只供測試與單任務模式；常駐請用 main_loop（它另外負責收尾母任務，且 worker 走
@@ -159,7 +164,7 @@ def _run_worker(db_path, task_id, claude_bin, timeout):
         conn.close()
 
 
-def start_ready(conn, db_path, claude_bin="claude", timeout=3600, parallel=MAX_PARALLEL):
+def start_ready(conn, db_path, claude_bin=CLAUDE_BIN, timeout=3600, parallel=MAX_PARALLEL):
     """把可跑的任務填滿到 parallel 上限，背景執行。回傳本輪啟動的 task id 清單。"""
     running = len(tq.list_tasks(conn, status="running"))
     slots = max(0, parallel - running)
@@ -196,7 +201,7 @@ def _acquire_singleton(db_path):
         fh.write(str(os.getpid()))
 
 
-def main_loop(claude_bin="claude", timeout=3600, poll=5, db_path="queue.db",
+def main_loop(claude_bin=CLAUDE_BIN, timeout=3600, poll=5, db_path="queue.db",
               parallel=MAX_PARALLEL):
     _acquire_singleton(db_path)
     conn = tq.connect(db_path)
