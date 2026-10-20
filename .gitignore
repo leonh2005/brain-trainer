@@ -84,3 +84,6 @@ rabbit-care/
 # 自動生成的 handoff 紀錄：內容含 diff 引用，會把被 diff 的檔案內容（含密碼）帶進公開 repo
 # （2026-10-14 抓到 handoff_20260422、handoff_20260513 夾帶 RTSP 攝影機密碼）
 gemma_work/
+
+# Kronos 模型驗證環境：外部 repo clone + venv + 模型權重，共 935MB，且含嵌套 .git
+kronos-test/
