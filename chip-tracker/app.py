@@ -12,6 +12,9 @@ import requests
 from flask import Flask, jsonify, render_template, request
 
 import db
+import analysis
+import history_loader
+import jobs
 import patterns
 import support as support_mod
 import updater
@@ -408,6 +411,76 @@ def api_refresh():
                      cwd=BASE_DIR,
                      stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     return jsonify({"ok": True})
+
+
+# ── 長工作（背景執行 + 輪詢） ──────────────────────────────────
+
+
+def _job_history(progress) -> str:
+    result = history_loader.load_history(progress=progress)
+    if result["aborted"]:
+        raise RuntimeError(f"資料驗證不一致，已中止寫入；明細見 {result['report']}")
+    msg = f"完成：{result['codes']} 檔 / {result['daily_rows']} 筆"
+    if result["errors"]:
+        msg += f"（{len(result['errors'])} 檔失敗）"
+    return msg
+
+
+def _job_cyq(progress) -> str:
+    result = analysis.compute_cyq_all(progress)
+    msg = f"完成：{result['ok']} 檔"
+    if result["failed"]:
+        msg += f"，{len(result['failed'])} 檔資料不足"
+    return msg
+
+
+def _job_strategy(progress) -> str:
+    result = analysis.run_strategies(progress)
+    return f"完成：{result['count']} 個訊號"
+
+
+jobs.configure(_job_history, _job_cyq, _job_strategy)
+
+
+@app.post("/api/jobs/<kind>")
+def api_start_job(kind):
+    started, message = jobs.start(kind)
+    return jsonify({"ok": started, "message": message}), (200 if started else 409)
+
+
+@app.get("/api/job_status")
+def api_job_status():
+    return jsonify(jobs.snapshot())
+
+
+@app.get("/api/cyq/<code>")
+def api_cyq(code):
+    code = code.upper()
+    if not _CODE_RE.match(code):
+        return jsonify({"ok": False, "error": "代碼格式錯誤"}), 400
+    conn = db.get_conn()
+    try:
+        if not conn.execute("SELECT 1 FROM stocks WHERE code = ?", (code,)).fetchone():
+            return jsonify({"ok": False, "error": "不在追蹤清單"}), 404
+        return jsonify({"ok": True, "code": code, "cyq": analysis.get_cyq(conn, code)})
+    except Exception as e:
+        return jsonify({"ok": False, "error": str(e)}), 502
+    finally:
+        conn.close()
+
+
+@app.get("/api/strategies")
+def api_strategies():
+    conn = db.get_conn()
+    try:
+        signals = analysis.get_signals(conn)
+        backtest = analysis.get_backtest(conn)
+        return jsonify({"ok": True, "signals": signals["signals"],
+                        "signals_run_at": signals["run_at"],
+                        "backtest": backtest["stats"],
+                        "backtest_run_at": backtest["run_at"]})
+    finally:
+        conn.close()
 
 
 if __name__ == "__main__":

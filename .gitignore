@@ -87,3 +87,8 @@ gemma_work/
 
 # Kronos 模型驗證環境：外部 repo clone + venv + 模型權重，共 935MB，且含嵌套 .git
 kronos-test/
+
+# SQLite WAL 執行期檔案與 FinMind 配額計數（都是本機狀態，不進版控）
+chip-tracker/chip.db-wal
+chip-tracker/chip.db-shm
+chip-tracker/data/finmind_usage.json
