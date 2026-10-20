@@ -1,6 +1,6 @@
 {
-  "scanned_at": "2026-10-20 03:00:39",
-  "since": "2026-10-19 03:00:00",
+  "scanned_at": "2026-10-21 03:00:40",
+  "since": "2026-10-20 03:00:01",
   "results": {
     "市場儀表板": {
       "exists": true,
@@ -29,20 +29,20 @@
     "財經新聞分析": {
       "exists": true,
       "errors": 1,
-      "last_error": "2026-10-19 05:33:15,832 [WARNING] fetcher.reddit_fetcher: Reddit fetch failed for r/wallstreetbets: HTTPSConnectionPool(host='www.reddit.com', port=443): Max retries exceeded with url: /r/wallstreetbets/hot/.rss (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.reddit.com', port=443) at 0x10",
-      "fix": "Port 被佔用或服務未啟動 → 檢查 LaunchAgent 是否正常載入"
+      "last_error": "2026-10-20 22:30:16,763 [WARNING] fetcher.ptt_fetcher: PTT article fetch failed https://www.ptt.cc/bbs/Stock/M.1792492099.A.FAD.html: HTTPSConnectionPool(host='www.ptt.cc', port=443): Read timed out. (read timeout=10)",
+      "fix": "網路逾時 → 確認目標服務可達，或增加 timeout 設定"
     },
     "川普監測": {
       "exists": true,
-      "errors": 1,
-      "last_error": "2026-10-19 08:30:03,691 ERROR 週末總結失敗：400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reason': 'API_KEY_INVALID', 'domain': 'googleapis.com', 'm",
-      "fix": "尚無對應建議，需人工判斷"
+      "errors": 0,
+      "last_error": null,
+      "fix": null
     },
     "持倉新聞(台股)": {
       "exists": true,
-      "errors": 1,
-      "last_error": "2026-10-19 08:30:36,673 WARNING T86 失敗 006208 day=20261019：HTTPSConnectionPool(host='www.twse.com.tw', port=443): Read timed out. (read timeout=10)",
-      "fix": "網路逾時 → 確認目標服務可達，或增加 timeout 設定"
+      "errors": 0,
+      "last_error": null,
+      "fix": null
     },
     "持倉新聞(美股)": {
       "exists": true,
