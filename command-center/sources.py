@@ -771,8 +771,49 @@ def orchestrator():
             'recent': recent}, _mtime(p)
 
 
+FUTURES_DIR = f'{CC}/data/futures_daily'
+FUTURES_TARGET_DAYS = 30   # 累積天數門檻（未達前只顯示進度，不做結論）
+
+
+@_wrap
+def futures_shadow():
+    """期貨基差影子驗證：每日累積的個股期貨收盤 vs 隔日沖候選的隔日報酬。
+    期交所 OpenAPI 只給最近交易日，必須逐日累積才有樣本。"""
+    import glob
+    files = sorted(glob.glob(f'{FUTURES_DIR}/*.json'))
+    track = _read_json(f'{CC}/telebot/data/swing_track.json') or {}
+    samples = []
+    for fp in files:
+        with open(fp, encoding='utf-8') as f:
+            d = json.load(f)
+        date = d.get('date')
+        by_stock = {c['stock']: c for c in d.get('contracts', {}).values()}
+        for r in (track.get(date) or {}).get('track_results', []):
+            c = by_stock.get(r.get('code'))
+            base = r.get('baseline')
+            if not c or not base or r.get('pct') is None:
+                continue
+            basis = (c['last'] - base) / base * 100
+            samples.append({'date': date, 'code': r['code'], 'name': r.get('name', ''),
+                            'basis': round(basis, 2), 'pct': r['pct']})
+    groups = []
+    for lo, hi, label in [(-99, -0.5, '逆價差 <-0.5%'), (-0.5, 0.5, '平價差'),
+                          (0.5, 99, '正價差 >0.5%')]:
+        v = [s['pct'] for s in samples if lo <= s['basis'] < hi]
+        groups.append({'label': label, 'n': len(v),
+                       'avg': round(sum(v) / len(v), 2) if v else None,
+                       'win': round(sum(1 for x in v if x > 0) / len(v) * 100, 1) if v else None})
+    updated = datetime.fromtimestamp(os.path.getmtime(files[-1])).strftime('%Y-%m-%d %H:%M') if files else ''
+    return {
+        'days': len(files), 'target_days': FUTURES_TARGET_DAYS,
+        'samples': len(samples), 'groups': groups,
+        'ready': len(files) >= FUTURES_TARGET_DAYS and len(samples) >= 30,
+        'latest': samples[-5:],
+    }, updated
+
+
 SIGNALS = {
     'daytrade': daytrade, 'swing': swing, 'intraday': intraday, 'ma': ma,
     'chips': chips, 'news': news, 'market-fear': market_fear,
-    'disposition': disposition, 'pullback': pullback,
+    'disposition': disposition, 'pullback': pullback, 'futures': futures_shadow,
 }
