@@ -9,6 +9,7 @@ JOBS = {
     "history": {"label": "更新歷史資料", "runner": None},
     "cyq": {"label": "重算 CYQ", "runner": None},
     "strategy": {"label": "跑策略選股", "runner": None},
+    "pattern": {"label": "重算型態", "runner": None},
 }
 
 _LOCK = threading.Lock()
@@ -16,10 +17,11 @@ _STATE = {k: {"status": "idle", "progress": 0.0, "message": "尚未執行",
               "started_at": None, "finished_at": None} for k in JOBS}
 
 
-def configure(history_runner, cyq_runner, strategy_runner) -> None:
+def configure(history_runner, cyq_runner, strategy_runner, pattern_runner=None) -> None:
     JOBS["history"]["runner"] = history_runner
     JOBS["cyq"]["runner"] = cyq_runner
     JOBS["strategy"]["runner"] = strategy_runner
+    JOBS["pattern"]["runner"] = pattern_runner
 
 
 def _update(kind: str, **kw) -> None:
