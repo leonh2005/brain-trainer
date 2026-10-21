@@ -73,13 +73,17 @@ def ensure_list(name, by_name):
     return by_name[name]
 
 
-def sync_list(name, wanted, holding_id, fallback_id, target_id, current):
-    """回傳 (added, moved_in, moved_out, skipped_holding)"""
+def sync_list(name, wanted, holding_id, fallback_id, target_id, current, on_drop='move'):
+    """on_drop='move' 舊名單移到觀察；'delete' 直接移除追蹤（庫存一律不動）。"""
     added = moved_in = moved_out = skipped = 0
     for code, list_id in list(current.items()):
         if list_id == target_id and code not in wanted:
-            call('PATCH', f'/api/stocks/{code}', {'list_id': fallback_id})
-            current[code] = fallback_id
+            if on_drop == 'delete':
+                call('POST', '/api/stocks/remove', {'code': code})
+                current.pop(code, None)
+            else:
+                call('PATCH', f'/api/stocks/{code}', {'list_id': fallback_id})
+                current[code] = fallback_id
             moved_out += 1
     for code, stock_name in wanted.items():
         cur = current.get(code)
@@ -94,8 +98,9 @@ def sync_list(name, wanted, holding_id, fallback_id, target_id, current):
             call('PATCH', f'/api/stocks/{code}', {'list_id': target_id})
             current[code] = target_id
             moved_in += 1
+    action = '移除' if on_drop == 'delete' else '移到觀察'
     print(f'{name}：今日 {len(wanted)} 檔（新增 {added}／移入 {moved_in}），'
-          f'移出舊名單 {moved_out} 檔{"，持倉未動 " + str(skipped) + " 檔" if skipped else ""}')
+          f'{action}舊名單 {moved_out} 檔{"，持倉未動 " + str(skipped) + " 檔" if skipped else ""}')
     return added + moved_in + moved_out
 
 
@@ -119,6 +124,9 @@ if __name__ == '__main__':
     data = call('GET', '/api/data')
     current = {s['code']: lst['id'] for lst in data['lists'] for s in lst['stocks']}
 
+    # 隔日沖：掉出名單的移到觀察；只差一項：掉出就移除追蹤，不進觀察
+    drop_actions = {'隔日沖': 'move', '只差一項': 'delete'}
     for name, wanted in targets:
         target_id = ensure_list(name, by_name)
-        sync_list(name, wanted, holding_id, fallback_id, target_id, current)
+        sync_list(name, wanted, holding_id, fallback_id, target_id, current,
+                  on_drop=drop_actions[name])
