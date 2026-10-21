@@ -1,6 +1,6 @@
 {
-  "scanned_at": "2026-10-21 03:00:40",
-  "since": "2026-10-20 03:00:01",
+  "scanned_at": "2026-10-22 03:00:42",
+  "since": "2026-10-21 03:00:01",
   "results": {
     "市場儀表板": {
       "exists": true,
@@ -29,8 +29,8 @@
     "財經新聞分析": {
       "exists": true,
       "errors": 1,
-      "last_error": "2026-10-20 22:30:16,763 [WARNING] fetcher.ptt_fetcher: PTT article fetch failed https://www.ptt.cc/bbs/Stock/M.1792492099.A.FAD.html: HTTPSConnectionPool(host='www.ptt.cc', port=443): Read timed out. (read timeout=10)",
-      "fix": "網路逾時 → 確認目標服務可達，或增加 timeout 設定"
+      "last_error": "2026-10-21 12:17:21,030 [WARNING] fetcher.reddit_fetcher: Reddit fetch failed for r/wallstreetbets: 500 Server Error: Internal Server Error for url: https://www.reddit.com/r/wallstreetbets/hot/.rss",
+      "fix": "尚無對應建議，需人工判斷"
     },
     "川普監測": {
       "exists": true,
@@ -88,9 +88,9 @@
     },
     "盤中監控": {
       "exists": true,
-      "errors": 0,
-      "last_error": null,
-      "fix": null
+      "errors": 5,
+      "last_error": "TimeoutError: Topic: api/v1/auth/error_tracking, Corr: c2, Client: PYAPI/N124711691/1021/010003/333810/59.115.249.125, payload: {'token': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYmYiOjE3OTI1NDQ0MDUsImV4cCI6MTc5MjYzMDgwNSwic2ltdWxhdGlvbiI6ZmFsc2UsInBlcnNvbl9pZCI6Ik4xMjQ3MTE2OTEiLCJ2ZXJzaW9uIjoiMS4z",
+      "fix": "網路逾時 → 確認目標服務可達，或增加 timeout 設定"
     },
     "蝦皮軟纖監測": {
       "exists": true,
@@ -124,9 +124,9 @@
     },
     "daily-stock-analysis": {
       "exists": true,
-      "errors": 0,
-      "last_error": null,
-      "fix": null
+      "errors": 2,
+      "last_error": "2026-10-21 22:11:03 | DEBUG    | venv/lib/python3.14/site-packages/httpcore/_trace.py:47 | receive_response_body.failed exception=GeneratorExit()",
+      "fix": "尚無對應建議，需人工判斷"
     }
   },
   "no_log": [
