@@ -143,10 +143,14 @@ def connect_with_retry(deadline_sec: int = 900, interval: int = 30):
             if time.monotonic() >= deadline:
                 msg = f'⚠️ 盤中主力監控啟動失敗（重試 {attempt} 次）：{type(e).__name__}，今天不會有訊號'
                 print(msg)
-                try:
-                    send_telegram(msg)
-                except Exception:
-                    pass
+                # KeepAlive 會每 5 分鐘重啟，同日只告警一次避免洗版
+                marker = f'/tmp/intraday_monitor_alert_{date.today().isoformat()}'
+                if not os.path.exists(marker):
+                    try:
+                        send_telegram(msg)
+                        open(marker, 'w').close()
+                    except Exception:
+                        pass
                 raise SystemExit(1)
             time.sleep(interval)
 
@@ -851,6 +855,11 @@ if __name__ == '__main__':
     _now = datetime.now()
     if _now.weekday() >= 5 or _now.date().isoformat() in TW_HOLIDAYS:
         print(f"{_now.strftime('%Y-%m-%d %H:%M:%S')} [startup] 非交易日（{_now.date()}），結束")
+        sys.exit(0)
+
+    # KeepAlive 誤觸時（例如盤後被重啟）直接結束，避免反覆登入 Shioaji
+    if _now.hour < 8 or _now.hour > 13 or (_now.hour == 13 and _now.minute > 35):
+        print('[startup] 非盤中時段，結束')
         sys.exit(0)
 
     # 以今日日期開頭：command-center sources.py 靠這行切分「當日」訊號，缺了會把昨日訊號當今天
