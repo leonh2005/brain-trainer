@@ -52,6 +52,10 @@ table.strat tr.grp td { background: rgba(59,130,246,0.08); font-weight: 600; }
 .badge.pattern-up { background: rgba(255,71,87,0.18); color: var(--red); }
 .badge.pattern-down { background: rgba(46,204,113,0.18); color: var(--green); }
 .badge.pattern-flat { background: rgba(59,130,246,0.18); color: var(--blue); }
+.badge.vol-score { cursor: help; }
+.badge.vol-lo { background: rgba(90,106,126,0.2); color: var(--text-dim); }
+.badge.vol-mid { background: rgba(255,170,0,0.15); color: var(--amber); }
+.badge.vol-hi { background: rgba(255,170,0,0.35); color: var(--amber); font-weight: 600; }
 .pattern-legend { padding: 0.5rem 2rem 2rem; }
 .legend-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(22rem, 1fr)); gap: 0.5rem 1.5rem; font-size: 0.8rem; color: var(--text-dim); }
 .legend-item { display: flex; align-items: baseline; gap: 0.5rem; }
@@ -169,6 +173,21 @@ table.strat tr.grp td { background: rgba(59,130,246,0.08); font-weight: 600; }
     <span class="badge">說明</span>由 stock-pattern 偵測，型態都在「突破前」就標出，只當輔助確認、不是獨立進場訊號。
     2026-10 以本清單 39 檔回測（扣 0050）：BATU +1.6%、ABCDU +1.3%、CRABU +1.1%（5 日超額），HNSD −1.9%、DNTL −1.1%；
     多頭旗形（BFLYU）與 ABCD 空方版本實測無效，已不顯示。
+  </div>
+</div>
+
+<div class="pattern-legend">
+  <div class="section-label">🌊 波動分數（0～5）</div>
+  <div class="legend-grid">
+    <div class="legend-item"><span class="badge vol-score vol-hi">波動 3～5</span>今天已有 3 項以上符合，隔天大起大落的機率高。要設好停損，不要只等漲停</div>
+    <div class="legend-item"><span class="badge vol-score vol-mid">波動 2</span>有一定波動特徵，留意隔天開盤</div>
+    <div class="legend-item"><span class="badge vol-score vol-lo">波動 0～1</span>波動特徵不明顯，隔天多半平淡</div>
+    <div class="legend-item"><span class="badge">條件</span>① 當日漲 ≥5%　② 近三日累計 ≥10%　③ 當日振幅 ≥7%　④ 跳空 ≥2%　⑤ 量比 ≥2 倍（hover 徽章可看每項實際值）</div>
+  </div>
+  <div class="legend-item" style="margin-top:.6rem;font-size:.72rem">
+    <span class="badge">重要</span>分數高 ≠ 會漲。分數衡量的是「隔天容易大動」，<b>上漲與下跌的機率都同時升高</b>。
+    全市場 1,001 檔、2026 驗證：分數 0 的隔日漲停率 1.3%、大跌（&gt;5%）2.4%；分數 4 的漲停率 9.0%、大跌 16.5%，平均報酬轉為 −0.25%。
+    只能當風險提示，不能當買進依據。已扣除當日已漲停的股票（不適用）。
   </div>
 </div>
 
@@ -384,6 +403,11 @@ function stockHtml(s) {
   const patternLine = (s.patterns || []).length
     ? `<div class="pattern-line">${s.patterns.map(p => `<span class="badge pattern-${patternSentiment(p)}">${esc(p)}</span>`).join("")}</div>`
     : "";
+  // 波動分數：只代表隔日大起大落的可能，不代表漲跌方向
+  const vs = s.vol_score;
+  const volLine = vs && vs.score != null
+    ? `<div class="pattern-line"><span class="badge vol-score vol-${vs.score >= 3 ? "hi" : vs.score >= 2 ? "mid" : "lo"}" title="${esc((vs.items || []).map(i => `${i.hit ? "✔" : "✘"} ${i.label}（${i.value}）`).join("\n"))}">波動 ${vs.score}/${vs.max}</span></div>`
+    : "";
   // 幾何型態（stock-pattern）只當輔助確認：實測 BATU/ABCDU/CRABU 略偏多、HNSD/DNTL 偏空
   const chartPatternLine = (s.chart_patterns || []).length
     ? `<div class="pattern-line">${s.chart_patterns.map(p =>
@@ -399,6 +423,7 @@ function stockHtml(s) {
       ${streakP ? `<div class="streak-line">${streakP}</div>` : ""}
       ${patternLine}
       ${chartPatternLine}
+      ${volLine}
       <div class="name"><a href="https://tw.stock.yahoo.com/quote/${esc(s.code)}.TW" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;">${esc(s.name)}</a></div>
       <div class="price" id="price-${s.code}">${price} ${chg}${liveBadge}</div>
       <div class="volume">量 ${fmtVolume(s.volume)}</div>

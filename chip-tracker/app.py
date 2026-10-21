@@ -17,6 +17,7 @@ import analysis
 import history_loader
 import jobs
 import patterns
+import volatility
 import support as support_mod
 import updater
 
@@ -104,6 +105,8 @@ def _stock_payload(conn, s: dict, dispositions: dict) -> dict:
         chart_patterns = json.loads(cp_row["patterns"]) if cp_row else []
     except (TypeError, ValueError):
         chart_patterns = []  # 壞資料不該讓整頁掛掉
+    vol_bars = list(reversed(daily))  # 舊到新
+    vol = volatility.score(vol_bars)
 
     w_latest = weekly[0] if weekly else {}
     w_prev = weekly[1] if len(weekly) >= 2 else {}
@@ -128,6 +131,7 @@ def _stock_payload(conn, s: dict, dispositions: dict) -> dict:
         "patterns": stock_patterns,
         "chart_patterns": chart_patterns,
         "chart_patterns_date": cp_row["date"] if cp_row else None,
+        "vol_score": vol,
         "inst_date": inst_row.get("date"),
         "foreign_net": inst_row.get("foreign_net"),
         "trust_net": inst_row.get("trust_net"),
