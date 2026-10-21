@@ -92,3 +92,9 @@ kronos-test/
 chip-tracker/chip.db-wal
 chip-tracker/chip.db-shm
 chip-tracker/data/finmind_usage.json
+
+# 本機工作區與執行紀錄（不版控）
+abacus-sanitizer/logs/
+stock-pattern-probe/
+data/futures_daily/
+data/*.lock
