@@ -112,11 +112,14 @@ def _get_sj():
     return _sj_api
 
 
-def connect_with_retry(deadline_sec: int = 900, interval: int = 30):
+def connect_with_retry(deadline_sec: int = 1500, interval: int = 30, warmup_poll: int = 5):
     """登入＋暖機，失敗每 interval 秒重試直到 deadline_sec。
 
     09:00 開盤前偶有暫時性失敗（2026-10-20 暖機逾時、10-21 login timeout），
-    原本一次失敗就 exit，整天沒有盤中主力訊號，所以改成重試到期限為止。
+    原本一次失敗就 exit，整天沒有盤中主力訊號。
+
+    08:55 起跑的暖機分成兩段：登入失敗才重新登入；登入成功後只是輪詢快照，
+    不在同一個 session 反覆重登（盤前快照可能要等 09:00 才有資料）。
     """
     global _sj_api
     deadline = time.monotonic() + deadline_sec
@@ -126,12 +129,22 @@ def connect_with_retry(deadline_sec: int = 900, interval: int = 30):
         try:
             api = _get_sj()
             probe = [api.Contracts.Stocks[c] for c in ('2330',) if api.Contracts.Stocks.get(c)]
-            for wait in range(1, 61):
-                time.sleep(1)
-                if api.snapshots(probe):
-                    print(f'[startup] Shioaji 暖機完成（第 {attempt} 次嘗試、{wait}s）')
-                    return api
-            raise TimeoutError('暖機 60s 無回應')
+            started = time.monotonic()
+            errors = 0
+            while True:
+                try:
+                    if api.snapshots(probe):
+                        print(f'[startup] Shioaji 暖機完成（第 {attempt} 次登入、{time.monotonic() - started:.0f}s）')
+                        return api
+                    errors = 0
+                except Exception as e:
+                    errors += 1
+                    print(f'[startup] 暖機查詢失敗（連續 {errors} 次）：{type(e).__name__}: {e}')
+                    if errors >= 3:
+                        raise
+                if time.monotonic() >= deadline:
+                    raise TimeoutError('暖機逾時（快照一直沒有資料）')
+                time.sleep(warmup_poll)
         except Exception as e:
             print(f'[startup] 第 {attempt} 次連線失敗：{type(e).__name__}: {e}')
             try:
