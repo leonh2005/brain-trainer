@@ -155,6 +155,25 @@ table.strat tr.grp td { background: rgba(59,130,246,0.08); font-weight: 600; }
   </div>
 </div>
 
+<div class="pattern-legend" id="signal-legend">
+  <div class="section-label">🧭 訊號類型說明</div>
+  <div class="legend-grid">
+    <div class="legend-item"><span class="badge">放量上涨</span>當日漲逾 2% 收紅 K，成交金額 ≥ 2 億且成交量達 5 日均量 2 倍</div>
+    <div class="legend-item"><span class="badge">均线多头</span>30 日均線階梯式往上，且 30 日漲幅超過 20%，趨勢明確向上</div>
+    <div class="legend-item"><span class="badge">停机坪</span>漲停創新高後連續 3 天在高檔橫盤、量縮不墜，像飛機停穩待起飛</div>
+    <div class="legend-item"><span class="badge">回踩年线</span>創 60 日新高後回檔，但一路守住年線（MA250），回檔量縮、跌逾 20% 後轉強</div>
+    <div class="legend-item"><span class="badge">突破平台</span>股價原本貼著 60 日線橫盤整理，某日放量收盤站上 60 日線</div>
+    <div class="legend-item"><span class="badge">无大幅回撤</span>60 日漲逾 60%，過程中沒有單日跌超過 7%、也沒有連兩日合計跌超過 10%</div>
+    <div class="legend-item"><span class="badge">海龟交易法则</span>收盤價創 60 日新高。海龜交易法用「突破前高」當買進訊號，賭趨勢延續</div>
+    <div class="legend-item"><span class="badge">高而窄的旗形</span>24～11 日前曾連兩日漲停、波段漲近一倍，近 5 日三大法人仍買超，高檔強勢整理</div>
+    <div class="legend-item"><span class="badge">放量跌停</span>當日跌逾 9.5%，成交金額 ≥ 2 億且成交量達 5 日均量 4 倍，留意恐慌賣壓</div>
+    <div class="legend-item"><span class="badge">低ATR成长</span>單日波動小（近 10 日平均振幅 &lt; 10%），但 10 日內最高最低相差超過 110%，屬低波動大波段</div>
+  </div>
+  <div class="legend-item" style="margin-top:.6rem;font-size:.72rem">
+    <span class="badge">說明</span>訊號為當日收盤後以日 K 計算，全部條件移植自 Instock 選股專案；符合條件才會列入「訊號時間」清單。
+  </div>
+</div>
+
 <div class="modal-overlay" id="support-modal-overlay" style="display:none" onclick="if(event.target===this)closeSupportModal()">
   <div class="modal-box">
     <div class="modal-head"><span id="support-modal-title"></span><span class="modal-close" onclick="closeSupportModal()">✕</span></div>
