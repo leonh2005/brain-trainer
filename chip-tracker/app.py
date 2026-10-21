@@ -283,6 +283,25 @@ def api_add_stock():
         conn.close()
 
 
+@app.patch("/api/stocks/<code>")
+def api_move_stock(code):
+    """換清單用（隔日沖每日同步）：只改 list_id，不重跑回補。"""
+    code = code.upper().strip()
+    data = request.get_json(force=True)
+    list_id = data.get("list_id")
+    conn = db.get_conn()
+    try:
+        if not conn.execute("SELECT 1 FROM stocks WHERE code = ?", (code,)).fetchone():
+            return jsonify({"ok": False, "error": "不在追蹤清單"}), 404
+        if list_id not in {l["id"] for l in db.list_lists(conn)}:
+            return jsonify({"ok": False, "error": "清單不存在"}), 400
+        conn.execute("UPDATE stocks SET list_id = ? WHERE code = ?", (list_id, code))
+        conn.commit()
+        return jsonify({"ok": True, "code": code, "list_id": list_id})
+    finally:
+        conn.close()
+
+
 @app.post("/api/stocks/remove")
 def api_remove_stock():
     """移除股票：庫存刪除時自動改列觀察（保留追蹤），其餘清單移除才是真的移除。"""
