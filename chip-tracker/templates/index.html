@@ -292,10 +292,8 @@ function renderCyq(c) {
     return `<rect x="${left}" y="${y}" width="${w.toFixed(1)}" height="${rowH - 1}" fill="${color}"></rect>`;
   }).join("");
   // 整列透明點擊區：柱子只有 3px 高，只點有色區塊很難命中
-  const hits = bins.map((b, i) => {
-    const w = Math.max(0.6, b.x / maxX * barW);
-    return `<rect class="cyq-hit" x="${left}" y="${18 + i * rowH}" width="${barW}" height="${rowH - 1}" fill="transparent" style="cursor:pointer" data-p="${b.p.toFixed(2)}" data-x="${b.x.toFixed(2)}" data-w="${w.toFixed(1)}"></rect>`;
-  }).join("");
+  const hits = bins.map((b, i) =>
+    `<rect class="cyq-hit" x="${left}" y="${18 + i * rowH}" width="${barW}" height="${rowH - 1}" fill="transparent" style="cursor:pointer" data-p="${b.p.toFixed(2)}" data-x="${b.x.toFixed(2)}"></rect>`).join("");
   const ticks = [];
   for (let i = 0; i < bins.length; i += Math.max(1, Math.floor(bins.length / 10))) {
     ticks.push(`<text x="${left - 5}" y="${18 + i * rowH + 3}" text-anchor="end" font-size="9" fill="#5a6a7e">${bins[i].p.toFixed(1)}</text>`);
@@ -304,7 +302,7 @@ function renderCyq(c) {
     ${rects}${ticks.join("")}
     <rect id="cyq-hl" x="${left}" y="0" width="${barW}" height="${rowH - 1}" fill="none" stroke="#e8edf4" stroke-width="1" visibility="hidden" pointer-events="none"></rect>
     ${hits}
-    <text id="cyq-pick" font-size="10" fill="#ffaa00" visibility="hidden" pointer-events="none"></text>
+    <text id="cyq-pick" font-size="10" fill="#ffaa00" stroke="#0a0e14" stroke-width="2.5" paint-order="stroke" visibility="hidden" pointer-events="none"></text>
     <text x="${left}" y="8" font-size="9" fill="#5a6a7e">紅=現價以上（套牢） 綠=現價以下（獲利）</text>
   </svg>`;
   document.getElementById("support-modal-body").innerHTML = head + svg;
@@ -317,12 +315,7 @@ function renderCyq(c) {
     const y = Number(hit.getAttribute("y"));
     pick.textContent = `${hit.dataset.p} · ${hit.dataset.x}%`;
     pick.setAttribute("y", y + 3);
-    pick.setAttribute("text-anchor", "start");
-    // 先放柱子右端，爆版就往左夾在圖內
-    const tx = left + Number(hit.dataset.w) + 4;
-    pick.setAttribute("x", tx);
-    const tw = pick.getComputedTextLength();
-    if (tx + tw > W - 2) pick.setAttribute("x", Math.max(left, W - 2 - tw));
+    pick.setAttribute("x", left + 4);
     pick.setAttribute("visibility", "visible");
     const hl = svgEl.querySelector("#cyq-hl");
     hl.setAttribute("y", y);
