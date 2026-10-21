@@ -58,6 +58,12 @@ CREATE TABLE IF NOT EXISTS cyq_cache (
     payload    TEXT NOT NULL,
     updated_at TEXT NOT NULL
 );
+CREATE TABLE IF NOT EXISTS chart_patterns (
+    code       TEXT PRIMARY KEY,
+    date       TEXT NOT NULL,
+    patterns   TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
 CREATE TABLE IF NOT EXISTS strategy_signals (
     run_at     TEXT NOT NULL,
     strategy   TEXT NOT NULL,

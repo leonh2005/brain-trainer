@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """chip-tracker Web（port 5850）：讀 SQLite 最新資料渲染，不在請求中抓外部資料。"""
 
+import json
 import re
 import subprocess
 import sys
@@ -95,6 +96,15 @@ def _stock_payload(conn, s: dict, dispositions: dict) -> dict:
         [d["close"] for d in pattern_rows if d.get("close") is not None]
     )
 
+    # 幾何型態（stock-pattern）：由「重算型態」工作寫入，這裡只讀，當輔助確認用
+    cp_row = conn.execute(
+        "SELECT date, patterns FROM chart_patterns WHERE code = ?", (code,)
+    ).fetchone()
+    try:
+        chart_patterns = json.loads(cp_row["patterns"]) if cp_row else []
+    except (TypeError, ValueError):
+        chart_patterns = []  # 壞資料不該讓整頁掛掉
+
     w_latest = weekly[0] if weekly else {}
     w_prev = weekly[1] if len(weekly) >= 2 else {}
     whale_change = None
@@ -116,6 +126,8 @@ def _stock_payload(conn, s: dict, dispositions: dict) -> dict:
         "price_streak": price_streak,
         "price_streak_pct": price_streak_pct,
         "patterns": stock_patterns,
+        "chart_patterns": chart_patterns,
+        "chart_patterns_date": cp_row["date"] if cp_row else None,
         "inst_date": inst_row.get("date"),
         "foreign_net": inst_row.get("foreign_net"),
         "trust_net": inst_row.get("trust_net"),
@@ -446,7 +458,23 @@ def _job_strategy(progress) -> str:
     return f"完成：{result['count']} 個訊號"
 
 
-jobs.configure(_job_history, _job_cyq, _job_strategy)
+# stock-pattern 只能在 probe venv（pandas 2.2）跑，用子程序隔離
+PATTERN_VENV_PY = os.path.expanduser("~/CCProject/stock-pattern-probe/.venv/bin/python")
+
+
+def _job_pattern(progress) -> str:
+    progress(0, 1, "掃描幾何型態…")
+    r = subprocess.run([PATTERN_VENV_PY, os.path.join(BASE_DIR, "pattern_scan.py")],
+                       capture_output=True, text=True, timeout=600)
+    if r.returncode != 0:
+        tail = (r.stderr or "").strip().splitlines()
+        raise RuntimeError(tail[-1] if tail else "型態掃描失敗")
+    progress(1, 1, "完成")
+    lines = (r.stdout or "").strip().splitlines()
+    return lines[-1] if lines else "完成"
+
+
+jobs.configure(_job_history, _job_cyq, _job_strategy, _job_pattern)
 
 
 @app.post("/api/jobs/<kind>")
