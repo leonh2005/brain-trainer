@@ -252,6 +252,13 @@ def api_add_stock():
         db.add_stock(conn, code, name, list_id)
         updater.backfill(conn, code)  # 同步回補 45 天，約 3-5 秒
         try:
+            # backfill 只寫日K，daily_ext 的 turnover 只有這裡會補；缺了 CYQ 算不出來
+            hist = history_loader.load_history(codes=[code])
+            if hist["aborted"]:
+                app.logger.warning("補歷史 %s 驗證不一致已中止: %s", code, hist["report"])
+        except Exception as e:
+            app.logger.warning("補歷史 %s 失敗（該檔 CYQ 會缺換手率）: %s", code, e)
+        try:
             updater.backfill_tdcc(conn, code)  # 近 12 週股權分散，約 10-20 秒
         except Exception as e:
             app.logger.warning("backfill_tdcc %s 失敗（週資料等排程補當週）: %s", code, e)
