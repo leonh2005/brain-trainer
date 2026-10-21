@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Abacus 模型選型與三檔推薦</title>
+<style>
+  :root{
+    --bg:#f7f7f5; --card:#fff; --ink:#1a1a18; --muted:#6b6b66;
+    --line:#e4e4df; --accent:#2f6f4f; --warn:#a8501f;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --bg:#16161a; --card:#1e1e23; --ink:#ececee; --muted:#9a9aa2;
+           --line:#2e2e35; --accent:#6fbf94; --warn:#e08a55; }
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+       font:15px/1.7 -apple-system,"PingFang TC","Noto Sans TC",sans-serif;}
+  .wrap{max-width:940px;margin:0 auto;padding:40px 20px 80px}
+  h1{font-size:26px;margin:0 0 4px;letter-spacing:-.01em}
+  .sub{color:var(--muted);font-size:13px;margin-bottom:36px}
+  h2{font-size:17px;margin:40px 0 12px;padding-bottom:8px;border-bottom:1px solid var(--line)}
+  table{width:100%;border-collapse:collapse;background:var(--card);
+        border:1px solid var(--line);border-radius:10px;overflow:hidden;font-size:13.5px}
+  th,td{padding:9px 12px;text-align:left;border-bottom:1px solid var(--line)}
+  th{font-weight:600;color:var(--muted);font-size:12px;letter-spacing:.03em;background:var(--bg)}
+  tr:last-child td{border-bottom:none}
+  td.num{text-align:right;font-variant-numeric:tabular-nums}
+  .tier{background:var(--card);border:1px solid var(--line);border-radius:12px;
+        padding:18px 20px;margin:14px 0}
+  .tier h3{margin:0 0 2px;font-size:15px}
+  .tier .pick{color:var(--accent);font-weight:600}
+  .tier p{margin:8px 0 0;font-size:13.5px;color:var(--muted)}
+  .note{font-size:13px;color:var(--warn);margin-top:10px}
+  code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12.5px;
+       background:var(--bg);padding:1px 5px;border-radius:4px;border:1px solid var(--line)}
+  ul{font-size:13.5px;color:var(--muted);padding-left:20px}
+  a{color:var(--accent)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>Abacus RouteLLM 模型選型</h1>
+<div class="sub">2026-10-21 · 依你的實際使用型態（近 90 天 742 commits）推薦三檔</div>
+
+<h2>一、強弱排序（Artificial Analysis Intelligence Index）</h2>
+<table>
+  <tr><th>排名</th><th>模型</th><th class="num">智力分</th><th class="num">每任務成本</th><th class="num">CP 指數</th></tr>
+  <tr><td>1</td><td>Claude Opus 5.5 (max)</td><td class="num">58</td><td class="num">$5.98</td><td class="num">9.7</td></tr>
+  <tr><td>2</td><td>Claude Sonnet 5.5 (max)</td><td class="num">56</td><td class="num">$5.46</td><td class="num">10.3</td></tr>
+  <tr><td>3</td><td>Claude Opus 5.5 (high)</td><td class="num">54</td><td class="num">$1.82</td><td class="num">29.7</td></tr>
+  <tr><td>4</td><td>GPT-6 Astra (max)</td><td class="num">53</td><td class="num">$3.26</td><td class="num">16.3</td></tr>
+  <tr><td>4</td><td>Gemini 4 Argon (high)</td><td class="num">53</td><td class="num">$1.99</td><td class="num">26.6</td></tr>
+  <tr><td>4</td><td>Claude Fable 5.1 (max)</td><td class="num">53</td><td class="num">$7.63</td><td class="num">6.9</td></tr>
+  <tr><td>7</td><td><strong>GPT-6.1 Sol (max)</strong></td><td class="num">52</td><td class="num">$0.72</td><td class="num"><strong>72.2</strong></td></tr>
+  <tr><td>7</td><td>Claude Sonnet 5.5 (xhigh)</td><td class="num">52</td><td class="num">$2.01</td><td class="num">25.9</td></tr>
+  <tr><td>9</td><td>Claude Opus 5.5 (medium)</td><td class="num">51</td><td class="num">$1.34</td><td class="num">38.1</td></tr>
+</table>
+<p class="note">CP 指數 = 智力分 ÷ 每任務成本，數值越高越划算。GPT-6.1 Sol 是同分帶裡唯一破 70 的，但需 OpenAI 格式轉換，且 Abacus 官方文件未列此 id。</p>
+
+<h2>二、你實際的使用型態</h2>
+<ul>
+  <li>近 90 天 742 次 commit，集中在 Flask 服務與儀表板：gemma_work 420、market-dashboard 180、command-center 180、learn-system 128、agent-orchestrator 83</li>
+  <li>檔案類型：.py 652、.html 397、.md 480 — 典型「大量中等規模、反覆小改」而非巨型重構</li>
+  <li>每個 turn 都帶完整系統提示與近 20 個工具定義 → <strong>input token 佔成本大宗，prompt cache 命中率比單價更重要</strong></li>
+  <li>已有 1M context 需求（deepseek-flash[1M]），常讀大檔與長 log</li>
+</ul>
+
+<h2>三、三檔推薦</h2>
+
+<div class="tier">
+  <h3>日常 · <span class="pick">DeepSeek V4 Flash</span></h3>
+  <p><code>deepseek-ai/DeepSeek-V4-Flash</code> · $0.14 / $0.28 每百萬 token · 1M context</p>
+  <p>你已在用。改 UI、加卡片、修錯字、抓資料、查詢這類佔你工作量七成，用最便宜的跑，判斷失準再往上轉。同價帶沒有更強的替代品。</p>
+</div>
+
+<div class="tier">
+  <h3>主力 coding · <span class="pick">Claude Sonnet 5.5 (xhigh)</span></h3>
+  <p><code>claude-sonnet-5-5</code> · $3 / $15 每百萬 token · 1M context</p>
+  <p>跨檔 debug、Flask 服務重構、agent 邏輯這類需要可靠 tool call 的任務。選它的理由是<strong>原生 <code>/v1/messages</code> pass-through</strong>：tool_use、prompt caching、extended thinking 全部原樣轉發，沒有翻譯層出錯的空間。而且 cache 命中時 input 只算 10%，實際帳單遠低於表價。</p>
+  <p>降本選項：<strong>GPT-6.1 Sol</strong>（52 分 / $0.72，CP 絕對冠軍），但要走 OpenAI 格式，ccr 得把 Anthropic tool_use 翻成 OpenAI tool_calls — 這是最容易出 bug 的一段。值得實測，不建議直接當預設。</p>
+</div>
+
+<div class="tier">
+  <h3>火力 · <span class="pick">Claude Opus 5.5 (high)</span></h3>
+  <p><code>claude-opus-5-5</code> · $5 / $25 每百萬 token · 1M context</p>
+  <p>架構決策、頑固 bug 的根因、長鏈推理。關鍵在 effort 檔位：high 就有 54 分，只比 Sonnet 5.5 的極限 56 分少 2 分，成本卻是三分之一。推到 max 檔拿 58 分要多付 3.3 倍，不划算。</p>
+</div>
+
+<h2>四、待確認</h2>
+<ul>
+  <li>Claude 三檔 id 已由官方 Anthropic Messages 文件確認；GPT-6.1 Sol、DeepSeek V4 Flash 的完整 id 需以 <code>GET /v1/models</code> 核對</li>
+  <li>Abacus <code>route-llm</code> 自動路由<strong>沒有候選模型白名單參數</strong> — 限縮候選只能靠指定明確 model id</li>
+  <li>強弱依據為 AA Intelligence Index 單一綜合分，coding 專項排名未取得</li>
+</ul>
+
+<h2>資料來源</h2>
+<ul>
+  <li><a href="https://api.abacus.ai/help/route-llm/anthropic-messages/">Abacus RouteLLM — Anthropic Messages</a></li>
+  <li><a href="https://abacus.ai/help/route-llm/">Abacus RouteLLM APIs</a></li>
+  <li><a href="https://artificialanalysis.ai/leaderboards/models">Artificial Analysis — Intelligence Index</a></li>
+  <li><a href="https://llmpricing.dev/p/abacus/">llmpricing.dev — Abacus model pricing</a></li>
+</ul>
+
+</div>
+</body>
+</html>
