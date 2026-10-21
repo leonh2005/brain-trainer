@@ -38,6 +38,7 @@ import json
 import os
 import sys
 import threading
+import time
 import warnings
 from datetime import date, datetime, timedelta
 
@@ -109,6 +110,45 @@ def _get_sj():
             secret_key=os.environ['SHIOAJI_SECRET_KEY'],
         )
     return _sj_api
+
+
+def connect_with_retry(deadline_sec: int = 900, interval: int = 30):
+    """登入＋暖機，失敗每 interval 秒重試直到 deadline_sec。
+
+    09:00 開盤前偶有暫時性失敗（2026-10-20 暖機逾時、10-21 login timeout），
+    原本一次失敗就 exit，整天沒有盤中主力訊號，所以改成重試到期限為止。
+    """
+    global _sj_api
+    deadline = time.monotonic() + deadline_sec
+    attempt = 0
+    while True:
+        attempt += 1
+        try:
+            api = _get_sj()
+            probe = [api.Contracts.Stocks[c] for c in ('2330',) if api.Contracts.Stocks.get(c)]
+            for wait in range(1, 61):
+                time.sleep(1)
+                if api.snapshots(probe):
+                    print(f'[startup] Shioaji 暖機完成（第 {attempt} 次嘗試、{wait}s）')
+                    return api
+            raise TimeoutError('暖機 60s 無回應')
+        except Exception as e:
+            print(f'[startup] 第 {attempt} 次連線失敗：{type(e).__name__}: {e}')
+            try:
+                if _sj_api is not None:
+                    _sj_api.logout()
+            except Exception:
+                pass
+            _sj_api = None
+            if time.monotonic() >= deadline:
+                msg = f'⚠️ 盤中主力監控啟動失敗（重試 {attempt} 次）：{type(e).__name__}，今天不會有訊號'
+                print(msg)
+                try:
+                    send_telegram(msg)
+                except Exception:
+                    pass
+                raise SystemExit(1)
+            time.sleep(interval)
 
 
 def trading_days_ago(n):
@@ -816,16 +856,7 @@ if __name__ == '__main__':
     # 以今日日期開頭：command-center sources.py 靠這行切分「當日」訊號，缺了會把昨日訊號當今天
     print(f"{_now.strftime('%Y-%m-%d %H:%M:%S')} [startup] intraday_monitor 啟動（動態清單）")
     print('[startup] 初始化 Shioaji...')
-    _api = _get_sj()
-    _probe_contracts = [_api.Contracts.Stocks[c] for c in ('2330',) if _api.Contracts.Stocks.get(c)]
-    for _wait in range(1, 61):
-        _time.sleep(1)
-        if _api.snapshots(_probe_contracts):
-            print(f'[startup] Shioaji 暖機完成（{_wait}s），開始監控迴圈')
-            break
-    else:
-        print('[startup] Shioaji 暖機逾時（60s），結束')
-        exit(1)
+    _api = connect_with_retry()
 
     _setup_tick_stream(_api)      # 註冊 tick callback（訂閱由 sync_universe 逐檔加入）
     sync_universe(_api)           # 開盤先掃名單：訂閱＋回補當日 ticks
