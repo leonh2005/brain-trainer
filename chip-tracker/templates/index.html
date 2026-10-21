@@ -64,7 +64,7 @@ table.strat tr.grp td { background: rgba(59,130,246,0.08); font-weight: 600; }
 .stock .head .price { font-family: var(--font-mono); font-size: 0.9rem; margin-top: 2px; }
 .stock .head .volume { font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-dim); margin-top: 1px; }
 .stock .head .disposition-line { margin-top: 2px; }
-.badge.disposition { background: rgba(255,71,87,0.25); color: var(--red); font-weight: 600; }
+.badge.disposition { background: rgba(46,204,113,0.25); color: var(--green); font-weight: 600; }
 .metrics { display: flex; flex-direction: column; gap: 0.6rem; }
 .metrics-row { display: grid; gap: 0.6rem 1.4rem; }
 .metrics-row.inst { grid-template-columns: repeat(4, auto); gap: 0.6rem 1.2rem; justify-content: start; }
@@ -186,7 +186,7 @@ table.strat tr.grp td { background: rgba(59,130,246,0.08); font-weight: 600; }
   </div>
   <div class="legend-item" style="margin-top:.6rem;font-size:.72rem">
     <span class="badge">重要</span>分數高 ≠ 會漲。分數衡量的是「隔天容易大動」，<b>上漲與下跌的機率都同時升高</b>。
-    全市場 1,001 檔、2026 驗證：分數 0 的隔日漲停率 1.3%、大跌（&gt;5%）2.4%；分數 4 的漲停率 9.0%、大跌 16.5%，平均報酬轉為 −0.25%。
+    全市場 2,009 檔、2026 驗證：分數 0 的隔日漲停率 1.4%、大跌（&gt;5%）2.6%；分數 4 的漲停率 8.5%、大跌 16.2%，平均報酬轉為 −0.33%。
     只能當風險提示，不能當買進依據。已扣除當日已漲停的股票（不適用）。
   </div>
 </div>
@@ -194,19 +194,19 @@ table.strat tr.grp td { background: rgba(59,130,246,0.08); font-weight: 600; }
 <div class="pattern-legend" id="signal-legend">
   <div class="section-label">🧭 訊號類型說明</div>
   <div class="legend-grid">
-    <div class="legend-item"><span class="badge">放量上涨</span>當日漲逾 2% 收紅 K，成交金額 ≥ 2 億且成交量達 5 日均量 2 倍</div>
-    <div class="legend-item"><span class="badge">均线多头</span>30 日均線階梯式往上，且 30 日漲幅超過 20%，趨勢明確向上</div>
-    <div class="legend-item"><span class="badge">停机坪</span>漲停創新高後連續 3 天在高檔橫盤、量縮不墜，像飛機停穩待起飛</div>
-    <div class="legend-item"><span class="badge">回踩年线</span>創 60 日新高後回檔，但一路守住年線（MA250），回檔量縮、跌逾 20% 後轉強</div>
-    <div class="legend-item"><span class="badge">突破平台</span>股價原本貼著 60 日線橫盤整理，某日放量收盤站上 60 日線</div>
-    <div class="legend-item"><span class="badge">无大幅回撤</span>60 日漲逾 60%，過程中沒有單日跌超過 7%、也沒有連兩日合計跌超過 10%</div>
-    <div class="legend-item"><span class="badge">海龟交易法则</span>收盤價創 60 日新高。海龜交易法用「突破前高」當買進訊號，賭趨勢延續</div>
-    <div class="legend-item"><span class="badge">高而窄的旗形</span>24～11 日前曾連兩日漲停、波段漲近一倍，近 5 日三大法人仍買超，高檔強勢整理</div>
-    <div class="legend-item"><span class="badge">放量跌停</span>當日跌逾 9.5%，成交金額 ≥ 2 億且成交量達 5 日均量 4 倍，留意恐慌賣壓</div>
-    <div class="legend-item"><span class="badge">低ATR成长</span>單日波動小（近 10 日平均振幅 &lt; 10%），但 10 日內最高最低相差超過 110%，屬低波動大波段</div>
+    <div class="legend-item"><span class="badge pattern-up">放量上涨</span>當日漲逾 2% 收紅 K，成交金額 ≥ 2 億且成交量達 5 日均量 2 倍</div>
+    <div class="legend-item"><span class="badge pattern-up">均线多头</span>30 日均線階梯式往上，且 30 日漲幅超過 20%，趨勢明確向上</div>
+    <div class="legend-item"><span class="badge pattern-up">停机坪</span>漲停創新高後連續 3 天在高檔橫盤、量縮不墜，像飛機停穩待起飛</div>
+    <div class="legend-item"><span class="badge pattern-up">回踩年线</span>創 60 日新高後回檔，但一路守住年線（MA250），回檔量縮、跌逾 20% 後轉強</div>
+    <div class="legend-item"><span class="badge pattern-up">突破平台</span>股價原本貼著 60 日線橫盤整理，某日放量收盤站上 60 日線</div>
+    <div class="legend-item"><span class="badge pattern-up">无大幅回撤</span>60 日漲逾 60%，過程中沒有單日跌超過 7%、也沒有連兩日合計跌超過 10%</div>
+    <div class="legend-item"><span class="badge pattern-up">海龟交易法则</span>收盤價創 60 日新高。海龜交易法用「突破前高」當買進訊號，賭趨勢延續</div>
+    <div class="legend-item"><span class="badge pattern-up">高而窄的旗形</span>24～11 日前曾連兩日漲停、波段漲近一倍，近 5 日三大法人仍買超，高檔強勢整理</div>
+    <div class="legend-item"><span class="badge pattern-down">放量跌停</span>當日跌逾 9.5%，成交金額 ≥ 2 億且成交量達 5 日均量 4 倍，留意恐慌賣壓</div>
+    <div class="legend-item"><span class="badge pattern-up">低ATR成长</span>單日波動小（近 10 日平均振幅 &lt; 10%），但 10 日內最高最低相差超過 110%，屬低波動大波段</div>
   </div>
   <div class="legend-item" style="margin-top:.6rem;font-size:.72rem">
-    <span class="badge">說明</span>訊號為當日收盤後以日 K 計算，全部條件移植自 Instock 選股專案；符合條件才會列入「訊號時間」清單。
+    <span class="badge pattern-flat">說明</span>訊號為當日收盤後以日 K 計算，全部條件移植自 Instock 選股專案；符合條件才會列入「訊號時間」清單。
   </div>
 </div>
 
@@ -409,9 +409,10 @@ function stockHtml(s) {
     ? `<div class="pattern-line"><span class="badge vol-score vol-${vs.score >= 3 ? "hi" : vs.score >= 2 ? "mid" : "lo"}" title="${esc((vs.items || []).map(i => `${i.hit ? "✔" : "✘"} ${i.label}（${i.value}）`).join("\n"))}">波動 ${vs.score}/${vs.max}</span></div>`
     : "";
   // 幾何型態（stock-pattern）只當輔助確認：實測 BATU/ABCDU/CRABU 略偏多、HNSD/DNTL 偏空
+  const GEO_BEARISH = new Set(["HNSD", "DNTL"]);
   const chartPatternLine = (s.chart_patterns || []).length
     ? `<div class="pattern-line">${s.chart_patterns.map(p =>
-        `<span class="badge pattern-${/D$/.test(p.pattern) ? "down" : "up"}" title="幾何型態 ${esc(p.start)} ~ ${esc(p.end)}">📐${esc(p.pattern)}</span>`).join("")}</div>`
+        `<span class="badge pattern-${GEO_BEARISH.has(p.pattern) ? "down" : "up"}" title="幾何型態 ${esc(p.start)} ~ ${esc(p.end)}">📐${esc(p.pattern)}</span>`).join("")}</div>`
     : "";
   const dispositionBadge = s.disposition
     ? `<span class="badge disposition" title="${esc(s.disposition.reason || "")}">處置中 ${md(s.disposition.start)}~${md(s.disposition.end)}</span>`
