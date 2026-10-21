@@ -30,6 +30,8 @@ button:disabled { opacity: 0.45; cursor: not-allowed; }
 .cyq-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr)); gap: 0.5rem; margin-bottom: 10px; }
 .cyq-stat .k { font-size: 0.65rem; color: var(--text-dim); }
 .cyq-stat .v { font-family: var(--font-mono); font-size: 0.95rem; }
+.cyq-readout { font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-dim); margin-bottom: 6px; }
+.cyq-readout b { color: var(--text); }
 .tbl-wrap { max-height: 420px; overflow: auto; border: 1px solid var(--border); border-radius: 8px; }
 table.strat { width: 100%; border-collapse: collapse; font-size: 0.78rem; }
 table.strat th, table.strat td { padding: 0.3rem 0.5rem; border-bottom: 1px solid var(--border); text-align: right; white-space: nowrap; }
@@ -279,7 +281,8 @@ function renderCyq(c) {
     ["90% 集中度", (c.percent_chips["90"].concentration * 100).toFixed(1) + "%"],
   ];
   const head = `<div class="cyq-stats">${stats.map(([k, v]) =>
-    `<div class="cyq-stat"><div class="k">${k}</div><div class="v">${v}</div></div>`).join("")}</div>`;
+    `<div class="cyq-stat"><div class="k">${k}</div><div class="v">${v}</div></div>`).join("")}</div>
+    <div class="cyq-readout" id="cyq-readout">點擊任一價位列可查看該價位的籌碼佔比</div>`;
 
   const bins = c.y.map((p, i) => ({ p, x: c.x[i] })).filter(b => b.x > 0.001).reverse();
   const maxX = Math.max(...bins.map(b => b.x), 0.0001);
@@ -291,15 +294,31 @@ function renderCyq(c) {
     const color = up ? "rgba(255,71,87,0.75)" : "rgba(0,214,143,0.7)";
     return `<rect x="${left}" y="${y}" width="${w.toFixed(1)}" height="${rowH - 1}" fill="${color}"></rect>`;
   }).join("");
+  // 整列透明點擊區：柱子只有 3px 高，只點有色區塊很難命中
+  const hits = bins.map((b, i) =>
+    `<rect class="cyq-hit" x="${left}" y="${18 + i * rowH}" width="${barW}" height="${rowH - 1}" fill="transparent" style="cursor:pointer" data-p="${b.p.toFixed(2)}" data-x="${b.x.toFixed(2)}"></rect>`).join("");
   const ticks = [];
   for (let i = 0; i < bins.length; i += Math.max(1, Math.floor(bins.length / 10))) {
     ticks.push(`<text x="${left - 5}" y="${18 + i * rowH + 3}" text-anchor="end" font-size="9" fill="#5a6a7e">${bins[i].p.toFixed(1)}</text>`);
   }
   const svg = `<svg viewBox="0 0 ${W} ${H}" width="100%" height="${H}" style="display:block">
     ${rects}${ticks.join("")}
+    <rect id="cyq-hl" x="${left}" y="0" width="${barW}" height="${rowH - 1}" fill="none" stroke="#e8edf4" stroke-width="1" visibility="hidden" pointer-events="none"></rect>
+    ${hits}
     <text x="${left}" y="8" font-size="9" fill="#5a6a7e">紅=現價以上（套牢） 綠=現價以下（獲利）</text>
   </svg>`;
   document.getElementById("support-modal-body").innerHTML = head + svg;
+
+  const svgEl = document.querySelector("#support-modal-body svg");
+  const readout = document.getElementById("cyq-readout");
+  svgEl.addEventListener("click", ev => {
+    const hit = ev.target.closest(".cyq-hit");
+    if (!hit) return;
+    readout.innerHTML = `價位 <b>${hit.dataset.p}</b> · 籌碼 <b>${hit.dataset.x}%</b>`;
+    const hl = svgEl.querySelector("#cyq-hl");
+    hl.setAttribute("y", hit.getAttribute("y"));
+    hl.setAttribute("visibility", "visible");
+  });
 }
 
 
