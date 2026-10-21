@@ -407,7 +407,8 @@ def intraday():
     with open(p, errors='replace') as f:
         lines = f.readlines()[-20000:]
     # 每次啟動時 FinMind/shioaji 都會印出帶完整日期的 log（如 "2026-08-07 09:00:03..."），
-    # 用今天最後一次這種行當分界，避免昨天殘留在同一份 log 裡的舊訊號被當成還沒更新。
+    # 用今天「第一次」啟動行當分界：取最後一次的話，程式盤中崩掉被 KeepAlive 重啟後，
+    # 重啟前已推播的訊號會從卡片消失。
     # 優先認監控自己的啟動行：shioaji SDK 的 warning 也以日期開頭，若盤中才出現會把切點往後推，
     # 讓當天稍早的訊號憑空消失。找不到才退回舊行為（任何以今日日期開頭的行）。
     today_str = str(date.today())
@@ -415,6 +416,7 @@ def intraday():
     for i, line in enumerate(lines):
         if line.startswith(today_str) and 'intraday_monitor' in line:
             start_idx = i
+            break
     if start_idx < 0:
         start_idx = 0
         for i, line in enumerate(lines):
