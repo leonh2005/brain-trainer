@@ -306,22 +306,23 @@ def intraday():
 
 @app.get("/big_orders")
 def big_orders():
-    """當日逐筆大單內外盤淨額（截至 end 時間）。
+    """指定日逐筆大單內外盤淨額（截至 end 時間，預設當日）。
     大單 = 單筆 100萬(含)~400萬(未滿)，特大單 = 單筆 400萬(含)以上；tick_type 1=外盤、2=內盤。
-    GET /big_orders?code=2330&end=12:58 -> {ok, big_net, super_net, combined_net, big_count, super_count}"""
+    GET /big_orders?code=2330&end=12:58&date=2026-10-16 -> {ok, big_net, super_net, combined_net, big_count, super_count, tick_count}"""
     code = request.args.get("code", "").strip()
     end = request.args.get("end", "12:58")
+    target_date = request.args.get("date") or date.today().strftime("%Y-%m-%d")
     if not code:
         return jsonify({"ok": False, "error": "code 必填"})
     try:
         def work(api):
             contract = _resolve_contract(api, code)
-            ticks = api.ticks(contract=contract, date=str(date.today()))
+            ticks = api.ticks(contract=contract, date=target_date)
             big_net = super_net = 0
             big_count = super_count = 0
             cutoff = f"{end}:59"
             for ts, close, volume, tick_type in zip(ticks.ts, ticks.close, ticks.volume, ticks.tick_type):
-                hhmmss = datetime.fromtimestamp(ts / 1e9).strftime("%H:%M:%S")
+                hhmmss = datetime.fromtimestamp(ts / 1e9, tz=timezone.utc).strftime("%H:%M:%S")
                 if hhmmss > cutoff:
                     continue
                 amount = close * volume * 1000
