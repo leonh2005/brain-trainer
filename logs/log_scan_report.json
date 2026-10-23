@@ -1,6 +1,6 @@
 {
-  "scanned_at": "2026-10-23 03:00:42",
-  "since": "2026-10-22 03:00:01",
+  "scanned_at": "2026-10-24 03:00:43",
+  "since": "2026-10-23 03:00:00",
   "results": {
     "市場儀表板": {
       "exists": true,
@@ -28,8 +28,8 @@
     },
     "財經新聞分析": {
       "exists": true,
-      "errors": 5,
-      "last_error": "2026-10-22 23:30:21,112 [WARNING] fetcher.ptt_fetcher: PTT article fetch failed https://www.ptt.cc/bbs/Stock/M.1779384745.A.647.html: HTTPSConnectionPool(host='www.ptt.cc', port=443): Read timed out. (read timeout=10)",
+      "errors": 4,
+      "last_error": "2026-10-23 04:30:14,793 [WARNING] fetcher.ptt_fetcher: PTT index fetch failed: HTTPSConnectionPool(host='www.ptt.cc', port=443): Read timed out. (read timeout=10)",
       "fix": "網路逾時 → 確認目標服務可達，或增加 timeout 設定"
     },
     "川普監測": {
@@ -40,9 +40,9 @@
     },
     "持倉新聞(台股)": {
       "exists": true,
-      "errors": 0,
-      "last_error": null,
-      "fix": null
+      "errors": 2,
+      "last_error": "2026-10-23 08:30:36,845 WARNING T86 失敗 00635U day=20261023：HTTPSConnectionPool(host='www.twse.com.tw', port=443): Read timed out. (read timeout=10)",
+      "fix": "網路逾時 → 確認目標服務可達，或增加 timeout 設定"
     },
     "持倉新聞(美股)": {
       "exists": true,
@@ -124,9 +124,9 @@
     },
     "daily-stock-analysis": {
       "exists": true,
-      "errors": 2,
-      "last_error": "2026-10-22 13:18:12 | DEBUG    | venv/lib/python3.14/site-packages/httpcore/_trace.py:47 | receive_response_body.failed exception=GeneratorExit()",
-      "fix": "尚無對應建議，需人工判斷"
+      "errors": 0,
+      "last_error": null,
+      "fix": null
     }
   },
   "no_log": [
