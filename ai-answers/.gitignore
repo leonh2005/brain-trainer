@@ -1,0 +1,5 @@
+profile/
+debug/
+data/
+__pycache__/
+*.log
