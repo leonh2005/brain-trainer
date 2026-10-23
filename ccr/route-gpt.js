@@ -16,6 +16,12 @@ const TIERS = {
 };
 // Abacus 掛掉或額度不足時退回直連 DeepSeek（不耗 Abacus 點數）
 const FALLBACK = "deepseek/deepseek-flash";
+// 不直接依賴 ccr 內建 fallback：它在第二個 attempt 沒有重算 content-length，DeepSeek 那次會在連線前 502
+const ABACUS_HEALTH = "/Users/steven/.claude-code-router/abacus-health.json";
+const DS_HEALTH = "/Users/steven/.claude-code-router/ds-health.json";
+const PROBE_INTERVAL_S = 15 * 60;
+const ABACUS_PROBE_URL = "http://127.0.0.1:8791/health";
+const PIN_FILE = "/Users/steven/.claude-code-router/route-pin.json";
 const STATE_DIR = "/Users/steven/.claude-code-router/route-state";
 const LOG = "/tmp/jev-router.log";
 const SHAPE_LOG = "/tmp/cc-req-shape.jsonl"; // TEMP: 驗證 Claude Code 請求格式後移除
@@ -30,6 +36,13 @@ module.exports = async function (request, config, ctx) {
   if (model === "claude-3-haiku") return remember(sessionId, model, "claude-openai/gpt-4o-mini", "gpt-backup", null);
 
   if (model === "claude-3-7-sonnet") {
+    const pin = pinnedProvider();
+    if (pin === "deepseek" || (!pin && (await pickProvider()) === "deepseek")) {
+      const route = pin ? "manual-deepseek" : "abacus-down";
+      fs.appendFileSync(LOG, `${new Date().toISOString()} ${sessionId} ${route} -> ${FALLBACK}\n`);
+      return remember(sessionId, model, FALLBACK, route, undefined);
+    }
+
     const state = readState(sessionId);
     if (state.tier && !isNewInstruction(messages)) {
       return remember(sessionId, model, state.tier, "jev-sticky", undefined);
@@ -70,6 +83,63 @@ module.exports = async function (request, config, ctx) {
   // 其餘（claude 預設 = Flash）放行
   return remember(sessionId, model, null, "passthrough", undefined);
 };
+
+// 手動釘住：route-pin.json 的 provider 為 deepseek 或 abacus 時，略過冷卻判斷，直到移除該檔
+function pinnedProvider() {
+  try {
+    const p = JSON.parse(fs.readFileSync(PIN_FILE, "utf8")).provider;
+    return p === "deepseek" || p === "abacus" ? p : undefined;
+  } catch (e) {
+    return undefined;
+  }
+}
+
+// 選路：Abacus 優先；Abacus 冷卻中改用 DeepSeek；兩邊都冷卻時回到 Abacus。
+// 冷卻期過後放行一個請求試探，成功會由 proxy 清除冷卻標記，失敗會重新標記。
+async function pickProvider() {
+  const a = coolState(ABACUS_HEALTH);
+  if (a === "down") {
+    const d = coolState(DS_HEALTH);
+    if (d === "down") return "abacus";
+    if (d === "due") claimProbe(DS_HEALTH);
+    return "deepseek";
+  }
+  if (a === "due") claimProbe(ABACUS_HEALTH);
+  if (!(await probeOk(ABACUS_PROBE_URL))) {
+    return coolState(DS_HEALTH) === "down" ? "abacus" : "deepseek";
+  }
+  return "abacus";
+}
+
+function coolState(file) {
+  let mark;
+  try {
+    mark = JSON.parse(fs.readFileSync(file, "utf8"));
+  } catch (e) {
+    return "ok";
+  }
+  const age = Date.now() / 1000 - Number(mark.ts);
+  return age < PROBE_INTERVAL_S ? "down" : "due";
+}
+
+function claimProbe(file) {
+  try {
+    const tmp = `${file}.${process.pid}.${Math.random().toString(36).slice(2)}.tmp`;
+    fs.writeFileSync(tmp, JSON.stringify({ status: "probe", ts: Date.now() / 1000 }));
+    fs.renameSync(tmp, file);
+  } catch (e) {
+    console.error("[route] 寫入探測標記失敗:", e.message);
+  }
+}
+
+async function probeOk(url) {
+  try {
+    const r = await fetch(url, { signal: AbortSignal.timeout(800) });
+    return r.ok;
+  } catch (e) {
+    return false;
+  }
+}
 
 function readState(sessionId) {
   try {
