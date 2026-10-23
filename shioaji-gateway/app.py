@@ -304,6 +304,47 @@ def intraday():
         return jsonify({"ok": False, "error": str(e)})
 
 
+@app.get("/big_orders")
+def big_orders():
+    """當日逐筆大單內外盤淨額（截至 end 時間）。
+    大單 = 單筆 100萬(含)~400萬(未滿)，特大單 = 單筆 400萬(含)以上；tick_type 1=外盤、2=內盤。
+    GET /big_orders?code=2330&end=12:58 -> {ok, big_net, super_net, combined_net, big_count, super_count}"""
+    code = request.args.get("code", "").strip()
+    end = request.args.get("end", "12:58")
+    if not code:
+        return jsonify({"ok": False, "error": "code 必填"})
+    try:
+        def work(api):
+            contract = _resolve_contract(api, code)
+            ticks = api.ticks(contract=contract, date=str(date.today()))
+            big_net = super_net = 0
+            big_count = super_count = 0
+            cutoff = f"{end}:59"
+            for ts, close, volume, tick_type in zip(ticks.ts, ticks.close, ticks.volume, ticks.tick_type):
+                hhmmss = datetime.fromtimestamp(ts / 1e9).strftime("%H:%M:%S")
+                if hhmmss > cutoff:
+                    continue
+                amount = close * volume * 1000
+                side = 1 if tick_type == 1 else -1 if tick_type == 2 else 0
+                if amount >= 4_000_000:
+                    super_net += side * amount
+                    super_count += 1
+                elif amount >= 1_000_000:
+                    big_net += side * amount
+                    big_count += 1
+            return {
+                "tick_count": len(ticks.ts),
+                "big_net": big_net,
+                "super_net": super_net,
+                "combined_net": big_net + super_net,
+                "big_count": big_count,
+                "super_count": super_count,
+            }
+        return jsonify({"ok": True, **_run(work)})
+    except Exception as e:
+        return jsonify({"ok": False, "error": str(e)})
+
+
 @app.get("/scanner")
 def scanner():
     """漲跌幅排行掃描（跨全市場，非單檔查詢）。count 上限 200（Shioaji 限制）。
