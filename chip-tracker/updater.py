@@ -11,7 +11,6 @@ import json
 import logging
 import os
 import re
-import subprocess
 import sys
 import time
 import urllib.parse
@@ -622,17 +621,6 @@ def main() -> int:
 
     db.set_meta(conn, "last_update", datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
     logger.info("更新完成：%d 檔", len(stocks))
-
-    # 幾何型態跟著行情重算（stock-pattern 只能在 probe venv 跑，用子程序隔離）
-    try:
-        subprocess.run(
-            [os.path.expanduser("~/CCProject/stock-pattern-probe/.venv/bin/python"),
-             os.path.join(os.path.dirname(os.path.abspath(__file__)), "pattern_scan.py")],
-            capture_output=True, timeout=600, check=True,
-        )
-        logger.info("幾何型態已重算")
-    except Exception as e:
-        logger.warning("幾何型態重算失敗: %s", e)
     return 0
 
 

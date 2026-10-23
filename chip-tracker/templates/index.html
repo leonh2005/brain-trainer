@@ -136,7 +136,6 @@ table.strat tr.grp td { background: rgba(59,130,246,0.08); font-weight: 600; }
     <button id="job-history">更新歷史資料</button>
     <button id="job-cyq">重算 CYQ</button>
     <button id="job-strategy">跑策略選股</button>
-    <button id="job-pattern">重算型態</button>
     <span class="hint" id="job-msg">閒置</span>
   </div>
   <div id="strategy-section" class="signal-list">載入中…</div>
@@ -157,22 +156,6 @@ table.strat tr.grp td { background: rgba(59,130,246,0.08); font-weight: 600; }
     <div class="legend-item"><span class="badge pattern-down">空頭排列</span>短、中、長期均線依序在下，趨勢偏空</div>
     <div class="legend-item"><span class="badge pattern-flat">十字星</span>開盤收盤幾乎相同，多空拉鋸、變盤訊號</div>
     <div class="legend-item"><span class="badge pattern-flat">母子線</span>當根實體完全包在前一根實體內，趨勢動能收斂、待變盤</div>
-  </div>
-</div>
-
-<div class="pattern-legend">
-  <div class="section-label">📐 幾何型態（輔助確認）</div>
-  <div class="legend-grid">
-    <div class="legend-item"><span class="badge pattern-up">📐BATU</span>看多蝙蝠諧波：XAB 後回檔落在 0.382~0.5，CD 段完成，偏多</div>
-    <div class="legend-item"><span class="badge pattern-up">📐ABCDU</span>看多 ABCD 三段結構完成，等突破 D 點後進場</div>
-    <div class="legend-item"><span class="badge pattern-up">📐CRABU</span>看多螃蟹諧波：D 點深度回檔（1.618 延伸）後反轉</div>
-    <div class="legend-item"><span class="badge pattern-down">📐HNSD</span>頭肩頂成形，跌破頸線偏空</div>
-    <div class="legend-item"><span class="badge pattern-down">📐DNTL</span>下降趨勢線壓制中，反彈受制</div>
-  </div>
-  <div class="legend-item" style="margin-top:.6rem;font-size:.72rem">
-    <span class="badge">說明</span>由 stock-pattern 偵測，型態都在「突破前」就標出，只當輔助確認、不是獨立進場訊號。
-    2026-10 以本清單 39 檔回測（扣 0050）：BATU +1.6%、ABCDU +1.3%、CRABU +1.1%（5 日超額），HNSD −1.9%、DNTL −1.1%；
-    多頭旗形（BFLYU）與 ABCD 空方版本實測無效，已不顯示。
   </div>
 </div>
 
@@ -408,12 +391,6 @@ function stockHtml(s) {
   const volLine = vs && vs.score != null
     ? `<div class="pattern-line"><span class="badge vol-score vol-${vs.score >= 3 ? "hi" : vs.score >= 2 ? "mid" : "lo"}" title="${esc((vs.items || []).map(i => `${i.hit ? "✔" : "✘"} ${i.label}（${i.value}）`).join("\n"))}">波動 ${vs.score}/${vs.max}</span></div>`
     : "";
-  // 幾何型態（stock-pattern）只當輔助確認：實測 BATU/ABCDU/CRABU 略偏多、HNSD/DNTL 偏空
-  const GEO_BEARISH = new Set(["HNSD", "DNTL"]);
-  const chartPatternLine = (s.chart_patterns || []).length
-    ? `<div class="pattern-line">${s.chart_patterns.map(p =>
-        `<span class="badge pattern-${GEO_BEARISH.has(p.pattern) ? "down" : "up"}" title="幾何型態 ${esc(p.start)} ~ ${esc(p.end)}">📐${esc(p.pattern)}</span>`).join("")}</div>`
-    : "";
   const dispositionBadge = s.disposition
     ? `<span class="badge disposition" title="${esc(s.disposition.reason || "")}">處置中 ${md(s.disposition.start)}~${md(s.disposition.end)}</span>`
     : "";
@@ -423,7 +400,6 @@ function stockHtml(s) {
       <div class="code">${s.code} · ${esc(s.date)}${supportBtn(s.code)}</div>
       ${streakP ? `<div class="streak-line">${streakP}</div>` : ""}
       ${patternLine}
-      ${chartPatternLine}
       ${volLine}
       <div class="name"><a href="https://tw.stock.yahoo.com/quote/${esc(s.code)}.TW" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;">${esc(s.name)}</a></div>
       <div class="price" id="price-${s.code}">${price} ${chg}${liveBadge}</div>
@@ -663,8 +639,8 @@ document.getElementById("refresh").onclick = async () => {
 };
 
 // ── 長工作（更新歷史 / 重算 CYQ / 跑策略） ──────────────
-const JOB_BUTTONS = { history: "job-history", cyq: "job-cyq", strategy: "job-strategy", pattern: "job-pattern" };
-const JOB_LABELS = { history: "更新歷史資料", cyq: "重算 CYQ", strategy: "跑策略選股", pattern: "重算型態" };
+const JOB_BUTTONS = { history: "job-history", cyq: "job-cyq", strategy: "job-strategy" };
+const JOB_LABELS = { history: "更新歷史資料", cyq: "重算 CYQ", strategy: "跑策略選股" };
 let pollTimer = null;
 const prevStatus = {};
 
@@ -755,7 +731,6 @@ function backtestHtml(d) {
 document.getElementById("job-history").onclick = () => startJob("history");
 document.getElementById("job-cyq").onclick = () => startJob("cyq");
 document.getElementById("job-strategy").onclick = () => startJob("strategy");
-document.getElementById("job-pattern").onclick = () => startJob("pattern");
 
 load();
 loadStrategies();
