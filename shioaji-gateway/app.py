@@ -14,6 +14,7 @@
 import heapq
 import itertools
 import os
+import re
 import threading
 import time
 from datetime import date, datetime, timedelta, timezone
@@ -58,6 +59,12 @@ _bidask_cache = {}        # code -> {"ts": float, "bids": [...], "asks": [...]}
 _bidask_subscribed = {}   # code -> 最後被 /bidask 查詢的時間
 BIDASK_IDLE_TIMEOUT = 90  # 超過這麼久沒人查詢就自動退訂
 BIDASK_SWEEP_INTERVAL = 60
+
+
+def _is_candidate_code(code):
+    """隔日沖候選代號：4碼個股、5碼數字 ETF、00xxxX 字尾 ETF（含正/反 ETF）；排除 6 碼數字權證"""
+    return ((len(code) in (4, 5) and code.isdigit())
+            or bool(re.fullmatch(r"00\d{3}[A-Z]", code)))
 
 
 def _read_secret(filename):
@@ -382,8 +389,7 @@ def market_snapshot():
         for market, suffix in (("TSE", ".TW"), ("OTC", ".TWO")):
             try:
                 board = getattr(api.Contracts.Stocks, market)
-                contracts = [c for c in board
-                             if getattr(c, "code", "").isdigit() and len(c.code) == 4]
+                contracts = [c for c in board if _is_candidate_code(getattr(c, "code", ""))]
             except Exception:
                 continue
             cmap = {c.code: c for c in contracts}
