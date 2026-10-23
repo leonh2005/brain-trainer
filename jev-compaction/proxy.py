@@ -28,14 +28,16 @@ import http.server
 import json
 import logging
 import os
+import re
 import socketserver
+from datetime import datetime
 from pathlib import Path
 
 import compactor
 import jev_client
 
 LISTEN_HOST = "127.0.0.1"
-LISTEN_PORT = 8788
+LISTEN_PORT = int(os.environ.get("JEV_COMPACTION_LISTEN_PORT", "8788"))
 
 # 上游＝真正的 LLM 供應商。
 #
@@ -48,7 +50,8 @@ UPSTREAM_HOST = os.environ.get("JEV_COMPACTION_UPSTREAM_HOST", "api.deepseek.com
 UPSTREAM_PORT = int(os.environ.get("JEV_COMPACTION_UPSTREAM_PORT", "443"))
 UPSTREAM_BASE = os.environ.get("JEV_COMPACTION_UPSTREAM_BASE", "/anthropic")
 
-LOG_PATH = Path(__file__).resolve().parent / "proxy.log"
+LOG_PATH = Path(os.environ.get("JEV_COMPACTION_LOG",
+                               Path(__file__).resolve().parent / "proxy.log"))
 
 # 偽名化（把路徑／專案名換成代號）。
 # 預設關閉：使用者只要求「憑證不能洩漏」，不在意對話內容的去識別化。
@@ -60,6 +63,8 @@ ANON = os.environ.get("JEV_COMPACTION_ANON", "0") == "1"
 # 影子模式：評估但不實際改動送出的內容。
 # 接上真實鏈路前先用它觀察「會砍什麼」，風險為零（只多花一點 Jev 費用）。
 DRY_RUN = os.environ.get("JEV_COMPACTION_DRY_RUN", "0") == "1"
+# A/B 對照：開啟時只在奇數日壓縮，偶數日原樣轉發。
+AB_MODE = os.environ.get("JEV_COMPACTION_AB", "0") == "1"
 TIMEOUT = float(os.environ.get("JEV_COMPACTION_TIMEOUT", "10.0"))
 # 上游（thinking-proxy）的等待上限。跟 JEV_COMPACTION_TIMEOUT 無關——
 # 後者只管 Jev 呼叫。設太短會截斷長回應，太長則上游卡住時佔住執行緒。
@@ -71,6 +76,29 @@ log = logging.getLogger("jev-compaction-proxy")
 
 _api_key: str | None = None
 _cache = compactor._Cache()
+
+
+_USAGE_FIELDS = {
+    "in": re.compile(rb'"input_tokens":\s*(\d+)'),
+    "cache_read": re.compile(rb'"cache_read_input_tokens":\s*(\d+)'),
+    "cache_create": re.compile(rb'"cache_creation_input_tokens":\s*(\d+)'),
+    "out": re.compile(rb'"output_tokens":\s*(\d+)'),
+}
+
+
+def usage_summary(group: str, head: bytes, tail: bytes) -> str:
+    """從串流的開頭（message_start）與尾段（message_delta）取出 usage。"""
+    def last(pattern: re.Pattern, buf: bytes) -> str:
+        found = pattern.findall(buf)
+        return found[-1].decode() if found else "-"
+
+    return " ".join([
+        group or "-",
+        f"in={last(_USAGE_FIELDS['in'], head)}",
+        f"cache_read={last(_USAGE_FIELDS['cache_read'], head)}",
+        f"cache_create={last(_USAGE_FIELDS['cache_create'], head)}",
+        f"out={last(_USAGE_FIELDS['out'], tail)}",
+    ])
 
 
 def api_key() -> str | None:
@@ -90,6 +118,9 @@ def maybe_compact(data: dict) -> tuple[dict, str]:
     messages = data.get("messages")
     if not isinstance(messages, list) or not messages:
         return data, "skip:no-messages"
+
+    if AB_MODE and datetime.now().day % 2 == 0:
+        return data, "ab-control"
 
     key = api_key()
     if not key:
@@ -134,12 +165,15 @@ class ProxyHandler(http.server.BaseHTTPRequestHandler):
             body = b""
 
         path_only = self.path.split("?", 1)[0]
+        group = ""
         if method == "POST" and path_only.rstrip("/").endswith("/messages"):
             try:
                 data = json.loads(body.decode("utf-8"))
                 data, summary = maybe_compact(data)
                 body = json.dumps(data).encode("utf-8")
-                log.info("[compact] %s", summary)
+                group = ("AB:ctrl" if summary == "ab-control"
+                         else "AB:on" if AB_MODE else "")
+                log.info("[compact]%s %s", f" {group}" if group else "", summary)
             except Exception as e:  # noqa: BLE001
                 log.info("[error] %s", e)
 
@@ -155,6 +189,7 @@ class ProxyHandler(http.server.BaseHTTPRequestHandler):
         fwd["Content-Length"] = str(len(body))
 
         headers_sent = False
+        head = b""
         conn = None
         try:
             conn_cls = (http.client.HTTPSConnection if UPSTREAM_SCHEME == "https"
@@ -200,10 +235,14 @@ class ProxyHandler(http.server.BaseHTTPRequestHandler):
                 self.wfile.write(chunk)
                 self.wfile.flush()
                 tail = (tail + chunk)[-65536:]   # 只留尾段比對，不再整包累積
+                if len(head) < 8192:
+                    head += chunk[:8192 - len(head)]
                 if b"message_stop" in tail:
                     break
                 if upstream_len is not None and received >= upstream_len:
                     break
+            if b'"usage"' in head or b'"usage"' in tail:
+                log.info("[usage] %s", usage_summary(group, head, tail))
         except Exception as e:  # noqa: BLE001
             log.info("[upstream-error] %s", e)
             if not headers_sent:
