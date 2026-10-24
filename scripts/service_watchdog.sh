@@ -24,6 +24,22 @@ is_port_up() {
   nc -z localhost "$1" 2>/dev/null
 }
 
+# 等 port 起來，最多 $2 秒（每 2 秒檢查一次）
+# 部分服務啟動前會做前置作業（如 dsa-backend 先建置前端約 15 秒），
+# 固定 sleep 5 會誤判重啟失敗
+wait_for_port() {
+  local port="$1"
+  local timeout="${2:-90}"
+  local waited=0
+  while [ "$waited" -lt "$timeout" ]; do
+    is_port_up "$port" && return 0
+    sleep 2
+    waited=$((waited + 2))
+  done
+  # 最後一次檢查，避免剛好在 timeout 當下才起來卻被判失敗
+  is_port_up "$port"
+}
+
 check_and_restart() {
   local name="$1"
   local port="$2"
@@ -50,9 +66,8 @@ check_and_restart() {
   touch "$lock_file"
 
   (cd "$cwd" && eval "nohup $cmd >> \"$svc_log\" 2>&1 &")
-  sleep 5
 
-  if is_port_up "$port"; then
+  if wait_for_port "$port" 90; then
     log "OK $name 重啟成功"
     send_telegram "✅ [Watchdog] $name (port $port) 已自動重啟"
     rm -f "$lock_file"
