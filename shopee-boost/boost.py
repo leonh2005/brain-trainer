@@ -175,6 +175,47 @@ def _open_boost_item(page, action_table, target_idx):
     return item if item.count() else None
 
 
+def _open_product_list(page):
+    page.goto(PRODUCT_URL, wait_until='domcontentloaded', timeout=30000)
+    page.wait_for_timeout(3000)
+    dismiss_ai_tour(page)
+
+
+def _find_tables(page):
+    """回傳（商品資訊表, 操作按鈕表），找不到回 (None, None)。"""
+    # 商品資訊表與操作按鈕表是兩張分開的 <table>（同步捲動用，欄位用 row index 對齊）
+    # 頁面偶爾要超過3秒才把表格資料載完（曾偶發誤判成「頁面結構改變」），改成輪詢最多15秒再放棄
+    for _ in range(15):
+        info_table = None
+        action_table = None
+        tables = page.locator('table')
+        for i in range(tables.count()):
+            t = tables.nth(i)
+            if t.locator('tbody tr').count() == 0:
+                continue
+            txt = t.inner_text() or ''
+            if info_table is None and '商品 ID' in txt:
+                info_table = t
+            if action_table is None and '更多' in txt:
+                action_table = t
+        if info_table is not None and action_table is not None:
+            return info_table, action_table
+        page.wait_for_timeout(1000)
+    return None, None
+
+
+def _locate_product(page, keyword):
+    """回傳（操作按鈕表, 商品列 index）；表格找不到回 (None, None)，商品找不到回 (表格, None)。"""
+    info_table, action_table = _find_tables(page)
+    if info_table is None:
+        return None, None
+    info_rows = info_table.locator('tbody tr')
+    for i in range(info_rows.count()):
+        if keyword in (info_rows.nth(i).inner_text() or ''):
+            return action_table, i
+    return action_table, None
+
+
 def run():
     all_success = load_last_success()
     now = datetime.now()
@@ -212,41 +253,17 @@ def run():
 
         dismiss_ai_tour(page)
 
-        # 商品資訊表與操作按鈕表是兩張分開的 <table>（同步捲動用，欄位用 row index 對齊）
-        # 頁面偶爾要超過3秒才把表格資料載完（曾偶發誤判成「頁面結構改變」），改成輪詢最多15秒再放棄
-        info_table = None
-        action_table = None
-        for _ in range(15):
-            tables = page.locator('table')
-            info_table = None
-            action_table = None
-            for i in range(tables.count()):
-                t = tables.nth(i)
-                if t.locator('tbody tr').count() == 0:
-                    continue
-                txt = t.inner_text() or ''
-                if info_table is None and '商品 ID' in txt:
-                    info_table = t
-                if action_table is None and '更多' in txt:
-                    action_table = t
-            if info_table is not None and action_table is not None:
-                break
-            page.wait_for_timeout(1000)
-        if info_table is None or action_table is None:
-            notify('⚠️ 蝦皮置頂推廣：頁面結構改變，找不到商品表格或操作表格')
-            logger.error(f'info_table found={info_table is not None} action_table found={action_table is not None}')
-            browser.close()
-            return
-
-        info_rows = info_table.locator('tbody tr')
         missing_now = set()
         failed_now = set()
-        for keyword in pending:
-            target_idx = None
-            for i in range(info_rows.count()):
-                if keyword in (info_rows.nth(i).inner_text() or ''):
-                    target_idx = i
-                    break
+        for n, keyword in enumerate(pending):
+            # 每個商品都重新載入頁面：上一個商品的下拉選單關不掉（Escape 無效），會攔截下一個商品的「更多」點擊
+            if n > 0:
+                _open_product_list(page)
+            action_table, target_idx = _locate_product(page, keyword)
+            if action_table is None:
+                notify('⚠️ 蝦皮置頂推廣：頁面結構改變，找不到商品表格或操作表格')
+                logger.error('找不到商品表格或操作表格')
+                break
             if target_idx is None:
                 missing_now.add(keyword)
                 logger.warning(f'商品列表找不到「{keyword}」，可能尚未過審／已下架，跳過')
@@ -273,7 +290,10 @@ def run():
             # 關鍵：點擊後必須回讀選單確認真的進入冷卻倒數，否則會「假成功」——
             # Shopee 有時不受理這次點擊，但 UI 不報錯、API 也照樣回 success，
             # 只憑「已點擊」記成功會讓本地狀態與 Shopee 實際脫節（log 說成功、商品卻沒置頂）。
-            verify = _open_boost_item(page, action_table, target_idx)
+            # 必須重新載入後再回讀：同頁回讀會誤判（2026-10-24 實測，點擊已生效卻回讀為 None）。
+            _open_product_list(page)
+            action_table, target_idx = _locate_product(page, keyword)
+            verify = _open_boost_item(page, action_table, target_idx) if target_idx is not None else None
             verify_text = verify.inner_text() if verify is not None else None
             page.keyboard.press('Escape')
             if _is_boost_countdown(verify_text):
