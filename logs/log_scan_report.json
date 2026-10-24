@@ -1,6 +1,6 @@
 {
-  "scanned_at": "2026-10-24 03:00:43",
-  "since": "2026-10-23 03:00:00",
+  "scanned_at": "2026-10-25 03:00:44",
+  "since": "2026-10-24 03:00:00",
   "results": {
     "市場儀表板": {
       "exists": true,
@@ -28,8 +28,8 @@
     },
     "財經新聞分析": {
       "exists": true,
-      "errors": 4,
-      "last_error": "2026-10-23 04:30:14,793 [WARNING] fetcher.ptt_fetcher: PTT index fetch failed: HTTPSConnectionPool(host='www.ptt.cc', port=443): Read timed out. (read timeout=10)",
+      "errors": 8,
+      "last_error": "2026-10-24 12:30:13,913 [WARNING] fetcher.ptt_fetcher: PTT index fetch failed: HTTPSConnectionPool(host='www.ptt.cc', port=443): Read timed out. (read timeout=10)",
       "fix": "網路逾時 → 確認目標服務可達，或增加 timeout 設定"
     },
     "川普監測": {
@@ -40,9 +40,9 @@
     },
     "持倉新聞(台股)": {
       "exists": true,
-      "errors": 2,
-      "last_error": "2026-10-23 08:30:36,845 WARNING T86 失敗 00635U day=20261023：HTTPSConnectionPool(host='www.twse.com.tw', port=443): Read timed out. (read timeout=10)",
-      "fix": "網路逾時 → 確認目標服務可達，或增加 timeout 設定"
+      "errors": 0,
+      "last_error": null,
+      "fix": null
     },
     "持倉新聞(美股)": {
       "exists": true,
@@ -88,9 +88,9 @@
     },
     "盤中監控": {
       "exists": true,
-      "errors": 2,
-      "last_error": "⚠️ 盤中主力監控啟動失敗（重試 1 次）：TimeoutError，今天不會有訊號",
-      "fix": "網路逾時 → 確認目標服務可達，或增加 timeout 設定"
+      "errors": 0,
+      "last_error": null,
+      "fix": null
     },
     "蝦皮軟纖監測": {
       "exists": true,
