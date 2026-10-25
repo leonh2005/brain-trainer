@@ -1,6 +1,6 @@
 {
-  "scanned_at": "2026-10-25 03:00:44",
-  "since": "2026-10-24 03:00:00",
+  "scanned_at": "2026-10-26 03:00:45",
+  "since": "2026-10-25 03:00:00",
   "results": {
     "市場儀表板": {
       "exists": true,
@@ -28,9 +28,9 @@
     },
     "財經新聞分析": {
       "exists": true,
-      "errors": 8,
-      "last_error": "2026-10-24 12:30:13,913 [WARNING] fetcher.ptt_fetcher: PTT index fetch failed: HTTPSConnectionPool(host='www.ptt.cc', port=443): Read timed out. (read timeout=10)",
-      "fix": "網路逾時 → 確認目標服務可達，或增加 timeout 設定"
+      "errors": 0,
+      "last_error": null,
+      "fix": null
     },
     "川普監測": {
       "exists": true,
