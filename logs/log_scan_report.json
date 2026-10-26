@@ -1,6 +1,6 @@
 {
-  "scanned_at": "2026-10-26 03:00:45",
-  "since": "2026-10-25 03:00:00",
+  "scanned_at": "2026-10-27 03:00:45",
+  "since": "2026-10-26 03:00:00",
   "results": {
     "市場儀表板": {
       "exists": true,
@@ -34,9 +34,9 @@
     },
     "川普監測": {
       "exists": true,
-      "errors": 0,
-      "last_error": null,
-      "fix": null
+      "errors": 1,
+      "last_error": "2026-10-26 10:50:04,139 WARNING 分析失敗：[Jung Inkyo's Trade-Off] Trump's Russian Diesel De — 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reaso",
+      "fix": "尚無對應建議，需人工判斷"
     },
     "持倉新聞(台股)": {
       "exists": true,
