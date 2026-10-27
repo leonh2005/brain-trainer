@@ -28,6 +28,8 @@ timesfm/model/*.safetensors
 
 # Log 檔案
 *.log
+# 輪替後的壓縮備份（command-center.log.0.gz 等）
+*.log.*.gz
 
 # 壓縮檔
 *.zip
