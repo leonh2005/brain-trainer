@@ -1,11 +1,20 @@
 import json
 import os
 import sys
+
 from flask import Flask, jsonify, render_template, request
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from storage import DB_PATH as _DEFAULT_DB, db_session, get_articles, get_bullish_trend_data, get_trend_data, init_db, set_irrelevant
+from storage import DB_PATH as _DEFAULT_DB
+from storage import (
+    db_session,
+    get_articles,
+    get_bullish_trend_data,
+    get_trend_data,
+    init_db,
+    set_irrelevant,
+)
 
 app = Flask(__name__)
 DB_PATH = _DEFAULT_DB

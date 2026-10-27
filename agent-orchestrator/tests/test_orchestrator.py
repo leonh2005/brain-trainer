@@ -1,8 +1,7 @@
 import stat
 
-import pytest
-
 import orchestrator
+import pytest
 import taskqueue as tq
 
 

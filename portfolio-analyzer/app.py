@@ -1,13 +1,15 @@
-from flask import Flask, render_template, jsonify, request
 from dotenv import load_dotenv
+from flask import Flask, jsonify, render_template, request
+
 load_dotenv()
 import json
-import requests as _req
 import time
 from datetime import date, timedelta
 from pathlib import Path
-from analysis import get_portfolio_data, PORTFOLIO_FILE
+
+import requests as _req
 from ai_masters import get_all_analyses, load_history
+from analysis import PORTFOLIO_FILE, get_portfolio_data
 from dcf import get_dcf_data
 from stock_names import load_stock_names
 
@@ -220,7 +222,11 @@ def _tdcc_query_prev_week(s, firm_date, prev_date, codes: list) -> dict:
 
 @app.route("/api/tdcc")
 def api_tdcc():
-    import io, warnings, re, pandas as pd
+    import io
+    import re
+    import warnings
+
+    import pandas as pd
     global _tdcc_cache
     force = request.args.get("refresh") == "1"
     now = time.time()

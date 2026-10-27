@@ -1,10 +1,12 @@
-import os
 import json
+import os
 import tempfile
-import pytest
-from storage import init_db, save_articles, get_unanalyzed, db_session
-from tests.helpers import set_analysis
+
 import app as flask_app
+import pytest
+from storage import db_session, get_unanalyzed, init_db, save_articles
+
+from tests.helpers import set_analysis
 
 
 @pytest.fixture

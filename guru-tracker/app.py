@@ -5,10 +5,10 @@ import os
 import subprocess
 import sys
 
+import db
 from flask import Flask, jsonify, render_template
 
 import config
-import db
 
 app = Flask(__name__)
 

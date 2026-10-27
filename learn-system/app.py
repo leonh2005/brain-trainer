@@ -3,7 +3,6 @@ import logging
 import threading
 
 from flask import Flask, jsonify, render_template, request
-
 from learn_system import db, mastery, tutor
 from learn_system.executor import run_pytest, run_python
 

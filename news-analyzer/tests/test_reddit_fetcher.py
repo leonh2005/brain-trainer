@@ -1,4 +1,5 @@
-from unittest.mock import patch, MagicMock
+from unittest.mock import MagicMock, patch
+
 from fetcher.reddit_fetcher import fetch_reddit
 
 RSS_TEMPLATE = """<?xml version="1.0" encoding="UTF-8"?>

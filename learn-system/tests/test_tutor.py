@@ -2,7 +2,6 @@ import asyncio
 import json
 
 import pytest
-
 from learn_system import tutor
 
 

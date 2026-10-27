@@ -1,10 +1,11 @@
-import feedparser
 import html
 import logging
 import re
-import requests
 import time
-from datetime import datetime, timezone
+from datetime import UTC, datetime
+
+import feedparser
+import requests
 
 logger = logging.getLogger(__name__)
 
@@ -45,7 +46,7 @@ def fetch_reddit(subreddits=None, limit=20):
             for entry in feed.entries[:limit]:
                 published = None
                 if getattr(entry, "published_parsed", None):
-                    published = datetime(*entry.published_parsed[:6], tzinfo=timezone.utc).isoformat()
+                    published = datetime(*entry.published_parsed[:6], tzinfo=UTC).isoformat()
                 articles.append({
                     "source": "reddit",
                     "title": entry.title,

@@ -30,7 +30,7 @@ def test_tw_holidays_match_open_data(mm):
     url = "https://cdn.jsdelivr.net/gh/ruyut/TaiwanCalendar/data/2026.json"
     try:
         data = json.loads(urllib.request.urlopen(url, timeout=15).read())
-    except Exception as e:  # noqa: BLE001 - 任何網路問題都只 skip
+    except Exception as e:
         pytest.skip(f"取得行事曆開放資料失敗：{e}")
 
     expected = {

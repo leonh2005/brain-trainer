@@ -3,7 +3,6 @@ import time
 from pathlib import Path
 
 from flask import Flask, jsonify, redirect, render_template, request, url_for
-
 from mapping import ACTIONS, BUTTONS, PRESETS, load_config, save_config
 
 STATE_PATH = Path(__file__).parent / "state.json"

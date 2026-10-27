@@ -1,6 +1,5 @@
 import app as app_module
 import pytest
-
 from learn_system import tutor
 
 # test_code 依題目定義是 pytest 斷言（見 tutor.QUESTION_PROMPT），故寫成測試函式。

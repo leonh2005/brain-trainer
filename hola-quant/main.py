@@ -11,14 +11,15 @@ import asyncio
 import logging
 import os
 import subprocess
-from datetime import datetime, date, time as dtime
+from datetime import date, datetime
+from datetime import time as dtime
 
 import aiohttp
 from dotenv import load_dotenv
 
 load_dotenv()
 
-from analyzer import analyze, AnalysisResult
+from analyzer import AnalysisResult, analyze
 from bot import HolaQuantBot, SignalMessage
 from screener import fetch_weekly_top20, load_watchlist
 
@@ -142,7 +143,8 @@ async def _send_morning_report(
 
 async def _run_analysis_cycle(watchlist: list[dict], news_stats: dict, bot: HolaQuantBot):
     import re
-    from analyzer import _groq_analysis, _build_context
+
+    from analyzer import _build_context, _groq_analysis
 
     logger.info(f"[main] Groq 初篩 {len(watchlist)} 檔")
     pre_tasks = [

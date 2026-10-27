@@ -3,10 +3,11 @@ import os
 import sys
 import threading
 import warnings
+
 warnings.filterwarnings("ignore")
 
 import numpy as np
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, jsonify, render_template, request
 
 sys.path.insert(0, os.path.dirname(__file__))
 MODEL_DIR = os.path.join(os.path.dirname(__file__), "model")
@@ -21,6 +22,7 @@ def _load_model():
     global _model, _model_ready, _model_error
     try:
         import torch
+
         import timesfm
         torch.set_float32_matmul_precision("high")
         _model = timesfm.TimesFM_2p5_200M_torch.from_pretrained(MODEL_DIR)

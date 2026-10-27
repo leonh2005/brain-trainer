@@ -3,7 +3,6 @@
 將 8x8 像素的 ASCII art tile 轉換為 NES CHR 格式（每 tile 16 bytes）
 NES 使用 2-bit 顏色（平面 0 + 平面 1）
 """
-import struct, sys
 
 def tile_to_chr(rows):
     """rows: 8個字串，每個8個字元，使用 '.','1','2','3' 代表顏色0-3"""
@@ -194,6 +193,7 @@ ORDER = [
 OUTPUT = "gfx/sprites.chr"
 
 import os
+
 os.makedirs("gfx", exist_ok=True)
 
 with open(OUTPUT, 'wb') as f:

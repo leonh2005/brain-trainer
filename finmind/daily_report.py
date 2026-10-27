@@ -7,10 +7,11 @@
 - 大盤籌碼：外資期貨多空
 """
 
-import requests
-import pandas as pd
 import warnings
 from datetime import datetime, timedelta
+
+import pandas as pd
+import requests
 from FinMind.data import DataLoader
 
 warnings.filterwarnings('ignore')
@@ -90,11 +91,11 @@ def vol_signal(price_row, avg5_vol):
             return f"{vol_str} 方向不明 🔍"
     elif vol_ratio < 0.6:
         if chg < 0:
-            return f"縮量回檔 → 健康整理 ✅"
+            return "縮量回檔 → 健康整理 ✅"
         else:
-            return f"縮量上漲 → 力道偏弱 🔍"
+            return "縮量上漲 → 力道偏弱 🔍"
     else:
-        return f"量平穩 → 觀望"
+        return "量平穩 → 觀望"
 
 # ── 開始執行 ──────────────────────────────────────
 
@@ -244,4 +245,4 @@ mkt_dir = "偏空 ↓" if last_fut['diff'] < 0 else "偏多 ↑"
 print(f"  大盤外資期貨：{mkt_dir}（多空差 {int(last_fut['diff']):+,} 口）")
 print(f"  當沖候選：{len(candidates)} 檔  {candidates if candidates else '今日無符合標的'}")
 print(f"  隔日沖候選：{len(swing_candidates)} 檔  {swing_candidates if swing_candidates else '今日無符合標的'}")
-print(f"\n  ⚠️  本報告為數據彙整，非投資建議，買賣自負。\n")
+print("\n  ⚠️  本報告為數據彙整，非投資建議，買賣自負。\n")

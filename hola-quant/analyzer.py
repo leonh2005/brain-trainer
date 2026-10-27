@@ -4,16 +4,15 @@
   GPT-5 Mini         → 交叉驗證（挑戰者）
   Gemini 2.5 Flash   → 整合結論
 """
-import asyncio
-import os
 import logging
+import os
 from dataclasses import dataclass
 
 from groq import AsyncGroq
 
 logger = logging.getLogger(__name__)
-from openai import AsyncOpenAI
 from google import genai as google_genai
+from openai import AsyncOpenAI
 
 
 @dataclass
@@ -149,6 +148,7 @@ async def analyze(
     kbars_summary: str = "",
 ) -> AnalysisResult:
     import os
+
     from pricer import calc_position
 
     context = _build_context(symbol, name, news_stats, kbars_summary)

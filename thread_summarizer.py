@@ -5,9 +5,9 @@ Thread 珍藏摘要產生器
 """
 
 import os
-import json
-from datetime import date, timedelta, datetime
+from datetime import date, timedelta
 from pathlib import Path
+
 from google import genai
 
 GEMINI_API_KEY = open(os.path.expanduser("~/CCProject/.secrets/gemini_key.txt")).read().strip()

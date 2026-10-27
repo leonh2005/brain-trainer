@@ -1,10 +1,13 @@
 """強制執行一次完整分析循環（忽略時段和情緒門檻，用於測試）"""
 import asyncio
+
 from dotenv import load_dotenv
+
 load_dotenv()
 
-from analyzer import analyze, AnalysisResult
+from analyzer import AnalysisResult, analyze
 from bot import HolaQuantBot, SignalMessage
+
 
 async def main():
     from screener import load_watchlist
@@ -21,7 +24,7 @@ async def main():
     print(f"[news] 多 {news_stats['bullish_pct']}%  空 {news_stats['bearish_pct']}%  共 {news_stats['total']} 篇\n")
 
     # 階段一：Groq 快速初篩全部 20 檔（免費）
-    from analyzer import _groq_analysis, _build_context, _gpt_validation, _gpt_conclusion
+    from analyzer import _build_context, _groq_analysis
     pre_tasks = [
         _groq_analysis(_build_context(s["symbol"], s["name"], news_stats, ""))
         for s in watchlist
@@ -93,7 +96,7 @@ async def main():
         try:
             await asyncio.wait_for(ev.wait(), timeout=30)
             print(f"[{result.symbol}] {'確認下單' if res['ok'] else '已拒絕'}")
-        except asyncio.TimeoutError:
+        except TimeoutError:
             print(f"[{result.symbol}] 逾時，視為拒絕")
 
     await bot.stop()

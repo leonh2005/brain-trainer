@@ -1,5 +1,18 @@
-from flask import Flask, render_template, request, redirect, url_for, jsonify
-from db import init_db, get_all_categories, get_skills_by_category, get_skill_detail, log_xp, get_character, update_skill, add_skill, delete_skill, update_category, add_category, delete_category
+from db import (
+    add_category,
+    add_skill,
+    delete_category,
+    delete_skill,
+    get_all_categories,
+    get_character,
+    get_skill_detail,
+    get_skills_by_category,
+    init_db,
+    log_xp,
+    update_category,
+    update_skill,
+)
+from flask import Flask, jsonify, redirect, render_template, request, url_for
 
 app = Flask(__name__)
 

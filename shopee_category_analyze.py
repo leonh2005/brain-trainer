@@ -58,4 +58,4 @@ for s in hits:
 
 json.dump(ranked, open("/tmp/cat_ranked.json", "w"), ensure_ascii=False, indent=1)
 json.dump(hits, open("/tmp/cat_hits.json", "w"), ensure_ascii=False, indent=1)
-print(f"\n→ /tmp/cat_ranked.json（全部）、/tmp/cat_hits.json（命中）")
+print("\n→ /tmp/cat_ranked.json（全部）、/tmp/cat_hits.json（命中）")

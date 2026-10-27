@@ -5,7 +5,8 @@ import re
 import sqlite3
 import time
 import urllib.request
-from datetime import datetime, date, timedelta
+from datetime import date, datetime, timedelta
+
 import support as support_mod
 
 CC = '/Users/steven/CCProject'

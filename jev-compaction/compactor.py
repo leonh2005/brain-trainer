@@ -236,7 +236,7 @@ def compact(messages: list[dict], api_key: str, anon: bool = True,
         items = [(str(c.idx), safe_texts[c.idx]) for c in batch]
         try:
             got = jev_client.score_relevance(items, safe_task, api_key, timeout=timeout)
-        except Exception as e:  # noqa: BLE001 - fail-open 是設計要求
+        except Exception as e:
             stats.error = f"{type(e).__name__}: {e}"
             log.warning("Jev 呼叫失敗，這次不壓縮：%s", e)
             # 沒有壓縮就沒有省下任何字元——不設的話 stats 會誤報成省了 100%

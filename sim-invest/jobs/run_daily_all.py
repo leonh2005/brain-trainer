@@ -1,13 +1,17 @@
 """LaunchAgent 進入點：對所有帳戶跑 run_day（今日）。"""
 import os
 import sys
+
 _ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, _ROOT_DIR)
 
 from datetime import date
-import store, quotes
-from jobs import daily
+
+import quotes
+import store
 from plans import PLANS
+
+from jobs import daily
 
 DB = os.environ.get("SIM_DB", os.path.join(_ROOT_DIR, "sim.db"))
 conn = store.connect(DB)

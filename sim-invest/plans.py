@@ -53,8 +53,9 @@ PLANS = {
 
 def ensure_accounts(conn):
     """若 accounts 表缺少 plan_id 對應的列，用 PLANS 預設值建立。"""
-    import store
     from datetime import date
+
+    import store
     today = date.today().isoformat()
     for plan_id, plan in PLANS.items():
         if store.get_account(conn, plan_id) is None:

@@ -1,5 +1,5 @@
-import telegram_bot as tb
 import taskqueue as tq
+import telegram_bot as tb
 
 
 def _conn(tmp_path):

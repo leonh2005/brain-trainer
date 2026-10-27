@@ -1,10 +1,13 @@
 """一次性初始化：建立帳戶 A/B，執行建帳日建倉 + 首批 DCA + 快照。"""
 import os
 import sys
+
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from datetime import date
-import store, quotes
+
+import quotes
+import store
 from jobs import daily
 from plans import PLANS
 

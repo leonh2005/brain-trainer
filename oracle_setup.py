@@ -5,11 +5,12 @@ Oracle Cloud 自動建立 VM 腳本
 - 持續嘗試建立 ARM VM，直到成功為止
 """
 
-import oci
-import time
 import os
 import subprocess
+import time
 from datetime import datetime
+
+import oci
 
 # ─── 設定 ────────────────────────────────────────────────────────
 COMPARTMENT_ID = "ocid1.tenancy.oc1..aaaaaaaa33in6usn64ykyh2ji34rqmdxx3tpgk5xbugjptrn5jzhn3iw2vdq"
@@ -167,10 +168,10 @@ def main():
         log(f"第 {attempt} 次嘗試建立 VM...")
         try:
             instance = create_instance(compute_client, subnet_id, ssh_public_key)
-            log(f"✅ VM 建立成功！")
+            log("✅ VM 建立成功！")
             log(f"Instance ID：{instance.id}")
             log(f"狀態：{instance.lifecycle_state}")
-            log(f"等待 VM 啟動...")
+            log("等待 VM 啟動...")
 
             # 等待 VM 啟動完成
             oci.wait_until(
@@ -188,7 +189,7 @@ def main():
             if vnic_attachments:
                 vnic = network_client.get_vnic(vnic_attachments[0].vnic_id).data
                 log(f"🌐 公開 IP：{vnic.public_ip}")
-                log(f"\n連線指令：")
+                log("\n連線指令：")
                 log(f"ssh -i {SSH_KEY_PATH} ubuntu@{vnic.public_ip}")
 
             break

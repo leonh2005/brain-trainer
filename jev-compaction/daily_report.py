@@ -10,7 +10,6 @@
 """
 from __future__ import annotations
 
-import os
 import re
 import sys
 from datetime import datetime, timedelta
@@ -118,7 +117,7 @@ def send_telegram(text: str) -> bool:
     try:
         with urllib.request.urlopen(req, timeout=15) as r:
             return json.loads(r.read().decode()).get("ok", False)
-    except Exception as e:  # noqa: BLE001
+    except Exception as e:
         print(f"Telegram 推播失敗：{e}", file=sys.stderr)
         return False
 

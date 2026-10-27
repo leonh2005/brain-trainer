@@ -1,5 +1,6 @@
-from PIL import Image
 import os
+
+from PIL import Image
 
 SRC = "/Users/steven/Downloads/sddefault.jpg"
 OUT = os.path.join(os.path.dirname(__file__), "../static/img/character_upper.png")

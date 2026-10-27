@@ -2,9 +2,8 @@ import json
 
 import app as app_module
 import pytest
-
-from learn_system import db, tutor
 from app import create_app
+from learn_system import db, tutor
 
 # test_code 依題目定義是 pytest 斷言（見 tutor.QUESTION_PROMPT），故一律寫成
 # 測試函式：模組層級的裸 assert pytest 不會收集，等於沒有測試可跑。

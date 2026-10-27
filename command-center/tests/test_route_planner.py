@@ -6,7 +6,6 @@
 from datetime import datetime
 
 import pytest
-
 import route_planner as rp
 
 # ── _mode_rank：運具優先度（台鐵 > 捷運 > 公車）──────────────

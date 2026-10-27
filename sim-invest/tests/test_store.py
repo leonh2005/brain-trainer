@@ -1,5 +1,6 @@
 import store
 
+
 def test_create_and_get_account():
     conn = store.connect(":memory:")
     store.create_account(conn, "A", "測試A", "A", "2026-07-24", 9_000_000)

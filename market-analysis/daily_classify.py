@@ -8,7 +8,6 @@ import os
 
 import pandas as pd
 import yfinance as yf
-
 from analyze import classify_day
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -18,7 +17,7 @@ HITS_JSON = os.path.join(BASE_DIR, "hit_counts.json")
 
 def load_hits():
     if os.path.exists(HITS_JSON):
-        with open(HITS_JSON, "r", encoding="utf-8") as f:
+        with open(HITS_JSON, encoding="utf-8") as f:
             return json.load(f)
     return {"last_date": None, "hits": {}, "history": []}
 
@@ -29,7 +28,7 @@ def save_hits(data):
 
 
 def main():
-    with open(ANALYSIS_JSON, "r", encoding="utf-8") as f:
+    with open(ANALYSIS_JSON, encoding="utf-8") as f:
         analysis = json.load(f)
     range_p30 = analysis["range_p30"]
 

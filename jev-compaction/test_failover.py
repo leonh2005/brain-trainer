@@ -4,9 +4,8 @@ import json
 import threading
 import time
 
-import pytest
-
 import proxy
+import pytest
 
 
 def _serve(handler_cls):

@@ -1,8 +1,8 @@
-import shioaji as sj
-from shioaji.constant import Action, StockPriceType, OrderType
-from shioaji.constant import FuturesPriceType, FuturesOCType
-from dotenv import load_dotenv
 import os
+
+import shioaji as sj
+from dotenv import load_dotenv
+from shioaji.constant import Action, FuturesOCType, FuturesPriceType, OrderType, StockPriceType
 
 load_dotenv()
 

@@ -4,10 +4,11 @@
 import os
 import re
 import subprocess
-from datetime import datetime, date
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from flask import Flask, render_template, jsonify
+from datetime import date, datetime
+
 import requests
+from flask import Flask, jsonify, render_template
 
 app = Flask(__name__)
 
@@ -144,7 +145,7 @@ def check_local_cron(task: dict) -> dict:
                     os.path.getmtime(log_path)).strftime("%H:%M")
         else:
             keyword = task.get("keyword")
-            with open(log_path, "r", errors="replace") as f:
+            with open(log_path, errors="replace") as f:
                 lines = f.readlines()[-500:]
             today_lines = [l for l in lines if today in l and (not keyword or re.search(keyword, l))]
             if today_lines:

@@ -6,8 +6,7 @@ from pathlib import Path
 
 import GameController
 import Quartz
-from Foundation import NSNotificationCenter, NSRunLoop, NSDate
-
+from Foundation import NSDate, NSNotificationCenter, NSRunLoop
 from mapping import ACTIONS, BUTTONS, CONFIG_PATH, DEFAULT_PROFILE, KEY, load_config
 
 STATE_PATH = Path(__file__).parent / "state.json"

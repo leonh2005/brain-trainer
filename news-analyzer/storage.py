@@ -1,7 +1,7 @@
 import os
 import sqlite3
 from contextlib import contextmanager
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 
 DB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "news.db")
 
@@ -76,7 +76,7 @@ def init_db(db_path=DB_PATH):
 
 def save_articles(articles, db_path=DB_PATH):
     """Insert articles, ignore duplicates by URL. Returns count of newly inserted rows."""
-    now = datetime.now(timezone.utc).isoformat()
+    now = datetime.now(UTC).isoformat()
     with db_session(db_path) as conn:
         before = conn.execute("SELECT COUNT(*) FROM articles").fetchone()[0]
         conn.executemany(
@@ -131,7 +131,7 @@ def set_irrelevant(article_id, value, db_path=DB_PATH):
 
     標記時同步寫入 irrelevant_examples 範例池（記錄真實標記時間），
     取消標記時從池子移除——池子裡的標題都被當成「不相關」範例餵給分析器。"""
-    now = datetime.now(timezone.utc).isoformat()
+    now = datetime.now(UTC).isoformat()
     with db_session(db_path) as conn:
         conn.execute("UPDATE articles SET irrelevant=? WHERE id=?", (1 if value else 0, article_id))
         row = conn.execute("SELECT title, source FROM articles WHERE id=?", (article_id,)).fetchone()
@@ -193,7 +193,7 @@ def _time_buckets(period):
 
     分桶一律用台灣時間（fetched_at +8 小時）：day=每小時、week/month=每日，
     labels 補滿整段期間（空桶由呼叫端補 null）。"""
-    now_tw = datetime.now(timezone.utc) + timedelta(hours=8)
+    now_tw = datetime.now(UTC) + timedelta(hours=8)
     today_tw = now_tw.date()
 
     if period == "day":

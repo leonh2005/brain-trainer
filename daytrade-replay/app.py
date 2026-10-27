@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """台股當沖回放模擬系統 — port 5400"""
 
-from flask import Flask, jsonify, render_template, request
-import data
 import signals as sig_mod
+from flask import Flask, jsonify, render_template, request
+
+import data
 
 app = Flask(__name__)
 

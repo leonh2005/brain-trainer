@@ -17,7 +17,7 @@ import os
 import re
 import threading
 import time
-from datetime import date, datetime, timedelta, timezone
+from datetime import UTC, date, datetime, timedelta
 
 from flask import Flask, jsonify, request
 
@@ -68,7 +68,7 @@ def _is_candidate_code(code):
 
 
 def _read_secret(filename):
-    with open(os.path.join(SECRETS_DIR, filename), "r", encoding="utf-8") as f:
+    with open(os.path.join(SECRETS_DIR, filename), encoding="utf-8") as f:
         return f.read().strip()
 
 
@@ -233,7 +233,7 @@ def daily_ohlcv():
             for ts, o, h, l, c, v in zip(kb.ts, kb.Open, kb.High, kb.Low, kb.Close, kb.Volume):
                 if c is None:
                     continue
-                d = datetime.fromtimestamp(ts / 1e9, tz=timezone.utc).date().isoformat()
+                d = datetime.fromtimestamp(ts / 1e9, tz=UTC).date().isoformat()
                 bar = daily.get(d)
                 if bar is None:
                     daily[d] = {"date": d, "open": float(o), "high": float(h),
@@ -297,7 +297,7 @@ def intraday():
                     continue
                 # kb.ts 是「台灣本地時間」數值但以 epoch 秒編碼（非真正 UTC），
                 # 用 utcfromtimestamp 直接取數值對應的時鐘時間，避免 fromtimestamp 多轉一次時區造成 +8 小時位移
-                t = datetime.fromtimestamp(ts / 1e9, tz=timezone.utc)
+                t = datetime.fromtimestamp(ts / 1e9, tz=UTC)
                 points.append({
                     "t": t.strftime("%H:%M"),
                     "price": float(close),
@@ -329,7 +329,7 @@ def big_orders():
             big_count = super_count = 0
             cutoff = f"{end}:59"
             for ts, close, volume, tick_type in zip(ticks.ts, ticks.close, ticks.volume, ticks.tick_type):
-                hhmmss = datetime.fromtimestamp(ts / 1e9, tz=timezone.utc).strftime("%H:%M:%S")
+                hhmmss = datetime.fromtimestamp(ts / 1e9, tz=UTC).strftime("%H:%M:%S")
                 if hhmmss > cutoff:
                     continue
                 amount = close * volume * 1000

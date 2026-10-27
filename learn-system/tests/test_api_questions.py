@@ -2,9 +2,8 @@ import json
 
 import app as app_module
 import pytest
-
-from learn_system import db, tutor
 from app import create_app
+from learn_system import db, tutor
 
 
 @pytest.fixture

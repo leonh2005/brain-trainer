@@ -4,12 +4,14 @@
 資料來源：FinMind API
 """
 
-import requests
-import pandas as pd
-import numpy as np
-from datetime import datetime, timedelta
 import time
 import warnings
+from datetime import datetime, timedelta
+
+import numpy as np
+import pandas as pd
+import requests
+
 warnings.filterwarnings('ignore')
 
 # FinMind 設定

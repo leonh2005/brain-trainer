@@ -1,5 +1,6 @@
-from unittest.mock import patch, MagicMock
-from fetcher.rss_fetcher import fetch_rss, fetch_all_rss
+from unittest.mock import MagicMock, patch
+
+from fetcher.rss_fetcher import fetch_all_rss, fetch_rss
 
 
 def _mock_feed(entries):

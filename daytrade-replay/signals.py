@@ -3,8 +3,10 @@
 訊號 7（外盤比）、8（委買委賣差）需要即時 tick 資料，歷史回放無法計算，回傳 null。
 """
 
-import pandas as pd
 import warnings
+
+import pandas as pd
+
 warnings.filterwarnings('ignore')
 
 SIGNAL_THRESHOLD = 4

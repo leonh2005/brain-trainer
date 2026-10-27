@@ -6,9 +6,10 @@
 用法：
     ./venv/bin/python depth_parallax.py [來源檔] [輸出gif]
 """
+import math
 import os
 import sys
-import math
+
 import numpy as np
 import torch
 from PIL import Image

@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
-import sqlite3, shutil, requests, re, sys
+import shutil
+import sqlite3
+import sys
 from datetime import datetime
+
+import requests
 
 FF_COOKIES_DB = "/Users/steven/Library/Application Support/Firefox/Profiles/ro7nczf2.default-release/cookies.sqlite"
 

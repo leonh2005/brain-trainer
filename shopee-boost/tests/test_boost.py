@@ -3,7 +3,7 @@ import os
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-import boost  # noqa: E402
+import boost
 
 
 def test_is_boost_countdown_true_for_hhmmss():

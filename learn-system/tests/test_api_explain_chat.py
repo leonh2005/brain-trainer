@@ -1,6 +1,5 @@
 import app as app_module
 import pytest
-
 from learn_system import tutor
 
 

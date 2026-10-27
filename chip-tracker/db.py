@@ -3,7 +3,6 @@
 
 import os
 import sqlite3
-from datetime import datetime
 
 DB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "chip.db")
 

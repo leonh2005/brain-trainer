@@ -73,7 +73,7 @@ class TestCacheConcurrency(unittest.TestCase):
                 for i in range(300):
                     cache.put(f"text-{n}-{i}", 0.5, "task-a")
                     cache.get(f"text-{n}-{i}", "task-a")
-            except Exception as e:  # noqa: BLE001
+            except Exception as e:
                 errors.append(e)
 
         threads = [threading.Thread(target=worker, args=(n,)) for n in range(8)]

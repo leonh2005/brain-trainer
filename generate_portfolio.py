@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """抓取五年歷史資料並生成靜態 portfolio-monitor.html"""
+import json
+
 import yfinance as yf
-import json, os
 
 HOLDINGS = [
     {'yahoo': '006208.TW', 'display': '006208', 'name': '富邦台50',       'amount': 140, 'color': '#c8a96e'},

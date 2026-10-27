@@ -1,10 +1,19 @@
+import json
 import os
 import tempfile
-import json
+
 import pytest
-from storage import (init_db, save_articles, get_unanalyzed,
-                     db_session, get_articles, get_trend_data,
-                     get_bullish_trend_data, set_irrelevant)
+from storage import (
+    db_session,
+    get_articles,
+    get_bullish_trend_data,
+    get_trend_data,
+    get_unanalyzed,
+    init_db,
+    save_articles,
+    set_irrelevant,
+)
+
 from tests.helpers import set_analysis
 
 

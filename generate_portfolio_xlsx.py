@@ -1,6 +1,5 @@
 from openpyxl import Workbook
-from openpyxl.styles import Font, PatternFill, Alignment, Border, Side, GradientFill
-from openpyxl.utils import get_column_letter
+from openpyxl.styles import Alignment, Border, Font, PatternFill, Side
 
 wb = Workbook()
 ws = wb.active

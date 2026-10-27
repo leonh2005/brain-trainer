@@ -3,10 +3,11 @@ ROAR Score Engine
 核心問題：從今天起，先漲 10% 的機率有多少（先跌 10% 之前）？
 方法：蒙地卡羅模擬，抽樣歷史日報酬 10,000 條路徑
 """
+from datetime import date, timedelta
+
 import numpy as np
 import pandas as pd
 import yfinance as yf
-from datetime import date, timedelta
 
 FINMIND_TOKEN_PATH = '/Users/steven/CCProject/.secrets/finmind_token.txt'
 N_SIMULATIONS = 10_000

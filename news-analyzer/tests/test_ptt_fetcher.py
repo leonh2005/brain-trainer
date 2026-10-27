@@ -1,5 +1,6 @@
-from unittest.mock import patch, MagicMock
-from fetcher.ptt_fetcher import parse_index_page, parse_article_page, fetch_ptt
+from unittest.mock import MagicMock, patch
+
+from fetcher.ptt_fetcher import fetch_ptt, parse_article_page, parse_index_page
 
 INDEX_HTML = """
 <html><body>

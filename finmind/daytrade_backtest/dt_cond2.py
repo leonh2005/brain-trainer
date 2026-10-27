@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """v2：診斷 + 修正 RVOL + 條件組合 + 按月穩定度"""
 import json
-from collections import defaultdict
 import os as _os
+from collections import defaultdict
+
 _BASE = _os.path.dirname(_os.path.abspath(__file__))
 _CACHE = _os.path.join(_BASE, 'cache')
 _LOG = _os.path.join(_BASE, '..', '..', 'logs', 'daytrade.log')

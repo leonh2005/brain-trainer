@@ -5,11 +5,10 @@
   - 根據方向與信心算出進場、停損、目標價
 """
 import os
+import warnings
 from dataclasses import dataclass
 
 import aiohttp
-import requests
-import warnings
 
 warnings.filterwarnings("ignore")
 

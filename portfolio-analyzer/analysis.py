@@ -1,9 +1,9 @@
-import yfinance as yf
-import numpy as np
 import json
 import time
 from pathlib import Path
 
+import numpy as np
+import yfinance as yf
 from stock_names import load_stock_names
 
 PORTFOLIO_FILE = Path(__file__).parent / "portfolio.json"

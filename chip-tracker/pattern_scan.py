@@ -19,10 +19,9 @@ sys.path.insert(0, BASE_DIR)
 PROBE_DIR = os.path.expanduser('~/CCProject/stock-pattern-probe')
 sys.path.insert(0, os.path.join(PROBE_DIR, 'stock-pattern', 'src'))
 
-import db  # noqa: E402  （純標準庫；順便套用 DDL 建表）
-
-import pandas as pd  # noqa: E402
-import utils  # noqa: E402
+import db
+import pandas as pd
+import utils
 
 KEEP = ('BATU', 'ABCDU', 'CRABU', 'HNSD', 'DNTL')
 DETECTORS = [n for n in dir(utils) if n.startswith('find_')]

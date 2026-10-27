@@ -1,8 +1,9 @@
 import os
 import tempfile
 from unittest.mock import patch
+
 from pipeline import run_pipeline
-from storage import init_db, get_articles
+from storage import get_articles, init_db
 
 MOCK_ARTICLES = [
     {"source": "cnyes", "title": "台股大漲", "url": "https://cnyes.com/1", "content": "漲幅驚人", "published_at": None},

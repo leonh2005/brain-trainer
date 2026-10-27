@@ -3,12 +3,14 @@
 聚焦精選低價候選股，確保資料完整
 """
 
-import requests
-import pandas as pd
-import numpy as np
-from datetime import datetime, timedelta
 import time
 import warnings
+from datetime import datetime, timedelta
+
+import numpy as np
+import pandas as pd
+import requests
+
 warnings.filterwarnings('ignore')
 
 with open("/Users/steven/CCProject/.secrets/finmind_token.txt") as f:
@@ -259,13 +261,13 @@ for idx, (sid, sname, current_price) in enumerate(low_price):
 
         # 篩選條件
         if slope < 0 and year_return < -5:
-            print(f"    -> 排除：下跌趨勢")
+            print("    -> 排除：下跌趨勢")
             continue
         if year_return > 80:
-            print(f"    -> 排除：暴漲股")
+            print("    -> 排除：暴漲股")
             continue
         if eps_trend == "衰退":
-            print(f"    -> 排除：EPS衰退")
+            print("    -> 排除：EPS衰退")
             continue
         if avg_eps < 0.3:
             print(f"    -> 排除：EPS太低({avg_eps:.2f})")

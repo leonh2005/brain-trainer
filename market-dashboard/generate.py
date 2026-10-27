@@ -3,15 +3,14 @@
 市場恐慌儀表板生成器
 每日抓取 VIX、S&P 500 200MA、CNN Fear & Greed，生成自含 HTML
 """
-import os
-
 import json
 import math
-import requests
+import os
 import sys
-from datetime import datetime, timezone
-from io import StringIO
+from datetime import UTC, datetime
 from pathlib import Path
+
+import requests
 
 
 def trunc2(x):
@@ -24,8 +23,8 @@ def fmt_or_na(val, spec, note):
     return f"{val:{spec}}{note}" if val else "N/A（抓取失敗）"
 
 try:
-    import yfinance as yf
     import pandas as pd
+    import yfinance as yf
 except ImportError:
     print("請安裝：pip3 install yfinance pandas")
     sys.exit(1)
@@ -499,7 +498,8 @@ def fetch_hindenburg_omen() -> dict:
     cache: hindenburg_cache.json
     {"history": [{"date","highs","lows","total","highs_pct","lows_pct","spx_above_ma50","triggered"}, ...]}
     """
-    from datetime import date as _date, timedelta
+    from datetime import date as _date
+    from datetime import timedelta
     today_str = _date.today().strftime("%Y-%m-%d")
 
     cache = {}
@@ -509,7 +509,7 @@ def fetch_hindenburg_omen() -> dict:
 
     # 今日已計算則跳過昂貴的下載
     if history and history[-1]["date"] == today_str:
-        print(f"  Hindenburg Omen：使用今日快取")
+        print("  Hindenburg Omen：使用今日快取")
     else:
         try:
             print("  下載 S&P 500 近1年數據（Hindenburg Omen）...")
@@ -825,7 +825,7 @@ def fetch_fear_greed():
         current = d["fear_and_greed"]
         hist_raw = d.get("fear_and_greed_historical", {}).get("data", [])
         hist = [
-            {"x": datetime.fromtimestamp(p["x"] / 1000, tz=timezone.utc).strftime("%Y-%m-%d"),
+            {"x": datetime.fromtimestamp(p["x"] / 1000, tz=UTC).strftime("%Y-%m-%d"),
              "y": trunc2(p["y"]),
              "rating": p.get("rating", "")}
             for p in hist_raw

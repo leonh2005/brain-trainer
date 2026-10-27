@@ -3,8 +3,9 @@
 區間內無爆量黑K）→ 進場K棒（大量長紅、站上5日線、破昨高、無長上影線）。
 2026-08-11 依課程影片補強：回檔不破月線、黃金分割回檔幅度、進場棒無長上影線、回檔區間無爆量黑K。"""
 
+from collections.abc import Callable
 from datetime import date
-from typing import Callable, Optional
+from typing import Optional
 
 import data_fetcher
 

@@ -5,7 +5,8 @@ AI 買賣點分析模組
 
 import json
 import os
-from openai import OpenAI, APIStatusError
+
+from openai import APIStatusError, OpenAI
 
 DEEPSEEK_API_KEY = open(os.path.expanduser("~/CCProject/.secrets/deepseek_key.txt")).read().strip()
 

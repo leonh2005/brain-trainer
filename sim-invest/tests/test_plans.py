@@ -1,5 +1,7 @@
 import math
+
 from plans import PLANS, Plan, Target
+
 
 def test_two_plans_exist():
     assert set(PLANS.keys()) == {"A", "B"}

@@ -1,9 +1,12 @@
 #!/usr/bin/env python3
 """Claude usage 週期監測 - 每5小時週期結束前自動同步（不推播）"""
 
-import os, time, subprocess
+import os
+import subprocess
+import time
 from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
+
 from dotenv import load_dotenv
 
 load_dotenv(os.path.expanduser('~/youtube-monitor/.env'))
@@ -78,7 +81,7 @@ def rsync_vm() -> str:
             os.path.expanduser('~/youtube-monitor/summaries/'),
             f'{VM_USER}@{VM_HOST}:/home/ubuntu/summaries/'
         ], capture_output=True, timeout=60)
-        return "✅ VM rsync 完成" if r.returncode == 0 else f"⚠️ rsync 失敗"
+        return "✅ VM rsync 完成" if r.returncode == 0 else "⚠️ rsync 失敗"
     except Exception as e:
         return f"❌ rsync 例外：{str(e)[:60]}"
 

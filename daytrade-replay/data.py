@@ -7,13 +7,12 @@
 
 import json
 import os
-import re
+import threading
 import time
 from collections import defaultdict
+from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import TimeoutError as FutureTimeoutError
 from datetime import date, datetime, timedelta
-from concurrent.futures import ThreadPoolExecutor, TimeoutError as FutureTimeoutError
-
-import threading
 from datetime import time as _time
 
 import pandas as pd

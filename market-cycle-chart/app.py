@@ -10,11 +10,10 @@
 
 import re
 
-import pandas as pd
-
-import cycles
 import current_position
+import cycles
 import econ_cycles
+import pandas as pd
 import research
 import taiex_data
 import wave_scripts

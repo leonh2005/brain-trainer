@@ -2,9 +2,14 @@
 """當沖出場點長期回測：候選來自 daytrade.log（2026-03-30 起真實推播名單）
 進場 = 當日執行時間 + 1 分鐘；比較各出場時點。
 """
-import json, os, re, time, urllib.request
-from collections import defaultdict
+import json
+import os
 import os as _os
+import re
+import time
+import urllib.request
+from collections import defaultdict
+
 _BASE = _os.path.dirname(_os.path.abspath(__file__))
 _CACHE = _os.path.join(_BASE, 'cache')
 _LOG = _os.path.join(_BASE, '..', '..', 'logs', 'daytrade.log')

@@ -17,7 +17,7 @@ import argparse
 import logging
 import os
 import sys
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
@@ -79,7 +79,7 @@ def prune_old_articles(conn, days: int) -> int:
 
 
 def run_prune(days: int = RETENTION_DAYS, db_path: str = DB_PATH, dry_run: bool = False) -> dict:
-    cutoff = datetime.now(timezone.utc) - timedelta(days=days)
+    cutoff = datetime.now(UTC) - timedelta(days=days)
     init_db(db_path)  # 確保 schema 與 WAL 就緒（WAL 只在這裡設定一次）
     with db_session(db_path) as conn:
         conn.execute("PRAGMA busy_timeout = 30000")

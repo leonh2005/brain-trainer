@@ -1,9 +1,8 @@
 """analyze_pending 兩階段管線測試。Jev 呼叫全部以假函式取代。"""
-import pytest
-
 import analyze_pending
 import jev_filter
-from storage import init_db, save_articles, get_articles
+import pytest
+from storage import get_articles, init_db, save_articles
 
 
 @pytest.fixture

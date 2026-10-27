@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """最終彙整：最佳條件的按月穩定度 + 停損疊加 + 總表"""
 import json
-from collections import defaultdict
 import os as _os
+
 _BASE = _os.path.dirname(_os.path.abspath(__file__))
 _CACHE = _os.path.join(_BASE, 'cache')
 _LOG = _os.path.join(_BASE, '..', '..', 'logs', 'daytrade.log')

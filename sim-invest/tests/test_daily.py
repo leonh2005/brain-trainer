@@ -2,6 +2,7 @@ import store
 from jobs import daily
 from plans import PLANS
 
+
 def q(t, m): return 10.0
 def fx(): return 32.0
 

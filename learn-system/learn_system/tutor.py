@@ -87,7 +87,7 @@ def _build_options(allow_web=False, session_id=None):
 
 
 async def _call_agent_async(prompt, allow_web=False, session_id=None):
-    from claude_agent_sdk import query, AssistantMessage, TextBlock
+    from claude_agent_sdk import AssistantMessage, TextBlock, query
 
     options = _build_options(allow_web=allow_web, session_id=session_id)
     text = []
@@ -116,7 +116,7 @@ def _call_agent(prompt, allow_web=False, session_id=None):
             _call_agent_async(prompt, allow_web=allow_web, session_id=session_id),
             AGENT_TIMEOUT,
         ))
-    except asyncio.TimeoutError as e:
+    except TimeoutError as e:
         raise TutorError(f"Agent 逾時（超過 {AGENT_TIMEOUT:.0f} 秒）") from e
     except Exception as e:
         raise TutorError(f"Agent 呼叫失敗：{e}") from e

@@ -1,8 +1,11 @@
-import pytest
-import sys
 import os
+import sys
+
+import pytest
+
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 import db
+
 
 @pytest.fixture(autouse=True)
 def fresh_db(tmp_path, monkeypatch):

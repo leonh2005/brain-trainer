@@ -9,7 +9,11 @@ import unittest
 
 import compactor
 from compactor import (
-    REMOVAL_NOTICE, _block_text, _replace_block_text, current_task, select_candidates,
+    REMOVAL_NOTICE,
+    _block_text,
+    _replace_block_text,
+    current_task,
+    select_candidates,
 )
 from privacy import Pseudonyms, apply_privacy, list_entities, redact
 

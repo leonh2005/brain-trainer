@@ -1,5 +1,4 @@
 import pytest
-
 from learn_system import db
 
 

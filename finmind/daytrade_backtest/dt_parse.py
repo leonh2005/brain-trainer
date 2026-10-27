@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 """從 daytrade.log 解析每檔候選的完整特徵，輸出 /tmp/dt_features.json"""
-import json, re
+import json
 import os as _os
+import re
+
 _BASE = _os.path.dirname(_os.path.abspath(__file__))
 _CACHE = _os.path.join(_BASE, 'cache')
 _LOG = _os.path.join(_BASE, '..', '..', 'logs', 'daytrade.log')

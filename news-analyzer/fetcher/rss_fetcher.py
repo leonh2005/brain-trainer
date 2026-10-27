@@ -1,7 +1,8 @@
 import calendar
-import feedparser
 import logging
-from datetime import datetime, timezone
+from datetime import UTC, datetime
+
+import feedparser
 
 logger = logging.getLogger(__name__)
 
@@ -10,12 +11,12 @@ def normalize_published(entry):
     """Return the entry's published time as an ISO 8601 UTC string, or None."""
     parsed = entry.get("published_parsed") or entry.get("updated_parsed")
     if parsed:
-        return datetime.fromtimestamp(calendar.timegm(parsed), tz=timezone.utc).isoformat()
+        return datetime.fromtimestamp(calendar.timegm(parsed), tz=UTC).isoformat()
     raw = entry.get("published")
     if raw:
         try:
             from email.utils import parsedate_to_datetime
-            return parsedate_to_datetime(raw).astimezone(timezone.utc).isoformat()
+            return parsedate_to_datetime(raw).astimezone(UTC).isoformat()
         except (TypeError, ValueError):
             return raw
     return None

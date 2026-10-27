@@ -7,16 +7,15 @@ import json
 import logging
 import os
 import sys
-from datetime import datetime, timezone
 from pathlib import Path
 
 import requests
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from fetcher.rss_fetcher import fetch_all_rss
 from fetcher.ptt_fetcher import fetch_ptt
 from fetcher.reddit_fetcher import fetch_reddit
+from fetcher.rss_fetcher import fetch_all_rss
 from storage import DB_PATH, init_db, save_articles
 
 logging.basicConfig(

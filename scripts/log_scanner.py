@@ -190,7 +190,7 @@ def build_report(data: dict) -> str:
     clean_services = {k: v for k, v in results.items() if v["exists"] and v["errors"] == 0}
 
     lines = [
-        f"📋 每日 Log 掃描報告",
+        "📋 每日 Log 掃描報告",
         f"掃描時間：{scanned_at}",
         f"涵蓋範圍：{since} 後",
         "",

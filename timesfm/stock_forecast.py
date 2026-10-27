@@ -5,9 +5,10 @@ TimesFM 台股價格預測腳本
 範例: python stock_forecast.py 2330 10
 """
 
-import sys
 import os
+import sys
 import warnings
+
 warnings.filterwarnings("ignore")
 
 import numpy as np

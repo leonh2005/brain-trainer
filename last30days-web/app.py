@@ -315,6 +315,7 @@ def report(filename):
     toolbar = TOOLBAR.format(switch=switch)
     if filename.endswith(".md"):
         import html as html_mod
+
         import markdown
         # 先跳脫再轉 markdown：報告內含未信任的網路文字，防 raw HTML 注入
         body = markdown.markdown(html_mod.escape(content), extensions=["tables"])

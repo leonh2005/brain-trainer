@@ -1,7 +1,8 @@
-import re
-import requests
 import logging
-from datetime import datetime, timezone
+import re
+from datetime import UTC, datetime
+
+import requests
 from bs4 import BeautifulSoup
 
 logger = logging.getLogger(__name__)
@@ -43,7 +44,7 @@ def published_from_url(url):
     m = re.search(r"/M\.(\d{10})\.", url)
     if not m:
         return None
-    return datetime.fromtimestamp(int(m.group(1)), tz=timezone.utc).isoformat()
+    return datetime.fromtimestamp(int(m.group(1)), tz=UTC).isoformat()
 
 
 def fetch_ptt(max_articles=30):

@@ -1,30 +1,28 @@
 """AI 指揮中心 — 統一入口儀表板（port 5950，對既有服務全唯讀）"""
 import ipaddress
+import json
+import os
 import re
 import secrets
-import tempfile
-
-import httpx
-from fastapi import FastAPI, HTTPException, File, Form, UploadFile
-from fastapi.responses import HTMLResponse, StreamingResponse, FileResponse, RedirectResponse
-from fastapi.staticfiles import StaticFiles
-from fastapi.templating import Jinja2Templates
-from fastapi import Request
-from fastapi.security import HTTPBasic, HTTPBasicCredentials
-from pydantic import BaseModel
-from starlette.middleware.base import BaseHTTPMiddleware
-from starlette.responses import Response
-import uvicorn
-import os
-import json
 import subprocess
+import tempfile
 import time
 from datetime import datetime
 
 import agent as agent_mod
+import httpx
 import jobs as jobs_mod
 import route_planner
 import sources
+import uvicorn
+from fastapi import FastAPI, File, Form, HTTPException, Request, UploadFile
+from fastapi.responses import FileResponse, HTMLResponse, RedirectResponse, StreamingResponse
+from fastapi.security import HTTPBasic, HTTPBasicCredentials
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
+from pydantic import BaseModel
+from starlette.middleware.base import BaseHTTPMiddleware
+from starlette.responses import Response
 
 # 卡片連結透過 /svc/<port>/... 走反向代理，讓外網（Cloudflare Tunnel）也連得到
 # 各服務的本機頁面，不必各自對外開洞。僅白名單內的 port 可被代理。

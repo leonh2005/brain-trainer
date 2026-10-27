@@ -7,9 +7,8 @@ import threading
 import time
 from types import SimpleNamespace
 
-import pytest
-
 import app as gw
+import pytest
 
 # ── _is_candidate_code ──────────────────────────────────────────
 

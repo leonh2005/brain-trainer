@@ -17,9 +17,8 @@ import urllib.parse
 import urllib.request
 from datetime import datetime, timedelta
 
-import requests
-
 import db
+import requests
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 logger = logging.getLogger("updater")

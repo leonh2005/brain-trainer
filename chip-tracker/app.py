@@ -1,24 +1,23 @@
 # -*- coding: utf-8 -*-
 """chip-tracker Web（port 5850）：讀 SQLite 最新資料渲染，不在請求中抓外部資料。"""
 
+import os
 import re
 import subprocess
 import sys
 import time
-import os
 from datetime import date
 
-import requests
-from flask import Flask, jsonify, render_template, request
-
-import db
 import analysis
+import db
 import history_loader
 import jobs
 import patterns
-import volatility
+import requests
 import support as support_mod
 import updater
+import volatility
+from flask import Flask, jsonify, render_template, request
 
 app = Flask(__name__)
 

@@ -1,15 +1,14 @@
 """AI 聊天層 — Claude Agent SDK，唯讀工具 + Bash 白名單"""
 import json
-import os
 
 from claude_agent_sdk import (
-    query,
-    ClaudeAgentOptions,
     AssistantMessage,
-    TextBlock,
-    ResultMessage,
+    ClaudeAgentOptions,
     PermissionResultAllow,
     PermissionResultDeny,
+    ResultMessage,
+    TextBlock,
+    query,
 )
 
 CC = '/Users/steven/CCProject'

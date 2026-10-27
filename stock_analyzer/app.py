@@ -2,18 +2,21 @@
 import os
 import threading
 import time
+
 from dotenv import load_dotenv
+
 load_dotenv()
 
-from flask import Flask, render_template, jsonify, request
-import shioaji as sj
-import pandas as pd
-import yfinance as yf
-import requests
-from openai import OpenAI
-from datetime import date, timedelta, datetime, timezone
 import hashlib
+from datetime import UTC, date, datetime, timedelta
+
 import feedparser
+import pandas as pd
+import requests
+import shioaji as sj
+import yfinance as yf
+from flask import Flask, jsonify, render_template, request
+from openai import OpenAI
 
 app = Flask(__name__)
 
@@ -264,7 +267,7 @@ def fetch_fundamentals(code: str) -> dict:
 
 # ── 新聞面（Google News RSS + DeepSeek 情緒）────────────────────
 def fetch_news(code: str, name: str, hours: int = 48) -> dict:
-    cutoff = datetime.now(timezone.utc) - timedelta(hours=hours)
+    cutoff = datetime.now(UTC) - timedelta(hours=hours)
     queries = [f"{name} {code}", name]
     articles = []
     seen = set()
@@ -279,14 +282,14 @@ def fetch_news(code: str, name: str, hours: int = 48) -> dict:
             pub = e.get("published_parsed") or e.get("updated_parsed")
             if not pub:
                 continue
-            pub_dt = datetime(*pub[:6], tzinfo=timezone.utc)
+            pub_dt = datetime(*pub[:6], tzinfo=UTC)
             if pub_dt < cutoff:
                 continue
             aid = hashlib.md5(e.title.encode()).hexdigest()
             if aid in seen:
                 continue
             seen.add(aid)
-            age_h = int((datetime.now(timezone.utc) - pub_dt).total_seconds() / 3600)
+            age_h = int((datetime.now(UTC) - pub_dt).total_seconds() / 3600)
             age_str = f"{age_h}h前" if age_h < 24 else f"{age_h//24}天前"
             source = e.get("source", {}).get("title", "") or ""
             articles.append({

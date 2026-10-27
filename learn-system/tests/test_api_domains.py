@@ -2,7 +2,6 @@ import sqlite3
 
 import app as app_module
 import pytest
-
 from learn_system import db, tutor
 
 

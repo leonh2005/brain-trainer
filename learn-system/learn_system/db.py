@@ -1,6 +1,6 @@
 import json
 import sqlite3
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS domains (
@@ -45,7 +45,7 @@ CREATE TABLE IF NOT EXISTS attempts (
 
 
 def _now():
-    return datetime.now(timezone.utc).isoformat()
+    return datetime.now(UTC).isoformat()
 
 
 def connect(db_path=None):

@@ -39,7 +39,7 @@ VOLUME_CACHE_TTL = 300  # 盤中每 5 分鐘更新一次估算值
 
 def _read_secret(filename):
     path = os.path.join(SECRETS_DIR, filename)
-    with open(path, "r", encoding="utf-8") as f:
+    with open(path, encoding="utf-8") as f:
         return f.read().strip()
 
 
@@ -377,10 +377,10 @@ def health():
 
 @app.get("/api/analysis")
 def analysis():
-    with open(ANALYSIS_JSON, "r", encoding="utf-8") as f:
+    with open(ANALYSIS_JSON, encoding="utf-8") as f:
         data = json.load(f)
     if os.path.exists(HITS_JSON):
-        with open(HITS_JSON, "r", encoding="utf-8") as f:
+        with open(HITS_JSON, encoding="utf-8") as f:
             data["hits"] = json.load(f).get("hits", {})
     else:
         data["hits"] = {}

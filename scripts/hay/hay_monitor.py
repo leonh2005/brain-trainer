@@ -10,7 +10,6 @@ import os
 from datetime import datetime, timedelta, timezone
 
 import requests
-
 import sources
 
 SEEN_FILE = os.path.expanduser("~/CCProject/scripts/hay_seen.json")

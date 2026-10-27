@@ -7,11 +7,17 @@ Threads 珍藏每日分析
 - 存檔 + 推播 Telegram 摘要
 """
 
-import os, json, sqlite3, shutil, hashlib, re
-from datetime import datetime, timedelta
+import hashlib
+import json
+import os
+import re
+import shutil
+import sqlite3
+from datetime import datetime
 from pathlib import Path
-from openai import OpenAI
+
 import requests
+from openai import OpenAI
 
 # ── 設定 ────────────────────────────────────────────────────────────────────
 BASE_DIR       = Path(__file__).parent
@@ -211,7 +217,6 @@ def main():
     save_state(state)
 
     # Telegram 只推「今日重點推薦」段落
-    import re
     highlight_match = re.search(r'(今日重點推薦.*)', analysis, re.DOTALL)
     highlight = highlight_match.group(1).strip() if highlight_match else analysis[:600]
     tg_msg = (

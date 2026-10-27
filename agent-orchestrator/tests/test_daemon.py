@@ -3,9 +3,8 @@ import os
 import stat
 import time
 
-import pytest
-
 import daemon
+import pytest
 import taskqueue as tq
 import worker as w
 

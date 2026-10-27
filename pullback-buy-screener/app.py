@@ -2,12 +2,10 @@
 """回後買上漲選股（port 5960）：一鍵掃描全市場，找符合「多頭回檔後長紅突破」的標的。"""
 
 import threading
-import time
 
-from flask import Flask, jsonify, render_template, request
-
-import screener
 import consolidation_screener
+import screener
+from flask import Flask, jsonify, render_template, request
 
 app = Flask(__name__)
 

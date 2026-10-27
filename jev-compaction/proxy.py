@@ -129,7 +129,7 @@ def record_health(path: str, status: int, detail: str = "") -> None:
         tmp = target.with_name(target.name + ".tmp")
         tmp.write_text(json.dumps({"status": status, "ts": time.time(), "detail": detail[:300]}))
         tmp.replace(target)
-    except OSError as e:  # noqa: BLE001 - 標記寫失敗不能影響轉發
+    except OSError as e:
         log.warning("寫冷卻標記失敗：%s", e)
 
 
@@ -185,7 +185,7 @@ def api_key() -> str | None:
     if _api_key is None:
         try:
             _api_key = jev_client.load_api_key()
-        except Exception as e:  # noqa: BLE001
+        except Exception as e:
             log.warning("載入 Jev key 失敗，將停用壓縮：%s", e)
             return None
     return _api_key
@@ -208,7 +208,7 @@ def maybe_compact(data: dict) -> tuple[dict, str]:
         new_messages, stats = compactor.compact(
             messages, key, anon=ANON, timeout=TIMEOUT, cache=_cache,
         )
-    except Exception as e:  # noqa: BLE001 - fail-open
+    except Exception as e:
         log.warning("壓縮例外，原樣轉發：%s", e)
         return data, f"error:{type(e).__name__}"
 
@@ -300,7 +300,7 @@ class ProxyHandler(http.server.BaseHTTPRequestHandler):
                 group = ("AB:ctrl" if summary == "ab-control"
                          else "AB:on" if AB_MODE else "")
                 log.info("[compact]%s %s", f" {group}" if group else "", summary)
-            except Exception as e:  # noqa: BLE001
+            except Exception as e:
                 log.info("[error] %s", e)
 
         fwd = {}
@@ -360,7 +360,7 @@ class ProxyHandler(http.server.BaseHTTPRequestHandler):
                     break
             if b'"usage"' in head or b'"usage"' in tail:
                 log.info("[usage] %s", usage_summary(group, head, tail))
-        except Exception as e:  # noqa: BLE001
+        except Exception as e:
             log.info("[upstream-error] %s", e)
             if not headers_sent:
                 try:
@@ -368,13 +368,13 @@ class ProxyHandler(http.server.BaseHTTPRequestHandler):
                     self.send_header("Content-Type", "application/json")
                     self.end_headers()
                     self.wfile.write(json.dumps({"error": str(e)}).encode())
-                except Exception:  # noqa: BLE001
+                except Exception:
                     pass
         finally:
             if conn is not None:
                 try:
                     conn.close()
-                except Exception:  # noqa: BLE001
+                except Exception:
                     pass
             self.close_connection = True
 

@@ -4,12 +4,9 @@
 """
 import json
 import os
-import time
 import warnings
-from datetime import date, timedelta
 from pathlib import Path
 
-import pandas as pd
 import requests
 import shioaji as sj
 

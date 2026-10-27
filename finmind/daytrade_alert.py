@@ -4,15 +4,17 @@
 資料來源：永豐金 Shioaji snapshots（個股即時 + 加權指數）+ TWSE 公開 API（輔）+ FinMind（三大法人現貨參考）
 """
 
-import requests
-import pandas as pd
-import warnings
-import shioaji as sj
-import os
 import html
-from datetime import datetime, date, timedelta
-from dotenv import load_dotenv
+import os
+import warnings
+from datetime import date, datetime, timedelta
+
+import pandas as pd
+import requests
+import shioaji as sj
 from ai_analysis import analyze_stock, format_ai_block
+from dotenv import load_dotenv
+
 
 def trading_days_ago(n):
     from datetime import date, timedelta
@@ -366,6 +368,7 @@ print(msg)
 
 # 儲存候選清單供盤中監控腳本使用
 import json
+
 candidate_list = [{
     'code': c['code'], 'name': c['name'], 'close': c['close'],
     'checks': {'量前20': True, '3%≤振幅<5%': True, '近5日均量≥3000張': True, '漲幅≥1.5%': True},  # 單一AND篩選，能列入候選就是全通過

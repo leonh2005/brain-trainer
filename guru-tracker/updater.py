@@ -14,10 +14,10 @@ import time
 import xml.etree.ElementTree as ET
 from datetime import date, datetime
 
+import db
 import requests
 
 import config
-import db
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 LOCK_PATH = os.path.join(BASE_DIR, ".updater.lock")

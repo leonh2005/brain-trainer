@@ -1,7 +1,6 @@
 """jev_filter 分類邏輯測試。用假的 _post 隔離外部 API。"""
-import pytest
-
 import jev_filter
+import pytest
 
 
 def _choices(*picks):

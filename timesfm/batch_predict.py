@@ -19,8 +19,9 @@ def main():
         print("{}")
         return
 
-    import timesfm
     from stock_forecast import load_model
+
+    import timesfm
 
     with contextlib.redirect_stdout(sys.stderr):
         model = load_model()

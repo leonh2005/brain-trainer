@@ -1,8 +1,9 @@
-import yfinance as yf
+from datetime import datetime, timedelta
+
 import numpy as np
 import pandas as pd
+import yfinance as yf
 from scipy.optimize import minimize
-from datetime import datetime, timedelta
 
 # ── 參數設定 ──
 tickers = {

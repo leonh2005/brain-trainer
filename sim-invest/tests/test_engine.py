@@ -1,6 +1,9 @@
 import json
-import store, engine
+
+import engine
+import store
 from plans import PLANS
+
 
 # 固定假報價：美股一律 $10、匯率 32、台股一律 50 元
 def q(ticker, market): return 10.0

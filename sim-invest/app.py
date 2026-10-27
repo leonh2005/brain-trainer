@@ -2,12 +2,12 @@
 import json
 import os
 from datetime import date
-from flask import Flask, g, jsonify, render_template, request
 
-import store
 import engine
 import plans as plans_mod
 import quotes
+import store
+from flask import Flask, g, jsonify, render_template, request
 from plans import PLANS
 
 app = Flask(__name__)

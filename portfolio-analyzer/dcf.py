@@ -1,5 +1,6 @@
-import yfinance as yf
 import time
+
+import yfinance as yf
 
 _cache = {"data": None, "time": 0}
 CACHE_TTL = 3600

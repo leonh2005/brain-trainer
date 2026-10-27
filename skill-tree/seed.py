@@ -1,5 +1,6 @@
 from db import get_db, init_db
 
+
 def seed():
     init_db()
     with get_db() as conn:

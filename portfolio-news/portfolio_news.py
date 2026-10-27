@@ -10,7 +10,7 @@ import logging
 import os
 import re
 import sys
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from difflib import SequenceMatcher
 from pathlib import Path
 
@@ -70,7 +70,7 @@ def fetch_news(queries: list[str], locale: str = "zh-TW", hours: int = 24) -> li
     來源極少且偏舊（實測最新一則常在 100 小時前），24 小時窗一過濾就全空。
     """
     hl, gl, ceid = LOCALES.get(locale, LOCALES["zh-TW"])
-    cutoff = datetime.now(timezone.utc) - timedelta(hours=hours)
+    cutoff = datetime.now(UTC) - timedelta(hours=hours)
     articles = []
     seen_ids = set()
 
@@ -85,7 +85,7 @@ def fetch_news(queries: list[str], locale: str = "zh-TW", hours: int = 24) -> li
                 pub = e.get("published_parsed") or e.get("updated_parsed")
                 if not pub:
                     continue  # 無日期的文章跳過，無法確認是否為近期
-                pub_dt = datetime(*pub[:6], tzinfo=timezone.utc)
+                pub_dt = datetime(*pub[:6], tzinfo=UTC)
                 if pub_dt < cutoff:
                     continue
                 aid = hashlib.md5(e.title.encode()).hexdigest()
@@ -245,7 +245,7 @@ def analyze(holding: dict, articles: list[dict],
             "push": False,
         }
 
-    now_utc = datetime.now(timezone.utc)
+    now_utc = datetime.now(UTC)
     def _age_str(a: dict) -> str:
         if not a.get("pub"):
             return ""
@@ -395,7 +395,7 @@ def run_session(holdings: list[dict], session_label: str):
         # 最新一篇文章的發布時間
         news_age = ""
         if deduped and deduped[0].get("pub"):
-            delta = datetime.now(timezone.utc) - deduped[0]["pub"]
+            delta = datetime.now(UTC) - deduped[0]["pub"]
             hrs = int(delta.total_seconds() // 3600)
             news_age = f" <i>（最新：{hrs}小時前）</i>" if hrs < 24 else f" <i>（最新：{delta.days}天前）</i>"
 
@@ -447,7 +447,7 @@ def probe(spec: dict) -> dict:
     供 command-center 的測試鈕使用：改完關鍵字立刻能看出該用哪個地區、
     這組詞夠不夠力，不必等隔天推播才發現還是空白。
     """
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     result = {}
     for locale in LOCALES:
         rows = [

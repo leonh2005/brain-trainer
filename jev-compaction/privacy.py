@@ -8,7 +8,6 @@ from __future__ import annotations
 
 import os
 import re
-from pathlib import Path
 
 # 憑證類遮蔽。順序重要：較具體的樣式要排在較通用的前面。
 REDACTIONS: list[tuple[re.Pattern, str]] = [

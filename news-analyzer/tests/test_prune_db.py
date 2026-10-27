@@ -1,9 +1,8 @@
 import os
 import tempfile
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta, timezone
 
 import pytest
-
 from prune_db import MAX_EXAMPLES, prune_old_articles, run_prune, sync_examples
 from storage import db_session, get_irrelevant_examples, init_db, set_irrelevant
 
@@ -19,7 +18,7 @@ def db_path():
 
 def _insert(conn, title, days_ago, published_at=None, irrelevant=0):
     """插入一篇文章；days_ago 決定 fetched_at，published_at 預設沿用 fetched_at。"""
-    fetched = (datetime.now(timezone.utc) - timedelta(days=days_ago)).isoformat()
+    fetched = (datetime.now(UTC) - timedelta(days=days_ago)).isoformat()
     conn.execute(
         """INSERT INTO articles (source, title, url, content, published_at, fetched_at, irrelevant)
            VALUES (?, ?, ?, ?, ?, ?, ?)""",
@@ -205,7 +204,7 @@ def test_malformed_fetched_at_is_still_pruned(db_path):
 def test_valid_published_at_survives_broken_fetched_at(db_path):
     """反向：published_at 有效時，即使 fetched_at 壞掉也要依 published_at 判斷。"""
     with db_session(db_path) as conn:
-        _insert(conn, "新文章", days_ago=1, published_at=datetime.now(timezone.utc).isoformat())
+        _insert(conn, "新文章", days_ago=1, published_at=datetime.now(UTC).isoformat())
         conn.execute("UPDATE articles SET fetched_at='garbage' WHERE title='新文章'")
         conn.commit()
 
@@ -262,7 +261,7 @@ def test_set_irrelevant_records_mark_time_and_removes_on_unmark(db_path):
             "SELECT title, marked_at FROM irrelevant_examples WHERE title='會被標記'"
         ).fetchone()
     assert row is not None
-    assert row["marked_at"] >= datetime.now(timezone.utc).isoformat()[:19]
+    assert row["marked_at"] >= datetime.now(UTC).isoformat()[:19]
 
     set_irrelevant(article_id, False, db_path)
 

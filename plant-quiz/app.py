@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
-import os, random, json
+import json
+import os
+import random
 from pathlib import Path
-from flask import Flask, jsonify, send_file, render_template_string
+
+from flask import Flask, jsonify, render_template_string, send_file
 
 app = Flask(__name__)
 PHOTOS_DIR = "/Users/steven/Downloads/edible_plants_photos"

@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-import requests
 import re
 import sys
 from datetime import datetime
+
+import requests
 
 USERNAME = "neolh"
 PASSWORD = "hmily1yk"

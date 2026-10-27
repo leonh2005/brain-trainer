@@ -1,5 +1,8 @@
-import os, store
+import os
+
+import store
 from plans import PLANS
+
 
 def test_health_and_accounts(tmp_path, monkeypatch):
     db = tmp_path / "t.db"
@@ -9,7 +12,9 @@ def test_health_and_accounts(tmp_path, monkeypatch):
     store.create_account(conn, "A", PLANS["A"].name, "A", "2026-07-24", 9_000_000)
     store.add_snapshot(conn, "A", "2026-07-24", 9_000_000, 5_000_000, 0.0, "{}")
     conn.close()
-    import importlib, app as appmod
+    import importlib
+
+    import app as appmod
     importlib.reload(appmod)
     c = appmod.app.test_client()
     assert c.get("/api/health").get_json()["status"] == "ok"
@@ -23,7 +28,9 @@ def test_nav_unknown_account_404(tmp_path, monkeypatch):
     monkeypatch.setenv("SIM_DB", str(db))
     import store as _s
     _s.connect(str(db)).close()
-    import importlib, app as appmod
+    import importlib
+
+    import app as appmod
     importlib.reload(appmod)
     c = appmod.app.test_client()
     assert c.get("/api/account/ZZZ/nav").status_code == 404
@@ -32,7 +39,9 @@ def test_nav_unknown_account_404(tmp_path, monkeypatch):
 def _app_with_mock_quotes(tmp_path, monkeypatch, name="t3.db"):
     db = tmp_path / name
     monkeypatch.setenv("SIM_DB", str(db))
-    import importlib, app as appmod
+    import importlib
+
+    import app as appmod
     importlib.reload(appmod)
     monkeypatch.setattr(appmod.quotes, "get_quote", lambda ticker, market: 10.0)
     monkeypatch.setattr(appmod.quotes, "get_fx", lambda: 32.0)

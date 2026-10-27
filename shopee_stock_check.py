@@ -1,10 +1,14 @@
-import os, time, subprocess, sys
+import os
+import subprocess
+import sys
+import time
+
 from selenium import webdriver
-from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
 
 PROFILE = os.path.expanduser('~/Library/Application Support/Firefox/Profiles/ro7nczf2.default-release')
 URL = 'https://shopee.tw/%E7%BE%8E%E5%9C%8BRabbit-Hole-Hay%E5%85%94%E5%AD%90%E6%B4%9E%E7%89%A7%E8%8D%89%E4%B8%AD%E7%BA%96-%E8%BB%9F%E7%BA%96-%E6%9E%9C%E5%9C%92(%E8%A2%8B%E8%A3%9D285g%E3%80%81908g)-i.4430087.1385536293'
@@ -114,7 +118,7 @@ try:
     time.sleep(6)
 
     if 'verify' in driver.current_url or 'captcha' in driver.current_url:
-        tg(f'🐰 軟纖提摩西有貨，已加入購物車！\n⚠️ 結帳時遇到驗證，請手動完成\nhttps://shopee.tw/cart')
+        tg('🐰 軟纖提摩西有貨，已加入購物車！\n⚠️ 結帳時遇到驗證，請手動完成\nhttps://shopee.tw/cart')
         print('CAPTCHA_CHECKOUT')
         driver.quit()
         sys.exit(0)
@@ -122,7 +126,7 @@ try:
     # 結帳頁：確認貨到付款已選取
     page_text = driver.execute_script("return document.body.innerText || ''")
     if '貨到付款' not in page_text:
-        tg(f'🐰 軟纖提摩西有貨，已加入購物車！\n⚠️ 結帳頁找不到貨到付款，請手動完成\nhttps://shopee.tw/cart')
+        tg('🐰 軟纖提摩西有貨，已加入購物車！\n⚠️ 結帳頁找不到貨到付款，請手動完成\nhttps://shopee.tw/cart')
         print('NO_COD_OPTION')
         driver.quit()
         sys.exit(0)
@@ -151,7 +155,7 @@ try:
     final_text = driver.execute_script("return document.body.innerText || ''")
 
     if 'verify' in final_url or 'captcha' in final_url:
-        tg(f'🐰 軟纖提摩西有貨，已加入購物車！\n⚠️ 提交訂單時遇到驗證，請手動完成\nhttps://shopee.tw/cart')
+        tg('🐰 軟纖提摩西有貨，已加入購物車！\n⚠️ 提交訂單時遇到驗證，請手動完成\nhttps://shopee.tw/cart')
         print('CAPTCHA_SUBMIT')
     elif any(k in final_text for k in ['訂單已成立', '訂購成功', '感謝您的訂購', 'Order Placed', 'order']):
         tg(
@@ -162,9 +166,9 @@ try:
         print('ORDER_PLACED')
     else:
         tg(
-            f'🐰 軟纖提摩西有貨！\n'
-            f'⚠️ 訂單狀態不確定，請確認蝦皮訂單頁\n'
-            f'https://shopee.tw/user/purchase'
+            '🐰 軟纖提摩西有貨！\n'
+            '⚠️ 訂單狀態不確定，請確認蝦皮訂單頁\n'
+            'https://shopee.tw/user/purchase'
         )
         print('ORDER_UNCERTAIN')
 

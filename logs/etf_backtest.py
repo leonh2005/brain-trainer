@@ -2,12 +2,13 @@
 """ETF 三年回測分析：0050, 0052, 00881, 006208"""
 
 import sys
+
 sys.path.insert(0, '/Users/steven/CCProject/finmind/venv/lib/python3.14/site-packages')
 
-import pandas as pd
+
 import numpy as np
+import pandas as pd
 from FinMind.data import DataLoader
-from datetime import datetime
 
 TOKEN = open('/Users/steven/CCProject/.secrets/finmind_token.txt').read().strip()
 
