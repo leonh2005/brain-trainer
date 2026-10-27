@@ -1,5 +1,10 @@
 #!/bin/bash
 # 每日首次登入狀態檢查 — 只執行一次（用日期 flag 控制）
+#
+# 2026-10-27 修正三處：
+#   1. `declare -A` 需要 bash 4+，但 macOS 內建 /bin/bash 是 3.2 → 改用一般 list
+#   2. `date -v-1d` 是 BSD 語法，但 PATH 上 GNU coreutils 的 date 在前 → 明確用 /bin/date
+#   3. 服務清單過時（banini-tracker/rabbit-care/timesfm/kelly-fibonacci 已退役或封存）→ 更新為現況
 
 FLAG="/tmp/claude_daily_check_$(date +%Y-%m-%d)"
 [ -f "$FLAG" ] && exit 0
@@ -8,44 +13,68 @@ touch "$FLAG"
 PASS="✅" FAIL="❌" WARN="⚠️"
 OUT=""
 
-# 1. 本地 Web 服務
-declare -A SERVICES=(
-  [3099]="banini-tracker"
-  [5001]="stock-screener"
-  [5173]="dsa-vite"
-  [5200]="rabbit-care"
-  [5300]="news-analyzer"
-  [5400]="daytrade-replay"
-  [5500]="stock-screener-ai"
-  [5550]="timesfm"
-  [5600]="dashboard"
-  [5650]="dsa-webui"
-  [5700]="kelly-fibonacci"
-  [8000]="dsa-backend"
-)
-declare -A OPTIONAL_SERVICES=(
-  [5050]="ai-compare"
-  [5100]="stock_analyzer"
-  [5800]="portfolio-analyzer"
-)
+# 1. 本地 Web 服務 —— 格式：port:名稱（用一般 list 相容 bash 3.2）
+SERVICES="
+5070:ai-broadcast
+5100:stock-analyzer
+5173:dsa-vite
+5250:sim-invest
+5300:news-analyzer
+5350:market-analysis
+5400:daytrade-replay
+5455:shioaji-gateway
+5460:daytrade-sim
+5500:stock-screener-ai
+5501:skill-tree
+5600:dashboard
+5650:dsa-webui
+5750:last30days-web
+5800:portfolio-analyzer
+5810:edible-plants-api
+5850:chip-tracker
+5905:market-cycle-chart
+5910:guru-tracker
+5950:command-center
+5960:pullback-buy-screener
+5970:controller-media
+5980:triz-solver
+5990:learn-system
+7799:plant-quiz
+8787:thinking-proxy
+8877:portfolio-monitor
+8000:dsa-backend
+"
+OPTIONAL_SERVICES="
+5050:ai-compare
+"
 
-for port in $(echo "${!SERVICES[@]}" | tr ' ' '\n' | sort -n); do
-  name="${SERVICES[$port]}"
-  if lsof -i :$port 2>/dev/null | grep -q LISTEN; then
-    OUT+="$PASS $name (port $port)\n"
+check_port() {
+  local port="$1" name="$2" level="$3"
+  if lsof -nP -i :"$port" -sTCP:LISTEN 2>/dev/null | grep -q LISTEN; then
+    echo "$PASS $name (port $port)"
   else
-    OUT+="$FAIL $name (port $port) — 未啟動\n"
+    if [ "$level" = "opt" ]; then
+      echo "$WARN $name (port $port) — 停止中"
+    else
+      echo "$FAIL $name (port $port) — 未啟動"
+    fi
   fi
-done
+}
 
-for port in $(echo "${!OPTIONAL_SERVICES[@]}" | tr ' ' '\n' | sort -n); do
-  name="${OPTIONAL_SERVICES[$port]}"
-  if lsof -i :$port 2>/dev/null | grep -q LISTEN; then
-    OUT+="$PASS $name (port $port)\n"
-  else
-    OUT+="$WARN $name (port $port) — 停止中\n"
-  fi
-done
+# while 跑在 subshell，變數不會傳回 → 把結果寫進檔案再讀回
+: > /tmp/.daily_check_out.$$
+while IFS=: read -r port name; do
+  [ -z "$port" ] && continue
+  check_port "$port" "$name" "req"
+done <<< "$SERVICES" > /tmp/.daily_check_out.$$ 2>/dev/null
+
+while IFS=: read -r port name; do
+  [ -z "$port" ] && continue
+  check_port "$port" "$name" "opt"
+done <<< "$OPTIONAL_SERVICES" >> /tmp/.daily_check_out.$$ 2>/dev/null
+
+OUT="$(cat /tmp/.daily_check_out.$$)"$'\n'
+rm -f /tmp/.daily_check_out.$$
 
 # 2. VM 服務
 VM_STATUS=$(ssh -i ~/.ssh/oracle_line_bot -o ConnectTimeout=6 -o BatchMode=yes \
@@ -73,9 +102,9 @@ else
   OUT+="$WARN voice_ideas_report (今天尚未執行或無 log)\n"
 fi
 
-# 4. thread_summarizer 最後一筆日期
+# 4. thread_summarizer 最後一筆日期（-v 是 BSD 語法，必須明確指定 /bin/date）
 LAST=$(tail -1 /Users/steven/CCProject/logs/thread_summarizer.log 2>/dev/null | grep -oE '[0-9]{4}-[0-9]{2}-[0-9]{2}' | head -1)
-YESTERDAY=$(date -v-1d +%Y-%m-%d)
+YESTERDAY=$(/bin/date -v-1d +%Y-%m-%d)
 if [ "$LAST" = "$TODAY" ] || [ "$LAST" = "$YESTERDAY" ]; then
   OUT+="$PASS thread_summarizer (最後：$LAST)\n"
 else
@@ -102,5 +131,5 @@ echo ""
 echo "╔══════════════════════════════╗"
 echo "║  每日服務狀態報告 $(date +%m/%d)       ║"
 echo "╚══════════════════════════════╝"
-printf "$OUT"
+printf '%b' "$OUT"
 echo ""

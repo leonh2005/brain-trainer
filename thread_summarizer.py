@@ -11,7 +11,7 @@ from pathlib import Path
 from google import genai
 
 GEMINI_API_KEY = open(os.path.expanduser("~/CCProject/.secrets/gemini_key.txt")).read().strip()
-VAULT_PATH = Path("/Users/steven/Library/CloudStorage/GoogleDrive-leonh2005@gmail.com/我的雲端硬碟/Obsidian Vault")
+VAULT_PATH = Path("/Users/steven/Library/CloudStorage/GoogleDrive-leonh2005@gmail.com/我的雲端硬碟/📚 學習 & 筆記/from Google keep")
 THREAD_DIR = VAULT_PATH / "thread"
 SUMMARY_DIR = THREAD_DIR / "摘要"
 MARKER_FILE = THREAD_DIR / ".last_summarized"
