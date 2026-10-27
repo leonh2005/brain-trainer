@@ -1,4 +1,5 @@
 """last30days-web: 薄殼 Flask 包 last30days 引擎（觸發研究 + 進度 + 報告庫 + Groq 中文翻譯）"""
+import errno
 import glob
 import logging
 import os
@@ -15,6 +16,9 @@ import requests
 from flask import Flask, abort, jsonify, render_template, request
 
 app = Flask(__name__)
+
+# macOS: 檔案在 iCloud 但內容還沒落地本機
+SF_DATALESS = 0x40000000
 
 SAVE_DIR = Path.home() / "Documents" / "Last30Days"
 CONFIG_ENV = Path.home() / ".config" / "last30days" / ".env"
@@ -157,8 +161,28 @@ def health():
     return jsonify(status="ok", timestamp=datetime.now().isoformat())
 
 
+def is_dataless(path) -> bool:
+    """判斷是否為 iCloud dataless 檔案（內容未落地本機）。
+
+    開啟這種檔案會觸發下載，macOS 會回 EDEADLK（Resource deadlock avoided），
+    等下載完才讀得到。stat() 只讀 metadata，不會觸發下載。
+    """
+    try:
+        st = path.stat()
+    except OSError:
+        return False
+    if getattr(st, "st_flags", 0) & SF_DATALESS:
+        return True
+    return st.st_size > 0 and st.st_blocks == 0
+
+
 def read_text_retry(path, size=None):
-    """讀檔重試，扛 macOS 本機快照暫時鎖檔（EDEADLK）；重試後仍失敗則拋出原始例外"""
+    """讀檔重試，扛 macOS 本機快照暫時鎖檔（EDEADLK）；重試後仍失敗則拋出原始例外
+
+    dataless 檔案直接放棄、不重試：重試只是白等 iCloud 下載，11 個報告累加會把
+    首頁拖慢近 6 秒。標題退回檔名即可（內容等檔案落地後再看）。"""
+    if is_dataless(path):
+        raise OSError(errno.EDEADLK, "dataless file (not yet downloaded from iCloud)", str(path))
     for attempt in range(3):
         try:
             text = path.read_text(errors="replace")
