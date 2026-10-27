@@ -1,0 +1,53 @@
+# ruff 設定：為 CCProject 這個多服務 monorepo 訂出可長期維持的基線。
+#
+# 原則（對應全域 CLAUDE.md「外科手術式修改」）：
+#   只啟用「修正後不改變行為」的規則，且優先採用 ruff 能安全自動修的。
+#   既有程式碼大量使用的風格（寬行、broad except、open 不用 with）不強制改，
+#   因為逐一改寫 500+ 處的風險遠大於收益。
+#
+# 若日後要收緊，建議一次只加一條規則、先跑 pytest 全部通過再提交。
+
+target-version = "py312"
+line-length = 100
+
+exclude = [
+    ".git",
+    ".venv",
+    "venv",
+    "node_modules",
+    "__pycache__",
+    "build",
+    "dist",
+    ".mypy_cache",
+    ".pytest_cache",
+    "site-packages",
+]
+
+[lint]
+# 只挑「語法/名稱錯誤」與「無行為差異的現代化」兩類
+select = [
+    "E4",   # import 相關
+    "E7",   # 語句相關
+    "E9",   # 語法/執行期錯誤（真 bug）
+    "F",    # pyflakes：未使用變數/import、重複定義
+    "I",    # import 排序
+    "UP",   # pyupgrade：現代語法
+    "RUF100", # 無效的 noqa 註解
+]
+
+ignore = [
+    "E501",   # 行寬：本 repo 既有風格不強制（p99 高達 131 字元）
+    "UP009",  # utf-8 宣告：無害，保留可讀性
+    "UP045",  # Optional[X] → X | None：純風格，且部分檔案仍要相容舊版
+    "F841",   # 未使用區域變數：常是刻意保留供除錯，逐一確認成本高
+    "E402",   # import 不在檔首：本 repo 大量用 sys.path.insert 後才 import，屬刻意寫法
+    "E741",   # 模糊變數名：OHLC 資料慣用 o/h/l/c，l 是 low 不是數字 1
+    "E701",   # 單行多語句（冒號）：既有風格
+    "E702",   # 單行多語句（分號）：既有風格
+    "E731",   # lambda 賦值：既有風格
+    "UP031",  # printf 格式字串：既有風格
+]
+
+[lint.per-file-ignores]
+# 測試檔允許較寬鬆：mock 常需要未使用的 import、fixture 常有未使用參數
+"**/tests/**" = ["F811", "F401"]
