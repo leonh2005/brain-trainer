@@ -29,15 +29,19 @@ logger = logging.getLogger("prune_db")
 RETENTION_DAYS = 35
 MAX_EXAMPLES = 500
 
-# 文章的有效日期：published_at 無法解析、為 NULL 或落在未來時，退回 fetched_at 判斷新舊
+# 文章的有效日期：published_at 無法解析、為 NULL 或落在未來時，退回 fetched_at 判斷新舊。
+# 連 fetched_at 都無法解析（壞資料）時視為 1970，確保這種幽靈文章不會永遠留著。
 EFFECTIVE_DATE_SQL = """
     datetime(COALESCE(
-        CASE
-            WHEN date(published_at) IS NULL THEN fetched_at
-            WHEN date(published_at) > date('now') THEN fetched_at
-            ELSE published_at
-        END,
-        fetched_at
+        datetime(COALESCE(
+            CASE
+                WHEN date(published_at) IS NULL THEN fetched_at
+                WHEN date(published_at) > date('now') THEN fetched_at
+                ELSE published_at
+            END,
+            fetched_at
+        )),
+        '1970-01-01 00:00:00'
     ))
 """
 

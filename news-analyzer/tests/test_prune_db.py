@@ -201,6 +201,23 @@ def test_malformed_published_at_is_still_pruned(db_path):
     conn.close()
 
 
+def test_malformed_fetched_at_is_still_pruned(db_path):
+    """連 fetched_at 都是壞字串時也不能變成永遠刪不掉幽靈文章。"""
+    conn = get_conn(db_path)
+    conn.execute(
+        """INSERT INTO articles (source, title, url, content, published_at, fetched_at)
+           VALUES ('ptt', '壞抓取時間', 'https://ptt.cc/badfetch', 'c', '2026-01-01T00:00:00+00:00', 'garbage')"""
+    )
+    conn.commit()
+    conn.close()
+
+    run_prune(days=30, db_path=db_path)
+
+    conn = get_conn(db_path)
+    assert conn.execute("SELECT COUNT(*) FROM articles WHERE title='壞抓取時間'").fetchone()[0] == 0
+    conn.close()
+
+
 def test_sync_examples_returns_inserted_count_not_net_change(db_path):
     """回傳值要是「本次實際插入筆數」，不是淨增減——池子被修剪時淨值會是負數。"""
     conn = get_conn(db_path)
