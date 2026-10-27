@@ -5,6 +5,16 @@ from datetime import datetime, timezone
 
 DB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "news.db")
 
+# 人工標記「不相關」的標題池。articles 會被定期修剪成只剩近期文章，
+# 這個表讓 few-shot 負樣本不受修剪影響。
+EXAMPLES_TABLE_SQL = """
+    CREATE TABLE IF NOT EXISTS irrelevant_examples (
+        title     TEXT PRIMARY KEY,
+        source    TEXT,
+        marked_at TEXT
+    )
+"""
+
 
 def get_conn(db_path=DB_PATH):
     conn = sqlite3.connect(db_path)
@@ -38,6 +48,7 @@ def init_db(db_path=DB_PATH):
             conn.execute("ALTER TABLE articles ADD COLUMN irrelevant INTEGER NOT NULL DEFAULT 0")
         if "auto_irrelevant" not in cols:
             conn.execute("ALTER TABLE articles ADD COLUMN auto_irrelevant INTEGER NOT NULL DEFAULT 0")
+        conn.execute(EXAMPLES_TABLE_SQL)
         conn.commit()
 
 
@@ -87,18 +98,43 @@ def update_analysis(article_id, score, summary, tags, db_path=DB_PATH):
 
 
 def get_irrelevant_examples(limit=5, db_path=DB_PATH):
-    """回傳人工標記為無關的文章樣本，供 few-shot prompt 使用。"""
+    """回傳人工標記為無關的文章樣本，供 few-shot prompt 使用。
+    優先讀 irrelevant_examples 範例池（articles 被修剪後仍保留），空則退回 articles。"""
     with get_conn(db_path) as conn:
         rows = conn.execute(
-            "SELECT title FROM articles WHERE irrelevant = 1 ORDER BY RANDOM() LIMIT ?",
-            (limit,),
+            "SELECT title FROM irrelevant_examples ORDER BY RANDOM() LIMIT ?", (limit,)
         ).fetchall()
+        if not rows:
+            rows = conn.execute(
+                "SELECT title FROM articles WHERE irrelevant = 1 ORDER BY RANDOM() LIMIT ?",
+                (limit,),
+            ).fetchall()
     return [r["title"] for r in rows]
 
 
 def set_irrelevant(article_id, value, db_path=DB_PATH):
+    """標記／取消標記文章為不相關。
+
+    標記時同步寫入 irrelevant_examples 範例池（記錄真實標記時間），
+    取消標記時從池子移除——池子裡的標題都被當成「不相關」範例餵給分析器。"""
+    now = datetime.now(timezone.utc).isoformat()
     with get_conn(db_path) as conn:
         conn.execute("UPDATE articles SET irrelevant=? WHERE id=?", (1 if value else 0, article_id))
+        row = conn.execute("SELECT title, source FROM articles WHERE id=?", (article_id,)).fetchone()
+        if row and value:
+            conn.execute(
+                """INSERT OR IGNORE INTO irrelevant_examples (title, source, marked_at)
+                   VALUES (?, ?, ?)""",
+                (row["title"], row["source"], now),
+            )
+        elif row:
+            # 同標題可能有多篇文章，仍有其他篇被標記就不該從池子移除
+            still_marked = conn.execute(
+                "SELECT COUNT(*) FROM articles WHERE title=? AND irrelevant=1",
+                (row["title"],),
+            ).fetchone()[0]
+            if still_marked == 0:
+                conn.execute("DELETE FROM irrelevant_examples WHERE title=?", (row["title"],))
         conn.commit()
 
 
