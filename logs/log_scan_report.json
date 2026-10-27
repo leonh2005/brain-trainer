@@ -1,6 +1,6 @@
 {
-  "scanned_at": "2026-10-27 03:00:45",
-  "since": "2026-10-26 03:00:00",
+  "scanned_at": "2026-10-28 03:00:46",
+  "since": "2026-10-27 03:00:00",
   "results": {
     "市場儀表板": {
       "exists": true,
@@ -28,15 +28,15 @@
     },
     "財經新聞分析": {
       "exists": true,
-      "errors": 0,
-      "last_error": null,
-      "fix": null
+      "errors": 7,
+      "last_error": "2026-10-27 07:15:15,012 [WARNING] fetcher.reddit_fetcher: Reddit fetch failed for r/stocks: 500 Server Error: Internal Server Error for url: https://www.reddit.com/r/stocks/hot/.rss",
+      "fix": "尚無對應建議，需人工判斷"
     },
     "川普監測": {
       "exists": true,
-      "errors": 1,
-      "last_error": "2026-10-26 10:50:04,139 WARNING 分析失敗：[Jung Inkyo's Trade-Off] Trump's Russian Diesel De — 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reaso",
-      "fix": "尚無對應建議，需人工判斷"
+      "errors": 0,
+      "last_error": null,
+      "fix": null
     },
     "持倉新聞(台股)": {
       "exists": true,
@@ -88,9 +88,9 @@
     },
     "盤中監控": {
       "exists": true,
-      "errors": 0,
-      "last_error": null,
-      "fix": null
+      "errors": 2,
+      "last_error": "⚠️ 盤中主力監控啟動失敗（重試 1 次）：TimeoutError，今天不會有訊號",
+      "fix": "網路逾時 → 確認目標服務可達，或增加 timeout 設定"
     },
     "蝦皮軟纖監測": {
       "exists": true,
@@ -124,9 +124,9 @@
     },
     "daily-stock-analysis": {
       "exists": true,
-      "errors": 0,
-      "last_error": null,
-      "fix": null
+      "errors": 3,
+      "last_error": "2026-10-27 13:17:44 | DEBUG    | venv/lib/python3.14/site-packages/httpcore/_trace.py:47 | receive_response_body.failed exception=GeneratorExit()",
+      "fix": "尚無對應建議，需人工判斷"
     }
   },
   "no_log": [
