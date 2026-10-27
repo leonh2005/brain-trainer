@@ -102,3 +102,18 @@ def test_report_title_falls_back_to_filename_for_dataless(tmp_path, monkeypatch)
     title = webapp.report_title(f)
     assert "台積電" in title
     assert "法說" not in title  # 讀不到內容，標題只能來自檔名
+
+
+def test_report_route_returns_503_with_message_for_dataless(tmp_path, monkeypatch):
+    """點進 dataless 報告要有說明，不要丟 500 給使用者。"""
+    monkeypatch.setattr(webapp, "SAVE_DIR", tmp_path)
+    f = tmp_path / "台積電-20260716-2121.md"
+    f.write_text("# Production Brief: 台積電法說優於預期\n")
+    _patch_stat(monkeypatch, flags=webapp.SF_DATALESS)
+
+    webapp.app.config["TESTING"] = True
+    with webapp.app.test_client() as c:
+        resp = c.get("/report/" + "台積電-20260716-2121.md")
+
+    assert resp.status_code == 503
+    assert "iCloud" in resp.get_data(as_text=True)

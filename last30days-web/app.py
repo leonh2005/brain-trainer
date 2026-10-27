@@ -161,7 +161,7 @@ def health():
     return jsonify(status="ok", timestamp=datetime.now().isoformat())
 
 
-def is_dataless(path) -> bool:
+def is_dataless(path: Path) -> bool:
     """判斷是否為 iCloud dataless 檔案（內容未落地本機）。
 
     開啟這種檔案會觸發下載，macOS 會回 EDEADLK（Resource deadlock avoided），
@@ -176,7 +176,7 @@ def is_dataless(path) -> bool:
     return st.st_size > 0 and st.st_blocks == 0
 
 
-def read_text_retry(path, size=None):
+def read_text_retry(path: Path, size: int | None = None) -> str:
     """讀檔重試，扛 macOS 本機快照暫時鎖檔（EDEADLK）；重試後仍失敗則拋出原始例外
 
     dataless 檔案直接放棄、不重試：重試只是白等 iCloud 下載，11 個報告累加會把
@@ -303,7 +303,15 @@ def report(filename):
                       f'const d=await r.json();'
                       f'if(r.ok)location.href="/report/"+encodeURIComponent(d.file);'
                       f'else{{b.textContent="翻譯失敗";alert(d.error)}}}}</script>')
-    content = read_text_retry(path)
+    try:
+        content = read_text_retry(path)
+    except OSError as e:
+        if e.errno != errno.EDEADLK:
+            raise
+        # iCloud dataless：內容還沒落地本機，等一下就會下載好
+        return ("<!doctype html><meta charset='utf-8'>"
+                "<p style='font-family:system-ui;padding:2em'>這份報告還在從 iCloud 下載中"
+                "（檔案內容尚未落地本機）。請稍等幾秒後重新整理。</p>"), 503
     toolbar = TOOLBAR.format(switch=switch)
     if filename.endswith(".md"):
         import html as html_mod
