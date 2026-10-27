@@ -4,6 +4,8 @@
 import os
 import subprocess
 import sys
+import threading
+from datetime import date, datetime, timedelta
 
 import db
 from flask import Flask, jsonify, render_template
@@ -14,6 +16,50 @@ app = Flask(__name__)
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 PYTHON = sys.executable
+
+# 手動更新的執行狀態（只記在這一個常駐行程的記憶體裡；
+# 重啟服務就清空，這是刻意的——重啟後本來就沒有「進行中」的更新）
+_refresh = {"proc": None, "started_at": None, "finished_at": None, "exit_code": None}
+
+# Flask 預設 threaded=True，兩個分頁同時按「手動更新」會同時通過「沒在跑」的檢查，
+# 各自啟動一個 updater（還互相截斷 log）。用鎖把「檢查＋啟動」變成不可分割。
+_refresh_lock = threading.Lock()
+
+# 13F 法定申報期限：季末後 45 天（實測多數申報者都在期限當天才送出）
+_13F_DEADLINE_DAYS = 45
+
+
+def _quarter_end(year: int, quarter: int) -> date:
+    """回傳該季的最後一天。"""
+    return date(
+        year,
+        quarter * 3,
+        [31, 30, 30, 31][quarter - 1],
+    )
+
+
+def _next_13f_deadline(today: date | None = None) -> dict:
+    """算出「下一個還沒到的 13F 申報期限」。
+
+    13F 在季末後 45 天內申報。起算點是「剛結束的那一季」，不是當前所在的季
+    ——例如 10/27 還在 Q4 進行中，但 Q3（9/30 結束，11/14 截止）尚未到期，
+    要回報的是 Q3 而不是 Q4。
+    """
+    today = today or date.today()
+    # 以絕對月份計算避免跨年錯誤（0-based）
+    abs_month = today.year * 12 + (today.month - 1)
+    for step in range(-1, 6):
+        y, mo = divmod(abs_month + step * 3, 12)
+        q = mo // 3 + 1
+        deadline = _quarter_end(y, q) + timedelta(days=_13F_DEADLINE_DAYS)
+        if deadline >= today:
+            return {
+                "quarter": f"{y}-Q{q}",
+                "deadline": deadline.isoformat(),
+                "days_left": (deadline - today).days,
+            }
+    return {}
+
 
 
 def _holder_summary(conn, holder: dict) -> dict:
@@ -303,12 +349,118 @@ def api_health():
     return jsonify({"ok": True})
 
 
+@app.get("/api/data-status")
+def api_data_status():
+    """資料新鮮度：最新季度、各來源最新期間、下一個 13F 申報期限。
+
+    用途：說明「為什麼最新一季還沒出現」——13F 有 45 天法定申報期，
+    期限前所有申報者都還沒送件是正常的，不是程式沒抓到。
+    """
+    conn = db.get_conn()
+    try:
+        row = conn.execute(
+            "SELECT MAX(period) FROM holdings_snapshot WHERE period LIKE '____-Q_'"
+        ).fetchone()
+        latest_quarter = row[0] if row and row[0] else None
+
+        row = conn.execute(
+            "SELECT MAX(period) FROM holdings_snapshot WHERE period LIKE '____-__-__'"
+        ).fetchone()
+        latest_daily = row[0] if row and row[0] else None
+
+        per_holder = conn.execute(
+            "SELECT h.name_zh, MAX(s.period) AS p "
+            "FROM holders h LEFT JOIN holdings_snapshot s ON s.holder_id = h.id "
+            "WHERE h.type = '13f' GROUP BY h.id ORDER BY p DESC, h.name_zh"
+        ).fetchall()
+    finally:
+        conn.close()
+
+    return jsonify({
+        "latest_quarter": latest_quarter,
+        "latest_daily": latest_daily,
+        "next_deadline": _next_13f_deadline(),
+        "holders": [{"name": r["name_zh"], "period": r["p"]} for r in per_holder],
+        "checked_at": datetime.now().isoformat(timespec="seconds"),
+    })
+
+
 @app.post("/api/refresh")
 def api_refresh():
-    subprocess.Popen([PYTHON, os.path.join(BASE_DIR, "updater.py")],
-                      cwd=BASE_DIR,
-                      stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-    return jsonify({"ok": True})
+    """觸發 updater.py。已在執行中則回 409，不重複啟動。"""
+    with _refresh_lock:
+        proc = _refresh["proc"]
+        if proc is not None and proc.poll() is None:
+            return jsonify({
+                "status": "running",
+                "started_at": _refresh["started_at"],
+            }), 409
+
+        log_path = os.path.join(BASE_DIR, "manual_refresh.log")
+        try:
+            # 'a' 而非 'w'：保留上一次執行的 log，失敗後重試才查得到前一次的錯誤
+            with open(log_path, "a", encoding="utf-8") as fh:
+                fh.write(f"\n===== 手動更新 {datetime.now().isoformat(timespec='seconds')} =====\n")
+                fh.flush()
+                # 先記下「本次輸出從這裡開始」的位置，再啟動，
+                # 否則 updater 可能已經寫入前幾行而被漏掉
+                offset = fh.tell()
+                proc = subprocess.Popen(
+                    [PYTHON, os.path.join(BASE_DIR, "updater.py")],
+                    cwd=BASE_DIR,
+                    stdout=fh,
+                    stderr=subprocess.STDOUT,
+                )
+        except OSError as exc:
+            return jsonify({"status": "error", "message": str(exc)}), 500
+
+        _refresh.update(
+            proc=proc,
+            started_at=datetime.now().isoformat(timespec="seconds"),
+            finished_at=None,
+            exit_code=None,
+            log_offset=offset,
+        )
+    return jsonify({"status": "started", "started_at": _refresh["started_at"]})
+
+
+@app.get("/api/refresh/status")
+def api_refresh_status():
+    """查手動更新進度。完成後附上本次執行的 log 尾段。"""
+    proc = _refresh["proc"]
+    if proc is None:
+        return jsonify({"status": "idle"})
+
+    code = proc.poll()
+    if code is None:
+        return jsonify({"status": "running", "started_at": _refresh["started_at"]})
+
+    if _refresh["finished_at"] is None:
+        _refresh["finished_at"] = datetime.now().isoformat(timespec="seconds")
+        _refresh["exit_code"] = code
+
+    tail = _read_run_log(_refresh.get("log_offset") or 0)
+
+    return jsonify({
+        "status": "done",
+        "ok": code == 0,
+        "exit_code": code,
+        "started_at": _refresh["started_at"],
+        "finished_at": _refresh["finished_at"],
+        "log_tail": tail,
+    })
+
+
+def _read_run_log(offset: int, max_lines: int = 20) -> list[str]:
+    """只讀「本次執行」寫入的段落（offset 之後），避免顯示上一次的殘留。"""
+    path = os.path.join(BASE_DIR, "manual_refresh.log")
+    try:
+        with open(path, encoding="utf-8", errors="replace") as fh:
+            fh.seek(offset)
+            lines = fh.read().strip().splitlines()
+        return lines[-max_lines:]
+    except OSError:
+        return []
 
 
 if __name__ == "__main__":
