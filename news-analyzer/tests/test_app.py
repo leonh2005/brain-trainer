@@ -2,7 +2,7 @@ import os
 import json
 import tempfile
 import pytest
-from storage import init_db, save_articles, get_unanalyzed
+from storage import init_db, save_articles, get_unanalyzed, db_session
 from tests.helpers import set_analysis
 import app as flask_app
 
@@ -62,8 +62,7 @@ def test_api_trend_returns_json(client):
 
 def test_api_stats_excludes_auto_irrelevant(client):
     """Jev 判為無關的新聞不計入多空統計。"""
-    from storage import get_conn
-    with get_conn(flask_app.DB_PATH) as conn:
+    with db_session(flask_app.DB_PATH) as conn:
         conn.execute("UPDATE articles SET auto_irrelevant=1 WHERE score=3")
         conn.commit()
     data = json.loads(client.get("/api/stats").data)

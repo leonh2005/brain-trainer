@@ -21,7 +21,7 @@ from datetime import datetime, timedelta, timezone
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from storage import DB_PATH, EXAMPLES_TABLE_SQL, get_conn
+from storage import DB_PATH, EXAMPLES_TABLE_SQL, db_session
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 logger = logging.getLogger("prune_db")
@@ -81,8 +81,7 @@ def prune_old_articles(conn, days: int) -> int:
 
 def run_prune(days: int = RETENTION_DAYS, db_path: str = DB_PATH, dry_run: bool = False) -> dict:
     cutoff = datetime.now(timezone.utc) - timedelta(days=days)
-    conn = get_conn(db_path)
-    try:
+    with db_session(db_path) as conn:
         conn.execute("PRAGMA busy_timeout = 30000")
         ensure_examples_table(conn)
         before = conn.execute("SELECT COUNT(*) FROM articles").fetchone()[0]
@@ -109,8 +108,6 @@ def run_prune(days: int = RETENTION_DAYS, db_path: str = DB_PATH, dry_run: bool 
         return {"before": before, "deleted": deleted, "after": after,
                 "examples": examples, "new_examples": new_examples,
                 "cutoff": cutoff.isoformat()}
-    finally:
-        conn.close()
 
 
 def main() -> None:

@@ -1,5 +1,6 @@
 import os
 import sqlite3
+from contextlib import contextmanager
 from datetime import datetime, timezone
 
 DB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "news.db")
@@ -22,8 +23,28 @@ def get_conn(db_path=DB_PATH):
     return conn
 
 
+@contextmanager
+def db_session(db_path=DB_PATH):
+    """開連線 → 提交交易 → 關閉連線。
+
+    sqlite3 的 `with conn:` 只管交易（__exit__ 做 commit/rollback），**不會關連線**，
+    而 sqlite3.Connection 有參考循環、只能靠 cyclic GC 回收 → fd 會累積
+    （實測 600 次 get_articles 後 news.db 相關 fd 從 12 增到 174）。
+    Flask 每個 request 都開連線，所以一律用這個，不要直接用 `with get_conn(...)`。
+    """
+    conn = get_conn(db_path)
+    try:
+        yield conn
+        conn.commit()
+    except Exception:
+        conn.rollback()
+        raise
+    finally:
+        conn.close()
+
+
 def init_db(db_path=DB_PATH):
-    with get_conn(db_path) as conn:
+    with db_session(db_path) as conn:
         conn.execute("""
             CREATE TABLE IF NOT EXISTS articles (
                 id              INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -54,7 +75,7 @@ def init_db(db_path=DB_PATH):
 def save_articles(articles, db_path=DB_PATH):
     """Insert articles, ignore duplicates by URL. Returns count of newly inserted rows."""
     now = datetime.now(timezone.utc).isoformat()
-    with get_conn(db_path) as conn:
+    with db_session(db_path) as conn:
         before = conn.execute("SELECT COUNT(*) FROM articles").fetchone()[0]
         conn.executemany(
             """INSERT OR IGNORE INTO articles
@@ -79,7 +100,7 @@ def save_articles(articles, db_path=DB_PATH):
 
 def get_unanalyzed(db_path=DB_PATH):
     """Return up to 100 articles with no score yet."""
-    with get_conn(db_path) as conn:
+    with db_session(db_path) as conn:
         rows = conn.execute(
             "SELECT id, source, title, content FROM articles WHERE score IS NULL ORDER BY fetched_at DESC LIMIT 100"
         ).fetchall()
@@ -92,7 +113,7 @@ def get_irrelevant_examples(limit=5, db_path=DB_PATH):
     這是**人工標註的 ground truth**（評測模型相關性判斷用）。articles 會被定期修剪成
     只剩近期文章，所以人工標記的標題另外存在 irrelevant_examples 池裡；
     池子空時退回 articles 內的標記。"""
-    with get_conn(db_path) as conn:
+    with db_session(db_path) as conn:
         rows = conn.execute(
             "SELECT title FROM irrelevant_examples ORDER BY RANDOM() LIMIT ?", (limit,)
         ).fetchall()
@@ -110,7 +131,7 @@ def set_irrelevant(article_id, value, db_path=DB_PATH):
     標記時同步寫入 irrelevant_examples 範例池（記錄真實標記時間），
     取消標記時從池子移除——池子裡的標題都被當成「不相關」範例餵給分析器。"""
     now = datetime.now(timezone.utc).isoformat()
-    with get_conn(db_path) as conn:
+    with db_session(db_path) as conn:
         conn.execute("UPDATE articles SET irrelevant=? WHERE id=?", (1 if value else 0, article_id))
         row = conn.execute("SELECT title, source FROM articles WHERE id=?", (article_id,)).fetchone()
         if row and value:
@@ -158,7 +179,7 @@ def get_articles(source=None, date=None, score_min=None, score_max=None, query=N
     limit = 20
     offset = (page - 1) * limit
 
-    with get_conn(db_path) as conn:
+    with db_session(db_path) as conn:
         total = conn.execute(f"SELECT COUNT(*) FROM articles {where}", params).fetchone()[0]
         rows = conn.execute(
             f"SELECT * FROM articles {where} ORDER BY COALESCE(published_at, fetched_at) DESC, id DESC LIMIT ? OFFSET ?",
@@ -192,7 +213,7 @@ def get_trend_data(period="day", db_path=DB_PATH):
 
     cond_sql, cond_params = condition
 
-    with get_conn(db_path) as conn:
+    with db_session(db_path) as conn:
         rows = conn.execute(
             f"""SELECT {time_bucket} as t, source, ROUND(AVG(score), 2) as avg_score
                 FROM articles
@@ -230,7 +251,7 @@ def get_bullish_trend_data(period="day", db_path=DB_PATH):
 
     cond_sql, cond_params = condition
 
-    with get_conn(db_path) as conn:
+    with db_session(db_path) as conn:
         rows = conn.execute(
             f"""SELECT {time_bucket} as t,
                        ROUND(100.0 * SUM(CASE WHEN score >= 7 THEN 1 ELSE 0 END) / COUNT(*), 1) as bullish_pct

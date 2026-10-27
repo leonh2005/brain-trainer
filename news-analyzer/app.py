@@ -5,7 +5,7 @@ from flask import Flask, jsonify, render_template, request
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from storage import DB_PATH as _DEFAULT_DB, get_articles, get_trend_data, get_bullish_trend_data, get_conn, init_db, set_irrelevant
+from storage import DB_PATH as _DEFAULT_DB, db_session, get_articles, get_bullish_trend_data, get_trend_data, init_db, set_irrelevant
 
 app = Flask(__name__)
 DB_PATH = _DEFAULT_DB
@@ -107,7 +107,7 @@ def api_stats():
     else:
         condition = "fetched_at >= datetime('now', '-24 hours')"
         params = []
-    with get_conn(DB_PATH) as conn:
+    with db_session(DB_PATH) as conn:
         rows = conn.execute(
             f"SELECT score FROM articles WHERE score IS NOT NULL AND irrelevant = 0 AND auto_irrelevant = 0 AND {condition}",
             params,

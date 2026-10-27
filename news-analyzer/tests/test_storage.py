@@ -3,8 +3,8 @@ import tempfile
 import json
 import pytest
 from storage import (init_db, save_articles, get_unanalyzed,
-                     get_articles, get_trend_data, get_bullish_trend_data, get_conn,
-                     set_irrelevant)
+                     db_session, get_articles, get_trend_data,
+                     get_bullish_trend_data, set_irrelevant)
 from tests.helpers import set_analysis
 
 
@@ -121,7 +121,7 @@ def _seed_bull_and_auto_irrelevant(db_path):
     ids = {a["title"]: a["id"] for a in get_unanalyzed(db_path)}
     set_analysis(ids["利多"], 10, "大漲", [], db_path)
     set_analysis(ids["無關"], 5, "", [], db_path)
-    with get_conn(db_path) as conn:
+    with db_session(db_path) as conn:
         conn.execute("UPDATE articles SET auto_irrelevant=1 WHERE id=?", (ids["無關"],))
         conn.commit()
 
@@ -156,7 +156,7 @@ def test_get_articles_show_irrelevant_covers_both_sources(db_path):
     set_analysis(ids["人工無關"], 5, "", [], db_path)
     set_analysis(ids["自動無關"], 5, "", [], db_path)
     set_irrelevant(ids["人工無關"], True, db_path)
-    with get_conn(db_path) as conn:
+    with db_session(db_path) as conn:
         conn.execute("UPDATE articles SET auto_irrelevant=1 WHERE id=?", (ids["自動無關"],))
         conn.commit()
 
@@ -165,3 +165,29 @@ def test_get_articles_show_irrelevant_covers_both_sources(db_path):
 
     shown = get_articles(show_irrelevant=True, db_path=db_path)
     assert sorted(a["title"] for a in shown["articles"]) == ["人工無關", "自動無關"]
+
+
+def test_db_session_closes_connection(db_path):
+    """db_session 必須關閉連線。
+
+    sqlite3 的 `with conn:` 只管交易不關連線，Flask 每個 request 都開一條
+    → fd 會累積（實測 600 次 get_articles 後多 160 個 fd）。"""
+    import sqlite3
+    with db_session(db_path) as conn:
+        conn.execute("SELECT 1")
+    with pytest.raises(sqlite3.ProgrammingError):
+        conn.execute("SELECT 1")
+
+
+def test_db_session_rolls_back_on_error(db_path):
+    """db_session 內拋例外時要 rollback，不留半套寫入。"""
+    with pytest.raises(ValueError):
+        with db_session(db_path) as conn:
+            conn.execute(
+                "INSERT INTO articles (source, title, url, content, published_at, fetched_at) "
+                "VALUES ('ptt', 'rollback', 'https://ptt.cc/rb', 'c', datetime('now'), datetime('now'))"
+            )
+            raise ValueError("boom")
+    with db_session(db_path) as conn:
+        count = conn.execute("SELECT COUNT(*) FROM articles WHERE title='rollback'").fetchone()[0]
+    assert count == 0

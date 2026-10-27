@@ -24,7 +24,7 @@ import time
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 import jev_filter
-from storage import DB_PATH, get_conn, init_db
+from storage import DB_PATH, db_session, init_db
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 logger = logging.getLogger("analyze_pending")
@@ -43,7 +43,7 @@ def fetch_pending(days: int, limit: int | None, db_path) -> list[dict]:
     if limit:
         sql += " LIMIT ?"
         params.append(limit)
-    with get_conn(db_path) as conn:
+    with db_session(db_path) as conn:
         return [dict(r) for r in conn.execute(sql, params).fetchall()]
 
 
@@ -66,7 +66,7 @@ def _classify_with_retry(titles: list[str], classify_fn, label: str,
 
 def _write_scores(rows: list[tuple[int, int, int]], db_path) -> None:
     """寫入 (id, score, auto_irrelevant)。Jev 不生成文字，摘要與標籤一律清空。"""
-    with get_conn(db_path) as conn:
+    with db_session(db_path) as conn:
         for article_id, score, auto_irrelevant in rows:
             conn.execute(
                 "UPDATE articles SET score=?, summary='', tags='[]', "
