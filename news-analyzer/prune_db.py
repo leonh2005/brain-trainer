@@ -84,7 +84,6 @@ def run_prune(days: int = RETENTION_DAYS, db_path: str = DB_PATH, dry_run: bool 
     try:
         conn.execute("PRAGMA busy_timeout = 30000")
         ensure_examples_table(conn)
-        conn.commit()
         before = conn.execute("SELECT COUNT(*) FROM articles").fetchone()[0]
         examples = conn.execute("SELECT COUNT(*) FROM irrelevant_examples").fetchone()[0]
 
@@ -115,7 +114,7 @@ def run_prune(days: int = RETENTION_DAYS, db_path: str = DB_PATH, dry_run: bool 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="修剪 news.db，只保留最近 N 天的新聞")
-    parser.add_argument("--days", type=int, default=RETENTION_DAYS, help="保留天數（預設 30）")
+    parser.add_argument("--days", type=int, default=RETENTION_DAYS, help=f"保留天數（預設 {RETENTION_DAYS}）")
     parser.add_argument("--dry-run", action="store_true", help="只統計不刪除")
     args = parser.parse_args()
 
