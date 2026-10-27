@@ -2,7 +2,8 @@ import os
 import json
 import tempfile
 import pytest
-from storage import init_db, save_articles, update_analysis, get_unanalyzed
+from storage import init_db, save_articles, get_unanalyzed
+from tests.helpers import set_analysis
 import app as flask_app
 
 
@@ -15,8 +16,8 @@ def client(tmp_path):
         {"source": "cnyes", "title": "Fed恐慌", "url": "https://cnyes.com/1", "content": "看空", "published_at": None},
     ], db)
     arts = get_unanalyzed(db)
-    update_analysis(arts[0]["id"], 7, "台積電看多", ["台積電"], db)
-    update_analysis(arts[1]["id"], 3, "Fed恐慌看空", ["Fed"], db)
+    set_analysis(arts[0]["id"], 7, "台積電看多", ["台積電"], db)
+    set_analysis(arts[1]["id"], 3, "Fed恐慌看空", ["Fed"], db)
 
     flask_app.app.config["TESTING"] = True
     flask_app.DB_PATH = db

@@ -1,6 +1,5 @@
 import os
 import sqlite3
-import json
 from datetime import datetime, timezone
 
 DB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "news.db")
@@ -87,19 +86,12 @@ def get_unanalyzed(db_path=DB_PATH):
         return [dict(r) for r in rows]
 
 
-def update_analysis(article_id, score, summary, tags, db_path=DB_PATH):
-    now = datetime.now(timezone.utc).isoformat()
-    with get_conn(db_path) as conn:
-        conn.execute(
-            "UPDATE articles SET score=?, summary=?, tags=?, analyzed_at=? WHERE id=?",
-            (score, summary, json.dumps(tags, ensure_ascii=False), now, article_id),
-        )
-        conn.commit()
-
-
 def get_irrelevant_examples(limit=5, db_path=DB_PATH):
-    """回傳人工標記為無關的文章樣本，供 few-shot prompt 使用。
-    優先讀 irrelevant_examples 範例池（articles 被修剪後仍保留），空則退回 articles。"""
+    """回傳人工標記為「不相關」的文章標題。
+
+    這是**人工標註的 ground truth**（評測模型相關性判斷用）。articles 會被定期修剪成
+    只剩近期文章，所以人工標記的標題另外存在 irrelevant_examples 池裡；
+    池子空時退回 articles 內的標記。"""
     with get_conn(db_path) as conn:
         rows = conn.execute(
             "SELECT title FROM irrelevant_examples ORDER BY RANDOM() LIMIT ?", (limit,)

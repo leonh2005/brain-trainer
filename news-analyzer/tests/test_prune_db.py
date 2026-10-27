@@ -202,11 +202,14 @@ def test_malformed_published_at_is_still_pruned(db_path):
 
 
 def test_malformed_fetched_at_is_still_pruned(db_path):
-    """連 fetched_at 都是壞字串時也不能變成永遠刪不掉幽靈文章。"""
+    """published_at 為 NULL 且 fetched_at 也是壞字串時，不能變成永遠刪不掉幽靈文章。
+
+    注意：published_at 必須是 NULL 或壞值，否則 CASE 會走 published_at 分支，
+    測的就不是 fetched_at 的 fallback 路徑了。"""
     conn = get_conn(db_path)
     conn.execute(
         """INSERT INTO articles (source, title, url, content, published_at, fetched_at)
-           VALUES ('ptt', '壞抓取時間', 'https://ptt.cc/badfetch', 'c', '2026-01-01T00:00:00+00:00', 'garbage')"""
+           VALUES ('ptt', '壞抓取時間', 'https://ptt.cc/badfetch', 'c', NULL, 'garbage')"""
     )
     conn.commit()
     conn.close()
@@ -215,6 +218,21 @@ def test_malformed_fetched_at_is_still_pruned(db_path):
 
     conn = get_conn(db_path)
     assert conn.execute("SELECT COUNT(*) FROM articles WHERE title='壞抓取時間'").fetchone()[0] == 0
+    conn.close()
+
+
+def test_valid_published_at_survives_broken_fetched_at(db_path):
+    """反向：published_at 有效時，即使 fetched_at 壞掉也要依 published_at 判斷。"""
+    conn = get_conn(db_path)
+    _insert(conn, "新文章", days_ago=1, published_at=datetime.now(timezone.utc).isoformat())
+    conn.execute("UPDATE articles SET fetched_at='garbage' WHERE title='新文章'")
+    conn.commit()
+    conn.close()
+
+    run_prune(days=30, db_path=db_path)
+
+    conn = get_conn(db_path)
+    assert conn.execute("SELECT COUNT(*) FROM articles WHERE title='新文章'").fetchone()[0] == 1
     conn.close()
 
 
