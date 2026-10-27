@@ -21,7 +21,7 @@ from datetime import datetime, timedelta, timezone
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from storage import DB_PATH, EXAMPLES_TABLE_SQL, db_session
+from storage import DB_PATH, EXAMPLES_TABLE_SQL, db_session, init_db
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 logger = logging.getLogger("prune_db")
@@ -44,8 +44,8 @@ EFFECTIVE_DATE_SQL = """
 
 
 def ensure_examples_table(conn) -> None:
+    """conn 必須由 storage.db_session 提供（統一負責 commit 與 close）。"""
     conn.execute(EXAMPLES_TABLE_SQL)
-    conn.commit()
 
 
 def sync_examples(conn) -> int:
@@ -75,12 +75,12 @@ def prune_old_articles(conn, days: int) -> int:
         f"DELETE FROM articles WHERE {EFFECTIVE_DATE_SQL} < datetime('now', ?)",
         (f"-{days} days",),
     )
-    conn.commit()
     return cur.rowcount
 
 
 def run_prune(days: int = RETENTION_DAYS, db_path: str = DB_PATH, dry_run: bool = False) -> dict:
     cutoff = datetime.now(timezone.utc) - timedelta(days=days)
+    init_db(db_path)  # 確保 schema 與 WAL 就緒（WAL 只在這裡設定一次）
     with db_session(db_path) as conn:
         conn.execute("PRAGMA busy_timeout = 30000")
         ensure_examples_table(conn)
@@ -104,6 +104,8 @@ def run_prune(days: int = RETENTION_DAYS, db_path: str = DB_PATH, dry_run: bool 
         deleted = prune_old_articles(conn, days)
         after = conn.execute("SELECT COUNT(*) FROM articles").fetchone()[0]
         examples = conn.execute("SELECT COUNT(*) FROM irrelevant_examples").fetchone()[0]
+        # VACUUM 不能在交易中執行，這裡是必須的交易邊界（不是多餘的 commit）
+        conn.commit()
         conn.execute("VACUUM")
         return {"before": before, "deleted": deleted, "after": after,
                 "examples": examples, "new_examples": new_examples,

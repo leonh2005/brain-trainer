@@ -72,7 +72,6 @@ def init_db(db_path=DB_PATH):
         if "auto_irrelevant" not in cols:
             conn.execute("ALTER TABLE articles ADD COLUMN auto_irrelevant INTEGER NOT NULL DEFAULT 0")
         conn.execute(EXAMPLES_TABLE_SQL)
-        conn.commit()
 
 
 def save_articles(articles, db_path=DB_PATH):
@@ -96,7 +95,6 @@ def save_articles(articles, db_path=DB_PATH):
                 for a in articles
             ],
         )
-        conn.commit()
         after = conn.execute("SELECT COUNT(*) FROM articles").fetchone()[0]
         return after - before
 
@@ -151,7 +149,6 @@ def set_irrelevant(article_id, value, db_path=DB_PATH):
             ).fetchone()[0]
             if still_marked == 0:
                 conn.execute("DELETE FROM irrelevant_examples WHERE title=?", (row["title"],))
-        conn.commit()
 
 
 def get_articles(source=None, date=None, score_min=None, score_max=None, query=None, page=1, show_irrelevant=False, db_path=DB_PATH):
@@ -191,30 +188,35 @@ def get_articles(source=None, date=None, score_min=None, score_max=None, query=N
         return {"total": total, "articles": [dict(r) for r in rows]}
 
 
-def get_trend_data(period="day", db_path=DB_PATH):
-    """Return average scores per time bucket per source, for Chart.js.
-    Labels are always filled to cover the full period (nulls for empty buckets)."""
-    from datetime import datetime, timedelta, timezone
+def _time_buckets(period):
+    """回傳 (time_bucket SQL, condition SQL, condition params, all_labels)。
 
+    分桶一律用台灣時間（fetched_at +8 小時）：day=每小時、week/month=每日，
+    labels 補滿整段期間（空桶由呼叫端補 null）。"""
     now_tw = datetime.now(timezone.utc) + timedelta(hours=8)
     today_tw = now_tw.date()
 
     if period == "day":
-        time_bucket = "strftime('%H:00', datetime(fetched_at, '+8 hours'))"
-        condition = "DATE(datetime(fetched_at, '+8 hours')) = ?", [str(today_tw)]
-        all_labels = [f"{h:02d}:00" for h in range(now_tw.hour + 1)]
-    elif period == "week":
-        time_bucket = "strftime('%m-%d', datetime(fetched_at, '+8 hours'))"
-        since = str(today_tw - timedelta(days=6))
-        condition = "DATE(datetime(fetched_at, '+8 hours')) >= ?", [since]
-        all_labels = [(today_tw - timedelta(days=i)).strftime("%m-%d") for i in range(6, -1, -1)]
-    else:  # month
-        time_bucket = "strftime('%m-%d', datetime(fetched_at, '+8 hours'))"
-        since = str(today_tw - timedelta(days=29))
-        condition = "DATE(datetime(fetched_at, '+8 hours')) >= ?", [since]
-        all_labels = [(today_tw - timedelta(days=i)).strftime("%m-%d") for i in range(29, -1, -1)]
+        return (
+            "strftime('%H:00', datetime(fetched_at, '+8 hours'))",
+            "DATE(datetime(fetched_at, '+8 hours')) = ?",
+            [str(today_tw)],
+            [f"{h:02d}:00" for h in range(now_tw.hour + 1)],
+        )
+    days = 6 if period == "week" else 29
+    since = str(today_tw - timedelta(days=days))
+    return (
+        "strftime('%m-%d', datetime(fetched_at, '+8 hours'))",
+        "DATE(datetime(fetched_at, '+8 hours')) >= ?",
+        [since],
+        [(today_tw - timedelta(days=i)).strftime("%m-%d") for i in range(days, -1, -1)],
+    )
 
-    cond_sql, cond_params = condition
+
+def get_trend_data(period="day", db_path=DB_PATH):
+    """Return average scores per time bucket per source, for Chart.js.
+    Labels are always filled to cover the full period (nulls for empty buckets)."""
+    time_bucket, cond_sql, cond_params, all_labels = _time_buckets(period)
 
     with db_session(db_path) as conn:
         rows = conn.execute(
@@ -232,27 +234,7 @@ def get_trend_data(period="day", db_path=DB_PATH):
 def get_bullish_trend_data(period="day", db_path=DB_PATH):
     """Return 多方(score>=7)佔比 per time bucket，供 Chart.js 畫多方百分比時間線。
     分桶邏輯與 get_trend_data 相同（day=每小時、week/month=每日），空桶補 null。"""
-    from datetime import datetime, timedelta, timezone
-
-    now_tw = datetime.now(timezone.utc) + timedelta(hours=8)
-    today_tw = now_tw.date()
-
-    if period == "day":
-        time_bucket = "strftime('%H:00', datetime(fetched_at, '+8 hours'))"
-        condition = "DATE(datetime(fetched_at, '+8 hours')) = ?", [str(today_tw)]
-        all_labels = [f"{h:02d}:00" for h in range(now_tw.hour + 1)]
-    elif period == "week":
-        time_bucket = "strftime('%m-%d', datetime(fetched_at, '+8 hours'))"
-        since = str(today_tw - timedelta(days=6))
-        condition = "DATE(datetime(fetched_at, '+8 hours')) >= ?", [since]
-        all_labels = [(today_tw - timedelta(days=i)).strftime("%m-%d") for i in range(6, -1, -1)]
-    else:  # month
-        time_bucket = "strftime('%m-%d', datetime(fetched_at, '+8 hours'))"
-        since = str(today_tw - timedelta(days=29))
-        condition = "DATE(datetime(fetched_at, '+8 hours')) >= ?", [since]
-        all_labels = [(today_tw - timedelta(days=i)).strftime("%m-%d") for i in range(29, -1, -1)]
-
-    cond_sql, cond_params = condition
+    time_bucket, cond_sql, cond_params, all_labels = _time_buckets(period)
 
     with db_session(db_path) as conn:
         rows = conn.execute(
