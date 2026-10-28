@@ -4,29 +4,51 @@
 - 今日候選 → 放進對應清單（已在其他清單的用 PATCH 換清單，不重跑回補）
 - 昨天以前留在該清單、今天不再是名單的 → 移到「觀察」
 - 庫存持股一律不動（避免把持倉搬出庫存）
-- 資料檔日期不是今天就等（screener 13:00 跑完才寫檔，13:01 進來通常還在寫）
-- 等超過 WAIT_SEC 仍沒更新就中止，避免拿舊檔清空清單
+
+2026-10-28 起改由 screener.py 寫檔完成後主動呼叫（不再靠 cron 13:01 進來 poll）。
+大盤跳過日 screener 不會呼叫本檔 — 當天沒有新資料，清單維持前一交易日內容，
+該狀態由 screener 自己的推播訊息說明，本檔不重複推播。
 
 預設走 command-center 代理（http://127.0.0.1:5950/svc/5850），可用環境變數 SWING_SYNC_BASE 覆寫。
 """
 import json
+import logging
 import os
 import sys
 import time
+import urllib.parse
 import urllib.request
 from datetime import date
+
+logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s %(message)s')
+log = logging.getLogger('swing_list_sync')
 
 CC = os.path.expanduser('~/CCProject')
 BASE = os.environ.get('SWING_SYNC_BASE', 'http://127.0.0.1:5950/svc/5850').rstrip('/')
 HOLDING_LIST = '庫存'
 FALLBACK_LIST = '觀察'
-WAIT_SEC = int(os.environ.get('SWING_SYNC_WAIT', '600'))
-POLL = 20
+TOKEN_FILE = f'{CC}/.secrets/telegram_token.txt'
+CHAT_ID = '7556217543'
+# 主動觸發後資料檔已寫好，只剩檔案系統落盤延遲；短重試即可，不再空等 600s
+RETRY_SEC = int(os.environ.get('SWING_SYNC_WAIT', '30'))
+POLL = 2
 
 
 def read_json(path):
     with open(path, encoding='utf-8') as f:
         return json.load(f)
+
+
+def send_telegram(text):
+    with open(TOKEN_FILE) as f:
+        token = f.read().strip()
+    data = urllib.parse.urlencode({'chat_id': CHAT_ID, 'text': text}).encode()
+    req = urllib.request.Request(f'https://api.telegram.org/bot{token}/sendMessage', data=data)
+    try:
+        with urllib.request.urlopen(req, timeout=15) as r:
+            r.read()
+    except Exception as e:
+        log.warning(f'Telegram 推播失敗: {e}')
 
 
 def swing_codes(today):
@@ -46,7 +68,7 @@ def near_miss_codes(today):
 
 
 def wait_for(loader, today):
-    deadline = time.time() + WAIT_SEC
+    deadline = time.time() + RETRY_SEC
     while True:
         try:
             data = loader(today)
@@ -99,8 +121,8 @@ def sync_list(name, wanted, holding_id, fallback_id, target_id, current, on_drop
             current[code] = target_id
             moved_in += 1
     action = '移除' if on_drop == 'delete' else '移到觀察'
-    print(f'{name}：今日 {len(wanted)} 檔（新增 {added}／移入 {moved_in}），'
-          f'{action}舊名單 {moved_out} 檔{"，持倉未動 " + str(skipped) + " 檔" if skipped else ""}')
+    log.info(f'{name}：今日 {len(wanted)} 檔（新增 {added}／移入 {moved_in}），'
+             f'{action}舊名單 {moved_out} 檔{"，持倉未動 " + str(skipped) + " 檔" if skipped else ""}')
     return added + moved_in + moved_out
 
 
@@ -113,7 +135,9 @@ if __name__ == '__main__':
     ]
     missing = [n for n, d in targets if d is None]
     if missing:
-        print(f'等 {WAIT_SEC}s 後仍拿不到今天的資料（{"/".join(missing)}），中止不動清單')
+        msg = f'等 {RETRY_SEC}s 後仍拿不到今天的資料（{"/".join(missing)}），中止不動清單'
+        log.error(msg)
+        send_telegram(f'⚠️ 隔日沖清單同步失敗（{today}）\n\n{msg}\n\n清單維持舊內容。')
         sys.exit(1)
 
     lists = call('GET', '/api/lists')
