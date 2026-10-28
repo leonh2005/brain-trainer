@@ -1,6 +1,6 @@
 {
-  "scanned_at": "2026-10-28 03:00:46",
-  "since": "2026-10-27 03:00:00",
+  "scanned_at": "2026-10-29 03:00:45",
+  "since": "2026-10-28 03:00:00",
   "results": {
     "市場儀表板": {
       "exists": true,
@@ -28,15 +28,15 @@
     },
     "財經新聞分析": {
       "exists": true,
-      "errors": 7,
-      "last_error": "2026-10-27 07:15:15,012 [WARNING] fetcher.reddit_fetcher: Reddit fetch failed for r/stocks: 500 Server Error: Internal Server Error for url: https://www.reddit.com/r/stocks/hot/.rss",
-      "fix": "尚無對應建議，需人工判斷"
+      "errors": 8,
+      "last_error": "2026-10-29 01:03:14,521 [WARNING] fetcher.reddit_fetcher: Reddit fetch failed for r/wallstreetbets: HTTPSConnectionPool(host='www.reddit.com', port=443): Max retries exceeded with url: /r/wallstreetbets/hot/.rss (Caused by NameResolutionError(\"HTTPSConnection(host='www.reddit.com', port=443): Failed",
+      "fix": "Port 被佔用或服務未啟動 → 檢查 LaunchAgent 是否正常載入"
     },
     "川普監測": {
       "exists": true,
-      "errors": 0,
-      "last_error": null,
-      "fix": null
+      "errors": 1,
+      "last_error": "2026-10-28 08:30:03,278 WARNING 分析失敗：Jensen Huang's Late-Night Calls With President Tru — 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reaso",
+      "fix": "尚無對應建議，需人工判斷"
     },
     "持倉新聞(台股)": {
       "exists": true,
@@ -76,9 +76,9 @@
     },
     "當沖推播": {
       "exists": true,
-      "errors": 0,
-      "last_error": null,
-      "fix": null
+      "errors": 1,
+      "last_error": "[sj] avg5 2409 失敗: Topic: api/v1/data/kbars, Corr: c9, Client: PYAPI/N124711691/1028/011004/078624/59.115.238.20, payload: {'token': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYmYiOjE3OTMxNDk4MDQsImV4cCI6MTc5MzIzNjIwNCwic2ltdWxhdGlvbiI6ZmFsc2UsInBlcnNvbl9pZCI6Ik4xMjQ3MTE2OTEiLCJ2ZXJzaW9uIjoiMS4zLjIiL",
+      "fix": "尚無對應建議，需人工判斷"
     },
     "隔日沖推播": {
       "exists": true,
@@ -124,9 +124,9 @@
     },
     "daily-stock-analysis": {
       "exists": true,
-      "errors": 3,
-      "last_error": "2026-10-27 13:17:44 | DEBUG    | venv/lib/python3.14/site-packages/httpcore/_trace.py:47 | receive_response_body.failed exception=GeneratorExit()",
-      "fix": "尚無對應建議，需人工判斷"
+      "errors": 0,
+      "last_error": null,
+      "fix": null
     }
   },
   "no_log": [
