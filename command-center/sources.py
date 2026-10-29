@@ -337,18 +337,74 @@ def _stop_loss_amount(baseline: float, shares: float, stop_pct: float) -> float:
     return price_loss + cost
 
 
+def _accumulate_month(months: dict, dt: str, results: list, hits: int,
+                      day_net_pnl: float, day_cost: float, day_pct: float | None) -> None:
+    """把一天的已比對結果累加到所屬月份的彙總（供每月結算表用）。"""
+    m = months.setdefault(dt[:7], {
+        'month': dt[:7], 'checked_days': 0, 'picks': 0, 'hits': 0,
+        'net_pnl': 0.0, 'cost': 0.0, 'r_sum': 0.0, 'r_count': 0,
+        'win_days': 0, 'lose_days': 0, 'flat_days': 0, 'streak': 0,
+        'max_win_streak': 0, 'max_loss_streak': 0,
+        'best_day': None, 'worst_day': None,
+    })
+    m['checked_days'] += 1
+    m['picks'] += len(results)
+    m['hits'] += hits
+    m['net_pnl'] += day_net_pnl
+    m['cost'] += day_cost
+    day_r = [r['r_multiple'] for r in results if r.get('r_multiple') is not None]
+    m['r_sum'] += sum(day_r)
+    m['r_count'] += len(day_r)
+
+    # 連勝／連敗：走訪方向不影響「最長連續」的長度，故與 days 同為新到舊也沒問題
+    if day_net_pnl > 0:
+        m['win_days'] += 1
+        m['streak'] = m['streak'] + 1 if m['streak'] > 0 else 1
+    elif day_net_pnl < 0:
+        m['lose_days'] += 1
+        m['streak'] = m['streak'] - 1 if m['streak'] < 0 else -1
+    else:
+        m['flat_days'] += 1
+        m['streak'] = 0
+    m['max_win_streak'] = max(m['max_win_streak'], m['streak'])
+    m['max_loss_streak'] = max(m['max_loss_streak'], -m['streak'])
+
+    # 當沖的 track_results 沒有 buy_shares（固定 1 張），day_cost 會是 0，
+    # 但最佳／最差單日仍有意義，所以用「有沒有可計價的結果」來判斷。
+    if results and any(r.get('net_pnl') is not None for r in results):
+        day = {'date': dt, 'net_pnl': day_net_pnl, 'net_pnl_pct': day_pct, 'picks': len(results)}
+        if m['best_day'] is None or day_net_pnl > m['best_day']['net_pnl']:
+            m['best_day'] = day
+        if m['worst_day'] is None or day_net_pnl < m['worst_day']['net_pnl']:
+            m['worst_day'] = day
+
+
+def _finalize_months(months: dict) -> list:
+    """月份彙總收尾：補上比率欄位，依時間正序回傳（舊→新，方便看趨勢）。"""
+    out = []
+    for key in sorted(months):
+        m = months[key]
+        m['hit_rate'] = round(m['hits'] / m['picks'] * 100, 1) if m['picks'] else None
+        m['net_pnl_pct'] = round(m['net_pnl'] / m['cost'] * 100, 2) if m['cost'] else None
+        m['avg_r'] = round(m['r_sum'] / m['r_count'], 2) if m['r_count'] else None
+        del m['r_sum']
+        out.append(m)
+    return out
+
+
 def _track_history(track_path: str, r_stop_pct: float | None = None):
     """通用歷史紀錄整理：依日期新到舊排序 + 累積命中率 + 累積損益（供 swing/daytrade history 共用）。
 
     r_stop_pct 提供時，為每筆結果附上 R 倍數（淨損益 ÷ 停損出場實際虧損）。
     """
     if not os.path.exists(track_path):
-        return {'days': [], 'total_hits': 0, 'total_picks': 0, 'hit_rate': None,
+        return {'days': [], 'months': [], 'total_hits': 0, 'total_picks': 0, 'hit_rate': None,
                 'total_net_pnl': 0, 'avg_r': None, 'r_count': 0, 'max_loss_streak': 0}
     with open(track_path, encoding='utf-8') as f:
         track = json.load(f)
 
     days = []
+    months: dict[str, dict] = {}
     total_hits = total_picks = 0
     total_net_pnl = 0
     total_r = r_count = 0
@@ -374,6 +430,7 @@ def _track_history(track_path: str, r_stop_pct: float | None = None):
             total_net_pnl += day_net_pnl
             total_r += sum(r['r_multiple'] for r in results if r.get('r_multiple') is not None)
             r_count += sum(1 for r in results if r.get('r_multiple') is not None)
+            _accumulate_month(months, dt, results, hits, day_net_pnl, day_cost, day_pct)
     hit_rate = round(total_hits / total_picks * 100, 1) if total_picks else None
     avg_r = round(total_r / r_count, 2) if r_count else None
     # 最高連敗天數：當日淨損益為負算一敗；空手日與未比對日都不是虧損，中斷連敗
@@ -384,9 +441,9 @@ def _track_history(track_path: str, r_stop_pct: float | None = None):
             max_streak = max(max_streak, streak)
         else:
             streak = 0
-    return {'days': days, 'total_hits': total_hits, 'total_picks': total_picks,
-            'hit_rate': hit_rate, 'total_net_pnl': total_net_pnl, 'avg_r': avg_r,
-            'r_count': r_count, 'max_loss_streak': max_streak}
+    return {'days': days, 'months': _finalize_months(months), 'total_hits': total_hits,
+            'total_picks': total_picks, 'hit_rate': hit_rate, 'total_net_pnl': total_net_pnl,
+            'avg_r': avg_r, 'r_count': r_count, 'max_loss_streak': max_streak}
 
 
 def swing_history():
