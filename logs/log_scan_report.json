@@ -1,6 +1,6 @@
 {
-  "scanned_at": "2026-10-29 03:00:45",
-  "since": "2026-10-28 03:00:00",
+  "scanned_at": "2026-10-30 03:00:45",
+  "since": "2026-10-29 03:00:00",
   "results": {
     "市場儀表板": {
       "exists": true,
@@ -28,15 +28,15 @@
     },
     "財經新聞分析": {
       "exists": true,
-      "errors": 8,
-      "last_error": "2026-10-29 01:03:14,521 [WARNING] fetcher.reddit_fetcher: Reddit fetch failed for r/wallstreetbets: HTTPSConnectionPool(host='www.reddit.com', port=443): Max retries exceeded with url: /r/wallstreetbets/hot/.rss (Caused by NameResolutionError(\"HTTPSConnection(host='www.reddit.com', port=443): Failed",
-      "fix": "Port 被佔用或服務未啟動 → 檢查 LaunchAgent 是否正常載入"
+      "errors": 0,
+      "last_error": null,
+      "fix": null
     },
     "川普監測": {
       "exists": true,
-      "errors": 1,
-      "last_error": "2026-10-28 08:30:03,278 WARNING 分析失敗：Jensen Huang's Late-Night Calls With President Tru — 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reaso",
-      "fix": "尚無對應建議，需人工判斷"
+      "errors": 0,
+      "last_error": null,
+      "fix": null
     },
     "持倉新聞(台股)": {
       "exists": true,
@@ -77,7 +77,7 @@
     "當沖推播": {
       "exists": true,
       "errors": 1,
-      "last_error": "[sj] avg5 2409 失敗: Topic: api/v1/data/kbars, Corr: c9, Client: PYAPI/N124711691/1028/011004/078624/59.115.238.20, payload: {'token': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYmYiOjE3OTMxNDk4MDQsImV4cCI6MTc5MzIzNjIwNCwic2ltdWxhdGlvbiI6ZmFsc2UsInBlcnNvbl9pZCI6Ik4xMjQ3MTE2OTEiLCJ2ZXJzaW9uIjoiMS4zLjIiL",
+      "last_error": "🌐 大盤即時：資料取得失敗",
       "fix": "尚無對應建議，需人工判斷"
     },
     "隔日沖推播": {
@@ -88,9 +88,9 @@
     },
     "盤中監控": {
       "exists": true,
-      "errors": 2,
-      "last_error": "⚠️ 盤中主力監控啟動失敗（重試 1 次）：TimeoutError，今天不會有訊號",
-      "fix": "網路逾時 → 確認目標服務可達，或增加 timeout 設定"
+      "errors": 5,
+      "last_error": "[universe] 掃描失敗，維持現有 0 檔: 全市場快照為空（session 失效或非交易日）",
+      "fix": "尚無對應建議，需人工判斷"
     },
     "蝦皮軟纖監測": {
       "exists": true,
