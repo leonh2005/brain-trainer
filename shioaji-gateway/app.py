@@ -101,16 +101,19 @@ def _login():
 
 
 def _is_conn_error(e):
-    """只有連線/認證類錯誤才值得重登。業務錯誤（KeyError 查無契約、ValueError 參數錯）
-    重登也救不了，反而讓所有並行客戶端白白斷線重連一次（每次約 2s，期間全體排隊）。
+    """連線/認證類錯誤才重登，業務錯誤（KeyError 查無契約、ValueError 參數錯）重登也救不了，
+    反而讓所有並行客戶端白白斷線重連一次（每次約 2s，期間全體排隊）。
     2026-10-28 實測：連打 3 個不存在的代碼 → 3 次重登。
 
-    清單依據實測：logout 後呼叫 ticks/kbars/snapshots 全部拋 AuthError（不是 TokenError，
-    後者是 AuthError 子類）。漏掉 AuthError 會讓連線真的死掉時不重登＝永久卡死。"""
+    判定改採「排除已知業務例外」而非白名單 —— 2026-10-29 事故：session 未建立時 Rust 層
+    拋的是 'contracts: transient transport failure ... SubCode(SessionNotEstablished)'，
+    不在原本的白名單（AuthError/ConnectionError/ResponseRecvError/ServerError/TimeoutError）
+    內 → 每個請求 0.014 秒直接回錯且永不重登，gateway 從 01:00 卡到 09:20 全服務取價失敗。
+    白名單天生會漏掉未知例外類型；改成未知一律當連線問題（fail-safe），只有確定重登無用的
+    才原樣往上拋。"""
     import shioaji as sj
-    return isinstance(e, (sj.AuthError, sj.ShioajiConnectionError,
-                          sj.ResponseRecvError, sj.ServerError,
-                          sj.ShioajiTimeoutError))
+    return not isinstance(e, (LookupError, ValueError, TypeError, AttributeError,
+                              sj.ValidationError, sj.BadRequestError))
 
 
 def _run(fn, priority=0):
@@ -124,6 +127,8 @@ def _run(fn, priority=0):
             return fn(_conn["api"])
         except Exception as e:
             if not _is_conn_error(e):
+                print(f"[{datetime.now():%Y-%m-%d %H:%M:%S}] 業務錯誤不重登 {type(e).__name__}: {e}",
+                      flush=True)
                 raise            # 業務錯誤：不動連線，直接往上傳
             try:
                 if _conn["api"] is not None:

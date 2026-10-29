@@ -6,6 +6,7 @@
 import json
 import os
 import time
+from datetime import datetime, timedelta, timezone
 
 from flask import Flask, jsonify, render_template, request
 
@@ -126,25 +127,80 @@ def _fetch_via_yfinance():
     }
 
 
-def _regional_indices():
-    """日股(日經225)、韓股(KOSPI) 大盤，走 yfinance(Shioaji 無海外指數)。"""
+# 日韓大盤：新浪 znb_* 即時源（延遲約 10 秒）優先，yfinance 備援。
+# 2026-10-29 實測：yfinance 免費源延遲 15-21 分鐘（^N225 分K 落後 16 分、^KS11 落後 21 分），
+# 韓股當日急殺時看板會少掉 1.3 個百分點。新浪 int_nikkei / int_kospi 是壞別名
+# （分別回 44,946 與空字串），只有 znb_NKY / znb_KOSPI 與 yfinance 前收一致可用。
+REGIONAL_INDICES = (
+    ("N225", "日經225", "znb_NKY", "^N225"),
+    ("KOSPI", "韓股KOSPI", "znb_KOSPI", "^KS11"),
+)
+SINA_QUOTE_MAX_AGE = 600  # 報價時間戳超過 10 分鐘視為凍結，退回 yfinance
+
+
+def _sina_index_quote(symbol):
+    """新浪 znb_* 國際指數即時報價，回傳 {price, prev_close, ts} 或 None。
+    欄位：名稱,現價,漲跌點,漲跌%,_,_,日期,時間,開,昨收,高,低；時間戳為北京時間 (UTC+8)。"""
+    import urllib.request
+
+    req = urllib.request.Request(
+        f"https://hq.sinajs.cn/list={symbol}",
+        headers={"Referer": "https://finance.sina.com.cn", "User-Agent": "Mozilla/5.0"},
+    )
+    with urllib.request.urlopen(req, timeout=8) as resp:
+        text = resp.read().decode("gbk", errors="replace")
+    parts = text.split('"')[1].split(",") if text.count('"') >= 2 else []
+    if len(parts) < 10 or not parts[1] or not parts[9]:
+        return None
+    try:
+        price = float(parts[1])
+        prev_close = float(parts[9])
+        ts = datetime.strptime(f"{parts[6]} {parts[7]}", "%Y-%m-%d %H:%M:%S")
+    except ValueError:
+        return None
+    if price <= 0 or prev_close <= 0:
+        return None
+    if not 0.5 < price / prev_close < 2.0:
+        return None                      # 欄位順序若被改動會解析出錯位數字，用漲跌幅合理性擋掉
+    ts = ts.replace(tzinfo=timezone(timedelta(hours=8)))
+    if (datetime.now(timezone.utc) - ts).total_seconds() > SINA_QUOTE_MAX_AGE:
+        return None                      # feed 凍結，別把舊價當即時價
+    return {"price": price, "prev_close": prev_close, "ts": ts}
+
+
+def _yf_index_quote(ticker):
+    """yfinance 備援報價（延遲 15-21 分鐘），回傳 {price, prev_close} 或 None。"""
     import yfinance as yf
+
+    closes = yf.Ticker(ticker).history(period="5d")["Close"].dropna()
+    if len(closes) < 2:
+        return None
+    return {"price": float(closes.iloc[-1]), "prev_close": float(closes.iloc[-2])}
+
+
+def _regional_indices():
+    """日股(日經225)、韓股(KOSPI) 大盤。新浪即時優先，yfinance 備援。"""
     out = []
-    for code, name, ticker in [("N225", "日經225", "^N225"), ("KOSPI", "韓股KOSPI", "^KS11")]:
+    for code, name, sina_symbol, ticker in REGIONAL_INDICES:
+        quote, source = None, None
         try:
-            closes = yf.Ticker(ticker).history(period="5d")["Close"].dropna()
-            if len(closes) < 2:
-                continue
-            close, prev = float(closes.iloc[-1]), float(closes.iloc[-2])
-            out.append({
-                "code": code,
-                "name": name,
-                "price": round(close, 2),
-                "change_pct": round((close - prev) / prev * 100, 2),
-                "change_point": round(close - prev, 2),
-            })
+            quote, source = _sina_index_quote(sina_symbol), "sina"
         except Exception:
-            continue
+            pass
+        if quote is None:
+            try:
+                quote, source = _yf_index_quote(ticker), "yfinance"
+            except Exception:
+                continue
+        close, prev = quote["price"], quote["prev_close"]
+        out.append({
+            "code": code,
+            "name": name,
+            "price": round(close, 2),
+            "change_pct": round((close - prev) / prev * 100, 2) if prev else None,
+            "change_point": round(close - prev, 2) if prev else None,
+            "source": source,
+        })
     return out
 
 
@@ -346,20 +402,33 @@ def _fetch_stocks_intraday(force=False):
 
 
 def _fetch_regional_intraday(force=False):
-    """日經225、韓股KOSPI 當日 1 分鐘走勢（yfinance，Shioaji 無海外指數）。"""
+    """日經225、韓股KOSPI 當日 1 分鐘走勢（yfinance 畫曲線 + 新浪即時末端點）。"""
     now = time.time()
     if not force and _regional_intraday_cache["data"] is not None and now - _regional_intraday_cache["ts"] < INTRADAY_CACHE_TTL:
         return _regional_intraday_cache["data"]
 
     import yfinance as yf
     out = []
-    for code, name, ticker in [("N225", "日經225", "^N225"), ("KOSPI", "韓股KOSPI", "^KS11")]:
+    for code, name, sina_symbol, ticker in REGIONAL_INDICES:
         try:
             t = yf.Ticker(ticker)
             intraday = t.history(period="1d", interval="1m")["Close"].dropna()
             points = [{"t": idx.strftime("%H:%M"), "price": float(v)} for idx, v in intraday.items()]
             daily = t.history(period="5d")["Close"].dropna()
             prev_close = float(daily.iloc[-2]) if len(daily) >= 2 else None
+            # 末端補新浪即時點：yfinance 分K 延遲 15-21 分鐘，不補會跟上方標題的價格對不上。
+            # 標籤時間要用交易所時區換算（日/韓皆 UTC+9），不能直接沿用新浪的北京時間。
+            try:
+                sina = _sina_index_quote(sina_symbol)
+            except Exception:
+                sina = None
+            if sina and points and intraday.index[-1] < sina["ts"]:
+                label = sina["ts"].astimezone(intraday.index[-1].tzinfo).strftime("%H:%M")
+                if points[-1]["t"] == label:
+                    points[-1]["price"] = round(sina["price"], 2)
+                else:
+                    points.append({"t": label, "price": round(sina["price"], 2)})
+                prev_close = sina["prev_close"] or prev_close
             out.append({"code": code, "name": name, "points": points, "prev_close": prev_close})
         except Exception:
             out.append({"code": code, "name": name, "points": [], "prev_close": None})
