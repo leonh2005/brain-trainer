@@ -829,6 +829,36 @@
       "lows_pct": 1.2,
       "spx_above_ma50": false,
       "triggered": false
+    },
+    {
+      "date": "2026-10-27",
+      "highs": 12,
+      "lows": 8,
+      "total": 500,
+      "highs_pct": 2.4,
+      "lows_pct": 1.6,
+      "spx_above_ma50": true,
+      "triggered": false
+    },
+    {
+      "date": "2026-10-28",
+      "highs": 19,
+      "lows": 9,
+      "total": 500,
+      "highs_pct": 3.8,
+      "lows_pct": 1.79,
+      "spx_above_ma50": true,
+      "triggered": false
+    },
+    {
+      "date": "2026-10-29",
+      "highs": 28,
+      "lows": 3,
+      "total": 500,
+      "highs_pct": 5.6,
+      "lows_pct": 0.6,
+      "spx_above_ma50": true,
+      "triggered": false
     }
   ]
 }

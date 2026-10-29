@@ -3,6 +3,13 @@
 持倉新聞監控 — 每日兩次推播
 - 08:30 台股持倉多空判斷
 - 21:00 美股持倉多空判斷
+
+多空判定規則（2026-10 調整）：
+- 完全沒有新聞 → direction="none"，不計入整體方向；不再用 5 分中性假裝有資訊
+- score 是「影響強度」而非多空分數，顯示時一律附上方向（8/10 利空）
+- 整體方向 = (多方總分 − 空方總分) ÷ 總分，絕對值 < 15% 判中性，不硬選邊
+- 單一標的 score >= 8 時，另外列「重大利多／重大利空」，並標註原因類別
+  （財報／法規政策／供應鏈／地緣政治／總經／產品技術／競爭態勢／資金面／其他）
 """
 import hashlib
 import json
@@ -238,9 +245,12 @@ def analyze(holding: dict, articles: list[dict],
             big_holder: float | None = None) -> dict:
     """用 DeepSeek V3 分析一個持倉的多空情緒。"""
     if not articles:
+        # direction="none" 表示「沒有資訊」，不是「中性」—— 不能拿去投票，
+        # 否則 7 檔沒新聞的 ETF 各給 5 分，會把真正有利多的標的抵銷掉。
         return {
-            "direction": "neutral",
-            "score": 5,
+            "direction": "none",
+            "score": 0,
+            "category": "",
             "summary": "過去 24 小時無相關新聞",
             "push": False,
         }
@@ -281,10 +291,20 @@ def analyze(holding: dict, articles: list[dict],
 
 請根據上述資訊（新聞＋法人動向＋大戶持股）對此標的做出多空判斷。
 
+注意：
+1. direction 是方向，score 是「影響強度」（1=幾乎無影響，10=重大事件），兩者互相獨立。
+   財報大幅不如預期、單日暴跌、重大訂單等事件請給 8 分以上。
+2. category 是「最主要的驅動原因」，只能從下列選一個：
+   財報、法規政策、供應鏈、地緣政治、總經、產品技術、競爭態勢、資金面、其他
+   （財報＝營收獲利指引；法規政策＝監管/補貼/關稅；供應鏈＝缺料/漲價/斷鏈；
+     地緣政治＝戰爭/衝突；總經＝利率/經濟數據；產品技術＝新產品/AI 技術；
+     競爭態勢＝市占/價格戰；資金面＝法人買賣/評等調整）
+
 回傳純 JSON，格式：
 {{
   "direction": "bullish" | "bearish" | "neutral",
-  "score": <影響分數 1-10，10 最強>,
+  "score": <影響強度 1-10，10 最強>,
+  "category": "<上面九個類別之一，逐字照抄>",
   "summary": "<30字內的關鍵判斷>",
   "key_factor": "<最重要的一則新聞標題，15字內摘要>",
   "push": <true 若 score >= 6，否則 false>
@@ -299,34 +319,127 @@ def analyze(holding: dict, articles: list[dict],
             model="deepseek-chat",
             messages=[{"role": "user", "content": prompt}],
             temperature=0.1,
-            max_tokens=300,
+            max_tokens=350,
         )
         text = re.sub(r"```[a-z]*\n?", "", resp.choices[0].message.content.strip()).strip("`").strip()
-        return json.loads(text)
+        return _normalize_result(json.loads(text))
     except Exception as e:
         logger.error("DeepSeek 分析失敗 %s：%s", holding["code"], e)
         return {
-            "direction": "neutral",
+            "direction": "error",
             "score": 0,
+            "category": "",
             "summary": "分析失敗",
             "key_factor": "",
             "push": False,
         }
 
 
+# 重大事件的驅動原因分類（模型只能從這幾個挑，寫錯就歸「其他」）
+CATEGORIES = ("財報", "法規政策", "供應鏈", "地緣政治", "總經",
+              "產品技術", "競爭態勢", "資金面", "其他")
+
+_CATEGORY_ALIASES = {
+    "財報": "財報", "業績": "財報", "獲利": "財報", "營收": "財報", "指引": "財報",
+    "法規": "法規政策", "政策": "法規政策", "監管": "法規政策", "關稅": "法規政策",
+    "供應鏈": "供應鏈", "缺料": "供應鏈", "漲價": "供應鏈", "斷鏈": "供應鏈", "訂單": "供應鏈",
+    "地緣": "地緣政治", "戰爭": "地緣政治", "衝突": "地緣政治", "制裁": "地緣政治",
+    "總經": "總經", "經濟": "總經", "利率": "總經", "通膨": "總經", "匯率": "總經",
+    "產品": "產品技術", "技術": "產品技術", "新品": "產品技術", "AI": "產品技術",
+    "競爭": "競爭態勢", "市占": "競爭態勢", "價格戰": "競爭態勢",
+    "資金": "資金面", "籌碼": "資金面", "法人": "資金面", "評等": "資金面",
+}
+
+
+def normalize_category(value) -> str:
+    """把模型可能寫歪的類別名對回固定清單，對不上就歸「其他」。"""
+    if not value:
+        return "其他"
+    text = str(value).strip()
+    if text in CATEGORIES:
+        return text
+    for key, cat in _CATEGORY_ALIASES.items():
+        if key in text:
+            return cat
+    return "其他"
+
+
+def _normalize_result(data: dict) -> dict:
+    """模型輸出的欄位防呆：方向／分數／類別三欄都可能寫壞。"""
+    if data.get("direction") not in ("bullish", "bearish", "neutral"):
+        data["direction"] = "neutral"
+    try:
+        score = int(data.get("score", 0))
+    except (TypeError, ValueError):
+        score = 0
+    data["score"] = max(0, min(10, score))
+    data["category"] = normalize_category(data.get("category"))
+    return data
+
+
 def direction_emoji(d: str) -> str:
-    return {"bullish": "📈", "bearish": "📉", "neutral": "➡️"}.get(d, "➡️")
+    return {"bullish": "📈", "bearish": "📉", "neutral": "➡️",
+            "none": "➡️", "error": "⚠️"}.get(d, "➡️")
 
 
-def overall_direction(results: list[dict]) -> str:
-    scores = {"bullish": 0, "bearish": 0, "neutral": 0}
+def score_label(result: dict) -> str:
+    """分數加上方向，避免「8/10」被讀成看多 8 分。"""
+    d = result.get("direction")
+    score = result.get("score", 0)
+    if d == "none":
+        return "無新聞"
+    if d == "error":
+        return "分析失敗"
+    if d == "neutral":
+        return f"{score}/10 中性"
+    return f"{score}/10 {'利多' if d == 'bullish' else '利空'}"
+
+
+def display_name(holding: dict) -> str:
+    """名稱若已含代碼就不再重複括號（例如「日本股市（EWJ）」）。"""
+    name = holding["name"]
+    suffix = f"（{holding['code']}）"
+    return name[:-len(suffix)] if name.endswith(suffix) else name
+
+
+# 淨值佔總分的比例低於此值就判中性 —— 差距太小不該硬選一邊
+OVERALL_NEUTRAL_BAND = 0.15
+
+
+def overall_direction(results: list[dict]) -> tuple[str, dict]:
+    """以「有號分數」決定整體方向，並回傳計算明細。
+
+    只看真正有資訊的標的（跳過 none/error），再用
+    (多方總分 − 空方總分) / 總分 判斷強度；差距小於 OVERALL_NEUTRAL_BAND 判中性。
+    """
+    sums = {"bullish": 0, "bearish": 0, "neutral": 0}
+    counts = {"bullish": 0, "bearish": 0, "neutral": 0}
     for r in results:
-        d = r.get("direction", "neutral")
-        scores[d] = scores.get(d, 0) + r.get("score", 5)
-    return max(scores, key=scores.get)
+        d = r.get("direction")
+        if d not in sums:
+            continue                    # none / error 沒有資訊，不投票
+        sums[d] += r.get("score", 0) or 0
+        counts[d] += 1
+
+    total = sum(sums.values())
+    net = sums["bullish"] - sums["bearish"]
+    stats = {"sums": sums, "counts": counts, "net": net, "total": total}
+
+    if total == 0:
+        return "none", stats
+    ratio = net / total
+    if ratio >= OVERALL_NEUTRAL_BAND:
+        return "bullish", stats
+    if ratio <= -OVERALL_NEUTRAL_BAND:
+        return "bearish", stats
+    return "neutral", stats
 
 
 def send_telegram(text: str):
+    if os.getenv("PORTFOLIO_NEWS_DRY") == "1":
+        logger.info("DRY_RUN：不送出 Telegram，以下為訊息內容")
+        print(text)
+        return
     try:
         r = requests.post(
             f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage",
@@ -360,6 +473,7 @@ def run_session(holdings: list[dict], session_label: str):
 
     monday = _is_monday()
     results = []
+    entries = []
     lines = []
 
     for h in holdings:
@@ -386,33 +500,57 @@ def run_session(holdings: list[dict], session_label: str):
 
         result = analyze(h, deduped, institutional, big_holder)
         results.append(result)
+        entries.append((h, result))
 
         emoji = direction_emoji(result["direction"])
-        score = result["score"]
         summary = result["summary"]
         key = result.get("key_factor", "")
 
-        # 最新一篇文章的發布時間
+        # 最新一篇文章的發布時間（沒有新聞就沒有時間可標）
         news_age = ""
-        if deduped and deduped[0].get("pub"):
+        if deduped and deduped[0].get("pub") and result["direction"] != "none":
             delta = datetime.now(UTC) - deduped[0]["pub"]
             hrs = int(delta.total_seconds() // 3600)
             news_age = f" <i>（最新：{hrs}小時前）</i>" if hrs < 24 else f" <i>（最新：{delta.days}天前）</i>"
 
-        line = f"{emoji} <b>{h['name']}（{h['code']}）</b> {score}/10{news_age}\n"
-        line += f"   {summary}"
+        line = (f"{emoji} <b>{display_name(h)}（{h['code']}）</b> "
+                f"{score_label(result)}{news_age}")
+        if result["direction"] != "none":
+            line += f"\n   {summary}"
         if key:
             line += f"\n   └ {key}"
         lines.append(line)
 
-    overall = overall_direction(results)
+    overall, stats = overall_direction(results)
     overall_emoji = direction_emoji(overall)
-    overall_label = {"bullish": "偏多", "bearish": "偏空", "neutral": "中性"}.get(overall, "中性")
+    overall_label = {"bullish": "偏多", "bearish": "偏空",
+                     "neutral": "中性", "none": "無資料"}.get(overall, "中性")
+    logger.info("整體方向 %s（多 %d／空 %d／中 %d，淨值 %+d）",
+                overall, stats["sums"]["bullish"], stats["sums"]["bearish"],
+                stats["sums"]["neutral"], stats["net"])
+
+    # 重大單一事件不該被平均掉，單獨列出來並標上原因類別
+    alerts = []
+    for label, want in (("⚠️ <b>重大利空</b>", "bearish"), ("🚀 <b>重大利多</b>", "bullish")):
+        hits = [(h, r) for h, r in entries
+                if r.get("direction") == want and r.get("score", 0) >= 8]
+        if not hits:
+            continue
+        groups: dict[str, list[str]] = {}
+        for h, r in hits:
+            cat = r.get("category") or "其他"
+            groups.setdefault(cat, []).append(f"{display_name(h)} {r['score']}/10")
+        for cat, items in groups.items():
+            alerts.append(f"{label}｜{cat}：{'、'.join(items)}")
 
     now_str = datetime.now().strftime("%m/%d %H:%M")
     header = f"📊 <b>{session_label}持倉情報</b>（{now_str}）\n\n"
     body   = "\n\n".join(lines)
-    footer = f"\n\n{overall_emoji} <b>整體方向：{overall_label}</b>"
+    footer = (f"\n\n{overall_emoji} <b>整體方向：{overall_label}</b>"
+              f"（多方 {stats['sums']['bullish']}／空方 {stats['sums']['bearish']}"
+              f"／中性 {stats['sums']['neutral']}，淨值 {stats['net']:+d}）")
+    if alerts:
+        footer += "\n" + "\n".join(alerts)
 
     send_telegram(header + body + footer)
     logger.info("%s 時段推播完成", session_label)
