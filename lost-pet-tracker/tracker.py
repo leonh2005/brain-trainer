@@ -33,9 +33,9 @@ TELEGRAM_CHAT = "7556217543"
 NOTIFY_AFTER_DAYS = 3
 MAX_POST_AGE_DAYS = 14  # 超過兩週的貼文不算「當前協尋」（PTT 搜尋按相關度，會撈到陳年舊文）
 
-# 實測：FB 中文複合詞搜尋會把結果吃光，單詞＋地區效果最好
-FB_QUERIES = ["協尋 台北", "協尋 新北", "走失 台北", "走失 新北", "懸賞 走失"]
-THREADS_QUERIES = ["協尋 走失", "走失 懸賞"]
+# FB 社團要加入成員才看得到貼文流，headless 抓不到內容，已停用（2026-10-31 決議）。
+# Threads 是目前唯一有量的來源。
+THREADS_QUERIES = ["協尋 狗", "協尋 貓", "走失 狗", "走失 貓", "走失 懸賞", "協尋 台北"]
 PTT_BOARDS = ["Pet_Get", "cat", "dog"]
 
 # 台北市 12 區（與其他縣市有同名區，需搭配「台北」字樣才算）
@@ -120,8 +120,11 @@ def too_old(text: str, url: str, max_days: int = MAX_POST_AGE_DAYS) -> bool:
     m = re.search(r"/M\.(\d+)\.", url)
     if m:
         posted = datetime.fromtimestamp(int(m.group(1))).date()
+    elif re.search(r"\d+\s*(分鐘|小時|天)前", text):
+        return False  # 相對時間（「3小時前」）一定是新的
     else:
-        m = re.search(r"(20\d{2})-(\d{2})-(\d{2})", text)
+        # Threads 的日期是 2026-1-27 單位數月份，不能只抓兩位數
+        m = re.search(r"(20\d{2})-(\d{1,2})-(\d{1,2})", text)
         if m:
             try:
                 posted = date(int(m.group(1)), int(m.group(2)), int(m.group(3)))
@@ -210,38 +213,6 @@ def load_cookies(host_like: str) -> list[dict]:
         }
         for h, n, v, p, s, hh in rows
     ]
-
-
-def scrape_facebook(page) -> list[dict]:
-    """FB 貼文搜尋；抓所有貼文連結與其文字"""
-    results = []
-    for query in FB_QUERIES:
-        url = f"https://www.facebook.com/search/posts?q={urllib.parse.quote(query)}"
-        try:
-            page.goto(url, wait_until="domcontentloaded", timeout=45000)
-            page.wait_for_timeout(4500)
-            for _ in range(6):  # 滾動載入更多
-                page.evaluate("window.scrollTo(0, document.body.scrollHeight)")
-                page.wait_for_timeout(2200)
-            # 實測：headless 下 role=article / feed 子元素都抓不到貼文正文，
-            # 只有整頁 innerText 裡的長句段是真的貼文（其餘是專頁卡片與導覽雜訊）。
-            body_text = page.inner_text("body")
-            added = 0
-            for line in body_text.split("\n"):
-                text = line.strip()
-                if len(text) < 40 or text.count("Facebook") > 3:
-                    continue
-                results.append({
-                    "id": f"fb:{hashlib_id(text[:200])}",
-                    "platform": "facebook",
-                    "url": "",
-                    "text": text[:800],
-                })
-                added += 1
-            log(f"FB「{query}」→ {added} 段")
-        except Exception as e:
-            log(f"FB「{query}」失敗：{type(e).__name__}: {str(e)[:80]}")
-    return results
 
 
 def scrape_threads(page) -> list[dict]:
@@ -510,9 +481,8 @@ def main() -> None:
             user_agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 "
                        "(KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
         )
-        ctx.add_cookies(load_cookies("threads.com") + load_cookies("facebook.com"))
+        ctx.add_cookies(load_cookies("threads.com"))
         page = ctx.new_page()
-        posts.extend(scrape_facebook(page))
         posts.extend(scrape_threads(page))
         browser.close()
 
