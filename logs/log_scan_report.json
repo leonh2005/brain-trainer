@@ -1,6 +1,6 @@
 {
-  "scanned_at": "2026-10-31 03:00:46",
-  "since": "2026-10-30 03:00:00",
+  "scanned_at": "2026-11-01 03:00:46",
+  "since": "2026-10-31 03:00:01",
   "results": {
     "市場儀表板": {
       "exists": true,
@@ -28,9 +28,9 @@
     },
     "財經新聞分析": {
       "exists": true,
-      "errors": 0,
-      "last_error": null,
-      "fix": null
+      "errors": 4,
+      "last_error": "2026-10-31 04:30:14,089 [WARNING] fetcher.ptt_fetcher: PTT index fetch failed: HTTPSConnectionPool(host='www.ptt.cc', port=443): Read timed out. (read timeout=10)",
+      "fix": "網路逾時 → 確認目標服務可達，或增加 timeout 設定"
     },
     "川普監測": {
       "exists": true,
@@ -76,9 +76,9 @@
     },
     "當沖推播": {
       "exists": true,
-      "errors": 1,
-      "last_error": "[sj] avg5 2409 失敗: Topic: api/v1/data/kbars, Corr: c9, Client: PYAPI/N124711691/1030/011003/610580/59.115.249.16, payload: {'token': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYmYiOjE3OTMzMjI2MDQsImV4cCI6MTc5MzQwOTAwNCwic2ltdWxhdGlvbiI6ZmFsc2UsInBlcnNvbl9pZCI6Ik4xMjQ3MTE2OTEiLCJ2ZXJzaW9uIjoiMS4zLjIiL",
-      "fix": "尚無對應建議，需人工判斷"
+      "errors": 0,
+      "last_error": null,
+      "fix": null
     },
     "隔日沖推播": {
       "exists": true,
@@ -88,9 +88,9 @@
     },
     "盤中監控": {
       "exists": true,
-      "errors": 3,
-      "last_error": "⚠️ 盤中主力監控啟動失敗（重試 2 次）：TimeoutError，今天不會有訊號",
-      "fix": "網路逾時 → 確認目標服務可達，或增加 timeout 設定"
+      "errors": 0,
+      "last_error": null,
+      "fix": null
     },
     "蝦皮軟纖監測": {
       "exists": true,
