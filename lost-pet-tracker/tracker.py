@@ -13,7 +13,6 @@ import os
 import re
 import sqlite3
 import sys
-import time
 import urllib.parse
 import urllib.request
 from datetime import date, datetime, timedelta
@@ -330,8 +329,8 @@ def is_still_alive(url: str) -> bool:
     return len(html) > 2000 and not any(m in html for m in markers)
 
 
-def check_resolved(conn: sqlite3.Connection) -> None:
-    """每半天跑一次：重抓有 URL 的案件，偵測是否已結案並通知"""
+def check_resolved(conn: sqlite3.Connection) -> list[str]:
+    """重抓有 URL 的案件，偵測是否已結案並標記，回傳新結案的貼文 id 清單"""
     cutoff = (date.today() - timedelta(days=90)).isoformat()
     rows = conn.execute(
         "SELECT id, url, district, reward, text, dead_misses FROM posts "
@@ -340,10 +339,10 @@ def check_resolved(conn: sqlite3.Connection) -> None:
     ).fetchall()
     if not rows:
         log("沒有需要檢查結案的案件")
-        return
+        return []
 
     log(f"檢查 {len(rows)} 件是否結案")
-    alerts, resolved_ids = [], []
+    resolved_ids = []
     for post_id, url, district, reward, text, dead_misses in rows:
         html = fetch_html(url)
         if html is None:
@@ -353,22 +352,86 @@ def check_resolved(conn: sqlite3.Connection) -> None:
             continue
         if not detect_resolved(html):
             continue
-        alerts.append(f"✅ {district or '雙北'}／{reward or '未標金額'}\n{text[:100]}\n{url}")
+        conn.execute(
+            "UPDATE posts SET resolved = 1, resolved_at = ? WHERE id = ?",
+            (date.today().isoformat(), post_id),
+        )
         resolved_ids.append(post_id)
         log(f"  {post_id[:20]} 已結案")
     conn.commit()
+    log(f"檢查完成，{len(resolved_ids)} 件新結案")
+    return resolved_ids
 
-    # 推播成功才標記結案，避免 Telegram 失敗後永久漏掉
-    if alerts and notify("🐾 協尋案件已結案\n\n" + "\n\n".join(alerts)):
-        for post_id in resolved_ids:
-            conn.execute(
-                "UPDATE posts SET resolved = 1, resolved_at = ? WHERE id = ?",
-                (date.today().isoformat(), post_id),
-            )
-        conn.commit()
-        log(f"已標記 {len(resolved_ids)} 件結案")
-    elif not alerts:
-        log("檢查完成，0 件新結案")
+
+def format_entry(row: tuple) -> str:
+    """district, reward, text, url → 一行摘要"""
+    district, reward, text, url = row
+    first_line = text.split("\n")[0][:70]
+    line = f"• {district or '雙北'}／{reward or '未標金額'}　{first_line}"
+    return f"{line}\n  {url}" if url else line
+
+
+def build_daily_report(conn: sqlite3.Connection, today: str) -> str:
+    """每日變動摘要：今天新增、滿 3 天仍在、今天結案、追蹤中總數"""
+    cutoff = (date.today() - timedelta(days=90)).isoformat()
+    active = conn.execute(
+        "SELECT id, platform, url, district, reward, text, first_seen FROM posts "
+        "WHERE resolved = 0 AND first_seen >= ? ORDER BY first_seen DESC",
+        (cutoff,),
+    ).fetchall()
+
+    fresh, mature = [], []
+    for post_id, platform, url, district, reward, text, first_seen in active:
+        days = (date.today() - date.fromisoformat(first_seen)).days
+        row = (district, reward, text, url)
+        if days >= NOTIFY_AFTER_DAYS:
+            # Threads 未登入抓到的只是 JS 空殼，改用「實際被掃到的天數」
+            if url and platform != "threads":
+                alive = is_still_alive(url)
+            else:
+                seen_days = conn.execute(
+                    "SELECT COUNT(*) FROM sightings WHERE post_id = ?", (post_id,)
+                ).fetchone()[0]
+                alive = seen_days >= NOTIFY_AFTER_DAYS
+            log(f"  {post_id}（{days} 天）：{'仍在' if alive else '已消失'}")
+            if alive:
+                mature.append((days, row))
+        elif first_seen == today:
+            fresh.append(row)
+
+    resolved = conn.execute(
+        "SELECT district, reward, text, url FROM posts "
+        "WHERE resolved = 1 AND resolved_at = ? ORDER BY rowid DESC",
+        (today,),
+    ).fetchall()
+    total = conn.execute("SELECT COUNT(*) FROM posts").fetchone()[0]
+
+    lines = [f"🐾 雙北協尋日報 {today}", ""]
+    if fresh:
+        lines.append(f"🆕 今日新增 {len(fresh)} 件")
+        lines.extend(format_entry(r) for r in fresh)
+        lines.append("")
+    if mature:
+        lines.append(f"📌 已滿 {NOTIFY_AFTER_DAYS} 天仍在 {len(mature)} 件")
+        lines.extend(format_entry(r) for _, r in sorted(mature, key=lambda x: -x[0]))
+        lines.append("")
+    if resolved:
+        lines.append(f"✅ 今日結案 {len(resolved)} 件")
+        lines.extend(format_entry(r) for r in resolved)
+        lines.append("")
+    if not (fresh or mature or resolved):
+        lines.append("今日無新變動")
+        lines.append("")
+    lines.append(f"📊 追蹤中 {len(active)} 件（累計掃到 {total} 筆符合條件）")
+    return "\n".join(lines)
+
+
+def save_daily_report(text: str, today: str) -> None:
+    path = os.path.join(BASE_DIR, "data", "daily")
+    os.makedirs(path, exist_ok=True)
+    with open(os.path.join(path, f"{today}.md"), "w", encoding="utf-8") as f:
+        f.write(text + "\n")
+    log(f"日報已存：data/daily/{today}.md")
 
 
 # ─── 通知 ────────────────────────────────────────────────────────────
@@ -474,46 +537,11 @@ def main() -> None:
         for sample in samples:
             log(f"  未通過 {platform}：{sample}")
 
-    # 檢查滿 3 天且仍存在的，推播
-    cutoff = (date.today() - timedelta(days=NOTIFY_AFTER_DAYS)).isoformat()
-    candidates = conn.execute(
-        "SELECT id, platform, url, district, reward, text, first_seen "
-        "FROM posts WHERE first_seen <= ? AND notified = 0 AND resolved = 0",
-        (cutoff,),
-    ).fetchall()
-
-    alerts, ready_ids = [], []
-    for post_id, platform, url, district, reward, text, first_seen in candidates:
-        # Threads 未登入抓到的只是 JS 空殼（沒有正文），不能用 HTML 判斷存活
-        if url and platform != "threads":
-            alive = is_still_alive(url)
-        else:
-            # 抓不到可驗證的頁面時，改用「實際被掃到的天數」
-            seen_days = conn.execute(
-                "SELECT COUNT(*) FROM sightings WHERE post_id = ?", (post_id,)
-            ).fetchone()[0]
-            alive = seen_days >= NOTIFY_AFTER_DAYS
-        days = (date.today() - date.fromisoformat(first_seen)).days
-        log(f"檢查 {post_id}（{days} 天）：{'仍在' if alive else '已消失'}")
-        if not alive:
-            continue
-        alerts.append(
-            f"【{days} 天仍在協尋】{district or '雙北'}／{reward or '未標金額'}\n"
-            f"{text[:120]}\n{url}"
-        )
-        ready_ids.append(post_id)
-
-    # 推播成功才標記，避免 Telegram 失敗後這批永遠不再推
-    if alerts and notify("🐾 雙北走失動物協尋（有獎金）\n\n" + "\n\n".join(alerts)):
-        for post_id in ready_ids:
-            conn.execute("UPDATE posts SET notified = 1 WHERE id = ?", (post_id,))
-        conn.commit()
-        log(f"已標記 {len(ready_ids)} 件推播")
-    elif not alerts:
-        log("本次無需推播")
-
-    # 早上這輪順便做結案檢查，晚上 21:00 再由 --check 補一次，合起來是每 12 小時
+    # 先標記結案，再組當日摘要一起推（每天固定一則，沒有變化也會發）
     check_resolved(conn)
+    report = build_daily_report(conn, today)
+    save_daily_report(report, today)
+    notify(report)
 
     conn.close()
     log("=== 完成 ===")
@@ -524,7 +552,13 @@ if __name__ == "__main__":
         if "--check" in sys.argv:
             # 只檢查既有案件是否結案（每半天跑一次），不重新掃描
             conn = init_db()
-            check_resolved(conn)
+            newly = check_resolved(conn)
+            if newly:
+                rows = conn.execute(
+                    f"SELECT district, reward, text, url FROM posts WHERE id IN "
+                    f"({','.join('?' * len(newly))})", newly
+                ).fetchall()
+                notify("🐾 協尋案件已結案\n\n" + "\n\n".join(format_entry(r) for r in rows))
             conn.close()
         else:
             main()
