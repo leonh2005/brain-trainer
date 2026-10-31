@@ -31,6 +31,7 @@ CHROME = os.path.expanduser(
 TELEGRAM_TOKEN = os.path.expanduser("~/CCProject/.secrets/telegram_token.txt")
 TELEGRAM_CHAT = "7556217543"
 NOTIFY_AFTER_DAYS = 3
+MAX_POST_AGE_DAYS = 14  # 超過兩週的貼文不算「當前協尋」（PTT 搜尋按相關度，會撈到陳年舊文）
 
 # 實測：FB 中文複合詞搜尋會把結果吃光，單詞＋地區效果最好
 FB_QUERIES = ["協尋 台北", "協尋 新北", "走失 台北", "走失 新北", "懸賞 走失"]
@@ -106,6 +107,29 @@ def init_db() -> sqlite3.Connection:
         conn.execute("ALTER TABLE posts ADD COLUMN dead_misses INTEGER DEFAULT 0")
     conn.commit()
     return conn
+
+
+def too_old(text: str, url: str, max_days: int = MAX_POST_AGE_DAYS) -> bool:
+    """貼文是否太舊。
+
+    PTT 搜尋結果是按相關度排序，不是時間，會把好幾年前的協尋文撈出來
+    （實測撈到 2022、2024 年的）。發文時間優先從 URL 的 M.<unix> 取，
+    取不到再從內文找 YYYY-MM-DD。
+    """
+    posted = None
+    m = re.search(r"/M\.(\d+)\.", url)
+    if m:
+        posted = datetime.fromtimestamp(int(m.group(1))).date()
+    else:
+        m = re.search(r"(20\d{2})-(\d{2})-(\d{2})", text)
+        if m:
+            try:
+                posted = date(int(m.group(1)), int(m.group(2)), int(m.group(3)))
+            except ValueError:
+                posted = None
+    if posted is None:
+        return False  # 判斷不出日期就不擋
+    return (date.today() - posted).days > max_days
 
 
 def detect_resolved(text: str) -> bool:
@@ -497,6 +521,8 @@ def main() -> None:
     kept = 0
     rejected: dict[str, list[str]] = {"facebook": [], "threads": [], "ptt": []}
     for post in posts:
+        if too_old(post["text"], post["url"]):
+            continue
         info = classify(post["text"])
         if not info:
             samples = rejected.setdefault(post["platform"], [])
