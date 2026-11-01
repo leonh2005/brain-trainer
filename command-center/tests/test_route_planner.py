@@ -240,3 +240,43 @@ def test_line_label_falls_back_to_short_name():
 def test_line_label_returns_empty_when_nothing():
     """完全沒有資訊時回空字串，不拋例外。"""
     assert rp._line_label({}) == ""
+
+
+# ── _poi_name_match：地標名稱比對（Nominatim 會省略地區前綴）─────────
+
+@pytest.mark.parametrize(
+    "query,display,expected",
+    [
+        # 尾兩字對上：「大遠百」是 display_name 的開頭
+        ("板橋大遠百", "大遠百, 28, 新站路, 福丘里, 板橋區, 新北市", True),
+        # 頭兩字對上：「樹林」在 display_name 開頭
+        ("樹林火車站", "樹林, 後站街, 樹福里, 樹林區, 新北市", True),
+        # 完整包含
+        ("台北101", "台北101, 信義路五段, 信義區, 臺北市", True),
+        # 頭兩字對上就算名稱相關——是不是真的 POI 由 _precision 另外把關
+        ("台中大遠百", "中正路, 西屯區, 台中市", True),
+        ("新莊棒球場", "中正路, 新莊區, 新北市", True),
+        # 完全不相關
+        ("新莊棒球場", "前鎮區, 高雄市", False),
+        ("板橋大遠百", "中山路, 花蓮市", False),
+    ],
+)
+def test_poi_name_match_allows_omitted_prefix(query, display, expected):
+    """Nominatim 常回省略地區前綴的名字，頭兩字或尾兩字有對上就算名稱相關。
+
+    注意這支只判斷名稱，街道不會被擋——那是 geocode_tw_address 裡
+    `_precision(hit) != 'poi'` 的責任。
+    """
+    assert rp._poi_name_match(query, display) is expected
+
+
+def test_precision_treats_building_train_station_as_poi():
+    """OSM 把車站標成 building/train_station，不能歸類成街道（樹林火車站第一筆就是）。"""
+    hit = {"class": "building", "type": "train_station", "display_name": "樹林, 後站街"}
+    assert rp._precision(hit) == "poi"
+
+
+def test_precision_keeps_plain_road_as_street():
+    """沒有 POI 特徵的道路要維持 street，否則地標查詢會對到一般街道。"""
+    hit = {"class": "highway", "type": "residential", "display_name": "中正路"}
+    assert rp._precision(hit) == "street"
