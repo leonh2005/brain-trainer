@@ -87,7 +87,18 @@ _POI_CLASSES = {'office', 'amenity', 'shop', 'building', 'tourism', 'leisure',
 # 站牌、月台這類節點在 Nominatim 的 class 是 highway，光看 class 會被誤判成街道
 _POI_TYPES = {('highway', 'bus_stop'), ('highway', 'platform'), ('highway', 'station'),
               ('railway', 'station'), ('railway', 'halt'), ('railway', 'tram_stop'),
-              ('public_transport', 'platform'), ('public_transport', 'station')}
+              ('public_transport', 'platform'), ('public_transport', 'station'),
+              # 車站常被 OSM 標成 building（例如「樹林火車站」第一筆結果）
+              ('building', 'train_station')}
+
+
+def _poi_name_match(q: str, disp: str) -> bool:
+    """地標名稱比對。Nominatim 常回省略地區前綴的名字
+    （「板橋大遠百」→「大遠百, 28, 新站路, 板橋區...」），
+    所以除了完整包含，也接受查詢的頭兩字或尾兩字有出現在結果裡。"""
+    if q in disp:
+        return True
+    return any(part and part in disp for part in (q[:2], q[-2:]))
 
 
 def _parse_addr(addr: str) -> dict:
@@ -115,7 +126,9 @@ def _nominatim(query: str) -> list:
         time.sleep(_NOMINATIM_GAP - gap)
     _last_nominatim = time.time()
     return _get(f'{NOMINATIM}?' + urllib.parse.urlencode(
-        {'q': query, 'format': 'json', 'limit': 1, 'countrycodes': 'tw'}), timeout=20)
+        # limit=3：第一筆常常是 building/train_station 這種被歸類成 street 的結果，
+        # 要多看幾筆才找得到 railway station
+        {'q': query, 'format': 'json', 'limit': 3, 'countrycodes': 'tw'}), timeout=20)
 
 
 def _precision(hit: dict) -> str:
@@ -157,16 +170,24 @@ def geocode_tw_address(addr: str) -> dict:
 
     weak = None
     for q in dict.fromkeys(t for t in tries if t):
-        for hit in _nominatim(q)[:1]:
+        for hit in _nominatim(q)[:3]:
             disp = hit.get('display_name', '')
-            if sig and sig not in disp:
-                continue
+            if p['street']:
+                # 地址查詢：結果必須含路名，否則就是模糊比對到別條路
+                if sig and sig not in disp:
+                    continue
+            else:
+                # 純地標查詢：名稱要對得上，而且必須是 POI 不是街道
+                if not _poi_name_match(key, disp) or _precision(hit) != 'poi':
+                    continue
             if p['house'] and re.search(rf"{p['house']}(?:之\d+)?號", disp):
                 return _hit_to_coord(key, hit, q)  # 命中門牌
             weak = weak or (hit, q)
     if weak:
         return _hit_to_coord(key, weak[0], weak[1])
-    raise ValueError(f'找不到這個地址，換個寫法或直接打地標名稱：{addr}')
+    raise ValueError(
+        f'找不到「{addr}」。試試加上行政區（例如「臺北市信義區 台北市政府」），'
+        f'或改用完整地址')
 
 
 # ── 時間工具 ─────────────────────────────────────
