@@ -247,25 +247,27 @@ def test_line_label_returns_empty_when_nothing():
 @pytest.mark.parametrize(
     "query,display,expected",
     [
-        # 尾兩字對上：「大遠百」是 display_name 的開頭
+        # 本體是查詢的子字串：板橋大遠百 → 大遠百
         ("板橋大遠百", "大遠百, 28, 新站路, 福丘里, 板橋區, 新北市", True),
-        # 頭兩字對上：「樹林」在 display_name 開頭
         ("樹林火車站", "樹林, 後站街, 樹福里, 樹林區, 新北市", True),
+        # 本體以查詢前兩字開頭：饒河夜市 → 饒河街觀光夜市
+        ("饒河夜市", "饒河街觀光夜市, 松山區, 臺北市", True),
+        # 台/臺 互換
+        ("台北車站", "臺北車站, 100, 北平西路, 中正區", True),
         # 完整包含
         ("台北101", "台北101, 信義路五段, 信義區, 臺北市", True),
-        # 頭兩字對上就算名稱相關——是不是真的 POI 由 _precision 另外把關
-        ("台中大遠百", "中正路, 西屯區, 台中市", True),
-        ("新莊棒球場", "中正路, 新莊區, 新北市", True),
-        # 完全不相關
+        # 靠地址段硬湊不算：「樹林車站」不能對到「山佳 (樹林區)」，差 3.8 km
+        ("樹林車站", "山佳, 山佳車站廣場, 中山里, 樹林區, 新北市", False),
+        # 「樹林大遠百」不能對到桃園龍潭的「烏樹林」，差 24 km
+        ("樹林大遠百", "烏樹林, 龍潭區, 桃園市", False),
         ("新莊棒球場", "前鎮區, 高雄市", False),
         ("板橋大遠百", "中山路, 花蓮市", False),
     ],
 )
-def test_poi_name_match_allows_omitted_prefix(query, display, expected):
-    """Nominatim 常回省略地區前綴的名字，頭兩字或尾兩字有對上就算名稱相關。
+def test_poi_name_match_only_compares_name_body(query, display, expected):
+    """只比對 display_name 第一段的名稱本體，不比地址段。
 
-    注意這支只判斷名稱，街道不會被擋——那是 geocode_tw_address 裡
-    `_precision(hit) != 'poi'` 的責任。
+    拿整串比會讓「樹林車站」靠地址段的「樹林區」對到山佳車站。
     """
     assert rp._poi_name_match(query, display) is expected
 

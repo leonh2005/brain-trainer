@@ -92,13 +92,26 @@ _POI_TYPES = {('highway', 'bus_stop'), ('highway', 'platform'), ('highway', 'sta
               ('building', 'train_station')}
 
 
+def _norm_name(s: str) -> str:
+    """台/臺 互換，OSM 資料新舊混用。"""
+    return s.replace('臺', '台').strip()
+
+
 def _poi_name_match(q: str, disp: str) -> bool:
-    """地標名稱比對。Nominatim 常回省略地區前綴的名字
-    （「板橋大遠百」→「大遠百, 28, 新站路, 板橋區...」），
-    所以除了完整包含，也接受查詢的頭兩字或尾兩字有出現在結果裡。"""
-    if q in disp:
-        return True
-    return any(part and part in disp for part in (q[:2], q[-2:]))
+    """地標名稱比對，只比 display_name 的第一段（名稱本體）。
+
+    Nominatim 常省略地區前綴（「板橋大遠百」→「大遠百, 28, 新站路, 板橋區...」），
+    所以接受「本體是查詢的子字串」。但**不能**拿整串 display_name 比，
+    否則「樹林車站」會靠地址段的「樹林區」對到「山佳車站」（差 3.8 公里）、
+    「樹林大遠百」會對到桃園龍潭的「烏樹林」站牌（差 24 公里）。
+    """
+    body = _norm_name(disp.split(',')[0])
+    query = _norm_name(q)
+    if not body or not query:
+        return False
+    # 本體以查詢的前兩字開頭也算（「饒河夜市」→「饒河街觀光夜市」），
+    # 但必須在開頭：「樹林大遠百」不會對到「烏樹林」。
+    return body in query or query in body or body.startswith(query[:2])
 
 
 def _parse_addr(addr: str) -> dict:
@@ -176,8 +189,10 @@ def geocode_tw_address(addr: str) -> dict:
                 # 地址查詢：結果必須含路名，否則就是模糊比對到別條路
                 if sig and sig not in disp:
                     continue
-            else:
-                # 純地標查詢：名稱要對得上，而且必須是 POI 不是街道
+            elif key not in disp:
+                # 名稱沒有完整出現時才嚴格要求：本體要對得上，且必須是 POI。
+                # 完整包含的先放行——夜市、商圈這類在 OSM 是 landuse，
+                # 用 poi 條件會把士林夜市、西門町全擋掉。
                 if not _poi_name_match(key, disp) or _precision(hit) != 'poi':
                     continue
             if p['house'] and re.search(rf"{p['house']}(?:之\d+)?號", disp):
