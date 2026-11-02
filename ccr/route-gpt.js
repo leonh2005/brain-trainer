@@ -2,7 +2,7 @@
 // 1. claude-3-sonnet / claude-3-haiku 偽裝 → gpt 備用
 // 2. cauto（用官方 id claude-3-7-sonnet 觸發）：
 //    只在使用者輸入新指令時由 Jev 判難度，其餘請求沿用該 session 目前層級（不在工具迴圈中途切換）
-//    0-2 → Haiku、3 → Sonnet、4-5 → Opus（皆走 Abacus，經 abacus-sanitizer 清理 thinking）
+//    0-2 → DeepSeek V4.1 Flash、3 → Claude Haiku、4-5 → Gemini 4 Argon（皆走 OpenCode Go）
 // 3. 其餘放行
 // 每個請求都把實際路由寫進 route-state/<session>.json，供狀態列顯示與跨重啟沿用
 
@@ -10,17 +10,14 @@ const fs = require("fs");
 
 // 白名單：Jev 只能從這裡挑，選不到清單外的模型
 const TIERS = {
-  t1: "abacus/claude-haiku-5-5",
-  t2: "abacus/claude-sonnet-5-5",
-  t3: "abacus/claude-opus-5-5",
+  t1: "opencode/deepseek-v4.1-flash",
+  t2: "opencode/claude-haiku-5-5",
+  t3: "opencode/gemini-4-argon",
 };
-// Abacus 掛掉或額度不足時退回直連 DeepSeek（不耗 Abacus 點數）
-const FALLBACK = "deepseek/deepseek-flash";
-// 不直接依賴 ccr 內建 fallback：它在第二個 attempt 沒有重算 content-length，DeepSeek 那次會在連線前 502
-const ABACUS_HEALTH = "/Users/steven/.claude-code-router/abacus-health.json";
-const DS_HEALTH = "/Users/steven/.claude-code-router/ds-health.json";
-const PROBE_INTERVAL_S = 15 * 60;
-const ABACUS_PROBE_URL = "http://127.0.0.1:8791/health";
+// 所有層級都掛在同一個 OpenCode Go provider，出錯時退回第一檔
+const FALLBACK = "opencode/deepseek-v4.1-flash";
+// cauto 觸發名：opencode/auto 是非 claude 名稱，Claude Code 才會套用 CLAUDE_CODE_MAX_CONTEXT_TOKENS（1M）
+const AUTO_MODELS = new Set(["claude-3-7-sonnet", "claude-3-7-sonnet[1m]", "opencode/auto"]);
 const PIN_FILE = "/Users/steven/.claude-code-router/route-pin.json";
 const STATE_DIR = "/Users/steven/.claude-code-router/route-state";
 const LOG = "/tmp/jev-router.log";
@@ -35,12 +32,11 @@ module.exports = async function (request, config, ctx) {
   if (model === "claude-3-sonnet") return remember(sessionId, model, "claude-openai/gpt-4o", "gpt-backup", null);
   if (model === "claude-3-haiku") return remember(sessionId, model, "claude-openai/gpt-4o-mini", "gpt-backup", null);
 
-  if (model === "claude-3-7-sonnet") {
-    const pin = pinnedProvider();
-    if (pin === "deepseek" || (!pin && (await pickProvider()) === "deepseek")) {
-      const route = pin ? "manual-deepseek" : "abacus-down";
-      fs.appendFileSync(LOG, `${new Date().toISOString()} ${sessionId} ${route} -> ${FALLBACK}\n`);
-      return remember(sessionId, model, FALLBACK, route, undefined);
+  if (AUTO_MODELS.has(model)) {
+    // 手動釘住 DeepSeek 時整輪都走第一檔，不呼叫 Jev
+    if (pinnedProvider() === "deepseek") {
+      fs.appendFileSync(LOG, `${new Date().toISOString()} ${sessionId} manual-deepseek -> ${FALLBACK}\n`);
+      return remember(sessionId, model, FALLBACK, "manual-deepseek", undefined);
     }
 
     const state = readState(sessionId);
@@ -84,60 +80,13 @@ module.exports = async function (request, config, ctx) {
   return remember(sessionId, model, null, "passthrough", undefined);
 };
 
-// 手動釘住：route-pin.json 的 provider 為 deepseek 或 abacus 時，略過冷卻判斷，直到移除該檔
+// 手動釘住：route-pin.json 的 provider 為 deepseek 時，整輪固定走第一檔，直到移除該檔
 function pinnedProvider() {
   try {
     const p = JSON.parse(fs.readFileSync(PIN_FILE, "utf8")).provider;
     return p === "deepseek" || p === "abacus" ? p : undefined;
   } catch (e) {
     return undefined;
-  }
-}
-
-// 選路：Abacus 優先；Abacus 冷卻中改用 DeepSeek；兩邊都冷卻時回到 Abacus。
-// 冷卻期過後放行一個請求試探，成功會由 proxy 清除冷卻標記，失敗會重新標記。
-async function pickProvider() {
-  const a = coolState(ABACUS_HEALTH);
-  if (a === "down") {
-    const d = coolState(DS_HEALTH);
-    if (d === "down") return "abacus";
-    if (d === "due") claimProbe(DS_HEALTH);
-    return "deepseek";
-  }
-  if (a === "due") claimProbe(ABACUS_HEALTH);
-  if (!(await probeOk(ABACUS_PROBE_URL))) {
-    return coolState(DS_HEALTH) === "down" ? "abacus" : "deepseek";
-  }
-  return "abacus";
-}
-
-function coolState(file) {
-  let mark;
-  try {
-    mark = JSON.parse(fs.readFileSync(file, "utf8"));
-  } catch (e) {
-    return "ok";
-  }
-  const age = Date.now() / 1000 - Number(mark.ts);
-  return age < PROBE_INTERVAL_S ? "down" : "due";
-}
-
-function claimProbe(file) {
-  try {
-    const tmp = `${file}.${process.pid}.${Math.random().toString(36).slice(2)}.tmp`;
-    fs.writeFileSync(tmp, JSON.stringify({ status: "probe", ts: Date.now() / 1000 }));
-    fs.renameSync(tmp, file);
-  } catch (e) {
-    console.error("[route] 寫入探測標記失敗:", e.message);
-  }
-}
-
-async function probeOk(url) {
-  try {
-    const r = await fetch(url, { signal: AbortSignal.timeout(800) });
-    return r.ok;
-  } catch (e) {
-    return false;
   }
 }
 

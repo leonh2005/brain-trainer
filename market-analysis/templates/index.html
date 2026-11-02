@@ -50,6 +50,33 @@ header .sub{font-size:11.5px; color:var(--faint)}
 .card h3{font-size:13px; font-weight:700; margin-bottom:12px; color:var(--fg)}
 .note{font-size:11px; color:var(--faint); margin-bottom:12px}
 
+/* 卡片拖曳排序 */
+.card{position:relative}
+.card > h3,.card > .note:first-child{padding-right:34px}
+.drag-handle{
+  position:absolute; top:9px; right:9px; width:26px; height:26px;
+  display:grid; place-items:center; padding:0; border:none; border-radius:7px;
+  background:transparent; color:var(--faint); font-size:15px; line-height:1;
+  cursor:grab; opacity:0; transition:opacity .15s,background .15s,color .15s;
+  touch-action:none; user-select:none; -webkit-user-select:none;
+}
+.card:hover .drag-handle{opacity:1}
+.drag-handle:hover{background:var(--bg-soft); color:var(--muted)}
+@media (hover:none){.card .drag-handle{opacity:.5}}
+.card.dragging{
+  opacity:.9; z-index:5; border-color:var(--accent);
+  box-shadow:0 14px 30px -10px rgba(20,20,19,.3);
+}
+body.is-dragging{cursor:grabbing}
+body.is-dragging .card,body.is-dragging .card *{user-select:none; -webkit-user-select:none}
+.sec-label.hidden{display:none}
+#reset-order{
+  margin-left:auto; font-size:11.5px; padding:5px 11px; cursor:pointer;
+  border:1px solid var(--border-soft); border-radius:8px;
+  background:var(--card); color:var(--muted);
+}
+#reset-order:hover{background:var(--bg-soft); color:var(--fg)}
+
 /* 區塊① 橫向長條 */
 .bar-row{display:flex; align-items:center; gap:10px; margin-bottom:9px}
 .bar-name{width:196px; flex:none; display:flex; align-items:center; gap:8px; font-size:12.5px; color:var(--fg)}
@@ -183,18 +210,19 @@ tr.highlight td{background:rgba(217,119,87,.07); font-weight:700}
       <h1>市場分析</h1>
       <div class="sub">大盤日內型態 · 費半/ADR 連動 · 六大權值股</div>
     </div>
+    <button id="reset-order" type="button" title="還原預設卡片排列" style="display:none">↺ 重設排列</button>
   </header>
 
   <!-- 區塊① -->
   <div class="sec-label">① 大盤日內走勢十大類型</div>
-  <div class="card">
+  <div class="card" data-card="type">
     <div class="note" id="type-note">26 年統計(^TWII 2000–2026)</div>
     <div id="type-bars"><div class="empty">載入中...</div></div>
   </div>
 
   <!-- 區塊② -->
   <div class="sec-label">② 大盤 × 費半 × 台積電 ADR</div>
-  <div class="card">
+  <div class="card" data-card="corr">
     <h3>同日相關矩陣</h3>
     <table id="corr-table">
       <thead><tr><th>組合</th><th>全期</th><th>近2年</th></tr></thead>
@@ -206,7 +234,7 @@ tr.highlight td{background:rgba(217,119,87,.07); font-weight:700}
       · <b>TWII × SOX ≈ 0.17</b>:台股大盤與費半「同日」關聯偏低 —— 因時差,美股當天的走勢要到<b>隔天</b>才反映到台股,所以同日看不出關聯(真正的影響在下方「隔夜領先」)。
     </div>
   </div>
-  <div class="card">
+  <div class="card" data-card="lead">
     <h3>隔夜領先相關(t日美股 → t+1日台股)</h3>
     <table id="lead-table">
       <thead><tr><th>領先關係</th><th>全期</th><th>近2年</th></tr></thead>
@@ -218,14 +246,14 @@ tr.highlight td{background:rgba(217,119,87,.07); font-weight:700}
       · 實務讀法:昨晚費半、台積電 ADR 收紅,今天台股偏多的機率上升(下方「隔日方向勝率」給出具體命中率)。
     </div>
   </div>
-  <div class="card">
+  <div class="card" data-card="hit">
     <h3>隔日方向勝率</h3>
     <div class="stat-row" id="hit-rates"></div>
   </div>
 
   <!-- 區塊③ -->
   <div class="sec-label">③ 六大權值股</div>
-  <div class="card">
+  <div class="card" data-card="weight">
     <h3>相關性 / Beta(依相關性排序)</h3>
     <div class="note">台積電近2年 corr 0.92 最能代表大盤</div>
     <table id="weight-table">
@@ -233,7 +261,7 @@ tr.highlight td{background:rgba(217,119,87,.07); font-weight:700}
       <tbody></tbody>
     </table>
   </div>
-  <div class="card">
+  <div class="card" data-card="live">
     <h3>盤中即時追蹤 <span style="font-weight:400;color:var(--faint);font-size:11px">(每15秒自動刷新)</span>
       <button id="live-refresh" title="立即刷新最新報價 (F5)" style="margin-left:8px;font-size:11px;padding:2px 9px;border:1px solid var(--border-soft);background:var(--bg-soft);border-radius:6px;cursor:pointer;color:var(--muted)">🔄 手動刷新</button>
     </h3>
@@ -258,21 +286,21 @@ tr.highlight td{background:rgba(217,119,87,.07); font-weight:700}
 
   <!-- 區塊④ 近月經濟總覽 -->
   <div class="sec-label">④ 近月經濟總覽 <span style="font-weight:400;color:var(--faint);font-size:11px" id="econ-updated"></span></div>
-  <div class="card">
+  <div class="card" data-card="econ-market">
     <h3>市場數值 <span style="font-weight:400;color:var(--faint);font-size:11px">(現價 · 當日 · 近一月)</span>
       <button id="econ-refresh" title="立即刷新市場數值" style="margin-left:8px;font-size:11px;padding:2px 9px;border:1px solid var(--border-soft);background:var(--bg-soft);border-radius:6px;cursor:pointer;color:var(--muted)">🔄 手動刷新</button>
     </h3>
     <div class="econ-grid" id="econ-market"><div class="empty">載入中...</div></div>
   </div>
-  <div class="card">
+  <div class="card" data-card="econ-data">
     <h3>經濟數據(CPI · 政策利率)</h3>
     <div class="econ-stats" id="econ-data"><div class="empty">載入中...</div></div>
   </div>
-  <div class="card">
+  <div class="card" data-card="econ-calendar">
     <h3>重大事件日曆 <span style="font-weight:400;color:var(--faint);font-size:11px">(即日起至今年年底)</span></h3>
     <div id="econ-earnings"><div class="empty">載入中...</div></div>
   </div>
-  <div class="card">
+  <div class="card" data-card="econ-war">
     <h3>戰爭 / 地緣消息 <span style="font-weight:400;color:var(--faint);font-size:11px">(近 14 天)</span></h3>
     <div id="econ-war"><div class="empty">載入中...</div></div>
   </div>
@@ -752,6 +780,120 @@ async function manualEconRefresh(){
   finally { if (btn){ btn.disabled = false; btn.textContent = '🔄 手動刷新'; } }
 }
 document.getElementById('econ-refresh').addEventListener('click', manualEconRefresh);
+
+// ── 卡片拖曳排序（順序存在 localStorage，重設按鈕可還原）────────────
+(function(){
+  const KEY = 'market-analysis-card-order-v1';
+  const wrap = document.querySelector('.wrap');
+  const resetBtn = document.getElementById('reset-order');
+  if (!wrap || !resetBtn) return;
+
+  const labels = [...wrap.querySelectorAll('.sec-label')];
+  const cardsInit = [...wrap.querySelectorAll('.card[data-card]')];
+  if (!cardsInit.length) return;
+  const defaultOrder = cardsInit.map(c => c.dataset.card);
+  const cardByKey = new Map(cardsInit.map(c => [c.dataset.card, c]));
+
+  // 每張卡片右上角掛一個拖曳把手
+  cardsInit.forEach(card => {
+    const h = document.createElement('button');
+    h.type = 'button';
+    h.className = 'drag-handle';
+    h.textContent = '⠿';
+    h.title = '拖曳移動卡片';
+    h.setAttribute('aria-label', '拖曳移動卡片');
+    card.appendChild(h);
+  });
+
+  function currentOrder(){
+    return [...wrap.querySelectorAll('.card[data-card]')].map(c => c.dataset.card);
+  }
+  function setCustomMode(on){
+    labels.forEach(l => l.classList.toggle('hidden', on));
+    resetBtn.style.display = on ? '' : 'none';
+  }
+
+  // 套用上次存的順序（區塊標籤同時隱藏，避免標題對不上內容）
+  let saved = null;
+  try { saved = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch(e){}
+  if (Array.isArray(saved) && saved.length){
+    const valid = [...new Set(saved.filter(k => cardByKey.has(k)))];
+    const order = valid.concat(defaultOrder.filter(k => !valid.includes(k)));
+    order.forEach(k => wrap.appendChild(cardByKey.get(k)));
+    setCustomMode(true);
+  }
+
+  resetBtn.addEventListener('click', () => {
+    try { localStorage.removeItem(KEY); } catch(e){}
+    location.reload();
+  });
+
+  let dragCard = null, pointerId = null, startY = 0, moved = false;
+
+  function onDown(e){
+    if (e.button > 0) return;
+    const handle = e.target.closest && e.target.closest('.drag-handle');
+    if (!handle) return;
+    dragCard = handle.closest('.card[data-card]');
+    if (!dragCard) return;
+    pointerId = e.pointerId;
+    startY = e.clientY;
+    moved = false;
+    try { handle.setPointerCapture(pointerId); } catch(err){}
+    e.preventDefault();
+  }
+
+  function onMove(e){
+    if (!dragCard || e.pointerId !== pointerId) return;
+    if (!moved){
+      if (Math.abs(e.clientY - startY) < 4) return;
+      moved = true;
+      dragCard.classList.add('dragging');
+      document.body.classList.add('is-dragging');
+      setCustomMode(true);
+    }
+
+    // 拖到視窗上下緣時自動捲動
+    if (e.clientY < 70) window.scrollBy(0, -12);
+    else if (e.clientY > window.innerHeight - 70) window.scrollBy(0, 12);
+
+    // 依「游標越過其他卡片中線」決定插入位置
+    const cards = [...wrap.querySelectorAll('.card[data-card]')];
+    const others = cards.filter(c => c !== dragCard);
+    const next = others.find(c => {
+      const r = c.getBoundingClientRect();
+      return e.clientY < r.top + r.height / 2;
+    });
+    if (next){
+      if (cards.indexOf(next) === cards.indexOf(dragCard) + 1) return;
+      wrap.insertBefore(dragCard, next);
+    } else if (cards[cards.length - 1] !== dragCard){
+      wrap.appendChild(dragCard);
+    }
+  }
+
+  function onUp(e){
+    if (!dragCard || e.pointerId !== pointerId) return;
+    const wasMoved = moved;
+    dragCard.classList.remove('dragging');
+    document.body.classList.remove('is-dragging');
+    dragCard = null; pointerId = null; moved = false;
+    if (!wasMoved) return;
+
+    // 排回預設順序就等於沒改：清掉設定並重載，讓區塊標籤回到原位
+    if (currentOrder().join() === defaultOrder.join()){
+      try { localStorage.removeItem(KEY); } catch(err){}
+      location.reload();
+      return;
+    }
+    try { localStorage.setItem(KEY, JSON.stringify(currentOrder())); } catch(err){}
+  }
+
+  wrap.addEventListener('pointerdown', onDown);
+  window.addEventListener('pointermove', onMove);
+  window.addEventListener('pointerup', onUp);
+  window.addEventListener('pointercancel', onUp);
+})();
 </script>
 </body>
 </html>
