@@ -70,6 +70,9 @@ header .sub{font-size:11.5px; color:var(--faint)}
 body.is-dragging{cursor:grabbing}
 body.is-dragging .card,body.is-dragging .card *{user-select:none; -webkit-user-select:none}
 .sec-label.hidden{display:none}
+/* 拖曳中把標題藏起來但保留高度：卡片會被搬到標題之間，留著會顯示在錯的區塊上；
+   用 display:none 又會讓版面瞬移，換位門檻跟著跑掉 */
+.sec-label.dragging-dim{visibility:hidden}
 #reset-order{
   margin-left:auto; font-size:11.5px; padding:5px 11px; cursor:pointer;
   border:1px solid var(--border-soft); border-radius:8px;
@@ -793,6 +796,8 @@ document.getElementById('econ-refresh').addEventListener('click', manualEconRefr
   if (!cardsInit.length) return;
   const defaultOrder = cardsInit.map(c => c.dataset.card);
   const cardByKey = new Map(cardsInit.map(c => [c.dataset.card, c]));
+  // 原始的子節點順序（含區塊標題），用於把版面完整還原成預設交錯排列
+  const defaultChildren = [...wrap.children];
 
   // 每張卡片右上角掛一個拖曳把手
   cardsInit.forEach(card => {
@@ -812,87 +817,181 @@ document.getElementById('econ-refresh').addEventListener('click', manualEconRefr
     labels.forEach(l => l.classList.toggle('hidden', on));
     resetBtn.style.display = on ? '' : 'none';
   }
+  // 把區塊標題放回原本夾在卡片之間的位置（只顯示標題不夠，位置也會錯）
+  function restoreDefaultLayout(){
+    // 只搬區塊標題與卡片：header 不在排序模型裡，重放會讓焦點（重設鈕）掉到 body
+    defaultChildren.forEach(n => {
+      if (n.matches('.sec-label, .card[data-card]')) wrap.appendChild(n);
+    });
+  }
 
-  // 套用上次存的順序（區塊標籤同時隱藏，避免標題對不上內容）
+  // 套用上次存的順序（若正規化後其實等於預設順序，就當作沒設定並清掉壞 key）
   let saved = null;
   try { saved = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch(e){}
   if (Array.isArray(saved) && saved.length){
     const valid = [...new Set(saved.filter(k => cardByKey.has(k)))];
     const order = valid.concat(defaultOrder.filter(k => !valid.includes(k)));
-    order.forEach(k => wrap.appendChild(cardByKey.get(k)));
-    setCustomMode(true);
+    if (order.join() === defaultOrder.join()){
+      try { localStorage.removeItem(KEY); } catch(e){}
+    } else {
+      order.forEach(k => wrap.appendChild(cardByKey.get(k)));
+      setCustomMode(true);
+    }
   }
 
   resetBtn.addEventListener('click', () => {
+    endDrag(false);   // 拖曳中被按下時先收尾，否則版面會在拖曳中途被重排
     try { localStorage.removeItem(KEY); } catch(e){}
-    location.reload();
+    restoreDefaultLayout();
+    setCustomMode(false);
+    loadAnalysis();   // 以前重設會整頁重載並重抓分析資料，改成原地還原後要自己補
   });
 
-  let dragCard = null, pointerId = null, startY = 0, moved = false;
+  let dragCard = null, dragHandle = null, pointerId = null, startY = 0, moved = false,
+      orderBefore = null, cursorY = 0, scrollDir = 0, rafId = null, scrollTicks = 0;
 
   function onDown(e){
     if (e.button > 0) return;
     const handle = e.target.closest && e.target.closest('.drag-handle');
     if (!handle) return;
+    // 拖曳中：第二指/手掌的按下（非主要指標）直接忽略，不要把進行中的拖曳打斷；
+    // 「另一個」主要指標才視為上一個手勢的收尾漏接，先清掉殘留再接手
+    if (dragCard){
+      if (!e.isPrimary || e.pointerId === pointerId) return;
+      endDrag(false);
+    }
     dragCard = handle.closest('.card[data-card]');
     if (!dragCard) return;
+    dragHandle = handle;
     pointerId = e.pointerId;
     startY = e.clientY;
+    cursorY = e.clientY;
     moved = false;
+    orderBefore = currentOrder();
     try { handle.setPointerCapture(pointerId); } catch(err){}
     e.preventDefault();
   }
 
   function onMove(e){
     if (!dragCard || e.pointerId !== pointerId) return;
+    // 防呆：pointerup 有可能收不到（在視窗外放開、切到別的 app）。滑鼠已放開左鍵
+    // 就立刻收尾，否則之後光移動滑鼠就會持續觸發自動捲動。
+    // 指標跑到視窗外時 Firefox 也會回報 buttons=0（那不是放手），忽略即可；
+    // 等回到視窗內仍沒按鍵才視為放手——此時手勢已完成，照正常放手處理。
+    // 觸控的 buttons 在部分 WebKit 版本會回報 0，不能拿來判斷，交給 pointercancel。
+    if (e.pointerType !== 'touch' && !(e.buttons & 1)){
+      const inside = e.clientX >= 0 && e.clientY >= 0 && e.clientX < window.innerWidth && e.clientY < window.innerHeight;
+      if (inside) endDrag(true);
+      // 指標停在視窗外時一律停掉自動捲動，否則收不到 pointerup 就會一直捲
+      scrollDir = 0;
+      // shortcut: 視窗外放手收不到事件，殘留狀態要等下一次回到視窗內才清掉；
+      // 待補：用 pointerleave/visibility 事件提早收尾（目前靠 autoScroll 10 秒上限與 blur 兜底）
+      return;
+    }
     if (!moved){
       if (Math.abs(e.clientY - startY) < 4) return;
       moved = true;
       dragCard.classList.add('dragging');
       document.body.classList.add('is-dragging');
-      setCustomMode(true);
+      // 標題暫時隱藏（保留高度）：卡片會跨過標題，留著會掛到錯的區塊
+      labels.forEach(l => l.classList.add('dragging-dim'));
     }
 
-    // 拖到視窗上下緣時自動捲動
-    if (e.clientY < 70) window.scrollBy(0, -12);
-    else if (e.clientY > window.innerHeight - 70) window.scrollBy(0, 12);
+    const dy = e.clientY - cursorY;
+    cursorY = e.clientY;
+    scrollDir = cursorY < 70 ? -1 : (cursorY > window.innerHeight - 70 ? 1 : 0);
+    if (scrollDir && !rafId){ scrollTicks = 0; rafId = requestAnimationFrame(autoScroll); }
 
-    // 依「游標越過其他卡片中線」決定插入位置
+    reorder(cursorY, dy);
+  }
+
+  // 游標停在視窗上下緣時持續捲動（只靠 pointermove 的話，滑鼠不動就不會捲）
+  function autoScroll(){
+    rafId = null;
+    if (!dragCard || !scrollDir) return;
+    // 上限 10 秒：pointerup 遺失又沒有任何後續事件時，不要把整頁捲到底
+    if (++scrollTicks > 600){ scrollDir = 0; return; }
+    const before = window.scrollY;
+    window.scrollBy(0, scrollDir * 14);
+    if (window.scrollY === before){ scrollDir = 0; return; }  // 已到邊界就停，不要空轉
+    reorder(cursorY, scrollDir);
+    rafId = requestAnimationFrame(autoScroll);
+  }
+
+  // 只跟「相鄰」卡片比中線，且依移動方向決定：高卡片插入後版面會重排，
+  // 若拿全體卡片找插入點，游標會被自己推回去，造成來回跳動。
+  // 用 while 連續追上：快速拖曳時單一事件可能一次跨過多張卡片的中線。
+  function reorder(y, dy){
+    if (!dy) return;  // 沒有上下位移就不必查詢版面
     const cards = [...wrap.querySelectorAll('.card[data-card]')];
-    const others = cards.filter(c => c !== dragCard);
-    const next = others.find(c => {
-      const r = c.getBoundingClientRect();
-      return e.clientY < r.top + r.height / 2;
-    });
-    if (next){
-      if (cards.indexOf(next) === cards.indexOf(dragCard) + 1) return;
-      wrap.insertBefore(dragCard, next);
-    } else if (cards[cards.length - 1] !== dragCard){
-      wrap.appendChild(dragCard);
+    let idx = cards.indexOf(dragCard);
+    if (idx < 0) return;
+    if (dy > 0){
+      while (idx < cards.length - 1){
+        const nb = cards[idx + 1], r = nb.getBoundingClientRect();
+        if (y <= r.top + r.height / 2) break;
+        wrap.insertBefore(nb, dragCard);
+        cards[idx] = nb; cards[idx + 1] = dragCard; idx++;
+      }
+    } else if (dy < 0){
+      while (idx > 0){
+        const nb = cards[idx - 1], r = nb.getBoundingClientRect();
+        if (y >= r.top + r.height / 2) break;
+        wrap.insertBefore(dragCard, nb);
+        cards[idx - 1] = dragCard; cards[idx] = nb; idx--;
+      }
     }
   }
 
-  function onUp(e){
-    if (!dragCard || e.pointerId !== pointerId) return;
-    const wasMoved = moved;
-    dragCard.classList.remove('dragging');
+  // commit=true 表示正常放手（寫入順序）；false 表示中止（pointercancel / blur / 按鍵遺失），
+  // 中止一律還原成拖曳前的排列，不會把半途的操作默默存起來，也不動既有的設定。
+  function endDrag(commit){
+    if (!dragCard) return;
+    const card = dragCard, handle = dragHandle, pid = pointerId, wasMoved = moved;
+    dragCard = null; dragHandle = null; pointerId = null; moved = false; scrollDir = 0;
+    if (rafId){ cancelAnimationFrame(rafId); rafId = null; }
+    try { handle && handle.releasePointerCapture(pid); } catch(err){}
+    card.classList.remove('dragging');
     document.body.classList.remove('is-dragging');
-    dragCard = null; pointerId = null; moved = false;
+    labels.forEach(l => l.classList.remove('dragging-dim'));
     if (!wasMoved) return;
 
-    // 排回預設順序就等於沒改：清掉設定並重載，讓區塊標籤回到原位
-    if (currentOrder().join() === defaultOrder.join()){
-      try { localStorage.removeItem(KEY); } catch(err){}
-      location.reload();
+    const order = currentOrder();
+
+    if (!commit){
+      const back = orderBefore;
+      // 還原成拖曳前的排列；先重播原始版面讓標題回到卡片之間，再套回自訂順序
+      restoreDefaultLayout();
+      if (back.join() === defaultOrder.join()){
+        setCustomMode(false);
+      } else {
+        back.forEach(k => wrap.appendChild(cardByKey.get(k)));
+        setCustomMode(true);
+      }
       return;
     }
-    try { localStorage.setItem(KEY, JSON.stringify(currentOrder())); } catch(err){}
+
+    // 排回預設順序就等於沒改：原地還原，不用整頁重載（避免重抓所有資料、捲動位置歸零）
+    if (order.join() === defaultOrder.join()){
+      try { localStorage.removeItem(KEY); } catch(err){}
+      restoreDefaultLayout();
+      setCustomMode(false);
+      return;
+    }
+    try { localStorage.setItem(KEY, JSON.stringify(order)); } catch(err){}
+    // 自訂模式會把區塊標題收掉，版面往上收；補償捲動讓剛放下的卡片停在原處
+    const topBefore = card.getBoundingClientRect().top;
+    setCustomMode(true);
+    window.scrollBy(0, card.getBoundingClientRect().top - topBefore);
   }
 
   wrap.addEventListener('pointerdown', onDown);
   window.addEventListener('pointermove', onMove);
-  window.addEventListener('pointerup', onUp);
-  window.addEventListener('pointercancel', onUp);
+  window.addEventListener('pointerup', e => { if (dragCard && e.pointerId === pointerId) endDrag(true); });
+  // 手勢被系統沒收（來電、系統手勢）算中止，不能當成正常放手
+  window.addEventListener('pointercancel', e => { if (dragCard && e.pointerId === pointerId) endDrag(false); });
+  // 視窗失焦（例如拖曳中切到別的 app）也要收尾，避免拖曳狀態卡住
+  window.addEventListener('blur', () => endDrag(false));
 })();
 </script>
 </body>
