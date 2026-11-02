@@ -44,6 +44,23 @@ table.strat tr.grp td { background: rgba(59,130,246,0.08); font-weight: 600; }
 .section-label .toggle-list { font-size: 0.7rem; background: none; border: none; padding: 0; color: var(--text-dim); cursor: pointer; transition: transform 0.15s; }
 .section-label.collapsed .toggle-list { transform: rotate(-90deg); }
 .stock-list.collapsed { display: none; }
+.rank-panel { margin: 0 2rem 0.6rem; border: 1px solid var(--border); border-radius: 10px; background: var(--card); }
+.rank-head { display: flex; align-items: center; gap: 0.6rem; padding: 0.6rem 1rem; cursor: pointer; user-select: none; font-size: 0.82rem; }
+.rank-head .caret { color: var(--text-dim); transition: transform 0.15s; }
+.rank-panel.open .rank-head .caret { transform: rotate(90deg); }
+.rank-head .hint { color: var(--text-dim); font-size: 0.72rem; }
+.rank-body { display: none; padding: 0 1rem 0.8rem; }
+.rank-panel.open .rank-body { display: block; }
+.rank-tabs { display: flex; gap: 0.4rem; margin-bottom: 0.6rem; }
+.rank-tabs button { padding: 0.25rem 0.7rem; font-size: 0.78rem; }
+.rank-tabs button.active { border-color: var(--blue); color: var(--blue); }
+.rank-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr)); gap: 0.3rem 1rem; font-size: 0.78rem; font-family: var(--font-mono); }
+.rank-row { display: flex; align-items: center; gap: 0.45rem; padding: 0.12rem 0; }
+.rank-row .n { color: var(--text-dim); width: 1.3rem; text-align: right; }
+.rank-row .code { color: var(--text-dim); }
+.rank-row .name { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-family: -apple-system, "PingFang TC", sans-serif; }
+.rank-row .val { text-align: right; min-width: 4.5rem; }
+.rank-empty { color: var(--text-dim); font-size: 0.78rem; padding: 0.3rem 0; }
 .stock-list { padding: 0 2rem 1rem; display: grid; gap: 0.7rem; }
 .stock { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 0.9rem 1.1rem; display: grid; grid-template-columns: 10rem 1fr 24rem 2rem; gap: 1rem; align-items: center; }
 .stock .head .code { font-family: var(--font-mono); color: var(--text-dim); font-size: 0.75rem; }
@@ -128,9 +145,22 @@ table.strat tr.grp td { background: rgba(59,130,246,0.08); font-weight: 600; }
   </select>
 </div>
 
-<div id="sections"></div>
+<div class="rank-panel" id="rankPanel">
+  <div class="rank-head" id="rankHead">
+    <span class="caret">▶</span> 市場排行
+    <span class="hint">漲跌幅／成交量／成交金額（前 20 名）</span>
+  </div>
+  <div class="rank-body">
+    <div class="rank-tabs" id="rankTabs">
+      <button data-rank="pct" class="active">漲跌幅</button>
+      <button data-rank="volume">成交量</button>
+      <button data-rank="amount">成交金額</button>
+    </div>
+    <div class="rank-grid" id="rankGrid"></div>
+  </div>
+</div>
 
-<div class="pattern-legend">
+<div id="sections"></div><div class="pattern-legend">
   <div class="section-label">🧮 籌碼分佈 × 策略選股</div>
   <div class="job-bar">
     <button id="job-history">更新歷史資料</button>
@@ -570,6 +600,59 @@ async function load() {
   renderSections(data);
   loadQuotes();
 }
+
+// ── 市場排行（可收合；每次切換都抓，伺服器端有 2 分鐘快取）────────
+let rankKind = "pct";
+let rankReq = 0;   // 只渲染最後一次請求，避免慢回來的舊頁籤蓋掉目前畫面
+
+async function loadRank(kind) {
+  const grid = document.getElementById("rankGrid");
+  const seq = ++rankReq;
+  grid.innerHTML = '<div class="rank-empty">載入中…</div>';
+  try {
+    const r = await fetch(`/api/rank?type=${kind}`);
+    const d = await r.json();
+    if (seq !== rankReq) return;   // 使用者已切到別的頁籤
+    if (!d.ok) throw new Error(d.error || "排行失敗");
+    renderRank(d.items || [], kind);
+  } catch (e) {
+    if (seq === rankReq) grid.innerHTML = `<div class="rank-empty">載入失敗：${esc(e.message)}</div>`;
+  }
+}
+
+function rankValue(item, kind) {
+  // 缺欄位顯示 —，不要畫成 0（舊版 gateway 沒有 volume/amount 時會誤導）
+  if (kind === "volume") return item.volume == null ? "—" : `${item.volume.toLocaleString()} 張`;
+  if (kind === "amount") return item.amount == null ? "—" : `${(item.amount / 1e8).toFixed(1)} 億`;
+  if (item.pct == null) return "—";
+  return `${item.pct > 0 ? "+" : ""}${item.pct.toFixed(2)}%`;
+}
+
+function renderRank(items, kind) {
+  const grid = document.getElementById("rankGrid");
+  if (!items.length) { grid.innerHTML = '<div class="rank-empty">目前沒有資料</div>'; return; }
+  grid.innerHTML = items.map((it, i) => `
+    <div class="rank-row">
+      <span class="n">${i + 1}</span>
+      <span class="code">${esc(it.code)}</span>
+      <span class="name">${esc(it.name)}</span>
+      <span class="val ${kind === "pct" ? cls(it.pct) : ""}">${rankValue(it, kind)}</span>
+    </div>`).join("");
+}
+
+document.getElementById("rankHead").onclick = () => {
+  const panel = document.getElementById("rankPanel");
+  panel.classList.toggle("open");
+  if (panel.classList.contains("open")) loadRank(rankKind);
+};
+
+document.getElementById("rankTabs").onclick = e => {
+  const btn = e.target.closest("button[data-rank]");
+  if (!btn) return;
+  rankKind = btn.dataset.rank;
+  [...document.querySelectorAll("#rankTabs button")].forEach(b => b.classList.toggle("active", b === btn));
+  loadRank(rankKind);
+};
 
 async function removeStock(code) {
   if (!confirm(`移除 ${code}？（庫存會自動改列觀察，其餘清單則直接移除；歷史資料保留）`)) return;

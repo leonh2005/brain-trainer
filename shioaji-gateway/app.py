@@ -8,7 +8,7 @@
   GET /snapshot?codes=IX0001,2330,2454     -> {ok, data:{code:{close,change_price,change_rate}}}
   GET /kbars?code=2330&days=30             -> {ok, closes:[...]}  (⚠️分K Close，非日K；日K請用 /daily_ohlcv)
   GET /intraday?code=IX0001[&date=2026-08-14] -> {ok, points:[{t:"09:01",price,high,low,volume},...]}  (指定日1分鐘走勢，預設當日)
-  GET /scanner?date=2026-08-28&count=200 -> {ok, items:[{code,name,close,change_price,pct},...]}  (漲跌幅排行，count上限200)
+  GET /scanner?type=pct|volume|amount&date=2026-08-28&count=200 -> {ok, items:[{code,name,close,change_price,pct,volume,amount},...]}  (行情排行，count上限200)
   GET /market_snapshot                     -> {ok, items:[{code,name,suffix,close,high,low,change_rate,total_volume},...]}  (全市場TSE+OTC即時快照)
 """
 import heapq
@@ -373,18 +373,34 @@ def big_orders():
         return jsonify({"ok": False, "error": str(e)})
 
 
+SCANNER_KINDS = {"pct": "ChangePercentRank", "volume": "VolumeRank", "amount": "AmountRank"}
+
+
+def _scanner_kind(value: str) -> str:
+    """查詢字串 → Shioaji 列舉名稱；未知值丟 ValueError（不靜默退回漲跌幅）。"""
+    key = (value or "pct").strip().lower()
+    if key not in SCANNER_KINDS:
+        raise ValueError(f"未知排行類型: {value}")
+    return SCANNER_KINDS[key]
+
+
 @app.get("/scanner")
 def scanner():
-    """漲跌幅排行掃描（跨全市場，非單檔查詢）。count 上限 200（Shioaji 限制）。
-    GET /scanner?date=2026-08-28&count=200&ascending=false -> {ok, items:[{code,name,close,change_price,pct},...]}"""
+    """行情排行掃描（跨全市場，非單檔查詢）。count 上限 200（Shioaji 限制）。
+    GET /scanner?type=pct|volume|amount&date=2026-08-28&count=200&ascending=false
+    -> {ok, items:[{code,name,close,change_price,pct,volume,amount},...]}"""
     import shioaji as sj
     target_date = request.args.get("date") or date.today().strftime("%Y-%m-%d")
-    count = int(request.args.get("count", "200"))
+    try:
+        count = max(1, min(int(request.args.get("count", "200")), 200))
+        scanner_type = getattr(sj.constant.ScannerType, _scanner_kind(request.args.get("type", "")))
+    except (ValueError, AttributeError) as e:
+        return jsonify({"ok": False, "error": f"參數錯誤: {e}"})
     ascending = request.args.get("ascending", "false").lower() == "true"
     try:
         def work(api):
             items = api.scanners(
-                scanner_type=sj.constant.ScannerType.ChangePercentRank,
+                scanner_type=scanner_type,
                 date=target_date, ascending=ascending, count=count,
             )
             out = []
@@ -392,7 +408,9 @@ def scanner():
                 prev_close = it.close - it.change_price
                 pct = (it.change_price / prev_close * 100) if prev_close else None
                 out.append({"code": it.code, "name": it.name.strip(), "close": float(it.close),
-                            "change_price": float(it.change_price), "pct": pct})
+                            "change_price": float(it.change_price), "pct": pct,
+                            # volume/amount 是當筆量，排行要看日累計
+                            "volume": int(it.total_volume or 0), "amount": int(it.total_amount or 0)})
             return out
         return jsonify({"ok": True, "items": _run(work)})
     except Exception as e:

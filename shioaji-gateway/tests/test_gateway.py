@@ -171,3 +171,34 @@ def test_run_clears_connection_after_double_failure(fake_conn, monkeypatch):
         gw._run(always_fail)
 
     assert fake_conn["api"] is None, "連兩次失敗後連線應清空"
+
+
+# ── _scanner_kind ───────────────────────────────────────────────
+
+@pytest.mark.parametrize("value,expected", [
+    ("pct", "ChangePercentRank"),
+    ("volume", "VolumeRank"),
+    ("amount", "AmountRank"),
+    ("", "ChangePercentRank"),          # 未指定 → 沿用舊行為（漲跌幅）
+    ("PCT", "ChangePercentRank"),       # 大小寫不敏感
+])
+def test_scanner_kind_maps_query_values(value, expected):
+    """查詢字串要用簡單字（pct/volume/amount）對應到 Shioaji 的列舉名稱。"""
+    assert gw._scanner_kind(value) == expected
+
+
+def test_scanner_kind_rejects_unknown_value():
+    """未知類型要明確報錯，不能靜默退回漲跌幅（免得畫面顯示錯的排行）。"""
+    with pytest.raises(ValueError):
+        gw._scanner_kind("turnover")
+
+
+# ── /scanner 路由參數驗證 ───────────────────────────────────────
+
+def test_scanner_route_returns_json_error_for_bad_count():
+    """count 非數字要回 {ok:false} JSON，而不是未捕捉例外造成的 500 HTML。"""
+    with gw.app.test_client() as client:
+        resp = client.get("/scanner?count=abc")
+    assert resp.status_code == 200
+    body = resp.get_json()
+    assert body["ok"] is False

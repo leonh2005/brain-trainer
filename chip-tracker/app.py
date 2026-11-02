@@ -13,6 +13,7 @@ import db
 import history_loader
 import jobs
 import patterns
+import rank
 import requests
 import support as support_mod
 import updater
@@ -396,6 +397,31 @@ def api_quotes():
         _quote_cache["ts"] = now
         _quote_cache["data"] = result
     return jsonify(result)
+
+
+_rank_cache: dict = {}
+_RANK_TTL = 120  # 秒；gateway 的掃描是 DB heavy，別讓每次開面板都打一次
+
+
+@app.get("/api/rank")
+def api_rank():
+    """市場行情排行（漲跌幅/成交量/成交金額），走 gateway 的 /scanner；2 分鐘快取。"""
+    import time as _time
+
+    kind = request.args.get("type", "pct")
+    now = _time.time()
+    hit = _rank_cache.get(kind)
+    if hit and now - hit["ts"] < _RANK_TTL:
+        return jsonify({"ok": True, "items": hit["items"], "cached": True})
+    try:
+        items = rank.fetch_rank(kind, gateway=SHIOAJI_GATEWAY)
+        if items:  # 空結果不快取，否則盤前/假日的空白會卡住整個 TTL
+            _rank_cache[kind] = {"ts": now, "items": items}
+        return jsonify({"ok": True, "items": items})
+    except Exception as e:
+        app.logger.warning("行情排行失敗 (%s): %s", kind, e)
+        # 不把內部位址吐給前端；狀態碼與其他 gateway 包裝端點一致
+        return jsonify({"ok": False, "error": "排行服務暫時無法使用"}), 502
 
 
 _support_cache: dict = {}
