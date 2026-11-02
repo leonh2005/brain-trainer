@@ -15,6 +15,8 @@
 
 輸出：~/CCProject/data/foreign_return_status.json（給 command-center 卡片讀）
 """
+from __future__ import annotations
+
 import json
 import os
 import re
@@ -64,8 +66,8 @@ def _to_int(s) -> int:
     return int(str(s).replace(",", "").strip())
 
 
-def fetch_foreign_net_oi(days: int = 8) -> list[dict]:
-    """外資大台淨未沖銷口數，回 [{date, net}] 由舊到新（負值=淨空單）。
+def fetch_foreign_net_oi(days: int = 8) -> tuple[list[dict], list[str]]:
+    """外資大台淨未沖銷口數，回 ([{date, net}] 由舊到新, 失敗訊息清單)。
 
     期交所 opendata 只有「當日」，故改逐日打網站的三大法人歷史查詢頁並解析表格
     （網站表格用「外資」，與 opendata 的「外資及陸資」不同；欄位順序見 _NUM 過濾後的
@@ -73,6 +75,7 @@ def fetch_foreign_net_oi(days: int = 8) -> list[dict]:
     """
     from bs4 import BeautifulSoup
     out = []
+    errors: list[str] = []
     d = date.today()
     for _ in range(days * 2 + 6):        # 多掃幾天以跳過週末/假日
         if len(out) >= days:
@@ -85,6 +88,7 @@ def fetch_foreign_net_oi(days: int = 8) -> list[dict]:
                 headers={"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)"},
                 timeout=30,
             )
+            r.raise_for_status()      # 403/5xx 若不檢查會被解析成 0 列而看似「沒資料」
             soup = BeautifulSoup(r.text, "html.parser")
             cur = None
             for tr in soup.find_all("tr", class_="12bk"):
@@ -98,23 +102,25 @@ def fetch_foreign_net_oi(days: int = 8) -> list[dict]:
                 if cur == BIG_CONTRACT and ident == FOREIGN_SITE:
                     nums = [x for x in tds if _NUM.fullmatch(x)]
                     if len(nums) > 10:
-                        out.append({"date": d.strftime("%Y%m%d"),
+                        out.append({"date": d.strftime("%Y-%m-%d"),
                                     "net": _to_int(nums[10])})
                     break
-        except Exception:
-            pass
+        except Exception as e:
+            errors.append(f"{d}：{str(e)[:80]}")
         d -= timedelta(days=1)
-    return sorted(out, key=lambda x: x["date"])
+    return sorted(out, key=lambda x: x["date"]), errors
 
 
-def fetch_volume(months: int = 3) -> list[dict]:
-    """大盤每日成交金額，回 [{date, amount}] 由舊到新（單位：元）。
+def fetch_volume(months: int = 3) -> tuple[list[dict], list[str]]:
+    """大盤每日成交金額，回 ([{date, amount}] 由舊到新, 失敗訊息清單)。
 
     FMTQIK 不帶 date 只回當月，故往前逐月抓以湊足 20 日均量所需的歷史。
     months 必須 ≥3：月初當月只有 0~1 個交易日，2 個月只湊得到約 20 筆，
     會讓 check_volume 永遠回「資料不足」（2026-11-02 實測 19 筆）。
+    單月失敗不再靜默跳過，錯誤摺進回傳值讓卡片顯示得出來。
     """
-    out = []
+    out: list[dict] = []
+    errors: list[str] = []
     today = date.today()
     for i in range(months):
         y, m = today.year, today.month - i
@@ -124,29 +130,85 @@ def fetch_volume(months: int = 3) -> list[dict]:
         try:
             d = _get_json(f"{TWSE_VOL}&date={y}{m:02d}01")
         except Exception as e:
-            print(f"fetch_volume: {y}{m:02d} 取得失敗：{e}")
+            errors.append(f"{y}-{m:02d} 取得失敗：{str(e)[:80]}")
             continue
+        bad = 0
         for row in d.get("data", []):
-            yy, mm, dd = row[0].split("/")          # 民國 115/10/16
-            out.append({"date": f"{int(yy) + 1911}-{int(mm):02d}-{int(dd):02d}",
-                        "amount": float(row[2].replace(",", ""))})
+            try:
+                yy, mm, dd = row[0].split("/")      # 民國 115/10/16
+                out.append({"date": f"{int(yy) + 1911}-{int(mm):02d}-{int(dd):02d}",
+                            "amount": float(row[2].replace(",", ""))})
+            except Exception:
+                bad += 1                            # 壞列跳過，不連累同月其他列
+        if bad:
+            errors.append(f"{y}-{m:02d} 有 {bad} 列無法解析")
     uniq = {r["date"]: r for r in out}
-    return [uniq[k] for k in sorted(uniq)]
+    return [uniq[k] for k in sorted(uniq)], errors
 
 
-def fetch_fx(days: int = 10) -> list[dict]:
-    """USD/NTD 收盤匯率，回 [{date, rate}] 由舊到新（數字下降=台幣升值）。"""
+def fetch_fx(days: int = 10) -> tuple[list[dict], list[str]]:
+    """USD/NTD 收盤匯率，回 ([{date, rate}] 由舊到新, 失敗訊息清單)。
+
+    期交所回 YYYYMMDD，統一轉成 YYYY-MM-DD 與其他兩項一致。
+    整個端點失敗時直接拋錯，由 main 記成「抓取失敗」，故 errors 恆為空。
+    """
     data = _get_json(TAIFEX_FX)
-    out = [{"date": r["Date"], "rate": float(r["USD/NTD"])}
-           for r in data if r.get("USD/NTD")]
+
+    def iso(s: str) -> str:
+        t = str(s).strip()
+        if len(t) == 8 and t.isdigit():
+            return f"{t[:4]}-{t[4:6]}-{t[6:8]}"
+        try:                                   # 容錯 2026/10/30 之類的變體
+            return datetime.strptime(t, "%Y/%m/%d").strftime("%Y-%m-%d")
+        except ValueError:
+            return ""                          # 完全無法解析就丟掉，讓缺口檢查抓到
+
+    out = []
+    for r in data:
+        rate = r.get("USD/NTD")
+        d = iso(r.get("Date", "")) if rate else ""
+        if d:
+            out.append({"date": d, "rate": float(rate)})
     out.sort(key=lambda x: x["date"])
-    return out[-days:]
+    return out[-days:], []
 
 
-def check_futures(rows: list[dict]) -> dict:
+def _gap_detail(rows: list[dict], max_gap: int = 4) -> str:
+    """回第一個超過 max_gap 天的日期缺口說明；沒有缺口回空字串。
+
+    週五→週一差 3 天屬正常，週五→週二（一日連假）差 4 天仍放行；
+    再長就代表有交易日被漏抓，此時「相鄰兩筆相減」會把多日變化算成單日。
+    """
+    for a, b in zip(rows, rows[1:]):
+        try:
+            d1, d2 = date.fromisoformat(a["date"]), date.fromisoformat(b["date"])
+        except (ValueError, TypeError):
+            return f"{a.get('date')}~{b.get('date')} 日期格式異常"
+        if (d2 - d1).days > max_gap:
+            return f"{a['date']} 與 {b['date']} 相隔 {(d2 - d1).days} 天"
+    return ""
+
+
+def _insufficient(have: int, need: int, errors: list[str] | None = None,
+                  unit: str = "筆") -> dict:
+    """三個訊號共用的「資料不足」結果，順帶把抓取失敗原因帶給卡片。"""
+    detail = f"資料不足（{have} 筆，需 {need} 筆）"
+    if errors:
+        shown = "；".join(errors[:2])          # 錯誤字串已在來源截斷
+        more = f" 等 {len(errors)} {unit}" if len(errors) > 2 else ""
+        detail += f"；抓取失敗 {len(errors)} {unit}：{shown}{more}"
+    return {"ok": False, "detail": detail}
+
+
+def check_futures(rows: list[dict], errors: list[str] | None = None) -> dict:
     """外資淨空單連續 REDUCE_DAYS 日各減碼 ≥REDUCE_LOTS 口。"""
     if len(rows) < REDUCE_DAYS + 1:
-        return {"ok": False, "detail": "資料不足"}
+        return _insufficient(len(rows), REDUCE_DAYS + 1, errors, "天")
+    gap = _gap_detail(rows[-(REDUCE_DAYS + 1):])
+    if gap:
+        # 缺一天會讓「兩日合計」被當成單日減碼 → 寧可不判定，也不要誤報成立
+        return {"ok": False, "warn": "資料有缺口",
+                "detail": f"資料有缺口（{gap}），暫不判定連續減碼"}
     changes = [rows[i]["net"] - rows[i - 1]["net"] for i in range(1, len(rows))]
     recent = changes[-REDUCE_DAYS:]
     ok = all(c >= REDUCE_LOTS for c in recent)
@@ -159,26 +221,46 @@ def check_futures(rows: list[dict]) -> dict:
     }
 
 
-def check_volume(rows: list[dict]) -> dict:
-    """最新一日成交金額站上 20 日均量。"""
+def check_volume(rows: list[dict], errors: list[str] | None = None) -> dict:
+    """最新一日成交金額站上 20 日均量。errors 來自 fetch_volume 的抓取失敗。"""
     if len(rows) < VOL_MA_DAYS + 1:
-        return {"ok": False, "detail": "資料不足"}
+        return _insufficient(len(rows), VOL_MA_DAYS + 1, errors, "個月")
     latest = rows[-1]
     avg = sum(r["amount"] for r in rows[-(VOL_MA_DAYS + 1):-1]) / VOL_MA_DAYS
-    return {
+    detail = (f"{latest['date']} 成交 {latest['amount'] / 1e12:.2f} 兆 "
+              f"vs 20日均量 {avg / 1e12:.2f} 兆")
+    result = {
         "ok": latest["amount"] >= avg,
         "latest_date": latest["date"],
         "latest_amount": latest["amount"],
         "ma20": avg,
-        "detail": f"{latest['date']} 成交 {latest['amount'] / 1e12:.2f} 兆 vs 20日均量 {avg / 1e12:.2f} 兆",
+        "detail": detail,
     }
+    # 只有真的影響判定的失敗才警告，否則會掛一個永遠不會消的假警告
+    warns = []
+    if errors:
+        cur_ym = date.today().strftime("%Y-%m")
+        if any(e.startswith(cur_ym) for e in errors):
+            warns.append(f"當月資料未取得，以 {latest['date']} 判定")
+        window_start = rows[-(VOL_MA_DAYS + 1)]["date"][:7]
+        if any(window_start <= e[:7] < cur_ym for e in errors):
+            warns.append("均量窗口內有月份缺失")
+    if warns:
+        result["warn"] = "；".join(warns)
+        result["detail"] = detail + f"　⚠️ {result['warn']}"
+    return result
 
 
-def check_fx(rows: list[dict]) -> dict:
+def check_fx(rows: list[dict], errors: list[str] | None = None) -> dict:
     """台幣連續 FX_UP_DAYS 日升值、累計 ≥FX_UP_TOTAL 元。"""
     if len(rows) < FX_UP_DAYS + 1:
-        return {"ok": False, "detail": "資料不足"}
+        return _insufficient(len(rows), FX_UP_DAYS + 1, errors, "筆")
     seg = rows[-(FX_UP_DAYS + 1):]
+    gap = _gap_detail(seg)
+    if gap:
+        # 中間缺一天時「連續升值」會把不相鄰的兩日當相鄰 → 不判定
+        return {"ok": False, "warn": "資料有缺口",
+                "detail": f"資料有缺口（{gap}），暫不判定連續升值"}
     daily_up = all(seg[i]["rate"] < seg[i - 1]["rate"] for i in range(1, len(seg)))
     total = seg[0]["rate"] - seg[-1]["rate"]     # 正=升值
     return {
@@ -199,9 +281,10 @@ def main() -> None:
         ("fx", check_fx, fetch_fx),
     ]:
         try:
-            results[key] = fn(fetcher())
+            results[key] = fn(*fetcher())      # fetcher 都回 (rows, errors)
         except Exception as e:
-            results[key] = {"ok": False, "error": str(e)[:200]}
+            # 卡片只讀 detail，所以失敗訊息寫這裡（不再另存 error 欄位）
+            results[key] = {"ok": False, "detail": f"抓取失敗：{str(e)[:150]}"}
 
     hits = [k for k, v in results.items() if v.get("ok")]
     status = {
