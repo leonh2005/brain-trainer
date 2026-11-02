@@ -172,6 +172,75 @@ def test_fetch_volume_skips_bad_row_without_dropping_rest(frm, monkeypatch, froz
     assert any("無法解析" in e for e in errors)
 
 
+def test_check_futures_allows_normal_weekend_gap(frm):
+    """週五→週一之間沒有工作日，屬正常，不可誤擋。"""
+    rows = [
+        {"date": "2026-10-29", "net": -100000},   # 週四
+        {"date": "2026-10-30", "net": -95000},    # 週五
+        {"date": "2026-11-02", "net": -85000},    # 週一
+        {"date": "2026-11-03", "net": -70000},    # 週二
+    ]
+    result = frm.check_futures(rows)
+    assert "缺口" not in result["detail"]
+
+
+def test_check_futures_detects_single_weekday_gap(frm):
+    """週三→週五中間夾了週四 → 必須抓到（固定天數門檻會漏掉這種）。"""
+    rows = [
+        {"date": "2026-10-26", "net": -100000},   # 週一
+        {"date": "2026-10-27", "net": -95000},    # 週二
+        {"date": "2026-10-29", "net": -83000},    # 週四（10-28 週三漏抓）
+        {"date": "2026-10-30", "net": -71000},    # 週五
+    ]
+    result = frm.check_futures(rows)
+    assert result["ok"] is False
+    assert "10-28" in result["detail"] or "工作日" in result["detail"]
+
+
+def test_check_futures_warns_when_errors_but_rows_suffice(frm):
+    """湊足筆數但有天抓不到時，必須提示最新資料日可能不是最近交易日。"""
+    rows = [
+        {"date": f"2026-10-{d}", "net": -100000 + i * 12000}
+        for i, d in enumerate(["26", "27", "28", "29", "30"])
+    ]
+    result = frm.check_futures(rows, ["2026-11-02：timeout"])
+    assert "抓取失敗" in result["warn"]
+
+
+def test_check_fx_uses_rounded_total(frm):
+    """累計升值 0.300 元必須判定成立，不能因浮點誤差顯示與判定矛盾。"""
+    rows = [
+        {"date": "2026-10-27", "rate": 31.002},
+        {"date": "2026-10-28", "rate": 30.902},
+        {"date": "2026-10-29", "rate": 30.802},
+        {"date": "2026-10-30", "rate": 30.702},
+    ]
+    result = frm.check_fx(rows)
+    assert result["total_appreciation"] == 0.3
+    assert result["ok"] is True
+
+
+def test_fx_accepts_iso_dates(frm, monkeypatch):
+    """來源若已是 ISO 格式（YYYY-MM-DD）也要吃得下，不能被丟光。"""
+    monkeypatch.setattr(frm, "_get_json", lambda url: [
+        {"Date": "2026-10-29", "USD/NTD": "32.452"},
+        {"Date": "2026-10-30", "USD/NTD": "32.478"},
+    ])
+    rows, errors = frm.fetch_fx()
+    assert [r["date"] for r in rows] == ["2026-10-29", "2026-10-30"]
+    assert not errors
+
+
+def test_fx_reports_unparseable_dates(frm, monkeypatch):
+    """日期格式無法解析時要記錯，不能靜默變成 0 筆。"""
+    monkeypatch.setattr(frm, "_get_json", lambda url: [
+        {"Date": "30/10/2026", "USD/NTD": "32.478"},
+    ])
+    rows, errors = frm.fetch_fx()
+    assert rows == []
+    assert errors and "無法解析" in errors[0]
+
+
 def test_check_fx_refuses_to_judge_across_gap(frm):
     """匯率中間缺一天時不可把不相鄰的兩日當成連續升值。"""
     rows = [

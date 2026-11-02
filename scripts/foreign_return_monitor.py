@@ -158,34 +158,52 @@ def fetch_fx(days: int = 10) -> tuple[list[dict], list[str]]:
         t = str(s).strip()
         if len(t) == 8 and t.isdigit():
             return f"{t[:4]}-{t[4:6]}-{t[6:8]}"
+        if len(t) == 10 and t[4] == "-" and t[7] == "-":
+            return t                           # 來源已是 ISO
         try:                                   # 容錯 2026/10/30 之類的變體
             return datetime.strptime(t, "%Y/%m/%d").strftime("%Y-%m-%d")
         except ValueError:
-            return ""                          # 完全無法解析就丟掉，讓缺口檢查抓到
+            return ""                          # 無法解析 → 丟掉並記進 errors
 
-    out = []
+    out, bad = [], 0
     for r in data:
         rate = r.get("USD/NTD")
-        d = iso(r.get("Date", "")) if rate else ""
-        if d:
-            out.append({"date": d, "rate": float(rate)})
+        if not rate:
+            continue
+        d = iso(r.get("Date", ""))
+        if not d:
+            bad += 1
+            continue
+        out.append({"date": d, "rate": float(rate)})
     out.sort(key=lambda x: x["date"])
-    return out[-days:], []
+    return out[-days:], ([f"{bad} 筆日期無法解析"] if bad else [])
 
 
-def _gap_detail(rows: list[dict], max_gap: int = 4) -> str:
-    """回第一個超過 max_gap 天的日期缺口說明；沒有缺口回空字串。
+def _weekdays_between(d1: date, d2: date) -> int:
+    """兩個日期之間（不含端點）的工作日數。"""
+    n, cur = 0, d1 + timedelta(days=1)
+    while cur < d2:
+        if cur.weekday() < 5:
+            n += 1
+        cur += timedelta(days=1)
+    return n
 
-    週五→週一差 3 天屬正常，週五→週二（一日連假）差 4 天仍放行；
-    再長就代表有交易日被漏抓，此時「相鄰兩筆相減」會把多日變化算成單日。
+
+def _gap_detail(rows: list[dict]) -> str:
+    """回第一個「中間夾了工作日卻沒資料」的缺口說明；沒有缺口回空字串。
+
+    週五→週一之間沒有工作日，屬正常（連假同理會誤擋，方向保守）；
+    週三→週五中間夾了週四，代表有一天交易日被漏抓 —— 此時相鄰兩筆
+    相減會把多日變化算成單日，必須擋掉。
     """
     for a, b in zip(rows, rows[1:]):
         try:
             d1, d2 = date.fromisoformat(a["date"]), date.fromisoformat(b["date"])
         except (ValueError, TypeError):
             return f"{a.get('date')}~{b.get('date')} 日期格式異常"
-        if (d2 - d1).days > max_gap:
-            return f"{a['date']} 與 {b['date']} 相隔 {(d2 - d1).days} 天"
+        missing = _weekdays_between(d1, d2)
+        if missing:
+            return f"{a['date']} 與 {b['date']} 之間漏了 {missing} 個工作日"
     return ""
 
 
@@ -211,14 +229,18 @@ def check_futures(rows: list[dict], errors: list[str] | None = None) -> dict:
                 "detail": f"資料有缺口（{gap}），暫不判定連續減碼"}
     changes = [rows[i]["net"] - rows[i - 1]["net"] for i in range(1, len(rows))]
     recent = changes[-REDUCE_DAYS:]
-    ok = all(c >= REDUCE_LOTS for c in recent)
-    return {
-        "ok": ok,
+    result = {
+        "ok": all(c >= REDUCE_LOTS for c in recent),
         "latest_net": rows[-1]["net"],
         "latest_date": rows[-1]["date"],
         "recent_changes": recent,
         "detail": f"近 {REDUCE_DAYS} 日淨空單變化 {recent}（減碼為正）",
     }
+    if errors:
+        # 湊足筆數但有天抓不到 → 最新資料日可能不是最近交易日，必須講出來
+        result["warn"] = f"最新資料日 {rows[-1]['date']}，期間有 {len(errors)} 天抓取失敗"
+        result["detail"] += f"　⚠️ {result['warn']}"
+    return result
 
 
 def check_volume(rows: list[dict], errors: list[str] | None = None) -> dict:
@@ -236,14 +258,16 @@ def check_volume(rows: list[dict], errors: list[str] | None = None) -> dict:
         "ma20": avg,
         "detail": detail,
     }
-    # 只有真的影響判定的失敗才警告，否則會掛一個永遠不會消的假警告
+    # 只有真的影響判定的失敗才警告，否則會掛一個永遠不會消的假警告。
+    # 只認「取得失敗」（整月沒抓到）；「無法解析」是少數壞列，由筆數與缺口把關。
     warns = []
-    if errors:
+    fails = [e for e in (errors or []) if "取得失敗" in e]
+    if fails:
         cur_ym = date.today().strftime("%Y-%m")
-        if any(e.startswith(cur_ym) for e in errors):
+        if any(e.startswith(cur_ym) for e in fails):
             warns.append(f"當月資料未取得，以 {latest['date']} 判定")
         window_start = rows[-(VOL_MA_DAYS + 1)]["date"][:7]
-        if any(window_start <= e[:7] < cur_ym for e in errors):
+        if any(window_start <= e[:7] < cur_ym for e in fails):
             warns.append("均量窗口內有月份缺失")
     if warns:
         result["warn"] = "；".join(warns)
@@ -263,14 +287,19 @@ def check_fx(rows: list[dict], errors: list[str] | None = None) -> dict:
                 "detail": f"資料有缺口（{gap}），暫不判定連續升值"}
     daily_up = all(seg[i]["rate"] < seg[i - 1]["rate"] for i in range(1, len(seg)))
     total = seg[0]["rate"] - seg[-1]["rate"]     # 正=升值
-    return {
-        "ok": daily_up and total >= FX_UP_TOTAL,
+    result = {
+        # 用與顯示相同的 3 位小數比較，否則會出現「升值 0.300 元」卻不算成立
+        "ok": daily_up and round(total, 3) >= FX_UP_TOTAL,
         "latest_date": seg[-1]["date"],
         "latest_rate": seg[-1]["rate"],
         "total_appreciation": round(total, 3),
         "detail": f"{seg[0]['date']}~{seg[-1]['date']} USD/NTD {seg[0]['rate']}→{seg[-1]['rate']}"
                   f"（台幣{'升值' if total > 0 else '貶值'} {abs(total):.3f} 元）",
     }
+    if errors:
+        result["warn"] = f"最新資料日 {seg[-1]['date']}，期間有 {len(errors)} 筆抓取失敗"
+        result["detail"] += f"　⚠️ {result['warn']}"
+    return result
 
 
 def main() -> None:
