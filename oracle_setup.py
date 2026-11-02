@@ -297,11 +297,13 @@ def main():
             return
 
         # 1. 缺的就建
+        created_now = []
         for idx, name in enumerate(missing):
             try:
                 instance = create_instance(compute_client, subnet_id, ssh_public_key, name)
                 log(f"✅ {name} 建立成功（{instance.lifecycle_state}）")
                 ours[name] = instance
+                created_now.append(name)
                 permanent_errors = 0
             except oci.exceptions.ServiceError as e:
                 if e.status in (429, 500):
@@ -320,6 +322,14 @@ def main():
                 time.sleep(INTER_REQUEST_DELAY)
             if permanent_errors >= 5:
                 break
+
+        # 搶到一台就先報，不要等三台全部到齊（剩下兩台可能還要等很久）
+        if created_now:
+            done = sum(1 for n in target_names if n in ours)
+            tail = ("繼續搶剩下的" if done < TARGET_COUNT
+                    else "三台都建好了，等 RUNNING／IP")
+            notify(f"🟡 Oracle 搶機進度 {done}/{TARGET_COUNT}\n"
+                   f"本輪建立：{', '.join(created_now)}\n{tail}")
 
         if missing or not_running:
             # STOPPED 的（例如被 Oracle 回收）嘗試重新啟動
@@ -355,7 +365,7 @@ def main():
     with open(RESULT_PATH, "w", encoding="utf-8") as f:
         f.write("\n".join(report) + "\n")
     log(f"結果已寫入 {RESULT_PATH}")
-    notify("Oracle ARM VM 搶到了\n\n" + "\n".join(report))
+    notify("🟢 Oracle ARM VM 全部到齊\n\n" + "\n".join(report))
     log("=== 全部完成 ===")
     self_unload()
 
