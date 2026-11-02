@@ -20,7 +20,54 @@ from openai import OpenAI
 
 app = Flask(__name__)
 
-DEEPSEEK_API_KEY = open(os.path.expanduser("~/CCProject/.secrets/deepseek_key.txt")).read().strip()
+GEMINI_BASE = "https://generativelanguage.googleapis.com/v1beta/openai/"
+GEMINI_MODELS = ("gemini-2.5-flash-lite", "gemini-3.1-flash-lite", "gemini-3-flash-preview")
+
+
+def _read_key(filename: str):
+    """延遲載入金鑰；檔案不存在回 None（該來源跳過）。"""
+    try:
+        with open(os.path.expanduser(f"~/CCProject/.secrets/{filename}"), encoding="utf-8") as f:
+            return f.read().strip()
+    except OSError:
+        return None
+
+
+_exhausted_models: set[str] = set()   # 本程序已回 429 的模型，不必再試
+
+
+def _llm_chat(prompt: str, max_tokens: int) -> str:
+    """Gemini 為主（免費額度），DeepSeek 當備援（有餘額時才輪得到）。"""
+    attempts = []
+    gkey = _read_key("gemini_key.txt")
+    if gkey:
+        attempts += [(GEMINI_BASE, gkey, m, {"reasoning_effort": "none"}) for m in GEMINI_MODELS]
+    dkey = _read_key("deepseek_key.txt")
+    if dkey:
+        attempts.append(("https://api.deepseek.com", dkey, "deepseek-chat", {}))
+
+    if not attempts:
+        raise RuntimeError("沒有可用的 API 金鑰（Gemini／DeepSeek 都讀不到）")
+
+    last = None
+    for base, key, model, extra in attempts:
+        if model in _exhausted_models:
+            continue
+        try:
+            client = OpenAI(api_key=key, base_url=base, timeout=20, max_retries=0)
+            resp = client.chat.completions.create(
+                model=model, max_tokens=max_tokens,
+                messages=[{"role": "user", "content": prompt}], **extra)
+            content = (resp.choices[0].message.content or "").strip()
+            if not content:
+                raise ValueError("模型回應為空")   # 200 但沒內容＝失敗
+            return content
+        except Exception as e:
+            if "429" in str(e):
+                _exhausted_models.add(model)
+            last = e
+            app.logger.warning("LLM %s 失敗：%s", model, str(e)[:80])
+    raise RuntimeError(f"所有模型都失敗：{last}")
 FINMIND_TOKEN = os.environ["FINMIND_TOKEN"]
 DISCOUNT_RATE = 0.10
 TERMINAL_GROWTH = 0.03
@@ -313,13 +360,7 @@ def fetch_news(code: str, name: str, hours: int = 48) -> dict:
 1. 整體情緒：偏多 / 偏空 / 中性（一個詞即可）
 2. 摘要：2-3句話說明主要新聞方向與對股價可能的影響"""
 
-    client = OpenAI(api_key=DEEPSEEK_API_KEY, base_url="https://api.deepseek.com")
-    resp = client.chat.completions.create(
-        model="deepseek-chat",
-        max_tokens=200,
-        messages=[{"role": "user", "content": prompt}]
-    )
-    raw = resp.choices[0].message.content
+    raw = _llm_chat(prompt, 200)
 
     sentiment = "中性"
     for kw in ["偏多", "偏空", "中性"]:
@@ -387,13 +428,7 @@ def api_ai_analysis():
 
 請給出：1) 整體評估（買入/觀察/避開）2) 主要理由（技術+基本面各一點）3) 注意風險"""
 
-        client = OpenAI(api_key=DEEPSEEK_API_KEY, base_url="https://api.deepseek.com")
-        resp = client.chat.completions.create(
-            model="deepseek-chat",
-            max_tokens=400,
-            messages=[{"role": "user", "content": prompt}]
-        )
-        return jsonify({"analysis": resp.choices[0].message.content})
+        return jsonify({"analysis": _llm_chat(prompt, 400)})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 

@@ -74,6 +74,53 @@ _PLANTS_PHOTOS = f'{_PLANTS_DIR}/photos'
 _PHOTO_EXTS = {'.jpg', '.jpeg', '.png', '.webp', '.gif'}
 _PHOTO_MAX_BYTES = 10 * 1024 * 1024
 _DEEPSEEK_KEY_FILE = f'{sources.CC}/.secrets/deepseek_key.txt'
+_GEMINI_KEY_FILE = f'{sources.CC}/.secrets/gemini_key.txt'
+_GEMINI_URL = 'https://generativelanguage.googleapis.com/v1beta/openai/chat/completions'
+_GEMINI_MODELS = ('gemini-2.5-flash-lite', 'gemini-3.1-flash-lite', 'gemini-3-flash-preview')
+
+
+_exhausted_models: set[str] = set()   # 本程序已回 429 的模型，不必再試
+
+
+def _ai_chat(messages: list[dict], temperature: float = 0.3, timeout: int = 20) -> str:
+    """Gemini 為主（免費額度），DeepSeek 當備援（有餘額時才輪得到）。"""
+    attempts: list[tuple] = []
+    for key_file, url, models, extra in (
+        (_GEMINI_KEY_FILE, _GEMINI_URL, _GEMINI_MODELS, {'reasoning_effort': 'none'}),
+        (_DEEPSEEK_KEY_FILE, 'https://api.deepseek.com/chat/completions', ('deepseek-chat',), {}),
+    ):
+        try:
+            with open(key_file, encoding='utf-8') as f:
+                key = f.read().strip()
+        except OSError:
+            continue                      # 沒有這把金鑰就跳過該來源
+        attempts += [(url, key, m, extra) for m in models]
+
+    if not attempts:
+        raise RuntimeError('沒有可用的 API 金鑰（Gemini／DeepSeek 都讀不到）')
+
+    last = None
+    for url, key, model, extra in attempts:
+        if model in _exhausted_models:
+            continue
+        try:
+            res = httpx.post(
+                url,
+                json={'model': model, 'temperature': temperature, 'messages': messages, **extra},
+                headers={'Authorization': f'Bearer {key}'},
+                timeout=timeout,
+            )
+            res.raise_for_status()
+            content = (res.json()['choices'][0]['message'].get('content') or '').strip()
+            if not content:
+                raise ValueError('模型回應為空')   # 200 但沒內容＝失敗
+            return content
+        except Exception as e:
+            if '429' in str(e):
+                _exhausted_models.add(model)
+            last = e
+            print(f'[ai] {model} 失敗：{str(e)[:80]}', flush=True)
+    raise RuntimeError(f'所有模型都失敗：{last}')
 
 _AUTH_USER, _AUTH_PASS = open(
     f'{sources.CC}/.secrets/command_center_auth.txt', encoding='utf-8'
@@ -516,11 +563,6 @@ def suggest_plant(req: PlantSuggestion):
     name = req.name.strip()
     if not name:
         raise HTTPException(400, '名稱不可空白')
-    try:
-        with open(_DEEPSEEK_KEY_FILE, encoding='utf-8') as f:
-            key = f.read().strip()
-    except OSError:
-        raise HTTPException(503, '找不到 DeepSeek 金鑰')
     prompt = (
         f'植物名稱：{name}\n'
         '只輸出 JSON，不要其他文字或 markdown，欄位：'
@@ -529,17 +571,10 @@ def suggest_plant(req: PlantSuggestion):
         '每個文字欄位 40-80 字繁體中文，針對台灣氣候的陽台盆栽寫照護重點。'
     )
     try:
-        res = httpx.post(
-            'https://api.deepseek.com/chat/completions',
-            json={'model': 'deepseek-chat', 'temperature': 0.3, 'messages': [
-                {'role': 'system', 'content': '你是台灣園藝顧問，回答務實、具體。'},
-                {'role': 'user', 'content': prompt},
-            ]},
-            headers={'Authorization': f'Bearer {key}'},
-            timeout=60,
-        )
-        res.raise_for_status()
-        content = res.json()['choices'][0]['message']['content']
+        content = _ai_chat([
+            {'role': 'system', 'content': '你是台灣園藝顧問，回答務實、具體。'},
+            {'role': 'user', 'content': prompt},
+        ])
     except Exception as e:
         raise HTTPException(502, f'AI 產生失敗：{e}')
     try:

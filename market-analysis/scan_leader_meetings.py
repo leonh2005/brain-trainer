@@ -17,7 +17,12 @@ from datetime import date
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 JSON_PATH = os.path.join(BASE_DIR, "leader_meetings.json")
+GEMINI_KEY = os.path.expanduser("~/CCProject/.secrets/gemini_key.txt")
 DEEPSEEK_KEY = os.path.expanduser("~/CCProject/.secrets/deepseek_key.txt")
+GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions"
+DEEPSEEK_URL = "https://api.deepseek.com/chat/completions"
+GEMINI_MODELS = ("gemini-2.5-flash-lite", "gemini-3.1-flash-lite", "gemini-3-flash-preview")
+_exhausted: set[str] = set()           # 本程序已回 429 的模型，不必再試
 TELEGRAM_TOKEN = os.path.expanduser("~/CCProject/.secrets/telegram_token.txt")
 CHAT_ID = "7556217543"
 
@@ -93,20 +98,53 @@ def _build_prompt(titles, data):
     return "\n".join(parts)
 
 
-def _ask_deepseek(prompt):
-    with open(DEEPSEEK_KEY, encoding="utf-8") as f:
-        key = f.read().strip()
-    body = json.dumps({
-        "model": "deepseek-chat",
-        "messages": [{"role": "user", "content": prompt}],
-        "temperature": 0.1,
-    }).encode()
-    req = urllib.request.Request(
-        "https://api.deepseek.com/chat/completions", data=body,
-        headers={"Authorization": f"Bearer {key}", "Content-Type": "application/json"})
-    with urllib.request.urlopen(req, timeout=120) as r:
-        resp = json.loads(r.read().decode("utf-8", "replace"))
-    return resp["choices"][0]["message"]["content"]
+def _read_key(path: str) -> str | None:
+    try:
+        with open(path, encoding="utf-8") as f:
+            return f.read().strip()
+    except OSError:
+        return None
+
+
+def _ask_llm(prompt: str) -> str:
+    """Gemini 為主（免費額度），DeepSeek 當備援（有餘額時才輪得到）。"""
+    attempts = []
+    gkey = _read_key(GEMINI_KEY)
+    if gkey:
+        attempts += [(GEMINI_URL, gkey, m, {"reasoning_effort": "none"}) for m in GEMINI_MODELS]
+    dkey = _read_key(DEEPSEEK_KEY)
+    if dkey:
+        attempts.append((DEEPSEEK_URL, dkey, "deepseek-chat", {}))
+
+    if not attempts:
+        raise RuntimeError("沒有可用的 API 金鑰（Gemini／DeepSeek 都讀不到）")
+
+    last = None
+    for url, key, model, extra in attempts:
+        if model in _exhausted:
+            continue
+        body = json.dumps({
+            "model": model,
+            "messages": [{"role": "user", "content": prompt}],
+            "temperature": 0.1,
+            **extra,
+        }).encode()
+        req = urllib.request.Request(
+            url, data=body,
+            headers={"Authorization": f"Bearer {key}", "Content-Type": "application/json"})
+        try:
+            with urllib.request.urlopen(req, timeout=60) as r:
+                resp = json.loads(r.read().decode("utf-8", "replace"))
+            content = (resp["choices"][0]["message"].get("content") or "").strip()
+            if not content:
+                raise ValueError("模型回應為空")     # 200 但沒內容＝失敗，換下一個
+            return content
+        except Exception as e:
+            if "429" in str(e):
+                _exhausted.add(model)
+            last = e
+            print(f"[warn] {model} 失敗：{str(e)[:80]}", flush=True)
+    raise RuntimeError(f"所有模型都失敗：{last}")
 
 
 def _parse_json(text):
@@ -164,7 +202,7 @@ def main():
     added = []
     if titles:
         try:
-            for e in _parse_json(_ask_deepseek(_build_prompt(titles, data))):
+            for e in _parse_json(_ask_llm(_build_prompt(titles, data))):
                 d, title = (e.get("date") or ""), (e.get("title") or "").strip()
                 if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", d) or not title or d < today:
                     continue

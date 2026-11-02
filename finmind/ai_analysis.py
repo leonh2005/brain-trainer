@@ -1,6 +1,6 @@
 """
 AI 買賣點分析模組
-使用 DeepSeek V3（deepseek-chat），給出買入價 / 止損價 / 目標價 + 一句結論
+Gemini 為主（免費額度、OpenAI 相容端點），DeepSeek 當備援（有餘額時才用得到）
 """
 
 import json
@@ -8,15 +8,32 @@ import os
 
 from openai import APIStatusError, OpenAI
 
-DEEPSEEK_API_KEY = open(os.path.expanduser("~/CCProject/.secrets/deepseek_key.txt")).read().strip()
+GEMINI_BASE = "https://generativelanguage.googleapis.com/v1beta/openai/"
+GEMINI_MODELS = ("gemini-2.5-flash-lite", "gemini-3.1-flash-lite", "gemini-3-flash-preview")
+_exhausted: set[str] = set()          # 本程序已回 429 的模型，後面的股票不必再試
+_credit_alerted = False
 
-_client = None
 
-def _get_client():
-    global _client
-    if _client is None:
-        _client = OpenAI(api_key=DEEPSEEK_API_KEY, base_url="https://api.deepseek.com")
-    return _client
+def _read_key(filename: str) -> str | None:
+    """延遲載入金鑰；檔案不存在回 None（該來源就跳過）。"""
+    try:
+        with open(os.path.expanduser(f"~/CCProject/.secrets/{filename}"), encoding="utf-8") as f:
+            return f.read().strip()
+    except OSError:
+        return None
+
+
+def _candidates():
+    """依序嘗試的 (client, model, extra)：Gemini 三個模型 → DeepSeek（已限流的跳過）。"""
+    gemini = _read_key("gemini_key.txt")
+    if gemini:
+        for model in GEMINI_MODELS:
+            yield (OpenAI(api_key=gemini, base_url=GEMINI_BASE, timeout=30, max_retries=0),
+                   model, {"reasoning_effort": "none"})
+    deepseek = _read_key("deepseek_key.txt")
+    if deepseek:
+        yield (OpenAI(api_key=deepseek, base_url="https://api.deepseek.com", timeout=30,
+                      max_retries=0), "deepseek-chat", {})
 
 
 def analyze_stock(code: str, name: str, close: float, chg_pct: float,
@@ -50,39 +67,59 @@ def analyze_stock(code: str, name: str, close: float, chg_pct: float,
 請只輸出 JSON，不要其他文字：
 {{"buy": 數字, "stop": 數字, "target": 數字, "note": "20字內的一句操作結論"}}"""
 
-    try:
-        client = _get_client()
-        resp = client.chat.completions.create(
-            model="deepseek-chat",
-            messages=[{"role": "user", "content": prompt}],
-            temperature=0.1,
-            max_tokens=120,
-        )
-        text = resp.choices[0].message.content.strip()
-        # 取出 JSON（防止前後有多餘文字）
-        start = text.find('{')
-        end = text.rfind('}') + 1
-        if start == -1 or end == 0:
-            return None
-        data = json.loads(text[start:end])
-        return {
-            'buy':    round(float(data['buy']), 1),
-            'stop':   round(float(data['stop']), 1),
-            'target': round(float(data['target']), 1),
-            'note':   str(data.get('note', '')),
-        }
-    except APIStatusError as e:
-        print(f'[AI] {code} API 錯誤 {e.status_code}: {e.message}')
-        if e.status_code == 402:
-            _send_credit_alert()
-        return None
-    except Exception as e:
-        print(f'[AI] {code} 分析失敗: {e}')
-        return None
+    last_error = None
+    tried = 0
+    for client, model, extra in _candidates():
+        if model in _exhausted:
+            continue
+        tried += 1
+        try:
+            resp = client.chat.completions.create(
+                model=model,
+                messages=[{"role": "user", "content": prompt}],
+                temperature=0.1,
+                max_tokens=200,      # Gemini 關掉思考後 120 也夠，但留點餘裕給長一點的結論
+                **extra,
+            )
+            text = (resp.choices[0].message.content or "").strip()
+            if not text:
+                raise ValueError("模型回應為空")   # 200 但沒內容＝失敗，不能當成功
+            # 取出 JSON（防止前後有多餘文字或 ``` 圍籬）
+            start = text.find('{')
+            end = text.rfind('}') + 1
+            if start == -1 or end == 0:
+                raise ValueError("回應不是 JSON")
+            data = json.loads(text[start:end])
+            return {
+                'buy':    round(float(data['buy']), 1),
+                'stop':   round(float(data['stop']), 1),
+                'target': round(float(data['target']), 1),
+                'note':   str(data.get('note', '')),
+            }
+        except APIStatusError as e:
+            last_error = e
+            if e.status_code == 429:
+                _exhausted.add(model)
+            print(f'[AI] {code} {model} 失敗 {e.status_code}: {str(e.message)[:80]}')
+            continue
+        except Exception as e:
+            last_error = e
+            print(f'[AI] {code} {model} 分析失敗: {str(e)[:80]}')
+            continue
+
+    if tried == 0:
+        print('[AI] 沒有可用的 API 金鑰（Gemini／DeepSeek 都讀不到）')
+    elif isinstance(last_error, APIStatusError) and last_error.status_code == 402:
+        _send_credit_alert()
+    return None
 
 
 def _send_credit_alert():
-    """DeepSeek 餘額不足時推播 Telegram"""
+    """備援（DeepSeek）也沒餘額時推播 Telegram；每個程序只發一次。"""
+    global _credit_alerted
+    if _credit_alerted:
+        return
+    _credit_alerted = True
     import requests
     BOT_TOKEN = open(os.path.expanduser("~/CCProject/.secrets/telegram_token.txt")).read().strip()
     CHAT_ID   = "7556217543"

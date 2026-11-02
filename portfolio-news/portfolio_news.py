@@ -31,12 +31,21 @@ load_dotenv(Path(__file__).parent / ".env")
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 logger = logging.getLogger("portfolio_news")
 
-BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", open(os.path.expanduser("~/CCProject/.secrets/telegram_token.txt")).read().strip())
-CHAT_ID   = os.getenv("TELEGRAM_CHAT_ID", "7556217543")
-DEEPSEEK_API_KEY = os.getenv("DEEPSEEK_API_KEY", open(os.path.expanduser("~/CCProject/.secrets/deepseek_key.txt")).read().strip())
+CHAT_ID = os.getenv("TELEGRAM_CHAT_ID", "7556217543")
+
+
+def _read_secret(filename: str, env: str) -> str:
+    """延遲載入金鑰：import 模組（含測試與 probe 子程序）不該要求金鑰檔存在。"""
+    value = os.getenv(env)
+    if value:
+        return value.strip()
+    with open(os.path.expanduser(f"~/CCProject/.secrets/{filename}"), encoding="utf-8") as f:
+        return f.read().strip()
+# 免費方案每個模型每天只有 20 次，兩個模型輪替才有 40 次（台股 5 + 美股 18 檔/天）
+GEMINI_MODELS = ("gemini-2.5-flash-lite", "gemini-3.1-flash-lite", "gemini-3-flash-preview")
 
 MAX_FETCH   = 50   # RSS 最多抓幾則
-MAX_SEND    = 20   # 去重後送 DeepSeek 上限
+MAX_SEND    = 20   # 去重後送模型上限
 SIMILAR_THR = 0.6  # 標題相似度閾值（超過視為重複）
 
 # ── 設定檔 ──────────────────────────────────────────────────────────────────
@@ -243,7 +252,7 @@ def fetch_foreign_holding(stock_code: str) -> float | None:
 def analyze(holding: dict, articles: list[dict],
             institutional: dict | None = None,
             big_holder: float | None = None) -> dict:
-    """用 DeepSeek V3 分析一個持倉的多空情緒。"""
+    """用 Gemini 分析一個持倉的多空情緒。"""
     if not articles:
         # direction="none" 表示「沒有資訊」，不是「中性」—— 不能拿去投票，
         # 否則 7 檔沒新聞的 ETF 各給 5 分，會把真正有利多的標的抵銷掉。
@@ -267,7 +276,7 @@ def analyze(holding: dict, articles: list[dict],
 
     # 法人買賣超補充段落
     inst_section = ""
-    if institutional:
+    if institutional and institutional.get("date"):
         def fmt_lots(n: int) -> str:
             sign = "+" if n >= 0 else ""
             return f"{sign}{n:,}張"
@@ -311,25 +320,38 @@ def analyze(holding: dict, articles: list[dict],
 }}"""
 
     try:
+        # Gemini 的 OpenAI 相容端點：SDK 與呼叫方式不變，只換 base_url 與 model
         client = OpenAI(
-            api_key=DEEPSEEK_API_KEY,
-            base_url="https://api.deepseek.com/v1",
+            api_key=_read_secret("gemini_key.txt", "GEMINI_API_KEY"),
+            base_url="https://generativelanguage.googleapis.com/v1beta/openai/",
+            timeout=30,        # 預設 600 秒會讓單一持倉卡住整個時段
+            max_retries=0,     # 重試交給下面的模型輪替
         )
-        resp = client.chat.completions.create(
-            model="deepseek-chat",
-            messages=[{"role": "user", "content": prompt}],
-            temperature=0.1,
-            max_tokens=350,
-        )
-        text = re.sub(r"```[a-z]*\n?", "", resp.choices[0].message.content.strip()).strip("`").strip()
-        return _normalize_result(json.loads(text))
+        # 免費方案有每日次數上限；額度用盡、服務暫時異常、或回應解析失敗都換下一個模型
+        last_err = ""
+        for model in GEMINI_MODELS:
+            try:
+                resp = client.chat.completions.create(
+                    model=model,
+                    messages=[{"role": "user", "content": prompt}],
+                    temperature=0.1,
+                    max_tokens=350,
+                    # 關掉 2.5 的思考 token，否則它會吃掉額度、JSON 被截斷
+                    reasoning_effort="none",
+                )
+                return _normalize_result(_parse_model_json(resp.choices[0].message.content))
+            except Exception as e:
+                last_err = f"{model}: {str(e)[:80]}"
+                logger.warning("%s 分析失敗，換下一個模型：%s", holding["code"], last_err)
+                continue
+        raise RuntimeError(last_err or "沒有可用的模型")
     except Exception as e:
-        logger.error("DeepSeek 分析失敗 %s：%s", holding["code"], e)
+        logger.error("Gemini 分析失敗 %s：%s", holding["code"], e)
         return {
             "direction": "error",
             "score": 0,
             "category": "",
-            "summary": "分析失敗",
+            "summary": f"分析失敗（{str(e)[:40]}）",
             "key_factor": "",
             "push": False,
         }
@@ -364,16 +386,28 @@ def normalize_category(value) -> str:
     return "其他"
 
 
+def _parse_model_json(content: str | None) -> dict:
+    """模型常把 JSON 包在 ```json 圍籬或加前後說明，這裡只取最外層的大括號。"""
+    text = (content or "").strip()
+    start, end = text.find("{"), text.rfind("}")
+    if start < 0 or end <= start:
+        raise ValueError("模型回應不是 JSON")
+    return json.loads(text[start:end + 1])
+
+
 def _normalize_result(data: dict) -> dict:
-    """模型輸出的欄位防呆：方向／分數／類別三欄都可能寫壞。"""
-    if data.get("direction") not in ("bullish", "bearish", "neutral"):
-        data["direction"] = "neutral"
-    try:
-        score = int(data.get("score", 0))
-    except (TypeError, ValueError):
-        score = 0
-    data["score"] = max(0, min(10, score))
+    """模型輸出的欄位防呆：欄位缺漏或格式走鐘都不能讓後面的流程崩掉。"""
+    direction = str(data.get("direction", "")).strip().lower()
+    # 認不出的方向視為 error（不投票），不要硬塞成 neutral 汙染整體方向
+    data["direction"] = direction if direction in ("bullish", "bearish", "neutral") else "error"
+    match = re.search(r"-?\d+", str(data.get("score", "")))
+    data["score"] = max(0, min(10, int(match.group()) if match else 0))
     data["category"] = normalize_category(data.get("category"))
+    data["summary"] = str(data.get("summary") or "").strip()
+    data["key_factor"] = str(data.get("key_factor") or "").strip()
+    data["push"] = bool(data.get("push"))
+    if data["direction"] == "error" and not data["summary"]:
+        data["summary"] = "分析失敗"
     return data
 
 
@@ -441,8 +475,9 @@ def send_telegram(text: str):
         print(text)
         return
     try:
+        token = _read_secret("telegram_token.txt", "TELEGRAM_BOT_TOKEN")
         r = requests.post(
-            f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage",
+            f"https://api.telegram.org/bot{token}/sendMessage",
             data={"chat_id": CHAT_ID, "text": text, "parse_mode": "HTML"},
             timeout=10,
         )
@@ -450,7 +485,7 @@ def send_telegram(text: str):
             logger.error("Telegram 推播失敗 %s：%s", r.status_code, r.text[:200])
             # HTML parse 失敗時，改用純文字重試
             r2 = requests.post(
-                f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage",
+                f"https://api.telegram.org/bot{token}/sendMessage",
                 data={"chat_id": CHAT_ID, "text": text, "parse_mode": ""},
                 timeout=10,
             )
@@ -546,9 +581,11 @@ def run_session(holdings: list[dict], session_label: str):
     now_str = datetime.now().strftime("%m/%d %H:%M")
     header = f"📊 <b>{session_label}持倉情報</b>（{now_str}）\n\n"
     body   = "\n\n".join(lines)
+    analyzed = sum(1 for r in results if r.get("direction") not in ("none", "error", None))
     footer = (f"\n\n{overall_emoji} <b>整體方向：{overall_label}</b>"
               f"（多方 {stats['sums']['bullish']}／空方 {stats['sums']['bearish']}"
-              f"／中性 {stats['sums']['neutral']}，淨值 {stats['net']:+d}）")
+              f"／中性 {stats['sums']['neutral']}，淨值 {stats['net']:+d}）"
+              f"\n已分析 {analyzed}/{len(results)} 檔")
     if alerts:
         footer += "\n" + "\n".join(alerts)
 

@@ -1169,17 +1169,17 @@ function renderForeignReturn(d){
   // 資料夠但有部分抓取失敗時，後端會給 warn（例如少一個月，均量失真）
   const w=(o,s)=>s+(o.warn?`　⚠️ ${esc(o.warn)}`:'');
   const f=R.futures||{};
-  add('① 外資淨空單連續減碼', f.ok, has(f)
+  add('① 外資淨空單連續減碼', f.ok && !f.warn, has(f)
       ? w(f, `資料日 ${dd(f.latest_date)}　淨未沖銷 ${n((f.latest_net||0)/1000,1)} 千口　近3日變化 `+
         ((f.recent_changes||[]).map(v=>n(v/1000,1)+'k').join('　')||'—'))
       : esc(f.detail||'—'));
   const v=R.volume||{};
   const diff=(v.latest_amount!=null&&v.ma20!=null)?(v.latest_amount-v.ma20)/1e12:0;
-  add('② 成交量站上20日均量', v.ok, has(v)
+  add('② 成交量站上20日均量', v.ok && !v.warn, has(v)
       ? w(v, `資料日 ${dd(v.latest_date)}　成交 ${((v.latest_amount||0)/1e12).toFixed(2)} 兆　均量 ${((v.ma20||0)/1e12).toFixed(2)} 兆　差 ${n(diff,2)} 兆`)
       : esc(v.detail||'—'));
   const x=R.fx||{};
-  add('③ 台幣連續升值', x.ok, has(x)
+  add('③ 台幣連續升值', x.ok && !x.warn, has(x)
       ? w(x, `資料日 ${dd(x.latest_date)}　USD/NTD ${(x.latest_rate||0).toFixed(3)}　台幣${(x.total_appreciation||0)>0?'升值':'貶值'} ${n(x.total_appreciation||0,3)} 元`)
       : esc(x.detail||'—'));
   const sum=el('div','row');

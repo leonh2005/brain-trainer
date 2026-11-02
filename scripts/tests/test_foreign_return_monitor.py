@@ -121,7 +121,7 @@ def test_check_volume_warns_when_current_month_failed(frm, frozen_today):
     """當月抓取失敗時，卡片必須說明判定用的是哪一天（不是今天）。"""
     frozen_today(2026, 11, 2)
     rows = [{"date": f"2026-10-{i:02d}", "amount": 1e12} for i in range(1, 22)]
-    result = frm.check_volume(rows, ["2026-11 取得失敗：timeout"])
+    result = frm.check_volume(rows, ["2026-11 取得失敗：timeout"], latest_td="2026-11-02")
     assert result["ok"] is True
     assert "當月資料未取得" in result["warn"]
     assert "2026-10-21" in result["warn"]
@@ -144,7 +144,7 @@ def test_check_futures_refuses_to_judge_across_gap(frm):
         {"date": "2026-11-02", "net": -60000},    # 兩日合計減 40,000 口
         {"date": "2026-11-03", "net": -40000},
     ]
-    result = frm.check_futures(rows)
+    result = frm.check_futures(rows, ["2026-10-29：timeout", "2026-10-30：timeout"])
     assert result["ok"] is False
     assert "缺口" in result["detail"]
 
@@ -241,17 +241,17 @@ def test_fx_reports_unparseable_dates(frm, monkeypatch):
     assert errors and "無法解析" in errors[0]
 
 
-def test_check_fx_refuses_to_judge_across_gap(frm):
-    """匯率中間缺一天時不可把不相鄰的兩日當成連續升值。"""
+def test_check_fx_uses_series_as_trading_calendar(frm):
+    """期交所匯率一次回傳完整序列，中間沒有的日期就是休市，不該擋判定。"""
     rows = [
         {"date": "2026-10-26", "rate": 32.60},
         {"date": "2026-10-27", "rate": 32.55},
-        {"date": "2026-10-28", "rate": 32.50},   # 10-29 缺
+        {"date": "2026-10-28", "rate": 32.50},   # 10-29、10-30 休市
         {"date": "2026-11-02", "rate": 32.30},
     ]
     result = frm.check_fx(rows)
-    assert result["ok"] is False
-    assert "缺口" in result["detail"]
+    assert "缺口" not in result.get("detail", "")
+    assert result["ok"] is True
 
 
 def test_fx_dates_are_iso(frm, monkeypatch):
@@ -262,3 +262,166 @@ def test_fx_dates_are_iso(frm, monkeypatch):
     ])
     rows, _ = frm.fetch_fx()
     assert [r["date"] for r in rows] == ["2026-10-29", "2026-10-30"]
+
+
+# ── 交易日曆（國定假日不該被當成資料缺口）────────────────────────
+
+def test_fetch_holidays_excludes_trading_notes(frm, monkeypatch, tmp_path):
+    """日曆裡「…開始交易日」是交易日備註，不能當成休市日。"""
+    monkeypatch.setattr(frm, "HOLIDAY_CACHE", str(tmp_path / "h.json"))
+    monkeypatch.setattr(frm, "_get_json", lambda url: {"data": [
+        ["2026-10-09", "國慶日", "依規定放假1日。"],
+        ["2026-10-02", "國曆新年開始交易日", "國曆新年開始交易。"],
+        ["2026-02-12", "市場無交易，僅辦理結算交割作業", ""],
+    ]})
+    assert frm.fetch_holidays(2026) == {"2026-10-09", "2026-02-12"}
+
+
+def test_check_futures_does_not_block_on_market_closure(frm):
+    """休市日（含颱風假）在期交所頁面是 200 無資料，不該被當成缺口擋掉訊號。"""
+    rows = [
+        {"date": "2026-10-08", "net": -100000},
+        {"date": "2026-10-12", "net": -85000},
+        {"date": "2026-10-13", "net": -70000},
+        {"date": "2026-10-14", "net": -55000},
+    ]
+    # 10-09 是國慶日；market_days 沒有這天（成交量也沒有）→ 視為休市
+    market = {"2026-10-08", "2026-10-12", "2026-10-13", "2026-10-14"}
+    result = frm.check_futures(rows, holidays={"2026-10-09"}, market_days=market)
+    assert "缺口" not in result["detail"]
+
+
+def test_check_futures_flags_gap_when_market_traded(frm):
+    """成交量顯示當天有交易、期貨卻缺 → 真的漏抓，必須擋。"""
+    rows = [
+        {"date": "2026-10-08", "net": -100000},
+        {"date": "2026-10-12", "net": -85000},
+        {"date": "2026-10-13", "net": -70000},
+        {"date": "2026-10-14", "net": -55000},
+    ]
+    market = {"2026-10-08", "2026-10-09", "2026-10-12", "2026-10-13", "2026-10-14"}
+    result = frm.check_futures(rows, market_days=market)
+    assert result["ok"] is False
+    assert "2026-10-09" in result["detail"]
+
+
+def test_latest_trading_day_skips_weekend_and_holiday(frm):
+    assert frm.latest_trading_day(datetime.date(2026, 10, 11), {"2026-10-09"}) == "2026-10-08"
+
+
+# ── 資料落後（來源延遲發布）──────────────────────────────────────
+
+def test_check_fx_allows_one_trading_day_lag(frm):
+    """期交所匯率固定 T-1 發布，落後 1 個交易日屬正常，不能永遠掛警告。"""
+    rows = [{"date": d, "rate": r} for d, r in [
+        ("2026-10-27", 31.0), ("2026-10-28", 30.9),
+        ("2026-10-29", 30.8), ("2026-10-30", 30.7)]]
+    assert "warn" not in frm.check_fx(rows, latest_td="2026-11-02")
+
+
+def test_check_fx_warns_when_lagging_two_trading_days(frm):
+    rows = [{"date": d, "rate": r} for d, r in [
+        ("2026-10-23", 31.2), ("2026-10-26", 31.1),
+        ("2026-10-27", 31.0), ("2026-10-29", 30.9)]]
+    result = frm.check_fx(rows, latest_td="2026-11-02")
+    assert "落後" in result["warn"]
+
+
+def test_check_futures_no_warn_when_data_is_current(frm):
+    rows = [{"date": d, "net": n} for d, n in [
+        ("2026-10-28", -100000), ("2026-10-29", -95000),
+        ("2026-10-30", -85000), ("2026-11-02", -70000)]]
+    result = frm.check_futures(rows, latest_td="2026-11-02")
+    assert "warn" not in result
+
+
+# ── 錯誤訊息只反映判定窗口 ──────────────────────────────────────
+
+def test_fx_ignores_unparseable_dates_outside_window(frm, monkeypatch):
+    """視窗外的單一壞日期不該讓 ⚠️ 永遠掛著。"""
+    data = [{"Date": "30/10/2025", "USD/NTD": "32.1"}]
+    data += [{"Date": f"202610{d:02d}", "USD/NTD": "32.0"} for d in range(1, 11)]
+    monkeypatch.setattr(frm, "_get_json", lambda url: data)
+    rows, errors = frm.fetch_fx(days=4)
+    assert len(rows) == 4
+    assert not errors
+
+
+def test_fetch_volume_reports_month_without_data(frm, monkeypatch, frozen_today):
+    """來源回 200 但沒有 data（當月未發布）要留錯誤，不能靜默。"""
+    frozen_today(2026, 11, 2)
+
+    def fake(url: str) -> dict:
+        ym = url.rsplit("=", 1)[-1][:6]
+        if ym == "202611":
+            return {"stat": "很抱歉，沒有符合條件的資料!"}
+        year, month = int(ym[:4]), int(ym[4:6])
+        return {"data": [[d, "0", "1,000,000,000", "0", "0", "0"]
+                         for d in _trading_days(year, month, 19)]}
+
+    monkeypatch.setattr(frm, "_get_json", fake)
+    _, errors = frm.fetch_volume()
+    assert any("2026-11" in e for e in errors)
+
+
+def test_check_volume_warns_on_bad_rows_in_window(frm, frozen_today):
+    frozen_today(2026, 11, 2)
+    rows = [{"date": f"2026-10-{i:02d}", "amount": 1e12} for i in range(1, 22)]
+    result = frm.check_volume(rows, ["2026-10 有 2 列無法解析"])
+    assert "無法解析" in result["warn"]
+
+
+def test_check_volume_ignores_bad_rows_outside_window(frm, frozen_today):
+    frozen_today(2026, 11, 2)
+    rows = [{"date": f"2026-10-{i:02d}", "amount": 1e12} for i in range(1, 22)]
+    result = frm.check_volume(rows, ["2026-07 有 1 列無法解析"])
+    assert "warn" not in result
+
+
+def test_count_hits_excludes_warned_signals(frm):
+    """有警告的訊號不算成立，避免用落後資料發「三訊號全部成立」。"""
+    results = {"a": {"ok": True}, "b": {"ok": True, "warn": "資料落後"}, "c": {"ok": False}}
+    assert frm._count_hits(results) == ["a"]
+
+
+def test_error_days_excludes_weekend_and_holiday(frm):
+    """週末與休市日的查詢失敗不是資料缺口（期貨是逐「日曆日」往回打）。"""
+    assert frm._error_days(["2026-10-31：timeout", "2026-10-30：timeout"],
+                           {"2026-10-30"}) == []
+    assert frm._error_days(["2026-10-29：timeout"]) == ["2026-10-29"]
+
+
+def test_check_futures_ignores_errors_before_window(frm):
+    """判定窗口之前的舊失敗不該永久否決訊號。"""
+    rows = [{"date": d, "net": n} for d, n in [
+        ("2026-10-28", -100000), ("2026-10-29", -95000),
+        ("2026-10-30", -85000), ("2026-11-02", -70000)]]
+    result = frm.check_futures(rows, ["2026-10-20：timeout"], latest_td="2026-11-02")
+    assert "warn" not in result
+
+
+def test_fx_counts_missing_rate_as_bad(frm, monkeypatch):
+    """有列但沒有匯率＝那天從序列消失，要算錯誤而不是靜默跳過。"""
+    monkeypatch.setattr(frm, "_get_json", lambda url: [
+        {"Date": "20261029", "USD/NTD": ""},
+        {"Date": "20261030", "USD/NTD": "32.4"},
+    ])
+    rows, errors = frm.fetch_fx()
+    assert [r["date"] for r in rows] == ["2026-10-30"]
+    assert errors and "無法解析" in errors[0]
+
+
+def test_notification_ignores_warning_cleared(frm):
+    """ok 一直是 True、只是警告消失 → 不算新成立，不該再發通知。"""
+    results = {"futures": {"ok": True}, "volume": {"ok": True}, "fx": {"ok": True}}
+    prev = {"results": {"futures": {"ok": True, "warn": "落後"},
+                        "volume": {"ok": True}, "fx": {"ok": True}}}
+    assert frm._notification(results, prev, is_first=False) is None
+
+
+def test_notification_fires_on_newly_confirmed_signal(frm):
+    results = {"futures": {"ok": True}, "volume": {"ok": False}, "fx": {"ok": False}}
+    assert frm._notification(results, {"results": {"futures": {"ok": True, "warn": "落後"}}},
+                             is_first=False) is None
+    msg = frm._notification(results, {"results": {"futures": {"ok": False}}}, is_first=False)
+    assert msg and "1/3" in msg
