@@ -24,7 +24,7 @@ import requests
 
 BASE = os.path.expanduser("~/CCProject")
 STATUS_FILE = os.path.join(BASE, "data", "foreign_return_status.json")
-TELEGRAM_TOKEN = open(os.path.join(BASE, ".secrets", "telegram_token.txt")).read().strip()
+TOKEN_FILE = os.path.join(BASE, ".secrets", "telegram_token.txt")
 TELEGRAM_CHAT_ID = "7556217543"
 
 TAIFEX_FX = "https://openapi.taifex.com.tw/v1/DailyForeignExchangeRates"
@@ -43,9 +43,11 @@ FX_UP_TOTAL = 0.3                  # 台幣累計升值門檻(元)
 
 
 def send_telegram(msg: str) -> None:
+    # 金鑰延遲載入：模組 import（含測試）不該要求本機存在 .secrets/
     try:
+        token = open(TOKEN_FILE, encoding="utf-8").read().strip()
         requests.post(
-            f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage",
+            f"https://api.telegram.org/bot{token}/sendMessage",
             data={"chat_id": TELEGRAM_CHAT_ID, "text": msg}, timeout=15,
         )
     except Exception as e:
@@ -105,10 +107,12 @@ def fetch_foreign_net_oi(days: int = 8) -> list[dict]:
     return sorted(out, key=lambda x: x["date"])
 
 
-def fetch_volume(months: int = 2) -> list[dict]:
+def fetch_volume(months: int = 3) -> list[dict]:
     """大盤每日成交金額，回 [{date, amount}] 由舊到新（單位：元）。
 
     FMTQIK 不帶 date 只回當月，故往前逐月抓以湊足 20 日均量所需的歷史。
+    months 必須 ≥3：月初當月只有 0~1 個交易日，2 個月只湊得到約 20 筆，
+    會讓 check_volume 永遠回「資料不足」（2026-11-02 實測 19 筆）。
     """
     out = []
     today = date.today()
@@ -119,7 +123,8 @@ def fetch_volume(months: int = 2) -> list[dict]:
             y -= 1
         try:
             d = _get_json(f"{TWSE_VOL}&date={y}{m:02d}01")
-        except Exception:
+        except Exception as e:
+            print(f"fetch_volume: {y}{m:02d} 取得失敗：{e}")
             continue
         for row in d.get("data", []):
             yy, mm, dd = row[0].split("/")          # 民國 115/10/16

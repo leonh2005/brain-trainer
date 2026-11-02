@@ -100,3 +100,6 @@ abacus-sanitizer/logs/
 stock-pattern-probe/
 data/futures_daily/
 data/*.lock
+
+# 暫存工具目錄（含瀏覽器登入 cookie，絕不進版控）
+.tmp_gmap/
