@@ -6,8 +6,10 @@
 import json
 import math
 import os
+import shutil
 import statistics
 import sys
+import tempfile
 from datetime import UTC, datetime
 from pathlib import Path
 
@@ -288,6 +290,25 @@ def fetch_cape():
         return []
 
 
+def _write_margin_cache(rows: list) -> None:
+    """原子寫入 margin_cache.json。
+
+    用唯一的暫存檔（mkstemp）而非固定的 .tmp：兩個程序同時跑時，
+    固定檔名會互撞，後執行者的 os.replace 找不到檔案直接拋錯。
+    """
+    fd, tmp_path = tempfile.mkstemp(dir=str(MARGIN_CACHE.parent), suffix=".tmp")
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8") as f:
+            f.write(json.dumps(rows, ensure_ascii=False))
+        os.replace(tmp_path, MARGIN_CACHE)
+    except BaseException:
+        try:
+            os.unlink(tmp_path)
+        except OSError:
+            pass
+        raise
+
+
 def _read_margin_cache() -> dict:
     """讀 margin_cache.json，回 {YYYY-MM: 該月資料}。
 
@@ -315,9 +336,11 @@ def _read_margin_cache() -> dict:
             rows[x[:7]] = r
 
     if rows and statistics.median(r["y"] for r in rows.values()) > MARGIN_SCALE_MAX:
-        print("  偵測到舊尺度的融資快取，清空檔案（command-center 也讀它）")
+        print("  偵測到舊尺度的融資快取，備份後清空（command-center 也讀它）")
         try:
-            MARGIN_CACHE.write_text("[]", encoding="utf-8")
+            # 先留一份可還原的備份：門檻若誤觸，24 個月的歷史還能救回來
+            shutil.copy2(MARGIN_CACHE, MARGIN_CACHE.with_name(MARGIN_CACHE.name + ".bak"))
+            _write_margin_cache([])
         except OSError:
             pass
         return {}
@@ -378,6 +401,16 @@ def fetch_margin_mktcap(tw_data: list, months: int = 24) -> list:
     # 2. TAIEX map 用於歷史市值縮放
     taiex_map = {d["x"]: d["y"] for d in tw_data}
     taiex_today = tw_data[-1]["y"] if tw_data else 0
+
+    # 市值或 TAIEX 拿不到時，每筆 ratio 都會是 0 —— 直接回退快取，
+    # 不要白跑 24 次 MI_MARGN 請求（實測約 30 秒）。
+    if mktcap_today <= 0 or taiex_today <= 0:
+        old = _read_margin_cache()
+        if old:
+            print(f"  市值或 TAIEX 取得失敗，直接沿用快取 {len(old)} 筆")
+            return [old[k] for k in sorted(old)]
+        print("  融資市值比：市值/TAIEX 取得失敗且無快取")
+        return []
 
     # 3. 月度融資餘額（查詢各月月初）
     result = {}
@@ -470,23 +503,21 @@ def fetch_margin_mktcap(tw_data: list, months: int = 24) -> list:
     if valid:
         merged = {**old, **{r["x"][:7]: r for r in data}}   # 以月份為 key
         out = [merged[k] for k in sorted(merged)]
-        # 原子寫入：與 14:00 cron 或手動執行撞在一起時，不會讓對方讀到半截 JSON
-        # 而把超過 24 個月的歷史砍掉。
-        tmp = MARGIN_CACHE.with_name(MARGIN_CACHE.name + ".tmp")
-        tmp.write_text(json.dumps(out, ensure_ascii=False), encoding="utf-8")
-        os.replace(tmp, MARGIN_CACHE)
+        _write_margin_cache(out)
         return out
 
     if old:
-        # 訊息要指得出實際原因，否則出事時無法從 log 判斷是網路還是資料異常
-        if not data:
-            why = "這輪沒抓到融資資料"
-        elif mktcap_today <= 0 or taiex_today <= 0:
-            why = "市值或 TAIEX 取得失敗"
-        else:
-            why = f"比率量級異常（median={med:.3f}）"
+        # 訊息要指得出實際原因；市值/TAIEX 失敗已在上面提前回退，這裡只剩
+        # 「完全沒抓到」與「量級異常」兩種。
+        why = "這輪沒抓到融資資料" if not data else f"比率量級異常（median={med:.3f}）"
         print(f"  {why}，沿用快取 {len(old)} 筆")
-        return [old[k] for k in sorted(old)]
+        out = [old[k] for k in sorted(old)]
+        # 順手把檔案裡不能用的列清掉：command-center 讀同一份，不能只清記憶體
+        try:
+            _write_margin_cache(out)
+        except OSError:
+            pass
+        return out
 
     print("  融資市值比：無可用資料（抓取失敗且無快取）")
     return []

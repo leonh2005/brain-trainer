@@ -108,4 +108,5 @@ data/*.lock
 data/tw_market_holidays.json
 logs/*.lock
 logs/.*.lock
-market-dashboard/*.stale
+market-dashboard/*.tmp
+market-dashboard/*.bak
