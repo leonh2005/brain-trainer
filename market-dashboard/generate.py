@@ -289,10 +289,13 @@ def fetch_cape():
 
 
 def _read_margin_cache() -> dict:
-    """讀 margin_cache.json，回 {月份: 該月資料}。
+    """讀 margin_cache.json，回 {YYYY-MM: 該月資料}。
 
-    舊尺度（2026-11-03 前 ÷10,000，ratio 大 10 倍）與形狀異常的資料一律丟棄：
-    command-center 也讀這個檔，留著會讓兩個入口差 10 倍。
+    逐列驗證（x 是字串、y 是數字），缺一就丟 —— 下游直接 d["y"] 取值，
+    形狀不對會在跑完全部網路抓取後才崩。以月份當 key，同一月只留一筆。
+
+    舊尺度（2026-11-03 前 ÷10,000，ratio 大 10 倍）用 median 判斷：
+    command-center 也讀這個檔，所以不能只在記憶體丟掉，要把檔案清空。
     """
     if not MARGIN_CACHE.exists():
         return {}
@@ -302,12 +305,23 @@ def _read_margin_cache() -> dict:
         return {}
     if not isinstance(cached, list):
         return {}
-    rows = [r for r in cached if isinstance(r, dict) and "x" in r]
-    vals = [r["y"] for r in rows if isinstance(r.get("y"), (int, float))]
-    if vals and max(vals) > MARGIN_SCALE_MAX:
-        print("  偵測到舊尺度的融資快取，整份丟棄重建")
+
+    rows = {}
+    for r in cached:
+        if not isinstance(r, dict):
+            continue
+        x, y = r.get("x"), r.get("y")
+        if isinstance(x, str) and isinstance(y, (int, float)):
+            rows[x[:7]] = r
+
+    if rows and statistics.median(r["y"] for r in rows.values()) > MARGIN_SCALE_MAX:
+        print("  偵測到舊尺度的融資快取，清空檔案（command-center 也讀它）")
+        try:
+            MARGIN_CACHE.write_text("[]", encoding="utf-8")
+        except OSError:
+            pass
         return {}
-    return {r["x"]: r for r in rows}
+    return rows
 
 
 def fetch_margin_mktcap(tw_data: list, months: int = 24) -> list:
@@ -339,9 +353,13 @@ def fetch_margin_mktcap(tw_data: list, months: int = 24) -> list:
             headers={"User-Agent": "Mozilla/5.0"}, timeout=20, verify=False,
         )
         price_rows = r_price.json()
-        # 只回部分個股時總市值會少好幾成，ratio 跟著被放大（會變成假的「偏熱」）
-        if len(shares_map) < MIN_TICKERS or len(price_rows) < MIN_TICKERS:
-            print(f"  市值來源不完整（股數 {len(shares_map)}、報價 {len(price_rows)}），本輪不採用")
+        # 用「交集家數」判斷完整度：兩個清單各自都夠多，不代表有股數的個股都有
+        # 報價（price_rows 含 ETF/TDR，shares_map 也會缺）。交集不足時總市值
+        # 少好幾成，ratio 被放大成假的「偏熱」。
+        common = sum(1 for code in {row.get("Code") for row in price_rows}
+                     if code in shares_map)
+        if common < MIN_TICKERS:
+            print(f"  市值來源不完整（交集 {common} 家），本輪不採用")
         else:
             total = 0.0
             for row in price_rows:
@@ -408,11 +426,16 @@ def fetch_margin_mktcap(tw_data: list, months: int = 24) -> list:
             else:
                 iso_date = f"{year}-{month:02d}-01"
 
-            # 找當日或同月最近 TAIEX
+            # 找當日或同月最近 TAIEX。該月完全沒有 TAIEX 資料就跳過這筆，
+            # 不可退回 taiex_today —— 那會把當月市值當成歷史市值，
+            # 算出接近今日的 ratio 並覆寫掉原本正確的歷史值。
             taiex_on = taiex_map.get(iso_date)
             if taiex_on is None:
                 candidates = [d for d in taiex_map if d[:7] == iso_date[:7]]
-                taiex_on = taiex_map[min(candidates)] if candidates else taiex_today
+                if not candidates:
+                    print(f"  {iso_date} 無對應 TAIEX，跳過（不推算）")
+                    continue
+                taiex_on = taiex_map[min(candidates)]
 
             if mktcap_today and taiex_today and taiex_on:
                 mktcap_hist = trunc2(mktcap_today * (taiex_on / taiex_today))
@@ -445,9 +468,13 @@ def fetch_margin_mktcap(tw_data: list, months: int = 24) -> list:
              and MARGIN_SCALE_MIN <= med <= MARGIN_SCALE_MAX)
 
     if valid:
-        merged = {**old, **{r["x"]: r for r in data}}
+        merged = {**old, **{r["x"][:7]: r for r in data}}   # 以月份為 key
         out = [merged[k] for k in sorted(merged)]
-        MARGIN_CACHE.write_text(json.dumps(out, ensure_ascii=False))
+        # 原子寫入：與 14:00 cron 或手動執行撞在一起時，不會讓對方讀到半截 JSON
+        # 而把超過 24 個月的歷史砍掉。
+        tmp = MARGIN_CACHE.with_name(MARGIN_CACHE.name + ".tmp")
+        tmp.write_text(json.dumps(out, ensure_ascii=False), encoding="utf-8")
+        os.replace(tmp, MARGIN_CACHE)
         return out
 
     if old:
