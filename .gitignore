@@ -103,3 +103,8 @@ data/*.lock
 
 # 暫存工具目錄（含瀏覽器登入 cookie，絕不進版控）
 .tmp_gmap/
+
+# TTL 快取（30 天自動更新，可重建）與執行期鎖檔
+data/tw_market_holidays.json
+logs/*.lock
+logs/.*.lock

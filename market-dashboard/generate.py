@@ -220,16 +220,12 @@ def fetch_bofa_bull_bear() -> dict:
                 break
 
         if value is not None:
+            # date 用文章發布日（代表數據本身的日期）。原本還用「距今天數 ≥6」
+            # 當追加條件，但今天算的是本機日期 → 文章不更新時每次執行都追加一筆
+            # 同日同值，cache 曾累積到 229 筆卻只有 16 個唯一日期。
             today = pub_date or datetime.now().strftime("%Y-%m-%d")
             last = history[-1] if history else {}
-            cache_age = 999
-            if last.get("date"):
-                try:
-                    from datetime import date as _d
-                    cache_age = (_d.today() - _d.fromisoformat(last["date"])).days
-                except Exception:
-                    pass
-            if last.get("value") != value or cache_age >= 6:
+            if last.get("date") != today or last.get("value") != value:
                 history.append({"date": today, "value": value})
                 history.sort(key=lambda x: x.get("date", ""))
                 raw = {"history": history}
