@@ -1,6 +1,6 @@
 {
-  "scanned_at": "2026-11-03 03:00:46",
-  "since": "2026-11-02 03:00:01",
+  "scanned_at": "2026-11-04 03:00:44",
+  "since": "2026-11-03 03:00:00",
   "results": {
     "市場儀表板": {
       "exists": true,
@@ -28,27 +28,27 @@
     },
     "財經新聞分析": {
       "exists": true,
-      "errors": 4,
-      "last_error": "2026-11-02 14:45:13,380 [WARNING] fetcher.ptt_fetcher: PTT index fetch failed: HTTPSConnectionPool(host='www.ptt.cc', port=443): Read timed out. (read timeout=10)",
-      "fix": "網路逾時 → 確認目標服務可達，或增加 timeout 設定"
+      "errors": 19,
+      "last_error": "2026-11-04 01:16:46,373 [WARNING] fetcher.reddit_fetcher: Reddit fetch failed for r/investing: 500 Server Error: Internal Server Error for url: https://www.reddit.com/r/investing/hot/.rss",
+      "fix": "尚無對應建議，需人工判斷"
     },
     "川普監測": {
       "exists": true,
-      "errors": 0,
-      "last_error": null,
-      "fix": null
+      "errors": 1,
+      "last_error": "2026-11-03 13:00:06,544 WARNING 分析失敗：Trump to remove Rwanda and South Africa from US tr — 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reaso",
+      "fix": "尚無對應建議，需人工判斷"
     },
     "持倉新聞(台股)": {
       "exists": true,
       "errors": 4,
-      "last_error": "2026-11-02 08:30:42,065 ERROR DeepSeek 分析失敗 2327：Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: fb731ae8-4814-4106-9d45-79fca01c763a)', 'type': 'insufficient_balance_error', 'param': None, 'code': 'invalid_request_error'}}",
+      "last_error": "2026-11-03 08:30:38,467 WARNING 2327 分析失敗，換下一個模型：gemini-2.5-flash-lite: Error code: 429 - [{'error': {'code': 429, 'message': 'You exceeded your current",
       "fix": "尚無對應建議，需人工判斷"
     },
     "持倉新聞(美股)": {
       "exists": true,
-      "errors": 9,
-      "last_error": "2026-11-02 21:00:30,081 ERROR DeepSeek 分析失敗 XLP：Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 125a91e6-784f-4867-bbd2-1ac39cf9e72c)', 'type': 'insufficient_balance_error', 'param': None, 'code': 'invalid_request_error'}}",
-      "fix": "尚無對應建議，需人工判斷"
+      "errors": 0,
+      "last_error": null,
+      "fix": null
     },
     "HolaQuant": {
       "exists": true,
@@ -76,9 +76,9 @@
     },
     "當沖推播": {
       "exists": true,
-      "errors": 22,
-      "last_error": "🌐 大盤即時：資料取得失敗",
-      "fix": "尚無對應建議，需人工判斷"
+      "errors": 0,
+      "last_error": null,
+      "fix": null
     },
     "隔日沖推播": {
       "exists": true,
@@ -88,8 +88,8 @@
     },
     "盤中監控": {
       "exists": true,
-      "errors": 3,
-      "last_error": "[universe] 掃描失敗，維持現有 30 檔: HTTPConnectionPool(host='localhost', port=5455): Read timed out. (read timeout=30)",
+      "errors": 2,
+      "last_error": "⚠️ 盤中主力監控啟動失敗（重試 1 次）：TimeoutError，今天不會有訊號",
       "fix": "網路逾時 → 確認目標服務可達，或增加 timeout 設定"
     },
     "蝦皮軟纖監測": {
