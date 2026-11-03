@@ -1,6 +1,6 @@
 """技術士「電腦軟體應用」丙級學科題庫測驗（port 5380）。
 
-GET  /api/quiz?count=50  隨機抽題（選項一併打散），不含答案
+GET  /api/quiz?count=50  隨機抽題（選項維持 PDF 原順序），不含答案
 POST /api/submit         交卷判分，寫入 history.json
 GET  /api/history        最近成績（含每題對錯，供之後的錯題重刷使用）
 GET  /api/health
@@ -83,6 +83,16 @@ def _save_mistakes(ids: set[int]) -> None:
     _atomic_write(MISTAKES_PATH, json.dumps(sorted(ids)))
 
 
+def _counts_as_mistake(correct: bool, picked) -> bool:
+    """答錯「且真的有作答」才算錯題。
+
+    picked 為 None 是沒作答（中途離開／逾時送出）；把它記進錯題庫，
+    會讓一次空測驗把整份 50 題都變成錯題。注意 picked == 0 是選了
+    第一個選項，不能當成 falsy 處理掉。
+    """
+    return not correct and picked is not None
+
+
 def _migrate_mistakes_once() -> None:
     """舊版的錯題存在 history 裡，第一次啟動時搬到 mistakes.json（持鎖，不在 GET 路徑寫檔）。"""
     if MISTAKES_PATH.exists():
@@ -90,10 +100,9 @@ def _migrate_mistakes_once() -> None:
     with _WRITE_LOCK:
         if MISTAKES_PATH.exists():
             return
-        # 與結算時同一條規則：沒作答（picked is None）不算錯題
         ids = {it["qid"] for rec in _load_history()
                for it in rec.get("items", [])
-               if not it.get("correct") and it.get("picked") is not None}
+               if _counts_as_mistake(it.get("correct"), it.get("picked"))}
         if ids:
             _save_mistakes(ids)
 
@@ -103,10 +112,24 @@ def _mistake_ids() -> set[int]:
     return _load_mistakes()
 
 
-try:
-    _migrate_mistakes_once()
-except Exception:      # 遷移失敗不該讓服務起不來
-    pass
+_migrated = False
+
+
+def _ensure_migrated() -> None:
+    """延遲遷移：第一次真的需要錯題庫時才做。
+
+    不能在 import 時執行 —— 測試 import 這個模組時 fixture 還沒把路徑
+    換成 tmp，會直接讀寫正式資料（刪掉 mistakes.json 後跑 pytest 會
+    拿真實 history 把它重建回來）。
+    """
+    global _migrated
+    if _migrated:
+        return
+    _migrated = True
+    try:
+        _migrate_mistakes_once()
+    except Exception:      # 遷移失敗不該讓請求失敗
+        pass
 
 
 def _as_int(value, name: str) -> int:
@@ -138,9 +161,11 @@ def quiz():
         return jsonify({"ok": False, "error": "count 需大於 0"}), 400
 
     if mode == "mistakes":
+        _ensure_migrated()
         mistakes = _mistake_ids()
         pool = [q for q in QUESTIONS if q["id"] in mistakes]
-        count = min(count, len(pool))   # 錯題不足時全出，不報錯
+        # 除了錯題數量，也要夾到交卷上限，否則會發出 /api/submit 自己會拒收的考卷
+        count = min(count, len(pool), MAX_ITEMS)
     else:
         pool = QUESTIONS
         limit = min(len(pool), MAX_ITEMS)   # 出題上限與交卷上限一致，避免發出交不回來的考卷
@@ -210,6 +235,9 @@ def submit():
     score = int(n_correct / total * 100 + 0.5)   # 四捨五入，不用 round() 的銀行家捨入
     at = time.strftime("%Y-%m-%d %H:%M:%S")
 
+    # 遷移要在取鎖之前跑：_migrate_mistakes_once 內部自己會取 _WRITE_LOCK，
+    # 而它是不可重入的 Lock，在這裡面呼叫會直接死鎖。
+    _ensure_migrated()
     with _WRITE_LOCK:
         records = _load_history()
         records.append({
@@ -227,7 +255,7 @@ def submit():
         # 記進錯題庫會把根本沒看過的題目也算成錯題。
         mistakes = _load_mistakes()
         mistakes.update(d["qid"] for d in details
-                        if not d["correct"] and d["picked"] is not None)
+                        if _counts_as_mistake(d["correct"], d["picked"]))
         _save_mistakes(mistakes)
 
     return jsonify({"ok": True, "score": score, "correct": n_correct, "total": total,

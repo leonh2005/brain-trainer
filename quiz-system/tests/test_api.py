@@ -1,7 +1,8 @@
 """test_api: 出題、判分、歷史成績。
 
-判分走「無狀態」設計：/api/quiz 回傳每題的 order（打散後各位置對應的原選項索引），
-交卷時把 order 一起送回，後端用 order[picked] 對回原題答案。
+判分走「無狀態」設計：/api/quiz 回傳每題的 order（各顯示位置對應的原選項索引）。
+選項維持 PDF 原順序，所以 order 恆為 [0,1,2,3]；欄位保留是為了交卷時
+能對回原題答案（order[picked]），也讓日後恢復打散時前後端不必改協議。
 """
 
 import json
@@ -14,6 +15,8 @@ import pytest
 def client(tmp_path, monkeypatch):
     monkeypatch.setattr(quiz, "HISTORY_PATH", tmp_path / "history.json")
     monkeypatch.setattr(quiz, "MISTAKES_PATH", tmp_path / "mistakes.json")
+    # 遷移是延遲執行的，這裡重置旗標，確保它用的是 tmp 路徑而不是正式資料
+    monkeypatch.setattr(quiz, "_migrated", False)
     quiz.app.config["TESTING"] = True
     return quiz.app.test_client()
 
@@ -23,7 +26,7 @@ def _answer_all(client, items, correct: bool):
     picked = []
     for it in items:
         q = quiz.QUESTIONS[it["qid"]]
-        right = it["order"].index(q["ans"])   # 打散後的正解位置
+        right = it["order"].index(q["ans"])   # 正解在畫面上的位置
         wrong = (right + 1) % 4
         picked.append({"qid": it["qid"], "order": it["order"],
                        "picked": right if correct else wrong})
@@ -116,6 +119,63 @@ def test_wrong_answer_still_added_to_mistakes(client):
 
     got = {q["qid"] for q in client.get("/api/quiz?mode=mistakes&count=50").get_json()["items"]}
     assert got == {it["qid"] for it in items}
+
+
+def test_mixed_answered_and_unanswered(client):
+    """同一份提交裡，只有真的答錯的進錯題庫，未作答的不進。
+
+    全部未作答／全部答錯的測試無法區分「逐題過濾」與「整份過濾」。
+    """
+    items = client.get("/api/quiz?count=2").get_json()["items"]
+    right = items[0]["order"].index(quiz.QUESTIONS[items[0]["qid"]]["ans"])
+    payload = {"items": [
+        {"qid": items[0]["qid"], "order": items[0]["order"], "picked": (right + 1) % 4},
+        {"qid": items[1]["qid"], "order": items[1]["order"], "picked": None},
+    ]}
+
+    r = client.post("/api/submit", json=payload).get_json()
+
+    assert r["ok"] is True
+    got = {q["qid"] for q in client.get("/api/quiz?mode=mistakes&count=50").get_json()["items"]}
+    assert got == {items[0]["qid"]}
+
+
+def test_unanswered_submit_succeeds(client):
+    """交卷本身要成功（4xx 時錯題庫自然是空的，不能誤判成過關）。"""
+    items = client.get("/api/quiz?count=4").get_json()["items"]
+    payload = {"items": [{"qid": it["qid"], "order": it["order"], "picked": None}
+                         for it in items]}
+
+    r = client.post("/api/submit", json=payload)
+
+    assert r.status_code == 200
+    assert r.get_json()["ok"] is True
+
+
+def test_migration_skips_unanswered(tmp_path, monkeypatch):
+    """舊資料遷移也要排除沒作答的題目（與交卷結算同一條規則）。"""
+    hist = [{"at": "2026-01-01 10:00:00", "score": 0, "correct": 0, "total": 2,
+             "items": [{"qid": quiz.QUESTIONS[10]["id"], "correct": False, "picked": None},
+                       {"qid": quiz.QUESTIONS[11]["id"], "correct": False, "picked": 2}]}]
+    monkeypatch.setattr(quiz, "HISTORY_PATH", tmp_path / "history.json")
+    monkeypatch.setattr(quiz, "MISTAKES_PATH", tmp_path / "mistakes.json")
+    monkeypatch.setattr(quiz, "_migrated", False)
+    (tmp_path / "history.json").write_text(json.dumps(hist), encoding="utf-8")
+
+    quiz._ensure_migrated()
+
+    assert quiz._load_mistakes() == {quiz.QUESTIONS[11]["id"]}
+
+
+def test_mistakes_count_capped_to_submit_limit(client, monkeypatch):
+    """錯題模式也要夾到交卷上限，不能發出自己會拒收的考卷。"""
+    items = client.get("/api/quiz?count=5").get_json()["items"]
+    client.post("/api/submit", json=_answer_all(client, items, correct=False))
+
+    monkeypatch.setattr(quiz, "MAX_ITEMS", 3)   # 模擬錯題數超過上限
+    got = client.get("/api/quiz?mode=mistakes&count=50").get_json()["items"]
+
+    assert len(got) <= 3
 
 
 def test_submit_records_per_question_details(client):
