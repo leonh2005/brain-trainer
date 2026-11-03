@@ -102,7 +102,8 @@ def test_submit_appends_history(client, tmp_path):
     assert len(records) == 1
     assert records[0]["score"] == 100
     assert records[0]["total"] == 5
-    assert len(records[0]["items"]) == 5
+    stored = json.loads((tmp_path / "history.json").read_text(encoding="utf-8"))
+    assert len(stored[0]["items"]) == 5      # 每題明細留在檔案，API 只回摘要
 
 
 def test_count_above_bank_is_rejected(client):

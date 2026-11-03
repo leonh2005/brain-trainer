@@ -105,7 +105,11 @@ async function loadQuiz(mode){
   $('result').style.display = 'none';
   $('again').style.display = 'none';
   $('submit').style.display = '';
-  $('submit').disabled = false;
+  $('submit').disabled = true;      // 新題回來前不可交卷，避免送出上一份
+  state.items = [];
+  state.picked = {};
+  state.submitted = false;
+  state.result = null;
   $('mode').textContent = mode === 'mistakes' ? '錯題重刷' : '';
   $('mode').className = mode === 'mistakes' ? 'mode-tag on' : 'mode-tag';
   try{
@@ -117,9 +121,11 @@ async function loadQuiz(mode){
     state.result = null;
     if(!state.items.length){
       $('questions').innerHTML = '<div class="empty">目前沒有錯題，先去一般練習吧。</div>';
+      $('submit').disabled = true;
       updateProgress();
       return;
     }
+    $('submit').disabled = false;
     render();
     updateProgress();
     window.scrollTo(0, 0);

@@ -9,6 +9,7 @@ GET  /api/health
 import json
 import os
 import random
+import tempfile
 import threading
 import time
 from pathlib import Path
@@ -28,13 +29,32 @@ RNG = random.SystemRandom()
 _WRITE_LOCK = threading.Lock()   # read-modify-write 必須原子，否則併發交卷會互蓋
 
 
-def _load_history() -> list[dict]:
-    if not HISTORY_PATH.exists():
+def _quarantine(path: Path) -> None:
+    """損壞的狀態檔改名保留，避免下一筆寫入直接把舊資料蓋掉。"""
+    try:
+        path.replace(path.with_suffix(path.suffix + ".corrupt"))
+    except OSError:
+        pass
+
+
+def _read_json_list(path: Path) -> list | None:
+    """讀 JSON 陣列：不存在回 []、損壞或型別不對回 None（呼叫端據此避免覆寫）。"""
+    if not path.exists():
         return []
     try:
-        return json.loads(HISTORY_PATH.read_text(encoding="utf-8"))
+        data = json.loads(path.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError):
-        return []
+        _quarantine(path)
+        return None
+    if not isinstance(data, list):
+        _quarantine(path)
+        return None
+    return data
+
+
+def _load_history() -> list[dict]:
+    data = _read_json_list(HISTORY_PATH)
+    return [r for r in (data or []) if isinstance(r, dict)]
 
 
 def _save_history(records: list[dict]) -> None:
@@ -42,39 +62,49 @@ def _save_history(records: list[dict]) -> None:
 
 
 def _atomic_write(path: Path, text: str) -> None:
-    """先寫暫存檔再 os.replace：避免讀到寫到一半的檔案。"""
-    tmp = path.with_suffix(path.suffix + ".tmp")
-    tmp.write_text(text, encoding="utf-8")
-    os.replace(tmp, path)
+    """先寫唯一暫存檔再 os.replace：併發寫入不會互踩，中斷也不會留下半截檔。"""
+    fd, tmp = tempfile.mkstemp(dir=path.parent, prefix=path.name + ".", suffix=".tmp")
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8") as f:
+            f.write(text)
+        os.replace(tmp, path)
+    except BaseException:
+        Path(tmp).unlink(missing_ok=True)
+        raise
 
 
 def _load_mistakes() -> set[int]:
-    """錯題庫：只增不減，與 HISTORY_LIMIT 無關。
-
-    檔案不存在時從既有 history 匯入一次（相容舊資料）。
-    """
-    if MISTAKES_PATH.exists():
-        try:
-            return set(json.loads(MISTAKES_PATH.read_text(encoding="utf-8")))
-        except (OSError, json.JSONDecodeError):
-            return set()
-    ids = set()
-    for rec in _load_history():
-        for it in rec.get("items", []):
-            if not it.get("correct"):
-                ids.add(it["qid"])
-    if ids:
-        _save_mistakes(ids)   # 首次匯入就落地：只靠 history 推算會隨 200 筆輪替消失
-    return ids
+    """錯題庫：只增不減，與 HISTORY_LIMIT 無關。"""
+    data = _read_json_list(MISTAKES_PATH)
+    return {x for x in (data or []) if isinstance(x, int) and not isinstance(x, bool)}
 
 
 def _save_mistakes(ids: set[int]) -> None:
     _atomic_write(MISTAKES_PATH, json.dumps(sorted(ids)))
 
 
+def _migrate_mistakes_once() -> None:
+    """舊版的錯題存在 history 裡，第一次啟動時搬到 mistakes.json（持鎖，不在 GET 路徑寫檔）。"""
+    if MISTAKES_PATH.exists():
+        return
+    with _WRITE_LOCK:
+        if MISTAKES_PATH.exists():
+            return
+        ids = {it["qid"] for rec in _load_history()
+               for it in rec.get("items", []) if not it.get("correct")}
+        if ids:
+            _save_mistakes(ids)
+
+
 def _mistake_ids() -> set[int]:
     """所有曾經答錯過的題目。只累積、不移出——答對過也留在錯題庫裡。"""
     return _load_mistakes()
+
+
+try:
+    _migrate_mistakes_once()
+except Exception:      # 遷移失敗不該讓服務起不來
+    pass
 
 
 def _as_int(value, name: str) -> int:
@@ -111,8 +141,9 @@ def quiz():
         count = min(count, len(pool))   # 錯題不足時全出，不報錯
     else:
         pool = QUESTIONS
-        if count > len(pool):
-            return jsonify({"ok": False, "error": f"count 需介於 1 與 {len(pool)}"}), 400
+        limit = min(len(pool), MAX_ITEMS)   # 出題上限與交卷上限一致，避免發出交不回來的考卷
+        if count > limit:
+            return jsonify({"ok": False, "error": f"count 需介於 1 與 {limit}"}), 400
 
     items = []
     for q in RNG.sample(pool, count):
@@ -142,7 +173,8 @@ def submit():
     details = []
     seen: set[int] = set()
     for it in items:
-        if not isinstance(it, dict) or not isinstance(it.get("order"), list):
+        if not isinstance(it, dict) or not isinstance(it.get("order"), list) \
+                or len(it["order"]) != 4:
             return jsonify({"ok": False, "error": "items 格式不正確"}), 400
         try:
             qid = _as_int(it["qid"], "qid")
@@ -172,7 +204,7 @@ def submit():
 
     total = len(details)
     n_correct = sum(1 for d in details if d["correct"])
-    score = round(n_correct / total * 100)
+    score = int(n_correct / total * 100 + 0.5)   # 四捨五入，不用 round() 的銀行家捨入
     at = time.strftime("%Y-%m-%d %H:%M:%S")
 
     with _WRITE_LOCK:
@@ -203,8 +235,11 @@ def history():
     except ValueError:
         limit = 10
     records = _load_history()
+    # 只回摘要：每題 items 留在檔案裡給錯題庫用，不必每次開頁序列化上萬筆
+    summary = [{k: r.get(k) for k in ("at", "score", "correct", "total")}
+               for r in records[-limit:]]
     return jsonify({"ok": True,
-                    "records": list(reversed(records[-limit:])),
+                    "records": list(reversed(summary)),
                     "mistake_count": len(_mistake_ids())})
 
 

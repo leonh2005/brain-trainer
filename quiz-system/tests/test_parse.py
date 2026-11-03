@@ -43,6 +43,28 @@ def test_second_question():
     assert qs[1]["ans"] == 1      # (2) → 索引 1
 
 
+def test_english_broken_by_newline_gets_space():
+    """PDF 換行切開英數詞時要補空格，否則 GamePort / IEEE802.15.4 會黏成一字。"""
+    text = """11800 電腦軟體應用 丙級 工作項目01：電腦概論
+1. (1)  下列何者正確？ ①Game
+Port 是連接埠 ②IEEE
+802.15.4 是協定 ③甲 ④乙 。
+"""
+    q = parse_text(text)[0]
+
+    assert q["opts"][0] == "Game Port 是連接埠"
+    assert q["opts"][1] == "IEEE 802.15.4 是協定"
+
+
+def test_answer_out_of_range_raises():
+    """答案只能是 1-4；(5) 要報錯，不能產生 ans=4 讓後續判分爆炸。"""
+    bad = """11800 電腦軟體應用 丙級 工作項目01：電腦概論
+1. (5)  題幹？ ①甲 ②乙 ③丙 ④丁 。
+"""
+    with pytest.raises(ValueError):
+        parse_text(bad)
+
+
 def test_missing_option_raises():
     """選項少於 4 個要報錯，不能靜默產出殘缺題庫。"""
     bad = """11800 電腦軟體應用 丙級 工作項目01：電腦概論

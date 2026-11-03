@@ -13,6 +13,7 @@ PDF 排版陷阱（2026-11-03 實測）：
 
 import argparse
 import json
+import os
 import re
 import sys
 from pathlib import Path
@@ -31,8 +32,8 @@ OPT_SPLIT = re.compile(r"[①②③④]")
 
 
 def _clean(text: str) -> str:
-    """移除排版換行；英文詞被換行切開時補回一個空格（Game\\nPort → Game Port）。"""
-    text = re.sub(r"(?<=[A-Za-z])\s*\n\s*(?=[A-Za-z])", " ", text)
+    """移除排版換行；被換行切開的英數詞要補空格（Game\\nPort、IEEE \\n802.15.4）。"""
+    text = re.sub(r"(?<=[A-Za-z0-9])\s*\n\s*(?=[A-Za-z0-9])", " ", text)
     text = re.sub(r"\s*\n\s*", "", text)
     return text.strip().rstrip("。 ").strip()
 
@@ -103,8 +104,10 @@ def main() -> int:
     for i, q in enumerate(questions):
         q["id"] = i
 
-    args.out.write_text(json.dumps(questions, ensure_ascii=False, indent=1), encoding="utf-8")
-
+    # 先寫暫存檔再 replace：中斷時不會留下被截斷的題庫，害 app 啟動失敗
+    tmp = args.out.with_suffix(args.out.suffix + ".tmp")
+    tmp.write_text(json.dumps(questions, ensure_ascii=False, indent=1), encoding="utf-8")
+    os.replace(tmp, args.out)
     counts: dict[str, int] = {}
     for q in questions:
         counts[q["cat"]] = counts.get(q["cat"], 0) + 1
