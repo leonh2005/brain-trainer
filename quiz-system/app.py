@@ -149,8 +149,9 @@ def quiz():
 
     items = []
     for q in RNG.sample(pool, count):
+        # 選項維持 PDF 原順序（不一開始是為了避免背位置，但 Steven 要看原稿對照）；
+        # order 欄位仍保留 [0,1,2,3]，前端與交卷比對的協議不變。
         order = [0, 1, 2, 3]
-        RNG.shuffle(order)          # 打散選項，避免正解固定在同一個位置
         items.append({
             "qid": q["id"],
             "cat": q["cat"],

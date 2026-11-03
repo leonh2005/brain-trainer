@@ -38,6 +38,19 @@ def test_quiz_returns_requested_count(client):
     assert all(len(it["opts"]) == 4 for it in items)
 
 
+def test_options_keep_pdf_order(client):
+    """選項維持 PDF 原順序，不打散。
+
+    2026-11-03：原本每次出題都 shuffle，對照 PDF 原稿時位置會跑掉。
+    order 仍回 [0,1,2,3]，前端與交卷比對的協議不變。
+    """
+    items = client.get("/api/quiz?count=10").get_json()["items"]
+
+    assert all(it["order"] == [0, 1, 2, 3] for it in items)
+    for it in items:
+        assert it["opts"] == quiz.QUESTIONS[it["qid"]]["opts"]
+
+
 def test_quiz_never_leaks_answer(client):
     items = client.get("/api/quiz?count=10").get_json()["items"]
 
