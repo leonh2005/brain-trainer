@@ -167,14 +167,20 @@ def test_migration_skips_unanswered(tmp_path, monkeypatch):
     assert quiz._load_mistakes() == {quiz.QUESTIONS[11]["id"]}
 
 
-def test_carry_mode_only_returns_carry_questions(client):
-    """進位題模式只出題目或選項含「進位」的題目。"""
-    items = client.get("/api/quiz?mode=carry&count=50").get_json()["items"]
+def test_carry_mode_covers_known_questions(client):
+    """進位題模式要涵蓋只寫「進制」「補數」的題目，不能只抓「進位」。
 
-    assert items
-    for it in items:
-        q = quiz.QUESTIONS[it["qid"]]
-        assert "進位" in q["q"] or any("進位" in o for o in q["opts"])
+    早期只用「進位」當關鍵字，漏掉 10 題（Q20、Q43、Q130 等），
+    進位專練有 31% 的目標題目永遠不會出現。
+    """
+    items = client.get("/api/quiz?mode=carry&count=99").get_json()["items"]
+    qids = {it["qid"] for it in items}
+
+    # 這幾題的題目或選項只含「進制」或「補數」，沒有「進位」兩字
+    assert {20, 43, 130} <= qids
+    assert len(qids) >= 30
+    # 抽樣確認真的是相關題目，而不是把整份題庫都放進來
+    assert len(qids) < len(quiz.QUESTIONS)
 
 
 def test_carry_mode_does_not_exceed_pool(client):
@@ -206,6 +212,18 @@ def test_mark_uncertain_is_idempotent(client):
 
     assert r["ok"] is True
     assert r["mistake_count"] == 1
+
+
+def test_mark_can_be_cancelled(client):
+    """誤按可以取消，錯題庫不能只能進不能出。"""
+    qid = quiz.QUESTIONS[10]["id"]
+    client.post("/api/mark", json={"qid": qid})
+
+    r = client.post("/api/mark", json={"qid": qid, "marked": False}).get_json()
+
+    assert r["marked"] is False
+    assert r["mistake_count"] == 0
+    assert client.get("/api/quiz?mode=mistakes&count=50").get_json()["items"] == []
 
 
 def test_mark_rejects_unknown_qid(client):

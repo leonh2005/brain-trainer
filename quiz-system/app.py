@@ -83,13 +83,19 @@ def _save_mistakes(ids: set[int]) -> None:
     _atomic_write(MISTAKES_PATH, json.dumps(sorted(ids)))
 
 
-def _is_carry(q: dict) -> bool:
-    """進位相關題目：題目或選項出現「進位」。
+# 進位題的判定關鍵字。只用「進位」會漏掉 10 題純進制／補數題
+# （例如「十進制數的17等於十六進制數」、Q43「2 的補數」），
+# 三個都收目前共 32 題。
+_CARRY_KEYS = ("進位", "進制", "補數")
 
-    題庫沒有專門分類，只能用關鍵字（目前命中 22 題：二／八／十六進位
-    轉換、補數、位元運算）。
+
+def _is_carry(q: dict) -> bool:
+    """進位／進制／補數相關題目。
+
+    題庫沒有專門分類，只能比對題目與選項的關鍵字。
     """
-    return "進位" in q["q"] or any("進位" in o for o in q["opts"])
+    text = q["q"] + "".join(q["opts"])
+    return any(k in text for k in _CARRY_KEYS)
 
 
 def _counts_as_mistake(correct: bool, picked) -> bool:
@@ -103,11 +109,21 @@ def _counts_as_mistake(correct: bool, picked) -> bool:
 
 
 def _migrate_mistakes_once() -> None:
-    """舊版的錯題存在 history 裡，第一次啟動時搬到 mistakes.json（持鎖，不在 GET 路徑寫檔）。"""
-    if MISTAKES_PATH.exists():
+    """舊版的錯題存在 history 裡，第一次需要時搬到 mistakes.json。
+
+    用獨立的 marker 檔當完成標記，不用「mistakes.json 存在」判斷：
+    遷移寫檔失敗後，submit 仍可能建立一份空檔，那樣重試就永遠 no-op、
+    歷史錯題靜默消失。
+    """
+    marker = MISTAKES_PATH.with_name(MISTAKES_PATH.name + ".migrated")
+    if marker.exists():
         return
     with _WRITE_LOCK:
+        if marker.exists():
+            return
         if MISTAKES_PATH.exists():
+            # 已經有錯題庫（舊版遷移過或使用者已有資料），視為完成
+            marker.touch()
             return
         ids = set()
         for rec in _load_history():
@@ -121,6 +137,8 @@ def _migrate_mistakes_once() -> None:
                     ids.add(qid)
         if ids:
             _save_mistakes(ids)
+            print(f"  錯題庫遷移：從 history 匯入 {len(ids)} 題")
+        marker.touch()
 
 
 def _mistake_ids() -> set[int]:
@@ -283,10 +301,10 @@ def submit():
 
 @app.post("/api/mark")
 def mark():
-    """把「不確定」的題目標進錯題庫。
+    """標記／取消標記「不確定」的題目（marked 預設 true）。
 
     與答錯共用同一份 mistakes.json：練習當下按鈕就能記，不必先交卷，
-    中途離開也不會漏掉。重複標記是幂等的。
+    中途離開也不會漏掉。重複標記是幂等的；marked=false 可取消誤按。
     """
     payload = request.get_json(silent=True)
     if not isinstance(payload, dict):
@@ -298,13 +316,20 @@ def mark():
     # QUESTIONS 是 list、id 等於索引（0..len-1），所以用範圍檢查而非 in
     if not 0 <= qid < len(QUESTIONS):
         return jsonify({"ok": False, "error": f"未知題號 {qid}"}), 400
+    marked = payload.get("marked", True)
+    if not isinstance(marked, bool):
+        return jsonify({"ok": False, "error": "marked 需為 true 或 false"}), 400
 
     _ensure_migrated()          # 取鎖前先遷移，避免與內層鎖互卡
     with _WRITE_LOCK:
         mistakes = _load_mistakes()
-        mistakes.add(qid)
+        if marked:
+            mistakes.add(qid)
+        else:
+            mistakes.discard(qid)      # 誤按可取消，不讓錯題庫只能進不能出
         _save_mistakes(mistakes)
-        return jsonify({"ok": True, "qid": qid, "mistake_count": len(mistakes)})
+        return jsonify({"ok": True, "qid": qid, "marked": marked,
+                        "mistake_count": len(mistakes)})
 
 
 @app.get("/api/history")
