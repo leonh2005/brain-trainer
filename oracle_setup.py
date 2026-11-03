@@ -27,8 +27,10 @@ BOOT_VOLUME_GB = 50  # 實測 API 下限 50 GB（映像 46.6 GB 是下限的由�
 TARGET_COUNT = 3  # 3 台 → 算力 3/4 OCPU、磁碟 50×3 + 47 = 197/200 GB
 INSTANCE_PREFIX = "line-bot-a1"
 SSH_KEY_PATH = os.path.expanduser("~/.ssh/oracle_line_bot")
-RETRY_INTERVAL = 150  # 每 2 分半重試一次
-INTER_REQUEST_DELAY = 20  # 實測連發 launch_instance 會撞 429，台與台之間隔開
+# Oracle launch_instance 限額實測約 20 次/小時（1174 輪 log 統計：每小時成功
+# 19-20 次、429 38 次；每次 429 不消耗配額）。因此每輪只發「一個」請求，
+# 200 秒一輪 = 18 次/小時，留餘裕不撞限流。
+RETRY_INTERVAL = 200
 LAUNCHD_LABEL = "com.steven.oracle-a1-grab"
 LOG_DIR = os.path.expanduser("~/CCProject/logs")
 LOCK_PATH = f"{LOG_DIR}/.oracle_a1_grab.lock"  # 防止 LaunchAgent 與手動執行併發，建出重複 VM
@@ -278,6 +280,7 @@ def main():
     # 只有「3 台全部 RUNNING 且都拿到公開 IP」才算完成，逾時不算。
     attempt = 0
     permanent_errors = 0
+    rr = 0                      # round-robin 游標：每輪輪流試不同的機器
     while True:
         attempt += 1
         ours = list_ours(compute_client)
@@ -296,9 +299,14 @@ def main():
             self_unload()
             return
 
-        # 1. 缺的就建
+        # 1. 缺的就建 —— 每輪只發一個請求（限額約 20 次/小時）
+        #    同時發 3 個只會讓第 2、3 台永遠吃 429，對成功率沒有幫助。
+        #    輪替而非固定第一台：三台同 AD 同 shape，容量狀態一致，輪替不會降低
+        #    命中率；但若第一台一直吃永久錯誤，固定寫法會讓它卡住整支腳本。
         created_now = []
-        for idx, name in enumerate(missing):
+        if missing:
+            name = missing[rr % len(missing)]
+            rr += 1
             try:
                 instance = create_instance(compute_client, subnet_id, ssh_public_key, name)
                 log(f"✅ {name} 建立成功（{instance.lifecycle_state}）")
@@ -318,10 +326,6 @@ def main():
                 # 網路層（逾時／連線中斷）不是 ServiceError 的子類，漏接會讓整支腳本 crash
                 log(f"   {name}：網路錯誤 {type(e).__name__}，稍後重試")
                 permanent_errors = 0
-            if idx < len(missing) - 1:
-                time.sleep(INTER_REQUEST_DELAY)
-            if permanent_errors >= 5:
-                break
 
         # 搶到一台就先報，不要等三台全部到齊（剩下兩台可能還要等很久）
         if created_now:
@@ -340,6 +344,8 @@ def main():
                         compute_client.start_instance(ours[name].id)
                     except oci.exceptions.ServiceError as e:
                         log(f"   啟動失敗：{e.code} {e.message}")
+            # 注意：搶到後不加速重試。限額約 20 次/小時，連發必定 429；
+            # 而 list_instances 有最終一致性延遲，無延遲 continue 還會對同一台重複 launch。
             log(f"{RETRY_INTERVAL} 秒後再確認...")
             time.sleep(RETRY_INTERVAL)
             continue
