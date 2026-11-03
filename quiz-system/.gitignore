@@ -1,5 +1,6 @@
 venv/
 history.json
+mistakes.json
 __pycache__/
 *.pyc
 .pytest_cache/

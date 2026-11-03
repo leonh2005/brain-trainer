@@ -9,6 +9,7 @@ GET  /api/health
 import json
 import os
 import random
+import threading
 import time
 from pathlib import Path
 
@@ -17,11 +18,14 @@ from flask import Flask, jsonify, render_template, request
 BASE_DIR = Path(__file__).parent
 QUESTIONS_PATH = Path(os.environ.get("QUIZ_QUESTIONS", BASE_DIR / "questions.json"))
 HISTORY_PATH = Path(os.environ.get("QUIZ_HISTORY", BASE_DIR / "history.json"))
-HISTORY_LIMIT = 200  # 只留最近 N 份，避免檔案無限長大
+MISTAKES_PATH = Path(os.environ.get("QUIZ_MISTAKES", BASE_DIR / "mistakes.json"))
+HISTORY_LIMIT = 200   # 只留最近 N 份成績
+MAX_ITEMS = 200       # 單次交卷題數上限，避免巨型 payload 寫爆 history
 
 app = Flask(__name__)
 QUESTIONS = json.loads(QUESTIONS_PATH.read_text(encoding="utf-8"))
 RNG = random.SystemRandom()
+_WRITE_LOCK = threading.Lock()   # read-modify-write 必須原子，否則併發交卷會互蓋
 
 
 def _load_history() -> list[dict]:
@@ -34,18 +38,54 @@ def _load_history() -> list[dict]:
 
 
 def _save_history(records: list[dict]) -> None:
-    HISTORY_PATH.write_text(json.dumps(records[-HISTORY_LIMIT:], ensure_ascii=False),
-                            encoding="utf-8")
+    _atomic_write(HISTORY_PATH, json.dumps(records[-HISTORY_LIMIT:], ensure_ascii=False))
 
 
-def _mistake_ids() -> set[int]:
-    """所有曾經答錯過的題目。只累積、不移出——答對過也留在錯題庫裡。"""
+def _atomic_write(path: Path, text: str) -> None:
+    """先寫暫存檔再 os.replace：避免讀到寫到一半的檔案。"""
+    tmp = path.with_suffix(path.suffix + ".tmp")
+    tmp.write_text(text, encoding="utf-8")
+    os.replace(tmp, path)
+
+
+def _load_mistakes() -> set[int]:
+    """錯題庫：只增不減，與 HISTORY_LIMIT 無關。
+
+    檔案不存在時從既有 history 匯入一次（相容舊資料）。
+    """
+    if MISTAKES_PATH.exists():
+        try:
+            return set(json.loads(MISTAKES_PATH.read_text(encoding="utf-8")))
+        except (OSError, json.JSONDecodeError):
+            return set()
     ids = set()
     for rec in _load_history():
         for it in rec.get("items", []):
             if not it.get("correct"):
                 ids.add(it["qid"])
+    if ids:
+        _save_mistakes(ids)   # 首次匯入就落地：只靠 history 推算會隨 200 筆輪替消失
     return ids
+
+
+def _save_mistakes(ids: set[int]) -> None:
+    _atomic_write(MISTAKES_PATH, json.dumps(sorted(ids)))
+
+
+def _mistake_ids() -> set[int]:
+    """所有曾經答錯過的題目。只累積、不移出——答對過也留在錯題庫裡。"""
+    return _load_mistakes()
+
+
+def _as_int(value, name: str) -> int:
+    """嚴格整數轉型：bool、字串、非整數 float 一律拒絕，避免 True → 1 這種誤判。"""
+    if isinstance(value, bool):
+        raise ValueError(f"{name} 格式不正確")
+    if isinstance(value, int):
+        return value
+    if isinstance(value, float) and value.is_integer():
+        return int(value)
+    raise ValueError(f"{name} 格式不正確")
 
 
 @app.get("/api/health")
@@ -90,21 +130,31 @@ def quiz():
 
 @app.post("/api/submit")
 def submit():
-    payload = request.get_json(silent=True) or {}
+    payload = request.get_json(silent=True)
+    if not isinstance(payload, dict):
+        return jsonify({"ok": False, "error": "payload 必須是 JSON 物件"}), 400
     items = payload.get("items")
     if not isinstance(items, list) or not items:
         return jsonify({"ok": False, "error": "items 不可為空"}), 400
+    if len(items) > MAX_ITEMS:
+        return jsonify({"ok": False, "error": f"單次最多 {MAX_ITEMS} 題"}), 400
 
     details = []
+    seen: set[int] = set()
     for it in items:
+        if not isinstance(it, dict) or not isinstance(it.get("order"), list):
+            return jsonify({"ok": False, "error": "items 格式不正確"}), 400
         try:
-            qid = int(it["qid"])
-            order = [int(x) for x in it["order"]]
+            qid = _as_int(it["qid"], "qid")
+            order = [_as_int(x, "order") for x in it["order"]]
             raw_picked = it.get("picked")
-            picked = None if raw_picked is None else int(raw_picked)
+            picked = None if raw_picked is None else _as_int(raw_picked, "picked")
         except (KeyError, TypeError, ValueError):
             return jsonify({"ok": False, "error": "items 格式不正確"}), 400
 
+        if qid in seen:
+            return jsonify({"ok": False, "error": f"題號 {qid} 重複"}), 400
+        seen.add(qid)
         if not 0 <= qid < len(QUESTIONS):
             return jsonify({"ok": False, "error": f"未知題號 {qid}"}), 400
         if sorted(order) != [0, 1, 2, 3]:
@@ -125,17 +175,22 @@ def submit():
     score = round(n_correct / total * 100)
     at = time.strftime("%Y-%m-%d %H:%M:%S")
 
-    records = _load_history()
-    records.append({
-        "at": at,
-        "score": score,
-        "correct": n_correct,
-        "total": total,
-        # 每題 qid 與對錯：之後「只刷錯題」靠這份資料，不用改格式
-        "items": [{"qid": d["qid"], "correct": d["correct"], "picked": d["picked"]}
-                  for d in details],
-    })
-    _save_history(records)
+    with _WRITE_LOCK:
+        records = _load_history()
+        records.append({
+            "at": at,
+            "score": score,
+            "correct": n_correct,
+            "total": total,
+            # 每題 qid 與對錯：錯題重刷靠這份資料
+            "items": [{"qid": d["qid"], "correct": d["correct"], "picked": d["picked"]}
+                      for d in details],
+        })
+        _save_history(records)
+        # 錯題庫獨立存檔、只增不減，不會被 history 的 200 筆上限擠掉
+        mistakes = _load_mistakes()
+        mistakes.update(d["qid"] for d in details if not d["correct"])
+        _save_mistakes(mistakes)
 
     return jsonify({"ok": True, "score": score, "correct": n_correct, "total": total,
                     "at": at, "details": details})

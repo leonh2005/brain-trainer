@@ -22,6 +22,7 @@ LOCAL_SERVICES = [
     {"name": "stock_analyzer",      "port": 5100, "url": "http://localhost:5100", "watchdog": False},
     {"name": "dsa-vite",            "port": 5173, "url": "http://localhost:5173", "watchdog": True},
     {"name": "news-analyzer",       "port": 5300, "url": "http://localhost:5300", "watchdog": True},
+    {"name": "quiz-system",         "port": 5380, "url": "http://localhost:5380", "watchdog": True},
     {"name": "daytrade-replay",     "port": 5400, "url": "http://localhost:5400", "watchdog": True},
     {"name": "stock-screener-ai",   "port": 5500, "url": "http://localhost:5500", "watchdog": True},
     {"name": "dashboard",           "port": 5600, "url": "http://localhost:5600", "watchdog": True},

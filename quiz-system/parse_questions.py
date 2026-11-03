@@ -31,8 +31,10 @@ OPT_SPLIT = re.compile(r"[①②③④]")
 
 
 def _clean(text: str) -> str:
-    """移除排版換行與尾部句號；保留原本的單一空格（如 "115 年"）。"""
-    return re.sub(r"\s*\n\s*", "", text).strip().rstrip("。 ").strip()
+    """移除排版換行；英文詞被換行切開時補回一個空格（Game\\nPort → Game Port）。"""
+    text = re.sub(r"(?<=[A-Za-z])\s*\n\s*(?=[A-Za-z])", " ", text)
+    text = re.sub(r"\s*\n\s*", "", text)
+    return text.strip().rstrip("。 ").strip()
 
 
 def _parse_segment(segment: str, cat: str) -> list[dict]:
@@ -43,6 +45,9 @@ def _parse_segment(segment: str, cat: str) -> list[dict]:
             continue
         parts = OPT_SPLIT.split(block[m.end():])
         no = m.group(1)
+        ans_no = int(m.group(2))
+        if not 1 <= ans_no <= 4:
+            raise ValueError(f"{cat} 第 {no} 題：答案 ({ans_no}) 超出 1-4")
         if len(parts) != 5:
             raise ValueError(f"{cat} 第 {no} 題：選項數為 {len(parts) - 1}，預期 4")
         stem = _clean(parts[0])
@@ -53,7 +58,7 @@ def _parse_segment(segment: str, cat: str) -> list[dict]:
             "cat": cat,
             "q": stem,
             "opts": opts,
-            "ans": int(m.group(2)) - 1,
+            "ans": ans_no - 1,
             "no": int(no),
         })
     return out

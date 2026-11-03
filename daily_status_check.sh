@@ -21,6 +21,7 @@ SERVICES="
 5250:sim-invest
 5300:news-analyzer
 5350:market-analysis
+5380:quiz-system
 5400:daytrade-replay
 5455:shioaji-gateway
 5460:daytrade-sim

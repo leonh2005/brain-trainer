@@ -292,7 +292,7 @@
    "COM1",
    "COM2",
    "LPT1",
-   "GamePort"
+   "Game Port"
   ],
   "ans": 2,
   "no": 23,
@@ -304,7 +304,7 @@
   "opts": [
    "LPT1",
    "顯示卡接頭",
-   "GamePort",
+   "Game Port",
    "COM1"
   ],
   "ans": 1,
@@ -381,7 +381,7 @@
   "q": "下列何者可以分擔部分CPU 的浮點計算工作，以提高系統的速度？",
   "opts": [
    "快取記憶體控制器（Cache Controller）",
-   "前端處理器（Front-EndProcessor）",
+   "前端處理器（Front-End Processor）",
    "磁碟控制器（Disk Controller）",
    "協同處理機（Coprocessor）"
   ],
@@ -537,7 +537,7 @@
   "q": "下列資料單位何者為由小而大順序排列？",
   "opts": [
    "GB TB KB MB",
-   "TB MB GBKB",
+   "TB MB GB KB",
    "KB MB GB TB",
    "MB KB GB TB"
   ],
@@ -693,7 +693,7 @@
   "q": "評量點矩陣印表機速度的單位是",
   "opts": [
    "DPI（Dot Per Inch）",
-   "CPS（CharacterPer Second）",
+   "CPS（Character Per Second）",
    "BPS（Bit Per Second）",
    "BPI（Byte Per Inch）"
   ],
@@ -734,7 +734,7 @@
    "TPI（Track Per Inch）",
    "CPS（Character Per Second）",
    "DPI（Dot Per Inch）",
-   "LPS（Line PerSecond）"
+   "LPS（Line Per Second）"
   ],
   "ans": 3,
   "no": 57,
@@ -916,7 +916,7 @@
    "check bit",
    "extended bit",
    "parity bit",
-   "redundancybit"
+   "redundancy bit"
   ],
   "ans": 2,
   "no": 71,
@@ -1761,7 +1761,7 @@
    "DPI（Dot Per Inch）",
    "BPS（Byte Per Second）",
    "PPM（Page Per Minute）",
-   "CPI（CharacterPer Inch）"
+   "CPI（Character Per Inch）"
   ],
   "ans": 2,
   "no": 136,
@@ -1785,7 +1785,7 @@
   "q": "IP 位址200.200.200.200 應該是屬於哪個Class 的IP？",
   "opts": [
    "Class A",
-   "ClassB",
+   "Class B",
    "Class C",
    "Class D"
   ],
@@ -1826,7 +1826,7 @@
    "DRAM",
    "PROM",
    "EEPROM",
-   "flashmemory"
+   "flash memory"
   ],
   "ans": 0,
   "no": 141,
@@ -2385,7 +2385,7 @@
    "快取記憶體（Cache Memory）",
    "暫存器（Register）",
    "主記憶體（RAM）",
-   "輔助記憶體（AuxiliaryMemory）"
+   "輔助記憶體（Auxiliary Memory）"
   ],
   "ans": 1,
   "no": 184,
@@ -3048,7 +3048,7 @@
    "可視化分析（Visibility Analysis）",
    "資料探勘（Data Mining）",
    "資料管理分析（Data Management Analysis）",
-   "預測性分析（PredictiveAnalysis）"
+   "預測性分析（Predictive Analysis）"
   ],
   "ans": 0,
   "no": 235,
@@ -3058,7 +3058,7 @@
   "cat": "工作項目01：電腦概論",
   "q": "大數據（Big Data）分析因為採用原始數據（Raw Data）處理，常常會發現以前因為科技所限制而忽略的資料，這類資料稱為",
   "opts": [
-   "千兆級資料（Petadata）",
+   "千兆級資料（Peta data）",
    "交互式資料（Interaction data）",
    "灰色資料（Gray data）",
    "暗資料（Dark data）"
@@ -3099,7 +3099,7 @@
   "opts": [
    "Spark SQL",
    "Spark Streaming",
-   "SparkMLlib",
+   "Spark MLlib",
    "GraphX"
   ],
   "ans": 2,
@@ -3423,9 +3423,9 @@
   "q": "下列何者為物聯網的英文名稱？",
   "opts": [
    "Interconnection of Things",
-   "Internet ofThings",
+   "Internet of Things",
    "Internet of Telecommunications",
-   "Interconnection ofTelecommunications"
+   "Interconnection of Telecommunications"
   ],
   "ans": 1,
   "no": 264,
@@ -3671,7 +3671,7 @@
   "opts": [
    "魚叉式網路釣魚（Spear phishing）",
    "網路捕鯨（Whaling）",
-   "複製型釣魚攻擊（Clonephishing）",
+   "複製型釣魚攻擊（Clone phishing）",
    "網路釣魚簡訊和網路釣魚電話（Smishing and vishing）"
   ],
   "ans": 3,
@@ -3685,7 +3685,7 @@
    "IP Spoofing",
    "DoS",
    "Information Explosion",
-   "Reflectionattack"
+   "Reflection attack"
   ],
   "ans": 0,
   "no": 284,
@@ -3696,7 +3696,7 @@
   "q": "駭客發送大量帶有被害者IP 地址的數據包給攻擊主機，導致被攻擊主機對IP 地址源做出大量回應，造成拒絕服務。這類型攻擊稱為？",
   "opts": [
    "XSS",
-   "SQLinjection",
+   "SQL injection",
    "DRDoS",
    "IP Spoofing"
   ],
@@ -4410,7 +4410,7 @@
   "cat": "工作項目02：應用軟體使用",
   "q": "下列何套電子郵件系統還能兼具有「管理行事曆」的功能？",
   "opts": [
-   "OutlookExpress",
+   "Outlook Express",
    "Netscape",
    "Outlook",
    "cc:Mail"
@@ -5218,7 +5218,7 @@
   "opts": [
    "分時作業（Time-sharing）",
    "多工作業（Multitasking）",
-   "程式翻譯作業（LanguageTranslation）",
+   "程式翻譯作業（Language Translation）",
    "多工程式作業（Multi-programming）"
   ],
   "ans": 2,
@@ -5362,7 +5362,7 @@
    "bps（bit per second）",
    "Bps（Byte per second）",
    "Mps（Mega per second）",
-   "Gps（Giga persecond）"
+   "Gps（Giga per second）"
   ],
   "ans": 0,
   "no": 25,
@@ -5453,7 +5453,7 @@
    "DMA",
    "Baud Rate",
    "Packet Size",
-   "FrameSize"
+   "Frame Size"
   ],
   "ans": 0,
   "no": 32,
@@ -5708,7 +5708,7 @@
  },
  {
   "cat": "工作項目03：系統軟體使用",
-  "q": "下列何者是合法的一致性命名慣例UNC（Uniform NamingConvention）？",
+  "q": "下列何者是合法的一致性命名慣例UNC（Uniform Naming Convention）？",
   "opts": [
    "\\\\BYTE\\program",
    "\\\\COM\\document\\",
@@ -6102,7 +6102,7 @@
   "opts": [
    "SRAM",
    "DRAM",
-   "HardDisk",
+   "Hard Disk",
    "USB 碟"
   ],
   "ans": 0,
@@ -6115,7 +6115,7 @@
   "opts": [
    "Administrators",
    "Guest",
-   "RemoteDesktop Users",
+   "Remote Desktop Users",
    "Anyone"
   ],
   "ans": 3,
@@ -6139,7 +6139,7 @@
   "cat": "工作項目03：系統軟體使用",
   "q": "連接電腦後不需重新啟動電腦即可使用的設備，為具有何種特性？",
   "opts": [
-   "plugand play",
+   "plug and play",
    "input and output",
    "all in one",
    "pull and play"
@@ -6618,7 +6618,7 @@
  },
  {
   "cat": "工作項目03：系統軟體使用",
-  "q": "下列有關作業系統的操作中，何者是不需要使用系統呼叫（systemcall）？",
+  "q": "下列有關作業系統的操作中，何者是不需要使用系統呼叫（system call）？",
   "opts": [
    "計算費伯納西數列（Fibonacci sequence）",
    "刪除一個行程（kill process）",
@@ -6673,7 +6673,7 @@
   "q": "下列行動通訊網路系統中，何者可提供之資料傳輸速率最快？",
   "opts": [
    "GSM（Global System for Mobile communications）",
-   "GPRS（General PacketRadio Service）",
+   "GPRS（General Packet Radio Service）",
    "HSDPA（High-Speed Downlink Packet Access）",
    "IS-95（Interim Standard 95）"
   ],
@@ -6842,7 +6842,7 @@
   "q": "下列何種作業系統無法在PC 個人電腦上使用？",
   "opts": [
    "Windows",
-   "WindowsServer",
+   "Windows Server",
    "VAX-11",
    "Linux"
   ],
@@ -7182,7 +7182,7 @@
    "Print Screen",
    "Alt＋P",
    "Ctrl＋P",
-   "Ctrl＋PrintScreen"
+   "Ctrl＋Print Screen"
   ],
   "ans": 0,
   "no": 165,
@@ -7296,7 +7296,7 @@
   "cat": "工作項目03：系統軟體使用",
   "q": "在Windows 作業系統中，下列何種應用程式可繪製圖形？",
   "opts": [
-   "MicrosoftEdge",
+   "Microsoft Edge",
    "小畫家",
    "快速助手",
    "記事本"
@@ -7606,7 +7606,7 @@
  },
  {
   "cat": "工作項目03：系統軟體使用",
-  "q": "在Windows 作業系統的「命令提示字元」視窗中，下達「COPYC:\\TEST.ABC D:\\*.TXT」指令後，下列敘述何者正確？",
+  "q": "在Windows 作業系統的「命令提示字元」視窗中，下達「COPY C:\\TEST.ABC D:\\*.TXT」指令後，下列敘述何者正確？",
   "opts": [
    "D 磁碟會產生檔名為TEST.ABC 的檔案",
    "C 磁碟檔名為TEST.ABC 的檔案將會不存在",
@@ -7975,7 +7975,7 @@
    "iTunes",
    "Power DVD",
    "iKala",
-   "WindowsMedia Player"
+   "Windows Media Player"
   ],
   "ans": 3,
   "no": 226,
@@ -8001,7 +8001,7 @@
    "遠端桌面連線",
    "Windows Movie Maker",
    "Windows Media Player",
-   "WindowsMedia Center"
+   "Windows Media Center"
   ],
   "ans": 3,
   "no": 228,
@@ -8092,7 +8092,7 @@
    "macOS",
    "Ubuntu",
    "Android",
-   "MSDOS"
+   "MS DOS"
   ],
   "ans": 3,
   "no": 235,
@@ -8726,7 +8726,7 @@
   "cat": "工作項目04：資訊安全",
   "q": "主要的硬體安全防護措失，下列何者錯誤？",
   "opts": [
-   "虛擬電腦系統（Virtualmachine）",
+   "虛擬電腦系統（Virtual machine）",
    "記憶體的保護",
    "上線密碼（Login-Password）",
    "核心設計（Kernel design）"

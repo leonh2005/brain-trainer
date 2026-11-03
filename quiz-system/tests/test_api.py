@@ -13,6 +13,7 @@ import pytest
 @pytest.fixture
 def client(tmp_path, monkeypatch):
     monkeypatch.setattr(quiz, "HISTORY_PATH", tmp_path / "history.json")
+    monkeypatch.setattr(quiz, "MISTAKES_PATH", tmp_path / "mistakes.json")
     quiz.app.config["TESTING"] = True
     return quiz.app.test_client()
 
@@ -187,6 +188,56 @@ def test_mistakes_count_larger_than_bank_is_clamped(client):
     r = client.get("/api/quiz?mode=mistakes&count=50").get_json()
 
     assert len(r["items"]) == 2
+
+
+def test_mistakes_are_stored_separately_from_history(client, tmp_path):
+    """錯題庫獨立存檔，不會被 history 的筆數上限擠掉。"""
+    items = client.get("/api/quiz?count=3").get_json()["items"]
+    wrong = {it["qid"] for it in items}
+    _submit_some(client, items, {it["qid"]: False for it in items})
+
+    stored = json.loads((tmp_path / "mistakes.json").read_text(encoding="utf-8"))
+
+    assert set(stored) == wrong
+
+
+def test_mistakes_survive_history_rotation(client, monkeypatch):
+    items = client.get("/api/quiz?count=3").get_json()["items"]
+    wrong = {it["qid"] for it in items}
+    _submit_some(client, items, {it["qid"]: False for it in items})
+
+    # 之後大量交卷，讓舊紀錄被 HISTORY_LIMIT 擠出
+    monkeypatch.setattr(quiz, "HISTORY_LIMIT", 2)
+    for _ in range(6):
+        good = client.get("/api/quiz?count=1").get_json()["items"]
+        _submit_some(client, good, {good[0]["qid"]: True})
+
+    assert wrong <= quiz._mistake_ids()
+
+
+def test_payload_must_be_object(client):
+    assert client.post("/api/submit", json=[1, 2]).status_code == 400
+
+
+def test_bool_is_not_accepted_as_qid(client):
+    payload = {"items": [{"qid": True, "order": [0, 1, 2, 3], "picked": 0}]}
+
+    assert client.post("/api/submit", json=payload).status_code == 400
+
+
+def test_duplicate_qid_rejected(client):
+    it = client.get("/api/quiz?count=1").get_json()["items"][0]
+    payload = {"items": [{"qid": it["qid"], "order": it["order"], "picked": 0},
+                         {"qid": it["qid"], "order": it["order"], "picked": 1}]}
+
+    assert client.post("/api/submit", json=payload).status_code == 400
+
+
+def test_too_many_items_rejected(client):
+    one = {"qid": 0, "order": [0, 1, 2, 3], "picked": 0}
+    payload = {"items": [dict(one, qid=i) for i in range(quiz.MAX_ITEMS + 1)]}
+
+    assert client.post("/api/submit", json=payload).status_code == 400
 
 
 def test_health(client):

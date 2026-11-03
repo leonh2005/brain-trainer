@@ -109,7 +109,7 @@ async function loadQuiz(mode){
   $('mode').textContent = mode === 'mistakes' ? '錯題重刷' : '';
   $('mode').className = mode === 'mistakes' ? 'mode-tag on' : 'mode-tag';
   try{
-    const r = await (await fetch(`/api/quiz?mode=${mode}&count=${COUNT}`)).json();
+    const r = await (await fetch(`/api/quiz?mode=${mode}&count=${Math.min(COUNT, TOTAL)}`)).json();
     if(!r.ok) throw new Error(r.error || '載入失敗');
     state.items = r.items;
     state.picked = {};
@@ -124,7 +124,12 @@ async function loadQuiz(mode){
     updateProgress();
     window.scrollTo(0, 0);
   }catch(e){
-    $('questions').innerHTML = `<div class="empty">載入失敗：${e.message}</div>`;
+    state.items = [];
+    state.picked = {};
+    state.submitted = false;
+    state.result = null;
+    $('submit').disabled = true;
+    $('questions').innerHTML = `<div class="empty">載入失敗：${esc(e.message)}</div>`;
   }
 }
 
@@ -238,7 +243,11 @@ function esc(s){
 
 $('submit').addEventListener('click', submit);
 $('again').addEventListener('click', () => loadQuiz(state.mode));
-$('mistakes').addEventListener('click', () => loadQuiz('mistakes'));
+$('mistakes').addEventListener('click', () => {
+  const answered = Object.keys(state.picked).length;
+  if (answered && !state.submitted && !confirm('切換到錯題重刷會丟棄目前的作答，確定嗎？')) return;
+  loadQuiz('mistakes');
+});
 loadQuiz();
 loadHistory();
 </script>
