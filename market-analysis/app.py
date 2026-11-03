@@ -6,7 +6,7 @@
 import json
 import os
 import time
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta, timezone
 
 from flask import Flask, jsonify, render_template, request
 
@@ -127,15 +127,44 @@ def _fetch_via_yfinance():
     }
 
 
-# 日韓大盤：新浪 znb_* 即時源（延遲約 10 秒）優先，yfinance 備援。
-# 2026-10-29 實測：yfinance 免費源延遲 15-21 分鐘（^N225 分K 落後 16 分、^KS11 落後 21 分），
-# 韓股當日急殺時看板會少掉 1.3 個百分點。新浪 int_nikkei / int_kospi 是壞別名
+# 日韓大盤：唯一來源是新浪 znb_* 即時報價（延遲約 10 秒）。
+# 2026-10-29 實測：yfinance 免費源延遲 15-21 分鐘；新浪 int_nikkei / int_kospi 是壞別名
 # （分別回 44,946 與空字串），只有 znb_NKY / znb_KOSPI 與 yfinance 前收一致可用。
+# 2026-11-03 起 yfinance 完全退出區域指數的「報價」角色（仍用在日波圖畫曲線）：
+# 它的日線時間戳是 00:00 且會跳過交易日（實測 ^KS11 5d 缺 2026-11-02），當備援會算錯漲跌幅。
 REGIONAL_INDICES = (
     ("N225", "日經225", "znb_NKY", "^N225"),
     ("KOSPI", "韓股KOSPI", "znb_KOSPI", "^KS11"),
 )
-SINA_QUOTE_MAX_AGE = 600  # 報價時間戳超過 10 分鐘視為凍結，退回 yfinance
+SINA_QUOTE_MAX_AGE = 600  # 報價停超過 10 分鐘只標示 stale，不丟棄：休市/午休/收盤後本來就沒有新 tick
+SINA_TZ = timezone(timedelta(hours=8))      # 新浪 znb_* 時間戳為北京時間
+EXCHANGE_TZ = timezone(timedelta(hours=9))  # 日/韓交易所；日波圖 X 軸與新鮮度徽章都用這個時區
+_NO_FRESHNESS = {"as_of": None, "as_of_time": None, "is_today": None, "is_stale": None}
+
+
+def _quote_age_seconds(ts: datetime, now: datetime | None = None) -> float:
+    """報價時間戳距 now（預設現在）幾秒。naive ts 視為交易所時區。"""
+    if ts.tzinfo is None:
+        ts = ts.replace(tzinfo=EXCHANGE_TZ)
+    return ((now or datetime.now(UTC)).astimezone(UTC) - ts).total_seconds()
+
+
+def _freshness(ts: datetime, now: datetime | None = None) -> dict:
+    """報價時間戳 → 前端標示用欄位。
+
+    時間一律用交易所時區：圖表 X 軸是 JST/KST，徽章若換成台北時間會在同一區塊
+    出現相差一小時的两个時間。is_today 用來區分「今天但停滯」與「非今天」。
+    """
+    if ts.tzinfo is None:      # 與 _quote_age_seconds 對 naive 的解讀保持一致
+        ts = ts.replace(tzinfo=EXCHANGE_TZ)
+    now = now or datetime.now(EXCHANGE_TZ)
+    local = ts.astimezone(EXCHANGE_TZ)
+    return {
+        "as_of": local.strftime("%Y-%m-%d"),
+        "as_of_time": local.strftime("%H:%M"),
+        "is_today": local.date() == now.astimezone(EXCHANGE_TZ).date(),
+        "is_stale": _quote_age_seconds(ts, now) > SINA_QUOTE_MAX_AGE,
+    }
 
 
 def _sina_index_quote(symbol):
@@ -162,36 +191,25 @@ def _sina_index_quote(symbol):
         return None
     if not 0.5 < price / prev_close < 2.0:
         return None                      # 欄位順序若被改動會解析出錯位數字，用漲跌幅合理性擋掉
-    ts = ts.replace(tzinfo=timezone(timedelta(hours=8)))
-    if (datetime.now(timezone.utc) - ts).total_seconds() > SINA_QUOTE_MAX_AGE:
-        return None                      # feed 凍結，別把舊價當即時價
+    ts = ts.replace(tzinfo=SINA_TZ)
     return {"price": price, "prev_close": prev_close, "ts": ts}
 
 
-def _yf_index_quote(ticker):
-    """yfinance 備援報價（延遲 15-21 分鐘），回傳 {price, prev_close} 或 None。"""
-    import yfinance as yf
-
-    closes = yf.Ticker(ticker).history(period="5d")["Close"].dropna()
-    if len(closes) < 2:
-        return None
-    return {"price": float(closes.iloc[-1]), "prev_close": float(closes.iloc[-2])}
-
-
 def _regional_indices():
-    """日股(日經225)、韓股(KOSPI) 大盤。新浪即時優先，yfinance 備援。"""
+    """日股(日經225)、韓股(KOSPI) 大盤，只用新浪 znb_* 即時源。
+
+    刻意不拿 yfinance 當備援：它的日線時間戳是 00:00 且會跳過交易日
+    （實測 ^KS11 5d 缺 2026-11-02），prev_close 取 iloc[-2] 會落在別的交易日，
+    漲跌幅可差 2~3 個百分點。取不到就讓該指數缺席，比顯示錯誤數字好。
+    """
     out = []
-    for code, name, sina_symbol, ticker in REGIONAL_INDICES:
-        quote, source = None, None
+    for code, name, sina_symbol, _ticker in REGIONAL_INDICES:
         try:
-            quote, source = _sina_index_quote(sina_symbol), "sina"
+            quote = _sina_index_quote(sina_symbol)
         except Exception:
-            pass
+            quote = None
         if quote is None:
-            try:
-                quote, source = _yf_index_quote(ticker), "yfinance"
-            except Exception:
-                continue
+            continue
         close, prev = quote["price"], quote["prev_close"]
         out.append({
             "code": code,
@@ -199,7 +217,9 @@ def _regional_indices():
             "price": round(close, 2),
             "change_pct": round((close - prev) / prev * 100, 2) if prev else None,
             "change_point": round(close - prev, 2) if prev else None,
-            "source": source,
+            "source": "sina",
+            # is_today 讓前端區分「今天但停滯」（顯示截至時間）與「非今天」（顯示資料日期）
+            **_freshness(quote["ts"]),
         })
     return out
 
@@ -413,25 +433,45 @@ def _fetch_regional_intraday(force=False):
         try:
             t = yf.Ticker(ticker)
             intraday = t.history(period="1d", interval="1m")["Close"].dropna()
+            if intraday.index.tz is None:  # 缺時區資訊時不讓 aware/naive 比較拋 TypeError
+                intraday = intraday.tz_localize(EXCHANGE_TZ)
             points = [{"t": idx.strftime("%H:%M"), "price": float(v)} for idx, v in intraday.items()]
-            daily = t.history(period="5d")["Close"].dropna()
-            prev_close = float(daily.iloc[-2]) if len(daily) >= 2 else None
-            # 末端補新浪即時點：yfinance 分K 延遲 15-21 分鐘，不補會跟上方標題的價格對不上。
-            # 標籤時間要用交易所時區換算（日/韓皆 UTC+9），不能直接沿用新浪的北京時間。
             try:
                 sina = _sina_index_quote(sina_symbol)
             except Exception:
                 sina = None
-            if sina and points and intraday.index[-1] < sina["ts"]:
-                label = sina["ts"].astimezone(intraday.index[-1].tzinfo).strftime("%H:%M")
-                if points[-1]["t"] == label:
-                    points[-1]["price"] = round(sina["price"], 2)
-                else:
-                    points.append({"t": label, "price": round(sina["price"], 2)})
-                prev_close = sina["prev_close"] or prev_close
-            out.append({"code": code, "name": name, "points": points, "prev_close": prev_close})
+
+            # 末端補新浪即時點：yfinance 分K 延遲 15-21 分鐘，不補會跟上方標題的價格對不上。
+            # 只有同交易日才補，否則會把別的交易日價格接到今天的曲線末端（跨日假跳空）。
+            appended_today = False
+            sina_local = None
+            if sina and points:
+                sina_local = sina["ts"].astimezone(intraday.index[-1].tzinfo)
+                if intraday.index[-1] < sina_local and intraday.index[-1].date() == sina_local.date():
+                    label = sina_local.strftime("%H:%M")
+                    if points[-1]["t"] == label:
+                        points[-1]["price"] = round(sina["price"], 2)
+                    else:
+                        points.append({"t": label, "price": round(sina["price"], 2)})
+                    appended_today = True
+
+            # 昨收只信新浪，且必須與曲線同一交易日：跨日時新浪的昨收是「曲線當天的收盤」，畫上去會錯位。
+            prev_close = None
+            if sina and sina.get("prev_close") and sina_local is not None \
+                    and intraday.index[-1].date() == sina_local.date():
+                prev_close = sina["prev_close"]
+
+            # 新鮮度以曲線最後一點為準；同日補點時用新浪時間戳，曲線為空時也退回新浪報價
+            last_ts = intraday.index[-1].to_pydatetime() if len(intraday) else None
+            if appended_today:
+                last_ts = sina["ts"]
+            elif last_ts is None and sina:
+                last_ts = sina["ts"]
+            out.append({"code": code, "name": name, "points": points, "prev_close": prev_close,
+                        **(_freshness(last_ts) if last_ts else _NO_FRESHNESS)})
         except Exception:
-            out.append({"code": code, "name": name, "points": [], "prev_close": None})
+            out.append({"code": code, "name": name, "points": [], "prev_close": None,
+                        **_NO_FRESHNESS})
 
     result = {"ok": True, "regional": out}
     _regional_intraday_cache["data"] = result

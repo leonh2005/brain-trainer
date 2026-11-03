@@ -124,6 +124,8 @@ tr.highlight td{background:rgba(217,119,87,.07); font-weight:700}
 .regional-row .reg-name{color:var(--fg); font-weight:600}
 .regional-row .reg-price{font-family:var(--mono); font-weight:600; margin:0 4px}
 .regional-row .reg-chg{font-family:var(--mono); font-weight:600}
+.regional-row .reg-stale{font-size:11px; font-weight:400; margin-left:5px; padding:0 4px; border:1px solid currentColor; border-radius:3px; opacity:.7; vertical-align:1px}
+.intraday-meta .reg-stale{font-family:inherit; font-weight:400; opacity:.85}
 .econ-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:10px}
 .econ-tile{background:var(--bg-soft); border:1px solid var(--border-soft); border-radius:9px; padding:9px 11px}
 .econ-tile .en{font-size:12px; color:var(--muted)}
@@ -440,6 +442,9 @@ async function loadLive(fresh){
     const d = await res.json();
     if (!d.ok){
       document.getElementById('live-updated').textContent = '暫無即時資料';
+      // 連區域指數一起清掉：留著上一輪的「收盤」徽章會把凍結狀態包裝成有效資料
+      document.getElementById('live-regional').innerHTML = '';
+      clearRegionalCharts();
       return;
     }
     const idx = d.index || {};
@@ -491,20 +496,23 @@ async function loadLive(fresh){
       oilEl.innerHTML = '';
     }
 
-    // 日股/韓股大盤（yfinance）
+    // 日股/韓股大盤（新浪即時源；yfinance 日線會跳交易日，不能當漲跌備援）
     const reg = d.regional || [];
-    document.getElementById('live-regional').innerHTML = reg.map(r => {
+    document.getElementById('live-regional').innerHTML = reg.length ? reg.map(r => {
       const rp = (r.change_point != null && !isNaN(r.change_point)) ? ((r.change_point > 0 ? '+' : '') + r.change_point.toFixed(2)) : '--';
-      return `<span class="reg-item"><span class="reg-name">${r.name}</span><span class="reg-price">${r.price != null ? r.price : '--'}</span>`
+      const lbl = staleLabel(r);
+      const stale = lbl ? `<span class="reg-stale">${lbl}</span>` : '';
+      return `<span class="reg-item"><span class="reg-name">${r.name}</span>${stale}<span class="reg-price">${r.price != null ? r.price : '--'}</span>`
            + `<span class="reg-chg ${pctClass(r.change_pct)}">${rp}（${fmtPct(r.change_pct)}）</span></span>`;
-    }).join('');
+    }).join('') : '<span class="reg-item">暫無日經／韓股資料</span>';
     const n225 = reg.find(r => r.code === 'N225');
     const kospi = reg.find(r => r.code === 'KOSPI');
+    const asOfTag = r => { const s = staleLabel(r); return s ? `（${s}）` : ''; };
     const chartPtN225 = document.getElementById('chart-pt-n225');
-    chartPtN225.textContent = n225 ? fmtPriceChg(n225.price, n225.change_point, n225.change_pct) : '';
+    chartPtN225.textContent = n225 ? fmtPriceChg(n225.price, n225.change_point, n225.change_pct) + asOfTag(n225) : '';
     chartPtN225.className = 'mono ' + pctClass(n225 && n225.change_pct);
     const chartPtKospi = document.getElementById('chart-pt-kospi');
-    chartPtKospi.textContent = kospi ? fmtPriceChg(kospi.price, kospi.change_point, kospi.change_pct) : '';
+    chartPtKospi.textContent = kospi ? fmtPriceChg(kospi.price, kospi.change_point, kospi.change_pct) + asOfTag(kospi) : '';
     chartPtKospi.className = 'mono ' + pctClass(kospi && kospi.change_pct);
 
     const stocks = d.stocks || [];
@@ -525,15 +533,32 @@ async function loadLive(fresh){
     loadStocksIntraday();
   }catch(e){
     document.getElementById('live-updated').textContent = '暫無即時資料';
+    document.getElementById('live-regional').innerHTML = '';
+    clearRegionalCharts();
   }
 }
 
 // 日波圖：SVG polyline，含昨收參考線、均價線、當日最高/最低標記
 // 供大盤/日經/韓股（size='full'）與六權值股小圖（size='mini'）共用，格式一致、僅尺寸縮放
-function renderIntradayChart(elId, points, prevClose, size){
+// 報價停滯的統一標籤：非今天＝休市/長假，標資料日期；今天＝午休或源停更，標最後報價時間
+// （不能把「停滯」一律寫成「收盤」——日經 11:30-12:30 JST 午休每天都會停一小時）
+function staleLabel(r){
+  if (!r || !r.is_stale || !r.as_of) return '';
+  return r.is_today ? `截至 ${r.as_of_time}` : `${r.as_of} 收盤`;
+}
+
+// 資料失效時連標題價一起清掉，並重設漲跌顏色（只清 textContent 會留下上一次的紅綠）
+function clearRegionalCharts(){
+  ['chart-pt-n225', 'chart-pt-kospi'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) { el.textContent = ''; el.className = 'mono'; }
+  });
+}
+
+function renderIntradayChart(elId, points, prevClose, size, asOfLabel){
   const el = document.getElementById(elId);
   if (!points || points.length < 2){
-    el.innerHTML = '<div class="empty">暫無日內走勢資料</div>';
+    el.innerHTML = `<div class="empty">暫無日內走勢資料${asOfLabel ? '（' + asOfLabel + '）' : ''}</div>`;
     return;
   }
   const mini = size === 'mini';
@@ -616,6 +641,7 @@ function renderIntradayChart(elId, points, prevClose, size){
       <span>${points[0].t} 開盤 ${prices[0].toFixed(2)}</span>
       <span>${prevClose != null ? '昨收 ' + prevClose.toFixed(2) : ''}</span>
       <span>${points[points.length - 1].t} 現價 ${last.toFixed(2)}</span>
+      ${asOfLabel ? `<span class="reg-stale">${asOfLabel}</span>` : ''}
     </div>`;
 
   const svgEl = document.getElementById(`${uid}-svg`);
@@ -685,7 +711,7 @@ async function loadRegionalIntraday(fresh){
     const map = {'N225': 'intraday-chart-n225', 'KOSPI': 'intraday-chart-kospi'};
     (d.regional || []).forEach(r => {
       const elId = map[r.code];
-      if (elId) renderIntradayChart(elId, r.points || [], r.prev_close);
+      if (elId) renderIntradayChart(elId, r.points || [], r.prev_close, undefined, staleLabel(r));
     });
   }catch(e){
     ['intraday-chart-n225', 'intraday-chart-kospi'].forEach(id => {
