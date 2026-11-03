@@ -39,6 +39,11 @@ BUFFETT_CACHE    = Path(__file__).parent / "buffett_cache.json"
 HINDENBURG_CACHE = Path(__file__).parent / "hindenburg_cache.json"
 ALERT_GRID       = Path(__file__).parent / "alert_grid.json"
 ALERT_THRESHOLD  = 6
+# 融資市值比門檻。2026-11-03 修正前是 3.5/4.5（融資餘額少算 10 倍的錯誤尺度）；
+# 這個數字原本散落在卡片/圖表/圖例/JS plugin/九宮格共 12 處，改尺度時漏改過一次，
+# 因此集中在這裡，HTML 內用 f-string 注入。
+MARGIN_HOT  = 0.45   # > 此值：偏熱
+MARGIN_WARN = 0.35   # 介於兩者：注意
 BOT_TOKEN = open(os.path.expanduser("~/CCProject/.secrets/telegram_token.txt")).read().strip()
 CHAT_ID = "7556217543"
 
@@ -277,6 +282,26 @@ def fetch_cape():
         return []
 
 
+def _drop_stale_margin_cache() -> None:
+    """把 2026-11-03 前的錯誤尺度快取（÷10,000，ratio 放大 10 倍）改名停用。
+
+    command-center 直接讀 margin_cache.json，只在本檔守門的話兩個入口會差 10 倍。
+    舊尺度實際值落在 3~4，新尺度合理上限約 0.7%，所以用 2 當分界（不是 1，
+    避免市場真的進入高槓桿時把合法資料誤刪）。
+    """
+    if not MARGIN_CACHE.exists():
+        return
+    try:
+        cached = json.loads(MARGIN_CACHE.read_text())
+        vals = [r["y"] for r in cached if isinstance(r.get("y"), (int, float))]
+    except (json.JSONDecodeError, OSError):
+        return
+    if vals and max(vals) > 2:
+        stale = MARGIN_CACHE.with_name(MARGIN_CACHE.name + ".stale")
+        MARGIN_CACHE.rename(stale)
+        print(f"  融資快取為舊尺度，已改名為 {stale.name}")
+
+
 def fetch_margin_mktcap(tw_data: list, months: int = 24) -> list:
     """台股融資市值比月度資料
     - 融資餘額: TWSE MI_MARGN selectType=ALL，取 tables[0].data[2][5]（今日餘額千元）
@@ -359,7 +384,8 @@ def fetch_margin_mktcap(tw_data: list, months: int = 24) -> list:
                 continue
             # rows[2] = ['融資金額(仟元)', 買進, 賣出, 現金償還, 前日餘額, 今日餘額]
             margin_k = float(rows[2][5].replace(",", ""))
-            margin_yi = trunc2(margin_k / 10000)  # 千元 → 億元
+            # 千元 → 億元：1 億元 = 100,000 仟元（原本誤用 10,000，放大 10 倍）
+            margin_yi = trunc2(margin_k / 100000)
 
             # 從 title 取得實際日期（如 "115年06月01日"）
             title = tables[0].get("title", "")
@@ -377,7 +403,7 @@ def fetch_margin_mktcap(tw_data: list, months: int = 24) -> list:
 
             if mktcap_today and taiex_today and taiex_on:
                 mktcap_hist = trunc2(mktcap_today * (taiex_on / taiex_today))
-                ratio = trunc2(margin_yi / mktcap_hist * 100) if mktcap_hist > 0 else 0
+                ratio = round(margin_yi / mktcap_hist * 100, 3) if mktcap_hist > 0 else 0
             else:
                 mktcap_hist = 0
                 ratio = 0
@@ -391,13 +417,36 @@ def fetch_margin_mktcap(tw_data: list, months: int = 24) -> list:
         key=lambda item: item["x"]
     )
 
-    if data:
-        MARGIN_CACHE.write_text(json.dumps(data, ensure_ascii=False))
-    elif MARGIN_CACHE.exists():
-        print("  使用融資市值比快取")
-        data = json.loads(MARGIN_CACHE.read_text())
+    # 這輪資料可用的前提：市值與 TAIEX 都拿到（否則每筆 ratio 都是 0）
+    valid = bool(data) and mktcap_today > 0 and taiex_today > 0
 
-    return data
+    # 覆寫快取還要筆數足夠，避免部分月份失敗時用短資料蓋掉整個歷史。
+    # 下限固定 12 筆：快取不存在時 prev_count=0，只看快取會讓保護恆真。
+    prev_count = 0
+    if MARGIN_CACHE.exists():
+        try:
+            prev_count = len(json.loads(MARGIN_CACHE.read_text()))
+        except Exception:
+            prev_count = 0
+    enough = len(data) >= max(min(prev_count, 24) - 2, 12)
+
+    if valid:
+        # 不論筆數夠不夠，舊尺度的檔案都不能留給 command-center（它也讀這個檔）
+        _drop_stale_margin_cache()
+        if enough:
+            MARGIN_CACHE.write_text(json.dumps(data, ensure_ascii=False))
+        else:
+            print(f"  融資資料僅 {len(data)} 筆，本輪先用但不覆寫快取")
+        return data
+
+    # 這輪資料不可用 → 先清掉舊尺度檔（command-center 也讀它），再退回快取
+    _drop_stale_margin_cache()
+    if MARGIN_CACHE.exists():
+        print("  使用融資市值比快取")
+        return json.loads(MARGIN_CACHE.read_text())
+
+    print("  融資市值比：市值/TAIEX 取得失敗且無可用快取")
+    return []
 
 
 def fetch_buffett_cash() -> dict:
@@ -986,12 +1035,20 @@ def generate_html(vix_data, sp_data, ma_data, sp_hist_high, fg_data, tw_data, tw
     # 融資市值比
     margin_data = margin_data or []
     mg_current = margin_data[-1] if margin_data else {}
-    mg_ratio   = mg_current.get("y", 0)
-    mg_margin  = mg_current.get("margin", 0)
-    mg_mktcap  = mg_current.get("mktcap", 0)
+    mg_ratio   = mg_current.get("y")          # None = 這輪沒抓到，不可畫成「正常」
+    mg_margin  = mg_current.get("margin")
+    mg_mktcap  = mg_current.get("mktcap")
     mg_date    = mg_current.get("x", "N/A")
-    mg_color   = "#ff4757" if mg_ratio > 4.5 else ("#ffaa00" if mg_ratio > 3.5 else "#00d68f")
-    mg_label   = "🔥 偏熱 >4.5%" if mg_ratio > 4.5 else ("⚠ 注意 3.5–4.5%" if mg_ratio > 3.5 else "正常 <3.5%")
+    # 抓取失敗時不可印「0 億元」——那看起來像餘額歸零，不是沒有資料
+    mg_margin_str = f"{mg_margin:,.0f}" if mg_margin is not None else "—"
+    mg_mktcap_str = f"{mg_mktcap:,.0f}" if mg_mktcap is not None else "—"
+    if mg_ratio is None:
+        mg_color = "#5a6a7e"; mg_label = "暫無資料（抓取失敗）"
+        mg_value = "—"; mg_unit = ""
+    else:
+        mg_color = "#ff4757" if mg_ratio > MARGIN_HOT else ("#ffaa00" if mg_ratio > MARGIN_WARN else "#00d68f")
+        mg_label = f"🔥 偏熱 >{MARGIN_HOT}%" if mg_ratio > MARGIN_HOT else (f"⚠ 注意 {MARGIN_WARN}–{MARGIN_HOT}%" if mg_ratio > MARGIN_WARN else f"正常 <{MARGIN_WARN}%")
+        mg_value = f"{mg_ratio:.3f}"; mg_unit = "%"
     mg_alert   = alert_class(mg_color)
 
     # Buffett 現金水位
@@ -1379,11 +1436,11 @@ def generate_html(vix_data, sp_data, ma_data, sp_hist_high, fg_data, tw_data, tw
 
   <div class="card {mg_alert}" style="--accent: {mg_color}">
     <div class="card-label"><span class="pulse"></span>融資市值比</div>
-    <div class="card-value">{mg_ratio:.2f}<span style="font-size:1.2rem">%</span></div>
+    <div class="card-value">{mg_value}<span style="font-size:1.2rem">{mg_unit}</span></div>
     <div class="card-sub">
       <b>{mg_label}</b>
-      <br>融資餘額：<b>{mg_margin:,.0f}</b> 億元
-      <br>總市值：<b>{mg_mktcap:,.0f}</b> 億元
+      <br>融資餘額：<b>{mg_margin_str}</b> 億元
+      <br>總市值：<b>{mg_mktcap_str}</b> 億元
       <br><span style="opacity:0.5">{mg_date} · 每日更新</span>
     </div>
   </div>
@@ -1643,11 +1700,11 @@ def generate_html(vix_data, sp_data, ma_data, sp_hist_high, fg_data, tw_data, tw
 
   <div class="chart-section">
     <div class="chart-header">
-      <div class="chart-title"><b>融資市值比</b> 月度 <span style="font-size:0.65rem;opacity:0.5">（融資餘額 ÷ 總市值 × 100%，&gt;4.5% 偏熱）</span></div>
+      <div class="chart-title"><b>融資市值比</b> 月度 <span style="font-size:0.65rem;opacity:0.5">（融資餘額 ÷ 總市值 × 100%，&gt;{MARGIN_HOT}% 偏熱）</span></div>
       <div class="chart-legend">
         <div class="legend-item"><div class="legend-dot" style="background:#c8a0ff"></div>融資市值比 %</div>
-        <div class="legend-item" style="color:#ff4757"><div class="legend-dot" style="background:#ff4757"></div>&gt;4.5% 偏熱</div>
-        <div class="legend-item" style="color:#ffaa00"><div class="legend-dot" style="background:#ffaa00"></div>3.5–4.5% 注意</div>
+        <div class="legend-item" style="color:#ff4757"><div class="legend-dot" style="background:#ff4757"></div>&gt;{MARGIN_HOT}% 偏熱</div>
+        <div class="legend-item" style="color:#ffaa00"><div class="legend-dot" style="background:#ffaa00"></div>{MARGIN_WARN}–{MARGIN_HOT}% 注意</div>
       </div>
     </div>
     <div class="chart-wrap"><canvas id="marginChart"></canvas></div>
@@ -2046,13 +2103,13 @@ const marginPlugin = {{
   beforeDraw(chart) {{
     const {{ ctx, chartArea, scales }} = chart;
     if (!chartArea) return;
-    const y45 = scales.y.getPixelForValue(4.5);
-    const y35 = scales.y.getPixelForValue(3.5);
+    const y45 = scales.y.getPixelForValue({MARGIN_HOT});
+    const y35 = scales.y.getPixelForValue({MARGIN_WARN});
     ctx.save();
-    // 紅：>4.5%
+    // 紅：>{MARGIN_HOT}%
     ctx.fillStyle = 'rgba(255,71,87,0.08)';
     ctx.fillRect(chartArea.left, chartArea.top, chartArea.right - chartArea.left, Math.max(0, y45 - chartArea.top));
-    // 黃：3.5-4.5%
+    // 黃：注意區
     const y45c = Math.max(y45, chartArea.top);
     const y35c = Math.min(y35, chartArea.bottom);
     if (y35c > y45c) {{
@@ -2065,7 +2122,7 @@ const marginPlugin = {{
       ctx.beginPath(); ctx.moveTo(chartArea.left, y45); ctx.lineTo(chartArea.right, y45); ctx.stroke();
       ctx.fillStyle = 'rgba(255,71,87,0.7)';
       ctx.font = "10px 'Share Tech Mono'"; ctx.setLineDash([]);
-      ctx.fillText('4.5% 偏熱', chartArea.left + 6, y45 - 4);
+      ctx.fillText('{MARGIN_HOT}% 偏熱', chartArea.left + 6, y45 - 4);
       ctx.setLineDash([4,4]);
     }}
     if (y35 >= chartArea.top && y35 <= chartArea.bottom) {{
@@ -2073,7 +2130,7 @@ const marginPlugin = {{
       ctx.beginPath(); ctx.moveTo(chartArea.left, y35); ctx.lineTo(chartArea.right, y35); ctx.stroke();
       ctx.fillStyle = 'rgba(255,170,0,0.7)';
       ctx.font = "10px 'Share Tech Mono'"; ctx.setLineDash([]);
-      ctx.fillText('3.5% 注意', chartArea.left + 6, y35 - 4);
+      ctx.fillText('{MARGIN_WARN}% 注意', chartArea.left + 6, y35 - 4);
     }}
     ctx.restore();
   }}
@@ -2089,8 +2146,8 @@ const marginChart = makeChart('marginChart', [{{
   parsing: {{ xAxisKey: 'x', yAxisKey: 'y' }},
   tension: 0.3,
   segment: {{
-    borderColor: ctx => ctx.p1.parsed.y > 4.5 ? '#ff4757' :
-                        ctx.p1.parsed.y > 3.5 ? '#ffaa00' : '#c8a0ff',
+    borderColor: ctx => ctx.p1.parsed.y > {MARGIN_HOT} ? '#ff4757' :
+                        ctx.p1.parsed.y > {MARGIN_WARN} ? '#ffaa00' : '#c8a0ff',
   }},
 }}], 0, null, {{
   scales: {{ x: {{ time: {{ unit: 'month' }} }} }}
@@ -2638,7 +2695,7 @@ def main():
     m1b_cur      = m1b_data[-1]["y"] if m1b_data else 0
     trade_cur    = trade_data[-1]["y"] if trade_data else 0
     m1b_r        = trunc2(trade_cur / m1b_cur * 100) if m1b_cur else 0
-    mg_r         = margin_data[-1]["y"] if margin_data else 0
+    mg_r         = margin_data[-1]["y"] if margin_data else None
     bb_val       = (bb_data or {}).get("value")
     bf_r         = (buffett_data or {}).get("ratio")
     sp_vs_ma_pct = trunc2((sp_cur / ma_cur - 1) * 100) if ma_cur else 0
@@ -2653,7 +2710,7 @@ def main():
         ("S&P vs 200MA", sp_vs_ma_pct < 0,                                   fmt_or_na(sp_vs_ma_pct, "+.2f", "%")),
         ("台股 vs 200MA", False,                                              fmt_or_na(tw_vs_ma_pct, "+.2f", "%（不納入警示）")),
         ("M1B比",      m1b_r > 7,                                            fmt_or_na(m1b_r, ".2f", "%（>7% 偏熱）")),
-        ("融資市值比", mg_r > 3.5,                                            fmt_or_na(mg_r, ".2f", "%（>3.5%）")),
+        ("融資市值比", mg_r is not None and mg_r > MARGIN_WARN,                       fmt_or_na(mg_r, ".3f", f"%（>{MARGIN_WARN}%）")),
         ("美銀牛熊",   bb_val is not None and (bb_val >= 8.0 or bb_val < 2.0), f"{bb_val if bb_val is not None else 'N/A'}"),
         ("巴菲特現金", bf_r is not None and bf_r >= 20,                      f"{bf_r:.1f}%（>=20% 謹慎）" if bf_r is not None else "N/A"),
     ]
