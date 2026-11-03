@@ -40,6 +40,9 @@ main{max-width:860px;margin:0 auto;padding:20px 16px 80px}
   padding:18px 20px;margin-bottom:14px}
 .q .head{display:flex;gap:10px;align-items:baseline;margin-bottom:10px}
 .q .no{font-weight:700;color:var(--accent);font-variant-numeric:tabular-nums}
+.q .flag{margin-left:auto;font-size:12px;padding:2px 10px;border-radius:999px;background:transparent;color:var(--muted);border:1px solid var(--line);white-space:nowrap}
+.q .flag:hover{color:var(--accent);border-color:var(--accent)}
+.q .flag.on{color:#c9a227;border-color:#c9a227;opacity:.75;cursor:default}
 .q .cat{font-size:12px;color:var(--muted);border:1px solid var(--line);
   border-radius:999px;padding:1px 8px;white-space:nowrap}
 .q .stem{font-weight:500;margin:0 0 12px}
@@ -75,6 +78,7 @@ aside h2{font-size:14px;font-weight:600;color:var(--fg);margin:0 0 8px}
   <span id="mode" class="mode-tag"></span>
   <span id="progress"></span>
   <span class="spacer"></span>
+  <button id="carry">進位題</button>
   <button id="mistakes">錯題重刷</button>
   <button id="again" style="display:none">再來一份</button>
   <button id="submit" class="primary">交卷</button>
@@ -94,7 +98,8 @@ aside h2{font-size:14px;font-weight:600;color:var(--fg);margin:0 0 8px}
 const TOTAL = {{ total_questions }};
 const COUNT = 50;
 const LETTERS = ['A','B','C','D'];
-const state = { items: [], picked: {}, submitted: false, result: null, mode: 'all' };
+const MODE_LABEL = { mistakes: '錯題重刷', carry: '進位題' };
+const state = { items: [], picked: {}, flagged: {}, submitted: false, result: null, mode: 'all' };
 
 const $ = id => document.getElementById(id);
 
@@ -108,15 +113,17 @@ async function loadQuiz(mode){
   $('submit').disabled = true;      // 新題回來前不可交卷，避免送出上一份
   state.items = [];
   state.picked = {};
+  state.flagged = {};
   state.submitted = false;
   state.result = null;
-  $('mode').textContent = mode === 'mistakes' ? '錯題重刷' : '';
-  $('mode').className = mode === 'mistakes' ? 'mode-tag on' : 'mode-tag';
+  $('mode').textContent = MODE_LABEL[mode] || '';
+  $('mode').className = MODE_LABEL[mode] ? 'mode-tag on' : 'mode-tag';
   try{
     const r = await (await fetch(`/api/quiz?mode=${mode}&count=${Math.min(COUNT, TOTAL)}`)).json();
     if(!r.ok) throw new Error(r.error || '載入失敗');
     state.items = r.items;
     state.picked = {};
+    state.flagged = {};
     state.submitted = false;
     state.result = null;
     if(!state.items.length){
@@ -132,6 +139,7 @@ async function loadQuiz(mode){
   }catch(e){
     state.items = [];
     state.picked = {};
+    state.flagged = {};
     state.submitted = false;
     state.result = null;
     $('submit').disabled = true;
@@ -170,12 +178,29 @@ function render(){
     }
 
     return `<article class="q">
-      <div class="head"><span class="no">${i + 1}</span><span class="stem">${esc(it.q)}</span></div>
+      <div class="head"><span class="no">${i + 1}</span><span class="stem">${esc(it.q)}</span><button class="flag${state.flagged[it.qid] ? ' on' : ''}"${state.flagged[it.qid] ? ' disabled' : ''} onclick="markUncertain(${it.qid})">${state.flagged[it.qid] ? '✓ 已標記' : '❓ 不確定'}</button></div>
       <div class="cat" style="display:inline-block;margin-bottom:10px">${esc(it.cat)}</div>
       <div class="opts">${opts}</div>
       ${verdict}
     </article>`;
   }).join('');
+}
+
+async function markUncertain(qid){
+  if(state.flagged[qid]) return;
+  try{
+    const r = await fetch('/api/mark', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({qid})
+    });
+    const d = await r.json();
+    if(!d.ok) throw new Error(d.error || '標記失敗');
+    state.flagged[qid] = true;
+    render();
+  }catch(e){
+    alert('標記失敗：' + e.message);
+  }
 }
 
 function pick(qid, idx){
@@ -249,6 +274,11 @@ function esc(s){
 
 $('submit').addEventListener('click', submit);
 $('again').addEventListener('click', () => loadQuiz(state.mode));
+$('carry').addEventListener('click', () => {
+  const answered = Object.keys(state.picked).length;
+  if (answered && !state.submitted && !confirm('切換到進位題會丟棄目前的作答，確定嗎？')) return;
+  loadQuiz('carry');
+});
 $('mistakes').addEventListener('click', () => {
   const answered = Object.keys(state.picked).length;
   if (answered && !state.submitted && !confirm('切換到錯題重刷會丟棄目前的作答，確定嗎？')) return;

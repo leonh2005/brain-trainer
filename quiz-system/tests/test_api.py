@@ -167,6 +167,56 @@ def test_migration_skips_unanswered(tmp_path, monkeypatch):
     assert quiz._load_mistakes() == {quiz.QUESTIONS[11]["id"]}
 
 
+def test_carry_mode_only_returns_carry_questions(client):
+    """進位題模式只出題目或選項含「進位」的題目。"""
+    items = client.get("/api/quiz?mode=carry&count=50").get_json()["items"]
+
+    assert items
+    for it in items:
+        q = quiz.QUESTIONS[it["qid"]]
+        assert "進位" in q["q"] or any("進位" in o for o in q["opts"])
+
+
+def test_carry_mode_does_not_exceed_pool(client):
+    """題庫不足時全出，不報錯也不會重複。"""
+    items = client.get("/api/quiz?mode=carry&count=999").get_json()["items"]
+
+    assert len(items) == len({it["qid"] for it in items})
+    assert len(items) <= len([q for q in quiz.QUESTIONS if quiz._is_carry(q)])
+
+
+def test_mark_uncertain_adds_to_mistakes(client):
+    """練習當下按「不確定」就把題目列進錯題庫，不必先交卷。"""
+    qid = quiz.QUESTIONS[10]["id"]
+
+    r = client.post("/api/mark", json={"qid": qid}).get_json()
+
+    assert r["ok"] is True
+    assert r["mistake_count"] == 1
+    got = {q["qid"] for q in client.get("/api/quiz?mode=mistakes&count=50").get_json()["items"]}
+    assert got == {qid}
+
+
+def test_mark_uncertain_is_idempotent(client):
+    """重複標記同一題不會重複計算。"""
+    qid = quiz.QUESTIONS[10]["id"]
+    client.post("/api/mark", json={"qid": qid})
+
+    r = client.post("/api/mark", json={"qid": qid}).get_json()
+
+    assert r["ok"] is True
+    assert r["mistake_count"] == 1
+
+
+def test_mark_rejects_unknown_qid(client):
+    assert client.post("/api/mark", json={"qid": 999999}).status_code == 400
+
+
+def test_mark_rejects_bad_payload(client):
+    assert client.post("/api/mark", json={"qid": "abc"}).status_code == 400
+    assert client.post("/api/mark", json=[]).status_code == 400
+
+
 def _isolated(tmp_path, monkeypatch, history: list) -> None:
     """把路徑指向 tmp 並寫入指定 history，重置遷移旗標。"""
     monkeypatch.setattr(quiz, "HISTORY_PATH", tmp_path / "history.json")

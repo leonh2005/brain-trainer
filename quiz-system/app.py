@@ -83,6 +83,15 @@ def _save_mistakes(ids: set[int]) -> None:
     _atomic_write(MISTAKES_PATH, json.dumps(sorted(ids)))
 
 
+def _is_carry(q: dict) -> bool:
+    """進位相關題目：題目或選項出現「進位」。
+
+    題庫沒有專門分類，只能用關鍵字（目前命中 22 題：二／八／十六進位
+    轉換、補數、位元運算）。
+    """
+    return "進位" in q["q"] or any("進位" in o for o in q["opts"])
+
+
 def _counts_as_mistake(correct: bool, picked) -> bool:
     """答錯「且真的有作答」才算錯題。
 
@@ -158,8 +167,8 @@ def health():
 @app.get("/api/quiz")
 def quiz():
     mode = request.args.get("mode", "all")
-    if mode not in ("all", "mistakes"):
-        return jsonify({"ok": False, "error": "mode 需為 all 或 mistakes"}), 400
+    if mode not in ("all", "mistakes", "carry"):
+        return jsonify({"ok": False, "error": "mode 需為 all、mistakes 或 carry"}), 400
     try:
         count = int(request.args.get("count", 50))
     except ValueError:
@@ -172,6 +181,9 @@ def quiz():
         mistakes = _mistake_ids()
         pool = [q for q in QUESTIONS if q["id"] in mistakes]
         # 除了錯題數量，也要夾到交卷上限，否則會發出 /api/submit 自己會拒收的考卷
+        count = min(count, len(pool), MAX_ITEMS)
+    elif mode == "carry":
+        pool = [q for q in QUESTIONS if _is_carry(q)]
         count = min(count, len(pool), MAX_ITEMS)
     else:
         pool = QUESTIONS
@@ -267,6 +279,32 @@ def submit():
 
     return jsonify({"ok": True, "score": score, "correct": n_correct, "total": total,
                     "at": at, "details": details})
+
+
+@app.post("/api/mark")
+def mark():
+    """把「不確定」的題目標進錯題庫。
+
+    與答錯共用同一份 mistakes.json：練習當下按鈕就能記，不必先交卷，
+    中途離開也不會漏掉。重複標記是幂等的。
+    """
+    payload = request.get_json(silent=True)
+    if not isinstance(payload, dict):
+        return jsonify({"ok": False, "error": "payload 必須是 JSON 物件"}), 400
+    try:
+        qid = _as_int(payload.get("qid"), "qid")
+    except ValueError as e:
+        return jsonify({"ok": False, "error": str(e)}), 400
+    # QUESTIONS 是 list、id 等於索引（0..len-1），所以用範圍檢查而非 in
+    if not 0 <= qid < len(QUESTIONS):
+        return jsonify({"ok": False, "error": f"未知題號 {qid}"}), 400
+
+    _ensure_migrated()          # 取鎖前先遷移，避免與內層鎖互卡
+    with _WRITE_LOCK:
+        mistakes = _load_mistakes()
+        mistakes.add(qid)
+        _save_mistakes(mistakes)
+        return jsonify({"ok": True, "qid": qid, "mistake_count": len(mistakes)})
 
 
 @app.get("/api/history")
