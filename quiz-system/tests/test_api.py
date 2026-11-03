@@ -167,6 +167,62 @@ def test_migration_skips_unanswered(tmp_path, monkeypatch):
     assert quiz._load_mistakes() == {quiz.QUESTIONS[11]["id"]}
 
 
+def _isolated(tmp_path, monkeypatch, history: list) -> None:
+    """把路徑指向 tmp 並寫入指定 history，重置遷移旗標。"""
+    monkeypatch.setattr(quiz, "HISTORY_PATH", tmp_path / "history.json")
+    monkeypatch.setattr(quiz, "MISTAKES_PATH", tmp_path / "mistakes.json")
+    monkeypatch.setattr(quiz, "_migrated", False)
+    (tmp_path / "history.json").write_text(json.dumps(history), encoding="utf-8")
+
+
+def test_history_triggers_migration(tmp_path, monkeypatch):
+    """開頁時 /api/history 就要觸發遷移。
+
+    否則 mistake_count 是 0，前端把「錯題重刷」按鈕設成 disabled，
+    使用者點不進錯題模式，也就永遠不會觸發遷移 —— 死結。
+    """
+    qid = quiz.QUESTIONS[10]["id"]
+    _isolated(tmp_path, monkeypatch, [
+        {"at": "2026-01-01 10:00:00", "score": 0, "correct": 0, "total": 1,
+         "items": [{"qid": qid, "correct": False, "picked": 2}]}])
+
+    d = quiz.app.test_client().get("/api/history").get_json()
+
+    assert d["mistake_count"] == 1
+
+
+def test_migration_retries_after_failure(tmp_path, monkeypatch):
+    """遷移失敗不可把旗標鎖死，否則該 process 終身不再重試。"""
+    monkeypatch.setattr(quiz, "MISTAKES_PATH", tmp_path / "mistakes.json")
+    monkeypatch.setattr(quiz, "_migrated", False)
+    calls = []
+
+    def boom():
+        calls.append(1)
+        raise RuntimeError("boom")
+
+    monkeypatch.setattr(quiz, "_migrate_mistakes_once", boom)
+
+    quiz._ensure_migrated()
+    quiz._ensure_migrated()
+
+    assert len(calls) == 2
+
+
+def test_migration_tolerates_malformed_items(tmp_path, monkeypatch):
+    """history 有壞掉的 items 時跳過該筆，不可讓整段遷移永遠失敗。"""
+    good = quiz.QUESTIONS[10]["id"]
+    _isolated(tmp_path, monkeypatch, [
+        {"at": "2026-01-01 10:00:00", "items": [
+            None, 0, "x", {"qid": "abc"}, {"qid": True},
+            {"qid": good, "correct": False, "picked": 1},
+        ]}])
+
+    quiz._ensure_migrated()
+
+    assert quiz._load_mistakes() == {good}
+
+
 def test_mistakes_count_capped_to_submit_limit(client, monkeypatch):
     """錯題模式也要夾到交卷上限，不能發出自己會拒收的考卷。"""
     items = client.get("/api/quiz?count=5").get_json()["items"]

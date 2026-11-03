@@ -100,9 +100,16 @@ def _migrate_mistakes_once() -> None:
     with _WRITE_LOCK:
         if MISTAKES_PATH.exists():
             return
-        ids = {it["qid"] for rec in _load_history()
-               for it in rec.get("items", [])
-               if _counts_as_mistake(it.get("correct"), it.get("picked"))}
+        ids = set()
+        for rec in _load_history():
+            for it in rec.get("items") or []:
+                if not isinstance(it, dict):
+                    continue
+                qid = it.get("qid")
+                if not isinstance(qid, int) or isinstance(qid, bool):
+                    continue
+                if _counts_as_mistake(it.get("correct"), it.get("picked")):
+                    ids.add(qid)
         if ids:
             _save_mistakes(ids)
 
@@ -125,11 +132,11 @@ def _ensure_migrated() -> None:
     global _migrated
     if _migrated:
         return
-    _migrated = True
     try:
         _migrate_mistakes_once()
-    except Exception:      # 遷移失敗不該讓請求失敗
-        pass
+    except Exception:      # 遷移失敗不該讓請求失敗；不設旗標，下次再試
+        return
+    _migrated = True
 
 
 def _as_int(value, name: str) -> int:
@@ -268,6 +275,7 @@ def history():
         limit = max(1, int(request.args.get("limit", 10)))
     except ValueError:
         limit = 10
+    _ensure_migrated()      # 開頁就要正確的錯題數，否則按鈕被禁用後永遠進不去
     records = _load_history()
     # 只回摘要：每題 items 留在檔案裡給錯題庫用，不必每次開頁序列化上萬筆
     summary = [{k: r.get(k) for k in ("at", "score", "correct", "total")}
