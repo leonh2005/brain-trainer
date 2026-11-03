@@ -39,7 +39,7 @@ BUFFETT_CACHE    = Path(__file__).parent / "buffett_cache.json"
 HINDENBURG_CACHE = Path(__file__).parent / "hindenburg_cache.json"
 ALERT_GRID       = Path(__file__).parent / "alert_grid.json"
 ALERT_THRESHOLD  = 6
-# 融資市值比門檻。2026-11-03 修正前是 3.5/4.5（融資餘額少算 10 倍的錯誤尺度）；
+# 融資市值比門檻。2026-11-03 修正前是 3.5/4.5（融資餘額被放大 10 倍的錯誤尺度）；
 # 這個數字原本散落在卡片/圖表/圖例/JS plugin/九宮格共 12 處，改尺度時漏改過一次，
 # 因此集中在這裡，HTML 內用 f-string 注入。
 MARGIN_HOT  = 0.45   # > 此值：偏熱
@@ -224,8 +224,10 @@ def fetch_bofa_bull_bear() -> dict:
             # 當追加條件，但今天算的是本機日期 → 文章不更新時每次執行都追加一筆
             # 同日同值，cache 曾累積到 229 筆卻只有 16 個唯一日期。
             today = pub_date or datetime.now().strftime("%Y-%m-%d")
-            last = history[-1] if history else {}
-            if last.get("date") != today or last.get("value") != value:
+            # 比對整份歷史而非只比最後一筆：RSS 會按相關度排序，可能回報比
+            # 現有末筆更舊的文章，只比 last 會讓同一組 date+value 反覆寫入。
+            existing = {(x.get("date"), x.get("value")) for x in history}
+            if (today, value) not in existing:
                 history.append({"date": today, "value": value})
                 history.sort(key=lambda x: x.get("date", ""))
                 raw = {"history": history}
@@ -289,7 +291,10 @@ def _drop_stale_margin_cache() -> None:
         return
     try:
         cached = json.loads(MARGIN_CACHE.read_text())
-        vals = [r["y"] for r in cached if isinstance(r.get("y"), (int, float))]
+        if not isinstance(cached, list):        # 手改成 dict 之類的形狀不可信
+            return
+        vals = [r["y"] for r in cached
+                if isinstance(r, dict) and isinstance(r.get("y"), (int, float))]
     except (json.JSONDecodeError, OSError):
         return
     if vals and max(vals) > 2:
@@ -413,33 +418,31 @@ def fetch_margin_mktcap(tw_data: list, months: int = 24) -> list:
         key=lambda item: item["x"]
     )
 
-    # 這輪資料可用的前提：市值與 TAIEX 都拿到（否則每筆 ratio 都是 0）
-    valid = bool(data) and mktcap_today > 0 and taiex_today > 0
-
-    # 覆寫快取還要筆數足夠，避免部分月份失敗時用短資料蓋掉整個歷史。
-    # 下限固定 12 筆：快取不存在時 prev_count=0，只看快取會讓保護恆真。
-    prev_count = 0
-    if MARGIN_CACHE.exists():
-        try:
-            prev_count = len(json.loads(MARGIN_CACHE.read_text()))
-        except Exception:
-            prev_count = 0
-    enough = len(data) >= max(min(prev_count, 24) - 2, 12)
+    # 這輪資料可用的前提：市值與 TAIEX 都拿到（否則每筆 ratio 都是 0），
+    # 且數值量級合理。STOCK_DAY_ALL 只回部分個股時 total 會少一個數量級，
+    # 所有 ratio 被放大約 10 倍 —— 這種資料寫進快取會污染整段歷史。
+    # 用中位數而非最大值，避免單一月分異常就否決整批。
+    ratios = sorted(r["y"] for r in data
+                    if isinstance(r.get("y"), (int, float)) and r["y"] > 0)
+    median_ratio = ratios[len(ratios) // 2] if ratios else 0
+    valid = (bool(data) and mktcap_today > 0 and taiex_today > 0
+             and 0.05 <= median_ratio <= 2)
 
     if valid:
-        # 不論筆數夠不夠，舊尺度的檔案都不能留給 command-center（它也讀這個檔）
-        _drop_stale_margin_cache()
-        if enough:
-            MARGIN_CACHE.write_text(json.dumps(data, ensure_ascii=False))
-        else:
-            print(f"  融資資料僅 {len(data)} 筆，本輪先用但不覆寫快取")
+        # 直接覆寫即可：新資料寫入後，舊尺度檔自然不存在
+        MARGIN_CACHE.write_text(json.dumps(data, ensure_ascii=False))
         return data
 
     # 這輪資料不可用 → 先清掉舊尺度檔（command-center 也讀它），再退回快取
     _drop_stale_margin_cache()
     if MARGIN_CACHE.exists():
-        print("  使用融資市值比快取")
-        return json.loads(MARGIN_CACHE.read_text())
+        try:
+            cached = json.loads(MARGIN_CACHE.read_text())
+        except (json.JSONDecodeError, OSError):
+            cached = None
+        if isinstance(cached, list) and cached:
+            print("  使用融資市值比快取")
+            return cached
 
     print("  融資市值比：市值/TAIEX 取得失敗且無可用快取")
     return []
