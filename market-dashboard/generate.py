@@ -2744,20 +2744,22 @@ def main():
         prev_state = json.loads(SP_STATE.read_text()).get("state") if SP_STATE.exists() else None
         SP_STATE.write_text(json.dumps({"state": current_state, "date": generated_at}))
 
-        if current_state == "below":
-            send_telegram(
-                f"🚨 S&P 500 低於 200 日均線\n"
-                f"S&P 500：{sp_current:,.0f}\n"
-                f"200MA：{ma_current:,.2f}\n"
-                f"偏離：{sp_vs_ma}%"
-            )
-        elif current_state == "above":
-            send_telegram(
-                f"✅ S&P 500 高於 200 日均線\n"
-                f"S&P 500：{sp_current:,.0f}\n"
-                f"200MA：{ma_current:,.2f}\n"
-                f"偏離：+{sp_vs_ma}%"
-            )
+        # 只有狀態真的改變才通知；prev_state 為 None（首次執行）時視為變化
+        if current_state != prev_state:
+            if current_state == "below":
+                send_telegram(
+                    f"🚨 S&P 500 低於 200 日均線\n"
+                    f"S&P 500：{sp_current:,.0f}\n"
+                    f"200MA：{ma_current:,.2f}\n"
+                    f"偏離：{sp_vs_ma}%"
+                )
+            else:
+                send_telegram(
+                    f"✅ S&P 500 高於 200 日均線\n"
+                    f"S&P 500：{sp_current:,.0f}\n"
+                    f"200MA：{ma_current:,.2f}\n"
+                    f"偏離：+{sp_vs_ma}%"
+                )
 
     # ── 九宮格多指標警報（≥6 格亮燈時推播）──────────────────────────────────
     vix_cur      = vix_data[-1]["y"] if vix_data else 0
