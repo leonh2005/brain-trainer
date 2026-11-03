@@ -122,5 +122,72 @@ def test_unknown_qid_is_rejected(client):
     assert r.status_code == 400
 
 
+def _submit_some(client, items, results):
+    """results: {qid: bool} —— 指定每題要答對（True）或答錯（False）。"""
+    picked = []
+    for it in items:
+        right = it["order"].index(quiz.QUESTIONS[it["qid"]]["ans"])
+        ok = results.get(it["qid"], True)
+        picked.append({"qid": it["qid"], "order": it["order"],
+                       "picked": right if ok else (right + 1) % 4})
+    client.post("/api/submit", json={"items": picked})
+
+
+def test_mistakes_mode_returns_only_wrong_questions(client):
+    items = client.get("/api/quiz?count=10").get_json()["items"]
+    wrong = {it["qid"] for it in items[:3]}
+    _submit_some(client, items, {it["qid"]: it["qid"] not in wrong for it in items})
+
+    r = client.get("/api/quiz?mode=mistakes&count=50").get_json()
+
+    assert {it["qid"] for it in r["items"]} == wrong
+
+
+def test_mistakes_accumulate_and_never_drop_out(client):
+    """答對不會把題目移出錯題庫：錯題庫只增不減。"""
+    first = client.get("/api/quiz?count=10").get_json()["items"]
+    wrong1 = {it["qid"] for it in first[:3]}
+    _submit_some(client, first, {it["qid"]: it["qid"] not in wrong1 for it in first})
+
+    # 把剛才錯的題全部答對
+    retry = client.get("/api/quiz?mode=mistakes&count=50").get_json()["items"]
+    _submit_some(client, retry, {it["qid"]: True for it in retry})
+
+    # 之後又答錯新的一題
+    second = client.get("/api/quiz?count=10").get_json()["items"]
+    new_wrong = second[0]["qid"]
+    _submit_some(client, second, {it["qid"]: it["qid"] != new_wrong for it in second})
+
+    r = client.get("/api/quiz?mode=mistakes&count=50").get_json()
+
+    assert {it["qid"] for it in r["items"]} == wrong1 | {new_wrong}
+
+
+def test_mistakes_mode_is_empty_before_any_submit(client):
+    r = client.get("/api/quiz?mode=mistakes&count=50").get_json()
+
+    assert r["ok"] is True
+    assert r["items"] == []
+
+
+def test_history_reports_mistake_count(client):
+    items = client.get("/api/quiz?count=10").get_json()["items"]
+    wrong = {it["qid"] for it in items[:4]}
+    _submit_some(client, items, {it["qid"]: it["qid"] not in wrong for it in items})
+
+    assert client.get("/api/history").get_json()["mistake_count"] == 4
+
+
+def test_mistakes_count_larger_than_bank_is_clamped(client):
+    """前端固定送 count=50，錯題只有幾題時要全出而不是報錯。"""
+    items = client.get("/api/quiz?count=10").get_json()["items"]
+    wrong = {it["qid"] for it in items[:2]}
+    _submit_some(client, items, {it["qid"]: it["qid"] not in wrong for it in items})
+
+    r = client.get("/api/quiz?mode=mistakes&count=50").get_json()
+
+    assert len(r["items"]) == 2
+
+
 def test_health(client):
     assert client.get("/api/health").get_json() == {"status": "ok"}

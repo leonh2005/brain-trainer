@@ -64,13 +64,18 @@ aside h2{font-size:14px;font-weight:600;color:var(--fg);margin:0 0 8px}
   padding:6px 2px}
 #history .s{font-variant-numeric:tabular-nums;font-weight:600;color:var(--fg)}
 .empty{color:var(--muted);padding:24px;text-align:center}
+.mode-tag{font-size:12px;color:var(--bad);border:1px solid var(--bad);
+  border-radius:999px;padding:1px 9px;display:none}
+.mode-tag.on{display:inline}
 </style>
 </head>
 <body>
 <header>
   <h1>丙級學科練習</h1>
+  <span id="mode" class="mode-tag"></span>
   <span id="progress"></span>
   <span class="spacer"></span>
+  <button id="mistakes">錯題重刷</button>
   <button id="again" style="display:none">再來一份</button>
   <button id="submit" class="primary">交卷</button>
 </header>
@@ -89,23 +94,32 @@ aside h2{font-size:14px;font-weight:600;color:var(--fg);margin:0 0 8px}
 const TOTAL = {{ total_questions }};
 const COUNT = 50;
 const LETTERS = ['A','B','C','D'];
-const state = { items: [], picked: {}, submitted: false, result: null };
+const state = { items: [], picked: {}, submitted: false, result: null, mode: 'all' };
 
 const $ = id => document.getElementById(id);
 
-async function loadQuiz(){
+async function loadQuiz(mode){
+  mode = mode || 'all';
+  state.mode = mode;
   $('questions').innerHTML = '<div class="empty">載入中…</div>';
   $('result').style.display = 'none';
   $('again').style.display = 'none';
   $('submit').style.display = '';
   $('submit').disabled = false;
+  $('mode').textContent = mode === 'mistakes' ? '錯題重刷' : '';
+  $('mode').className = mode === 'mistakes' ? 'mode-tag on' : 'mode-tag';
   try{
-    const r = await (await fetch(`/api/quiz?count=${COUNT}`)).json();
+    const r = await (await fetch(`/api/quiz?mode=${mode}&count=${COUNT}`)).json();
     if(!r.ok) throw new Error(r.error || '載入失敗');
     state.items = r.items;
     state.picked = {};
     state.submitted = false;
     state.result = null;
+    if(!state.items.length){
+      $('questions').innerHTML = '<div class="empty">目前沒有錯題，先去一般練習吧。</div>';
+      updateProgress();
+      return;
+    }
     render();
     updateProgress();
     window.scrollTo(0, 0);
@@ -203,6 +217,9 @@ async function submit(){
 async function loadHistory(){
   try{
     const r = await (await fetch('/api/history?limit=10')).json();
+    const n = r.mistake_count || 0;
+    $('mistakes').textContent = `錯題重刷（${n}）`;
+    $('mistakes').disabled = n === 0;
     const list = $('history');
     if(!r.records || !r.records.length){
       list.innerHTML = '<li class="empty">尚無紀錄</li>';
@@ -220,7 +237,8 @@ function esc(s){
 }
 
 $('submit').addEventListener('click', submit);
-$('again').addEventListener('click', loadQuiz);
+$('again').addEventListener('click', () => loadQuiz(state.mode));
+$('mistakes').addEventListener('click', () => loadQuiz('mistakes'));
 loadQuiz();
 loadHistory();
 </script>

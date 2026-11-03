@@ -38,6 +38,16 @@ def _save_history(records: list[dict]) -> None:
                             encoding="utf-8")
 
 
+def _mistake_ids() -> set[int]:
+    """所有曾經答錯過的題目。只累積、不移出——答對過也留在錯題庫裡。"""
+    ids = set()
+    for rec in _load_history():
+        for it in rec.get("items", []):
+            if not it.get("correct"):
+                ids.add(it["qid"])
+    return ids
+
+
 @app.get("/api/health")
 def health():
     return jsonify({"status": "ok"})
@@ -45,15 +55,27 @@ def health():
 
 @app.get("/api/quiz")
 def quiz():
+    mode = request.args.get("mode", "all")
+    if mode not in ("all", "mistakes"):
+        return jsonify({"ok": False, "error": "mode 需為 all 或 mistakes"}), 400
     try:
         count = int(request.args.get("count", 50))
     except ValueError:
         return jsonify({"ok": False, "error": "count 必須是整數"}), 400
-    if not 1 <= count <= len(QUESTIONS):
-        return jsonify({"ok": False, "error": f"count 需介於 1 與 {len(QUESTIONS)}"}), 400
+    if count < 1:
+        return jsonify({"ok": False, "error": "count 需大於 0"}), 400
+
+    if mode == "mistakes":
+        mistakes = _mistake_ids()
+        pool = [q for q in QUESTIONS if q["id"] in mistakes]
+        count = min(count, len(pool))   # 錯題不足時全出，不報錯
+    else:
+        pool = QUESTIONS
+        if count > len(pool):
+            return jsonify({"ok": False, "error": f"count 需介於 1 與 {len(pool)}"}), 400
 
     items = []
-    for q in RNG.sample(QUESTIONS, count):
+    for q in RNG.sample(pool, count):
         order = [0, 1, 2, 3]
         RNG.shuffle(order)          # 打散選項，避免正解固定在同一個位置
         items.append({
@@ -63,7 +85,7 @@ def quiz():
             "opts": [q["opts"][i] for i in order],
             "order": order,
         })
-    return jsonify({"ok": True, "items": items})
+    return jsonify({"ok": True, "mode": mode, "items": items})
 
 
 @app.post("/api/submit")
@@ -126,7 +148,9 @@ def history():
     except ValueError:
         limit = 10
     records = _load_history()
-    return jsonify({"ok": True, "records": list(reversed(records[-limit:]))})
+    return jsonify({"ok": True,
+                    "records": list(reversed(records[-limit:])),
+                    "mistake_count": len(_mistake_ids())})
 
 
 @app.get("/")
