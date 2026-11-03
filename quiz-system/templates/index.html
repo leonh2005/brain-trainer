@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>丙級學科練習</title>
+<style>
+:root{
+  --bg:#f6f7f9; --card:#fff; --fg:#16181d; --muted:#69707d;
+  --line:#e3e6ea; --accent:#2563eb; --ok:#15803d; --bad:#c02626;
+  --ok-bg:#e9f7ee; --bad-bg:#fdeceb; --sel:#eef4ff;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --bg:#12141a; --card:#1a1d25; --fg:#e6e8ec; --muted:#9aa2af;
+    --line:#2b303b; --accent:#6ea0ff; --ok:#5ec98a; --bad:#ff7b72;
+    --ok-bg:#16281d; --bad-bg:#2b1a19; --sel:#1b2740;
+  }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);
+  font:16px/1.65 -apple-system,"PingFang TC","Noto Sans TC",sans-serif}
+header{position:sticky;top:0;z-index:9;background:var(--bg);
+  border-bottom:1px solid var(--line);padding:12px 20px;
+  display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+header h1{font-size:16px;margin:0;font-weight:600}
+.spacer{flex:1}
+#progress{color:var(--muted);font-size:14px;font-variant-numeric:tabular-nums}
+button{font:inherit;cursor:pointer;border-radius:8px;border:1px solid var(--line);
+  background:var(--card);color:var(--fg);padding:8px 16px}
+button:hover{border-color:var(--accent)}
+button.primary{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
+button:disabled{opacity:.45;cursor:default}
+main{max-width:860px;margin:0 auto;padding:20px 16px 80px}
+#result{display:none;background:var(--card);border:1px solid var(--line);
+  border-radius:12px;padding:24px;margin-bottom:20px;text-align:center}
+#result .score{font-size:44px;font-weight:700;font-variant-numeric:tabular-nums}
+#result .sub{color:var(--muted);margin-top:4px}
+.q{background:var(--card);border:1px solid var(--line);border-radius:12px;
+  padding:18px 20px;margin-bottom:14px}
+.q .head{display:flex;gap:10px;align-items:baseline;margin-bottom:10px}
+.q .no{font-weight:700;color:var(--accent);font-variant-numeric:tabular-nums}
+.q .cat{font-size:12px;color:var(--muted);border:1px solid var(--line);
+  border-radius:999px;padding:1px 8px;white-space:nowrap}
+.q .stem{font-weight:500;margin:0 0 12px}
+.opts{display:grid;gap:8px}
+.opt{display:flex;gap:10px;align-items:flex-start;text-align:left;width:100%;
+  padding:10px 14px;line-height:1.5;transition:background .12s,border-color .12s}
+.opt .k{flex:0 0 auto;font-weight:700;color:var(--muted);width:1.2em}
+.opt:hover:not(:disabled){background:var(--sel)}
+.opt.sel{background:var(--sel);border-color:var(--accent)}
+.opt.sel .k{color:var(--accent)}
+.opt.ok{background:var(--ok-bg);border-color:var(--ok)}
+.opt.ok .k{color:var(--ok)}
+.opt.bad{background:var(--bad-bg);border-color:var(--bad)}
+.opt.bad .k{color:var(--bad)}
+.verdict{font-size:13px;margin-top:10px;color:var(--muted)}
+.verdict b.ok{color:var(--ok)}
+.verdict b.bad{color:var(--bad)}
+aside{max-width:860px;margin:0 auto;padding:0 16px 60px;color:var(--muted);font-size:14px}
+aside h2{font-size:14px;font-weight:600;color:var(--fg);margin:0 0 8px}
+#history{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+#history li{display:flex;justify-content:space-between;border-bottom:1px solid var(--line);
+  padding:6px 2px}
+#history .s{font-variant-numeric:tabular-nums;font-weight:600;color:var(--fg)}
+.empty{color:var(--muted);padding:24px;text-align:center}
+</style>
+</head>
+<body>
+<header>
+  <h1>丙級學科練習</h1>
+  <span id="progress"></span>
+  <span class="spacer"></span>
+  <button id="again" style="display:none">再來一份</button>
+  <button id="submit" class="primary">交卷</button>
+</header>
+
+<main>
+  <div id="result"></div>
+  <div id="questions"><div class="empty">載入中…</div></div>
+</main>
+
+<aside>
+  <h2>最近成績</h2>
+  <ul id="history"><li class="empty">尚無紀錄</li></ul>
+</aside>
+
+<script>
+const TOTAL = {{ total_questions }};
+const COUNT = 50;
+const LETTERS = ['A','B','C','D'];
+const state = { items: [], picked: {}, submitted: false, result: null };
+
+const $ = id => document.getElementById(id);
+
+async function loadQuiz(){
+  $('questions').innerHTML = '<div class="empty">載入中…</div>';
+  $('result').style.display = 'none';
+  $('again').style.display = 'none';
+  $('submit').style.display = '';
+  $('submit').disabled = false;
+  try{
+    const r = await (await fetch(`/api/quiz?count=${COUNT}`)).json();
+    if(!r.ok) throw new Error(r.error || '載入失敗');
+    state.items = r.items;
+    state.picked = {};
+    state.submitted = false;
+    state.result = null;
+    render();
+    updateProgress();
+    window.scrollTo(0, 0);
+  }catch(e){
+    $('questions').innerHTML = `<div class="empty">載入失敗：${e.message}</div>`;
+  }
+}
+
+function render(){
+  const detailByQid = {};
+  if(state.submitted && state.result){
+    for(const d of state.result.details) detailByQid[d.qid] = d;
+  }
+
+  $('questions').innerHTML = state.items.map((it, i) => {
+    const d = detailByQid[it.qid];
+    const opts = it.opts.map((text, idx) => {
+      const cls = ['opt'];
+      if(!state.submitted){
+        if(state.picked[it.qid] === idx) cls.push('sel');
+      }else if(d){
+        if(idx === d.answer_index) cls.push('ok');
+        else if(idx === d.picked) cls.push('bad');
+      }
+      const dis = state.submitted ? ' disabled' : '';
+      const label = state.submitted ? '' : ` onclick="pick(${it.qid}, ${idx})"`;
+      return `<button class="${cls.join(' ')}"${dis}${label}>`
+           + `<span class="k">${LETTERS[idx]}</span><span>${esc(text)}</span></button>`;
+    }).join('');
+
+    let verdict = '';
+    if(d){
+      verdict = d.correct
+        ? '<div class="verdict"><b class="ok">✓ 答對</b></div>'
+        : `<div class="verdict"><b class="bad">✗ 答錯</b>　正解：${LETTERS[d.answer_index]}`
+          + `${d.picked === null ? '（未作答）' : ''}</div>`;
+    }
+
+    return `<article class="q">
+      <div class="head"><span class="no">${i + 1}</span><span class="stem">${esc(it.q)}</span></div>
+      <div class="cat" style="display:inline-block;margin-bottom:10px">${esc(it.cat)}</div>
+      <div class="opts">${opts}</div>
+      ${verdict}
+    </article>`;
+  }).join('');
+}
+
+function pick(qid, idx){
+  if(state.submitted) return;
+  state.picked[qid] = idx;
+  updateProgress();
+  render();
+}
+
+function updateProgress(){
+  const n = state.items.filter(it => state.picked[it.qid] !== undefined).length;
+  $('progress').textContent = `已答 ${n}/${state.items.length}`;
+}
+
+async function submit(){
+  const unanswered = state.items.filter(it => state.picked[it.qid] === undefined).length;
+  if(unanswered && !confirm(`還有 ${unanswered} 題未作答，確定交卷？`)) return;
+
+  const payload = { items: state.items.map(it => ({
+    qid: it.qid, order: it.order,
+    picked: state.picked[it.qid] === undefined ? null : state.picked[it.qid],
+  })) };
+
+  $('submit').disabled = true;
+  try{
+    const r = await (await fetch('/api/submit', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(payload),
+    })).json();
+    if(!r.ok) throw new Error(r.error || '交卷失敗');
+
+    state.submitted = true;
+    state.result = r;
+    const res = $('result');
+    res.style.display = 'block';
+    res.innerHTML = `<div class="score">${r.score} 分</div>`
+      + `<div class="sub">答對 ${r.correct} / ${r.total} 題　·　${r.at}</div>`;
+    $('again').style.display = '';
+    $('submit').style.display = 'none';
+    render();
+    window.scrollTo({top: 0, behavior: 'smooth'});
+    loadHistory();
+  }catch(e){
+    alert(`交卷失敗：${e.message}`);
+    $('submit').disabled = false;
+  }
+}
+
+async function loadHistory(){
+  try{
+    const r = await (await fetch('/api/history?limit=10')).json();
+    const list = $('history');
+    if(!r.records || !r.records.length){
+      list.innerHTML = '<li class="empty">尚無紀錄</li>';
+      return;
+    }
+    list.innerHTML = r.records.map(x =>
+      `<li><span>${esc(x.at)}</span><span class="s">${x.score} 分（${x.correct}/${x.total}）</span></li>`
+    ).join('');
+  }catch(e){ /* 歷史失敗不影響作答 */ }
+}
+
+function esc(s){
+  return String(s).replace(/[&<>"']/g, c =>
+    ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+$('submit').addEventListener('click', submit);
+$('again').addEventListener('click', loadQuiz);
+loadQuiz();
+loadHistory();
+</script>
+</body>
+</html>

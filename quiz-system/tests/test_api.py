@@ -1,0 +1,126 @@
+"""test_api: 出題、判分、歷史成績。
+
+判分走「無狀態」設計：/api/quiz 回傳每題的 order（打散後各位置對應的原選項索引），
+交卷時把 order 一起送回，後端用 order[picked] 對回原題答案。
+"""
+
+import json
+
+import app as quiz
+import pytest
+
+
+@pytest.fixture
+def client(tmp_path, monkeypatch):
+    monkeypatch.setattr(quiz, "HISTORY_PATH", tmp_path / "history.json")
+    quiz.app.config["TESTING"] = True
+    return quiz.app.test_client()
+
+
+def _answer_all(client, items, correct: bool):
+    """組出全部答對或全部答錯的提交 payload。"""
+    picked = []
+    for it in items:
+        q = quiz.QUESTIONS[it["qid"]]
+        right = it["order"].index(q["ans"])   # 打散後的正解位置
+        wrong = (right + 1) % 4
+        picked.append({"qid": it["qid"], "order": it["order"],
+                       "picked": right if correct else wrong})
+    return {"items": picked}
+
+
+def test_quiz_returns_requested_count(client):
+    items = client.get("/api/quiz?count=50").get_json()["items"]
+
+    assert len(items) == 50
+    assert len({it["qid"] for it in items}) == 50          # 不重複
+    assert all(len(it["opts"]) == 4 for it in items)
+
+
+def test_quiz_never_leaks_answer(client):
+    items = client.get("/api/quiz?count=10").get_json()["items"]
+
+    for it in items:
+        assert set(it) == {"qid", "cat", "q", "opts", "order"}
+        assert sorted(it["order"]) == [0, 1, 2, 3]         # 合法排列
+
+
+def test_two_quizzes_differ(client):
+    a = [it["qid"] for it in client.get("/api/quiz?count=50").get_json()["items"]]
+    b = [it["qid"] for it in client.get("/api/quiz?count=50").get_json()["items"]]
+
+    assert a != b
+
+
+def test_all_correct_scores_100(client):
+    items = client.get("/api/quiz?count=10").get_json()["items"]
+
+    r = client.post("/api/submit", json=_answer_all(client, items, correct=True)).get_json()
+
+    assert r["correct"] == 10
+    assert r["score"] == 100
+
+
+def test_all_wrong_scores_0(client):
+    items = client.get("/api/quiz?count=10").get_json()["items"]
+
+    r = client.post("/api/submit", json=_answer_all(client, items, correct=False)).get_json()
+
+    assert r["correct"] == 0
+    assert r["score"] == 0
+
+
+def test_unanswered_counts_as_wrong(client):
+    items = client.get("/api/quiz?count=4").get_json()["items"]
+    payload = {"items": [{"qid": it["qid"], "order": it["order"], "picked": None}
+                         for it in items]}
+
+    r = client.post("/api/submit", json=payload).get_json()
+
+    assert r["correct"] == 0
+    assert all(d["picked"] is None for d in r["details"])
+
+
+def test_submit_records_per_question_details(client):
+    """錯題重刷的資料基礎：每題的 qid 與對錯都要留下來。"""
+    items = client.get("/api/quiz?count=5").get_json()["items"]
+
+    r = client.post("/api/submit", json=_answer_all(client, items, correct=True)).get_json()
+
+    assert len(r["details"]) == 5
+    assert {d["qid"] for d in r["details"]} == {it["qid"] for it in items}
+    assert all(d["correct"] for d in r["details"])
+
+
+def test_submit_appends_history(client, tmp_path):
+    items = client.get("/api/quiz?count=5").get_json()["items"]
+    client.post("/api/submit", json=_answer_all(client, items, correct=True))
+
+    records = client.get("/api/history").get_json()["records"]
+
+    assert len(records) == 1
+    assert records[0]["score"] == 100
+    assert records[0]["total"] == 5
+    assert len(records[0]["items"]) == 5
+
+
+def test_count_above_bank_is_rejected(client):
+    assert client.get("/api/quiz?count=999").status_code == 400
+
+
+def test_count_zero_is_rejected(client):
+    assert client.get("/api/quiz?count=0").status_code == 400
+
+
+def test_empty_submit_is_rejected(client):
+    assert client.post("/api/submit", json={"items": []}).status_code == 400
+
+
+def test_unknown_qid_is_rejected(client):
+    r = client.post("/api/submit", json={"items": [{"qid": 99999, "order": [0, 1, 2, 3],
+                                                    "picked": 0}]})
+    assert r.status_code == 400
+
+
+def test_health(client):
+    assert client.get("/api/health").get_json() == {"status": "ok"}
