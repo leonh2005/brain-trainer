@@ -90,8 +90,10 @@ def _migrate_mistakes_once() -> None:
     with _WRITE_LOCK:
         if MISTAKES_PATH.exists():
             return
+        # 與結算時同一條規則：沒作答（picked is None）不算錯題
         ids = {it["qid"] for rec in _load_history()
-               for it in rec.get("items", []) if not it.get("correct")}
+               for it in rec.get("items", [])
+               if not it.get("correct") and it.get("picked") is not None}
         if ids:
             _save_mistakes(ids)
 
@@ -219,9 +221,12 @@ def submit():
                       for d in details],
         })
         _save_history(records)
-        # 錯題庫獨立存檔、只增不減，不會被 history 的 200 筆上限擠掉
+        # 錯題庫獨立存檔、只增不減，不會被 history 的 200 筆上限擠掉。
+        # 只收「有作答但答錯」：picked is None 是沒作答（中途離開／逾時送出），
+        # 記進錯題庫會把根本沒看過的題目也算成錯題。
         mistakes = _load_mistakes()
-        mistakes.update(d["qid"] for d in details if not d["correct"])
+        mistakes.update(d["qid"] for d in details
+                        if not d["correct"] and d["picked"] is not None)
         _save_mistakes(mistakes)
 
     return jsonify({"ok": True, "score": score, "correct": n_correct, "total": total,

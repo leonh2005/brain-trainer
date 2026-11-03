@@ -82,6 +82,29 @@ def test_unanswered_counts_as_wrong(client):
     assert all(d["picked"] is None for d in r["details"])
 
 
+def test_unanswered_not_added_to_mistakes(client):
+    """沒作答要算錯（分數），但不能進錯題庫。
+
+    2026-11-03：測驗中途離開會送出 picked=None，整個 50 題被記成錯題，
+    錯題庫從 0 暴增到 118 題，重刷時全是沒看過的題目。
+    """
+    items = client.get("/api/quiz?count=4").get_json()["items"]
+    payload = {"items": [{"qid": it["qid"], "order": it["order"], "picked": None}
+                         for it in items]}
+    client.post("/api/submit", json=payload)
+
+    assert client.get("/api/quiz?mode=mistakes&count=50").get_json()["items"] == []
+
+
+def test_wrong_answer_still_added_to_mistakes(client):
+    """對照組：真的有作答但答錯，仍然要進錯題庫。"""
+    items = client.get("/api/quiz?count=3").get_json()["items"]
+    client.post("/api/submit", json=_answer_all(client, items, correct=False))
+
+    got = {q["qid"] for q in client.get("/api/quiz?mode=mistakes&count=50").get_json()["items"]}
+    assert got == {it["qid"] for it in items}
+
+
 def test_submit_records_per_question_details(client):
     """錯題重刷的資料基礎：每題的 qid 與對錯都要留下來。"""
     items = client.get("/api/quiz?count=5").get_json()["items"]
