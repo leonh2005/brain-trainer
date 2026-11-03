@@ -6,6 +6,7 @@
 import json
 import math
 import os
+import statistics
 import sys
 from datetime import UTC, datetime
 from pathlib import Path
@@ -44,6 +45,13 @@ ALERT_THRESHOLD  = 6
 # 因此集中在這裡，HTML 內用 f-string 注入。
 MARGIN_HOT  = 0.45   # > 此值：偏熱
 MARGIN_WARN = 0.35   # 介於兩者：注意
+# 合理性範圍：低於下限或高於上限都代表資料壞了（舊尺度約 3~4.4、
+# 市值只抓到部分個股會讓 ratio 放大數倍），這種資料不能寫進快取。
+MARGIN_SCALE_MIN = 0.05
+MARGIN_SCALE_MAX = 2.0
+# 上市個股數約 1,000；低於此值代表 openapi 只回了部分資料，
+# 總市值會少好幾成、ratio 跟著放大，這種資料不能當真。
+MIN_TICKERS = 800
 BOT_TOKEN = open(os.path.expanduser("~/CCProject/.secrets/telegram_token.txt")).read().strip()
 CHAT_ID = "7556217543"
 
@@ -280,27 +288,26 @@ def fetch_cape():
         return []
 
 
-def _drop_stale_margin_cache() -> None:
-    """把 2026-11-03 前的錯誤尺度快取（÷10,000，ratio 放大 10 倍）改名停用。
+def _read_margin_cache() -> dict:
+    """讀 margin_cache.json，回 {月份: 該月資料}。
 
-    command-center 直接讀 margin_cache.json，只在本檔守門的話兩個入口會差 10 倍。
-    舊尺度實際值落在 3~4，新尺度合理上限約 0.7%，所以用 2 當分界（不是 1，
-    避免市場真的進入高槓桿時把合法資料誤刪）。
+    舊尺度（2026-11-03 前 ÷10,000，ratio 大 10 倍）與形狀異常的資料一律丟棄：
+    command-center 也讀這個檔，留著會讓兩個入口差 10 倍。
     """
     if not MARGIN_CACHE.exists():
-        return
+        return {}
     try:
         cached = json.loads(MARGIN_CACHE.read_text())
-        if not isinstance(cached, list):        # 手改成 dict 之類的形狀不可信
-            return
-        vals = [r["y"] for r in cached
-                if isinstance(r, dict) and isinstance(r.get("y"), (int, float))]
     except (json.JSONDecodeError, OSError):
-        return
-    if vals and max(vals) > 2:
-        stale = MARGIN_CACHE.with_name(MARGIN_CACHE.name + ".stale")
-        MARGIN_CACHE.rename(stale)
-        print(f"  融資快取為舊尺度，已改名為 {stale.name}")
+        return {}
+    if not isinstance(cached, list):
+        return {}
+    rows = [r for r in cached if isinstance(r, dict) and "x" in r]
+    vals = [r["y"] for r in rows if isinstance(r.get("y"), (int, float))]
+    if vals and max(vals) > MARGIN_SCALE_MAX:
+        print("  偵測到舊尺度的融資快取，整份丟棄重建")
+        return {}
+    return {r["x"]: r for r in rows}
 
 
 def fetch_margin_mktcap(tw_data: list, months: int = 24) -> list:
@@ -331,17 +338,22 @@ def fetch_margin_mktcap(tw_data: list, months: int = 24) -> list:
             "https://openapi.twse.com.tw/v1/exchangeReport/STOCK_DAY_ALL",
             headers={"User-Agent": "Mozilla/5.0"}, timeout=20, verify=False,
         )
-        total = 0.0
-        for row in r_price.json():
-            code = row.get("Code", "")
-            price_s = row.get("ClosingPrice", "0").replace(",", "")
-            if code in shares_map:
-                try:
-                    total += float(price_s) * shares_map[code]
-                except ValueError:
-                    pass
-        mktcap_today = trunc2(total / 1e8)  # 元 → 億元
-        print(f"  今日市值：{mktcap_today:,.0f} 億元")
+        price_rows = r_price.json()
+        # 只回部分個股時總市值會少好幾成，ratio 跟著被放大（會變成假的「偏熱」）
+        if len(shares_map) < MIN_TICKERS or len(price_rows) < MIN_TICKERS:
+            print(f"  市值來源不完整（股數 {len(shares_map)}、報價 {len(price_rows)}），本輪不採用")
+        else:
+            total = 0.0
+            for row in price_rows:
+                code = row.get("Code", "")
+                price_s = row.get("ClosingPrice", "0").replace(",", "")
+                if code in shares_map:
+                    try:
+                        total += float(price_s) * shares_map[code]
+                    except ValueError:
+                        pass
+            mktcap_today = trunc2(total / 1e8)  # 元 → 億元
+            print(f"  今日市值：{mktcap_today:,.0f} 億元")
     except Exception as e:
         print(f"  市值計算失敗: {e}")
 
@@ -418,33 +430,38 @@ def fetch_margin_mktcap(tw_data: list, months: int = 24) -> list:
         key=lambda item: item["x"]
     )
 
-    # 這輪資料可用的前提：市值與 TAIEX 都拿到（否則每筆 ratio 都是 0），
-    # 且數值量級合理。STOCK_DAY_ALL 只回部分個股時 total 會少一個數量級，
-    # 所有 ratio 被放大約 10 倍 —— 這種資料寫進快取會污染整段歷史。
-    # 用中位數而非最大值，避免單一月分異常就否決整批。
-    ratios = sorted(r["y"] for r in data
-                    if isinstance(r.get("y"), (int, float)) and r["y"] > 0)
-    median_ratio = ratios[len(ratios) // 2] if ratios else 0
+    # 以月份為 key 合併新舊資料。整份覆寫在部分月份失敗時會丟失歷史，
+    # 加「筆數不得變少」的守衛只是補丁，還會讓卡片（用本輪記憶體資料）
+    # 與 command-center（讀快取檔）不同步。
+    old = _read_margin_cache()
+
+    # 這輪資料可用的前提：市值與 TAIEX 都拿到（否則 ratio 全 0），且量級合理。
+    # 用 median 而非 max，單一月分異常不該否決整批（statistics.median 才會
+    # 在偶數筆時取中間兩者的平均，手寫 sorted[n//2] 是上中位數）。
+    ratios = [r["y"] for r in data
+              if isinstance(r.get("y"), (int, float)) and r["y"] > 0]
+    med = statistics.median(ratios) if ratios else 0
     valid = (bool(data) and mktcap_today > 0 and taiex_today > 0
-             and 0.05 <= median_ratio <= 2)
+             and MARGIN_SCALE_MIN <= med <= MARGIN_SCALE_MAX)
 
     if valid:
-        # 直接覆寫即可：新資料寫入後，舊尺度檔自然不存在
-        MARGIN_CACHE.write_text(json.dumps(data, ensure_ascii=False))
-        return data
+        merged = {**old, **{r["x"]: r for r in data}}
+        out = [merged[k] for k in sorted(merged)]
+        MARGIN_CACHE.write_text(json.dumps(out, ensure_ascii=False))
+        return out
 
-    # 這輪資料不可用 → 先清掉舊尺度檔（command-center 也讀它），再退回快取
-    _drop_stale_margin_cache()
-    if MARGIN_CACHE.exists():
-        try:
-            cached = json.loads(MARGIN_CACHE.read_text())
-        except (json.JSONDecodeError, OSError):
-            cached = None
-        if isinstance(cached, list) and cached:
-            print("  使用融資市值比快取")
-            return cached
+    if old:
+        # 訊息要指得出實際原因，否則出事時無法從 log 判斷是網路還是資料異常
+        if not data:
+            why = "這輪沒抓到融資資料"
+        elif mktcap_today <= 0 or taiex_today <= 0:
+            why = "市值或 TAIEX 取得失敗"
+        else:
+            why = f"比率量級異常（median={med:.3f}）"
+        print(f"  {why}，沿用快取 {len(old)} 筆")
+        return [old[k] for k in sorted(old)]
 
-    print("  融資市值比：市值/TAIEX 取得失敗且無可用快取")
+    print("  融資市值比：無可用資料（抓取失敗且無快取）")
     return []
 
 
