@@ -140,6 +140,10 @@ class BasicAuthMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
         if request.url.path == '/api/health':
             return await call_next(request)
+        # 題庫練習（5380）免登入：只是選擇題練習，沒有任何個資或金鑰。
+        # 手機要能直接開，不必每次輸入帳密或帶 ?k= token。
+        if request.url.path.startswith('/svc/5380'):
+            return await call_next(request)
         # 內網直連（非經 Cloudflare Tunnel 轉發）免登入，Tunnel 對外流量仍要密碼
         if 'cf-connecting-ip' not in request.headers:
             try:
