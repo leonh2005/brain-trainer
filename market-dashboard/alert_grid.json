@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-04 07:00",
+  "generated_at": "2026-11-04 14:01",
   "count": 5,
   "threshold": 6,
   "cells": [
@@ -26,7 +26,7 @@
     {
       "name": "台股 vs 200MA",
       "triggered": false,
-      "detail": "+6.02%（不納入警示）"
+      "detail": "+4.97%（不納入警示）"
     },
     {
       "name": "M1B比",
@@ -36,7 +36,7 @@
     {
       "name": "融資市值比",
       "triggered": true,
-      "detail": "0.423%（>0.35%）"
+      "detail": "0.419%（>0.35%）"
     },
     {
       "name": "美銀牛熊",
