@@ -1,6 +1,6 @@
 {
-  "scanned_at": "2026-11-04 03:00:44",
-  "since": "2026-11-03 03:00:00",
+  "scanned_at": "2026-11-05 03:00:47",
+  "since": "2026-11-04 03:00:00",
   "results": {
     "市場儀表板": {
       "exists": true,
@@ -28,27 +28,27 @@
     },
     "財經新聞分析": {
       "exists": true,
-      "errors": 19,
-      "last_error": "2026-11-04 01:16:46,373 [WARNING] fetcher.reddit_fetcher: Reddit fetch failed for r/investing: 500 Server Error: Internal Server Error for url: https://www.reddit.com/r/investing/hot/.rss",
-      "fix": "尚無對應建議，需人工判斷"
+      "errors": 1,
+      "last_error": "2026-11-04 14:00:28,270 [WARNING] fetcher.ptt_fetcher: PTT article fetch failed https://www.ptt.cc/bbs/Stock/M.1793766540.A.342.html: HTTPSConnectionPool(host='www.ptt.cc', port=443): Max retries exceeded with url: /bbs/Stock/M.1793766540.A.342.html (Caused by ConnectTimeoutError(<HTTPSConnection(ho",
+      "fix": "Port 被佔用或服務未啟動 → 檢查 LaunchAgent 是否正常載入"
     },
     "川普監測": {
       "exists": true,
       "errors": 1,
-      "last_error": "2026-11-03 13:00:06,544 WARNING 分析失敗：Trump to remove Rwanda and South Africa from US tr — 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reaso",
+      "last_error": "2026-11-04 13:15:03,925 WARNING 分析失敗：investingLive Asia-Pacific market news: Stocks sli — 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reaso",
       "fix": "尚無對應建議，需人工判斷"
     },
     "持倉新聞(台股)": {
       "exists": true,
-      "errors": 4,
-      "last_error": "2026-11-03 08:30:38,467 WARNING 2327 分析失敗，換下一個模型：gemini-2.5-flash-lite: Error code: 429 - [{'error': {'code': 429, 'message': 'You exceeded your current",
-      "fix": "尚無對應建議，需人工判斷"
-    },
-    "持倉新聞(美股)": {
-      "exists": true,
       "errors": 0,
       "last_error": null,
       "fix": null
+    },
+    "持倉新聞(美股)": {
+      "exists": true,
+      "errors": 1,
+      "last_error": "2026-11-04 21:00:24,066 WARNING MU 分析失敗，換下一個模型：gemini-2.5-flash-lite: Error code: 503 - [{'error': {'code': 503, 'message': 'This model is currently e",
+      "fix": "尚無對應建議，需人工判斷"
     },
     "HolaQuant": {
       "exists": true,
@@ -88,8 +88,8 @@
     },
     "盤中監控": {
       "exists": true,
-      "errors": 2,
-      "last_error": "⚠️ 盤中主力監控啟動失敗（重試 1 次）：TimeoutError，今天不會有訊號",
+      "errors": 3,
+      "last_error": "[universe] 掃描失敗，維持現有 30 檔: HTTPConnectionPool(host='localhost', port=5455): Read timed out. (read timeout=30)",
       "fix": "網路逾時 → 確認目標服務可達，或增加 timeout 設定"
     },
     "蝦皮軟纖監測": {
