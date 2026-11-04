@@ -15,6 +15,7 @@ import pytest
 def client(tmp_path, monkeypatch):
     monkeypatch.setattr(quiz, "HISTORY_PATH", tmp_path / "history.json")
     monkeypatch.setattr(quiz, "MISTAKES_PATH", tmp_path / "mistakes.json")
+    monkeypatch.setattr(quiz, "STATS_PATH", tmp_path / "stats.json")
     # 遷移是延遲執行的，這裡重置旗標，確保它用的是 tmp 路徑而不是正式資料
     monkeypatch.setattr(quiz, "_migrated", False)
     quiz.app.config["TESTING"] = True
@@ -165,6 +166,45 @@ def test_migration_skips_unanswered(tmp_path, monkeypatch):
     quiz._ensure_migrated()
 
     assert quiz._load_mistakes() == {quiz.QUESTIONS[11]["id"]}
+
+
+def test_correct_count_accumulates(client):
+    """每答對一次就累加，答錯不計。"""
+    items = client.get("/api/quiz?count=2").get_json()["items"]
+    client.post("/api/submit", json=_answer_all(client, items, correct=True))
+    client.post("/api/submit", json=_answer_all(client, items, correct=True))
+    client.post("/api/submit", json=_answer_all(client, items, correct=False))
+
+    stats = quiz._load_stats()
+    for it in items:
+        assert stats[it["qid"]] == 2
+
+
+def test_unmastered_excludes_mastered_questions(client, monkeypatch):
+    """答對達門檻後，該題不再出現在「未熟練」模式。"""
+    monkeypatch.setattr(quiz, "MASTERED_THRESHOLD", 2)
+    items = client.get("/api/quiz?count=2").get_json()["items"]
+    target = items[0]
+    right = target["order"].index(quiz.QUESTIONS[target["qid"]]["ans"])
+
+    for _ in range(2):
+        client.post("/api/submit", json={"items": [
+            {"qid": target["qid"], "order": target["order"], "picked": right}]})
+
+    got = {q["qid"] for q in
+           client.get("/api/quiz?mode=unmastered&count=200").get_json()["items"]}
+    assert target["qid"] not in got
+    assert got              # 其他題還在
+
+
+def test_unmastered_keeps_questions_answered_wrong(client):
+    """答錯不會被算成熟練：統計上不累加即可（抽題是隨機的，不能斷言特定題會被抽到）。"""
+    items = client.get("/api/quiz?count=2").get_json()["items"]
+    client.post("/api/submit", json=_answer_all(client, items, correct=False))
+
+    stats = quiz._load_stats()
+    for it in items:
+        assert stats.get(it["qid"], 0) == 0
 
 
 def test_carry_mode_covers_known_questions(client):

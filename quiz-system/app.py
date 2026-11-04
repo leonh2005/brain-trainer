@@ -21,6 +21,10 @@ QUESTIONS_PATH = Path(os.environ.get("QUIZ_QUESTIONS", BASE_DIR / "questions.jso
 HISTORY_PATH = Path(os.environ.get("QUIZ_HISTORY", BASE_DIR / "history.json"))
 MISTAKES_PATH = Path(os.environ.get("QUIZ_MISTAKES", BASE_DIR / "mistakes.json"))
 HISTORY_LIMIT = 200   # 只留最近 N 份成績
+# 答對累計達此次數即視為熟練，不再出現在一般出題（獨立計數，不受 history 200 筆上限影響）
+MASTERED_THRESHOLD = 10
+STATS_PATH = Path(os.environ.get("QUIZ_STATS", BASE_DIR / "stats.json"))
+
 MAX_ITEMS = 200       # 單次交卷題數上限，避免巨型 payload 寫爆 history
 
 app = Flask(__name__)
@@ -59,6 +63,31 @@ def _load_history() -> list[dict]:
 
 def _save_history(records: list[dict]) -> None:
     _atomic_write(HISTORY_PATH, json.dumps(records[-HISTORY_LIMIT:], ensure_ascii=False))
+
+
+def _load_stats() -> dict[int, int]:
+    """每題累計答對次數 {qid: count}。壞檔視為空，不讓統計擋住練習。"""
+    if not STATS_PATH.exists():
+        return {}
+    try:
+        data = json.loads(STATS_PATH.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return {}
+    raw = data.get("correct_counts") if isinstance(data, dict) else None
+    if not isinstance(raw, dict):
+        return {}
+    out = {}
+    for k, v in raw.items():
+        try:
+            out[int(k)] = int(v)
+        except (TypeError, ValueError):
+            continue
+    return out
+
+
+def _save_stats(counts: dict[int, int]) -> None:
+    _atomic_write(STATS_PATH, json.dumps(
+        {"correct_counts": {str(k): v for k, v in counts.items()}}, ensure_ascii=False))
 
 
 def _atomic_write(path: Path, text: str) -> None:
@@ -185,8 +214,8 @@ def health():
 @app.get("/api/quiz")
 def quiz():
     mode = request.args.get("mode", "all")
-    if mode not in ("all", "mistakes", "carry"):
-        return jsonify({"ok": False, "error": "mode 需為 all、mistakes 或 carry"}), 400
+    if mode not in ("all", "mistakes", "carry", "unmastered"):
+        return jsonify({"ok": False, "error": "mode 需為 all、mistakes、carry 或 unmastered"}), 400
     try:
         count = int(request.args.get("count", 50))
     except ValueError:
@@ -202,6 +231,12 @@ def quiz():
         count = min(count, len(pool), MAX_ITEMS)
     elif mode == "carry":
         pool = [q for q in QUESTIONS if _is_carry(q)]
+        count = min(count, len(pool), MAX_ITEMS)
+    elif mode == "unmastered":
+        # 已答對達 MASTERED_THRESHOLD 次的題目視為熟練，從一般練習中移除
+        stats = _load_stats()
+        pool = [q for q in QUESTIONS
+                if stats.get(q["id"], 0) < MASTERED_THRESHOLD]
         count = min(count, len(pool), MAX_ITEMS)
     else:
         pool = QUESTIONS
@@ -294,6 +329,13 @@ def submit():
         mistakes.update(d["qid"] for d in details
                         if _counts_as_mistake(d["correct"], d["picked"]))
         _save_mistakes(mistakes)
+
+        # 累計答對次數（獨立檔，不受 history 200 筆上限影響）
+        stats = _load_stats()
+        for d in details:
+            if d["correct"]:
+                stats[d["qid"]] = stats.get(d["qid"], 0) + 1
+        _save_stats(stats)
 
     return jsonify({"ok": True, "score": score, "correct": n_correct, "total": total,
                     "at": at, "details": details})

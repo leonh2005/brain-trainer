@@ -80,6 +80,7 @@ aside h2{font-size:14px;font-weight:600;color:var(--fg);margin:0 0 8px}
   <span class="spacer"></span>
   <button id="allq">全部題目</button>
   <button id="carry">進位題</button>
+  <button id="unmastered">未熟練</button>
   <button id="mistakes">錯題重刷</button>
   <button id="again" style="display:none">再來一份</button>
   <button id="submit" class="primary">交卷</button>
@@ -99,7 +100,7 @@ aside h2{font-size:14px;font-weight:600;color:var(--fg);margin:0 0 8px}
 const TOTAL = {{ total_questions }};
 const COUNT = 50;
 const LETTERS = ['A','B','C','D'];
-const MODE_LABEL = { mistakes: '錯題重刷', carry: '進位題' };
+const MODE_LABEL = { mistakes: '錯題重刷', carry: '進位題', unmastered: '未熟練' };
 const state = { items: [], picked: {}, flagged: {}, submitted: false, result: null, mode: 'all' };
 
 const $ = id => document.getElementById(id);
@@ -130,6 +131,7 @@ async function loadQuiz(mode){
     if(!state.items.length){
       const emptyMsg = mode === 'carry' ? '目前沒有符合的進位題，請確認題庫內容。'
                      : mode === 'mistakes' ? '目前沒有錯題，先去一般練習吧。'
+                     : mode === 'unmastered' ? '全部題目都已熟練（答對滿 10 次），去一般練習吧。'
                      : '目前沒有題目。';
       $('questions').innerHTML = `<div class="empty">${emptyMsg}</div>`;
       $('submit').disabled = true;
@@ -288,6 +290,7 @@ function switchMode(mode){
 }
 $('allq').addEventListener('click', () => switchMode('all'));
 $('carry').addEventListener('click', () => switchMode('carry'));
+$('unmastered').addEventListener('click', () => switchMode('unmastered'));
 $('mistakes').addEventListener('click', () => switchMode('mistakes'));
 loadQuiz();
 loadHistory();
