@@ -2,6 +2,15 @@
 <html lang="zh-TW">
 <head>
 <meta charset="utf-8">
+<script>
+// 儀表板每次打開都應該從頂端開始，關掉瀏覽器的捲動位置還原
+// （reload／bfcache 會把上次位置帶回來）。必須放在最前面才趕得上。
+// 註：這只處理「頁面重新載入」，不涵蓋 Firefox 關閉再開的會話還原。
+if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+window.addEventListener('pageshow', function (e) {
+  if (e.persisted) window.scrollTo(0, 0);   // 從 bfcache 回來時也要回到頂端
+});
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>市場分析</title>
 <style>
@@ -527,7 +536,7 @@ async function loadLive(fresh){
         <div><span class="name">${s.name}</span><span class="code">${s.code}</span></div>
         <div class="price">${s.price}</div>
         <div class="pct ${pctClass(s.change_pct)}">${sp ? sp + '（' + fmtPct(s.change_pct) + '）' : fmtPct(s.change_pct)}</div>
-        <div id="stock-chart-${code}" style="margin-top:8px"><div class="empty">載入中...</div></div>
+        <div id="stock-chart-${code}" style="margin-top:8px;min-height:121px"><div class="empty">載入中...</div></div>
       </div>`;
     }).join('') || '<div class="empty">暫無即時資料</div>';
     loadStocksIntraday();
