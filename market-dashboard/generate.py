@@ -38,8 +38,10 @@ FG_CACHE   = Path(__file__).parent / "fg_history.json"
 SP_STATE   = Path(__file__).parent / "sp_state.json"
 CAPE_CACHE = Path(__file__).parent / "cape_cache.json"
 BB_CACHE   = Path(__file__).parent / "bb_cache.json"
-# 牛熊指標每週四發布；媒體不一定每週寫出數值，超過三週沒新值視為資料過期
-BB_STALE_DAYS = 21
+# 牛熊指標每週四發布，媒體常晚 1–3 天轉載；錯過 2 次發布就算資料過期
+BB_STALE_DAYS = 14
+# 同值但間隔小於此天數 → 視為同一份報告的轉載，不重複記錄
+BB_SAME_REPORT_DAYS = 7
 MARGIN_CACHE = Path(__file__).parent / "margin_cache.json"
 BUFFETT_CACHE    = Path(__file__).parent / "buffett_cache.json"
 HINDENBURG_CACHE = Path(__file__).parent / "hindenburg_cache.json"
@@ -57,8 +59,19 @@ MARGIN_SCALE_MAX = 2.0
 # 上市個股數約 1,000；低於此值代表 openapi 只回了部分資料，
 # 總市值會少好幾成、ratio 跟著放大，這種資料不能當真。
 MIN_TICKERS = 800
-BOT_TOKEN = open(os.path.expanduser("~/CCProject/.secrets/telegram_token.txt")).read().strip()
+TELEGRAM_TOKEN_PATH = Path(os.path.expanduser("~/CCProject/.secrets/telegram_token.txt"))
 CHAT_ID = "7556217543"
+
+
+def _bot_token() -> str:
+    """延遲載入 token：import 這個模組時不該因為缺檔而失敗（測試、換機）。
+
+    缺 token 時回空字串，send_telegram 會靜默跳過。
+    """
+    try:
+        return TELEGRAM_TOKEN_PATH.read_text().strip()
+    except OSError:
+        return ""
 
 
 def load_fg_cache() -> dict:
@@ -82,9 +95,12 @@ def merge_fg_history(cnn_hist: list, cache: dict) -> list:
 
 
 def send_telegram(text):
+    token = _bot_token()
+    if not token:
+        return
     try:
         requests.post(
-            f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage",
+            f"https://api.telegram.org/bot{token}/sendMessage",
             data={"chat_id": CHAT_ID, "text": text},
             timeout=10,
         )
@@ -184,25 +200,28 @@ BB_RSS_SOURCES = (
 
 # 指標值：0.0–10.0。{1,2} 是必要的——只寫 \d\.\d 會把 "10.0" 截成 "0.0"
 _BB_NUM = r'(\d{1,2}\.\d)'
+# 指標名稱的實際寫法：Bull & Bear / Bull and Bear / Bull-Bear / B&B
+_BB_NAME = r'(?:bull\s*(?:&|＆|and|-|–)\s*bear|b\s*[&＆]\s*b)'
 
 
 def _parse_bb_value(text: str) -> float | None:
     """從新聞標題／摘要抽出 Bull & Bear 指標數值（0–10）。
 
-    寧缺勿濫：只認「指標詞 + 變動動詞 + 數字」的高信度句式。
-    寬鬆比對會把「跌破 8.0 門檻」的門檻值、或無關的漲跌幅 3.2% 當成讀數；
-    錯誤的讀數比沒有讀數更糟，它會寫進快取並觸發九宮格警報。
+    寧缺勿濫：只認「指標名稱緊接動詞 + 數字」的句式，且不跨越任何標點。
+    寬鬆比對會把「跌破 8.0 門檻」的門檻值、「Indicator in sell zone;
+    yield falls to 4.1」的殖利率、或無關漲跌幅當成讀數；錯誤的讀數比
+    沒有讀數更糟，它會寫進快取並觸發九宮格警報。
     """
     for pattern in (
-        # 英文：「... to Y」涵蓋 slides/falls/rises to 與「from X to Y」。
-        # 用 . 而非 [^.]：小數點本身是 .，排除它會讓「from 8.1 to 7.4」匹配不到；
-        # 未開 DOTALL，. 不跨行，已足以避免跨句誤抓。
-        r'bull\s*[&＆]\s*bear\s+indicator\b.{0,50}?\bto\s+' + _BB_NUM,
+        # 英文：「... to Y」涵蓋 slides/falls/rises to 與「from X to Y」
+        _BB_NAME + r'\s+(?:indicator|gauge)\s+'
+        r'(?:\w+\s+)?(?:from\s+\d{1,2}\.\d\s+)?to\s+' + _BB_NUM,
         # 英文：「... hits/at Y」無 to 的句式
-        r'bull\s*[&＆]\s*bear\s+indicator\s+'
+        _BB_NAME + r'\s+(?:indicator|gauge)\s+'
         r'(?:hits?|at|stands?\s+at|reaches?)\s+' + _BB_NUM,
-        # 中文：「從X降至Y」取 Y，20 字窗才容得下「已经由前一周的8.1明显下降至」
-        r'牛熊\s*指[標标][^。]{0,20}?'
+        # 中文：16 字窗且排除標點——「已经由前一周的8.1明显下降至7.4」要吃得下，
+        # 但「脱离卖出区，纳指跌至4.5%」必須在逗號處斷開
+        r'牛熊\s*指[標标][^，。；、,;]{0,16}?'
         r'(?:降至|降到|回落至|回落到|跌至|下滑至|下降至|升至|漲至|衝上|冲上)\s*' + _BB_NUM,
     ):
         m = re.search(pattern, text, re.I)
@@ -242,13 +261,36 @@ def _fetch_bb_from_rss(url: str) -> list[tuple[str, float]]:
     return out
 
 
+def _write_bb_cache(history: list) -> None:
+    """原子寫入 bb_cache.json（mkstemp + os.replace）。
+
+    寫不進去只影響下次執行的起點，不該讓整份儀表板中止。
+    """
+    try:
+        fd, tmp_path = tempfile.mkstemp(dir=str(BB_CACHE.parent), suffix=".tmp")
+        try:
+            with os.fdopen(fd, "w", encoding="utf-8") as f:
+                f.write(json.dumps({"history": history}, ensure_ascii=False, indent=2))
+            os.replace(tmp_path, BB_CACHE)
+        except BaseException:
+            Path(tmp_path).unlink(missing_ok=True)
+            raise
+    except OSError as e:
+        print(f"  警告：bb_cache 寫入失敗（{e}）")
+
+
 def fetch_bofa_bull_bear() -> dict:
     """美銀牛熊指標（0=極空 / 10=極多）。
     cache 格式：{"history": [{"date":"YYYY-MM-DD","value":X.X}, ...]}
     手動更新：直接編輯 bb_cache.json 的 history 陣列（先前的 update_bb.py 從未建立）
     """
     # ── 讀取 / 遷移舊格式 ──────────────────────────────────────────
-    raw = json.loads(BB_CACHE.read_text()) if BB_CACHE.exists() else {}
+    # 半截 JSON（上次寫入中斷）或權限問題不該讓整份儀表板中止
+    try:
+        raw = json.loads(BB_CACHE.read_text()) if BB_CACHE.exists() else {}
+    except (OSError, ValueError) as e:
+        print(f"  警告：bb_cache 讀取失敗（{e}），改用空歷史")
+        raw = {}
     if isinstance(raw, dict) and "history" not in raw:
         # 舊格式 {"value":X,"date":"..."}  → 遷移為新格式
         history = []
@@ -256,9 +298,11 @@ def fetch_bofa_bull_bear() -> dict:
             history.append({"date": raw["date"], "value": raw["value"]})
         raw = {"history": history}
 
-    history: list = raw.get("history", [])
+    history: list = raw.get("history", []) if isinstance(raw, dict) else []
+    # date 可能是 null（人工編輯或舊遷移），排序鍵一律先轉字串
+    history.sort(key=lambda x: x.get("date") or "")
 
-    # ── 多來源收集，同一數值只取最早報導日 ──────────────────────────
+    # ── 多來源收集 ─────────────────────────────────────────────────
     # 舊版只讀第一個命中的文章就 break：Google News 若排了舊文，
     # 就算 Bing 有更新的數值也看不到。
     found: list[tuple[str, float]] = []
@@ -266,38 +310,36 @@ def fetch_bofa_bull_bear() -> dict:
         found.extend(_fetch_bb_from_rss(src))
 
     if found:
-        # 同一份 BofA 報告常被中文媒體晚 1–3 天轉載，數值相同但日期更晚。
-        # 只按最新日期取會把轉載日當成新數據日，圖表出現假的更新點，
-        # 因此同值一律收斂到最早的報導日（最接近原始發布日）。
-        earliest: dict[float, str] = {}
-        for date_str, v in found:
-            earliest[v] = min(date_str, earliest.get(v, date_str))
-        latest_value = max(earliest, key=lambda v: earliest[v])
-        latest_date = earliest[latest_value]
+        latest_date, latest_value = max(found, key=lambda x: x[0])
+        last = history[-1] if history else {}
 
-        # 日期必須嚴格新於快取末筆。今天刊出的回顧稿（「BofA indicator hit 8.1
-        # in February」）pubDate 是今天，不擋會把歷史數值蓋成最新讀數；
-        # 未來日期則代表來源時區標錯，同樣不採用。
-        today = datetime.now().strftime("%Y-%m-%d")
-        last_date = history[-1].get("date", "") if history else ""
-        if last_date < latest_date <= today:
-            history.append({"date": latest_date, "value": latest_value})
-            history.sort(key=lambda x: x.get("date", ""))
+        # 同一份 BofA 報告常被中文媒體晚 1–3 天轉載：數值相同、日期更晚。
+        # 直接寫入會製造假的更新點並把過期時鐘歸零；但同值也可能是下一週
+        # 真的沒變（快取裡 7.4×2、8.8×2 都是這種），用 7 天窗區分。
+        same_report = False
+        if last.get("value") == latest_value and last.get("date"):
             try:
-                BB_CACHE.write_text(
-                    json.dumps({"history": history}, ensure_ascii=False, indent=2))
-            except OSError as e:
-                # 寫不進去只影響下次執行的起點，不該讓整份儀表板中止
-                print(f"  警告：bb_cache 寫入失敗（{e}）")
+                gap = (datetime.strptime(latest_date, "%Y-%m-%d").date()
+                       - datetime.strptime(last["date"], "%Y-%m-%d").date()).days
+                same_report = 0 <= gap < BB_SAME_REPORT_DAYS
+            except (ValueError, TypeError):
+                same_report = False
 
-    history.sort(key=lambda x: x.get("date", ""))
+        # 日期必須嚴格新於快取末筆，且不得是未來（來源時區標錯）。
+        today = datetime.now().strftime("%Y-%m-%d")
+        if not same_report and latest_date > (last.get("date") or "") and latest_date <= today:
+            history.append({"date": latest_date, "value": latest_value})
+            _write_bb_cache(history)
+
+    history.sort(key=lambda x: x.get("date") or "")
     latest = history[-1] if history else {}
-    try:
-        days_old: int | None = (
-            datetime.now().date() - datetime.strptime(latest["date"], "%Y-%m-%d").date()
-        ).days if latest.get("date") else None
-    except (ValueError, TypeError, KeyError):
-        days_old = None
+    days_old: int | None = None
+    if latest.get("date"):
+        try:
+            days_old = (datetime.now().date()
+                        - datetime.strptime(latest["date"], "%Y-%m-%d").date()).days
+        except (ValueError, TypeError):
+            days_old = None
     return {
         "value":    latest.get("value"),
         "date":     latest.get("date", "N/A"),
@@ -1156,7 +1198,6 @@ def generate_html(vix_data, sp_data, ma_data, sp_hist_high, fg_data, tw_data, tw
         bb_display = f"{bb_value:.1f}"
     else:
         bb_color = "#5a6a7e"; bb_label = "暫無資料"; bb_pct = 0; bb_display = "N/A"
-    bb_alert = alert_class(bb_color) if bb_value is not None and (bb_value >= 8.0 or bb_value < 2.0) else ""
 
     # 資料新鮮度：指標每週四發布，但媒體不一定每週寫出數值。
     # 超過 BB_STALE_DAYS 沒新值就明確標示，避免把舊讀數當成今天的水位。
@@ -1172,6 +1213,11 @@ def generate_html(vix_data, sp_data, ma_data, sp_hist_high, fg_data, tw_data, tw
     else:
         bb_update_note, bb_stale = "每週更新", False
     bb_date_style = "color:#ffaa00; font-weight:600" if bb_stale else "opacity:0.5"
+    # 過期讀數不套紅色警報樣式：九宮格已因過期而不亮燈，
+    # 卡片再閃紅色會讓同一份頁面對同一筆資料給出矛盾訊號。
+    bb_alert = alert_class(bb_color) if (
+        bb_value is not None and not bb_stale and (bb_value >= 8.0 or bb_value < 2.0)
+    ) else ""
 
     # 融資市值比
     margin_data = margin_data or []
@@ -2760,7 +2806,9 @@ def main():
 
     print(f"[{datetime.now().strftime('%H:%M:%S')}] 抓取美銀牛熊指標...")
     bb_data = fetch_bofa_bull_bear()
-    bb_val_str = f"{bb_data['value']:.1f}" if bb_data.get("value") is not None else "N/A"
+    # 手改快取可能把 value 寫成字串或漏掉，格式化前先確認型別
+    _bv = bb_data.get("value")
+    bb_val_str = f"{_bv:.1f}" if isinstance(_bv, (int, float)) else "N/A"
     print(f"  BofA B&B：{bb_val_str}（{bb_data.get('date','N/A')}）")
 
     print(f"[{datetime.now().strftime('%H:%M:%S')}] 抓取融資市值比...")
@@ -2843,12 +2891,18 @@ def main():
     bb_days      = (bb_data or {}).get("days_old")
     # 過期讀數不列入九宮格：三週前的數字不代表現在的市場狀態，
     # 讓它亮燈會在 Telegram 推播裡看起來像即時警報。
-    bb_valid     = bb_val is not None and bb_days is not None and bb_days <= BB_STALE_DAYS
-    bb_detail    = (
-        "N/A" if bb_val is None
-        else f"{bb_val:.1f}" if bb_valid
-        else f"{bb_val:.1f}（{bb_days} 天前，已過期）"
-    )
+    # 0 <= days 是必要的：快取日期在未來時 days 為負，不加這條會永遠判定新鮮，
+    # 且該筆日期讓後續更新全被擋掉。
+    bb_valid     = (bb_val is not None and bb_days is not None
+                    and 0 <= bb_days <= BB_STALE_DAYS)
+    if bb_val is None:
+        bb_detail = "N/A"
+    elif bb_valid:
+        bb_detail = f"{bb_val:.1f}"
+    elif bb_days is None:
+        bb_detail = f"{bb_val:.1f}（日期無法解析）"
+    else:
+        bb_detail = f"{bb_val:.1f}（{bb_days} 天前，已過期）"
     bf_r         = (buffett_data or {}).get("ratio")
     sp_vs_ma_pct = trunc2((sp_cur / ma_cur - 1) * 100) if ma_cur else 0
     tw_cur       = tw_data[-1]["y"] if tw_data else 0
