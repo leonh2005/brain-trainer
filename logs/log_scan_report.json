@@ -1,6 +1,6 @@
 {
-  "scanned_at": "2026-11-05 03:00:47",
-  "since": "2026-11-04 03:00:00",
+  "scanned_at": "2026-11-06 03:00:45",
+  "since": "2026-11-05 03:00:00",
   "results": {
     "市場儀表板": {
       "exists": true,
@@ -28,14 +28,14 @@
     },
     "財經新聞分析": {
       "exists": true,
-      "errors": 1,
-      "last_error": "2026-11-04 14:00:28,270 [WARNING] fetcher.ptt_fetcher: PTT article fetch failed https://www.ptt.cc/bbs/Stock/M.1793766540.A.342.html: HTTPSConnectionPool(host='www.ptt.cc', port=443): Max retries exceeded with url: /bbs/Stock/M.1793766540.A.342.html (Caused by ConnectTimeoutError(<HTTPSConnection(ho",
-      "fix": "Port 被佔用或服務未啟動 → 檢查 LaunchAgent 是否正常載入"
+      "errors": 19,
+      "last_error": "2026-11-05 04:30:14,590 [WARNING] fetcher.ptt_fetcher: PTT index fetch failed: HTTPSConnectionPool(host='www.ptt.cc', port=443): Read timed out. (read timeout=10)",
+      "fix": "網路逾時 → 確認目標服務可達，或增加 timeout 設定"
     },
     "川普監測": {
       "exists": true,
-      "errors": 1,
-      "last_error": "2026-11-04 13:15:03,925 WARNING 分析失敗：investingLive Asia-Pacific market news: Stocks sli — 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reaso",
+      "errors": 3,
+      "last_error": "2026-11-05 13:20:03,977 WARNING 分析失敗：US midterm outcome offers limited relief to India; — 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reaso",
       "fix": "尚無對應建議，需人工判斷"
     },
     "持倉新聞(台股)": {
@@ -46,9 +46,9 @@
     },
     "持倉新聞(美股)": {
       "exists": true,
-      "errors": 1,
-      "last_error": "2026-11-04 21:00:24,066 WARNING MU 分析失敗，換下一個模型：gemini-2.5-flash-lite: Error code: 503 - [{'error': {'code': 503, 'message': 'This model is currently e",
-      "fix": "尚無對應建議，需人工判斷"
+      "errors": 0,
+      "last_error": null,
+      "fix": null
     },
     "HolaQuant": {
       "exists": true,
@@ -76,9 +76,9 @@
     },
     "當沖推播": {
       "exists": true,
-      "errors": 0,
-      "last_error": null,
-      "fix": null
+      "errors": 1,
+      "last_error": "[sj] avg5 0050 失敗: Topic: api/v1/data/kbars, Corr: c9, Client: PYAPI/N124711691/1105/011003/008842/59.115.246.147, payload: {'token': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYmYiOjE3OTM4NDEwMDMsImV4cCI6MTc5MzkyNzQwMywic2ltdWxhdGlvbiI6ZmFsc2UsInBlcnNvbl9pZCI6Ik4xMjQ3MTE2OTEiLCJ2ZXJzaW9uIjoiMS4zLjIi",
+      "fix": "尚無對應建議，需人工判斷"
     },
     "隔日沖推播": {
       "exists": true,
@@ -88,9 +88,9 @@
     },
     "盤中監控": {
       "exists": true,
-      "errors": 3,
-      "last_error": "[universe] 掃描失敗，維持現有 30 檔: HTTPConnectionPool(host='localhost', port=5455): Read timed out. (read timeout=30)",
-      "fix": "網路逾時 → 確認目標服務可達，或增加 timeout 設定"
+      "errors": 14,
+      "last_error": "requests.exceptions.ConnectionError: ('Connection aborted.', ConnectionResetError(54, 'Connection reset by peer'))",
+      "fix": "尚無對應建議，需人工判斷"
     },
     "蝦皮軟纖監測": {
       "exists": true,
