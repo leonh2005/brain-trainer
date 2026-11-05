@@ -6,6 +6,7 @@
 import json
 import math
 import os
+import re
 import shutil
 import statistics
 import sys
@@ -37,6 +38,8 @@ FG_CACHE   = Path(__file__).parent / "fg_history.json"
 SP_STATE   = Path(__file__).parent / "sp_state.json"
 CAPE_CACHE = Path(__file__).parent / "cape_cache.json"
 BB_CACHE   = Path(__file__).parent / "bb_cache.json"
+# 牛熊指標每週四發布；媒體不一定每週寫出數值，超過三週沒新值視為資料過期
+BB_STALE_DAYS = 21
 MARGIN_CACHE = Path(__file__).parent / "margin_cache.json"
 BUFFETT_CACHE    = Path(__file__).parent / "buffett_cache.json"
 HINDENBURG_CACHE = Path(__file__).parent / "hindenburg_cache.json"
@@ -170,13 +173,80 @@ def fetch_taiex_with_ma(period="20y"):
     return prices, mas, hist_high
 
 
+# 牛熊指標新聞來源。Google News 為主，Bing News 為輔：兩邊收錄的媒體不同，
+# 中文翻譯稿常比英文原稿晚 1–2 天出現，單一來源會漏掉較新的數值。
+BB_RSS_SOURCES = (
+    "https://news.google.com/rss/search?q=BofA+bull+bear+indicator&hl=en-US&gl=US&ceid=US:en",
+    "https://www.bing.com/news/search?q=BofA+bull+bear+indicator&format=RSS",
+    "https://www.bing.com/news/search?q=%E7%BE%8E%E9%93%B6%E7%89%9B%E7%86%8A%E6%8C%87%E6%A0%87&format=RSS&setmkt=zh-TW",
+)
+
+
+# 指標值：0.0–10.0。{1,2} 是必要的——只寫 \d\.\d 會把 "10.0" 截成 "0.0"
+_BB_NUM = r'(\d{1,2}\.\d)'
+
+
+def _parse_bb_value(text: str) -> float | None:
+    """從新聞標題／摘要抽出 Bull & Bear 指標數值（0–10）。
+
+    寧缺勿濫：只認「指標詞 + 變動動詞 + 數字」的高信度句式。
+    寬鬆比對會把「跌破 8.0 門檻」的門檻值、或無關的漲跌幅 3.2% 當成讀數；
+    錯誤的讀數比沒有讀數更糟，它會寫進快取並觸發九宮格警報。
+    """
+    for pattern in (
+        # 英文：「... to Y」涵蓋 slides/falls/rises to 與「from X to Y」。
+        # 用 . 而非 [^.]：小數點本身是 .，排除它會讓「from 8.1 to 7.4」匹配不到；
+        # 未開 DOTALL，. 不跨行，已足以避免跨句誤抓。
+        r'bull\s*[&＆]\s*bear\s+indicator\b.{0,50}?\bto\s+' + _BB_NUM,
+        # 英文：「... hits/at Y」無 to 的句式
+        r'bull\s*[&＆]\s*bear\s+indicator\s+'
+        r'(?:hits?|at|stands?\s+at|reaches?)\s+' + _BB_NUM,
+        # 中文：「從X降至Y」取 Y，20 字窗才容得下「已经由前一周的8.1明显下降至」
+        r'牛熊\s*指[標标][^。]{0,20}?'
+        r'(?:降至|降到|回落至|回落到|跌至|下滑至|下降至|升至|漲至|衝上|冲上)\s*' + _BB_NUM,
+    ):
+        m = re.search(pattern, text, re.I)
+        if m:
+            v = float(m.group(1))
+            if 0.0 <= v <= 10.0:
+                return v
+    return None
+
+
+def _fetch_bb_from_rss(url: str) -> list[tuple[str, float]]:
+    """抓單一 RSS 來源，回傳所有 (發布日, 指標值)。失敗或無資料回空 list。"""
+    import xml.etree.ElementTree as ET
+    from email.utils import parsedate_to_datetime
+
+    headers = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36"}
+    try:
+        r = requests.get(url, headers=headers, timeout=10)
+        root = ET.fromstring(r.text)
+    except Exception:
+        return []
+
+    out: list[tuple[str, float]] = []
+    for item in root.findall(".//item"):
+        combined = " ".join(filter(None, [
+            (item.findtext("title") or ""),
+            (item.findtext("description") or ""),
+        ]))
+        v = _parse_bb_value(combined)
+        pub = item.findtext("pubDate")
+        if v is None or not pub:
+            continue
+        try:
+            out.append((parsedate_to_datetime(pub).strftime("%Y-%m-%d"), v))
+        except Exception:
+            continue
+    return out
+
+
 def fetch_bofa_bull_bear() -> dict:
     """美銀牛熊指標（0=極空 / 10=極多）。
     cache 格式：{"history": [{"date":"YYYY-MM-DD","value":X.X}, ...]}
-    手動更新：執行 python3 update_bb.py <value>  或直接編輯 bb_cache.json
+    手動更新：直接編輯 bb_cache.json 的 history 陣列（先前的 update_bb.py 從未建立）
     """
-    import re
-
     # ── 讀取 / 遷移舊格式 ──────────────────────────────────────────
     raw = json.loads(BB_CACHE.read_text()) if BB_CACHE.exists() else {}
     if isinstance(raw, dict) and "history" not in raw:
@@ -188,69 +258,51 @@ def fetch_bofa_bull_bear() -> dict:
 
     history: list = raw.get("history", [])
 
-    # ── 嘗試從 Google News RSS + 文章標題抓最新值 ───────────────────
-    def _try_extract_bb(text: str):
-        # 優先：標題中直接含數字（如 "hits 8.5" / "rises to 8.8"）
-        m = re.search(r'bull\s*[&＆]\s*bear\s+indicator\s+(?:hits?|rises?\s+to|at|stands?\s+at|reaches?|climbs?\s+to|falls?\s+to|drops?\s+to)\s+(\d\.\d)', text, re.I)
-        if m:
-            return float(m.group(1))
-        # 次要：bull/bear 附近有數字
-        ctx = re.findall(r'(?:bull.{0,30}bear|b(?:&|and)b\s+indicator).{0,80}?(\b\d\.\d\b)', text, re.I)
-        candidates = [float(v) for v in ctx if 0.1 <= float(v) <= 10.0]
-        return candidates[0] if candidates else None
+    # ── 多來源收集，同一數值只取最早報導日 ──────────────────────────
+    # 舊版只讀第一個命中的文章就 break：Google News 若排了舊文，
+    # 就算 Bing 有更新的數值也看不到。
+    found: list[tuple[str, float]] = []
+    for src in BB_RSS_SOURCES:
+        found.extend(_fetch_bb_from_rss(src))
 
-    try:
-        headers = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36"}
-        rss_url = "https://news.google.com/rss/search?q=BofA+bull+bear+indicator&hl=en-US&gl=US&ceid=US:en"
-        r = requests.get(rss_url, headers=headers, timeout=10)
+    if found:
+        # 同一份 BofA 報告常被中文媒體晚 1–3 天轉載，數值相同但日期更晚。
+        # 只按最新日期取會把轉載日當成新數據日，圖表出現假的更新點，
+        # 因此同值一律收斂到最早的報導日（最接近原始發布日）。
+        earliest: dict[float, str] = {}
+        for date_str, v in found:
+            earliest[v] = min(date_str, earliest.get(v, date_str))
+        latest_value = max(earliest, key=lambda v: earliest[v])
+        latest_date = earliest[latest_value]
 
-        import xml.etree.ElementTree as ET
-        root = ET.fromstring(r.text)
-        value = None
-        pub_date = None
-
-        for item in root.findall(".//item"):
-            title_el = item.find("title")
-            desc_el  = item.find("description")
-            pub_el   = item.find("pubDate")
-            combined = " ".join(filter(None, [
-                title_el.text  if title_el  is not None else "",
-                desc_el.text   if desc_el   is not None else "",
-            ]))
-            v = _try_extract_bb(combined)
-            if v is not None:
-                value = v
-                # 從 pubDate 取 YYYY-MM-DD
-                if pub_el is not None and pub_el.text:
-                    try:
-                        from email.utils import parsedate_to_datetime
-                        pub_date = parsedate_to_datetime(pub_el.text).strftime("%Y-%m-%d")
-                    except Exception:
-                        pub_date = None
-                break
-
-        if value is not None:
-            # date 用文章發布日（代表數據本身的日期）。原本還用「距今天數 ≥6」
-            # 當追加條件，但今天算的是本機日期 → 文章不更新時每次執行都追加一筆
-            # 同日同值，cache 曾累積到 229 筆卻只有 16 個唯一日期。
-            today = pub_date or datetime.now().strftime("%Y-%m-%d")
-            # 比對整份歷史而非只比最後一筆：RSS 會按相關度排序，可能回報比
-            # 現有末筆更舊的文章，只比 last 會讓同一組 date+value 反覆寫入。
-            existing = {(x.get("date"), x.get("value")) for x in history}
-            if (today, value) not in existing:
-                history.append({"date": today, "value": value})
-                history.sort(key=lambda x: x.get("date", ""))
-                raw = {"history": history}
-                BB_CACHE.write_text(json.dumps(raw, ensure_ascii=False, indent=2))
-    except Exception:
-        pass
+        # 日期必須嚴格新於快取末筆。今天刊出的回顧稿（「BofA indicator hit 8.1
+        # in February」）pubDate 是今天，不擋會把歷史數值蓋成最新讀數；
+        # 未來日期則代表來源時區標錯，同樣不採用。
+        today = datetime.now().strftime("%Y-%m-%d")
+        last_date = history[-1].get("date", "") if history else ""
+        if last_date < latest_date <= today:
+            history.append({"date": latest_date, "value": latest_value})
+            history.sort(key=lambda x: x.get("date", ""))
+            try:
+                BB_CACHE.write_text(
+                    json.dumps({"history": history}, ensure_ascii=False, indent=2))
+            except OSError as e:
+                # 寫不進去只影響下次執行的起點，不該讓整份儀表板中止
+                print(f"  警告：bb_cache 寫入失敗（{e}）")
 
     history.sort(key=lambda x: x.get("date", ""))
     latest = history[-1] if history else {}
+    try:
+        days_old: int | None = (
+            datetime.now().date() - datetime.strptime(latest["date"], "%Y-%m-%d").date()
+        ).days if latest.get("date") else None
+    except (ValueError, TypeError, KeyError):
+        days_old = None
     return {
-        "value":   latest.get("value"),
-        "date":    latest.get("date", "N/A"),
-        "history": history,
+        "value":    latest.get("value"),
+        "date":     latest.get("date", "N/A"),
+        "days_old": days_old,
+        "history":  history,
     }
 
 
@@ -1106,6 +1158,21 @@ def generate_html(vix_data, sp_data, ma_data, sp_hist_high, fg_data, tw_data, tw
         bb_color = "#5a6a7e"; bb_label = "暫無資料"; bb_pct = 0; bb_display = "N/A"
     bb_alert = alert_class(bb_color) if bb_value is not None and (bb_value >= 8.0 or bb_value < 2.0) else ""
 
+    # 資料新鮮度：指標每週四發布，但媒體不一定每週寫出數值。
+    # 超過 BB_STALE_DAYS 沒新值就明確標示，避免把舊讀數當成今天的水位。
+    # days_old 由 fetch_bofa_bull_bear 算好，main() 的九宮格也共用同一個判斷。
+    bb_days_old = (bb_data or {}).get("days_old")
+    if bb_value is None:
+        bb_update_note, bb_stale = "—", False
+    elif bb_days_old is None:
+        # 日期存在但解析不了 → 不能假設新鮮（fail-closed）
+        bb_update_note, bb_stale = "⚠ 日期無法解析", True
+    elif bb_days_old > BB_STALE_DAYS:
+        bb_update_note, bb_stale = f"⚠ 已 {bb_days_old} 天未更新", True
+    else:
+        bb_update_note, bb_stale = "每週更新", False
+    bb_date_style = "color:#ffaa00; font-weight:600" if bb_stale else "opacity:0.5"
+
     # 融資市值比
     margin_data = margin_data or []
     mg_current = margin_data[-1] if margin_data else {}
@@ -1535,7 +1602,7 @@ def generate_html(vix_data, sp_data, ma_data, sp_hist_high, fg_data, tw_data, tw
     <div class="card-sub">
       <b>{bb_label}</b>
       &nbsp;·&nbsp; 0–10 分
-      <br><span style="opacity:0.5">{bb_date} · 每週更新</span>
+      <br><span style="{bb_date_style}">{bb_date} · {bb_update_note}</span>
     </div>
   </div>
 
@@ -1592,7 +1659,7 @@ def generate_html(vix_data, sp_data, ma_data, sp_hist_high, fg_data, tw_data, tw
         <div style="margin-top:8px; font-size:0.85rem">
           <b style="color:{bb_color}">{bb_label}</b>
           &nbsp;·&nbsp; 0–2 買入訊號 &nbsp;/&nbsp; 8–10 賣出訊號
-          <br><span style="opacity:0.5; font-size:0.7rem">{bb_date} · 每週更新，由 BofA Global Research 發布</span>
+          <br><span style="{bb_date_style}; font-size:0.7rem">{bb_date} · {bb_update_note}，由 BofA Global Research 發布</span>
         </div>
       </div>
     </div>
@@ -2773,6 +2840,15 @@ def main():
     m1b_r        = trunc2(trade_cur / m1b_cur * 100) if m1b_cur else 0
     mg_r         = margin_data[-1]["y"] if margin_data else None
     bb_val       = (bb_data or {}).get("value")
+    bb_days      = (bb_data or {}).get("days_old")
+    # 過期讀數不列入九宮格：三週前的數字不代表現在的市場狀態，
+    # 讓它亮燈會在 Telegram 推播裡看起來像即時警報。
+    bb_valid     = bb_val is not None and bb_days is not None and bb_days <= BB_STALE_DAYS
+    bb_detail    = (
+        "N/A" if bb_val is None
+        else f"{bb_val:.1f}" if bb_valid
+        else f"{bb_val:.1f}（{bb_days} 天前，已過期）"
+    )
     bf_r         = (buffett_data or {}).get("ratio")
     sp_vs_ma_pct = trunc2((sp_cur / ma_cur - 1) * 100) if ma_cur else 0
     tw_cur       = tw_data[-1]["y"] if tw_data else 0
@@ -2787,7 +2863,7 @@ def main():
         ("台股 vs 200MA", False,                                              fmt_or_na(tw_vs_ma_pct, "+.2f", "%（不納入警示）")),
         ("M1B比",      m1b_r > 7,                                            fmt_or_na(m1b_r, ".2f", "%（>7% 偏熱）")),
         ("融資市值比", mg_r is not None and mg_r > MARGIN_WARN,                       fmt_or_na(mg_r, ".3f", f"%（>{MARGIN_WARN}%）")),
-        ("美銀牛熊",   bb_val is not None and (bb_val >= 8.0 or bb_val < 2.0), f"{bb_val if bb_val is not None else 'N/A'}"),
+        ("美銀牛熊",   bb_valid and (bb_val >= 8.0 or bb_val < 2.0),           bb_detail),
         ("巴菲特現金", bf_r is not None and bf_r >= 20,                      f"{bf_r:.1f}%（>=20% 謹慎）" if bf_r is not None else "N/A"),
     ]
     alert_count = sum(1 for _, triggered, _ in alert_grid if triggered)
