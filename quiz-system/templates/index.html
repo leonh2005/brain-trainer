@@ -159,7 +159,21 @@ function render(){
     for(const d of state.result.details) detailByQid[d.qid] = d;
   }
 
-  $('questions').innerHTML = state.items.map((it, i) => {
+  // 交卷後只留「答錯」與「標記不確定」的題目；保留原始題號，避免對照時混淆
+  const shown = state.items
+    .map((it, i) => ({ it, i }))
+    .filter(({ it }) => {
+      if(!state.submitted) return true;
+      const d = detailByQid[it.qid];
+      return state.flagged[it.qid] || (d && !d.correct);
+    });
+
+  if(!shown.length && state.submitted){
+    $('questions').innerHTML = '<div class="empty">🎉 全部答對，也沒有標記不確定的題目</div>';
+    return;
+  }
+
+  $('questions').innerHTML = shown.map(({ it, i }) => {
     const d = detailByQid[it.qid];
     const opts = it.opts.map((text, idx) => {
       const cls = ['opt'];
@@ -183,8 +197,14 @@ function render(){
           + `${d.picked === null ? '（未作答）' : ''}</div>`;
     }
 
+    // 交卷後不顯示標記按鈕：/api/mark 的不確定標記與答錯共用同一份
+    // mistakes.json，在此取消會讓該題從錯題庫消失、答對的題目也會
+    // 直接從清單濾掉，誤觸一次就救不回來。
+    const flagBtn = state.submitted ? '' :
+      `<button class="flag${state.flagged[it.qid] ? ' on' : ''}" onclick="markUncertain(${it.qid})" title="再按一次可取消">${state.flagged[it.qid] ? '✓ 已標記（點擊取消）' : '❓ 不確定'}</button>`;
+
     return `<article class="q">
-      <div class="head"><span class="no">${i + 1}</span><span class="stem">${esc(it.q)}</span><button class="flag${state.flagged[it.qid] ? ' on' : ''}" onclick="markUncertain(${it.qid})" title="再按一次可取消">${state.flagged[it.qid] ? '✓ 已標記（點擊取消）' : '❓ 不確定'}</button></div>
+      <div class="head"><span class="no">${i + 1}</span><span class="stem">${esc(it.q)}</span>${flagBtn}</div>
       <div class="cat" style="display:inline-block;margin-bottom:10px">${esc(it.cat)}</div>
       <div class="opts">${opts}</div>
       ${verdict}
@@ -194,6 +214,7 @@ function render(){
 
 async function markUncertain(qid){
   const on = !state.flagged[qid];          // 再按一次可取消誤標
+  const myItems = state.items;             // 記錄當下這份考卷
   try{
     const r = await fetch('api/mark', {
       method: 'POST',
@@ -202,6 +223,8 @@ async function markUncertain(qid){
     });
     const d = await r.json();
     if(!d.ok) throw new Error(d.error || '標記失敗');
+    // 等待期間換了考卷就丟棄回應，否則會把舊考卷的標記寫進新考卷
+    if(state.items !== myItems) return;
     state.flagged[qid] = on;
     render();
     loadHistory();      // 錯題按鈕的計數與 disabled 狀態要跟著更新
