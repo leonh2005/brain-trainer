@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-05 10:57",
+  "generated_at": "2026-11-05 16:03",
   "count": 4,
   "threshold": 6,
   "cells": [
@@ -26,22 +26,22 @@
     {
       "name": "台股 vs 200MA",
       "triggered": false,
-      "detail": "+3.36%（不納入警示）"
+      "detail": "+1.47%（不納入警示）"
     },
     {
       "name": "M1B比",
       "triggered": false,
-      "detail": "3.79%（>7% 偏熱）"
+      "detail": "3.14%（>7% 偏熱）"
     },
     {
       "name": "融資市值比",
       "triggered": true,
-      "detail": "0.417%（>0.35%）"
+      "detail": "0.409%（>0.35%）"
     },
     {
       "name": "美銀牛熊",
       "triggered": false,
-      "detail": "7.4"
+      "detail": "7.4（20 天前，已過期）"
     },
     {
       "name": "巴菲特現金",
