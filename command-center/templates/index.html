@@ -137,6 +137,10 @@ body.sortable-mode #route .card{cursor:default; outline:none}
 .card-head .resize-btn:hover{background:var(--bg-soft); color:var(--accent)}
 .card-head .resize-btn.active{background:var(--accent); color:#fff}
 .card-head:has(.resize-btn) .ts{margin-left:auto}
+.card-head .ctrl-btn{margin-left:8px; color:var(--faint); cursor:pointer; font-size:11px; width:22px; height:22px; display:grid; place-items:center; border-radius:6px; transition:.15s; flex:none; user-select:none}
+.card-head .ctrl-btn:hover{background:var(--bg-soft); color:var(--accent)}
+.card-head .ctrl-btn.on{color:var(--up)}
+.card-head .ctrl-btn.busy{opacity:.45; cursor:default}
 .card-body{min-height:26px}
 .empty{color:var(--faint); font-size:12px; padding:6px 0}
 .err{color:var(--up); font-size:11px; font-family:var(--mono); word-break:break-all}
@@ -393,7 +397,7 @@ const CARDS=[
   {id:'pullback',ic:'📈', title:'回後買候選', span:'', url:'/api/signals/pullback', render:renderPullback, site:'/svc/5960/'},
   {id:'daytrade',ic:'⚡', title:'當沖候選',   span:'', url:'/api/signals/daytrade', render:renderDaytrade, site:'/svc/5400/'},
   {id:'disposition', ic:'🚧', title:'處置股警示', span:'', url:'/api/signals/disposition', render:renderDisposition},
-  {id:'intraday',ic:'🎯', title:'盤中主力訊號', span:'wide', url:'/api/signals/intraday', render:renderIntraday, site:'/svc/5400/'},
+  {id:'intraday',ic:'🎯', title:'盤中主力訊號', span:'wide', url:'/api/signals/intraday', render:renderIntraday, site:'/svc/5400/', ctrl:'intraday-monitor'},
   {id:'news',    ic:'📰', title:'新聞情緒',   span:'', url:'/api/signals/news', render:renderNews, site:'/svc/5300/'},
   {id:'market',  ic:'🌡️', title:'市場恐慌指標', span:'wide', url:'/api/signals/market-fear', render:renderMarket, site:'/market-dashboard'},
   {id:'chips',   ic:'📊', title:'籌碼追蹤',   span:'wide', url:'/api/signals/chips', render:renderChips, site:'/svc/5850/'},
@@ -439,13 +443,24 @@ function mount(container,defs,sizeKey){
   defs.forEach(d=>{
     const c=el('div','card fade-in'+(d.span?' '+d.span:''));
     c.draggable=true; c.dataset.id=d.id;
-    c.innerHTML=`<div class="card-head"><span class="ic">${d.ic}</span><h3>${d.title}</h3><span class="ts" id="ts-${d.id}"></span>${d.site?`<a class="site-btn" href="${d.site}"${/^https?:/.test(d.site)?' target="_blank" rel="noopener"':''} title="開啟服務網站">↗</a>`:''}</div><div class="card-body" id="cb-${d.id}"><div class="skel" style="width:70%"></div><div class="skel" style="width:45%"></div></div>`;
+    c.innerHTML=`<div class="card-head"><span class="ic">${d.ic}</span><h3>${d.title}</h3><span class="ts" id="ts-${d.id}"></span>${d.ctrl?`<span class="ctrl-btn" data-ctrl="${d.ctrl}" title="啟用盤中監控">▶</span>`:''}${d.site?`<a class="site-btn" href="${d.site}"${/^https?:/.test(d.site)?' target="_blank" rel="noopener"':''} title="開啟服務網站">↗</a>`:''}</div><div class="card-body" id="cb-${d.id}"><div class="skel" style="width:70%"></div><div class="skel" style="width:45%"></div></div>`;
     wrap.appendChild(c);
     addResizeBtn(c,sizeKey);
+    const cbtn=c.querySelector('.ctrl-btn');
+    if(cbtn){
+      cbtn.addEventListener('click',e=>{e.stopPropagation();toggleCtrl(cbtn,cbtn.dataset.ctrl)});
+      syncCtrlBtn(cbtn,cbtn.dataset.ctrl);
+    }
     loadCard(d);
   });
   applySavedSizes(wrap,sizeKey);
-  setInterval(()=>defs.forEach(loadCard),CARD_POLL_MS);
+  setInterval(()=>{
+    defs.forEach(loadCard);
+    // 按鈕狀態也要跟著輪詢，否則 08:55 launchd 自動起跑後圖示還停在 ▶，點下去會變成「停止」
+    wrap.querySelectorAll('.ctrl-btn').forEach(b=>{
+      if(!b.classList.contains('busy'))syncCtrlBtn(b,b.dataset.ctrl);
+    });
+  },CARD_POLL_MS);
 }
 
 /* ── 卡片尺寸（自由拖拉寬高）── */
@@ -1272,6 +1287,38 @@ function stopJob(btn,jobId){
     toast(res.stopped?'⏹ 已停止':'⚠️ '+(res.reason||'停止失敗'));
   }).catch(e=>toast('❌ '+e.message)).finally(()=>{
     btn.disabled=false;btn.classList.remove('busy');btn.innerHTML=orig;
+  });
+}
+/* ── 卡片標題的啟用/停止鈕（對應 jobs.py 的 stoppable label 任務）── */
+function setCtrlBtn(btn,running){
+  btn.textContent=running?'⏹':'▶';
+  btn.classList.toggle('on',running);
+  btn.title=running?'停止盤中監控':'啟用盤中監控';
+}
+function syncCtrlBtn(btn,jid){
+  // 用 /api/jobs：只回 running，不會像 /status 那樣整檔讀 log
+  fetch('/api/jobs').then(r=>r.json()).then(list=>{
+    const j=list.find(x=>x.id===jid);
+    if(j)setCtrlBtn(btn,!!j.running);
+  }).catch(()=>{});
+}
+function toggleCtrl(btn,jid){
+  if(btn.classList.contains('busy'))return;
+  btn.classList.add('busy');btn.textContent='…';
+  // 圖示一律以伺服器實際狀態為準（res.stopped/res.started 分不出「失敗」與「本來就是該狀態」），
+  // launchd 轉換有一拍延遲，所以在 finally 後 2 秒再查一次
+  fetch(`/api/jobs/${jid}/status`).then(r=>r.json()).then(s=>{
+    const doStop=!!s.running;
+    return fetch(`/api/jobs/${jid}/${doStop?'stop':'run'}`,{method:'POST'}).then(r=>r.json()).then(res=>{
+      if(doStop)toast(res.stopped?'⏹ 已停止盤中監控（明天 08:55 需按 ▶ 重新啟用）':'⚠️ '+(res.reason||'停止失敗'));
+      else{
+        toast(res.started?'▶ 已啟動盤中監控':'⚠️ '+(res.reason||'未啟動'));
+        if(res.started)refreshCard('intraday');
+      }
+    });
+  }).catch(e=>toast('❌ '+e.message)).finally(()=>{
+    btn.classList.remove('busy');
+    setTimeout(()=>syncCtrlBtn(btn,jid),2000);
   });
 }
 function poll(id,btn,orig,maxAttempts,showModal){
