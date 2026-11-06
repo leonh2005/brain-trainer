@@ -75,3 +75,4 @@
 2026-11-03 14:02:18,593 INFO 掃描完成，0 檔候選，已寫入 /Users/steven/CCProject/pullback-buy-screener/../telebot/data/pullback_candidates.json
 2026-11-04 14:02:16,812 INFO 掃描完成，2 檔候選，已寫入 /Users/steven/CCProject/pullback-buy-screener/../telebot/data/pullback_candidates.json
 2026-11-05 14:02:47,960 INFO 掃描完成，0 檔候選，已寫入 /Users/steven/CCProject/pullback-buy-screener/../telebot/data/pullback_candidates.json
+2026-11-06 14:02:49,206 ERROR 掃描失敗: HTTPSConnectionPool(host='openapi.twse.com.tw', port=443): Max retries exceeded with url: /v1/exchangeReport/STOCK_DAY_ALL (Caused by ConnectTimeoutError(<HTTPSConnection(host='openapi.twse.com.tw', port=443) at 0x1094542f0>, 'Connection to openapi.twse.com.tw timed out. (connect timeout=20)'))
