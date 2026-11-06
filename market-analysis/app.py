@@ -542,5 +542,27 @@ def index():
     return render_template("index.html")
 
 
+# yfinance 的 tz 與 cookie 快取都走 peewee，而 peewee 的 SQLite 連線是 thread-local；
+# Flask 每個請求開一條新執行緒，連線在執行緒結束後不會自動關閉，fd 就一直累積。
+# 2026-11-06 實測同一 process 累積 236 個 tkr-tz.db fd，撐爆上限後只回 Connection reset。
+# 請求結束時關掉當前執行緒的兩條快取連線；peewee 下次查詢會自動重連。
+try:
+    from yfinance.cache import _CookieDBManager, _TzDBManager
+except Exception:  # yfinance 未安裝或改版拿掉私有 API → 停用清理，下面會記一筆警告
+    _CookieDBManager = _TzDBManager = None
+
+
+@app.teardown_request
+def _close_yf_caches(exc=None):
+    if _TzDBManager is None:
+        app.logger.warning("yfinance 快取管理器不可用，fd 可能持續累積")
+        return
+    for manager in (_TzDBManager, _CookieDBManager):
+        try:
+            manager.close_db()  # 未初始化時是安全 no-op
+        except Exception:
+            app.logger.warning("關閉 yfinance 快取連線失敗", exc_info=True)
+
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5350, debug=False)
