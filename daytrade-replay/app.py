@@ -1,12 +1,21 @@
 #!/usr/bin/env python3
 """台股當沖回放模擬系統 — port 5400"""
 
+import os
+import sys
+
 import signals as sig_mod
 from flask import Flask, jsonify, render_template, request
 
 import data
 
 app = Flask(__name__)
+
+# yfinance 快取連線清理（共用模組，說明見 lib/yf_guard.py）
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "lib"))
+from yf_guard import register
+
+register(app)
 
 # 啟動自動訂閱背景執行緒（每天 09:00 自動重訂閱上次股票）
 data._start_auto_subscribe()

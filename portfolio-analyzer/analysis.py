@@ -21,7 +21,7 @@ def fetch_data(portfolio):
     us = [p["ticker"] for p in portfolio["us"]]
     all_tickers = tw + us + ["USDTWD=X"]
 
-    raw = yf.download(all_tickers, period="1y", auto_adjust=True, progress=False)["Close"]
+    raw = yf.download(all_tickers, period="1y", auto_adjust=True, progress=False, threads=False)["Close"]
     # 確保是 DataFrame
     if hasattr(raw, "squeeze") and raw.ndim == 1:
         raw = raw.to_frame(name=all_tickers[0])

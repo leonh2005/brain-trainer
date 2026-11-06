@@ -308,7 +308,7 @@ def _yf_today_1min(stock_id: str) -> list:
     import yfinance as yf
     try:
         df = yf.download(_yf_ticker(stock_id), interval='1m', period='1d',
-                         progress=False, auto_adjust=True)
+                         progress=False, auto_adjust=True, threads=False)
     except Exception as e:
         print(f'[yf-today] {stock_id} 失敗: {e}')
         return []
@@ -438,7 +438,7 @@ def get_1min_kbars(stock_id: str, date_str: str) -> list:
         ticker = stock_id + suffix
         try:
             df = yf.download(ticker, interval='1m', start=date_str, end=end_date,
-                             progress=False, auto_adjust=True)
+                             progress=False, auto_adjust=True, threads=False)
         except Exception:
             continue
         if not df.empty:
@@ -511,7 +511,7 @@ def get_daily_stats(stock_id: str, date_str: str) -> tuple:
         d = date.fromisoformat(date_str)
         start = (d - timedelta(days=30)).strftime('%Y-%m-%d')
         df = yf.download(ticker, start=start, end=date_str, interval='1d',
-                         progress=False, auto_adjust=True)
+                         progress=False, auto_adjust=True, threads=False)
         if df.empty:
             return 0, 0, 0, 0, 0
         if isinstance(df.columns, pd.MultiIndex):
@@ -789,7 +789,7 @@ def get_taiex_1min(date_str: str) -> list:
             return json.load(f)
     import yfinance as yf
     try:
-        df = yf.download('^TWII', interval='1m', period='7d', progress=False, auto_adjust=True)
+        df = yf.download('^TWII', interval='1m', period='7d', progress=False, auto_adjust=True, threads=False)
         if df.empty:
             return []
         if isinstance(df.columns, pd.MultiIndex):

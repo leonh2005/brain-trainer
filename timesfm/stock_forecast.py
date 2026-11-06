@@ -26,11 +26,11 @@ def fetch_stock_data(symbol: str, days: int = 120) -> tuple[list[float], list[st
         raise ImportError("請先安裝 yfinance: uv pip install yfinance")
 
     ticker = f"{symbol}.TW"
-    df = yf.download(ticker, period=f"{days}d", progress=False, auto_adjust=True)
+    df = yf.download(ticker, period=f"{days}d", progress=False, auto_adjust=True, threads=False)
     if df.empty:
         # 嘗試 OTC
         ticker = f"{symbol}.TWO"
-        df = yf.download(ticker, period=f"{days}d", progress=False, auto_adjust=True)
+        df = yf.download(ticker, period=f"{days}d", progress=False, auto_adjust=True, threads=False)
     if df.empty:
         raise ValueError(f"找不到股票 {symbol} 的資料")
 
