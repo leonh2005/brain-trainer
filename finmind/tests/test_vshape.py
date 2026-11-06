@@ -301,6 +301,143 @@ def test_detect_skips_unclosed_bar_by_row_count():
     assert detect_v_shape(df, state, params) is None
 
 
+def test_early_session_uses_short_lookback():
+    """開盤初期只有 5 根時就用 5 根基準判定，不必等到第 21 根。"""
+    rows = [(100.0, 100.2, 99.5, 100.1, 1000)] * 5
+    rows.append((99.8, 100.0, 99.0, 99.9, 2500))
+    df = make_df(rows)
+    state = VShapeState()
+
+    events = feed(df, state, VShapeParams())
+
+    assert [e.stage for e in events] == ["A"]
+    assert events[0].detail["lookback"] == 5
+
+
+def test_full_lookback_applies_after_early_window():
+    """超過 early_bars 後改用 20 根基準：早期深低點仍在回看範圍內，就不算跌破。"""
+    early_deep = [(100.0, 100.2, 98.0, 100.1, 1000)] * 16   # 早期低點 98.0
+    recent = [(100.0, 100.2, 99.0, 100.1, 1000)] * 5        # 最近低點 99.0
+    trig = (99.2, 99.3, 98.5, 99.25, 2500)                  # 98.5 介於兩者之間
+    df = make_df(early_deep + recent + [trig])
+    state = VShapeState()
+
+    events = feed(df, state, VShapeParams())
+
+    assert events == [], "20 根基準下 98.5 沒有跌破 98.0，不該觸發"
+
+
+# ── 反向 V（倒 V / ∧ 型，做空方向）──────────────────────────────────────────
+# 完全鏡像：A 突破高點後回落、長上影線、收盤位置偏低（從高點算）、量增
+#          B 跌破 VWAP、跌破 A 段低點、量增
+#          C 反彈 VWAP 被壓回、高點低於 A 段高點、再跌破 B 段低點
+
+SHORT_A = (100.4, 101.0, 100.3, 100.4, 2500)   # 上影線 86%、從高點算位置 86%
+SHORT_B = (99.8, 99.9, 99.0, 99.2, 3000)        # 跌破 VWAP 與 A 低 100.3
+SHORT_C_REBOUND = (99.2, 99.9, 99.1, 99.3, 1200)  # 反彈觸 VWAP 後收在其下
+SHORT_C_BREAK = (99.0, 99.1, 98.5, 98.7, 1500)    # 跌破 B 段低點 99.0
+
+
+def flat_bars_short(n: int = 20, price: float = 100.0, volume: int = 1000) -> list:
+    """空方用的橫盤：高點 100.5，供 A 階段突破。"""
+    return [(price, price + 0.5, price - 0.2, price - 0.1, volume) for _ in range(n)]
+
+
+def feed_short(df: pd.DataFrame, state: VShapeState, params: VShapeParams) -> list:
+    events = []
+    for i in range(1, len(df) + 1):
+        event = detect_v_shape(df.iloc[:i], state, params, direction="short")
+        if event is not None:
+            events.append(event)
+    return events
+
+
+def test_short_a_triggers_on_breakout_with_long_upper_shadow():
+    df = make_df(flat_bars_short() + [SHORT_A])
+    state = VShapeState()
+
+    events = feed_short(df, state, VShapeParams())
+
+    assert [e.stage for e in events] == ["A"]
+    assert state.a_high == 101.0
+    assert state.a_low == 100.3
+
+
+def test_short_a_rejects_shallow_upper_shadow():
+    bar = (100.2, 100.9, 100.1, 100.7, 2500)  # 上影 20%
+    df = make_df(flat_bars_short() + [bar])
+    state = VShapeState()
+
+    assert feed_short(df, state, VShapeParams()) == []
+    assert state.stage == "idle"
+
+
+def test_short_a_rejects_low_volume():
+    bar = (100.4, 101.0, 100.3, 100.4, 1200)
+    df = make_df(flat_bars_short() + [bar])
+    state = VShapeState()
+
+    assert feed_short(df, state, VShapeParams()) == []
+    assert state.stage == "idle"
+
+
+def test_short_b_triggers_below_vwap_and_a_low():
+    df = make_df(flat_bars_short() + [SHORT_A, SHORT_B])
+    state = VShapeState()
+
+    events = feed_short(df, state, VShapeParams())
+
+    assert [e.stage for e in events] == ["A", "B"]
+    assert state.stage == "B"
+    assert state.b_low == 99.0
+
+
+def test_short_b_rejects_when_above_vwap():
+    # 跌破 A 低點但收盤仍在 VWAP 之上
+    bar = (100.0, 100.1, 99.9, 100.0, 3000)
+    df = make_df(flat_bars_short() + [SHORT_A, bar])
+    state = VShapeState()
+
+    events = feed_short(df, state, VShapeParams())
+
+    assert [e.stage for e in events] == ["A"]
+
+
+def test_short_c_triggers_after_rebound_to_vwap_then_breakdown():
+    df = make_df(flat_bars_short() + [SHORT_A, SHORT_B, SHORT_C_REBOUND, SHORT_C_BREAK])
+    state = VShapeState()
+
+    events = feed_short(df, state, VShapeParams())
+
+    assert [e.stage for e in events] == ["A", "B", "C"]
+
+
+def test_short_c_requires_rebound_before_breakdown():
+    # 沒有先反彈到 VWAP，直接跌破 B 低點 → 不算 C
+    bar = (98.8, 98.9, 98.2, 98.4, 1500)
+    df = make_df(flat_bars_short() + [SHORT_A, SHORT_B, bar])
+    state = VShapeState()
+
+    events = feed_short(df, state, VShapeParams())
+
+    assert [e.stage for e in events] == ["A", "B"]
+
+
+def test_short_a_invalidates_on_new_high():
+    bars = [
+        (101.2, 101.5, 101.0, 101.3, 1500),  # 又創新高，A 失效
+        (101.0, 101.1, 100.5, 100.8, 1200),
+        (100.8, 100.9, 100.4, 100.6, 1200),
+    ]
+    df = make_df(flat_bars_short() + [SHORT_A] + bars)
+    state = VShapeState()
+
+    events = feed_short(df, state, VShapeParams())
+
+    assert [e.stage for e in events] == ["A"]
+    assert state.stage == "idle"
+
+
 def test_event_carries_price_vwap_and_detail():
     df = make_df(flat_bars() + [A_BAR])
     state = VShapeState()

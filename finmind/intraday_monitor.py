@@ -75,8 +75,30 @@ LOCK_FILE         = '/Users/steven/CCProject/logs/intraday_monitor.lock'
 
 # 固定監控清單：不受動態篩選（漲幅 ≥2%、金額 ≥5億、排除 0 開頭 ETF）影響。
 # 2026-11-06 加入 00631L，用 V 型反轉三階段判定（見 vshape.py）。
-FIXED_WATCH = {'00631L': '元大台灣50正2'}
+# V 型反轉（做多 V／做空倒 V）：監控清單由 UI 維護，兩個方向各自一份代號清單。
+# 清單檔與狀態檔都放在 finmind/.local/，UI 服務讀寫同一份，改完下一輪 sync 即生效。
+VSHAPE_WATCH_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), '.local', 'vshape_watch.json')
+VSHAPE_STATE_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), '.local', 'vshape_state.json')
 VSHAPE_PUSHED_FILE = '/tmp/intraday_vshape_pushed.json'
+DEFAULT_VSHAPE_WATCH = {'long': ['00631L'], 'short': ['00631L', '0050']}
+
+
+def load_vshape_watch() -> dict:
+    """讀 UI 維護的監控清單；檔案不存在或格式錯誤時回預設值。"""
+    try:
+        with open(VSHAPE_WATCH_FILE) as f:
+            data = json.load(f)
+        return {
+            'long': [str(c) for c in (data.get('long') or [])],
+            'short': [str(c) for c in (data.get('short') or [])],
+        }
+    except Exception:
+        return {k: list(v) for k, v in DEFAULT_VSHAPE_WATCH.items()}
+
+
+def fixed_codes() -> list:
+    """兩個方向的聯集，維持順序去重（訂閱用）。"""
+    return list(dict.fromkeys(_vshape_watch['long'] + _vshape_watch['short']))
 
 # 台股休市日（與 scripts/ma_monitor.py 同源；休市時 snapshot 是前一日舊價，會誤篩）
 TW_HOLIDAYS = {
@@ -310,22 +332,44 @@ def _unsubscribe(api, code: str) -> None:
 
 def sync_universe(api) -> None:
     """重掃名單：新入選者訂閱＋回補；連續 DROP_STREAK 輪未入選且停留滿 MIN_RESIDENCE_MIN 才退訂。"""
+    global _vshape_watch
     now = datetime.now()
+
+    # 每輪重讀 UI 維護的 V 型監控清單，讓增刪標的在下一輪生效
+    new_watch = load_vshape_watch()
+    if new_watch != _vshape_watch:
+        print(f'[vshape] 監控清單變更: 做多 {new_watch["long"]}｜做空 {new_watch["short"]}')
+        _vshape_watch = new_watch
+        for code in list(_vshape_states):
+            if code not in fixed_codes():
+                _vshape_states.pop(code, None)
+
+    fixed = {code: (_universe.get(code) or code) for code in fixed_codes()}
+
     # 「首輪」以動態清單為準：固定清單先訂閱後 _universe 必然非空，
     # 若用 not _universe 判斷，首輪掃描失敗一次就再也補不滿 25 檔。
-    first_round = not any(code not in FIXED_WATCH for code in _universe)
+    first_round = not any(code not in fixed for code in _universe)
 
     # 固定監控標的先處理，不依賴 gateway 掃描：全市場快照在盤中可能逾時，
-    # 若放在掃描之後，掃描失敗會連 00631L 都訂不到。
-    for code, name in FIXED_WATCH.items():
+    # 若放在掃描之後，掃描失敗會連固定標的都訂不到。
+    for code, name in fixed.items():
         if code in _universe:
-            _universe[code] = name
+            _universe[code] = _universe[code] or name
             _universe_missed[code] = 0
         elif not _subscribe(api, code, name, now) and code not in _fixed_watch_alerted:
             # 訂閱失敗時整個 V 型功能等於沒開；只提醒一次，避免每分鐘洗版
             _fixed_watch_alerted.add(code)
             print(f'[universe] 固定標的 {code} 訂閱失敗，V 型反轉本日不會運作')
             send_telegram(f"⚠️ <b>{code} {name} 訂閱失敗</b>\nV 型反轉今日不會運作，請檢查 Shioaji 合約或連線")
+
+    # UI 已移除的固定標的：退訂並清掉狀態
+    for code in list(_universe):
+        if code in fixed:
+            continue
+        if code in _fixed_watch_alerted or any(code in v for v in _vshape_states.values()):
+            _unsubscribe(api, code)
+            _fixed_watch_alerted.discard(code)
+            print(f'[vshape] {code} 已從監控清單移除，退訂')
 
     try:
         picked = pick_universe()
@@ -338,7 +382,7 @@ def sync_universe(api) -> None:
         return
 
     # 固定監控標的也算在 picked 內，下方淘汰迴圈才不會把它退訂
-    picked = {**FIXED_WATCH, **picked}
+    picked = {**fixed, **picked}
 
     # 開機首輪一次補滿（固定清單已先訂閱，不佔 added 名額），之後每輪最多新增 MAX_NEW_PER_SCAN 檔
     max_new = UNIVERSE_SIZE if first_round else MAX_NEW_PER_SCAN
@@ -787,16 +831,32 @@ def build_message(code: str, signals: list, snap: dict, avg5: int, sector_txt: s
     )
 
 
-# ── V 型反轉推播 ─────────────────────────────────────────────────────────────
+# ── V 型反轉推播（做多 V／做空倒 V）─────────────────────────────────────────
+VSHAPE_TITLE = {'long': 'V型反轉', 'short': '倒V反轉'}
 VSHAPE_STYLE = {
-    'A': ('🟡', '疑似止跌', '開始觀察'),
-    'B': ('🟢', '初步反轉', '初步確認反轉'),
-    'C': ('🔵', '回測確認', '反轉結構進一步確認'),
+    'long': {
+        'A': ('🟡', '疑似止跌', '開始觀察'),
+        'B': ('🟢', '初步反轉', '初步確認反轉'),
+        'C': ('🔵', '回測確認', '反轉結構進一步確認'),
+    },
+    'short': {
+        'A': ('🟠', '疑似止漲', '開始觀察'),
+        'B': ('🔴', '初步反轉', '初步確認反轉'),
+        'C': ('🟣', '回測確認', '反轉結構進一步確認'),
+    },
 }
 
 
+def _state_for(code: str, direction: str) -> VShapeState:
+    """取得（必要時建立）某標的某方向的狀態。"""
+    per = _vshape_states.setdefault(code, {})
+    if direction not in per:
+        per[direction] = VShapeState()
+    return per[direction]
+
+
 def _load_vshape_pushed() -> dict:
-    """讀回今日已推播的 V 型階段 {code: {stage: 成立時間}}（跨日自動失效）。"""
+    """讀回今日已推播的階段 {code: {direction: {stage: 成立時間}}}（跨日自動失效）。"""
     try:
         with open(VSHAPE_PUSHED_FILE) as f:
             data = json.load(f)
@@ -804,17 +864,22 @@ def _load_vshape_pushed() -> dict:
             return {}
         out: dict = {}
         for key, ts in (data.get('pushed') or {}).items():
-            code, _, stage = key.partition(':')
-            if code and stage:
-                out.setdefault(code, {})[stage] = ts
+            code, _, rest = key.partition(':')
+            direction, _, stage = rest.partition(':')
+            if code and stage in ('A', 'B', 'C') and direction in ('long', 'short'):
+                out.setdefault(code, {}).setdefault(direction, {})[stage] = ts
+            elif code and direction:
+                # 舊格式（code:stage）：視為做多
+                out.setdefault(code, {}).setdefault('long', {})[direction] = ts
         return out
     except Exception:
         return {}
 
 
 def _save_vshape_pushed() -> None:
-    pushed = {f'{code}:{stage}': ts
-              for code, st in _vshape_states.items()
+    pushed = {f'{code}:{direction}:{stage}': ts
+              for code, per in _vshape_states.items()
+              for direction, st in per.items()
               for stage, ts in st.pushed.items()}
     try:
         with open(VSHAPE_PUSHED_FILE, 'w') as f:
@@ -825,40 +890,58 @@ def _save_vshape_pushed() -> None:
 
 def _restore_vshape_pushed() -> None:
     """重啟後補回已推播紀錄，並標記需要回放當日 K 棒重建階段（否則 B/C 永遠接不上）。"""
-    for code, stages in _load_vshape_pushed().items():
-        state = _vshape_states.get(code)
-        if state is None:
-            continue
-        state.pushed.update(stages)
-        state.needs_replay = True
-        print(f'[vshape] {code} 恢復已推階段 {stages}，待回放重建狀態')
+    for code, per in _load_vshape_pushed().items():
+        for direction, stages in per.items():
+            state = _state_for(code, direction)
+            state.pushed.update(stages)
+            state.needs_replay = True
+            print(f'[vshape] {code} {direction} 恢復已推階段 {stages}，待回放重建狀態')
 
 
-def build_vshape_message(code: str, name: str, event, snap: dict) -> str:
-    icon, label, action = VSHAPE_STYLE[event.stage]
+def build_vshape_message(code: str, name: str, event, snap: dict, direction: str) -> str:
+    icon, label, action = VSHAPE_STYLE[direction][event.stage]
+    title = VSHAPE_TITLE[direction]
     close = snap.get('close', event.price)
     chg = snap.get('chg_pct')
     price_line = f"💰 {close:.2f}（{chg:+.1f}%）" if chg is not None else f"💰 {close:.2f}"
     d = event.detail
 
     if event.stage == 'A':
-        lines = (
-            f"跌破近 {_vshape_params.lookback} 根低點 {d['recent_low']:.2f} → 低點 {d['bar_low']:.2f}\n"
-            f"下影線 {d['lower_shadow_pct']:.0f}%｜收盤位置 {d['close_pos_pct']:.0f}%｜量 {d['volume_ratio']:.1f}x"
-        )
+        if direction == 'long':
+            lines = (
+                f"跌破近 {d['lookback']} 根低點 {d['recent_low']:.2f} → 低點 {d['bar_low']:.2f}\n"
+                f"下影線 {d['lower_shadow_pct']:.0f}%｜收盤位置 {d['close_pos_pct']:.0f}%｜量 {d['volume_ratio']:.1f}x"
+            )
+        else:
+            lines = (
+                f"突破近 {d['lookback']} 根高點 {d['recent_high']:.2f} → 高點 {d['bar_high']:.2f}\n"
+                f"上影線 {d['upper_shadow_pct']:.0f}%｜收盤位置 {d['close_pos_pct']:.0f}%｜量 {d['volume_ratio']:.1f}x"
+            )
     elif event.stage == 'B':
-        lines = (
-            f"站回 VWAP {event.vwap:.2f}｜突破 A 段高點 {d['a_high']:.2f}\n"
-            f"量 {d['volume_ratio']:.1f}x"
-        )
+        if direction == 'long':
+            lines = (
+                f"站回 VWAP {event.vwap:.2f}｜突破 A 段高點 {d['a_high']:.2f}\n"
+                f"量 {d['volume_ratio']:.1f}x"
+            )
+        else:
+            lines = (
+                f"跌破 VWAP {event.vwap:.2f}｜跌破 A 段低點 {d['a_low']:.2f}\n"
+                f"量 {d['volume_ratio']:.1f}x"
+            )
     else:
-        lines = (
-            f"回踩 VWAP {d['pullback_vwap']:.2f} 守住（低 {d['pullback_low']:.2f}）\n"
-            f"突破 B 段高點 {d['b_high']:.2f}｜現 VWAP {event.vwap:.2f}"
-        )
+        if direction == 'long':
+            lines = (
+                f"回踩 VWAP {d['pullback_vwap']:.2f} 守住（低 {d['pullback_low']:.2f}）\n"
+                f"突破 B 段高點 {d['b_high']:.2f}｜現 VWAP {event.vwap:.2f}"
+            )
+        else:
+            lines = (
+                f"反彈 VWAP {d['pullback_vwap']:.2f} 被壓回（高 {d['pullback_high']:.2f}）\n"
+                f"跌破 B 段低點 {d['b_low']:.2f}｜現 VWAP {event.vwap:.2f}"
+            )
 
     return (
-        f"{icon} <b>V型反轉｜{event.stage} {label}</b>｜{code} {name}｜{event.ts}\n"
+        f"{icon} <b>{title}｜{event.stage} {label}</b>｜{code} {name}｜{event.ts}\n"
         f"\n{price_line}\n"
         f"{lines}\n"
         f"\n→ {action}\n"
@@ -866,30 +949,68 @@ def build_vshape_message(code: str, name: str, event, snap: dict) -> str:
     )
 
 
-def check_v_shape(code: str, df: pd.DataFrame, snap: dict) -> None:
-    """對單一固定監控標的跑一次 V 型判定；有新階段且推播成功才記錄。"""
-    state = _vshape_states.get(code)
-    if state is None:
-        return
+def _save_vshape_state() -> None:
+    """寫出目前各標的階段給 UI 讀；每分鐘 recompute 時呼叫一次。"""
+    items = {}
+    for code in fixed_codes():
+        per = _vshape_states.get(code) or {}
+        entry = {'name': _universe.get(code) or code}
+        for direction in ('long', 'short'):
+            st = per.get(direction)
+            if st is None:
+                entry[direction] = {'stage': 'idle'}
+                continue
+            entry[direction] = {
+                'stage': st.stage,
+                'a_low': st.a_low, 'a_high': st.a_high,
+                'b_high': st.b_high, 'b_low': st.b_low,
+                'a_ts': st.a_ts, 'b_ts': st.b_ts,
+                'pushed': dict(st.pushed),
+            }
+        items[code] = entry
+    payload = {
+        'updated': datetime.now().strftime('%H:%M:%S'),
+        'watch': _vshape_watch,
+        'items': items,
+    }
+    try:
+        os.makedirs(os.path.dirname(VSHAPE_STATE_FILE), exist_ok=True)
+        with open(VSHAPE_STATE_FILE, 'w') as f:
+            json.dump(payload, f, ensure_ascii=False)
+    except Exception as e:
+        print(f'[vshape] 狀態檔寫入失敗: {e}')
+
+
+def _check_one(code: str, df: pd.DataFrame, snap: dict, direction: str) -> None:
+    """跑單一方向的判定；有新階段且推播成功才記錄。"""
+    state = _state_for(code, direction)
     try:
         if state.needs_replay and len(df) >= _vshape_params.min_bars:
-            replay_state(df, state, _vshape_params)
+            replay_state(df, state, _vshape_params, direction=direction)
             state.needs_replay = False
-            print(f'[vshape] {code} 已回放 {len(df)} 根重建階段 → {state.stage}')
-        event = detect_v_shape(df, state, _vshape_params)
+            print(f'[vshape] {code} {direction} 已回放 {len(df)} 根重建 → {state.stage}')
+        event = detect_v_shape(df, state, _vshape_params, direction=direction)
     except Exception as e:
-        print(f'[vshape] {code} 判定失敗: {e}')
+        print(f'[vshape] {code} {direction} 判定失敗: {e}')
         return
     if event is None:
         return
-    name = _universe.get(code) or FIXED_WATCH.get(code, code)
-    if not send_telegram(build_vshape_message(code, name, event, snap)):
+    name = _universe.get(code) or code
+    if not send_telegram(build_vshape_message(code, name, event, snap, direction)):
         # 不寫 pushed：推播沒送出就不算已推，下一輪同階段仍可再試
-        print(f'[vshape] {code} {event.stage} 推播失敗，不記錄')
+        print(f'[vshape] {code} {direction} {event.stage} 推播失敗，不記錄')
         return
     state.pushed[event.stage] = event.ts
     _save_vshape_pushed()
-    print(f"[vshape] {code} {name} → {event.stage}（收 {event.price:.2f} VWAP {event.vwap:.2f}）")
+    print(f"[vshape] {code} {direction} {name} → {event.stage}"
+          f"（收 {event.price:.2f} VWAP {event.vwap:.2f}）")
+
+
+def check_v_shape(code: str, df: pd.DataFrame, snap: dict) -> None:
+    """對單一監控標的跑它被指派的方向（可同時做多與做空）。"""
+    for direction in ('long', 'short'):
+        if code in _vshape_watch[direction]:
+            _check_one(code, df, snap, direction)
 
 
 # ── 主程式 ─────────────────────────────────────────────────────────────────
@@ -900,9 +1021,10 @@ _last_bar_signals: dict = {}
 # 5日均量快取，程式啟動時載入一次，之後常駐記憶體共用（避免每5秒重複讀寫檔案）
 _avg5_cache: dict = _load_avg5_cache()
 
-# V 型反轉：每個固定監控標的各自一份狀態，跨分鐘保留。state.pushed 記錄當日已推播的階段，
-# 程式異常重啟時由 _restore_vshape_pushed() 從檔案補回，避免同一階段推第二次。
-_vshape_states: dict = {code: VShapeState() for code in FIXED_WATCH}
+# V 型反轉：監控清單由 UI 維護（finmind/.local/vshape_watch.json），每輪 sync 重讀。
+# _vshape_states 結構 {code: {'long': VShapeState, 'short': VShapeState}}，兩個方向各自去重。
+_vshape_watch: dict = load_vshape_watch()
+_vshape_states: dict = {}
 _vshape_params = VShapeParams()
 _fixed_watch_alerted: set = set()   # 固定標的訂閱失敗只提醒一次
 
@@ -927,7 +1049,7 @@ def recompute_technical_cache():
             continue
         long_sigs, short_sigs = detect_technical_signals(df)
         _last_bar_signals[code] = {'long': long_sigs, 'short': short_sigs}
-        if code in FIXED_WATCH:
+        if code in _vshape_watch['long'] or code in _vshape_watch['short']:
             # recompute 在整分 0-4 秒觸發，此時 resample 的最後一根是「剛開始的當前分鐘」，
             # 量能與價位都還在變動，餵進去只會得到永遠不成立的形狀。只取已收盤的 K 棒。
             current_min = pd.Timestamp(now).floor('min')
@@ -939,6 +1061,7 @@ def recompute_technical_cache():
             check_v_shape(code, closed, snap)
 
     _save_avg5_cache(_avg5_cache)
+    _save_vshape_state()
 
 
 def volume_check():

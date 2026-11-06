@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>V 型反轉監控</title>
+<style>
+  :root {
+    --bg: #0f1217;
+    --panel: #161b22;
+    --line: #262d38;
+    --fg: #e6ebf2;
+    --muted: #8b95a6;
+    --long: #f0a72c;
+    --short: #e5544b;
+    --idle: #55606f;
+    --ok: #3fb950;
+    --radius: 8px;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--fg);
+    font: 15px/1.6 -apple-system, "Noto Sans TC", sans-serif;
+    padding: 24px max(16px, env(safe-area-inset-left, 0px)) 48px max(16px, env(safe-area-inset-right, 0px));
+  }
+  header {
+    max-width: 1100px; margin: 0 auto 20px;
+    display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap;
+  }
+  h1 { font-size: 1.25rem; margin: 0; letter-spacing: .02em; }
+  #updated { color: var(--muted); font-size: .82rem; font-variant-numeric: tabular-nums; }
+  main {
+    max-width: 1100px; margin: 0 auto;
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 18px;
+  }
+  .panel { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; }
+  .panel > h2 {
+    margin: 0 0 12px; font-size: .95rem; font-weight: 600;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .dot { width: 9px; height: 9px; border-radius: 50%; }
+  .panel[data-dir="long"] .dot { background: var(--long); }
+  .panel[data-dir="short"] .dot { background: var(--short); }
+
+  .row {
+    display: grid; grid-template-columns: auto 1fr auto auto auto; align-items: center;
+    gap: 10px; padding: 9px 0; border-bottom: 1px solid var(--line);
+  }
+  .row:last-child { border-bottom: 0; }
+  .code { font-family: ui-monospace, Menlo, monospace; font-weight: 600; font-size: .92rem; }
+  .name { color: var(--muted); font-size: .82rem; }
+  .price { font-variant-numeric: tabular-nums; font-size: .88rem; text-align: right; white-space: nowrap; }
+  .price .up { color: #f0616d; }
+  .price .down { color: #3fb950; }
+
+  .stage {
+    font-size: .72rem; font-weight: 600; padding: 2px 8px; border-radius: 999px;
+    border: 1px solid var(--line); color: var(--muted); white-space: nowrap;
+  }
+  .stage[data-s="A"] { color: #f0c674; border-color: #6b5320; background: #2a2216; }
+  .stage[data-s="B"] { color: #62c46f; border-color: #245c2c; background: #12251a; }
+  .stage[data-s="C"] { color: #6aa8ff; border-color: #244a7a; background: #12203a; }
+  .timeline { grid-column: 1 / -1; color: var(--muted); font-size: .76rem; padding-left: 2px; }
+  .timeline span { margin-right: 12px; font-variant-numeric: tabular-nums; }
+
+  .del {
+    background: none; border: 1px solid var(--line); color: var(--muted);
+    width: 24px; height: 24px; border-radius: 6px; cursor: pointer; line-height: 1;
+  }
+  .del:hover { color: #f0616d; border-color: #6b2020; }
+
+  form.add { display: flex; gap: 8px; margin-top: 12px; }
+  form.add input {
+    flex: 1; min-width: 0; background: #0d1117; border: 1px solid var(--line);
+    color: var(--fg); border-radius: 6px; padding: 7px 10px; font-size: .88rem;
+    font-family: ui-monospace, Menlo, monospace;
+  }
+  form.add button {
+    background: #1f2937; border: 1px solid var(--line); color: var(--fg);
+    border-radius: 6px; padding: 7px 14px; cursor: pointer; font-size: .85rem;
+  }
+  form.add button:hover { background: #273244; }
+  .err { color: #f0616d; font-size: .78rem; margin-top: 6px; min-height: 1em; }
+  .empty { color: var(--muted); font-size: .85rem; padding: 10px 0; }
+</style>
+</head>
+<body>
+<header>
+  <h1>V 型反轉監控</h1>
+  <span id="updated">載入中…</span>
+</header>
+
+<main>
+  <section class="panel" data-dir="long">
+    <h2><span class="dot"></span>做多 · V 型反轉</h2>
+    <div class="list" id="list-long"><p class="empty">載入中…</p></div>
+    <form class="add" data-dir="long">
+      <input name="code" placeholder="代號，如 00631L" maxlength="6" inputmode="numeric">
+      <button type="submit">新增</button>
+    </form>
+    <div class="err" data-err="long"></div>
+  </section>
+
+  <section class="panel" data-dir="short">
+    <h2><span class="dot"></span>做空 · 倒 V 反轉</h2>
+    <div class="list" id="list-short"><p class="empty">載入中…</p></div>
+    <form class="add" data-dir="short">
+      <input name="code" placeholder="代號，如 0050" maxlength="6" inputmode="numeric">
+      <button type="submit">新增</button>
+    </form>
+    <div class="err" data-err="short"></div>
+  </section>
+</main>
+
+<script>
+const LABEL = { idle: '等待', A: 'A 疑似反轉', B: 'B 初步反轉', C: 'C 回測確認' };
+let state = { items: {}, watch: { long: [], short: [] }, quotes: {} };
+
+function esc(s) {
+  return String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+}
+
+function row(code, dir) {
+  const item = state.items[code] || {};
+  const side = item[dir] || { stage: 'idle' };
+  const q = state.quotes[code] || {};
+  const name = item.name || '';
+  let price = '—';
+  if (q.close != null) {
+    const pct = q.chg_pct;
+    const cls = pct > 0 ? 'up' : pct < 0 ? 'down' : '';
+    const pctTxt = pct == null ? '' : ` <span class="${cls}">${pct > 0 ? '+' : ''}${pct.toFixed(2)}%</span>`;
+    price = `${q.close.toFixed(2)}${pctTxt}`;
+  }
+  const times = ['A', 'B', 'C']
+    .filter(s => side.pushed && side.pushed[s])
+    .map(s => `<span>${s} ${esc(side.pushed[s])}</span>`)
+    .join('');
+  return `
+    <div class="row">
+      <span class="code">${esc(code)}</span>
+      <span class="name">${esc(name)}</span>
+      <span class="price">${price}</span>
+      <span class="stage" data-s="${side.stage || 'idle'}">${LABEL[side.stage] || side.stage || '等待'}</span>
+      <button class="del" data-code="${esc(code)}" data-dir="${dir}" title="移除">×</button>
+      ${times ? `<div class="timeline">${times}</div>` : ''}
+    </div>`;
+}
+
+function render() {
+  for (const dir of ['long', 'short']) {
+    const codes = state.watch[dir] || [];
+    const el = document.getElementById('list-' + dir);
+    el.innerHTML = codes.length
+      ? codes.map(c => row(c, dir)).join('')
+      : '<p class="empty">尚未加入標的</p>';
+  }
+  document.getElementById('updated').textContent =
+    state.updated ? `盤中最後更新 ${state.updated}` : '監控程式未在盤中執行';
+}
+
+async function refresh() {
+  try {
+    const r = await fetch('/api/state');
+    state = await r.json();
+    render();
+  } catch (e) {
+    document.getElementById('updated').textContent = '讀取失敗：' + e.message;
+  }
+}
+
+async function mutate(direction, action, code) {
+  const errBox = document.querySelector(`[data-err="${direction}"]`);
+  errBox.textContent = '';
+  const r = await fetch('/api/watch', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ direction, action, code })
+  });
+  const j = await r.json();
+  if (!j.ok) { errBox.textContent = j.error || '操作失敗'; return false; }
+  await refresh();
+  return true;
+}
+
+document.addEventListener('click', e => {
+  const btn = e.target.closest('.del');
+  if (!btn) return;
+  mutate(btn.dataset.dir, 'remove', btn.dataset.code);
+});
+
+document.querySelectorAll('form.add').forEach(form => {
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+    const input = form.querySelector('input[name="code"]');
+    const code = input.value.trim();
+    if (!code) return;
+    if (await mutate(form.dataset.dir, 'add', code)) input.value = '';
+  });
+});
+
+refresh();
+setInterval(refresh, 30000);
+</script>
+</body>
+</html>
