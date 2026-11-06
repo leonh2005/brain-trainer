@@ -398,6 +398,7 @@ const CARDS=[
   {id:'daytrade',ic:'⚡', title:'當沖候選',   span:'', url:'/api/signals/daytrade', render:renderDaytrade, site:'/svc/5400/'},
   {id:'disposition', ic:'🚧', title:'處置股警示', span:'', url:'/api/signals/disposition', render:renderDisposition},
   {id:'intraday',ic:'🎯', title:'盤中主力訊號', span:'wide', url:'/api/signals/intraday', render:renderIntraday, site:'/svc/5400/', ctrl:'intraday-monitor'},
+  {id:'vshape',  ic:'🔄', title:'V型反轉',   span:'wide', url:'/api/signals/vshape', render:renderVshape, site:'/svc/5995/'},
   {id:'news',    ic:'📰', title:'新聞情緒',   span:'', url:'/api/signals/news', render:renderNews, site:'/svc/5300/'},
   {id:'market',  ic:'🌡️', title:'市場恐慌指標', span:'wide', url:'/api/signals/market-fear', render:renderMarket, site:'/market-dashboard'},
   {id:'chips',   ic:'📊', title:'籌碼追蹤',   span:'wide', url:'/api/signals/chips', render:renderChips, site:'/svc/5850/'},
@@ -921,6 +922,24 @@ function renderIntraday(d){
     const row=el('div','row');
     const cls=s.side==='多方'?'long':'short';
     row.innerHTML=`<span class="badge ${cls}">${s.side}</span>${tkLink(s.name,s.code)}${supportBtn(s.code)}<span class="spacer"></span><span class="mini">信心 ${s.confidence}%</span><span class="mini" style="margin-left:8px">${s.at||''}</span>`;
+    box.appendChild(row);
+  });
+  return box;
+}
+function renderVshape(d){
+  const rows=(d&&d.rows)||[];
+  if(!rows.length)return el('div','empty',d&&d.stale?'監控未執行（非盤中或尚未啟動）':'今日尚無 V 型階段');
+  const box=el('div');
+  if(d.stale){
+    const w=el('div','row');
+    w.innerHTML='<span class="tk" style="font-size:11px;color:var(--down)">⚠ 非盤中資料，僅供參考</span>';
+    box.appendChild(w);
+  }
+  rows.slice(0,8).forEach(r=>{
+    const row=el('div','row');
+    const longB = r.long!=='idle' ? `<span class="badge long">V ${r.long}</span>` : '';
+    const shortB = r.short!=='idle' ? `<span class="badge short">倒 ${r.short}</span>` : '';
+    row.innerHTML=`${longB}${shortB}${tkLink(r.name,r.code)}<span class="spacer"></span><span class="mini">${r.times||''}</span>`;
     box.appendChild(row);
   });
   return box;

@@ -329,6 +329,38 @@ def pullback():
     return d, d.get('date', _mtime(p))
 
 
+@_wrap
+def vshape():
+    """V 型反轉（做多）與倒 V（做空）目前階段，讀 finmind/.local/vshape_state.json。
+
+    intraday_monitor 每分鐘寫一次；收盤後檔案停留在最後狀態，靠 updated 判斷是否過期。
+    """
+    p = f'{CC}/finmind/.local/vshape_state.json'
+    try:
+        d = _read_json(p)
+    except Exception:
+        return {'rows': [], 'updated': None, 'stale': True}, None
+
+    rows = []
+    for code, e in (d.get('items') or {}).items():
+        long_side = e.get('long') or {}
+        short_side = e.get('short') or {}
+        long_st = long_side.get('stage', 'idle')
+        short_st = short_side.get('stage', 'idle')
+        if long_st == 'idle' and short_st == 'idle':
+            continue
+        pushed = {**short_side.get('pushed', {}), **long_side.get('pushed', {})}
+        rows.append({
+            'code': code,
+            'name': e.get('name') or code,
+            'long': long_st,
+            'short': short_st,
+            'times': ' '.join(f'{k} {v}' for k, v in sorted(pushed.items())),
+        })
+    updated = d.get('updated')
+    return {'rows': rows, 'updated': updated, 'stale': not updated}, _mtime(p)
+
+
 def _stop_loss_amount(baseline: float, shares: float, stop_pct: float) -> float:
     """停損出場時實際會虧掉的金額（價格損失 + 手續費 + 交易稅），即 R 倍數的 1R。"""
     stop_price = baseline * (1 - stop_pct)
@@ -876,4 +908,5 @@ SIGNALS = {
     'daytrade': daytrade, 'swing': swing, 'intraday': intraday, 'ma': ma,
     'chips': chips, 'news': news, 'market-fear': market_fear,
     'disposition': disposition, 'pullback': pullback, 'futures': futures_shadow,
+    'vshape': vshape,
 }
