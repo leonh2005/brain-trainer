@@ -163,7 +163,7 @@ function render() {
 
 async function refresh() {
   try {
-    const r = await fetch('/api/state');
+    const r = await fetch('api/state');
     state = await r.json();
     render();
   } catch (e) {
@@ -174,7 +174,7 @@ async function refresh() {
 async function mutate(direction, action, code) {
   const errBox = document.querySelector(`[data-err="${direction}"]`);
   errBox.textContent = '';
-  const r = await fetch('/api/watch', {
+  const r = await fetch('api/watch', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ direction, action, code })
