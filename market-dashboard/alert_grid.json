@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-07 07:00",
+  "generated_at": "2026-11-07 14:02",
   "count": 5,
   "threshold": 6,
   "cells": [
@@ -31,7 +31,7 @@
     {
       "name": "M1B比",
       "triggered": false,
-      "detail": "4.25%（>7% 偏熱）"
+      "detail": "4.15%（>7% 偏熱）"
     },
     {
       "name": "融資市值比",
