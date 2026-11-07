@@ -1,6 +1,6 @@
 {
-  "scanned_at": "2026-11-07 03:00:45",
-  "since": "2026-11-06 03:00:00",
+  "scanned_at": "2026-11-08 03:00:46",
+  "since": "2026-11-07 03:00:00",
   "results": {
     "市場儀表板": {
       "exists": true,
@@ -28,15 +28,15 @@
     },
     "財經新聞分析": {
       "exists": true,
-      "errors": 4,
-      "last_error": "2026-11-06 16:45:12,850 [WARNING] fetcher.ptt_fetcher: PTT index fetch failed: HTTPSConnectionPool(host='www.ptt.cc', port=443): Read timed out. (read timeout=10)",
-      "fix": "網路逾時 → 確認目標服務可達，或增加 timeout 設定"
+      "errors": 0,
+      "last_error": null,
+      "fix": null
     },
     "川普監測": {
       "exists": true,
-      "errors": 1,
-      "last_error": "2026-11-06 10:30:05,626 WARNING 分析失敗：Live Q&A: How Trump’s Midterms Defeat Affects Asia — 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reaso",
-      "fix": "尚無對應建議，需人工判斷"
+      "errors": 0,
+      "last_error": null,
+      "fix": null
     },
     "持倉新聞(台股)": {
       "exists": true,
@@ -76,9 +76,9 @@
     },
     "當沖推播": {
       "exists": true,
-      "errors": 1,
-      "last_error": "[sj] avg5 0050 失敗: Topic: api/v1/data/kbars, Corr: c9, Client: PYAPI/N124711691/1106/011005/624283/220.141.45.148, payload: {'token': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYmYiOjE3OTM5Mjc0MDUsImV4cCI6MTc5NDAxMzgwNSwic2ltdWxhdGlvbiI6ZmFsc2UsInBlcnNvbl9pZCI6Ik4xMjQ3MTE2OTEiLCJ2ZXJzaW9uIjoiMS4zLjIi",
-      "fix": "尚無對應建議，需人工判斷"
+      "errors": 0,
+      "last_error": null,
+      "fix": null
     },
     "隔日沖推播": {
       "exists": true,
@@ -88,9 +88,9 @@
     },
     "盤中監控": {
       "exists": true,
-      "errors": 3,
-      "last_error": "⚠️ 盤中主力監控啟動失敗（重試 2 次）：TimeoutError，今天不會有訊號",
-      "fix": "網路逾時 → 確認目標服務可達，或增加 timeout 設定"
+      "errors": 0,
+      "last_error": null,
+      "fix": null
     },
     "蝦皮軟纖監測": {
       "exists": true,
