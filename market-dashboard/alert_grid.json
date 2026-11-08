@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-07 14:02",
+  "generated_at": "2026-11-08 07:00",
   "count": 5,
   "threshold": 6,
   "cells": [
@@ -31,7 +31,7 @@
     {
       "name": "M1B比",
       "triggered": false,
-      "detail": "4.15%（>7% 偏熱）"
+      "detail": "4.25%（>7% 偏熱）"
     },
     {
       "name": "融資市值比",
@@ -41,7 +41,7 @@
     {
       "name": "美銀牛熊",
       "triggered": false,
-      "detail": "7.4（22 天前，已過期）"
+      "detail": "7.4（23 天前，已過期）"
     },
     {
       "name": "巴菲特現金",
