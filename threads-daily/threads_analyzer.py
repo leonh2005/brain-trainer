@@ -67,8 +67,18 @@ def get_ff_cookies() -> dict:
     return cookies
 
 # ── 抓取 Threads 珍藏 ────────────────────────────────────────────────────────
+MAX_SCROLLS = 60   # 單次抓取的滾動上限（保護用，正常靠 IDLE_SCROLLS 提早結束）
+IDLE_SCROLLS = 3   # 連續幾次滾動都沒有新貼文，視為到底
+
+
 def fetch_saved_posts(cookies: dict) -> list[dict]:
-    """回傳 [{"text": 貼文內容, "url": 貼文永久連結}, ...]"""
+    """回傳 [{"text": 貼文內容, "url": 貼文永久連結}, ...]
+
+    Threads 的珍藏頁是**虛擬滾動**：DOM 只保留視窗內的幾則，滾出畫面就被回收。
+    因此不能只取最後一次的結果（2026-11-09 實測：總共 101 篇，舊版每次都覆蓋
+    只抓到 8 篇，漏掉 92%）。必須每次滾動後**累積**、用 href 去重，
+    並以「連續 IDLE_SCROLLS 次沒有新增」判斷到底，而不是固定滾幾次。
+    """
     from playwright.sync_api import sync_playwright
 
     with sync_playwright() as p:
@@ -107,53 +117,92 @@ def fetch_saved_posts(cookies: dict) -> list[dict]:
             return results;
         }"""
 
-        raw = page.evaluate(extract_js)
+        seen: dict[str, str] = {}
 
-        # 滾動載入更多；Threads 偶爾滾動後整頁改顯示錯誤訊息（蓋掉原本已載入的內容），
-        # 一旦偵測到就放棄這次滾動、保留滾動前已抓到的內容，不讓失敗的滾動把資料弄丟
-        for _ in range(2):
+        def collect() -> int:
+            before = len(seen)
+            for r in page.evaluate(extract_js):
+                if r["href"] not in seen and r.get("text"):
+                    seen[r["href"]] = r["text"]
+            return len(seen) - before
+
+        collect()
+        idle = 0
+        for _ in range(MAX_SCROLLS):
             page.evaluate("window.scrollTo(0, document.body.scrollHeight)")
-            page.wait_for_timeout(1500)
+            page.wait_for_timeout(1600)
+            # 滾動偶爾會讓整頁變成錯誤訊息（蓋掉已載入內容）；一旦發生就停手，
+            # 已累積的內容保留，不讓失敗的滾動把資料弄丟
             if page.get_by_text("Something went wrong").count() > 0:
                 break
-            raw = page.evaluate(extract_js)
+            if collect() == 0:
+                idle += 1
+                if idle >= IDLE_SCROLLS:
+                    break
+            else:
+                idle = 0
 
         posts = [
-            {"text": r["text"][:800], "url": f"https://www.threads.com{r['href']}"}
-            for r in raw if r.get("text")
+            {"text": text[:800], "url": f"https://www.threads.com{href}"}
+            for href, text in seen.items()
         ]
         browser.close()
 
     return posts
 
 # ── Claude Haiku 分析 ────────────────────────────────────────────────────────
+BATCH_SIZE = 12   # 每批丟給模型的篇數；一次太多會被 max_tokens 截斷
+
+STEVEN_CONTEXT = (
+    "Steven 的背景：台灣，非開發者但熟悉終端機，正在用 Claude Code 做個人專案"
+    "（台股當沖回放、兔子照護系統、財經新聞分析等），對 AI 工具、自動化、投資理財有高度興趣。"
+)
+
+
 def analyze_with_llm(posts: list[dict]) -> str:
     client = OpenAI(api_key=OPENAI_KEY)
 
-    posts_text = "\n\n---\n\n".join(f"[{i+1}] {p['text']}" for i, p in enumerate(posts))
+    # 逐篇說明分成小批處理：修好抓取後一次可能進來近百篇，
+    # 單次呼叫會超出 max_tokens 被截斷（2026-11-09 實測 101 篇）。
+    parts = []
+    batches = [posts[i:i + BATCH_SIZE] for i in range(0, len(posts), BATCH_SIZE)]
+    for n, chunk in enumerate(batches, 1):
+        posts_text = "\n\n---\n\n".join(f"[{i+1}] {p['text']}" for i, p in enumerate(chunk))
+        prompt = f"""以下是 Steven 在 Threads 上的新增珍藏貼文（第 {n}/{len(batches)} 批，共 {len(chunk)} 篇）。
 
-    prompt = f"""以下是 Steven 在 Threads 上的新增珍藏貼文（共 {len(posts)} 篇）。
-
-Steven 的背景：台灣，非開發者但熟悉終端機，正在用 Claude Code 做個人專案（台股當沖回放、兔子照護系統、財經新聞分析等），對 AI 工具、自動化、投資理財有高度興趣。
+{STEVEN_CONTEXT}
 
 請針對每篇珍藏：
 1. 用一句話說明這篇在講什麼
 2. 具體說明對 Steven 有什麼幫助或可以如何應用
 
-最後給「今日重點推薦」：挑出最值得 Steven 立刻跟進的 1-2 篇，說明原因。
-
 請用繁體中文，簡潔有重點。
 
 ---
-
 {posts_text}"""
+        msg = client.chat.completions.create(
+            model="gpt-4o-mini",
+            max_tokens=3000,
+            messages=[{"role": "user", "content": prompt}],
+        )
+        parts.append(msg.choices[0].message.content)
 
-    msg = client.chat.completions.create(
+    # 重點推薦只做一次，用標題掃過全部，避免每批各推一次
+    titles = "\n".join(f"[{i+1}] {p['text'][:80]}" for i, p in enumerate(posts))
+    rec_prompt = f"""以下是 Steven 今天新增的 {len(posts)} 篇 Threads 珍藏（只列開頭）：
+
+{STEVEN_CONTEXT}
+
+{titles}
+
+請挑出最值得他立刻跟進的 1-2 篇，說明原因。繁體中文，簡潔。"""
+    rec = client.chat.completions.create(
         model="gpt-4o-mini",
-        max_tokens=4000,
-        messages=[{"role": "user", "content": prompt}]
+        max_tokens=800,
+        messages=[{"role": "user", "content": rec_prompt}],
     )
-    return msg.choices[0].message.content
+    parts.append("## 今日重點推薦\n\n" + rec.choices[0].message.content)
+    return "\n\n---\n\n".join(parts)
 
 # ── 主程式 ───────────────────────────────────────────────────────────────────
 def main():
