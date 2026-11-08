@@ -29,8 +29,9 @@ INSTANCE_PREFIX = "line-bot-a1"
 SSH_KEY_PATH = os.path.expanduser("~/.ssh/oracle_line_bot")
 # Oracle launch_instance 限額實測約 20 次/小時（1174 輪 log 統計：每小時成功
 # 19-20 次、429 38 次；每次 429 不消耗配額）。因此每輪只發「一個」請求，
-# 200 秒一輪 = 18 次/小時，留餘裕不撞限流。
-RETRY_INTERVAL = 200
+# 180 秒一輪 = 20 次/小時，剛好用滿額度又不會連續撞 429。
+# 2026-11-08 由 200 秒調成 180 秒（使用者要求加密；再短只會換來 429，有效次數不變）。
+RETRY_INTERVAL = 180
 LAUNCHD_LABEL = "com.steven.oracle-a1-grab"
 LOG_DIR = os.path.expanduser("~/CCProject/logs")
 LOCK_PATH = f"{LOG_DIR}/.oracle_a1_grab.lock"  # 防止 LaunchAgent 與手動執行併發，建出重複 VM
