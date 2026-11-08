@@ -26,16 +26,20 @@ TELEGRAM_TOKEN = open(os.path.expanduser("~/CCProject/.secrets/telegram_token.tx
 TELEGRAM_CHAT  = "7556217543"
 FF_PROFILE     = Path.home() / "Library/Application Support/Firefox/Profiles/ro7nczf2.default-release"
 OPENAI_KEY     = open(os.path.expanduser("~/CCProject/.secrets/openai_news_key.txt")).read().strip()
-OBSIDIAN_VAULT_DIR = Path.home() / "我的雲端硬碟" / "📚 學習 & 筆記" / "from Google keep" / "Projects" / "Threads 珍藏日報"
+# 2026-11-09 修正：原本寫 ~/我的雲端硬碟/，那是 Google Drive 的過時本機快照，
+# 實際同步中的 vault 在 CloudStorage 下（見 memory reference_obsidian）。
+OBSIDIAN_VAULT_DIR = (
+    Path.home() / "Library" / "CloudStorage"
+    / "GoogleDrive-leonh2005@gmail.com" / "我的雲端硬碟"
+    / "📚 學習 & 筆記" / "from Google keep" / "Projects" / "Threads 珍藏日報"
+)
 
 
 def copy_to_obsidian(out_file: Path):
-    """複製當天報告進 Obsidian vault；vault 資料夾不存在（Google Drive 未同步）就跳過，不影響主流程"""
+    """複製當天報告進 Obsidian vault；資料夾不存在就建立，失敗不影響主流程"""
     try:
-        if OBSIDIAN_VAULT_DIR.is_dir():
-            shutil.copy2(str(out_file), str(OBSIDIAN_VAULT_DIR / out_file.name))
-        else:
-            print(f"警告：Obsidian vault 資料夾不存在，跳過複製（{OBSIDIAN_VAULT_DIR}）")
+        OBSIDIAN_VAULT_DIR.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(str(out_file), str(OBSIDIAN_VAULT_DIR / out_file.name))
     except Exception as e:
         print(f"複製進 Obsidian 失敗（不影響主流程）: {e}")
 
