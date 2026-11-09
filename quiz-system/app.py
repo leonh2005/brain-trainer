@@ -21,8 +21,9 @@ QUESTIONS_PATH = Path(os.environ.get("QUIZ_QUESTIONS", BASE_DIR / "questions.jso
 HISTORY_PATH = Path(os.environ.get("QUIZ_HISTORY", BASE_DIR / "history.json"))
 MISTAKES_PATH = Path(os.environ.get("QUIZ_MISTAKES", BASE_DIR / "mistakes.json"))
 HISTORY_LIMIT = 200   # 只留最近 N 份成績
-# 答對累計達此次數即視為熟練，不再出現在一般出題（獨立計數，不受 history 200 筆上限影響）
-MASTERED_THRESHOLD = 10
+# 答對累計達此次數即視為熟練，不再出現在未熟練出題（獨立計數，不受 history 200 筆上限影響）
+# 2026-11-09 由 10 調成 5：使用者目標是「全部做過一遍再熟練」，10 次要 7,480 次答對太遠
+MASTERED_THRESHOLD = 5
 STATS_PATH = Path(os.environ.get("QUIZ_STATS", BASE_DIR / "stats.json"))
 
 MAX_ITEMS = 200       # 單次交卷題數上限，避免巨型 payload 寫爆 history
@@ -65,18 +66,11 @@ def _save_history(records: list[dict]) -> None:
     _atomic_write(HISTORY_PATH, json.dumps(records[-HISTORY_LIMIT:], ensure_ascii=False))
 
 
-def _load_stats() -> dict[int, int]:
-    """每題累計答對次數 {qid: count}。壞檔視為空，不讓統計擋住練習。"""
-    if not STATS_PATH.exists():
-        return {}
-    try:
-        data = json.loads(STATS_PATH.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError):
-        return {}
-    raw = data.get("correct_counts") if isinstance(data, dict) else None
+def _to_int_map(raw) -> dict[int, int]:
+    """把 {str: num} 轉成 {int: int}，個別壞值跳過。"""
+    out: dict[int, int] = {}
     if not isinstance(raw, dict):
-        return {}
-    out = {}
+        return out
     for k, v in raw.items():
         try:
             out[int(k)] = int(v)
@@ -85,16 +79,11 @@ def _load_stats() -> dict[int, int]:
     return out
 
 
-def _save_stats(counts: dict[int, int]) -> None:
-    _atomic_write(STATS_PATH, json.dumps(
-        {"correct_counts": {str(k): v for k, v in counts.items()}}, ensure_ascii=False))
+def _seen_from_history() -> dict[int, int]:
+    """從 history 補算每題被抽到的次數，只在 stats.json 還沒有 seen_counts 時用一次。
 
-
-def _seen_counts() -> dict[int, int]:
-    """每題在歷史練習中被抽到的次數 {qid: count}。
-
-    history 只保留最近 HISTORY_LIMIT 筆，所以這是「近期出現次數」而非全歷史。
-    「未熟練」模式用它把已經練過 2 次以上的題目淘汰掉（2026-11-09 使用者要求）。
+    history 只保留最近 HISTORY_LIMIT 筆，所以這份是「能回溯到的次數」；
+    寫進 stats.json 之後就由 /api/submit 永久累加，不再依賴 history。
     """
     counts: dict[int, int] = {}
     for rec in _load_history():
@@ -106,6 +95,33 @@ def _seen_counts() -> dict[int, int]:
             if isinstance(qid, int):
                 counts[qid] = counts.get(qid, 0) + 1
     return counts
+
+
+def _load_stats() -> tuple[dict[int, int], dict[int, int]]:
+    """回 (每題答對次數, 每題被抽到次數)，兩者都永久累計。
+
+    壞檔視為空，不讓統計擋住練習。舊版 stats.json 只有 correct_counts，
+    沒有 seen_counts 時用 history 補一次當起始值。
+    """
+    if not STATS_PATH.exists():
+        return {}, _seen_from_history()
+    try:
+        data = json.loads(STATS_PATH.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return {}, _seen_from_history()
+    if not isinstance(data, dict):
+        return {}, _seen_from_history()
+    correct = _to_int_map(data.get("correct_counts"))
+    raw_seen = data.get("seen_counts")
+    seen = _to_int_map(raw_seen) if isinstance(raw_seen, dict) else _seen_from_history()
+    return correct, seen
+
+
+def _save_stats(correct: dict[int, int], seen: dict[int, int]) -> None:
+    _atomic_write(STATS_PATH, json.dumps({
+        "correct_counts": {str(k): v for k, v in correct.items()},
+        "seen_counts": {str(k): v for k, v in seen.items()},
+    }, ensure_ascii=False))
 
 
 def _atomic_write(path: Path, text: str) -> None:
@@ -229,6 +245,24 @@ def health():
     return jsonify({"status": "ok"})
 
 
+@app.get("/api/progress")
+def progress():
+    """練習進度：總題數、從沒做過、未熟練、已熟練。前端用來顯示還差多少。"""
+    correct, seen = _load_stats()
+    total = len(QUESTIONS)
+    mastered = sum(1 for q in QUESTIONS
+                   if correct.get(q["id"], 0) >= MASTERED_THRESHOLD)
+    unseen = sum(1 for q in QUESTIONS if seen.get(q["id"], 0) == 0)
+    return jsonify({
+        "ok": True,
+        "total": total,
+        "mastered": mastered,
+        "unmastered": total - mastered,
+        "unseen": unseen,
+        "threshold": MASTERED_THRESHOLD,
+    })
+
+
 @app.get("/api/quiz")
 def quiz():
     mode = request.args.get("mode", "all")
@@ -251,14 +285,15 @@ def quiz():
         pool = [q for q in QUESTIONS if _is_carry(q)]
         count = min(count, len(pool), MAX_ITEMS)
     elif mode == "unmastered":
-        # 已答對達 MASTERED_THRESHOLD 次的題目視為熟練，從一般練習中移除；
-        # 另外排除「近期練習已抽到 2 次以上」的題目，只留還沒什麼機會練到的
-        # （2026-11-09 使用者要求：未出現過兩次以上）。
-        stats = _load_stats()
-        seen = _seen_counts()
-        pool = [q for q in QUESTIONS
-                if stats.get(q["id"], 0) < MASTERED_THRESHOLD
-                and seen.get(q["id"], 0) <= 1]
+        # 兩段式（2026-11-09 使用者目標：全部做過一遍 → 再熟練）：
+        #   第一階段 還有「從沒被抽到」的題目時，只抽那些，保證 748 題都會做過；
+        #   第二階段 全部做過後，換成「答對次數未達門檻」的題目重複練。
+        # seen 是 stats.json 的永久累計，不受 history 200 筆上限影響。
+        correct, seen = _load_stats()
+        unmastered = [q for q in QUESTIONS
+                      if correct.get(q["id"], 0) < MASTERED_THRESHOLD]
+        unseen = [q for q in unmastered if seen.get(q["id"], 0) == 0]
+        pool = unseen or unmastered
         count = min(count, len(pool), MAX_ITEMS)
     else:
         pool = QUESTIONS
@@ -343,6 +378,9 @@ def submit():
             "items": [{"qid": d["qid"], "correct": d["correct"], "picked": d["picked"]}
                       for d in details],
         })
+        # 先載入統計再加入本次紀錄：stats.json 若還沒有 seen_counts，會用 history 補算，
+        # 而 history 必須是「本次提交之前」的版本，否則這一筆會被算兩次。
+        correct, seen = _load_stats()
         _save_history(records)
         # 錯題庫獨立存檔、只增不減，不會被 history 的 200 筆上限擠掉。
         # 只收「有作答但答錯」：picked is None 是沒作答（中途離開／逾時送出），
@@ -352,12 +390,12 @@ def submit():
                         if _counts_as_mistake(d["correct"], d["picked"]))
         _save_mistakes(mistakes)
 
-        # 累計答對次數（獨立檔，不受 history 200 筆上限影響）
-        stats = _load_stats()
+        # 累計答對次數與出現次數（獨立檔，不受 history 200 筆上限影響）
         for d in details:
+            seen[d["qid"]] = seen.get(d["qid"], 0) + 1
             if d["correct"]:
-                stats[d["qid"]] = stats.get(d["qid"], 0) + 1
-        _save_stats(stats)
+                correct[d["qid"]] = correct.get(d["qid"], 0) + 1
+        _save_stats(correct, seen)
 
     return jsonify({"ok": True, "score": score, "correct": n_correct, "total": total,
                     "at": at, "details": details})

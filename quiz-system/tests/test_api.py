@@ -175,9 +175,9 @@ def test_correct_count_accumulates(client):
     client.post("/api/submit", json=_answer_all(client, items, correct=True))
     client.post("/api/submit", json=_answer_all(client, items, correct=False))
 
-    stats = quiz._load_stats()
+    correct, _ = quiz._load_stats()
     for it in items:
-        assert stats[it["qid"]] == 2
+        assert correct[it["qid"]] == 2
 
 
 def test_unmastered_excludes_mastered_questions(client, monkeypatch):
@@ -216,7 +216,7 @@ def test_unmastered_excludes_questions_seen_twice(client):
 
 
 def test_seen_counts_tracks_appearances(client):
-    """_seen_counts() 正確累計 history 裡的出現次數（unmastered 篩選的依據）。"""
+    """出現次數永久累計在 stats.json，不受 history 200 筆上限影響。"""
     items = client.get("/api/quiz?count=1").get_json()["items"]
     target = items[0]
     right = target["order"].index(quiz.QUESTIONS[target["qid"]]["ans"])
@@ -225,7 +225,7 @@ def test_seen_counts_tracks_appearances(client):
         client.post("/api/submit", json={"items": [
             {"qid": target["qid"], "order": target["order"], "picked": right}]})
 
-    assert quiz._seen_counts().get(target["qid"]) == 2
+    assert quiz._load_stats()[1].get(target["qid"]) == 2
 
 
 def test_unmastered_keeps_questions_answered_wrong(client):
@@ -233,9 +233,9 @@ def test_unmastered_keeps_questions_answered_wrong(client):
     items = client.get("/api/quiz?count=2").get_json()["items"]
     client.post("/api/submit", json=_answer_all(client, items, correct=False))
 
-    stats = quiz._load_stats()
+    correct, _ = quiz._load_stats()
     for it in items:
-        assert stats.get(it["qid"], 0) == 0
+        assert correct.get(it["qid"], 0) == 0
 
 
 def test_carry_mode_covers_known_questions(client):

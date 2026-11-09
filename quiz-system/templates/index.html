@@ -76,6 +76,7 @@ aside h2{font-size:14px;font-weight:600;color:var(--fg);margin:0 0 8px}
 <header>
   <h1>丙級學科練習</h1>
   <span id="mode" class="mode-tag"></span>
+  <span id="pool-progress" style="color:var(--muted);font-size:13px"></span>
   <span id="progress"></span>
   <span class="spacer"></span>
   <button id="allq">全部題目</button>
@@ -274,12 +275,20 @@ async function submit(){
     render();
     window.scrollTo({top: 0, behavior: 'smooth'});
     loadHistory();
+    loadPoolProgress();
   }catch(e){
     alert(`交卷失敗：${e.message}`);
     $('submit').disabled = false;
   }
 }
 
+async function loadPoolProgress(){
+  try{
+    const d = await (await fetch('/api/progress')).json();
+    $('pool-progress').textContent =
+      `未做過 ${d.unseen} ｜ 未熟練 ${d.unmastered} ｜ 已熟練 ${d.mastered}`;
+  }catch(e){}
+}
 async function loadHistory(){
   try{
     const r = await (await fetch('api/history?limit=10')).json();
@@ -317,6 +326,7 @@ $('unmastered').addEventListener('click', () => switchMode('unmastered'));
 $('mistakes').addEventListener('click', () => switchMode('mistakes'));
 loadQuiz();
 loadHistory();
+loadPoolProgress();
 </script>
 </body>
 </html>
