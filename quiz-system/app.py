@@ -22,8 +22,8 @@ HISTORY_PATH = Path(os.environ.get("QUIZ_HISTORY", BASE_DIR / "history.json"))
 MISTAKES_PATH = Path(os.environ.get("QUIZ_MISTAKES", BASE_DIR / "mistakes.json"))
 HISTORY_LIMIT = 200   # 只留最近 N 份成績
 # 答對累計達此次數即視為熟練，不再出現在未熟練出題（獨立計數，不受 history 200 筆上限影響）
-# 2026-11-09 由 10 調成 5：使用者目標是「全部做過一遍再熟練」，10 次要 7,480 次答對太遠
-MASTERED_THRESHOLD = 5
+# 2026-11-09 由 10 降到 5，再依使用者要求降到 3
+MASTERED_THRESHOLD = 3
 STATS_PATH = Path(os.environ.get("QUIZ_STATS", BASE_DIR / "stats.json"))
 
 MAX_ITEMS = 200       # 單次交卷題數上限，避免巨型 payload 寫爆 history
