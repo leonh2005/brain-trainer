@@ -197,6 +197,37 @@ def test_unmastered_excludes_mastered_questions(client, monkeypatch):
     assert got              # 其他題還在
 
 
+def test_unmastered_excludes_questions_seen_twice(client):
+    """近期練習已抽到 2 次的題目，不再出現在「未熟練」模式（2026-11-09 需求）。
+
+    與答案對錯無關：只看 history 裡被抽到幾次。
+    """
+    items = client.get("/api/quiz?count=1").get_json()["items"]
+    target = items[0]
+    right = target["order"].index(quiz.QUESTIONS[target["qid"]]["ans"])
+
+    for _ in range(2):
+        client.post("/api/submit", json={"items": [
+            {"qid": target["qid"], "order": target["order"], "picked": right}]})
+
+    got = {q["qid"] for q in
+           client.get("/api/quiz?mode=unmastered&count=300").get_json()["items"]}
+    assert target["qid"] not in got
+
+
+def test_seen_counts_tracks_appearances(client):
+    """_seen_counts() 正確累計 history 裡的出現次數（unmastered 篩選的依據）。"""
+    items = client.get("/api/quiz?count=1").get_json()["items"]
+    target = items[0]
+    right = target["order"].index(quiz.QUESTIONS[target["qid"]]["ans"])
+
+    for _ in range(2):
+        client.post("/api/submit", json={"items": [
+            {"qid": target["qid"], "order": target["order"], "picked": right}]})
+
+    assert quiz._seen_counts().get(target["qid"]) == 2
+
+
 def test_unmastered_keeps_questions_answered_wrong(client):
     """答錯不會被算成熟練：統計上不累加即可（抽題是隨機的，不能斷言特定題會被抽到）。"""
     items = client.get("/api/quiz?count=2").get_json()["items"]

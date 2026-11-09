@@ -90,6 +90,24 @@ def _save_stats(counts: dict[int, int]) -> None:
         {"correct_counts": {str(k): v for k, v in counts.items()}}, ensure_ascii=False))
 
 
+def _seen_counts() -> dict[int, int]:
+    """每題在歷史練習中被抽到的次數 {qid: count}。
+
+    history 只保留最近 HISTORY_LIMIT 筆，所以這是「近期出現次數」而非全歷史。
+    「未熟練」模式用它把已經練過 2 次以上的題目淘汰掉（2026-11-09 使用者要求）。
+    """
+    counts: dict[int, int] = {}
+    for rec in _load_history():
+        items = rec.get("items")
+        if not isinstance(items, list):
+            continue
+        for item in items:
+            qid = item.get("qid") if isinstance(item, dict) else None
+            if isinstance(qid, int):
+                counts[qid] = counts.get(qid, 0) + 1
+    return counts
+
+
 def _atomic_write(path: Path, text: str) -> None:
     """先寫唯一暫存檔再 os.replace：併發寫入不會互踩，中斷也不會留下半截檔。"""
     fd, tmp = tempfile.mkstemp(dir=path.parent, prefix=path.name + ".", suffix=".tmp")
@@ -233,10 +251,14 @@ def quiz():
         pool = [q for q in QUESTIONS if _is_carry(q)]
         count = min(count, len(pool), MAX_ITEMS)
     elif mode == "unmastered":
-        # 已答對達 MASTERED_THRESHOLD 次的題目視為熟練，從一般練習中移除
+        # 已答對達 MASTERED_THRESHOLD 次的題目視為熟練，從一般練習中移除；
+        # 另外排除「近期練習已抽到 2 次以上」的題目，只留還沒什麼機會練到的
+        # （2026-11-09 使用者要求：未出現過兩次以上）。
         stats = _load_stats()
+        seen = _seen_counts()
         pool = [q for q in QUESTIONS
-                if stats.get(q["id"], 0) < MASTERED_THRESHOLD]
+                if stats.get(q["id"], 0) < MASTERED_THRESHOLD
+                and seen.get(q["id"], 0) <= 1]
         count = min(count, len(pool), MAX_ITEMS)
     else:
         pool = QUESTIONS
