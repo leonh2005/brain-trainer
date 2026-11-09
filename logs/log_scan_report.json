@@ -1,6 +1,6 @@
 {
-  "scanned_at": "2026-11-09 03:00:46",
-  "since": "2026-11-08 03:00:01",
+  "scanned_at": "2026-11-10 03:00:46",
+  "since": "2026-11-09 03:00:00",
   "results": {
     "市場儀表板": {
       "exists": true,
@@ -28,9 +28,9 @@
     },
     "財經新聞分析": {
       "exists": true,
-      "errors": 2,
-      "last_error": "2026-11-08 21:45:11,974 [WARNING] fetcher.reddit_fetcher: Reddit fetch failed for r/stocks: 500 Server Error: Internal Server Error for url: https://www.reddit.com/r/stocks/hot/.rss",
-      "fix": "尚無對應建議，需人工判斷"
+      "errors": 0,
+      "last_error": null,
+      "fix": null
     },
     "川普監測": {
       "exists": true,
@@ -76,9 +76,9 @@
     },
     "當沖推播": {
       "exists": true,
-      "errors": 0,
-      "last_error": null,
-      "fix": null
+      "errors": 1,
+      "last_error": "[sj] avg5 0050 失敗: Topic: api/v1/data/kbars, Corr: c9, Client: PYAPI/N124711691/1109/011003/720391/220.141.34.6, payload: {'token': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYmYiOjE3OTQxODY2MDQsImV4cCI6MTc5NDI3MzAwNCwic2ltdWxhdGlvbiI6ZmFsc2UsInBlcnNvbl9pZCI6Ik4xMjQ3MTE2OTEiLCJ2ZXJzaW9uIjoiMS4zLjIiLC",
+      "fix": "尚無對應建議，需人工判斷"
     },
     "隔日沖推播": {
       "exists": true,
@@ -88,9 +88,9 @@
     },
     "盤中監控": {
       "exists": true,
-      "errors": 0,
-      "last_error": null,
-      "fix": null
+      "errors": 5,
+      "last_error": "[universe] 掃描失敗，維持現有 31 檔: HTTPConnectionPool(host='localhost', port=5455): Read timed out. (read timeout=30)",
+      "fix": "網路逾時 → 確認目標服務可達，或增加 timeout 設定"
     },
     "蝦皮軟纖監測": {
       "exists": true,
