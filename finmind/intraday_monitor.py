@@ -1029,7 +1029,16 @@ _vshape_params = VShapeParams()
 _fixed_watch_alerted: set = set()   # 固定標的訂閱失敗只提醒一次
 
 
-def _in_trading_hours(now: datetime) -> bool:
+def _in_main_hours(now: datetime) -> bool:
+    """盤中主力發動（13 項指標）只在 09:00–10:30 判定與推播。
+
+    2026-11-10 使用者要求：10:30 之後這套不做了。
+    """
+    return now.hour == 9 or (now.hour == 10 and now.minute <= 30)
+
+
+def _in_vshape_hours(now: datetime) -> bool:
+    """V 型反轉判定涵蓋整個交易時段 09:00–13:30，與主力監控時段無關。"""
     return (9 <= now.hour <= 12) or (now.hour == 13 and now.minute <= 30)
 
 
@@ -1038,7 +1047,9 @@ def recompute_technical_cache():
     now = datetime.now()
     print(f"[{now.strftime('%H:%M:%S')}] intraday_monitor 開始執行")
 
-    if not _in_trading_hours(now):
+    in_main = _in_main_hours(now)      # 主力發動：09:00–10:30
+    in_vshape = _in_vshape_hours(now)  # V 型反轉：整個交易時段
+    if not (in_main or in_vshape):
         print('非交易時段，略過')
         return
 
@@ -1047,9 +1058,10 @@ def recompute_technical_cache():
         df = get_1min_kbars(code)
         if df.empty:
             continue
-        long_sigs, short_sigs = detect_technical_signals(df)
-        _last_bar_signals[code] = {'long': long_sigs, 'short': short_sigs}
-        if code in _vshape_watch['long'] or code in _vshape_watch['short']:
+        if in_main:
+            long_sigs, short_sigs = detect_technical_signals(df)
+            _last_bar_signals[code] = {'long': long_sigs, 'short': short_sigs}
+        if in_vshape and (code in _vshape_watch['long'] or code in _vshape_watch['short']):
             # recompute 在整分 0-4 秒觸發，此時 resample 的最後一根是「剛開始的當前分鐘」，
             # 量能與價位都還在變動，餵進去只會得到永遠不成立的形狀。只取已收盤的 K 棒。
             current_min = pd.Timestamp(now).floor('min')
@@ -1067,7 +1079,7 @@ def recompute_technical_cache():
 def volume_check():
     """高頻（約5秒）呼叫：用當前累積中的K棒算量能訊號，跟上一根收盤K棒的技術訊號合併判斷是否推播。"""
     now = datetime.now()
-    if not _in_trading_hours(now):
+    if not _in_main_hours(now):
         return
 
     codes     = list(_universe.keys())
@@ -1149,6 +1161,7 @@ if __name__ == '__main__':
         sys.exit(0)
 
     # KeepAlive 誤觸時（例如盤後被重啟）直接結束，避免反覆登入 Shioaji
+    # V 型反轉要跑到 13:30，所以主程式不能只開到 10:30；主力推播由 _in_main_hours 控制
     if _now.hour < 8 or _now.hour > 13 or (_now.hour == 13 and _now.minute > 35):
         print('[startup] 非盤中時段，結束')
         sys.exit(0)
