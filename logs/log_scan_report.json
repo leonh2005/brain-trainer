@@ -1,6 +1,6 @@
 {
-  "scanned_at": "2026-11-10 03:00:46",
-  "since": "2026-11-09 03:00:00",
+  "scanned_at": "2026-11-11 03:00:46",
+  "since": "2026-11-10 03:00:00",
   "results": {
     "市場儀表板": {
       "exists": true,
@@ -34,9 +34,9 @@
     },
     "川普監測": {
       "exists": true,
-      "errors": 0,
-      "last_error": null,
-      "fix": null
+      "errors": 5,
+      "last_error": "2026-11-10 13:05:06,695 WARNING 分析失敗：Could Trump's Relationship With Nvidia CEO Jensen  — 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reaso",
+      "fix": "尚無對應建議，需人工判斷"
     },
     "持倉新聞(台股)": {
       "exists": true,
@@ -77,7 +77,7 @@
     "當沖推播": {
       "exists": true,
       "errors": 1,
-      "last_error": "[sj] avg5 0050 失敗: Topic: api/v1/data/kbars, Corr: c9, Client: PYAPI/N124711691/1109/011003/720391/220.141.34.6, payload: {'token': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYmYiOjE3OTQxODY2MDQsImV4cCI6MTc5NDI3MzAwNCwic2ltdWxhdGlvbiI6ZmFsc2UsInBlcnNvbl9pZCI6Ik4xMjQ3MTE2OTEiLCJ2ZXJzaW9uIjoiMS4zLjIiLC",
+      "last_error": "[sj] avg5 2409 失敗: Topic: api/v1/data/kbars, Corr: c9, Client: PYAPI/N124711691/1110/011003/407491/220.141.34.6, payload: {'token': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYmYiOjE3OTQyNzMwMDQsImV4cCI6MTc5NDM1OTQwNCwic2ltdWxhdGlvbiI6ZmFsc2UsInBlcnNvbl9pZCI6Ik4xMjQ3MTE2OTEiLCJ2ZXJzaW9uIjoiMS4zLjIiLC",
       "fix": "尚無對應建議，需人工判斷"
     },
     "隔日沖推播": {
@@ -88,9 +88,9 @@
     },
     "盤中監控": {
       "exists": true,
-      "errors": 5,
-      "last_error": "[universe] 掃描失敗，維持現有 31 檔: HTTPConnectionPool(host='localhost', port=5455): Read timed out. (read timeout=30)",
-      "fix": "網路逾時 → 確認目標服務可達，或增加 timeout 設定"
+      "errors": 4,
+      "last_error": "[avg5] 6147 第1次失敗: Topic: api/v1/data/kbars, Corr: c194, Client: PYAPI/N124711691/1110/012011/905591/220.141.34.6, payload: {'token': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYmYiOjE3OTQyNzM2MTIsImV4cCI6MTc5NDM2MDAxMiwic2ltdWxhdGlvbiI6ZmFsc2UsInBlcnNvbl9pZCI6Ik4xMjQ3MTE2OTEiLCJ2ZXJzaW9uIjoiMS4zLjIi",
+      "fix": "尚無對應建議，需人工判斷"
     },
     "蝦皮軟纖監測": {
       "exists": true,
