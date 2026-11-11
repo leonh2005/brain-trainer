@@ -158,7 +158,11 @@ function render() {
       : '<p class="empty">尚未加入標的</p>';
   }
   document.getElementById('updated').textContent =
-    state.updated ? `盤中最後更新 ${state.updated}` : '監控程式未在盤中執行';
+    state.updated
+      ? `${state.stale ? '⚠ 非盤中資料｜' : ''}盤中最後更新 ${state.date ? state.date + ' ' : ''}${state.updated}`
+      : '監控程式未在盤中執行';
+  document.getElementById('updated').style.color =
+    state.stale ? 'var(--short)' : '';
 }
 
 async function refresh() {

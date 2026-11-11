@@ -33,6 +33,7 @@
   13. MACD 底背離 / 頂背離
 """
 
+import copy
 import fcntl
 import json
 import os
@@ -415,7 +416,7 @@ def sync_universe(api) -> None:
     for code in list(_universe):
         if code in fixed:
             continue
-        if code in _fixed_watch_alerted or any(code in v for v in _vshape_states.values()):
+        if code in _fixed_watch_alerted or code in _vshape_states:
             _unsubscribe(api, code)
             _fixed_watch_alerted.discard(code)
             print(f'[vshape] {code} 已從監控清單移除，退訂')
@@ -430,8 +431,9 @@ def sync_universe(api) -> None:
         print('[universe] 掃描結果為空，維持現有名單')
         return
 
-    # 固定監控標的也算在 picked 內，下方淘汰迴圈才不會把它退訂
-    picked = {**fixed, **picked}
+    # 固定監控標的也算在 picked 內，下方淘汰迴圈才不會把它退訂。
+    # fixed 只有裸代號，這裡先用 _universe 已解析好的名字，避免把中文名覆寫回代號。
+    picked = {**{c: _universe.get(c) or c for c in fixed}, **picked}
 
     # 開機首輪一次補滿（固定清單已先訂閱，不佔 added 名額），之後每輪最多新增 MAX_NEW_PER_SCAN 檔
     max_new = UNIVERSE_SIZE if first_round else MAX_NEW_PER_SCAN
@@ -1001,15 +1003,7 @@ def build_vshape_message(code: str, name: str, event, snap: dict, direction: str
 
 
 def _vshape_display_name(code: str) -> str:
-    """vshape 清單的標的不在當日候選池，會反覆被 sync_universe 進出 _universe，
-    所以名稱直接問 shioaji 的合約（權威來源），查不到才退回 _universe / 代號。"""
-    try:
-        contract = _sj_api.Contracts.Stocks.get(code) if _sj_api else None
-    except Exception:
-        contract = None
-    name = getattr(contract, 'name', None)
-    if name:
-        return name
+    """名稱由 _subscribe() 寫進 _universe（合約中文名）；這裡只是它還沒訂閱到之前的保險。"""
     return _universe.get(code) or code
 
 
@@ -1033,16 +1027,28 @@ def _save_vshape_state() -> None:
             }
         items[code] = entry
     now = datetime.now()
+    # tick 串流斷線時 updated 仍會是現在時間；記下最後一筆 tick 的時間，
+    # 讀者才能分辨「真的在跑」與「階段停在幾小時前」。
+    with _tick_lock:
+        last_tick = None
+        for rows in _tick_store.values():
+            if rows and (last_tick is None or rows[-1][0] > last_tick):
+                last_tick = rows[-1][0]
     payload = {
         'updated': now.strftime('%H:%M:%S'),   # 前端直接顯示，維持原格式
         'date': now.strftime('%Y-%m-%d'),      # 讀者靠這個判斷是否跨日殘檔
+        'last_tick': last_tick.strftime('%H:%M:%S') if last_tick else None,
         'watch': _vshape_watch,
         'items': items,
     }
     try:
         os.makedirs(os.path.dirname(VSHAPE_STATE_FILE), exist_ok=True)
-        with open(VSHAPE_STATE_FILE, 'w') as f:
+        # 先寫暫存再 os.replace：兩個常駐讀者（command-center 每 60 秒、
+        # vshape-dashboard 每 30 秒）才不會撞到截斷後、寫完前的空檔
+        tmp = VSHAPE_STATE_FILE + '.tmp'
+        with open(tmp, 'w') as f:
             json.dump(payload, f, ensure_ascii=False)
+        os.replace(tmp, VSHAPE_STATE_FILE)
     except Exception as e:
         print(f'[vshape] 狀態檔寫入失敗: {e}')
 
@@ -1050,6 +1056,9 @@ def _save_vshape_state() -> None:
 def _check_one(code: str, df: pd.DataFrame, snap: dict, direction: str) -> None:
     """跑單一方向的判定；有新階段且推播成功才記錄。"""
     state = _state_for(code, direction)
+    # detect_v_shape 會原地推進 stage；推播失敗（或判定途中拋錯）若不回滾，
+    # 下一輪只會從新 stage 往下找，這則通知就永遠不會再觸發。
+    before = copy.deepcopy(state)
     try:
         if state.needs_replay and len(df) >= _vshape_params.min_bars:
             replay_state(df, state, _vshape_params, direction=direction)
@@ -1057,14 +1066,15 @@ def _check_one(code: str, df: pd.DataFrame, snap: dict, direction: str) -> None:
             print(f'[vshape] {code} {direction} 已回放 {len(df)} 根重建 → {state.stage}')
         event = detect_v_shape(df, state, _vshape_params, direction=direction)
     except Exception as e:
-        print(f'[vshape] {code} {direction} 判定失敗: {e}')
+        state.__dict__.update(before.__dict__)
+        print(f'[vshape] {code} {direction} 判定失敗（狀態已回滾）: {e}')
         return
     if event is None:
         return
     name = _universe.get(code) or code
     if not send_telegram(build_vshape_message(code, name, event, snap, direction)):
-        # 不寫 pushed：推播沒送出就不算已推，下一輪同階段仍可再試
-        print(f'[vshape] {code} {direction} {event.stage} 推播失敗，不記錄')
+        state.__dict__.update(before.__dict__)
+        print(f'[vshape] {code} {direction} {event.stage} 推播失敗（狀態已回滾，下一輪重試）')
         return
     state.pushed[event.stage] = event.ts
     _save_vshape_pushed()
@@ -1104,8 +1114,12 @@ def _in_main_hours(now: datetime) -> bool:
 
 
 def _in_vshape_hours(now: datetime) -> bool:
-    """V 型反轉判定涵蓋整個交易時段 09:00–13:30，與主力監控時段無關。"""
-    return (9 <= now.hour <= 12) or (now.hour == 13 and now.minute <= 30)
+    """V 型反轉判定涵蓋整個交易時段 09:00–13:30，與主力監控時段無關。
+
+    多留一分鐘到 13:31：13:30:0x 那次 recompute 只看得到 13:29 收盤的 K，
+    13:30 那根要 13:31 才收盤；若 13:31 就 early-return，尾盤成形的階段永遠不推。
+    """
+    return (9 <= now.hour <= 12) or (now.hour == 13 and now.minute <= 31)
 
 
 def recompute_technical_cache():

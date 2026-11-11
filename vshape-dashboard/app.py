@@ -10,6 +10,7 @@
 
 import json
 import os
+from datetime import date, datetime
 
 import requests
 from flask import Flask, jsonify, render_template, request
@@ -71,6 +72,27 @@ def api_state():
             state = json.load(f)
     except Exception:
         state = {"updated": None, "items": {}}
+    # 階段是昨天的殘檔時要明講，否則會跟現查的即時報價混在一起看
+    upd_date = state.get("date")
+    if upd_date:
+        state["stale"] = upd_date != str(date.today())
+    else:
+        try:
+            state["stale"] = date.fromtimestamp(os.path.getmtime(STATE_FILE)) != date.today()
+        except OSError:
+            state["stale"] = True
+    # tick 斷線時 updated 仍是現在時間，用最後一筆 tick 判斷階段是否已經停止更新
+    last_tick = state.get("last_tick")
+    if not state["stale"] and last_tick:
+        try:
+            lt = datetime.combine(date.today(), datetime.strptime(last_tick, "%H:%M:%S").time())
+            now = datetime.now()
+            # 只在盤中判斷：收盤後 tick 本來就會停，不能當成斷線
+            in_session = now.hour < 13 or (now.hour == 13 and now.minute <= 30)
+            if in_session and (now - lt).total_seconds() > 300:
+                state["stale"] = True
+        except ValueError:
+            pass
     watch = load_watch()
     state["watch"] = watch
     state["quotes"] = quotes(sorted(set(watch["long"]) | set(watch["short"])))

@@ -62,7 +62,7 @@ table.strat tr.grp td { background: rgba(59,130,246,0.08); font-weight: 600; }
 .rank-row .val { text-align: right; min-width: 4.5rem; }
 .rank-empty { color: var(--text-dim); font-size: 0.78rem; padding: 0.3rem 0; }
 .stock-list { padding: 0 2rem 1rem; display: grid; gap: 0.7rem; }
-.stock { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 0.9rem 1.1rem; display: grid; grid-template-columns: 10rem 1fr 24rem 2rem; gap: 1rem; align-items: center; }
+.stock { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 0.9rem 1.1rem; display: grid; grid-template-columns: 10rem 1fr 24rem 4.4rem; gap: 1rem; align-items: center; }
 .stock .head .code { font-family: var(--font-mono); color: var(--text-dim); font-size: 0.75rem; }
 .stock .head .streak-line { margin: 2px 0; }
 .stock .head .pattern-line { margin: 2px 0; }
@@ -101,7 +101,10 @@ table.strat tr.grp td { background: rgba(59,130,246,0.08); font-weight: 600; }
 .spark-wrap { flex: 1; min-width: 0; }
 .spark-box { position: relative; height: 42px; width: 100%; }
 .spark-wrap .k { font-size: 0.65rem; color: var(--text-dim); white-space: nowrap; overflow: hidden; }
-.rm { justify-self: end; background: none; border: none; color: var(--text-dim); font-size: 1rem; cursor: pointer; }
+.actions { justify-self: end; display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
+.to-holding { font-size: 0.68rem; padding: 2px 6px; background: none; border: 1px solid var(--border); border-radius: 6px; color: var(--text-dim); cursor: pointer; white-space: nowrap; }
+.to-holding:hover { color: var(--amber); border-color: var(--amber); }
+.rm { background: none; border: none; color: var(--text-dim); font-size: 1rem; cursor: pointer; }
 .rm:hover { color: var(--red); }
 .empty { color: var(--text-dim); font-size: 0.85rem; padding: 0.5rem 0; }
 .tdcc-date { font-size: 0.62rem; color: var(--text-dim); }
@@ -114,7 +117,7 @@ table.strat tr.grp td { background: rgba(59,130,246,0.08); font-weight: 600; }
 .support-level:last-child { border-bottom: none; }
 .support-price { font-family: var(--font-mono); font-size: 0.95rem; color: var(--text); }
 .support-src { font-size: 0.7rem; color: var(--text-dim); margin-top: 3px; }
-@media (max-width: 900px) { .stock { grid-template-columns: 1fr; } .rm { justify-self: start; } }
+@media (max-width: 900px) { .stock { grid-template-columns: 1fr; } .actions { justify-self: start; flex-direction: row; } }
 </style>
 </head>
 <body>
@@ -392,7 +395,7 @@ function renderCyq(c) {
 }
 
 
-function stockHtml(s) {
+function stockHtml(s, listName) {
   const chg = s.change_pct == null ? "" :
     `<span class="${cls(s.change_pct)}">${s.change_point == null ? "" : (s.change_point > 0 ? "+" : "") + s.change_point + " "}${s.change_pct > 0 ? "+" : ""}${s.change_pct}%</span>`;
   const price = s.close == null ? "—" : s.close.toLocaleString();
@@ -472,7 +475,10 @@ function stockHtml(s) {
         <div class="spark-box"><canvas id="spark-foreign-${s.code}"></canvas></div>
       </div>
     </div>
-    <button class="rm" title="移除" onclick="removeStock('${s.code}')">✕</button>
+    <div class="actions">
+      ${listName === "庫存" ? "" : `<button class="to-holding" title="移入庫存清單" onclick="moveToHolding('${s.code}')">轉庫存</button>`}
+      <button class="rm" title="移除" onclick="removeStock('${s.code}')">✕</button>
+    </div>
   </div>`;
 }
 
@@ -583,7 +589,7 @@ function renderSections(data) {
         ${listIcon(l.name)} ${esc(label)}（${stocks.length}）${delBtn}
       </div>
       <div class="stock-list${collapsed ? " collapsed" : ""}" id="list-${l.id}">${
-        stocks.length ? stocks.map(stockHtml).join("") : '<div class="empty">尚未加入任何股票</div>'
+        stocks.length ? stocks.map(s => stockHtml(s, l.name)).join("") : '<div class="empty">尚未加入任何股票</div>'
       }</div>`;
   }).join("");
   data.lists.forEach(l => l.stocks.forEach(drawSpark));
@@ -653,6 +659,22 @@ document.getElementById("rankTabs").onclick = e => {
   [...document.querySelectorAll("#rankTabs button")].forEach(b => b.classList.toggle("active", b === btn));
   loadRank(rankKind);
 };
+
+async function moveToHolding(code) {
+  const holding = (lastData && lastData.lists || []).find(l => l.name === "庫存");
+  const msg = document.getElementById("msg");
+  if (!holding) { if (msg) msg.textContent = "找不到庫存清單"; return; }
+  if (!confirm(`將 ${code} 移入庫存清單？`)) return;
+  try {
+    const r = await fetch(`/api/stocks/${encodeURIComponent(code)}`, { method: "PATCH",
+      headers: {"Content-Type": "application/json"}, body: JSON.stringify({ list_id: holding.id }) });
+    const res = await r.json();
+    if (msg) msg.textContent = res.ok ? `${code} 已移入庫存清單` : (res.error || "移入庫存失敗");
+  } catch (e) {
+    if (msg) msg.textContent = "移入庫存失敗：" + e;
+  }
+  load();
+}
 
 async function removeStock(code) {
   if (!confirm(`移除 ${code}？（庫存會自動改列觀察，其餘清單則直接移除；歷史資料保留）`)) return;

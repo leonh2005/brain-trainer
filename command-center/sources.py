@@ -358,7 +358,33 @@ def vshape():
             'times': ' '.join(f'{k} {v}' for k, v in sorted(pushed.items())),
         })
     updated = d.get('updated')
-    return {'rows': rows, 'updated': updated, 'stale': not updated}, _mtime(p)
+    upd_date = d.get('date')
+    if upd_date:
+        stale = upd_date != str(date.today())
+    else:
+        # 沒有 date 的舊格式：改用檔案 mtime 判斷（updated 是必寫欄位，用 `not updated` 會恆為 False）
+        try:
+            stale = date.fromtimestamp(os.path.getmtime(p)) != date.today()
+        except OSError:
+            stale = not updated
+    # 盤中凍結：tick 斷線後 updated 仍會是現在時間，要看最後一筆 tick 才知道階段停了多久
+    last_tick = d.get('last_tick')
+    if not stale and last_tick:
+        try:
+            lt = datetime.combine(date.today(), datetime.strptime(last_tick, '%H:%M:%S').time())
+            now = datetime.now()
+            # 只在盤中判斷：收盤後 tick 本來就會停，不能當成斷線
+            in_session = now.hour < 13 or (now.hour == 13 and now.minute <= 30)
+            if in_session and (now - lt).total_seconds() > 300:
+                stale = True
+        except ValueError:
+            pass
+    # 卡片以 updated 當重繪鍵；跨日 stale 翻轉時字串若沒變，畫面會一直停在舊狀態。
+    # 帶上日期、stale 時加註記，確保重繪鍵一定會變。
+    shown = f'{upd_date} {updated}' if (upd_date and updated) else updated
+    if stale and shown:
+        shown += '（非盤中）'
+    return {'rows': rows, 'updated': shown, 'stale': stale}, _mtime(p)
 
 
 def _stop_loss_amount(baseline: float, shares: float, stop_pct: float) -> float:
