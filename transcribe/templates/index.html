@@ -98,6 +98,7 @@ function setFile(f) {
 
 go.onclick = () => {
   if (!file) return;
+  if (file.size > {{ max_mb }} * 1024 * 1024) { toast(`檔案超過 {{ max_mb }} MB`); return; }
   go.disabled = true;
   const fd = new FormData();
   fd.append('file', file);
@@ -108,9 +109,15 @@ go.onclick = () => {
       if (!d.ok) throw new Error(d.error || '上傳失敗');
       const el = document.createElement('div');
       el.className = 'job'; el.dataset.id = d.job_id;
-      el.innerHTML = `<div class="row"><span class="name">${file.name}</span>
-        <span class="pill busy">queued</span><span class="muted">排隊中</span></div>
-        <div class="bar"><i></i></div>`;
+      const row = document.createElement('div'); row.className = 'row';
+      const nm = document.createElement('span'); nm.className = 'name'; nm.textContent = file.name;
+      const pl = document.createElement('span'); pl.className = 'pill busy'; pl.textContent = 'queued';
+      const ms = document.createElement('span'); ms.className = 'muted'; ms.textContent = '排隊中';
+      row.append(nm, pl, ms);
+      el.appendChild(row);
+      const bar = document.createElement('div'); bar.className = 'bar';
+      bar.innerHTML = '<i></i>';
+      el.appendChild(bar);
       document.getElementById('jobs').prepend(el);
       poll(d.job_id);
       toast('已開始轉錄');
@@ -120,8 +127,8 @@ go.onclick = () => {
 
 function poll(id) {
   const t = setInterval(async () => {
-    const r = await fetch(`api/job/${id}`);
-    if (!r.ok) return;
+    const r = await fetch(`api/job/${id}`).catch(() => null);
+    if (!r || !r.ok) { clearInterval(t); go.disabled = false; return; }
     const { job } = await r.json();
     const el = document.querySelector(`.job[data-id="${id}"]`);
     if (!el) return clearInterval(t);

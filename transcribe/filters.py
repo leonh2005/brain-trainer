@@ -50,9 +50,13 @@ def clean_segments(segments):
     """丟掉幻覺段，並移除前導的雜訊區（音樂段）。"""
     segs = [s for s in segments
             if not is_junk(s.get("text", "")) and not is_repetitive(s.get("text", ""))]
-    # 前 5 段都太短 → 還在音樂／環境音，往後找第一段可讀的
-    for i in range(max(0, len(segs) - 5)):
-        if all(len(segs[i + k]["text"].strip()) >= 4 for k in range(5)):
+    # 只有「前兩分鐘幾乎沒有內容」才視為音樂段並跳過；
+    # 開頭就是對話時（字數正常）一律保留，避免誤刪問候語
+    early_chars = sum(len(s["text"].strip()) for s in segs if s["start"] < 120)
+    if early_chars >= 20:
+        return segs
+    for i, s in enumerate(segs):
+        if len(s["text"].strip()) >= 4:
             return segs[i:]
     return segs
 

@@ -12,7 +12,6 @@ import time
 
 import pipeline
 from flask import Flask, jsonify, render_template, request, send_file
-from werkzeug.utils import secure_filename
 
 BASE = os.path.dirname(os.path.abspath(__file__))
 DATA = os.path.join(BASE, "data")
@@ -72,6 +71,10 @@ def _run_job(job_id):
         with open(out, "w", encoding="utf-8") as f:
             f.write(text)
         friendly = "完成" if turns else ("完成（語者模型未授權）" if err and "GatedRepoError" in err else "完成（未分軌）")
+        try:
+            os.remove(wav)          # 轉完就刪，原始檔保留供重跑
+        except OSError:
+            pass
         _set(job_id, state="done", message=friendly,
              blocks=blocks, has_speakers=bool(turns), diarize_error=err,
              elapsed=round(elapsed), output=out)
@@ -84,10 +87,39 @@ def _worker():
         job_id = _queue.get()
         try:
             _run_job(job_id)
+        except Exception as e:      # 任何例外都不能讓唯一的 worker 死掉
+            try:
+                _set(job_id, state="error", message=f"{type(e).__name__}: {e}")
+            except Exception:
+                pass
         finally:
             _queue.task_done()
 
 
+def _load_existing_jobs():
+    """重啟後把 data/ 內的 meta.json 讀回來，首頁才不會空白。"""
+    if not os.path.isdir(DATA):
+        return
+    for name in os.listdir(DATA):
+        meta_path = os.path.join(DATA, name, "meta.json")
+        if not os.path.isfile(meta_path):
+            continue
+        try:
+            with open(meta_path, encoding="utf-8") as f:
+                meta = json.load(f)
+        except (OSError, ValueError):
+            continue
+        if not isinstance(meta, dict):
+            continue
+        meta["id"] = name
+        meta.pop("src_path", None)
+        if meta.get("state") in ("queued", "transcribing", "diarizing"):
+            meta["state"] = "error"
+            meta["message"] = "服務重啟，任務中斷"
+        _jobs[name] = meta
+
+
+_load_existing_jobs()
 threading.Thread(target=_worker, daemon=True, name="transcribe-worker").start()
 
 
@@ -110,8 +142,8 @@ def upload():
     job_id = time.strftime("%Y%m%d-%H%M%S") + "-" + secrets.token_hex(3)
     d = _job_dir(job_id)
     os.makedirs(d, exist_ok=True)
-    safe = secure_filename(f.filename) or f"audio{ext}"
-    src = os.path.join(d, safe)
+    display = os.path.basename(f.filename) or f"audio{ext}"   # 保留中文原名
+    src = os.path.join(d, f"source{ext}")                      # 存檔用安全名稱
     f.save(src)
 
     try:
@@ -120,7 +152,7 @@ def upload():
         want = 0
     with _jobs_lock:
         _jobs[job_id] = {
-            "id": job_id, "name": safe, "state": "queued", "message": "排隊中",
+            "id": job_id, "name": display, "state": "queued", "message": "排隊中",
             "created": time.time(), "src_path": src, "has_speakers": False,
             "speakers": want if want >= 2 else None,
         }
@@ -132,7 +164,7 @@ def upload():
 @app.get("/api/job/<job_id>")
 def job_status(job_id):
     with _jobs_lock:
-        job = _jobs.get(job_id)
+        job = dict(_jobs[job_id]) if job_id in _jobs else None
     if not job:
         return jsonify({"ok": False, "error": "not found"}), 404
     return jsonify({"ok": True, "job": {k: v for k, v in job.items() if not k.startswith("_")}})
@@ -163,14 +195,23 @@ def health():
                     "diarize_ready": _diarize_ready()})
 
 
+_diarize_cache = {"ts": 0.0, "ready": False}
+
+
 def _diarize_ready():
+    """最多每 60 秒檢查一次；HF 不可達時不要拖慢健康檢查。"""
+    now = time.time()
+    if now - _diarize_cache["ts"] < 60:
+        return _diarize_cache["ready"]
     try:
         token = open(pipeline.HF_TOKEN_PATH, encoding="utf-8").read().strip()
         from huggingface_hub import hf_hub_download
         hf_hub_download("pyannote/speaker-diarization-community-1", "plda/plda.npz", token=token)
-        return True
+        ready = True
     except Exception:
-        return False
+        ready = False
+    _diarize_cache.update(ts=now, ready=ready)
+    return ready
 
 
 if __name__ == "__main__":

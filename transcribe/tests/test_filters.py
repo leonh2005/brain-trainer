@@ -47,6 +47,20 @@ def test_clean_segments_skips_leading_noise():
     assert out[0]["start"] == 400, "音樂段的幻覺要整段丟掉"
 
 
+def test_clean_segments_keeps_early_speech():
+    """開頭就是對話時不能因為前幾句短就把真實內容刪掉。"""
+    segs = [
+        {"start": 0, "end": 2, "text": "你好"},
+        {"start": 2, "end": 5, "text": "我想要找機械表"},
+        {"start": 5, "end": 8, "text": "那大概要排多久啊"},
+        {"start": 8, "end": 10, "text": "對對對"},
+        {"start": 10, "end": 13, "text": "生日禮物嗎"},
+        {"start": 13, "end": 16, "text": "目前現場只有這兩款"},
+    ]
+    out = filters.clean_segments(segs)
+    assert out[0]["text"] == "你好"
+
+
 def test_speaker_for_uses_largest_overlap():
     turns = [(0, 3, "男"), (3, 6, "女")]
     assert filters.speaker_for(2.5, 4.0, turns) == "女"

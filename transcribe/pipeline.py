@@ -11,8 +11,11 @@ ASR_MODEL = "mlx-community/whisper-large-v3-turbo"
 
 def normalize(src, dst):
     """任何格式 → 16k 單聲道 wav。"""
-    subprocess.run(["ffmpeg", "-v", "quiet", "-y", "-i", src, "-ac", "1", "-ar", "16000", dst],
-                   check=True, timeout=1800)
+    proc = subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", src, "-ac", "1", "-ar", "16000", dst],
+                          capture_output=True, timeout=1800)
+    if proc.returncode != 0:
+        detail = proc.stderr.decode("utf-8", "replace").strip()[-300:]
+        raise RuntimeError(f"音訊轉檔失敗：{detail or 'ffmpeg 無輸出'}")
     return dst
 
 
@@ -68,23 +71,31 @@ def _median_f0(chunk, sr=16000):
 
 
 def name_speakers_by_pitch(wav, turns):
-    """pyannote 的 SPEAKER_00/01 → 男/女：整段平均音高較高者為女。"""
+    """pyannote 的 SPEAKER_00/01 → 男/女：平均音高較高者為女。
+
+    只讀每一段的前 2 秒（wave 隨機存取），避免把整顆錄音載進記憶體。
+    """
     import wave as wavemod
 
+    per = {}
     with wavemod.open(wav, "rb") as f:
         sr = f.getframerate()
-        raw = f.readframes(f.getnframes())
-    audio = np.frombuffer(raw, dtype=np.int16).astype(np.float32) / 32768.0
-
-    per = {}
-    for t_start, t_end, label in turns:
-        clip = audio[int(t_start * sr):int(min(len(audio) / sr, t_end) * sr)]
-        f0 = _median_f0(clip, sr)
-        if f0:
-            per.setdefault(label, []).append(f0)
+        total = f.getnframes()
+        for t_start, t_end, label in turns[:600]:
+            start = int(max(0.0, t_start) * sr)
+            end = int(min(total / sr, t_end) * sr)
+            end = min(end, start + 2 * sr)
+            if end - start < sr * 0.2:
+                continue
+            f.setpos(start)
+            audio = np.frombuffer(f.readframes(end - start), dtype=np.int16)
+            f0 = _median_f0(audio.astype(np.float32) / 32768.0, sr)
+            if f0:
+                per.setdefault(label, []).append(f0)
     means = {k: float(np.mean(v)) for k, v in per.items() if v}
-    if len(means) < 2:
-        return turns, {}
+    if len(means) < 2 or len(means) > 2:
+        # 少於兩人沒得比；超過兩人硬壓成男女會把不同人併成同一人
+        return turns, means
     female = max(means, key=means.get)
     mapping = {k: ("女" if k == female else "男") for k in means}
     return [(a, b, mapping.get(c, c)) for a, b, c in turns], means
@@ -112,8 +123,10 @@ def diarize(wav, progress=None, num_speakers=None):
 def build_text(wav_name, segs, turns, error=None, elapsed=None):
     blocks = merge_blocks(segs, turns)
     lines = [f"# 逐字稿：{wav_name}"]
-    if turns:
+    if turns and all(t[2] in ("男", "女") for t in turns):
         lines.append("# 語者：男／女（依整段平均音高判定）")
+    elif turns:
+        lines.append(f"# 語者：自動分群 {len({t[2] for t in turns})} 位（未對應男女）")
     else:
         reason = "語者分離模型尚未授權（Hugging Face）" if error and "GatedRepoError" in error else (error or "不可用")
         lines.append(f"# 未分軌：{reason}")
