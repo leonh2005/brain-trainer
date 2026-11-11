@@ -101,7 +101,7 @@ _request_ctx = threading.local()     # 每個執行緒目前的請求 deadline
 
 # 毫秒。SDK 預設 30000，死掉的 session 會讓人等滿 30 秒（2026-11-11 事故）
 SNAPSHOT_TIMEOUT_MS = 4000
-INTRADAY_TIMEOUT_MS = 6000
+INTRADAY_TIMEOUT_MS = 4000
 KBARS_TIMEOUT_MS = 8000
 DAILY_TIMEOUT_MS = 15000
 TICKS_TIMEOUT_MS = 12000
@@ -228,14 +228,18 @@ def _mark_down(api, exc):
 
 
 def _ensure_api(deadline):
-    """拿到一個可用的 api；需要重登時只有一個執行緒去登，其他人最多等 RECONNECT_WAIT_S。"""
+    """拿到一個可用的 api；需要重登時只有一個執行緒去登，其他人最多等 RECONNECT_WAIT_S。
+
+    等待要有「總量」上限：每次醒來再等一輪的話，會一路等到整個請求預算用完
+    （2026-11-11 實測：重連期間請求仍卡到 12 秒）。"""
+    reconnect_deadline = min(deadline, time.monotonic() + RECONNECT_WAIT_S)
     while True:
         with _state_cv:
             api = _conn["api"]
             if api is not None:
                 return api
             if _login_state["reconnecting"]:
-                wait = min(deadline - time.monotonic(), RECONNECT_WAIT_S)
+                wait = reconnect_deadline - time.monotonic()
                 if wait > 0:
                     _state_cv.wait(wait)
                     continue

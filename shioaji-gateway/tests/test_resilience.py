@@ -188,6 +188,16 @@ def test_concurrent_requests_trigger_single_login(monkeypatch):
     assert errors == []
 
 
+def test_reconnect_wait_is_capped(monkeypatch):
+    """重連期間的請求最多等 RECONNECT_WAIT_S，不能一路等到整個請求預算用完。"""
+    gw._conn["api"] = None
+    gw._login_state["reconnecting"] = True
+    t0 = time.monotonic()
+    with pytest.raises(gw.GatewayReconnecting):
+        gw._run(lambda api: "ok", budget_s=12)
+    assert time.monotonic() - t0 < 3.5
+
+
 def test_retry_after_relogin_succeeds(monkeypatch):
     api1, api2 = object(), object()
     monkeypatch.setattr(gw, "_conn", {"api": api1})
