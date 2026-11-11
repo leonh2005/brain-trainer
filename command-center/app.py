@@ -35,8 +35,8 @@ from starlette.responses import Response
 # command-center 的學習系統卡片仍以伺服器端的 sources._proxy 讀它的
 # /api/domains，不受影響（見 sources.py 的 learn_system）。
 PROXY_PORTS = {5070, 5100, 5250, 5300, 5350, 5380, 5400, 5460, 5500, 5501,
-               5650, 5750, 5800, 5810, 5850, 5905, 5910, 5960, 5970, 5980,
-               5995, 7799, 8188}
+               5650, 5750, 5800, 5810, 5850, 5905, 5910, 5960, 5970, 5975,
+               5980, 5995, 7799, 8188}
 _PROXY_HOP_HEADERS = {
     'connection', 'keep-alive', 'proxy-authenticate', 'proxy-authorization',
     'te', 'trailers', 'transfer-encoding', 'upgrade', 'content-encoding', 'content-length',

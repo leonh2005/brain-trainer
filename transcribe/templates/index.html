@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>語音轉逐字稿</title>
+<style>
+  :root{--bg:#0d0d1a;--card:#171728;--line:#2a2a44;--text:#e8e8ff;--dim:#9a9ac0;--accent:#7c9cff;--up:#4ade80;--down:#f87171}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:'PingFang TC','Noto Sans TC',system-ui,sans-serif;padding:24px}
+  h1{font-size:18px;margin:0 0 4px}
+  .sub{color:var(--dim);font-size:12px;margin-bottom:18px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:16px}
+  #drop{border:2px dashed var(--line);border-radius:12px;padding:34px;text-align:center;color:var(--dim);cursor:pointer;transition:.15s}
+  #drop.hover{border-color:var(--accent);color:var(--text);background:#1b1b30}
+  #drop b{color:var(--text)}
+  input[type=file]{display:none}
+  button{background:var(--accent);color:#0b0b16;border:0;border-radius:9px;padding:9px 16px;font-weight:600;cursor:pointer}
+  button:disabled{opacity:.5;cursor:default}
+  .job{border-top:1px solid var(--line);padding:12px 0;font-size:13px}
+  .job:first-child{border-top:0}
+  .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  .name{font-weight:600}
+  .muted{color:var(--dim);font-size:12px}
+  .pill{font-size:11px;padding:2px 8px;border-radius:99px;border:1px solid var(--line)}
+  .ok{color:var(--up);border-color:var(--up)}
+  .err{color:var(--down);border-color:var(--down)}
+  .busy{color:var(--accent);border-color:var(--accent)}
+  a{color:var(--accent);text-decoration:none;font-size:12px}
+  .bar{height:3px;background:var(--line);border-radius:2px;overflow:hidden;margin-top:8px}
+  .bar i{display:block;height:100%;width:30%;background:var(--accent);animation:slide 1.2s infinite}
+  @keyframes slide{0%{margin-left:-30%}100%{margin-left:100%}}
+</style>
+</head>
+<body>
+  <h1>🎙️ 語音轉逐字稿</h1>
+  <div class="sub">本機處理，音檔不會上傳到任何外部服務 · 支援 wav / mp3 / m4a / flac，上限 {{ max_mb }} MB</div>
+
+  <div class="card">
+    <div id="drop">
+      <div style="font-size:28px;margin-bottom:8px">📂</div>
+      把錄音檔拖進來，或 <b>點這裡選檔案</b>
+      <div class="muted" style="margin-top:6px">轉錄時間約為音檔長度的 1/5～1/10</div>
+    </div>
+    <input type="file" id="file" accept=".wav,.mp3,.m4a,.flac,.ogg,.aac,.mp4">
+    <div class="row" style="margin-top:12px">
+      <button id="go" disabled>開始轉錄</button>
+      <span class="muted" id="pick"></span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div style="font-weight:600;margin-bottom:6px">最近任務</div>
+    <div id="jobs">
+      {% for j in jobs %}
+      <div class="job" data-id="{{ j.id }}">
+        <div class="row">
+          <span class="name">{{ j.name }}</span>
+          <span class="pill {{ 'ok' if j.state=='done' else 'err' if j.state=='error' else 'busy' }}">{{ j.state }}</span>
+          <span class="muted">{{ j.message }}</span>
+          <span style="flex:1"></span>
+          <a class="view" href="/view/{{ j.id }}" target="_blank">檢視</a>
+          <a class="dl" href="/download/{{ j.id }}">下載</a>
+        </div>
+      </div>
+      {% else %}
+      <div class="muted">還沒有任務</div>
+      {% endfor %}
+    </div>
+  </div>
+
+<script>
+const drop = document.getElementById('drop');
+const input = document.getElementById('file');
+const go = document.getElementById('go');
+const pick = document.getElementById('pick');
+let file = null;
+
+drop.onclick = () => input.click();
+drop.ondragover = e => { e.preventDefault(); drop.classList.add('hover'); };
+drop.ondragleave = () => drop.classList.remove('hover');
+drop.ondrop = e => {
+  e.preventDefault(); drop.classList.remove('hover');
+  if (e.dataTransfer.files.length) setFile(e.dataTransfer.files[0]);
+};
+input.onchange = () => { if (input.files.length) setFile(input.files[0]); };
+
+function setFile(f) {
+  file = f;
+  pick.textContent = `${f.name}（${(f.size/1024/1024).toFixed(1)} MB）`;
+  go.disabled = false;
+}
+
+go.onclick = () => {
+  if (!file) return;
+  go.disabled = true;
+  const fd = new FormData();
+  fd.append('file', file);
+  fetch('upload', { method: 'POST', body: fd })
+    .then(r => r.json())
+    .then(d => {
+      if (!d.ok) throw new Error(d.error || '上傳失敗');
+      const el = document.createElement('div');
+      el.className = 'job'; el.dataset.id = d.job_id;
+      el.innerHTML = `<div class="row"><span class="name">${file.name}</span>
+        <span class="pill busy">queued</span><span class="muted">排隊中</span></div>
+        <div class="bar"><i></i></div>`;
+      document.getElementById('jobs').prepend(el);
+      poll(d.job_id);
+      toast('已開始轉錄');
+    })
+    .catch(e => { toast(e.message); go.disabled = false; });
+};
+
+function poll(id) {
+  const t = setInterval(async () => {
+    const r = await fetch(`api/job/${id}`);
+    if (!r.ok) return;
+    const { job } = await r.json();
+    const el = document.querySelector(`.job[data-id="${id}"]`);
+    if (!el) return clearInterval(t);
+    const pill = el.querySelector('.pill');
+    pill.className = 'pill ' + (job.state === 'done' ? 'ok' : job.state === 'error' ? 'err' : 'busy');
+    pill.textContent = job.state;
+    el.querySelector('.muted').textContent = job.message +
+      (job.elapsed ? `（${job.elapsed}s）` : '');
+    if (job.state === 'done') {
+      clearInterval(t);
+      el.querySelector('.bar')?.remove();
+      const row = el.querySelector('.row');
+      row.insertAdjacentHTML('beforeend',
+        `<span style="flex:1"></span><a href="view/${id}" target="_blank">檢視</a><a href="download/${id}">下載</a>`);
+      go.disabled = false;
+    }
+    if (job.state === 'error') { clearInterval(t); go.disabled = false; }
+  }, 3000);
+}
+
+function toast(msg) {
+  const d = document.createElement('div');
+  d.textContent = msg;
+  d.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#242442;padding:10px 18px;border-radius:10px;font-size:13px';
+  document.body.appendChild(d);
+  setTimeout(() => d.remove(), 2600);
+}
+</script>
+</body>
+</html>

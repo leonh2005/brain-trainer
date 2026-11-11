@@ -1,0 +1,171 @@
+"""語音轉逐字稿（本機）— Flask 服務，port 5975。
+
+上傳錄音 → mlx-whisper 轉文字 → pyannote 分語者（有授權才啟用）→ 下載逐字稿。
+檔案只留在本機，不會上傳到任何外部服務。
+"""
+import json
+import os
+import queue
+import secrets
+import threading
+import time
+
+import pipeline
+from flask import Flask, jsonify, render_template, request, send_file
+from werkzeug.utils import secure_filename
+
+BASE = os.path.dirname(os.path.abspath(__file__))
+DATA = os.path.join(BASE, "data")
+ALLOWED = {".wav", ".mp3", ".m4a", ".flac", ".ogg", ".aac", ".mp4"}
+MAX_MB = 500
+
+os.makedirs(DATA, exist_ok=True)
+
+app = Flask(__name__)
+app.config["MAX_CONTENT_LENGTH"] = MAX_MB * 1024 * 1024
+
+_jobs = {}
+_jobs_lock = threading.Lock()
+_queue = queue.Queue()
+
+
+def _job_dir(job_id):
+    return os.path.join(DATA, job_id)
+
+
+def _save_meta(job_id):
+    with _jobs_lock:
+        meta = dict(_jobs[job_id])
+    meta.pop("_path", None)
+    with open(os.path.join(_job_dir(job_id), "meta.json"), "w", encoding="utf-8") as f:
+        json.dump(meta, f, ensure_ascii=False, indent=1)
+
+
+def _set(job_id, **kw):
+    with _jobs_lock:
+        _jobs[job_id].update(kw)
+    _save_meta(job_id)
+
+
+def _run_job(job_id):
+    meta = _jobs[job_id]
+    started = time.time()
+    src = meta["src_path"]
+    d = _job_dir(job_id)
+
+    def progress(state, message):
+        _set(job_id, state=state, message=message)
+
+    try:
+        progress("transcribing", "整理音訊…")
+        wav = pipeline.normalize(src, os.path.join(d, "audio.wav"))
+
+        segs = pipeline.transcribe(wav, progress)
+        _set(job_id, segments=len(segs), asr_done=True)
+
+        turns, err = pipeline.diarize(wav, progress)
+        elapsed = time.time() - started
+        text, blocks = pipeline.build_text(os.path.basename(src), segs, turns, err, elapsed)
+
+        out = os.path.join(d, "transcript.txt")
+        with open(out, "w", encoding="utf-8") as f:
+            f.write(text)
+        friendly = "完成" if turns else ("完成（語者模型未授權）" if err and "GatedRepoError" in err else "完成（未分軌）")
+        _set(job_id, state="done", message=friendly,
+             blocks=blocks, has_speakers=bool(turns), diarize_error=err,
+             elapsed=round(elapsed), output=out)
+    except Exception as e:      # 任何失敗都要留下原因
+        _set(job_id, state="error", message=f"{type(e).__name__}: {e}")
+
+
+def _worker():
+    while True:
+        job_id = _queue.get()
+        try:
+            _run_job(job_id)
+        finally:
+            _queue.task_done()
+
+
+threading.Thread(target=_worker, daemon=True, name="transcribe-worker").start()
+
+
+@app.get("/")
+def index():
+    with _jobs_lock:
+        jobs = sorted(_jobs.values(), key=lambda j: j.get("created", 0), reverse=True)[:10]
+    return render_template("index.html", jobs=jobs, max_mb=MAX_MB)
+
+
+@app.post("/upload")
+def upload():
+    f = request.files.get("file")
+    if not f or not f.filename:
+        return jsonify({"ok": False, "error": "沒有檔案"}), 400
+    ext = os.path.splitext(f.filename)[1].lower()
+    if ext not in ALLOWED:
+        return jsonify({"ok": False, "error": f"不支援的格式：{ext}"}), 400
+
+    job_id = time.strftime("%Y%m%d-%H%M%S") + "-" + secrets.token_hex(3)
+    d = _job_dir(job_id)
+    os.makedirs(d, exist_ok=True)
+    safe = secure_filename(f.filename) or f"audio{ext}"
+    src = os.path.join(d, safe)
+    f.save(src)
+
+    with _jobs_lock:
+        _jobs[job_id] = {
+            "id": job_id, "name": safe, "state": "queued", "message": "排隊中",
+            "created": time.time(), "src_path": src, "has_speakers": False,
+        }
+    _save_meta(job_id)
+    _queue.put(job_id)
+    return jsonify({"ok": True, "job_id": job_id})
+
+
+@app.get("/api/job/<job_id>")
+def job_status(job_id):
+    with _jobs_lock:
+        job = _jobs.get(job_id)
+    if not job:
+        return jsonify({"ok": False, "error": "not found"}), 404
+    return jsonify({"ok": True, "job": {k: v for k, v in job.items() if not k.startswith("_")}})
+
+
+@app.get("/download/<job_id>")
+def download(job_id):
+    path = os.path.join(_job_dir(job_id), "transcript.txt")
+    if not os.path.exists(path):
+        return jsonify({"ok": False, "error": "尚未完成"}), 404
+    return send_file(path, as_attachment=True,
+                     download_name=f"{job_id}_逐字稿.txt", mimetype="text/plain; charset=utf-8")
+
+
+@app.get("/view/<job_id>")
+def view(job_id):
+    path = os.path.join(_job_dir(job_id), "transcript.txt")
+    if not os.path.exists(path):
+        return jsonify({"ok": False, "error": "尚未完成"}), 404
+    return open(path, encoding="utf-8").read(), 200, {"Content-Type": "text/plain; charset=utf-8"}
+
+
+@app.get("/api/health")
+def health():
+    with _jobs_lock:
+        running = [j["id"] for j in _jobs.values() if j["state"] in ("transcribing", "diarizing")]
+    return jsonify({"ok": True, "queue": _queue.qsize(), "running": running,
+                    "diarize_ready": _diarize_ready()})
+
+
+def _diarize_ready():
+    try:
+        token = open(pipeline.HF_TOKEN_PATH, encoding="utf-8").read().strip()
+        from huggingface_hub import hf_hub_download
+        hf_hub_download("pyannote/speaker-diarization-community-1", "plda/plda.npz", token=token)
+        return True
+    except Exception:
+        return False
+
+
+if __name__ == "__main__":
+    app.run(host="127.0.0.1", port=5975)

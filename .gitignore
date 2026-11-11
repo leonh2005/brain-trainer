@@ -111,3 +111,6 @@ logs/.*.lock
 market-dashboard/*.tmp
 market-dashboard/*.bak
 finmind/.local/
+
+# 語音轉逐字稿：上傳音檔與輸出都在本機，不進版控
+transcribe/data/
