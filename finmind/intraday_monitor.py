@@ -58,6 +58,7 @@ SIGNAL_THRESHOLD = 4                    # 觸發推播的最低訊號數
 SIGNAL_MARGIN    = 2                    # 多空訊號數差距要達到這個門檻才推播，太接近視為方向不明
 CONFIDENCE_MIN   = 36                   # 信心分數低於此門檻不推播
 VOL_SIGNAL_KEYS  = ['昨量', '單K', '超越開盤量']  # 必要量能訊號（至少 1 個）
+MAX_CHG_PCT      = 7.0                  # 順勢幅度門檻：漲逾此值不推多方、跌逾此值不推空方
 COOLDOWN_MINUTES = 30
 COOLDOWN_FILE    = '/tmp/intraday_cooldown.json'
 AVG5_CACHE_FILE  = '/tmp/intraday_avg5_cache.json'
@@ -115,6 +116,7 @@ TW_HOLIDAYS = {
 
 # 執行期狀態（由 sync_universe() 動態維護）
 _universe: dict = {}          # code -> name
+_universe_max_chg: dict = {}  # code -> 順勢門檻（%），依合約漲停幅度換算
 _universe_joined: dict = {}   # code -> 加入時間
 _universe_missed: dict = {}   # code -> 連續未入選次數
 
@@ -128,15 +130,24 @@ SECTOR_PEERS = {
 
 # ── Shioaji 連線 ─────────────────────────────────────────────────────────────
 _sj_api = None
+_relogin_needed = threading.Event()   # SDK 回報 session 掉了；由主迴圈重登＋重新訂閱
+SDK_TIMEOUT_MS = 5000                 # SDK 預設 30000，死掉的 session 會讓人等滿 30 秒
+
 
 def _get_sj():
     global _sj_api
     if _sj_api is None:
-        _sj_api = sj.Shioaji(simulation=False)
-        _sj_api.login(
+        api = sj.Shioaji(simulation=False)
+        api.login(
             api_key=os.environ['SHIOAJI_API_KEY'],
             secret_key=os.environ['SHIOAJI_SECRET_KEY'],
         )
+        # 回呼跑在 SDK 的 Rust 執行緒：只設旗標，不做任何其他事
+        register = (getattr(api, 'set_session_down_callback', None)
+                    or getattr(api, 'on_session_down', None))
+        if register is not None:
+            register(_relogin_needed.set)
+        _sj_api = api
     return _sj_api
 
 
@@ -161,7 +172,7 @@ def connect_with_retry(deadline_sec: int = 1500, interval: int = 30, warmup_poll
             errors = 0
             while True:
                 try:
-                    if api.snapshots(probe):
+                    if api.snapshots(probe, timeout=SDK_TIMEOUT_MS):
                         print(f'[startup] Shioaji 暖機完成（第 {attempt} 次登入、{time.monotonic() - started:.0f}s）')
                         return api
                     errors = 0
@@ -196,6 +207,30 @@ def connect_with_retry(deadline_sec: int = 1500, interval: int = 30, warmup_poll
             time.sleep(interval)
 
 
+def _relogin_and_resubscribe(now: datetime):
+    """session 中途失效：重登、重掛 tick callback、把現有清單重新訂閱（含當日回補）。
+
+    2026-11-11 之前沒有這段：session 掉了就整天靜默、13:36 還 exit 0，
+    KeepAlive 不會重啟，等於整個下午都沒有訊號。
+    """
+    global _sj_api
+    print(f'[{now.strftime("%H:%M:%S")}] session 失效，重新登入...')
+    if _sj_api is not None:
+        try:
+            _sj_api.logout()
+        except Exception:
+            pass
+    _sj_api = None
+    api = connect_with_retry(deadline_sec=90, interval=5)
+    _setup_tick_stream(api)
+    codes = list(_universe.items())
+    for code, name in codes:
+        _subscribe(api, code, name, now)
+    _relogin_needed.clear()
+    print(f'[{now.strftime("%H:%M:%S")}] 重登完成，重新訂閱 {len(codes)} 檔')
+    return api
+
+
 def trading_days_ago(n):
     d = date.today()
     count = 0
@@ -227,7 +262,7 @@ def _setup_tick_stream(api):
 def _backfill_code(api, contract, code: str) -> None:
     """個股加入監控時一次性回補當日 ticks（之後全靠訂閱流）。"""
     try:
-        ticks = api.ticks(contract, date=str(date.today()))
+        ticks = api.ticks(contract, date=str(date.today()), timeout=SDK_TIMEOUT_MS)
         ts = pd.to_datetime(list(ticks.ts), unit='ns')
         # 歷史 ticks 理論上不含試撮；若 SDK 提供 simtrade 欄位則防禦性過濾（與即時流一致）
         sim = list(getattr(ticks, 'simtrade', []) or [])
@@ -307,6 +342,19 @@ def _subscribe(api, code: str, name: str, now: datetime) -> bool:
     _last_bar_signals.pop(code, None)
     _backfill_code(api, contract, code)
 
+    # vshape 固定清單的標的不在當日候選池，呼叫端只能傳代號當 name；
+    # contract 已經拿到了，這裡優先用合約的中文名補上。
+    if not name or name == code:
+        name = getattr(contract, 'name', None) or code
+    # 順勢門檻按這檔自己的漲停幅度換算：10% 限制 → 7%，20%（槓桿 ETF）→ 14%。
+    # 無漲跌幅限制的標的 shioaji 用 9999.95 當哨兵，這種要退回預設值，
+    # 否則會算出數萬 % 的門檻讓追高過濾器完全失效。
+    ref = getattr(contract, 'reference', 0) or 0
+    limit_up = getattr(contract, 'limit_up', 0) or 0
+    limit_pct = (limit_up - ref) / ref * 100 if ref and limit_up else 0
+    _universe_max_chg[code] = (
+        MAX_CHG_PCT * (limit_pct / 10.0) if 0 < limit_pct <= 25 else MAX_CHG_PCT
+    )
     _universe[code] = name
     _universe_joined[code] = now
     _universe_missed[code] = 0
@@ -322,6 +370,7 @@ def _unsubscribe(api, code: str) -> None:
     except Exception as e:
         print(f'[unsubscribe] {code} 失敗: {e}')
     _universe.pop(code, None)
+    _universe_max_chg.pop(code, None)
     _universe_joined.pop(code, None)
     _universe_missed.pop(code, None)
     _last_bar_signals.pop(code, None)
@@ -389,7 +438,9 @@ def sync_universe(api) -> None:
     added = 0
     for code, name in picked.items():
         if code in _universe:
-            _universe[code] = name
+            # fixed 清單帶的是裸代號（vshape 標的不在候選池），別把 _subscribe
+            # 剛從合約補好的中文名又蓋回去
+            _universe[code] = _universe.get(code) or name
             _universe_missed[code] = 0
         elif added < max_new and _subscribe(api, code, name, now):
             added += 1
@@ -454,7 +505,7 @@ def get_snapshot(codes: list) -> dict:
         if not contracts:
             return {}
         cmap = {c.code: c for c in contracts}
-        return _parse_snaps(api.snapshots(contracts), cmap)
+        return _parse_snaps(api.snapshots(contracts, timeout=SDK_TIMEOUT_MS), cmap)
     except Exception as e:
         print(f'[snapshot] 失敗: {e}')
         return {}
@@ -486,7 +537,7 @@ def get_avg5_vol(code: str, cache: dict) -> int:
     # 當日首次 kbars 呼叫偶發失敗（連線暖機），重試一次即可（2408 每日固定中招）
     for attempt in (1, 2):
         try:
-            kb = api.kbars(contract, start=start, end=end)
+            kb = api.kbars(contract, start=start, end=end, timeout=SDK_TIMEOUT_MS)
             df = pd.DataFrame({**kb})
             if df.empty:
                 return 0
@@ -949,12 +1000,25 @@ def build_vshape_message(code: str, name: str, event, snap: dict, direction: str
     )
 
 
+def _vshape_display_name(code: str) -> str:
+    """vshape 清單的標的不在當日候選池，會反覆被 sync_universe 進出 _universe，
+    所以名稱直接問 shioaji 的合約（權威來源），查不到才退回 _universe / 代號。"""
+    try:
+        contract = _sj_api.Contracts.Stocks.get(code) if _sj_api else None
+    except Exception:
+        contract = None
+    name = getattr(contract, 'name', None)
+    if name:
+        return name
+    return _universe.get(code) or code
+
+
 def _save_vshape_state() -> None:
     """寫出目前各標的階段給 UI 讀；每分鐘 recompute 時呼叫一次。"""
     items = {}
     for code in fixed_codes():
         per = _vshape_states.get(code) or {}
-        entry = {'name': _universe.get(code) or code}
+        entry = {'name': _vshape_display_name(code)}
         for direction in ('long', 'short'):
             st = per.get(direction)
             if st is None:
@@ -968,8 +1032,10 @@ def _save_vshape_state() -> None:
                 'pushed': dict(st.pushed),
             }
         items[code] = entry
+    now = datetime.now()
     payload = {
-        'updated': datetime.now().strftime('%H:%M:%S'),
+        'updated': now.strftime('%H:%M:%S'),   # 前端直接顯示，維持原格式
+        'date': now.strftime('%Y-%m-%d'),      # 讀者靠這個判斷是否跨日殘檔
         'watch': _vshape_watch,
         'items': items,
     }
@@ -1058,14 +1124,15 @@ def recompute_technical_cache():
         df = get_1min_kbars(code)
         if df.empty:
             continue
+        # recompute 在整分 0-4 秒觸發，此時 resample 的最後一根是「剛開始的當前分鐘」，
+        # 量能與價位都還在變動；技術指標與 V 型判定都只該用已收盤的 K 棒。
+        # 每檔重算 current_min：第一輪補 avg5 可能跨過整分邊界，固定值會少算剛收盤那根。
+        current_min = pd.Timestamp(datetime.now()).floor('min')
+        closed = df[df['ts'] < current_min]
         if in_main:
-            long_sigs, short_sigs = detect_technical_signals(df)
+            long_sigs, short_sigs = detect_technical_signals(closed)
             _last_bar_signals[code] = {'long': long_sigs, 'short': short_sigs}
         if in_vshape and (code in _vshape_watch['long'] or code in _vshape_watch['short']):
-            # recompute 在整分 0-4 秒觸發，此時 resample 的最後一根是「剛開始的當前分鐘」，
-            # 量能與價位都還在變動，餵進去只會得到永遠不成立的形狀。只取已收盤的 K 棒。
-            current_min = pd.Timestamp(now).floor('min')
-            closed = df[pd.to_datetime(df['ts']) < current_min]
             try:
                 snap = get_snapshot([code]).get(code) or {}
             except Exception:
@@ -1126,19 +1193,45 @@ def volume_check():
         if abs(len(long_sigs) - len(short_sigs)) < SIGNAL_MARGIN:
             continue
 
-        # 取信心分數較高的方向
-        direction, signals = max(candidates, key=lambda x: calc_confidence(x[1]))
-        if calc_confidence(signals) < CONFIDENCE_MIN:
+        # 順勢方向已走完門檻：漲逾門檻不推多方、跌逾門檻不推空方（追高／追空點位已無空間）。
+        # 門檻按合約漲跌停幅度換算（槓桿 ETF 是 20%，不能跟個股共用 7%）。
+        # 必須「先過濾再取 max」：先取 max 的話，被擋掉的強方向會連帶丟掉另一邊仍合格的候選。
+        chg_pct = snap.get('chg_pct', 0)
+        max_chg = _universe_max_chg.get(code, MAX_CHG_PCT)
+        both_sides = len(candidates) == 2
+        candidates = [
+            (d, s) for d, s in candidates
+            if not (d == 'long' and chg_pct >= max_chg)
+            and not (d == 'short' and chg_pct <= -max_chg)
+        ]
+        if not candidates:
             continue
+        # 兩邊原本都達標、過濾後只剩一邊 → 強方向被價格門檻砍掉，轉推較弱的一邊
+        # 等於違反 SIGNAL_MARGIN「太接近視為方向不明」的用意，直接放棄這一輪
+        if both_sides and len(candidates) < 2:
+            continue
+
+        # 每個候選只算一次信心分數（原本同一方向重複算 3 次）
+        scored = [(d, s, calc_confidence(s)) for d, s in candidates]
+        direction, signals, conf = max(scored, key=lambda x: x[2])
+        if conf < CONFIDENCE_MIN:
+            continue
+
         sector_txt = get_sector_status(code, all_snaps)
         msg = build_message(code, signals, snap, avg5, sector_txt, direction, tick_triggered)
-        send_telegram(msg)
+        name = _universe.get(code, code)
+        if not send_telegram(msg):
+            # 失敗仍要寫冷卻：volume_check 每 5 秒跑一次，不寫冷卻會對同一訊號
+            # 一路重送到洗版（Telegram 429 或 reset 時單檔一天可重試上千次）
+            cooldown[code] = datetime.now().isoformat()
+            pushed = True
+            print(f"  檢查 {code} {name} ... 推播失敗（已冷卻 {COOLDOWN_MINUTES} 分鐘）")
+            continue
         cooldown[code] = datetime.now().isoformat()
         pushed = True
-        name      = _universe.get(code, code)
         dir_label = '多方' if direction == 'long' else '空方'
         print(f"  檢查 {code} {name} ... 多方:{len(long_sigs)} 空方:{len(short_sigs)}")
-        print(f'  → {dir_label}推播已送出（信心 {calc_confidence(signals)}%）')
+        print(f'  → {dir_label}推播已送出（信心 {conf}%）')
 
     if pushed:
         save_cooldown(cooldown)
@@ -1179,11 +1272,17 @@ if __name__ == '__main__':
     recompute_technical_cache()   # 開盤暖機：先算一次技術指標，避免 volume_check() 空等到整分邊界
 
     _next_scan = _time.monotonic() + SCAN_INTERVAL
+    _last_relogin = 0.0
     while True:
         _now = datetime.now()
         if _now.hour > 13 or (_now.hour == 13 and _now.minute > 35):
             print(f'[{_now.strftime("%H:%M:%S")}] 盤後，監控結束')
             break
+        # session 掉了就重登（最多每 60 秒試一次，避免迴圈暴衝）
+        if _relogin_needed.is_set() and _time.monotonic() - _last_relogin > 60:
+            _last_relogin = _time.monotonic()
+            _api = _relogin_and_resubscribe(_now)
+            _next_scan = _time.monotonic() + SCAN_INTERVAL
         if _time.monotonic() >= _next_scan:
             sync_universe(_api)
             _next_scan = _time.monotonic() + SCAN_INTERVAL
