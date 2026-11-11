@@ -375,7 +375,7 @@ def vshape():
             now = datetime.now()
             # 只在盤中判斷：收盤後 tick 本來就會停，不能當成斷線
             in_session = now.hour < 13 or (now.hour == 13 and now.minute <= 30)
-            if in_session and (now - lt).total_seconds() > 300:
+            if in_session and (now - lt).total_seconds() > 360:
                 stale = True
         except ValueError:
             pass

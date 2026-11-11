@@ -413,6 +413,7 @@ def sync_universe(api) -> None:
                 _vshape_states.pop(code, None)
 
     fixed = {code: (_universe.get(code) or code) for code in fixed_codes()}
+    _ever_fixed.update(fixed)
 
     # 「首輪」以動態清單為準：固定清單先訂閱後 _universe 必然非空，
     # 若用 not _universe 判斷，首輪掃描失敗一次就再也補不滿 25 檔。
@@ -434,8 +435,9 @@ def sync_universe(api) -> None:
     for code in list(_universe):
         if code in fixed:
             continue
-        if code in _fixed_watch_alerted or code in _vshape_states:
+        if code in _ever_fixed:
             _unsubscribe(api, code)
+            _ever_fixed.discard(code)
             _fixed_watch_alerted.discard(code)
             print(f'[vshape] {code} 已從監控清單移除，退訂')
 
@@ -1076,9 +1078,21 @@ def _save_vshape_state() -> None:
 
 def _check_one(code: str, df: pd.DataFrame, snap: dict, direction: str) -> None:
     """跑單一方向的判定；有新階段且推播成功才記錄。"""
+    key = (code, direction)
+    # 上次推播失敗的事件先補送。stage 已隨 detect_v_shape 推進，重跑判定救不回來
+    # （detect 只看最新一根，更晚的 K 不會再重現同一階段）。
+    pending = _pending_vshape.get(key)
+    if pending is not None:
+        name = _universe.get(code) or code
+        if send_telegram(build_vshape_message(code, name, pending, snap, direction)):
+            state = _state_for(code, direction)
+            state.pushed[pending.stage] = pending.ts
+            _save_vshape_pushed()
+            _pending_vshape.pop(key, None)
+            print(f'[vshape] {code} {direction} {name} → {pending.stage}（補送成功）')
+        return   # 補送期間先不推進新判定，避免事件堆積
+
     state = _state_for(code, direction)
-    # detect_v_shape 會原地推進 stage；推播失敗（或判定途中拋錯）若不回滾，
-    # 下一輪只會從新 stage 往下找，這則通知就永遠不會再觸發。
     before = copy.deepcopy(state)
     try:
         if state.needs_replay and len(df) >= _vshape_params.min_bars:
@@ -1094,8 +1108,10 @@ def _check_one(code: str, df: pd.DataFrame, snap: dict, direction: str) -> None:
         return
     name = _universe.get(code) or code
     if not send_telegram(build_vshape_message(code, name, event, snap, direction)):
-        state.__dict__.update(before.__dict__)
-        print(f'[vshape] {code} {direction} {event.stage} 推播失敗（狀態已回滾，下一輪重試）')
+        # 不回滾 stage：回滾會讓後續 B/C 找不到 stage=='A' 的前置而整條鏈消失，
+        # 改成把事件暫存，下一輪先補送。
+        _pending_vshape[key] = event
+        print(f'[vshape] {code} {direction} {event.stage} 推播失敗（已暫存，下一輪補送）')
         return
     state.pushed[event.stage] = event.ts
     _save_vshape_pushed()
@@ -1122,8 +1138,10 @@ _avg5_cache: dict = _load_avg5_cache()
 # _vshape_states 結構 {code: {'long': VShapeState, 'short': VShapeState}}，兩個方向各自去重。
 _vshape_watch: dict = load_vshape_watch()
 _vshape_states: dict = {}
+_pending_vshape: dict = {}   # (code, direction) -> event，推播失敗待補送
 _vshape_params = VShapeParams()
 _fixed_watch_alerted: set = set()   # 固定標的訂閱失敗只提醒一次
+_ever_fixed: set = set()            # 曾進過固定清單的代號，UI 移除時用來判斷要不要立即退訂
 
 
 def _in_main_hours(now: datetime) -> bool:
@@ -1233,22 +1251,23 @@ def volume_check():
         # 必須「先過濾再取 max」：先取 max 的話，被擋掉的強方向會連帶丟掉另一邊仍合格的候選。
         chg_pct = snap.get('chg_pct', 0)
         max_chg = _universe_max_chg.get(code, MAX_CHG_PCT)
-        both_sides = len(candidates) == 2
-        candidates = [
-            (d, s) for d, s in candidates
+        # 每個候選只算一次信心分數（原本同一方向重複算 3 次）
+        scored_all = [(d, s, calc_confidence(s)) for d, s in candidates]
+        both_sides = len(scored_all) == 2
+        scored = [
+            (d, s, c) for d, s, c in scored_all
             if not (d == 'long' and chg_pct >= max_chg)
             and not (d == 'short' and chg_pct <= -max_chg)
         ]
-        if not candidates:
+        if not scored:
             continue
-        # 兩邊原本都達標、過濾後只剩一邊 → 強方向被價格門檻砍掉，轉推較弱的一邊
-        # 等於違反 SIGNAL_MARGIN「太接近視為方向不明」的用意，直接放棄這一輪
-        if both_sides and len(candidates) < 2:
-            continue
-
-        # 每個候選只算一次信心分數（原本同一方向重複算 3 次）
-        scored = [(d, s, calc_confidence(s)) for d, s in candidates]
         direction, signals, conf = max(scored, key=lambda x: x[2])
+        # 兩邊原本都達標、過濾後只剩一邊：只有「被砍掉的方向信心 >= 存活方向」才算方向不明。
+        # 被砍的是較弱那邊時，較強方向仍完全合格，照推。
+        if both_sides and len(scored) < 2:
+            dropped = [c for d, _s, c in scored_all if d != direction]
+            if dropped and max(dropped) >= conf:
+                continue
         if conf < CONFIDENCE_MIN:
             continue
 

@@ -425,8 +425,11 @@ const CARD_POLL_MS=60000;
 const cardLastUpdated={};
 function loadCard(d){
   fetch(d.url).then(r=>r.json()).then(res=>{
-    if(cardLastUpdated[d.id]===res.updated)return;
-    cardLastUpdated[d.id]=res.updated;
+    // stale 也是狀態的一部分：跨日或斷流翻轉時 updated（檔案 mtime）不會變，
+    // 只比 mtime 的話卡片會永遠停在舊階段、連警示都不出現
+    const ck=res.updated+(res.data&&res.data.stale?':stale':'');
+    if(cardLastUpdated[d.id]===ck)return;
+    cardLastUpdated[d.id]=ck;
     $('#ts-'+d.id).textContent=res.updated||'';
     const body=$('#cb-'+d.id);
     if(!res.ok){body.innerHTML=`<div class="err">${res.error||'讀取失敗'}</div>`;return}
