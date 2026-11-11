@@ -57,7 +57,11 @@ def clean_segments(segments):
         return segs
     for i, s in enumerate(segs):
         if len(s["text"].strip()) >= 4:
-            return segs[i:]
+            segs = segs[i:]
+            break
+    # 開頭孤立、後面緊接長時間空白 → 那段是環境音（音樂）的幻覺
+    while len(segs) >= 2 and segs[1]["start"] - segs[0]["end"] > 120:
+        segs = segs[1:]
     return segs
 
 

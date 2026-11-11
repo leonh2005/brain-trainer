@@ -88,3 +88,14 @@ def test_merge_blocks_without_speakers_merges_by_gap():
     blocks = filters.merge_blocks(segs, None)
     assert len(blocks) == 2
     assert blocks[0]["text"] == "第一句第二句"
+
+
+def test_proofread_chunks_and_prefix():
+    import proofread
+
+    lines = [f"[{i:02d}:00] 男：這是第 {i} 句" for i in range(30)]
+    chunks = list(proofread._chunks(lines, limit=200))
+    assert sum(len(c) for c in chunks) == 30
+    assert all(len("\n".join(c)) <= 260 for c in chunks)
+    assert proofread._prefix("[00:12] 男：你好") == "[00:12] 男："
+    assert proofread._prefix("[01:05] 女：嗯") == "[01:05] 女："

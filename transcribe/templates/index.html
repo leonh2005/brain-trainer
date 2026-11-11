@@ -47,6 +47,9 @@
       <label class="muted" style="display:flex;align-items:center;gap:6px;cursor:pointer">
         <input type="checkbox" id="two" checked> 兩人對話（強制分兩位，適合一對一錄音）
       </label>
+      <label class="muted" style="display:flex;align-items:center;gap:6px;cursor:pointer">
+        <input type="checkbox" id="polish" checked> AI 校對（修正錯字與標點，用 Gemini，不新增內容）
+      </label>
     </div>
     <div class="row" style="margin-top:12px">
       <button id="go" disabled>開始轉錄</button>
@@ -103,6 +106,7 @@ go.onclick = () => {
   const fd = new FormData();
   fd.append('file', file);
   fd.append('speakers', document.getElementById('two').checked ? '2' : '0');
+  fd.append('polish', document.getElementById('polish').checked ? '1' : '0');
   fetch('upload', { method: 'POST', body: fd })
     .then(r => r.json())
     .then(d => {

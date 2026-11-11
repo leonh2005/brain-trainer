@@ -109,6 +109,12 @@ def diarize(wav, progress=None, num_speakers=None):
         from pyannote.audio import Pipeline
         token = open(HF_TOKEN_PATH, encoding="utf-8").read().strip()
         pipe = Pipeline.from_pretrained("pyannote/speaker-diarization-3.1", token=token)
+        try:
+            import torch
+            if torch.backends.mps.is_available():
+                pipe.to(torch.device("mps"))   # CPU 跑 52 分鐘要 30+ 分鐘
+        except Exception:
+            pass
         kwargs = {"num_speakers": num_speakers} if num_speakers else {}
         out = pipe(wav, **kwargs)
         # pyannote 4.x 回傳 DiarizeOutput；3.x 直接回 Annotation
@@ -120,7 +126,7 @@ def diarize(wav, progress=None, num_speakers=None):
         return None, f"{type(e).__name__}: {e}"
 
 
-def build_text(wav_name, segs, turns, error=None, elapsed=None):
+def build_text(wav_name, segs, turns, error=None, elapsed=None, polish=False):
     blocks = merge_blocks(segs, turns)
     lines = [f"# 逐字稿：{wav_name}"]
     if turns and all(t[2] in ("男", "女") for t in turns):
@@ -138,11 +144,24 @@ def build_text(wav_name, segs, turns, error=None, elapsed=None):
         m, sec = divmod(int(x), 60)
         return f"{m:02d}:{sec:02d}"
 
+    body = []
     prev_end = None
     for b in blocks:
         if prev_end is not None and b["start"] - prev_end > 90:
-            lines.append(f"[{ts(prev_end)}] （此段 {ts(b['start'] - prev_end)} 無可辨識語音）")
+            body.append({"gap": True, "text": f"[{ts(prev_end)}] （此段 {ts(b['start'] - prev_end)} 無可辨識語音）"})
         who = f"{b['label']}：" if b["label"] else ""
-        lines.append(f"[{ts(b['start'])}] {who}{b['text']}")
+        body.append({"gap": False, "text": f"[{ts(b['start'])}] {who}{b['text']}"})
         prev_end = b["end"]
+
+    if polish and body:
+        from proofread import proofread_lines
+        content = [b["text"] for b in body if not b["gap"]]
+        fixed, note = proofread_lines(content)
+        it = iter(fixed)
+        for b in body:
+            if not b["gap"]:
+                b["text"] = next(it, b["text"])
+        lines.append(f"# {note}")
+
+    lines.extend(b["text"] for b in body)
     return "\n".join(lines) + "\n", len(blocks)

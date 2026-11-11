@@ -11,7 +11,7 @@ import threading
 import time
 
 import pipeline
-from flask import Flask, jsonify, render_template, request, send_file
+from flask import Flask, jsonify, redirect, render_template, request, send_file
 
 BASE = os.path.dirname(os.path.abspath(__file__))
 DATA = os.path.join(BASE, "data")
@@ -65,7 +65,9 @@ def _run_job(job_id):
         turns, err = pipeline.diarize(wav, progress,
                                       num_speakers=(meta.get("speakers") or None))
         elapsed = time.time() - started
-        text, blocks = pipeline.build_text(os.path.basename(src), segs, turns, err, elapsed)
+        text, blocks = pipeline.build_text(meta.get("name") or os.path.basename(src),
+                                           segs, turns, err, elapsed,
+                                           polish=bool(meta.get("polish")))
 
         out = os.path.join(d, "transcript.txt")
         with open(out, "w", encoding="utf-8") as f:
@@ -155,6 +157,7 @@ def upload():
             "id": job_id, "name": display, "state": "queued", "message": "排隊中",
             "created": time.time(), "src_path": src, "has_speakers": False,
             "speakers": want if want >= 2 else None,
+            "polish": request.form.get("polish", "") == "1",
         }
     _save_meta(job_id)
     _queue.put(job_id)
@@ -177,6 +180,19 @@ def download(job_id):
         return jsonify({"ok": False, "error": "尚未完成"}), 404
     return send_file(path, as_attachment=True,
                      download_name=f"{job_id}_逐字稿.txt", mimetype="text/plain; charset=utf-8")
+
+
+@app.get("/swap/<job_id>")
+def swap(job_id):
+    """互換男/女標籤：音高相近時自動判定可能顛倒，讓使用者一鍵修正。"""
+    path = os.path.join(_job_dir(job_id), "transcript.txt")
+    if not os.path.exists(path):
+        return jsonify({"ok": False, "error": "尚未完成"}), 404
+    text = open(path, encoding="utf-8").read()
+    text = text.replace("] 男：", "] @TMP@：").replace("] 女：", "] 男：").replace("] @TMP@：", "] 女：")
+    with open(path, "w", encoding="utf-8") as f:
+        f.write(text)
+    return redirect(f"/view/{job_id}")
 
 
 @app.get("/view/<job_id>")
