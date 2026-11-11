@@ -131,23 +131,33 @@ SECTOR_PEERS = {
 
 # ── Shioaji 連線 ─────────────────────────────────────────────────────────────
 _sj_api = None
+_session_gen = 0                      # 每次建立新 session +1；用來辨識遲到的舊回呼
 _relogin_needed = threading.Event()   # SDK 回報 session 掉了；由主迴圈重登＋重新訂閱
+_snapshot_health = {'fail_streak': 0} # 快照連續失敗次數（callback 沒送達時的後備偵測）
 SDK_TIMEOUT_MS = 5000                 # SDK 預設 30000，死掉的 session 會讓人等滿 30 秒
 
 
+def _on_session_down(gen):
+    """只有「目前這個 session」的斷線才算數（舊 session 的延遲回呼直接忽略）。"""
+    if gen == _session_gen:
+        _relogin_needed.set()
+
+
 def _get_sj():
-    global _sj_api
+    global _sj_api, _session_gen
     if _sj_api is None:
         api = sj.Shioaji(simulation=False)
         api.login(
             api_key=os.environ['SHIOAJI_API_KEY'],
             secret_key=os.environ['SHIOAJI_SECRET_KEY'],
         )
+        _session_gen += 1
+        gen = _session_gen
         # 回呼跑在 SDK 的 Rust 執行緒：只設旗標，不做任何其他事
         register = (getattr(api, 'set_session_down_callback', None)
                     or getattr(api, 'on_session_down', None))
         if register is not None:
-            register(_relogin_needed.set)
+            register(lambda gen=gen: _on_session_down(gen))
         _sj_api = api
     return _sj_api
 
@@ -223,11 +233,13 @@ def _relogin_and_resubscribe(now: datetime):
             pass
     _sj_api = None
     api = connect_with_retry(deadline_sec=90, interval=5)
+    # 先清旗標：接下來重新訂閱可能花數十秒，期間若再斷線會重新設起
+    _relogin_needed.clear()
+    _snapshot_health['fail_streak'] = 0
     _setup_tick_stream(api)
     codes = list(_universe.items())
     for code, name in codes:
-        _subscribe(api, code, name, now)
-    _relogin_needed.clear()
+        _subscribe(api, code, name, now, keep_ticks=True)
     print(f'[{now.strftime("%H:%M:%S")}] 重登完成，重新訂閱 {len(codes)} 檔')
     return api
 
@@ -253,6 +265,8 @@ def _setup_tick_stream(api):
 
     @api.on_tick_stk_v1()
     def _on_tick(exchange, tick):
+        if _sj_api is not api:      # 舊 session 的殘留 tick，丟掉避免重複計算成交量
+            return
         if getattr(tick, 'simtrade', False):  # 排除試撮
             return
         row = (pd.Timestamp(tick.datetime), float(tick.close), int(tick.volume), int(tick.tick_type))
@@ -322,8 +336,11 @@ def pick_universe() -> dict:
     return {code: names[code] for code in sorted(rank_sum, key=lambda c: rank_sum[c])[:UNIVERSE_SIZE]}
 
 
-def _subscribe(api, code: str, name: str, now: datetime) -> bool:
-    """訂閱並回補；成功回 True（呼叫端據此計算本輪新增檔數）。"""
+def _subscribe(api, code: str, name: str, now: datetime, keep_ticks: bool = False) -> bool:
+    """訂閱並回補；成功回 True（呼叫端據此計算本輪新增檔數）。
+
+    keep_ticks=True 供重連使用：不清掉當日已累積的 tick，回補失敗也不會讓整個上午消失。
+    """
     contract = api.Contracts.Stocks.get(code)
     if contract is None:
         print(f'[subscribe] {code} 無合約，跳過')
@@ -338,8 +355,9 @@ def _subscribe(api, code: str, name: str, now: datetime) -> bool:
         print(f'[subscribe] {code} 失敗（該檔今日無即時資料）: {e}')
         return False
 
-    with _tick_lock:
-        _tick_store.pop(code, None)      # 重新加入時清空，避免舊 cutoff 漏掉淘汰期間的 tick
+    if not keep_ticks:
+        with _tick_lock:
+            _tick_store.pop(code, None)  # 重新加入時清空，避免舊 cutoff 漏掉淘汰期間的 tick
     _last_bar_signals.pop(code, None)
     _backfill_code(api, contract, code)
 
@@ -507,9 +525,12 @@ def get_snapshot(codes: list) -> dict:
         if not contracts:
             return {}
         cmap = {c.code: c for c in contracts}
-        return _parse_snaps(api.snapshots(contracts, timeout=SDK_TIMEOUT_MS), cmap)
+        result = _parse_snaps(api.snapshots(contracts, timeout=SDK_TIMEOUT_MS), cmap)
+        _snapshot_health['fail_streak'] = 0
+        return result
     except Exception as e:
-        print(f'[snapshot] 失敗: {e}')
+        _snapshot_health['fail_streak'] += 1
+        print(f'[snapshot] 失敗（連續 {_snapshot_health["fail_streak"]} 次）: {e}')
         return {}
 
 
@@ -1292,6 +1313,9 @@ if __name__ == '__main__':
         if _now.hour > 13 or (_now.hour == 13 and _now.minute > 35):
             print(f'[{_now.strftime("%H:%M:%S")}] 盤後，監控結束')
             break
+        # 後備偵測：快照連續失敗 6 次（約 30 秒）就當成斷線，即使 callback 沒送達
+        if _snapshot_health['fail_streak'] >= 6:
+            _relogin_needed.set()
         # session 掉了就重登（最多每 60 秒試一次，避免迴圈暴衝）
         if _relogin_needed.is_set() and _time.monotonic() - _last_relogin > 60:
             _last_relogin = _time.monotonic()
