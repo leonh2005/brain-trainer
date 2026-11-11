@@ -68,6 +68,7 @@
           <span class="muted">{{ j.message }}</span>
           <span style="flex:1"></span>
           <a class="view" href="/view/{{ j.id }}" target="_blank">檢視</a>
+          <a class="swap" href="/swap/{{ j.id }}">互換男女</a>
           <a class="dl" href="/download/{{ j.id }}">下載</a>
         </div>
       </div>
@@ -146,7 +147,7 @@ function poll(id) {
       el.querySelector('.bar')?.remove();
       const row = el.querySelector('.row');
       row.insertAdjacentHTML('beforeend',
-        `<span style="flex:1"></span><a href="view/${id}" target="_blank">檢視</a><a href="download/${id}">下載</a>`);
+        `<span style="flex:1"></span><a href="view/${id}" target="_blank">檢視</a><a href="swap/${id}">互換男女</a><a href="download/${id}">下載</a>`);
       go.disabled = false;
     }
     if (job.state === 'error') { clearInterval(t); go.disabled = false; }
