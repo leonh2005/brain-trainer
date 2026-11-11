@@ -33,6 +33,7 @@ CACHE_TTL = 30
 _intraday_cache = {"data": None, "ts": 0}
 _regional_intraday_cache = {"data": None, "ts": 0}
 _stocks_intraday_cache = {"data": None, "ts": 0}
+_stocks_last_good = {}    # code -> 上一筆成功的 points（gateway 中斷時沿用）
 INTRADAY_CACHE_TTL = 55  # 前端每 60 秒刷新一次，快取略短於刷新間隔
 
 _volume_cache = {"data": None, "ts": 0}
@@ -382,21 +383,47 @@ def _fetch_live(force=False):
     return result
 
 
+INTRADAY_MAX_STALE_SEC = 900  # 超過 15 分鐘的舊資料不再當成現況，寧可回失敗
+
+
+def _intraday_fallback(reason, now):
+    """gateway 暫時失效時沿用上一筆成功資料（標記 stale），太舊就回失敗。
+
+    2026-11-11 事故：失敗被快取 55 秒且丟棄舊資料，前端就把整個圖表清空。
+    但也不能無限期沿用——gateway 曾從 01:00 卡到 09:20，昨天的曲線會被當成今天。
+    """
+    data, ts = _intraday_cache["data"], _intraday_cache["ts"]
+    age = now - ts
+    if data and data.get("ok") and age <= INTRADAY_MAX_STALE_SEC:
+        return {**data, "points": list(data.get("points") or []),
+                "stale": True, "stale_age": int(age), "stale_reason": reason}
+    return {"ok": False, "error": reason}
+
+
 def _fetch_intraday(force=False):
     now = time.time()
-    if not force and _intraday_cache["data"] is not None and now - _intraday_cache["ts"] < INTRADAY_CACHE_TTL:
-        return _intraday_cache["data"]
+    cached = _intraday_cache["data"]
+    if not force and cached is not None and now - _intraday_cache["ts"] < INTRADAY_CACHE_TTL:
+        return cached
 
     import urllib.request
     try:
         with urllib.request.urlopen(f"{SHIOAJI_GATEWAY}/intraday?code=IX0001", timeout=15) as r:
             result = json.loads(r.read())
     except Exception as e:
-        result = {"ok": False, "error": str(e)}
+        return _intraday_fallback(str(e), now)
 
-    _intraday_cache["data"] = result
-    _intraday_cache["ts"] = now
-    return result
+    if not isinstance(result, dict):
+        return _intraday_fallback(f"unexpected payload: {type(result).__name__}", now)
+
+    points = result.get("points") or []
+    if result.get("ok") and len(points) >= 2:
+        _intraday_cache["data"] = result
+        _intraday_cache["ts"] = now
+        return result
+
+    # 空回應（盤前常見）不覆蓋快取裡可用的資料
+    return _intraday_fallback(str(result.get("error") or f"points={len(points)}"), now)
 
 
 def _fetch_stocks_intraday(force=False):
@@ -408,12 +435,19 @@ def _fetch_stocks_intraday(force=False):
     import urllib.request
     out = []
     for s in STOCKS:
+        points = []
         try:
             with urllib.request.urlopen(f"{SHIOAJI_GATEWAY}/intraday?code={s['code']}", timeout=15) as r:
                 resp = json.loads(r.read())
-            points = resp.get("points", []) if resp.get("ok") else []
+            if isinstance(resp, dict) and resp.get("ok"):
+                points = resp.get("points", []) or []
         except Exception:
             points = []
+        # 單檔失敗時沿用上一筆成功資料，否則整波 gateway 中斷會清空六張小圖
+        if points:
+            _stocks_last_good[s["code"]] = points
+        else:
+            points = _stocks_last_good.get(s["code"], [])
         out.append({"code": s["code"], "name": s["name"], "points": points})
 
     result = {"ok": True, "stocks": out}

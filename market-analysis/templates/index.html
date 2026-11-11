@@ -683,16 +683,20 @@ function renderIntradayChart(elId, points, prevClose, size, asOfLabel){
 }
 
 async function loadIntraday(fresh){
+  const box = document.getElementById('intraday-chart');
   try{
     const res = await fetch('/api/intraday' + (fresh ? '?fresh=1' : ''));
     const d = await res.json();
     if (!d.ok){
-      document.getElementById('intraday-chart').innerHTML = '<div class="empty">暫無日內走勢資料</div>';
+      // 失敗時保留上一張圖，不要整塊清空（gateway 重登期間會短暫無回應）
+      if (!box.querySelector('svg')) box.innerHTML = '<div class="empty">暫無日內走勢資料</div>';
       return;
     }
-    renderIntradayChart('intraday-chart', d.points || [], _prevClose);
+    const staleLbl = d.stale ? `延遲 ${Math.max(1, Math.round((d.stale_age || 0) / 60))} 分` : '';
+    renderIntradayChart('intraday-chart', d.points || [], _prevClose, undefined, staleLbl);
   }catch(e){
-    document.getElementById('intraday-chart').innerHTML = '<div class="empty">載入失敗</div>';
+    console.warn('日內波載入失敗', e);
+    if (!box.querySelector('svg')) box.innerHTML = '<div class="empty">載入失敗</div>';
   }
 }
 
