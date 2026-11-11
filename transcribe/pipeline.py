@@ -90,7 +90,7 @@ def name_speakers_by_pitch(wav, turns):
     return [(a, b, mapping.get(c, c)) for a, b, c in turns], means
 
 
-def diarize(wav, progress=None):
+def diarize(wav, progress=None, num_speakers=None):
     """回傳 (turns, error)；沒有授權或失敗時 turns 為 None，轉錄結果仍可用。"""
     if progress:
         progress("diarizing", "辨識說話者中…")
@@ -98,7 +98,10 @@ def diarize(wav, progress=None):
         from pyannote.audio import Pipeline
         token = open(HF_TOKEN_PATH, encoding="utf-8").read().strip()
         pipe = Pipeline.from_pretrained("pyannote/speaker-diarization-3.1", token=token)
-        ann = pipe(wav)
+        kwargs = {"num_speakers": num_speakers} if num_speakers else {}
+        out = pipe(wav, **kwargs)
+        # pyannote 4.x 回傳 DiarizeOutput；3.x 直接回 Annotation
+        ann = getattr(out, "speaker_diarization", out)
         turns = [(float(t.start), float(t.end), s) for t, _, s in ann.itertracks(yield_label=True)]
         turns, means = name_speakers_by_pitch(wav, turns)
         return turns, None

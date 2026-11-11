@@ -63,7 +63,8 @@ def _run_job(job_id):
         segs = pipeline.transcribe(wav, progress)
         _set(job_id, segments=len(segs), asr_done=True)
 
-        turns, err = pipeline.diarize(wav, progress)
+        turns, err = pipeline.diarize(wav, progress,
+                                      num_speakers=(meta.get("speakers") or None))
         elapsed = time.time() - started
         text, blocks = pipeline.build_text(os.path.basename(src), segs, turns, err, elapsed)
 
@@ -113,10 +114,15 @@ def upload():
     src = os.path.join(d, safe)
     f.save(src)
 
+    try:
+        want = int(request.form.get("speakers", "0") or 0)
+    except ValueError:
+        want = 0
     with _jobs_lock:
         _jobs[job_id] = {
             "id": job_id, "name": safe, "state": "queued", "message": "排隊中",
             "created": time.time(), "src_path": src, "has_speakers": False,
+            "speakers": want if want >= 2 else None,
         }
     _save_meta(job_id)
     _queue.put(job_id)
