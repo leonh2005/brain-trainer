@@ -1,0 +1,308 @@
+<title>眼藥水選物</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+  /* 設計：醫療用品比較 — 冷靜的藍綠色調、清楚的分級標籤、警語用琥珀色 */
+  :root {
+    --bg: #f4f7f8;
+    --surface: #ffffff;
+    --surface-2: #e9eff1;
+    --fg: #14201f;
+    --fg-muted: #5a6b70;
+    --line: #d3dee1;
+    --accent: #0f6f73;
+    --accent-soft: #e0f0f1;
+    --ok: #157347;
+    --ok-soft: #e3f3ea;
+    --warn: #8a5a00;
+    --warn-soft: #fbf1da;
+    --bad: #a32b22;
+    --bad-soft: #fbe8e6;
+    --mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+    --sans: "Noto Sans TC", -apple-system, BlinkMacSystemFont, "PingFang TC", sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0e1416; --surface: #151d1f; --surface-2: #1c2629;
+      --fg: #e2ecec; --fg-muted: #93a5a8; --line: #273336;
+      --accent: #5fc6c9; --accent-soft: #123033;
+      --ok: #55cc8e; --ok-soft: #122a1e;
+      --warn: #e0ad4d; --warn-soft: #2b2312;
+      --bad: #f28b82; --bad-soft: #2e1715;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0e1416; --surface: #151d1f; --surface-2: #1c2629;
+    --fg: #e2ecec; --fg-muted: #93a5a8; --line: #273336;
+    --accent: #5fc6c9; --accent-soft: #123033;
+    --ok: #55cc8e; --ok-soft: #122a1e;
+    --warn: #e0ad4d; --warn-soft: #2b2312;
+    --bad: #f28b82; --bad-soft: #2e1715;
+    color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--fg);
+    font-family: var(--sans); font-size: 15.5px; line-height: 1.75;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+  }
+  main { max-width: 820px; margin: 0 auto; padding-block: 44px 72px; }
+  h1 { font-size: clamp(1.5rem, 4vw, 1.95rem); margin: 0 0 6px; text-wrap: balance; }
+  h2 { font-size: 1.12rem; margin: 0 0 12px; }
+  p { margin: 0 0 12px; }
+  .meta { font-family: var(--mono); font-size: .76rem; color: var(--fg-muted); letter-spacing: .03em; }
+  .lede { color: var(--fg-muted); margin-top: 8px; }
+  section { margin-top: 40px; }
+  .eyebrow {
+    font-family: var(--mono); font-size: .7rem; letter-spacing: .12em;
+    color: var(--fg-muted); text-transform: uppercase; margin-bottom: 6px;
+  }
+  .verdict {
+    margin: 26px 0 0; padding: 18px 20px; background: var(--surface);
+    border: 1px solid var(--line); border-left: 4px solid var(--warn); border-radius: 5px;
+  }
+  .verdict strong { font-weight: 700; }
+
+  .alert {
+    margin: 22px 0; padding: 16px 18px; background: var(--warn-soft);
+    border: 1px solid var(--warn); border-radius: 5px; font-size: .92rem;
+  }
+  .alert b { color: var(--warn); }
+
+  .table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 5px; background: var(--surface); }
+  table { border-collapse: collapse; width: 100%; min-width: 620px; font-size: .88rem; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { font-size: .74rem; letter-spacing: .05em; color: var(--fg-muted); font-weight: 500; background: var(--surface-2); }
+  tr:last-child td { border-bottom: 0; }
+  .price { font-family: var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .mono { font-family: var(--mono); font-size: .82rem; }
+  .tag {
+    display: inline-block; font-family: var(--mono); font-size: .7rem;
+    padding: 1px 7px; border-radius: 3px; white-space: nowrap; font-weight: 600;
+  }
+  .tag.mild { color: var(--warn); background: var(--warn-soft); }
+  .tag.none { color: var(--fg-muted); background: var(--surface-2); }
+  .tag.cool { color: var(--bad); background: var(--bad-soft); }
+  .tag.best { color: var(--ok); background: var(--ok-soft); }
+
+  .pick {
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: 5px; padding: 15px 18px; margin-bottom: 12px;
+  }
+  .pick h3 { margin: 0 0 4px; font-size: .98rem; }
+  .pick .why { font-size: .9rem; color: var(--fg-muted); margin: 0; }
+  .pick.best { border-color: var(--accent); }
+
+  ul.plain { margin: 0; padding-left: 20px; font-size: .92rem; }
+  ul.plain li { margin-bottom: 6px; }
+  ol.plain { margin: 0; padding-left: 22px; font-size: .92rem; }
+  ol.plain li { margin-bottom: 8px; }
+  .src { font-size: .8rem; color: var(--fg-muted); }
+  .src li { margin-bottom: 4px; }
+  footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--line); font-size: .8rem; color: var(--fg-muted); }
+</style>
+
+<main>
+  <header>
+    <p class="meta">選物研究 · 2026-11-10 · 已依成分表重新篩選</p>
+    <h1>抗疲勞眼藥水（排除血管收縮劑、類固醇）</h1>
+    <p class="lede">上一版六款逐一核對有効成分後的結果：五款含血管收縮劑被剔除，補進五款真正不含的。</p>
+
+    <div class="verdict">
+      <strong>先講結論：上一版六款裡，只有參天 Beauteye 過關。</strong>
+      另外五款（LION Smile40 系列四款、前一版首選 EX Gold Mild）全部含 <span class="mono">塩酸テトラヒドロゾリン</span>，這是血管收縮劑。補查後找到 <b>Vロートゴールド40マイルド</b>——6 種抗疲勞成分、清涼感標示 0、不含血管收縮劑，是目前最符合你條件的。
+    </div>
+
+    <div class="alert">
+      <b>青光眼提醒。</b>你的紀錄裡有青光眼。血管收縮劑會讓眼壓調節更不穩定，長期用還有反彈性充血（越點越紅）。這份清單只做客觀的成分核對，<b>買之前把成分表給藥師或眼科醫師看過</b>，我不替你判斷能不能用。
+    </div>
+  </header>
+
+  <section>
+    <div class="eyebrow">第一步 · 剔除</div>
+    <h2>被排除的品項</h2>
+    <p>以下都含 <span class="mono">塩酸テトラヒドロゾリン</span>（Tetrahydrozoline hydrochloride）——日本 OTC 最常用的血管收縮劑，作用是去紅血絲。</p>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>品項</th><th>配合量</th><th>狀態</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>LION Smile40 <b>EX mild</b></td>
+            <td class="mono">0.01g / 100mL</td>
+            <td><span class="tag cool">排除</span></td>
+          </tr>
+          <tr>
+            <td>LION Smile40 <b>EX Gold Mild</b></td>
+            <td class="mono">0.01g / 100mL</td>
+            <td><span class="tag cool">排除</span></td>
+          </tr>
+          <tr>
+            <td>LION Smile40 <b>Premium THE ONE Mild</b></td>
+            <td class="mono">0.02g / 100mL</td>
+            <td><span class="tag cool">排除</span></td>
+          </tr>
+          <tr>
+            <td>LION Smile40 <b>Premium DX</b></td>
+            <td class="mono">0.01g / 100mL</td>
+            <td><span class="tag cool">排除</span></td>
+          </tr>
+          <tr>
+            <td>參天 <b>メディカル12</b></td>
+            <td class="mono">0.03%</td>
+            <td><span class="tag cool">排除</span></td>
+          </tr>
+          <tr>
+            <td>ロート <b>アイストレッチ</b></td>
+            <td class="mono">0.010%</td>
+            <td><span class="tag cool">排除</span></td>
+          </tr>
+          <tr>
+            <td>ロート<b>クール40</b></td>
+            <td class="mono">—</td>
+            <td><span class="tag mild">成分過關但含薄荷醇（會涼）</span></td>
+          </tr>
+          <tr>
+            <td>ロート <b>デジアイa</b></td>
+            <td class="mono">—</td>
+            <td><span class="tag mild">成分過關但含薄荷醇＋樟腦（會涼）</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="alert" style="margin-top:18px">
+      <b>類固醇的部分：全數未驗出。</b>這次核對了 15 款日本 OTC 眼藥水的完整有効成分表，沒有任何一款含類固醇。日本第 2 類／第 3 類医薬品法規上就不允許添加類固醇——那是処方薬（處方藥）才有的成分。所以這輪篩選實際上只砍掉了血管收縮劑。
+    </div>
+  </section>
+
+  <section>
+    <div class="eyebrow">第二步 · 合格清單</div>
+    <h2>六款不含血管收縮劑</h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>品項</th><th>容量</th><th>清涼感</th><th>有効成分</th><th>價格</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><b>Vロートゴールド40マイルド</b><br><span class="mono" style="color:var(--fg-muted)">樂敦 V金40 溫和型</span></td>
+            <td class="mono">20mL</td>
+            <td><span class="tag best">0</span></td>
+            <td>タウリン 1%<br>ネオスチグミン 0.005%<br>ビタミンE 0.05%<br>ビタミンB6 0.1%<br>L-アスパラギン酸K 1%<br>クロルフェニラミン 0.03%</td>
+            <td class="price">858 円</td>
+          </tr>
+          <tr>
+            <td><b>Vロートゴールド40コンタクトマイルド</b><br><span class="mono" style="color:var(--fg-muted)">隱形眼鏡可戴</span></td>
+            <td class="mono">20mL</td>
+            <td><span class="tag best">0</span></td>
+            <td>タウリン 1%<br>ネオスチグミン 0.005%<br>ビタミンE 0.03%<br>ビタミンB6 0.05%<br>コンドロイチン硫酸Na 0.5%<br>クロルフェニラミン 0.02%</td>
+            <td class="price">858 円</td>
+          </tr>
+          <tr>
+            <td>參天 <b>Beauteye</b> 玫瑰</td>
+            <td class="mono">12mL</td>
+            <td><span class="tag none">未標</span></td>
+            <td>タウリン 1%<br>ビタミンB12 0.02%<br>パンテノール<br>L-アスパラギン酸K<br>コンドロイチン硫酸Na</td>
+            <td class="price">260–355</td>
+          </tr>
+          <tr>
+            <td><b>ロート養潤水α</b></td>
+            <td class="mono">13mL</td>
+            <td><span class="tag none">未標</span></td>
+            <td>コンドロイチン硫酸Na 0.5%<br>タウリン 0.5%<br>ビタミンE 0.03%<br>L-アスパラギン酸K 0.5%</td>
+            <td class="price">164–290</td>
+          </tr>
+          <tr>
+            <td><b>ロートCキューブ プレミアムモイスチャー</b><br><span class="mono" style="color:var(--fg-muted)">隱形眼鏡可戴</span></td>
+            <td class="mono">18mL</td>
+            <td><span class="tag best">0</span></td>
+            <td>コンドロイチン硫酸Na 0.5%<br>塩化カリウム 0.15%<br>塩化ナトリウム 0.4%<br>ヒプロメロース 0.25%<br>ブドウ糖 0.09%</td>
+            <td class="price">825 円<br><span style="font-size:.78em">台灣 147</span></td>
+          </tr>
+          <tr>
+            <td><b>なみだロート ファイブ</b><br><span class="mono" style="color:var(--fg-muted)">純人工淚液</span></td>
+            <td class="mono">4mL×5本</td>
+            <td><span class="tag best">0</span></td>
+            <td>塩化カリウム 0.1%<br>塩化ナトリウム 0.4%</td>
+            <td class="price">825 円<br><span style="font-size:.78em">台灣 242–249</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="margin-top:12px;font-size:.86rem;color:var(--fg-muted)">「円」是日本官網標示的希望小売価格；新台幣數字是 feebee 比價站 2026-11-10 抓到台灣賣場（唐吉軻德、惠比壽藥妝、完美行、DOKODEMO 等）的實售價，未含國際運費。空白處代表台灣通路沒查到現貨。</p>
+  </section>
+
+  <section>
+    <div class="eyebrow">直接買</div>
+    <h2>三個選擇，看你在意什麼</h2>
+
+    <div class="pick best">
+      <h3>抗疲勞最強、又不涼 → Vロートゴールド40マイルド（858 円）</h3>
+      <p class="why">六種有効成分全是抗疲勞與代謝路線（牛磺酸、B6、維生素E、新斯的明、L-天門冬酸鉀），完全沒有血管收縮劑。清涼感官方標示 <b>0</b>。唯一要注意：含防腐劑 benzalkonium chloride，長期每天點要跟醫師討論。</p>
+    </div>
+
+    <div class="pick">
+      <h3>戴隱形眼鏡、又怕涼 → Vロートゴールド40コンタクトマイルド（858 円）</h3>
+      <p class="why">同一系列，配方換成角膜保護的コンドロイチン硫酸鈉，清涼感也是 0，軟式／硬式／拋棄式都能戴著點。缺點是抗疲勞成分濃度略低於非接觸鏡版。</p>
+    </div>
+
+    <div class="pick">
+      <h3>台灣買得到、不想代購 → 參天 Beauteye 玫瑰（260–355 元）</h3>
+      <p class="why">唯一從上一版活下來的。唐吉軻德、惠比壽藥妝、小熊藥妝都有現貨。五種有効成分、無血管收縮劑；清涼感官方沒標，部分賣場標 2，實際點起來是微涼不是刺痛。</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="eyebrow">自己看</div>
+    <h2>四步判斷任何一款眼藥水</h2>
+    <ol class="plain">
+      <li><b>翻到「有効成分」欄</b>，找這三個字：<span class="mono">テトラヒドロゾリン</span>、<span class="mono">ナファゾリン</span>、<span class="mono">フェニレフリン</span>。任何一個出現就是血管收縮劑。</li>
+      <li><b>看「効能・効果」</b>：出現「結膜充血」幾乎等於有血管收縮劑——這是它唯一能宣稱的效果。</li>
+      <li><b>看類固醇</b>：成分名結尾是 <span class="mono">ゾロン</span>、<span class="mono">メタゾン</span>、<span class="mono">コルチゾン</span> 就是類固醇。日本 OTC 不會有，台灣成藥也不該有。</li>
+      <li><b>看清涼感</b>：LION 標 1–7，樂敦標 ★ 數。追「不涼」就找 0 或 ☆☆☆☆☆。</li>
+    </ol>
+  </section>
+
+  <section>
+    <div class="eyebrow">警語</div>
+    <h2>青光眼族群的三件事</h2>
+    <ul class="plain">
+      <li><b>血管收縮劑要避開。</b>它作用在結膜血管，對眼壓沒有治療效果，卻可能讓房水循環更不穩定。日本包裝的「相談すること」欄位明列「緑内障」為使用前應諮詢的對象——這批被排除的六款全都印了這行。</li>
+      <li><b>反彈性充血。</b>連續點超過一週，停用後紅眼會反彈得更嚴重，很多人因此越點越依賴。</li>
+      <li><b>防腐劑。</b>多支裝幾乎都含 benzalkonium chloride，長期高頻使用對角膜上皮有累積傷害。若要天天點，單支裝（無防腐劑）的人工淚液是比較安全的底。</li>
+    </ul>
+  </section>
+
+  <section>
+    <div class="eyebrow">查證狀態</div>
+    <h2>這次做到了什麼、沒做到什麼</h2>
+    <ul class="plain">
+      <li><b>做到了：成分表逐款核對。</b>樂敦日本官網 12 個產品頁、參天官網、加上 Yahoo Japan 商品頁的原文引用，每一款的「有効成分」欄都抓下來比對過，不是看包裝標語。</li>
+      <li><b>做到了：PDF 添付文書驗證。</b>下載 10 份日本官方 PDF 交叉檢查，確認這些品項的警語欄都有「緑内障」。</li>
+      <li><b>沒做：論壇負評。</b>Dcard、PTT、Mobile01 要真實瀏覽器才讀得到，這輪沒開。</li>
+      <li><b>沒做：台灣實體藥局現價。</b>大樹、丁丁、杏一通常比代購便宜 10–20%，但沒有線上價可查。</li>
+      <li><b>價格可信度：</b>「円」是官網標價，可信；新台幣是比價站抓到的賣場標價，會隨匯率與活動變動。</li>
+    </ul>
+  </section>
+
+  <footer>
+    <p style="margin-bottom:6px"><strong>出處（皆為 2026-11-10 查詢）</strong></p>
+    <ul class="src" style="margin:0;padding-left:18px">
+      <li>樂敦日本官網 · Vロートゴールド40マイルド 成分表：<a href="https://jp.rohto.com/gold40/eyedrop-mild/" target="_blank" rel="noopener">jp.rohto.com/gold40/eyedrop-mild</a></li>
+      <li>樂敦日本官網 · Vロートゴールド40コンタクトマイルド：<a href="https://jp.rohto.com/gold40/eyedrop-cl-mild/" target="_blank" rel="noopener">jp.rohto.com/gold40/eyedrop-cl-mild</a></li>
+      <li>樂敦日本官網 · Cキューブ プレミアムモイスチャー：<a href="https://jp.rohto.com/c3/premium-moisture/" target="_blank" rel="noopener">jp.rohto.com/c3/premium-moisture</a></li>
+      <li>樂敦日本官網 · なみだロート ファイブ：<a href="https://jp.rohto.com/namida-rohto/five/" target="_blank" rel="noopener">jp.rohto.com/namida-rohto/five</a></li>
+      <li>參天製薬 · Beauteye 品牌頁：<a href="https://www.santen.com/jp/healthcare/eye/products/brand/beauteye" target="_blank" rel="noopener">santen.com/…/brand/beauteye</a></li>
+      <li>LION スマイル40 · EX 成分（含塩酸テトラヒドロゾリン 0.01g）：<a href="https://smile.lion.co.jp/products/smile40-ex" target="_blank" rel="noopener">smile.lion.co.jp/products/smile40-ex</a></li>
+      <li>LION スマイル40 · プレミアム THE ONE マイルド（含 0.02g）：<a href="https://smile.lion.co.jp/products/smile40-premium-the-one-mild" target="_blank" rel="noopener">smile.lion.co.jp/products/smile40-premium-the-one-mild</a></li>
+      <li>feebee 比價站 · Beauteye 搜尋：<a href="https://feebee.com.tw/s/Beauteye/" target="_blank" rel="noopener">feebee.com.tw/s/Beauteye</a></li>
+      <li>feebee 比價站 · 養潤水搜尋：<a href="https://feebee.com.tw/s/%E3%83%AD%E3%83%BC%E3%83%88%E9%A4%8A%E6%BD%A4%E6%B0%B4/" target="_blank" rel="noopener">feebee.com.tw/s/ロート養潤水</a></li>
+    </ul>
+  </footer>
+</main>

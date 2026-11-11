@@ -1,0 +1,330 @@
+<title>沖牙機 4000 元選購</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;700&display=swap">
+<style>
+  /* Layout: one narrow reading column; a price-ordered table is the centre of gravity. */
+  :root{
+    --bg:#f4f6f4; --surface:#ffffff; --surface-2:#eef2ef;
+    --ink:#141c1a; --muted:#5c6b66; --line:#d8e0dc;
+    --accent:#0d7266; --accent-soft:#dcefe9;
+    --flag:#a4490e; --flag-soft:#fbeadb;
+    --serif:"Noto Serif TC","Songti TC",Georgia,serif;
+    --sans:"Noto Sans TC",-apple-system,"PingFang TC","Helvetica Neue",sans-serif;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#0e1413; --surface:#161e1c; --surface-2:#1d2725;
+      --ink:#e6eeeb; --muted:#93a5a0; --line:#2a3734;
+      --accent:#55d3b8; --accent-soft:#17332d;
+      --flag:#f0a269; --flag-soft:#2e2118;
+      color-scheme:dark;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0e1413; --surface:#161e1c; --surface-2:#1d2725;
+    --ink:#e6eeeb; --muted:#93a5a0; --line:#2a3734;
+    --accent:#55d3b8; --accent-soft:#17332d;
+    --flag:#f0a269; --flag-soft:#2e2118;
+    color-scheme:dark;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    background:var(--bg); color:var(--ink);
+    font-family:var(--sans); font-size:16px; line-height:1.75;
+    padding-left:max(16px,env(safe-area-inset-left,0px));
+    padding-right:max(16px,env(safe-area-inset-right,0px));
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:940px;margin:0 auto;padding-block:40px 72px}
+
+  /* header */
+  header{display:flex;flex-wrap:wrap;align-items:flex-end;gap:20px;justify-content:space-between;
+    padding-bottom:22px;border-bottom:2px solid var(--ink)}
+  h1{font-family:var(--serif);font-weight:700;font-size:clamp(30px,5vw,44px);line-height:1.15;
+    margin:0;letter-spacing:.01em;text-wrap:balance}
+  .meta{display:flex;flex-direction:column;gap:2px;font-size:13px;color:var(--muted);
+    font-variant-numeric:tabular-nums;text-align:right}
+  @media (max-width:520px){.meta{text-align:left}}
+  .kicker{font-size:12px;letter-spacing:.16em;color:var(--accent);font-weight:700;
+    text-transform:uppercase;margin:0 0 8px}
+
+  section{margin-top:52px}
+  h2{font-family:var(--serif);font-weight:600;font-size:22px;margin:0 0 6px;text-wrap:balance}
+  .sub{color:var(--muted);font-size:14px;margin:0 0 20px}
+
+  /* verdict cards */
+  .picks{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+  .pick{background:var(--surface);border:1px solid var(--line);border-radius:14px;
+    padding:18px 18px 16px;display:flex;flex-direction:column;gap:6px;min-width:0}
+  .pick.lead{border-color:var(--accent);background:var(--accent-soft);
+    box-shadow:0 1px 0 var(--accent) inset}
+  .pick .for{font-size:12px;letter-spacing:.1em;color:var(--muted);font-weight:700}
+  .pick.lead .for{color:var(--accent)}
+  .pick .name{font-family:var(--serif);font-weight:700;font-size:19px;line-height:1.35}
+  .pick .price{font-size:15px;font-weight:700;font-variant-numeric:tabular-nums}
+  .pick .why{font-size:14px;color:var(--muted);line-height:1.65}
+  .pick .why b{color:var(--ink);font-weight:500}
+
+  /* table */
+  .tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+  table{width:100%;border-collapse:collapse;font-size:14px;min-width:640px}
+  thead th{text-align:left;font-size:12px;letter-spacing:.08em;font-weight:700;color:var(--muted);
+    background:var(--surface-2);padding:10px 14px;white-space:nowrap;
+    border-bottom:1px solid var(--line);position:sticky;top:0}
+  tbody td{padding:12px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+  tbody tr:last-child td{border-bottom:0}
+  tbody tr:hover td{background:var(--surface-2)}
+  td.model{font-weight:700;white-space:nowrap}
+  td.price,td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
+  .tag{display:inline-block;font-size:11px;font-weight:700;padding:1px 8px;border-radius:99px;
+    border:1px solid var(--line);color:var(--muted);white-space:nowrap}
+  .tag.desk{color:var(--accent);border-color:var(--accent);background:var(--accent-soft)}
+  .note{margin:12px 0 0;font-size:13px;color:var(--muted)}
+
+  /* principle list */
+  .rules{display:grid;gap:2px;counter-reset:r;background:var(--line);
+    border-radius:12px;overflow:hidden}
+  .rule{background:var(--surface);padding:16px 18px;display:grid;
+    grid-template-columns:28px 1fr;gap:14px;align-items:start}
+  .rule::before{counter-increment:r;content:counter(r,decimal-leading-zero);
+    font-variant-numeric:tabular-nums;font-size:12px;font-weight:700;color:var(--accent);
+    padding-top:3px;letter-spacing:.04em}
+  .rule h3{font-size:15px;font-weight:700;margin:0 0 2px}
+  .rule p{margin:0;font-size:14px;color:var(--muted);line-height:1.7}
+
+  /* myth block */
+  .myths{display:grid;gap:14px}
+  .myth{background:var(--surface);border-left:3px solid var(--flag);border-radius:0 10px 10px 0;
+    padding:14px 18px}
+  .myth .q{font-weight:700;font-size:15px;margin:0 0 4px}
+  .myth .a{margin:0;font-size:14px;color:var(--muted);line-height:1.7}
+  .myth .a b{color:var(--ink);font-weight:500}
+
+  .buy{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px 20px}
+  .buy ul{margin:0;padding-left:1.2em;font-size:14px;color:var(--muted);line-height:1.85}
+  .buy ul b{color:var(--ink);font-weight:500}
+
+  footer{margin-top:56px;padding-top:18px;border-top:1px solid var(--line);
+    font-size:12px;color:var(--muted);line-height:1.9}
+  a{color:var(--accent);text-decoration-thickness:1px;text-underline-offset:2px}
+  a:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+</style>
+
+<div class="wrap">
+  <header>
+    <div>
+      <p class="kicker">選物 · 口腔清潔</p>
+      <h1>沖牙機 4000 元以內</h1>
+    </div>
+    <div class="meta">
+      <span>預算上限 NT$4,000</span>
+      <span>查價日 2026/10/28</span>
+      <span>價格為網路通路參考區間</span>
+    </div>
+  </header>
+
+  <section>
+    <h2>先看結論</h2>
+    <p class="sub">4,000 元的預算在台灣市場已經買得到一線品牌，剩下的是「你要在家用還是帶出門」。</p>
+    <div class="picks">
+      <div class="pick lead">
+        <span class="for">家用定點、想一次沖完</span>
+        <span class="name">Waterpik WP-660</span>
+        <span class="price">NT$3,100–3,980</span>
+        <span class="why"><b>桌上型、650ml、10 段水壓（10–100 PSI）</b>，Waterpik 是唯一拿到 ADA 美國牙醫學會認證的沖牙機品牌。全家共用、不用中途補水，牙周囊袋也沖得到。</span>
+      </div>
+      <div class="pick">
+        <span class="for">浴室小、偶爾帶出門</span>
+        <span class="name">飛利浦 HX3826</span>
+        <span class="price">NT$3,290</span>
+        <span class="why"><b>X 型四向水流</b>，一次覆蓋更大範圍的牙齦線，對牙齦容易流血的人比較溫和。250ml 以攜帶型來說偏大。</span>
+      </div>
+      <div class="pick">
+        <span class="for">想先試水溫、不想賭</span>
+        <span class="name">小米電動沖牙器 2</span>
+        <span class="price">NT$660–749</span>
+        <span class="why"><b>不到 800 元、IPX7、90 天續航</b>。先用兩個月確認自己真的會用，再加碼買 3,000 元等級的機器，比一次買貴的放著長灰塵划算。</span>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>價位帶一覽</h2>
+    <p class="sub">同價位帶裡，差別主要在「最低檔夠不夠柔」和「水箱要不要中途補水」。</p>
+    <div class="tablewrap">
+      <table>
+        <thead>
+          <tr>
+            <th>型號</th><th>類型</th><th>參考價</th><th>水壓</th><th>水箱</th><th>重點</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="model">小米 電動沖牙器 2</td>
+            <td><span class="tag">攜帶</span></td>
+            <td class="price">660–749</td>
+            <td class="n">3 模式</td>
+            <td class="n">200 ml</td>
+            <td>IPX7 全機防水、4 小時快充、溫和模式可用約 90 天</td>
+          </tr>
+          <tr>
+            <td class="model">SAKANO KEN SI-500</td>
+            <td><span class="tag">攜帶</span></td>
+            <td class="price">854</td>
+            <td class="n">5 段</td>
+            <td class="n">300 ml</td>
+            <td>軟管取水設計，任何角度都吸得到水；附多種噴嘴</td>
+          </tr>
+          <tr>
+            <td class="model">SAMPO WB-Z2003NL</td>
+            <td><span class="tag">攜帶</span></td>
+            <td class="price">888</td>
+            <td class="n">8 檔</td>
+            <td class="n">200 ml</td>
+            <td>同價位水壓段數最細，低噪音；適合怕痛、要慢慢調的人</td>
+          </tr>
+          <tr>
+            <td class="model">Kolin KTB-JB185</td>
+            <td><span class="tag">攜帶</span></td>
+            <td class="price">888</td>
+            <td class="n">3 模式</td>
+            <td class="n">150 ml</td>
+            <td>充飽電可用約 60 分鐘，續航在同價位突出</td>
+          </tr>
+          <tr>
+            <td class="model">AWSON AW-3300</td>
+            <td><span class="tag desk">桌上型</span></td>
+            <td class="price">960</td>
+            <td class="n">10 段</td>
+            <td class="n">1000 ml</td>
+            <td>最便宜的桌上型，大水箱不用補水；要插電、佔位</td>
+          </tr>
+          <tr>
+            <td class="model">PORClean WASH 330</td>
+            <td><span class="tag">攜帶</span></td>
+            <td class="price">1,280</td>
+            <td class="n">3 模式</td>
+            <td class="n">140 ml</td>
+            <td>比手機還輕，水流溫和；水箱小是代價</td>
+          </tr>
+          <tr>
+            <td class="model">Panasonic EW-DJ31</td>
+            <td><span class="tag">攜帶</span></td>
+            <td class="price">1,890</td>
+            <td class="n">4 段</td>
+            <td class="n">150 ml</td>
+            <td>伸縮機身、1 小時快充，出差旅行最好收</td>
+          </tr>
+          <tr>
+            <td class="model">Oral-B MDH20</td>
+            <td><span class="tag">攜帶</span></td>
+            <td class="price">2,790</td>
+            <td class="n">3 段</td>
+            <td class="n">150 ml</td>
+            <td>活氧微分子水柱，主打深入牙齦溝</td>
+          </tr>
+          <tr>
+            <td class="model">Waterpik WP-560</td>
+            <td><span class="tag">攜帶</span></td>
+            <td class="price">3,100–3,599</td>
+            <td class="n">3 段<br>45–75 PSI</td>
+            <td class="n">207 ml</td>
+            <td>無線旗艦款，磁吸充電；Waterpik 品牌背書</td>
+          </tr>
+          <tr>
+            <td class="model">飛利浦 HX3826</td>
+            <td><span class="tag">攜帶</span></td>
+            <td class="price">3,290</td>
+            <td class="n">2 模式 3 級</td>
+            <td class="n">250 ml</td>
+            <td>X 型四向水流，刷牙齦線效率高</td>
+          </tr>
+          <tr>
+            <td class="model">Waterpik WP-660</td>
+            <td><span class="tag desk">桌上型</span></td>
+            <td class="price">3,100–3,980</td>
+            <td class="n">10 段<br>10–100 PSI</td>
+            <td class="n">650 ml</td>
+            <td>ADA 認證、附牙周噴嘴，可接牙菌斑噴嘴做深層清潔</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">價格取自 momo、PChome、東森、蝦皮與 BigGo／飛比比價，會隨檔期浮動。特別注意：搜尋結果裡數百元的「Waterpik 沖牙機」多半是<b>噴頭或水管配件</b>，不是主機。</p>
+  </section>
+
+  <section>
+    <h2>規格表看不出來的五件事</h2>
+    <p class="sub">這五點決定你買回家三天後還在不在用。</p>
+    <div class="rules">
+      <div class="rule">
+        <div>
+          <h3>最低檔要「柔」，不是最高檔要「強」</h3>
+          <p>新手最常犯的錯是開強檔，沖到牙齦流血後就永遠收進櫃子。挑有明確「柔和／敏感模式」且最低段真的溫和的機種；8 段、10 段的機型容錯更高。</p>
+        </div>
+      </div>
+      <div class="rule">
+        <div>
+          <h3>水箱容量決定你會不會偷懶</h3>
+          <p>150ml 大約只夠沖 30–40 秒，全口通常要補水 1–2 次。要一次沖完，250ml 是下限，650ml 以上才是真的不用停。</p>
+        </div>
+      </div>
+      <div class="rule">
+        <div>
+          <h3>水箱可不可以拆下來洗</h3>
+          <p>沖牙機最常見的災情不是馬達壞，是水箱內壁發霉。可拆水箱＋每天倒空晾乾，壽命差好幾年。</p>
+        </div>
+      </div>
+      <div class="rule">
+        <div>
+          <h3>噴嘴是耗材，先算半年成本</h3>
+          <p>原廠建議 3–6 個月換一次噴嘴。冷門品牌停產後買不到噴嘴，機器就報廢了。買之前先確認該型號的噴嘴在台灣買得到、單支多少錢。</p>
+        </div>
+      </div>
+      <div class="rule">
+        <div>
+          <h3>IPX7 與否，決定能不能在淋浴間用</h3>
+          <p>只在洗手台用沒差；習慣邊洗澡邊沖的人，沒有 IPX7 的機種別帶進淋浴間。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>三個常見誤解</h2>
+    <div class="myths">
+      <div class="myth">
+        <p class="q">「買了就能取代牙線？」</p>
+        <p class="a"><b>不行。</b>沖牙機沖得掉大塊菜渣，沖不掉貼在牙面上的牙菌斑生物膜，那要靠牙線的物理摩擦刮除。牙醫師的一貫說法是「刷牙＋牙線＋沖牙機」三件一起，沖牙機是補死角，不是替代品。</p>
+      </div>
+      <div class="myth">
+        <p class="q">「水壓越強洗越乾淨？」</p>
+        <p class="a"><b>不會。</b>超出牙齦耐受度只會造成疼痛與反覆創傷。從最低段開始，一週後再往上加，是比較安全的節奏。</p>
+      </div>
+      <div class="myth">
+        <p class="q">「用沖牙機會讓牙齦萎縮？」</p>
+        <p class="a"><b>正確使用不會。</b>水柱能沖進牙齦溝、減少發炎出血。真正會傷牙齦的是「高水壓垂直猛沖牙肉」，以及「只靠沖牙機、不刷牙也不用牙線」導致牙菌斑堆積。</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>下單前</h2>
+    <div class="buy">
+      <ul>
+        <li><b>公司貨 vs 水貨：</b>Waterpik、飛利浦、Panasonic 都有台灣代理，認明有保固貼紙的，維修與噴嘴補貨才不會斷。</li>
+        <li><b>比價：</b>把型號丟進飛比價格或 BigGo，價差經常到 500–800 元；官方網站特價有時比電商低（Waterpik 官網 WP-660 曾特價 3,980）。</li>
+        <li><b>先確認配件：</b>同型號常有「標準組」與「豪華組」，差別在噴嘴數量與收納盒，別只看數字比價。</li>
+        <li><b>若戴矯正器：</b>務必確認附「矯正噴嘴」，或該型號可單買。</li>
+      </ul>
+    </div>
+  </section>
+
+  <footer>
+    資料來源：<a href="https://corepickslab.com/water-flosser-reviews/" target="_blank" rel="noopener">CorePicksLab 沖牙機評比</a>、<a href="https://review.com.tw/%E6%B2%96%E7%89%99%E6%A9%9F%E6%8E%A8%E8%96%A6/" target="_blank" rel="noopener">review.com.tw 熱銷排行</a>、<a href="https://www.mi.com/tw/product/xiaomi-water-flosser-2/" target="_blank" rel="noopener">小米台灣官網</a>、<a href="https://biggo.com.tw/" target="_blank" rel="noopener">BigGo 比價</a>、<a href="https://www.ptt.cc/bbs/teeth_salon/M.1667277589.A.00A.html" target="_blank" rel="noopener">PTT teeth_salon 討論</a>、<a href="https://proimplant.com.tw/dental_knowledge/oral-irrigator/" target="_blank" rel="noopener">牙醫師解析沖牙機適用族群</a>。<br>
+    價格與庫存為 2026/10/28 查詢結果，實際以各通路頁面為準。
+  </footer>
+</div>
