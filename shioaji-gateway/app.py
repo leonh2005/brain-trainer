@@ -284,12 +284,10 @@ def _relogin(deadline, prior_api):
                     old.clear_session_down_callback()
                 except Exception:
                     pass
-                if was_marked_down:
-                    # 已判定斷線：logout 可能卡住，丟背景做，不擋登入
-                    threading.Thread(target=_quiet_logout, args=(old,),
-                                     daemon=True, name="old-logout").start()
-                else:
-                    _quiet_logout(old)
+                # 必須「先登出舊的、再登入新的」：反過來的話 SDK 會在登入後才釋放
+                # 共用的 token slot（log: Successfully released token slot 1），
+                # 把剛拿到的新 token 一起作廢，變成每 5 分鐘一次的重登迴圈。
+                _quiet_logout(old)
             new_api = _login()
         except BaseException as e:
             with _state_cv:
