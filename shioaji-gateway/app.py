@@ -121,7 +121,13 @@ def _sdk_timeout_ms(cap_ms):
     if deadline is None:
         return cap_ms
     remaining = int((deadline - time.monotonic()) * 1000)
-    return max(500, min(cap_ms, remaining))
+    # 下限 2 秒：500ms 會在負載高時把健康 session 誤判成逾時→連鎖重登
+    return max(2000, min(cap_ms, remaining))
+
+
+def _time_left():
+    deadline = getattr(_request_ctx, "deadline", None)
+    return None if deadline is None else deadline - time.monotonic()
 
 _bidask_cache = {}        # code -> {"ts": float, "bids": [...], "asks": [...]}
 _bidask_subscribed = {}   # code -> 最後被 /bidask 查詢的時間
@@ -250,9 +256,17 @@ def _ensure_api(deadline):
         return _relogin(deadline, None)
 
 
+def _quiet_logout(api):
+    """舊 session 盡量登出，任何失敗都吞掉（背景執行緒用）。"""
+    try:
+        api.logout()
+    except Exception:
+        pass
+
+
 def _relogin(deadline, prior_api):
     """single-flight 重登。全程不持 _lock，所以其他請求不會陪等登入。"""
-    remaining = max(0.0, deadline - time.monotonic())
+    remaining = min(max(0.0, deadline - time.monotonic()), RECONNECT_WAIT_S)
     if not _login_lock.acquire(timeout=remaining):
         raise GatewayReconnecting("login already in progress")
     try:
@@ -265,15 +279,17 @@ def _relogin(deadline, prior_api):
             _login_state["last_attempt"] = time.time()
         old = prior_api
         try:
-            if old is not None and not was_marked_down:
+            if old is not None:
                 try:
                     old.clear_session_down_callback()
                 except Exception:
                     pass
-                try:
-                    old.logout()
-                except Exception:
-                    pass
+                if was_marked_down:
+                    # 已判定斷線：logout 可能卡住，丟背景做，不擋登入
+                    threading.Thread(target=_quiet_logout, args=(old,),
+                                     daemon=True, name="old-logout").start()
+                else:
+                    _quiet_logout(old)
             new_api = _login()
         except BaseException as e:
             with _state_cv:
@@ -330,23 +346,26 @@ def _run(fn, priority=0, op="?", budget_s=DEFAULT_BUDGET_S, retry=True):
             try:
                 api = _conn["api"]
                 if api is None:
-                    outcome = "reconnecting"
-                    raise GatewayReconnecting("gateway reconnecting")
-                try:
-                    result = fn(api)
-                    _note_success()
-                    outcome = "ok" if attempt == 0 else "retry_ok"
-                    return result
-                except Exception as e:
-                    if not _is_conn_error(e):
-                        print(f"[{datetime.now():%Y-%m-%d %H:%M:%S}] 業務錯誤不重登 "
-                              f"{type(e).__name__}: {e}", flush=True)
-                        outcome = "business_error"
-                        raise
-                    _mark_down(api, e)
-                    outcome = "retry_failed"
-                    if attempt == 1 or not retry:
-                        raise
+                    if attempt == 1:
+                        outcome = "reconnecting"
+                        raise GatewayReconnecting("gateway reconnecting")
+                    # 排隊期間 session 掉了：交給迴圈尾端重登後再試一次
+                else:
+                    try:
+                        result = fn(api)
+                        _note_success()
+                        outcome = "ok" if attempt == 0 else "retry_ok"
+                        return result
+                    except Exception as e:
+                        if not _is_conn_error(e):
+                            print(f"[{datetime.now():%Y-%m-%d %H:%M:%S}] 業務錯誤不重登 "
+                                  f"{type(e).__name__}: {e}", flush=True)
+                            outcome = "business_error"
+                            raise
+                        _mark_down(api, e)
+                        outcome = "retry_failed"
+                        if attempt == 1 or not retry:
+                            raise
             finally:
                 _lock.release()     # 一定要先放資料鎖，再去重登
             api = _relogin(deadline, api)
@@ -675,9 +694,12 @@ def market_snapshot():
     GET /market_snapshot -> {ok, items:[{code,name,suffix,close,high,low,change_rate,total_volume}]}"""
     def work(api):
         items = []
+        partial = False
         total_deadline = time.monotonic() + MARKET_SNAPSHOT_TOTAL_S
         consecutive_failures = 0
         for market, suffix in (("TSE", ".TW"), ("OTC", ".TWO")):
+            if partial:
+                break
             try:
                 board = getattr(api.Contracts.Stocks, market)
                 contracts = [c for c in board if _is_candidate_code(getattr(c, "code", ""))]
@@ -686,6 +708,7 @@ def market_snapshot():
             cmap = {c.code: c for c in contracts}
             for i in range(0, len(contracts), 200):
                 if time.monotonic() > total_deadline:
+                    partial = True
                     break
                 try:
                     snaps = api.snapshots(
@@ -693,10 +716,14 @@ def market_snapshot():
                         timeout=_sdk_timeout_ms(MARKET_SNAPSHOT_BATCH_TIMEOUT_MS))
                     consecutive_failures = 0
                 except Exception:
-                    # 單批失敗先跳過；連續 3 批或 session 已死就往上拋，別讓鎖被拖住
+                    # 單批失敗先跳過；連續 3 批就停手。已抓到的資料仍回傳並標 partial，
+                    # 不要把部分成功變成整個端點失敗（呼叫端有 fallback 但會退到昨日資料）
                     consecutive_failures += 1
-                    if _conn["api"] is None or consecutive_failures >= 3:
+                    if _conn["api"] is None:
                         raise
+                    if consecutive_failures >= 3:
+                        partial = True
+                        break
                     continue
                 for s in snaps:
                     try:  # 單筆髒資料（停牌/None）只跳過，勿讓整批或整個市場失敗
@@ -716,10 +743,14 @@ def market_snapshot():
         if not items:
             # 不可把空清單當成功回傳：呼叫端會誤判成「市場沒資料」而非「抓取失敗」
             raise RuntimeError('全市場快照為空（session 失效或非交易日）')
-        return items
+        return items, partial
     try:
-        return jsonify({"ok": True, "items": _run(work, priority=1, op="market_snapshot",
-                                                 budget_s=25, retry=False)})
+        items, partial = _run(work, priority=1, op="market_snapshot",
+                              budget_s=25, retry=False)
+        payload = {"ok": True, "items": items}
+        if partial:
+            payload["partial"] = True
+        return jsonify(payload)
     except Exception as e:
         return jsonify({"ok": False, "error": str(e)})
 
@@ -773,6 +804,17 @@ def _spawn_bidask_resubscribe(api, generation):
                 if _conn["api"] is not api or _login_state["generation"] != generation:
                     return
             try:
+                # 不經 _run（避免失敗時遞迴重登），但仍要共用資料鎖：
+                # SDK 是單一連線，不能跟 snapshots/kbars 併發
+                _lock.acquire(timeout=5)
+            except LockTimeout:
+                continue
+            try:
+                with _state_cv:
+                    if _conn["api"] is not api or _login_state["generation"] != generation:
+                        return
+                if code not in _bidask_subscribed:
+                    continue      # 期間已被 sweep 退訂，不要再訂回來
                 contract = _resolve_contract(api, code)
                 api.quote.subscribe(
                     contract,
@@ -781,6 +823,8 @@ def _spawn_bidask_resubscribe(api, generation):
                 )
             except Exception as e:
                 print(f"[bidask] 重訂閱 {code} 失敗（忽略）: {e}", flush=True)
+            finally:
+                _lock.release()
 
     threading.Thread(target=run, daemon=True, name="bidask-resub").start()
 

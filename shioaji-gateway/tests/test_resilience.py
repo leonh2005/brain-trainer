@@ -294,6 +294,31 @@ def test_market_snapshot_aborts_after_consecutive_failures(monkeypatch):
     assert calls["n"] == 3, "連續 3 批失敗就要放棄，不能跑滿整個市場"
 
 
+def test_market_snapshot_keeps_partial_data(monkeypatch):
+    """已抓到的批次要保留並標 partial，不能因為後段失敗就整個端點掛掉。"""
+    calls = {"n": 0}
+
+    def snapshots(batch, timeout=None):
+        calls["n"] += 1
+        if calls["n"] == 1:
+            return [SimpleNamespace(code="1000", close=10.0, high=10.5, low=9.5,
+                                    change_rate=1.0, total_volume=100)]
+        raise TimeoutError("dead")
+
+    contracts = [SimpleNamespace(code=str(1000 + i)) for i in range(1000)]
+    api = SimpleNamespace(
+        Contracts=SimpleNamespace(Stocks=SimpleNamespace(TSE=contracts, OTC=[])),
+        snapshots=snapshots,
+    )
+    monkeypatch.setattr(gw, "_conn", {"api": api})
+
+    d = gw.app.test_client().get("/market_snapshot").get_json()
+    assert d["ok"] is True
+    assert d["partial"] is True
+    assert len(d["items"]) == 1
+    assert calls["n"] == 4      # 1 成功 + 連續 3 次失敗後停手
+
+
 # ── health ─────────────────────────────────────────────────────
 
 def test_health_reports_state(monkeypatch):
