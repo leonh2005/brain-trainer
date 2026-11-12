@@ -12,6 +12,7 @@ import json
 import os
 import re
 import time
+import unicodedata
 from datetime import date, datetime
 
 import requests
@@ -26,55 +27,69 @@ DEFAULT_WATCH = {"long": ["00631L"], "short": ["00631L", "0050"]}
 app = Flask(__name__)
 
 CODE_RE = re.compile(r"^[0-9]{4,6}[A-Z]?$")
-_name_map = {"ts": 0.0, "data": {}}     # 名稱 → 代號（30 分鐘快取）
+_name_map = {"ts": 0.0, "data": {}}     # 名稱 → [代號]（30 分鐘快取）
+
+
+class LookupUnavailable(RuntimeError):
+    """查詢服務（gateway）當下不可用，和「查無此標的」要分開講。"""
+
+
+def _norm(text: str) -> str:
+    """大小寫、全半形、臺/台 異體字都先統一，避免明明有卻查不到。"""
+    t = unicodedata.normalize("NFKC", text or "").strip().upper()
+    return t.replace("臺", "台")
 
 
 def _name_map_refresh() -> dict:
-    """從 gateway 全市場快照建立名稱對照；gateway 掛掉就沿用舊資料。"""
+    """從 gateway 全市場快照建立名稱對照；partial 或失敗都不覆蓋舊資料。"""
     now = time.time()
     if _name_map["data"] and now - _name_map["ts"] < 1800:
         return _name_map["data"]
     mapping = {}
     try:
-        r = requests.get(f"{GATEWAY}/market_snapshot", timeout=25)
-        for it in (r.json().get("items") or []):
-            name = str(it.get("name") or "").strip()
+        r = requests.get(f"{GATEWAY}/market_snapshot", timeout=28)
+        payload = r.json()
+        if payload.get("partial"):
+            return _name_map["data"]
+        for it in (payload.get("items") or []):
+            name = _norm(it.get("name") or "")
             code = str(it.get("code") or "").strip()
             if name and code:
-                mapping[name] = code
+                mapping.setdefault(name, []).append(code)
     except Exception:
-        pass
+        return _name_map["data"]
     if mapping:
         _name_map.update(ts=now, data=mapping)
     return _name_map["data"]
 
 
-def resolve_code(text: str):
-    """代號或中文名稱 → (代號, None)；對到多個 → (None, 候選清單)。"""
-    text = text.strip()
-    if CODE_RE.match(text):
-        return text, None
+def resolve_code(text: str) -> tuple[str | None, list | None]:
+    """代號或中文名稱 → (代號, None)；多筆符合 → (None, 候選)；服務掛掉 → 丟 LookupUnavailable。"""
+    norm = _norm(text)
+    if CODE_RE.match(norm):
+        return norm, None
 
-    mapping = _name_map_refresh()
-    if mapping:
-        exact = [c for n, c in mapping.items() if n == text]
+    # 先問便宜的模糊搜尋（gateway 已支援 4-6 碼 ETF）
+    try:
+        r = requests.get(f"{GATEWAY}/stock_search", params={"q": norm, "limit": 20}, timeout=6)
+        results = (r.json() or {}).get("results") or []
+    except Exception as exc:      # 查詢服務壞掉 ≠ 查無此標的
+        raise LookupUnavailable("查詢服務暫時不可用，請稍後再試") from exc
+
+    if results:
+        exact = [x for x in results if _norm(x.get("name", "")) == norm]
         if len(exact) == 1:
-            return exact[0], None
-        part = [(c, n) for n, c in mapping.items() if text in n]
-        if len(part) == 1:
-            return part[0][0], None
-        if part:
-            return None, [{"code": c, "name": n} for c, n in part[:8]]
+            return exact[0]["code"], None
+        if len(results) == 1:
+            return results[0]["code"], None
+        return None, results[:8]
 
-    try:      # 備援：gateway 模糊搜尋（只涵蓋 4 碼個股）
-        r = requests.get(f"{GATEWAY}/stock_search", params={"q": text}, timeout=6)
-        res = r.json().get("results") or []
-        if len(res) == 1:
-            return res[0]["code"], None
-        if res:
-            return None, res[:8]
-    except Exception:
-        pass
+    # 備援：全市場快照的名稱表（涵蓋 5 碼 ETF 等）
+    hits = _name_map_refresh().get(norm, [])
+    if len(hits) == 1:
+        return hits[0], None
+    if hits:
+        return None, [{"code": c, "name": norm} for c in hits[:8]]
     return None, []
 
 
@@ -164,7 +179,10 @@ def api_watch():
 
     code, candidates = (raw, None)
     if action == "add":
-        code, candidates = resolve_code(raw)
+        try:
+            code, candidates = resolve_code(raw)
+        except LookupUnavailable as e:
+            return jsonify({"ok": False, "error": str(e)}), 200
         if candidates is not None:
             if candidates:
                 return jsonify({"ok": False, "error": f"「{raw}」符合多筆，請選擇",

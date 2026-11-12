@@ -26,6 +26,7 @@ app = Flask(__name__)
 SECRETS_DIR = "/Users/steven/CCProject/.secrets"
 
 _conn = {"api": None}
+_STOCK_CODE_RE = re.compile(r"^\d{4,6}[A-Z]?$")     # 個股 4 碼、ETF 5-6 碼，可加字母（00631L）
 
 
 class LockTimeout(RuntimeError):
@@ -447,8 +448,16 @@ def snapshot():
 
 @app.get("/stock_search")
 def stock_search():
-    """模糊搜尋股票代碼或中文名稱，回傳最多 10 筆 [{code, name}]。"""
+    """模糊搜尋代號或中文名稱，回傳最多 limit 筆 [{code, name}]。
+
+    原本只收 4 碼個股，導致 006208（富邦台50）這類 6 碼 ETF 永遠查不到；
+    改成 4-6 碼數字（可加一個字母），並支援 limit。
+    """
     q = request.args.get("q", "").strip()
+    try:
+        limit = max(1, min(int(request.args.get("limit", "10")), 50))
+    except ValueError:
+        limit = 10
     if not q:
         return jsonify({"ok": True, "results": []})
     try:
@@ -458,11 +467,11 @@ def stock_search():
                 for contract in market:
                     code = getattr(contract, "code", "")
                     name = getattr(contract, "name", "")
-                    if not (len(code) == 4 and code.isdigit()):
+                    if not _STOCK_CODE_RE.match(code):
                         continue
                     if q in code or q in name:
                         results.append({"code": code, "name": name})
-                    if len(results) >= 10:
+                    if len(results) >= limit:
                         return results
             return results
         return jsonify({"ok": True, "results": _run(work, op="stock_search", budget_s=3)})

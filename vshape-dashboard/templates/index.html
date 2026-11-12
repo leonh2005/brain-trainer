@@ -181,12 +181,18 @@ async function refresh() {
 async function mutate(direction, action, code) {
   const errBox = document.querySelector(`[data-err="${direction}"]`);
   errBox.textContent = '';
-  const r = await fetch('api/watch', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ direction, action, code })
-  });
-  const j = await r.json();
+  let r, j;
+  try {
+    r = await fetch('api/watch', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ direction, action, code })
+    });
+    j = await r.json();
+  } catch (e) {
+    errBox.textContent = '連線失敗：' + e.message;
+    return false;
+  }
   if (!j.ok) {
     errBox.textContent = j.error || '操作失敗';
     if (j.candidates && j.candidates.length) {
