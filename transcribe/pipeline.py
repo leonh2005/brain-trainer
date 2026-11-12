@@ -181,8 +181,7 @@ def build_text(wav_name, segs, turns, error=None, elapsed=None, polish=False, of
             if not b["gap"]:
                 b["text"] = next(it, b["text"])
         lines.append(f"# {note}")
-        if "ⓘ" in "".join(b["text"] for b in body if not b["gap"]) or True:
-            lines.append("# ⓘ = 無法確定、保留原文；請對照錄音確認")
+        lines.append("# ⓘ = 無法確定、保留原文；請對照錄音確認")
 
     lines.extend(b["text"] for b in body)
     return "\n".join(lines) + "\n", len(blocks)
