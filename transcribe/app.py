@@ -57,7 +57,9 @@ def _run_job(job_id):
 
     try:
         progress("transcribing", "整理音訊…")
-        wav = pipeline.normalize(src, os.path.join(d, "audio.wav"))
+        wav = pipeline.normalize(src, os.path.join(d, "audio.wav"),
+                                 skip_start=meta.get("skip_start") or 0,
+                                 skip_end=meta.get("skip_end") or 0)
 
         segs = pipeline.transcribe(wav, progress)
         _set(job_id, segments=len(segs), asr_done=True)
@@ -67,7 +69,8 @@ def _run_job(job_id):
         elapsed = time.time() - started
         text, blocks = pipeline.build_text(meta.get("name") or os.path.basename(src),
                                            segs, turns, err, elapsed,
-                                           polish=bool(meta.get("polish")))
+                                           polish=bool(meta.get("polish")),
+                                           offset=meta.get("skip_start") or 0)
 
         out = os.path.join(d, "transcript.txt")
         with open(out, "w", encoding="utf-8") as f:
@@ -148,6 +151,19 @@ def upload():
     src = os.path.join(d, f"source{ext}")                      # 存檔用安全名稱
     f.save(src)
 
+    def _sec(key):
+        """'5:00' 或 '300' → 秒。"""
+        raw = (request.form.get(key) or "").strip()
+        if not raw:
+            return 0
+        try:
+            if ":" in raw:
+                m, s2 = raw.split(":", 1)
+                return int(m) * 60 + int(s2)
+            return int(float(raw))
+        except ValueError:
+            return 0
+
     try:
         want = int(request.form.get("speakers", "0") or 0)
     except ValueError:
@@ -158,6 +174,8 @@ def upload():
             "created": time.time(), "src_path": src, "has_speakers": False,
             "speakers": want if want >= 2 else None,
             "polish": request.form.get("polish", "") == "1",
+            "skip_start": _sec("skip_start"),
+            "skip_end": _sec("skip_end"),
         }
     _save_meta(job_id)
     _queue.put(job_id)

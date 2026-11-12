@@ -9,10 +9,29 @@ HF_TOKEN_PATH = os.path.expanduser("~/.cache/huggingface/token")
 ASR_MODEL = "mlx-community/whisper-large-v3-turbo"
 
 
-def normalize(src, dst):
-    """任何格式 → 16k 單聲道 wav。"""
-    proc = subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", src, "-ac", "1", "-ar", "16000", dst],
-                          capture_output=True, timeout=1800)
+def duration(src):
+    """回傳音檔長度（秒）。"""
+    out = subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration",
+                          "-of", "default=nw=1:nk=1", src], capture_output=True, timeout=60)
+    try:
+        return float(out.stdout.decode().strip())
+    except ValueError:
+        return 0.0
+
+
+def normalize(src, dst, skip_start=0, skip_end=0):
+    """任何格式 → 16k 單聲道 wav；可跳過頭尾（客戶常說前後沒重點）。"""
+    cmd = ["ffmpeg", "-v", "error", "-y"]
+    if skip_start:
+        cmd += ["-ss", str(skip_start)]
+    cmd += ["-i", src]
+    if skip_start or skip_end:
+        total = duration(src)
+        if total:
+            keep = max(1.0, total - skip_start - skip_end)
+            cmd += ["-t", str(keep)]
+    cmd += ["-ac", "1", "-ar", "16000", dst]
+    proc = subprocess.run(cmd, capture_output=True, timeout=1800)
     if proc.returncode != 0:
         detail = proc.stderr.decode("utf-8", "replace").strip()[-300:]
         raise RuntimeError(f"音訊轉檔失敗：{detail or 'ffmpeg 無輸出'}")
@@ -126,7 +145,7 @@ def diarize(wav, progress=None, num_speakers=None):
         return None, f"{type(e).__name__}: {e}"
 
 
-def build_text(wav_name, segs, turns, error=None, elapsed=None, polish=False):
+def build_text(wav_name, segs, turns, error=None, elapsed=None, polish=False, offset=0):
     blocks = merge_blocks(segs, turns)
     lines = [f"# 逐字稿：{wav_name}"]
     if turns and all(t[2] in ("男", "女") for t in turns):
@@ -141,7 +160,7 @@ def build_text(wav_name, segs, turns, error=None, elapsed=None, polish=False):
     lines.append("")
 
     def ts(x):
-        m, sec = divmod(int(x), 60)
+        m, sec = divmod(int(x + offset), 60)     # 裁切過的話，時間碼對回原檔
         return f"{m:02d}:{sec:02d}"
 
     body = []
@@ -162,6 +181,8 @@ def build_text(wav_name, segs, turns, error=None, elapsed=None, polish=False):
             if not b["gap"]:
                 b["text"] = next(it, b["text"])
         lines.append(f"# {note}")
+        if "ⓘ" in "".join(b["text"] for b in body if not b["gap"]) or True:
+            lines.append("# ⓘ = 無法確定、保留原文；請對照錄音確認")
 
     lines.extend(b["text"] for b in body)
     return "\n".join(lines) + "\n", len(blocks)

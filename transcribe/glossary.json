@@ -1,0 +1,860 @@
+{
+ "_note": "手錶專有名詞（台灣繁中正式寫法）。terms 由官方網站整理，aliases 是常見口誤或 ASR 容易聽成的樣子。",
+ "terms": [
+  {
+   "zh": "沛納海",
+   "en": "Panerai",
+   "aliases": [
+    "佩納海",
+    "潘納海",
+    "沛纳海"
+   ]
+  },
+  {
+   "zh": "積家",
+   "en": "Jaeger-LeCoultre",
+   "aliases": [
+    "積架",
+    "JLC",
+    "積家表"
+   ]
+  },
+  {
+   "zh": "Luminor 系列",
+   "en": "Luminor",
+   "aliases": [
+    "盧米諾",
+    "魯米諾",
+    "夜光系列"
+   ]
+  },
+  {
+   "zh": "Luminor Due 系列",
+   "en": "Luminor Due",
+   "aliases": [
+    "Luminor 2",
+    "Due",
+    "輕薄版"
+   ]
+  },
+  {
+   "zh": "Luminor Marina 系列",
+   "en": "Luminor Marina",
+   "aliases": [
+    "瑪麗娜",
+    "Marina"
+   ]
+  },
+  {
+   "zh": "Radiomir 系列",
+   "en": "Radiomir",
+   "aliases": [
+    "雷達米爾",
+    "輻射米爾"
+   ]
+  },
+  {
+   "zh": "Submersible 系列",
+   "en": "Submersible",
+   "aliases": [
+    "潛水系列",
+    "Submariner"
+   ]
+  },
+  {
+   "zh": "錶冠護橋裝置",
+   "en": "crown guard",
+   "aliases": [
+    "護橋",
+    "錶冠護弓",
+    "龍頭護橋",
+    "錶冠橋"
+   ]
+  },
+  {
+   "zh": "三明治錶盤",
+   "en": "sandwich dial",
+   "aliases": [
+    "三明治面盤",
+    "三明治錶面"
+   ]
+  },
+  {
+   "zh": "單向旋轉錶圈",
+   "en": "unidirectional rotating bezel",
+   "aliases": [
+    "單向圈",
+    "潛水圈"
+   ]
+  },
+  {
+   "zh": "枕形錶殼",
+   "en": "cushion case",
+   "aliases": [
+    "枕型殼",
+    "方形殼"
+   ]
+  },
+  {
+   "zh": "八日動力儲存",
+   "en": "8 Giorni",
+   "aliases": [
+    "八日鍊",
+    "8日鍊"
+   ]
+  },
+  {
+   "zh": "三日動力儲存",
+   "en": "Tre Giorni",
+   "aliases": [
+    "三日鍊",
+    "3日鍊"
+   ]
+  },
+  {
+   "zh": "青銅",
+   "en": "Bronzo",
+   "aliases": [
+    "銅錶",
+    "青銅錶"
+   ]
+  },
+  {
+   "zh": "鍍層碳纖維複合材質",
+   "en": "Carbotech",
+   "aliases": [
+    "碳纖維",
+    "卡蹦"
+   ]
+  },
+  {
+   "zh": "鈦陶瓷",
+   "en": "Ti-Ceramitech",
+   "aliases": [
+    "鈦金屬陶瓷"
+   ]
+  },
+  {
+   "zh": "P.900 自動上鍊機芯",
+   "en": "P.900",
+   "aliases": [
+    "P900",
+    "900機芯"
+   ]
+  },
+  {
+   "zh": "熱帶錶盤",
+   "en": "tropical dial",
+   "aliases": [
+    "熱帶面盤",
+    "漸層錶盤"
+   ]
+  },
+  {
+   "zh": "Reverso 翻轉系列",
+   "en": "Reverso",
+   "aliases": [
+    "雷佛索",
+    "瑞佛索",
+    "翻轉錶"
+   ]
+  },
+  {
+   "zh": "Reverso Tribute 翻轉系列",
+   "en": "Reverso Tribute",
+   "aliases": [
+    "Tribute",
+    "致敬系列"
+   ]
+  },
+  {
+   "zh": "Reverso Duetto 翻轉系列雙面腕錶",
+   "en": "Reverso Duetto",
+   "aliases": [
+    "雙面翻轉",
+    "Duetto"
+   ]
+  },
+  {
+   "zh": "Master Control 大師系列",
+   "en": "Master Control",
+   "aliases": [
+    "大師控制",
+    "Master 系列"
+   ]
+  },
+  {
+   "zh": "Master Ultra Thin 超薄大師系列",
+   "en": "Master Ultra Thin",
+   "aliases": [
+    "超薄大師"
+   ]
+  },
+  {
+   "zh": "Master Ultra Thin Moon 超薄大師月相腕錶",
+   "en": "Master Ultra Thin Moon",
+   "aliases": [
+    "超薄月相",
+    "月相大師"
+   ]
+  },
+  {
+   "zh": "Polaris 系列",
+   "en": "Polaris",
+   "aliases": [
+    "北極星系列",
+    "極地系列"
+   ]
+  },
+  {
+   "zh": "Duometre 雙翼系列",
+   "en": "Duometre",
+   "aliases": [
+    "雙翼"
+   ]
+  },
+  {
+   "zh": "璣鏤",
+   "en": "guilloché",
+   "aliases": [
+    "雕花",
+    "格紋"
+   ]
+  },
+  {
+   "zh": "琺瑯",
+   "en": "enamel",
+   "aliases": [
+    "珐瑯"
+   ]
+  },
+  {
+   "zh": "三問報時",
+   "en": "minute repeater",
+   "aliases": [
+    "三問",
+    "報時"
+   ]
+  },
+  {
+   "zh": "萬年曆",
+   "en": "perpetual calendar",
+   "aliases": [
+    "永久曆"
+   ]
+  },
+  {
+   "zh": "陀飛輪",
+   "en": "tourbillon",
+   "aliases": [
+    "陀飛倫"
+   ]
+  },
+  {
+   "zh": "雙時區",
+   "en": "dual time zone",
+   "aliases": [
+    "兩地時間",
+    "GMT"
+   ]
+  },
+  {
+   "zh": "鉑金",
+   "en": "platinum",
+   "aliases": [
+    "白金（錯，白金是 white gold）"
+   ]
+  },
+  {
+   "zh": "Grand Seiko",
+   "en": "Grand Seiko",
+   "aliases": [
+    "GS",
+    "大精工",
+    "冠藍獅"
+   ]
+  },
+  {
+   "zh": "Evolution 9 Collection",
+   "en": "Evolution 9",
+   "aliases": [
+    "進化9",
+    "Evolution 9 系列"
+   ]
+  },
+  {
+   "zh": "Heritage Collection",
+   "en": "Heritage",
+   "aliases": [
+    "傳承系列",
+    "復古系列"
+   ]
+  },
+  {
+   "zh": "Spring Drive",
+   "en": "Spring Drive",
+   "aliases": [
+    "春動",
+    "春天驅動",
+    "彈簧驅動"
+   ]
+  },
+  {
+   "zh": "9S 機械機芯",
+   "en": "9S",
+   "aliases": [
+    "9S 機芯",
+    "9S 機械"
+   ]
+  },
+  {
+   "zh": "9F 石英機芯",
+   "en": "9F",
+   "aliases": [
+    "9F 石英錶",
+    "9F 機芯"
+   ]
+  },
+  {
+   "zh": "超鏡面拋光",
+   "en": "Zaratsu",
+   "aliases": [
+    "砂輪拋光",
+    "扎拉茲拋光",
+    "Zaratsu 研磨"
+   ]
+  },
+  {
+   "zh": "白鋼",
+   "en": "Ever-Brilliant Steel",
+   "aliases": [
+    "Ever Brilliant 鋼"
+   ]
+  },
+  {
+   "zh": "信州時之匠工坊",
+   "en": "Shinshu Watch Studio",
+   "aliases": [
+    "信州工坊",
+    "長野工坊"
+   ]
+  },
+  {
+   "zh": "雫石工坊",
+   "en": "Studio Shizukuishi",
+   "aliases": [
+    "石工坊",
+    "雫石工作室"
+   ]
+  },
+  {
+   "zh": "透視背蓋",
+   "en": "see-through case back",
+   "aliases": [
+    "透明底蓋",
+    "透背"
+   ]
+  },
+  {
+   "zh": "雙弧面藍寶石水晶玻璃",
+   "en": "dual-curved sapphire crystal",
+   "aliases": [
+    "藍寶石鏡面",
+    "雙弧鏡面"
+   ]
+  },
+  {
+   "zh": "按壓式三折錶扣",
+   "en": "push-button tri-fold clasp",
+   "aliases": [
+    "三折扣",
+    "蝴蝶扣"
+   ]
+  },
+  {
+   "zh": "螺旋式錶冠",
+   "en": "screw-down crown",
+   "aliases": [
+    "鎖牙錶冠",
+    "旋入式龍頭"
+   ]
+  },
+  {
+   "zh": "內面無反射塗層處理",
+   "en": "anti-reflective coating",
+   "aliases": [
+    "內鍍膜",
+    "AR 鍍膜"
+   ]
+  },
+  {
+   "zh": "蠔式恒動型",
+   "en": "Oyster Perpetual",
+   "aliases": [
+    "歐式恆動",
+    "OperSafe",
+    "歐普塞夫",
+    "蠔式恒動"
+   ]
+  },
+  {
+   "zh": "日誌型",
+   "en": "Datejust",
+   "aliases": [
+    "第十區",
+    "Date Just",
+    "日期型"
+   ]
+  },
+  {
+   "zh": "女裝日誌型",
+   "en": "Lady-Datejust",
+   "aliases": [
+    "女日誌",
+    "淑女日誌型"
+   ]
+  },
+  {
+   "zh": "星期日曆型",
+   "en": "Day-Date",
+   "aliases": [
+    "星期日志",
+    "戴日期"
+   ]
+  },
+  {
+   "zh": "潛航者型",
+   "en": "Submariner",
+   "aliases": [
+    "潛水艇",
+    "水下戰士",
+    "殺手馬林"
+   ]
+  },
+  {
+   "zh": "海使型",
+   "en": "Sea-Dweller",
+   "aliases": [
+    "海居民",
+    "海棲者"
+   ]
+  },
+  {
+   "zh": "深潛型",
+   "en": "Deepsea",
+   "aliases": [
+    "深海型",
+    "迪普西"
+   ]
+  },
+  {
+   "zh": "格林尼治型 II",
+   "en": "GMT-Master II",
+   "aliases": [
+    "格林威治型",
+    "GMT 大師"
+   ]
+  },
+  {
+   "zh": "探險家型",
+   "en": "Explorer",
+   "aliases": [
+    "探險佳",
+    "伊克斯普羅"
+   ]
+  },
+  {
+   "zh": "宇宙計型迪通拿",
+   "en": "Cosmograph Daytona",
+   "aliases": [
+    "迪通納",
+    "戴通納",
+    "宇宙計時型"
+   ]
+  },
+  {
+   "zh": "遊艇名仕型",
+   "en": "Yacht-Master",
+   "aliases": [
+    "遊艇大師",
+    "遊艇名士型"
+   ]
+  },
+  {
+   "zh": "縱航者型",
+   "en": "Sky-Dweller",
+   "aliases": [
+    "縱橫者型",
+    "天行者"
+   ]
+  },
+  {
+   "zh": "空中霸王型",
+   "en": "Air-King",
+   "aliases": [
+    "空中之王",
+    "阿金"
+   ]
+  },
+  {
+   "zh": "陸使型",
+   "en": "Land-Dweller",
+   "aliases": [
+    "陸行者型",
+    "陸使者",
+    "蘭德威勒"
+   ]
+  },
+  {
+   "zh": "蠔式錶殼",
+   "en": "Oyster case",
+   "aliases": [
+    "歐式錶殼",
+    "牡蠣殼"
+   ]
+  },
+  {
+   "zh": "三角坑紋外圈",
+   "en": "fluted bezel",
+   "aliases": [
+    "太陽紋外圈",
+    "坑紋圈"
+   ]
+  },
+  {
+   "zh": "測速計",
+   "en": "tachymeter",
+   "aliases": [
+    "計速器",
+    "測速圈"
+   ]
+  },
+  {
+   "zh": "Cerachrom 字圈",
+   "en": "Cerachrom bezel",
+   "aliases": [
+    "陶瓷圈",
+    "色拉孔"
+   ]
+  },
+  {
+   "zh": "紀念型錶帶",
+   "en": "Jubilee bracelet",
+   "aliases": [
+    "朱比利錶帶",
+    "五珠帶"
+   ]
+  },
+  {
+   "zh": "元首型錶帶",
+   "en": "President bracelet",
+   "aliases": [
+    "總統型錶帶",
+    "三珠帶"
+   ]
+  },
+  {
+   "zh": "蠔式保險扣",
+   "en": "Oysterlock",
+   "aliases": [
+    "歐式保險扣"
+   ]
+  },
+  {
+   "zh": "小窗凸透鏡",
+   "en": "Cyclops lens",
+   "aliases": [
+    "獨眼龍",
+    "放大鏡"
+   ]
+  },
+  {
+   "zh": "排氦閥門",
+   "en": "helium escape valve",
+   "aliases": [
+    "排氦閥",
+    "氦氣閥"
+   ]
+  },
+  {
+   "zh": "頂級天文台精密時計",
+   "en": "Superlative Chronometer",
+   "aliases": [
+    "超卓天文台精密時計",
+    "頂級天文台認證",
+    "超級天文台"
+   ]
+  },
+  {
+   "zh": "蠔式鋼",
+   "en": "Oystersteel",
+   "aliases": [
+    "歐式鋼",
+    "904L 鋼"
+   ]
+  },
+  {
+   "zh": "永恒玫瑰金",
+   "en": "Everose gold",
+   "aliases": [
+    "永恆玫瑰金",
+    "永恆玫瑰"
+   ]
+  },
+  {
+   "zh": "歐米茄",
+   "en": "OMEGA",
+   "aliases": [
+    "歐米加",
+    "歐咪茄",
+    "歐米尬"
+   ]
+  },
+  {
+   "zh": "海馬系列",
+   "en": "Seamaster",
+   "aliases": [
+    "海罵",
+    "海馬斯",
+    "西馬斯特"
+   ]
+  },
+  {
+   "zh": "海馬 Aqua Terra 150米",
+   "en": "Seamaster Aqua Terra 150M",
+   "aliases": [
+    "水陸兩棲",
+    "阿夸特拉"
+   ]
+  },
+  {
+   "zh": "海馬 潛水300米",
+   "en": "Seamaster Diver 300M",
+   "aliases": [
+    "海馬300",
+    "潛水300"
+   ]
+  },
+  {
+   "zh": "Planet Ocean 600米",
+   "en": "Planet Ocean 600M",
+   "aliases": [
+    "海洋宇宙",
+    "星球海洋"
+   ]
+  },
+  {
+   "zh": "超霸系列",
+   "en": "Speedmaster",
+   "aliases": [
+    "超爸",
+    "超八",
+    "史匹德大師"
+   ]
+  },
+  {
+   "zh": "超霸專業登月錶",
+   "en": "Moonwatch Professional",
+   "aliases": [
+    "登月錶",
+    "月球錶",
+    "登躍錶"
+   ]
+  },
+  {
+   "zh": "超霸月之暗面",
+   "en": "Dark Side of the Moon",
+   "aliases": [
+    "月之暗麵",
+    "暗面"
+   ]
+  },
+  {
+   "zh": "星座系列",
+   "en": "Constellation",
+   "aliases": [
+    "星辰系列",
+    "星座椅"
+   ]
+  },
+  {
+   "zh": "碟飛系列",
+   "en": "De Ville",
+   "aliases": [
+    "蝶飛",
+    "跌飛",
+    "德維爾"
+   ]
+  },
+  {
+   "zh": "鐵霸系列",
+   "en": "Railmaster",
+   "aliases": [
+    "鐵爸",
+    "鐵路大師",
+    "瑞爾大師"
+   ]
+  },
+  {
+   "zh": "同軸擒縱",
+   "en": "Co-Axial escapement",
+   "aliases": [
+    "同軸情縱",
+    "同軸擒縱器"
+   ]
+  },
+  {
+   "zh": "大師天文台認證",
+   "en": "Master Chronometer",
+   "aliases": [
+    "大獅天文台",
+    "大師天文檯",
+    "至臻天文台"
+   ]
+  },
+  {
+   "zh": "計時腕錶",
+   "en": "chronograph",
+   "aliases": [
+    "計時碼表",
+    "計時碼錶"
+   ]
+  },
+  {
+   "zh": "Sedna 金",
+   "en": "Sedna gold",
+   "aliases": [
+    "塞德娜金",
+    "詩丹娜金"
+   ]
+  },
+  {
+   "zh": "Moonshine 金",
+   "en": "Moonshine Gold",
+   "aliases": [
+    "月光金",
+    "沐光金"
+   ]
+  },
+  {
+   "zh": "泰格豪雅",
+   "en": "TAG Heuer",
+   "aliases": [
+    "泰格豪亞",
+    "太格豪雅",
+    "豪雅"
+   ]
+  },
+  {
+   "zh": "卡萊拉系列",
+   "en": "Carrera",
+   "aliases": [
+    "卡雷拉",
+    "凱拉拉",
+    "卡拉"
+   ]
+  },
+  {
+   "zh": "摩納哥系列",
+   "en": "Monaco",
+   "aliases": [
+    "摩納歌",
+    "蒙納哥",
+    "摩納可"
+   ]
+  },
+  {
+   "zh": "競潛系列",
+   "en": "Aquaracer",
+   "aliases": [
+    "徑潛",
+    "競前",
+    "鏡潛",
+    "阿夸雷瑟"
+   ]
+  },
+  {
+   "zh": "林肯系列",
+   "en": "Link",
+   "aliases": [
+    "林克",
+    "連克"
+   ]
+  },
+  {
+   "zh": "Autavia 系列",
+   "en": "Autavia",
+   "aliases": [
+    "奧塔維亞",
+    "歐塔維亞"
+   ]
+  },
+  {
+   "zh": "Formula 1 系列",
+   "en": "Formula 1",
+   "aliases": [
+    "F1 系列",
+    "一級方程式"
+   ]
+  },
+  {
+   "zh": "Connected 智能腕錶",
+   "en": "TAG Heuer Connected",
+   "aliases": [
+    "康涅狄格"
+   ]
+  },
+  {
+   "zh": "Calibre 5 自動機芯",
+   "en": "Calibre 5",
+   "aliases": [
+    "卡萊布5",
+    "口徑5"
+   ]
+  },
+  {
+   "zh": "TH20-00 機芯",
+   "en": "TH20-00",
+   "aliases": [
+    "TH20",
+    "Heuer 02"
+   ]
+  },
+  {
+   "zh": "熊貓面",
+   "en": "panda dial",
+   "aliases": [
+    "熊貓錶面"
+   ]
+  },
+  {
+   "zh": "碳纖維游絲",
+   "en": "carbon hairspring",
+   "aliases": [
+    "TH-Carbonspring"
+   ]
+  },
+  {
+   "zh": "機芯",
+   "en": "movement",
+   "aliases": [
+    "機心"
+   ]
+  },
+  {
+   "zh": "摺疊錶扣",
+   "en": "folding clasp",
+   "aliases": [
+    "折疊扣",
+    "折疊錶扣"
+   ]
+  },
+  {
+   "zh": "藍寶石水晶鏡面",
+   "en": "sapphire crystal",
+   "aliases": [
+    "藍寶石鏡面"
+   ]
+  }
+ ]
+}

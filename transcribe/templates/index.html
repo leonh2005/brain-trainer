@@ -52,6 +52,11 @@
       </label>
     </div>
     <div class="row" style="margin-top:12px">
+      <label class="muted">跳過開頭 <input id="skip_start" placeholder="0:00" maxlength="8" style="width:64px;background:#0f1524;color:var(--text);border:1px solid var(--line);border-radius:6px;padding:5px 8px"></label>
+      <label class="muted">跳過結尾 <input id="skip_end" placeholder="0:00" maxlength="8" style="width:64px;background:#0f1524;color:var(--text);border:1px solid var(--line);border-radius:6px;padding:5px 8px"></label>
+      <span class="muted">（前後沒重點時可裁掉，格式 5:00）</span>
+    </div>
+    <div class="row" style="margin-top:12px">
       <button id="go" disabled>開始轉錄</button>
       <span class="muted" id="pick"></span>
     </div>
@@ -108,6 +113,8 @@ go.onclick = () => {
   fd.append('file', file);
   fd.append('speakers', document.getElementById('two').checked ? '2' : '0');
   fd.append('polish', document.getElementById('polish').checked ? '1' : '0');
+  fd.append('skip_start', document.getElementById('skip_start').value.trim());
+  fd.append('skip_end', document.getElementById('skip_end').value.trim());
   fetch('upload', { method: 'POST', body: fd })
     .then(r => r.json())
     .then(d => {

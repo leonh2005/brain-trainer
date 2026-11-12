@@ -10,6 +10,25 @@ import urllib.request
 KEY_PATH = os.path.expanduser("~/CCProject/.secrets/gemini_key.txt")
 MODELS = ["gemini-3.1-flash-lite", "gemini-2.5-flash-lite", "gemini-3-flash-preview"]
 MAX_CHARS = 1200
+GLOSSARY_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "glossary.json")
+_glossary_cache = {"mtime": 0.0, "text": ""}
+
+def _glossary_text() -> str:
+    """術語表（中文 | 英文 | 常見誤寫），有更新才重讀。"""
+    try:
+        mtime = os.path.getmtime(GLOSSARY_PATH)
+        if mtime != _glossary_cache["mtime"]:
+            data = json.load(open(GLOSSARY_PATH, encoding="utf-8"))
+            rows = []
+            for term in data.get("terms", []):
+                zh, en = term.get("zh", ""), term.get("en", "")
+                alias = "、".join(term.get("aliases", []))
+                rows.append(f"{zh} | {en}" + (f" | 常被聽成：{alias}" if alias else ""))
+            _glossary_cache.update(mtime=mtime, text="\n".join(rows))
+    except Exception:
+        _glossary_cache.update(mtime=0.0, text="")
+    return _glossary_cache["text"]
+
 
 PROMPT = """你是逐字稿校對員。以下是一段對話的語音辨識結果，每行格式是「[時間] 語者：文字」。
 
@@ -24,12 +43,20 @@ PROMPT = """你是逐字稿校對員。以下是一段對話的語音辨識結�
 - 輸出必須是「一行對一行」，每行都要保留原本的 [時間] 與語者前綴
 - 只輸出校對後的行，不要任何說明
 
+{glossary}
+{context}
 原文：
 """
 
 
-def _call(text, key):
-    body = json.dumps({"contents": [{"parts": [{"text": PROMPT + text}]}]}).encode()
+def _call(text, key, context=""):
+    glossary = _glossary_text()
+    block = ""
+    if glossary:
+        block += "【術語表：以下寫法優先採用】\n" + glossary + "\n\n"
+    if context:
+        block += "【上文（只供理解，不要重複輸出）】\n" + context[-300:] + "\n\n"
+    body = json.dumps({"contents": [{"parts": [{"text": PROMPT.format(glossary=block, context="") + text}]}]}).encode()
     last = None
     for model in MODELS:
         req = urllib.request.Request(
@@ -64,10 +91,11 @@ def proofread_lines(lines, key=None):
         return lines, "沒有 Gemini 金鑰，略過校對"
 
     out, fixed_lines, errors = [], 0, 0
+    context = ""
     for chunk in _chunks(lines):
         source = "\n".join(chunk)
         try:
-            text = _call(source, key)
+            text = _call(source, key, context)
         except Exception as e:      # 單一區塊失敗就保留原文
             errors += 1
             out.extend(chunk)
@@ -83,6 +111,7 @@ def proofread_lines(lines, key=None):
             if a != b:
                 fixed_lines += 1
             out.append(a.strip())
+        context = "\n".join(got[-4:])      # 下一段校對時參考
     msg = f"校對：修正 {fixed_lines} 行" + (f"，{errors} 段退回原文" if errors else "")
     return out, msg
 
