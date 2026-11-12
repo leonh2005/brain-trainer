@@ -163,11 +163,15 @@ def build_text(wav_name, segs, turns, error=None, elapsed=None, polish=False, of
         m, sec = divmod(int(x + offset), 60)     # 裁切過的話，時間碼對回原檔
         return f"{m:02d}:{sec:02d}"
 
+    def ts_dur(x):
+        m, sec = divmod(int(x), 60)              # 時間長度不加 offset
+        return f"{m:02d}:{sec:02d}"
+
     body = []
     prev_end = None
     for b in blocks:
         if prev_end is not None and b["start"] - prev_end > 90:
-            body.append({"gap": True, "text": f"[{ts(prev_end)}] （此段 {ts(b['start'] - prev_end)} 無可辨識語音）"})
+            body.append({"gap": True, "text": f"[{ts(prev_end)}] （此段 {ts_dur(b['start'] - prev_end)} 無可辨識語音）"})
         who = f"{b['label']}：" if b["label"] else ""
         body.append({"gap": False, "text": f"[{ts(b['start'])}] {who}{b['text']}"})
         prev_end = b["end"]
