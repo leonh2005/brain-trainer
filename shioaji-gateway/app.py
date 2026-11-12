@@ -942,22 +942,18 @@ def ticks_subscribe():
                 marker = _tick_seq.get(code, 0)
                 meta["first_live_ts"] = None
                 meta["gen"] = generation
-                # 先登記 client：回補期間若發生重登，resubscribe 才看得到這檔
+            if not (already and gen_ok):
+                # 失敗直接往外丟：此時還沒登記 client，不會留下孤兒訂閱
+                _run(lambda api, contract=contract: api.quote.subscribe(
+                        contract,
+                        quote_type=sj.constant.QuoteType.Tick,
+                        version=sj.constant.QuoteVersion.v1),
+                     priority=2, op="tick_sub", budget_s=10)
+            # 訂閱成功後、回補前才登記：回補期間若重登，resubscribe 才看得到這檔
+            with _tick_lock:
                 _tick_clients.setdefault(code, {})[client] = time.time()
-            try:
-                if not (already and gen_ok):
-                    _run(lambda api, contract=contract: api.quote.subscribe(
-                            contract,
-                            quote_type=sj.constant.QuoteType.Tick,
-                            version=sj.constant.QuoteVersion.v1),
-                         priority=2, op="tick_sub", budget_s=10)
-            except Exception:
-                with _tick_lock:
-                    _tick_clients.get(code, {}).pop(client, None)
-                    if not _tick_clients.get(code):
-                        _tick_clients.pop(code, None)
-                raise
             rows = []
+            backfill_error = None
             if backfill:
                 try:
                     ticks = _run(lambda api, contract=contract: api.ticks(
@@ -970,8 +966,9 @@ def ticks_subscribe():
                         rows = [r for r in parsed
                                 if first_live is None or r[0] < first_live]
                 except Exception as e:
-                    # 訂閱已成立：回補失敗不影響即時 tick，也不要留下孤兒訂閱
-                    print(f"[tick] {code} 回補失敗（訂閱仍有效）: {redact(e)}", flush=True)
+                    # 訂閱已成立：回補失敗不影響即時 tick；明確標記讓客戶端不要推進游標
+                    backfill_error = redact(e)
+                    print(f"[tick] {code} 回補失敗（訂閱仍有效）: {backfill_error}", flush=True)
             with _tick_lock:
                 out[code] = {
                     "subscribed": True,
@@ -985,6 +982,7 @@ def ticks_subscribe():
                     "head_seq": _tick_seq.get(code, 0),
                     "resume_seq": marker,
                     "backfill": [list(r) for r in rows],
+                    "backfill_error": backfill_error,
                 }
         except Exception as e:
             out[code] = {"subscribed": False, "error": redact(e)}
@@ -1102,6 +1100,7 @@ def _spawn_tick_resubscribe(api, generation):
                 if _conn["api"] is not api or _login_state["generation"] != generation:
                     return
             contract = None
+            failed = False
             try:
                 _lock.acquire(timeout=5)
             except LockTimeout:
@@ -1115,8 +1114,10 @@ def _spawn_tick_resubscribe(api, generation):
                 with _tick_lock:
                     if code not in _tick_clients:
                         continue
-                    floor = _tick_meta.get(code, {}).get("last_ts")
-                    _tick_meta.setdefault(code, {})["first_live_ts"] = None
+                    meta = _tick_meta.setdefault(code, {})
+                    floor = meta.get("last_ts")
+                    meta["first_live_ts"] = None
+                    meta["gen"] = generation   # 沒更新這裡，下面的補洞守衛會永遠擋掉
                 contract = _resolve_contract(api, code)
                 api.quote.subscribe(
                     contract,
@@ -1125,10 +1126,13 @@ def _spawn_tick_resubscribe(api, generation):
                 )
             except Exception as e:
                 print(f"[tick] 重訂閱 {code} 失敗（交給客戶端重試）: {redact(e)}", flush=True)
-                _drop_tick_code(code)
-                continue
+                failed = True
             finally:
                 _lock.release()
+            if failed:
+                # 必須在釋放 _lock 後才取 _tick_lock（鎖順序：兩者不嵌套）
+                _drop_tick_code(code)
+                continue
             # 補洞：重登期間漏掉的成交
             try:
                 _lock.acquire(timeout=5)
@@ -1211,7 +1215,8 @@ def _tick_sweep_worker():
                     _run(resub, priority=2, op="tick_resub", budget_s=4)
                     print(f"[tick] 補回訂閱 {code}", flush=True)
                 except Exception as e:
-                    print(f"[tick] 補回訂閱 {code} 失敗: {redact(e)}", flush=True)
+                    print(f"[tick] 補回訂閱 {code} 失敗（交給客戶端重試）: {redact(e)}", flush=True)
+                    _drop_tick_code(code)
 
 
 def _spawn_bidask_resubscribe(api, generation):

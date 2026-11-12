@@ -83,8 +83,10 @@ def get_top_volume_sj(n: int = 20) -> list:
     except Exception as e:
         print(f'[gateway] 全市場快照失敗: {redact(e)}')
         return []
-    if data.get('partial'):
-        # 22 秒預算用盡或連續 3 批失敗：量排名可能缺漏，至少留下痕跡
+    global _market_partial
+    _market_partial = bool(data.get('partial'))
+    if _market_partial:
+        # 22 秒預算用盡或連續 3 批失敗：量排名可能缺漏，推播訊息要一起講
         print('[gateway] 全市場快照不完整（partial），量排名可能缺漏')
     rows = {}
     for s in data.get('items', []):
@@ -113,6 +115,7 @@ def get_top_volume_sj(n: int = 20) -> list:
 
 
 _bars_cache = {}
+_market_partial = False
 
 
 def get_daily_bars(symbol: str) -> list:
@@ -124,7 +127,7 @@ def get_daily_bars(symbol: str) -> list:
         bars = [b for b in (data.get('bars') or []) if b.get('date') < str(date.today())]
     except Exception as e:
         print(f'[gateway] 日K {symbol} 失敗: {redact(e)}')
-        return []          # 失敗不進快取：否則 streak 會靜默變成 0（排除條件失效）
+        return None        # 失敗不進快取；None 與「沒資料」要分開，否則連跌排除會靜默失效
     _bars_cache[symbol] = bars
     return bars
 
@@ -132,15 +135,18 @@ def get_daily_bars(symbol: str) -> list:
 def get_sj_avg5(symbol: str) -> int:
     """近5日均量（不含今日）"""
     bars = get_daily_bars(symbol)
-    if len(bars) < 5:
+    if not bars or len(bars) < 5:
         return 0
     return int(round(sum(b['volume'] for b in bars[-5:]) / 5, 0))
 
 
-def get_price_streak(symbol: str) -> int:
-    """連漲跌天數（不含今日，正=連漲、負=連跌、0=無資料或平盤，
-    同 chip-tracker/db.py price_streak() 語意）"""
-    closes = [b['close'] for b in get_daily_bars(symbol)]
+def get_price_streak(symbol: str):
+    """連漲跌天數（不含今日，正=連漲、負=連跌、0=無資料或平盤；
+    取不到日K回 None，呼叫端要跳過該檔，不能當成 0 放行）"""
+    bars = get_daily_bars(symbol)
+    if not bars:
+        return None
+    closes = [b['close'] for b in bars]
     if len(closes) < 2:
         return 0
     chg_pcts = []  # 新到舊
@@ -282,6 +288,9 @@ def main():
         if avg5 < 3000:
             continue
         streak = get_price_streak(code)
+        if streak is None:
+            print(f'[daytrade] {code} {row["name"]} 日K取得失敗，無法判斷連跌，排除')
+            continue
         if streak < 0:
             print(f'[daytrade] {code} {row["name"]} 連跌{-streak}天，排除')
             continue
@@ -311,6 +320,8 @@ def main():
     # ── 組訊息 ────────────────────────────────────────
 
     lines = [f"📊 <b>當沖候選</b>｜{TODAY} 09:10\n"]
+    if _market_partial:
+        lines.append("⚠️ 全市場快照不完整（partial），量排名可能缺漏\n")
     if idx_chg is not None:
         lines.append(f"🌐 大盤即時：{idx_val:,.2f}（{idx_chg:+.2f}%）\n")
     else:

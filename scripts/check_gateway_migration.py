@@ -25,7 +25,7 @@ CHAT_ID = '7556217543'
 GATEWAY = 'http://localhost:5455'
 MONITOR_LOG = f'{CC}/logs/intraday_monitor.log'
 DAYTRADE_LOG = f'{CC}/logs/daytrade.log'
-GATEWAY_LOG = f'{CC}/shioaji-gateway/shioaji.log'
+GATEWAY_LOG = '/tmp/shioaji-gateway.log'   # LaunchAgent stdout；session down 印在這（SDK log 沒有）
 TODAY = date.today().isoformat()
 
 
@@ -66,8 +66,8 @@ def check_health():
         ('✅' if (ticks.get('last_tick_age_s') is not None
                   and ticks.get('last_tick_age_s') < 30) else '❌',
          f"最後一筆 tick: {ticks.get('last_tick_age_s')} 秒前"),
-        ('✅' if (h.get('session_down_count') or 0) == 0 else '⚠️',
-         f"今日 session down 次數: {h.get('session_down_count')}（今天以前是 20）"),
+        # 這個計數是程序生命週期累計（不是按日重置），僅供參考；真正的「今日」看下面日誌檢查
+        ('ℹ️', f"gateway 程序啟動以來 session down: {h.get('session_down_count')} 次"),
     ]
     return out
 
@@ -107,10 +107,10 @@ def check_daytrade():
 
 
 def check_gateway_log():
-    """SDK 日誌是 UTC；台北 09:xx = UTC 01:xx，同一天。"""
+    """gateway 的 session down 格式：`[2026-11-12 09:10:05] session down; api cleared`。"""
     log = tail(GATEWAY_LOG, 400_000)
-    downs = len(re.findall(rf'{TODAY}T0[0-9]:\d\d:\d\d.*session down', log))
-    return [('✅' if downs == 0 else '⚠️', f'gateway 今日 session down 行數: {downs}')]
+    downs = len(re.findall(rf'\[{TODAY} [0-9:]{{8}}\] session down', log))
+    return [('✅' if downs == 0 else '❌', f'今日 session down 次數: {downs}（今天以前是 20）')]
 
 
 def main():

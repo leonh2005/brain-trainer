@@ -75,8 +75,8 @@ def test_daily_bars_failure_not_cached(monkeypatch):
         raise TimeoutError('gateway slow')
 
     monkeypatch.setattr(d, '_get_json', boom)
-    assert d.get_daily_bars('2330') == []
-    assert d.get_daily_bars('2330') == []
+    assert d.get_daily_bars('2330') is None
+    assert d.get_daily_bars('2330') is None
     assert calls['n'] == 2          # 失敗不進快取，下次仍會重試
 
 
@@ -100,6 +100,12 @@ def test_streak_up_and_down(monkeypatch):
 def test_streak_insufficient_data(monkeypatch):
     monkeypatch.setattr(d, 'get_daily_bars', lambda s: [{'close': 100, 'volume': 1}])
     assert d.get_price_streak('2330') == 0
+
+
+def test_streak_returns_none_when_bars_unavailable(monkeypatch):
+    """取不到日K不能回 0：0 會讓連跌排除靜默放行。"""
+    monkeypatch.setattr(d, 'get_daily_bars', lambda s: None)
+    assert d.get_price_streak('2330') is None
 
 
 def test_avg5_finmind_disabled_returns_zero():

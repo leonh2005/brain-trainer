@@ -17,7 +17,10 @@ import re
 _JWT = re.compile(r"eyJ[A-Za-z0-9_-]{8,}\.[A-Za-z0-9_-]{8,}\.[A-Za-z0-9_-]{8,}")
 # JSON / dict repr 裡的 token 欄位
 # 負向先行：已替換過的佔位符不要再被吃一次（否則 <redacted-jwt> 會變 <redacted>）
-_TOKEN_FIELD = re.compile(r"""(['"]token['"]\s*:\s*['"])(?!<redacted)[^'"]+(['"])""", re.I)
+_TOKEN_FIELD = re.compile(
+    r"""(['"](?:access_token|refresh_token|api_key|token)['"]\s*:\s*['"])"""
+    r"""(?!<redacted)[^'"]+(['"])""",
+    re.I)
 # query string 裡的 token / api_key
 _QUERY_TOKEN = re.compile(r"([?&](?:token|access_token|api_key)=)[^&\s'\"]+", re.I)
 # Authorization header

@@ -144,6 +144,7 @@ TICKS_TIMEOUT = 8
 DAILY_TIMEOUT = 15
 _tick_cursor: dict = {}               # code -> 已收到的最大 seq
 _gateway_boot_id = None               # gateway 重啟偵測
+_resub_fail: dict = {}                # code -> 連續重訂閱失敗次數（排到隊尾，避免餓死其他檔）
 
 
 def _get_json(path: str, params: dict, timeout: int) -> dict:
@@ -333,7 +334,11 @@ def _subscribe(code: str, name: str, now: datetime, keep_ticks: bool = False) ->
             _tick_store.pop(code, None)  # 重新加入時清空，避免舊資料漏掉淘汰期間的 tick
     _last_bar_signals.pop(code, None)
     _merge_backfill(code, _decode_ticks(info.get('backfill') or []))
-    _tick_cursor[code] = int(info.get('resume_seq') or 0)
+    if info.get('backfill_error'):
+        # 回補失敗時不能推進游標：被 ring 淘汰的那段之後就再也補不回來
+        print(f'[subscribe] {code} 回補失敗，保留游標: {redact(info["backfill_error"])}')
+    else:
+        _tick_cursor[code] = int(info.get('resume_seq') or 0)
 
     # vshape 固定清單的標的不在當日候選池，呼叫端只能傳代號當 name；
     # gateway 已回傳合約中文名，這裡優先補上。
@@ -1318,9 +1323,13 @@ if __name__ == '__main__':
             _next_scan = _time.monotonic() + SCAN_INTERVAL
         # 必須在 recompute_technical_cache 之前：剛收盤那一分鐘的最後幾筆 tick 要先進來
         need = poll_ticks()
-        # 每輪最多補 2 檔：重訂閱是阻塞 HTTP（含回補），做太多會讓輪詢與指標停擺
-        for code in need[:2]:
-            _subscribe(code, _universe.get(code) or code, _now, keep_ticks=True)
+        # 每輪最多補 2 檔：重訂閱是阻塞 HTTP（含回補），做太多會讓輪詢與指標停擺。
+        # 一直失敗的排到隊尾，避免兩檔壞掉就餓死其他 20 幾檔。
+        for code in sorted(need, key=lambda c: _resub_fail.get(c, 0))[:2]:
+            if _subscribe(code, _universe.get(code) or code, _now, keep_ticks=True):
+                _resub_fail.pop(code, None)
+            else:
+                _resub_fail[code] = _resub_fail.get(code, 0) + 1
         if _now.second < 5:
             recompute_technical_cache()
         volume_check()

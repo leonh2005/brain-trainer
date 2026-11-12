@@ -291,8 +291,9 @@ def test_snapshot_includes_extended_fields(monkeypatch):
 
 def test_snapshot_error_redacts_jwt(monkeypatch):
     api = _fake_api()
-    jwt = ("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9."
-           "eyJuYmYiOjE3OTQ0NDY0MDh9.oypM06XlcnJaXq3phV-mRYiVNjeeh5rvbjqY1KPS9l4")
+    # 自造假 JWT（公開 repo 不可放真實 token）
+    jwt = ("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0In0."
+           "c2lnbmF0dXJlLW5vdC1yZWFs")
 
     def boom(fn, **kw):
         raise RuntimeError(f"payload: {{'token': '{jwt}'}}")
