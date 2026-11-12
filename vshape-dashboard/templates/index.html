@@ -84,6 +84,9 @@
   form.add button:hover { background: #273244; }
   .err { color: #f0616d; font-size: .78rem; margin-top: 6px; min-height: 1em; }
   .empty { color: var(--muted); font-size: .85rem; padding: 10px 0; }
+  .cand { margin: 6px 6px 0 0; background: #1b2536; color: var(--fg); border: 1px solid var(--line);
+          border-radius: 6px; padding: 5px 10px; cursor: pointer; font-size: .82rem; }
+  .cand:hover { background: #273244; }
 </style>
 </head>
 <body>
@@ -97,7 +100,7 @@
     <h2><span class="dot"></span>做多 · V 型反轉</h2>
     <div class="list" id="list-long"><p class="empty">載入中…</p></div>
     <form class="add" data-dir="long">
-      <input name="code" placeholder="代號，如 00631L" maxlength="6" inputmode="numeric">
+      <input name="code" placeholder="代號或名稱，如 00631L、台積電" maxlength="20">
       <button type="submit">新增</button>
     </form>
     <div class="err" data-err="long"></div>
@@ -107,7 +110,7 @@
     <h2><span class="dot"></span>做空 · 倒 V 反轉</h2>
     <div class="list" id="list-short"><p class="empty">載入中…</p></div>
     <form class="add" data-dir="short">
-      <input name="code" placeholder="代號，如 0050" maxlength="6" inputmode="numeric">
+      <input name="code" placeholder="代號或名稱，如 0050、元大台灣50" maxlength="20">
       <button type="submit">新增</button>
     </form>
     <div class="err" data-err="short"></div>
@@ -184,7 +187,22 @@ async function mutate(direction, action, code) {
     body: JSON.stringify({ direction, action, code })
   });
   const j = await r.json();
-  if (!j.ok) { errBox.textContent = j.error || '操作失敗'; return false; }
+  if (!j.ok) {
+    errBox.textContent = j.error || '操作失敗';
+    if (j.candidates && j.candidates.length) {
+      const box = document.createElement('div');
+      j.candidates.forEach(c => {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'cand';
+        b.textContent = `${c.code} ${c.name}`;
+        b.addEventListener('click', () => mutate(direction, 'add', c.code));
+        box.appendChild(b);
+      });
+      errBox.appendChild(box);
+    }
+    return false;
+  }
   await refresh();
   return true;
 }

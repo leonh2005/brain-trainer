@@ -10,6 +10,8 @@
 
 import json
 import os
+import re
+import time
 from datetime import date, datetime
 
 import requests
@@ -22,6 +24,58 @@ GATEWAY = "http://localhost:5455"
 DEFAULT_WATCH = {"long": ["00631L"], "short": ["00631L", "0050"]}
 
 app = Flask(__name__)
+
+CODE_RE = re.compile(r"^[0-9]{4,6}[A-Z]?$")
+_name_map = {"ts": 0.0, "data": {}}     # 名稱 → 代號（30 分鐘快取）
+
+
+def _name_map_refresh() -> dict:
+    """從 gateway 全市場快照建立名稱對照；gateway 掛掉就沿用舊資料。"""
+    now = time.time()
+    if _name_map["data"] and now - _name_map["ts"] < 1800:
+        return _name_map["data"]
+    mapping = {}
+    try:
+        r = requests.get(f"{GATEWAY}/market_snapshot", timeout=25)
+        for it in (r.json().get("items") or []):
+            name = str(it.get("name") or "").strip()
+            code = str(it.get("code") or "").strip()
+            if name and code:
+                mapping[name] = code
+    except Exception:
+        pass
+    if mapping:
+        _name_map.update(ts=now, data=mapping)
+    return _name_map["data"]
+
+
+def resolve_code(text: str):
+    """代號或中文名稱 → (代號, None)；對到多個 → (None, 候選清單)。"""
+    text = text.strip()
+    if CODE_RE.match(text):
+        return text, None
+
+    mapping = _name_map_refresh()
+    if mapping:
+        exact = [c for n, c in mapping.items() if n == text]
+        if len(exact) == 1:
+            return exact[0], None
+        part = [(c, n) for n, c in mapping.items() if text in n]
+        if len(part) == 1:
+            return part[0][0], None
+        if part:
+            return None, [{"code": c, "name": n} for c, n in part[:8]]
+
+    try:      # 備援：gateway 模糊搜尋（只涵蓋 4 碼個股）
+        r = requests.get(f"{GATEWAY}/stock_search", params={"q": text}, timeout=6)
+        res = r.json().get("results") or []
+        if len(res) == 1:
+            return res[0]["code"], None
+        if res:
+            return None, res[:8]
+    except Exception:
+        pass
+    return None, []
 
 
 def load_watch() -> dict:
@@ -104,11 +158,20 @@ def api_watch():
     body = request.get_json(silent=True) or {}
     direction = body.get("direction")
     action = body.get("action")
-    code = str(body.get("code") or "").strip()
-    if direction not in ("long", "short") or action not in ("add", "remove") or not code:
+    raw = str(body.get("code") or "").strip()
+    if direction not in ("long", "short") or action not in ("add", "remove") or not raw:
         return jsonify({"ok": False, "error": "參數錯誤"}), 400
-    if not (code.isdigit() and 4 <= len(code) <= 6):
-        return jsonify({"ok": False, "error": "代號格式應為 4-6 位數字"}), 400
+
+    code, candidates = (raw, None)
+    if action == "add":
+        code, candidates = resolve_code(raw)
+        if candidates is not None:
+            if candidates:
+                return jsonify({"ok": False, "error": f"「{raw}」符合多筆，請選擇",
+                                "candidates": candidates}), 200
+            return jsonify({"ok": False, "error": f"找不到「{raw}」這個標的"}), 200
+    if not CODE_RE.match(code):
+        return jsonify({"ok": False, "error": "代號格式應為 4-6 位數字（ETF 可加字母，如 00631L）"}), 400
 
     watch = load_watch()
     if action == "add":
