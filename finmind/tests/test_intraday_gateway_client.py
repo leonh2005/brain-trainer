@@ -172,6 +172,17 @@ def test_get_avg5_vol_filters_today(monkeypatch):
     assert cache['2330'] == 300
 
 
+def test_log_vshape_event_writes_both_directions(monkeypatch, tmp_path):
+    log = tmp_path / "vshape_events.log"
+    monkeypatch.setattr(m, 'VSHAPE_EVENT_LOG', str(log))
+    m._log_vshape_event('0050', '元大台灣50', 'long', 'A', 102.7, 101.42, '12:52')
+    m._log_vshape_event('00631L', '元大台灣50正2', 'short', 'A', 32.91, 32.72, '13:01')
+    lines = log.read_text(encoding='utf-8').splitlines()
+    assert len(lines) == 2
+    assert lines[0].endswith('| long | 0050 元大台灣50 | A | 收 102.70 | VWAP 101.42')
+    assert '| short | 00631L' in lines[1]
+
+
 def test_get_avg5_vol_insufficient_bars(monkeypatch):
     monkeypatch.setattr(m, '_get_json', lambda p, q, t: {
         'ok': True, 'bars': [{'date': '2026-11-10', 'volume': 100}]})

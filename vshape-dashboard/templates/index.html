@@ -43,6 +43,12 @@
   .dot { width: 9px; height: 9px; border-radius: 50%; }
   .panel[data-dir="long"] .dot { background: var(--long); }
   .panel[data-dir="short"] .dot { background: var(--short); }
+  .panel.events { grid-column: 1 / -1; }
+  .panel.events .dot { background: var(--muted); }
+  .ev { font-family: var(--mono); font-size: .82rem; padding: 6px 0; border-bottom: 1px solid var(--line); }
+  .ev:last-child { border-bottom: 0; }
+  .ev .dir-long { color: var(--long); }
+  .ev .dir-short { color: var(--short); }
 
   .row {
     display: grid; grid-template-columns: auto 1fr auto auto auto; align-items: center;
@@ -115,6 +121,11 @@
     </form>
     <div class="err" data-err="short"></div>
   </section>
+
+  <section class="panel events">
+    <h2><span class="dot"></span>今日 V 轉 / A 轉紀錄</h2>
+    <div class="list" id="events"><p class="empty">載入中…</p></div>
+  </section>
 </main>
 
 <script>
@@ -168,6 +179,23 @@ function render() {
     state.stale ? 'var(--short)' : '';
 }
 
+function renderEvents(data) {
+  const el = document.getElementById('events');
+  const rows = data.events || [];
+  if (!rows.length) {
+    el.innerHTML = '<p class="empty">今日尚無 V / A 轉事件</p>';
+    return;
+  }
+  el.innerHTML = rows.map(line => {
+    const parts = line.split(' | ');
+    if (parts.length < 6) return `<div class="ev">${esc(line)}</div>`;
+    const [dt, dir, code, stage, price, vwap] = parts;
+    const dirTxt = dir === 'long' ? 'V轉' : 'A轉';
+    return `<div class="ev"><span class="dir-${esc(dir)}">${dirTxt}</span> ` +
+      `${esc((dt.split(' ')[1] || dt))} · ${esc(code)} · ${esc(stage)} · ${esc(price)} · ${esc(vwap)}</div>`;
+  }).join('');
+}
+
 async function refresh() {
   try {
     const r = await fetch('api/state');
@@ -175,6 +203,12 @@ async function refresh() {
     render();
   } catch (e) {
     document.getElementById('updated').textContent = '讀取失敗：' + e.message;
+  }
+  try {
+    const r2 = await fetch('api/events');
+    renderEvents(await r2.json());
+  } catch (e) {
+    document.getElementById('events').innerHTML = '<p class="empty">紀錄讀取失敗</p>';
   }
 }
 

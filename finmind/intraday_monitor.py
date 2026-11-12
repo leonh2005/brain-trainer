@@ -84,6 +84,8 @@ LOCK_FILE         = '/Users/steven/CCProject/logs/intraday_monitor.lock'
 VSHAPE_WATCH_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), '.local', 'vshape_watch.json')
 VSHAPE_STATE_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), '.local', 'vshape_state.json')
 VSHAPE_PUSHED_FILE = '/tmp/intraday_vshape_pushed.json'
+# 永久事件紀錄（/tmp 的 pushed 檔重開機就沒了）：V 轉與 A 轉都寫，供 5995 頁面與事後回顧
+VSHAPE_EVENT_LOG = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'logs', 'vshape_events.log')
 DEFAULT_VSHAPE_WATCH = {'long': ['00631L'], 'short': ['00631L', '0050']}
 
 
@@ -1033,6 +1035,18 @@ def _save_vshape_state() -> None:
         print(f'[vshape] 狀態檔寫入失敗: {e}')
 
 
+def _log_vshape_event(code: str, name: str, direction: str, stage: str,
+                      price: float, vwap: float, ts: str) -> None:
+    """append 一行事件紀錄；V（long）與 A（short）共用同一份，方向欄位區分。"""
+    try:
+        os.makedirs(os.path.dirname(VSHAPE_EVENT_LOG), exist_ok=True)
+        with open(VSHAPE_EVENT_LOG, 'a', encoding='utf-8') as f:
+            f.write(f'{date.today()} {ts} | {direction} | {code} {name} | {stage} '
+                    f'| 收 {price:.2f} | VWAP {vwap:.2f}\n')
+    except Exception as e:
+        print(f'[vshape] 事件 log 寫入失敗: {redact(e)}')
+
+
 def _check_one(code: str, df: pd.DataFrame, snap: dict, direction: str) -> None:
     """跑單一方向的判定；有新階段且推播成功才記錄。"""
     key = (code, direction)
@@ -1045,6 +1059,8 @@ def _check_one(code: str, df: pd.DataFrame, snap: dict, direction: str) -> None:
             state = _state_for(code, direction)
             state.pushed[pending.stage] = pending.ts
             _save_vshape_pushed()
+            _log_vshape_event(code, name, direction, pending.stage,
+                              pending.price, pending.vwap, pending.ts)
             _pending_vshape.pop(key, None)
             print(f'[vshape] {code} {direction} {name} → {pending.stage}（補送成功）')
         return   # 補送期間先不推進新判定，避免事件堆積
@@ -1072,6 +1088,8 @@ def _check_one(code: str, df: pd.DataFrame, snap: dict, direction: str) -> None:
         return
     state.pushed[event.stage] = event.ts
     _save_vshape_pushed()
+    _log_vshape_event(code, name, direction, event.stage,
+                      event.price, event.vwap, event.ts)
     print(f"[vshape] {code} {direction} {name} → {event.stage}"
           f"（收 {event.price:.2f} VWAP {event.vwap:.2f}）")
 

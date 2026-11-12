@@ -258,6 +258,7 @@ def get_stock_sector(code: str) -> str:
 # ── 主程式 ────────────────────────────────────────
 
 def main():
+    print(f'[run] {TODAY} 當沖掃描開始')   # 供 check_gateway_migration.py 切分本次執行
     _init_finmind()
 
     top20 = get_top_volume_sj(n=20)

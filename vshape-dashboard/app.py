@@ -21,6 +21,7 @@ from flask import Flask, jsonify, render_template, request
 BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 WATCH_FILE = os.path.join(BASE, "finmind", ".local", "vshape_watch.json")
 STATE_FILE = os.path.join(BASE, "finmind", ".local", "vshape_state.json")
+EVENT_LOG = os.path.join(BASE, "logs", "vshape_events.log")
 GATEWAY = "http://localhost:5455"
 DEFAULT_WATCH = {"long": ["00631L"], "short": ["00631L", "0050"]}
 
@@ -166,6 +167,21 @@ def api_state():
     state["watch"] = watch
     state["quotes"] = quotes(sorted(set(watch["long"]) | set(watch["short"])))
     return jsonify(state)
+
+
+@app.route("/api/events")
+def api_events():
+    """今日 V 轉（long）與 A 轉（short）事件紀錄，新到舊。"""
+    today = str(date.today())
+    rows = []
+    try:
+        with open(EVENT_LOG, encoding="utf-8") as f:
+            for line in f:
+                if line.startswith(today):
+                    rows.append(line.rstrip("\n"))
+    except FileNotFoundError:
+        pass
+    return jsonify({"date": today, "events": list(reversed(rows[-100:]))})
 
 
 @app.route("/api/watch", methods=["POST"])
