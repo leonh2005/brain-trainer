@@ -1,6 +1,6 @@
 {
-  "scanned_at": "2026-11-12 03:00:47",
-  "since": "2026-11-11 03:00:00",
+  "scanned_at": "2026-11-13 03:00:47",
+  "since": "2026-11-12 03:00:00",
   "results": {
     "市場儀表板": {
       "exists": true,
@@ -28,14 +28,14 @@
     },
     "財經新聞分析": {
       "exists": true,
-      "errors": 0,
-      "last_error": null,
-      "fix": null
+      "errors": 8,
+      "last_error": "2026-11-13 01:46:56,633 [WARNING] fetcher.ptt_fetcher: PTT article fetch failed https://www.ptt.cc/bbs/Stock/M.1794463214.A.BB8.html: HTTPSConnectionPool(host='www.ptt.cc', port=443): Read timed out.",
+      "fix": "網路逾時 → 確認目標服務可達，或增加 timeout 設定"
     },
     "川普監測": {
       "exists": true,
-      "errors": 8,
-      "last_error": "2026-11-11 12:45:03,991 WARNING 分析失敗：Data centres in SE Asia could be the first to feel — 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reaso",
+      "errors": 11,
+      "last_error": "2026-11-12 12:20:03,875 WARNING 分析失敗：Trump’s ties to Nvidia CEO Jensen Huang in the spo — 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reaso",
       "fix": "尚無對應建議，需人工判斷"
     },
     "持倉新聞(台股)": {
@@ -76,8 +76,8 @@
     },
     "當沖推播": {
       "exists": true,
-      "errors": 2,
-      "last_error": "[sj] avg5 1303 失敗: Topic: api/v1/data/kbars, Corr: c10, Client: PYAPI/N124711691/1111/011004/338864/220.141.34.6, payload: {'token': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYmYiOjE3OTQzNTk0MDQsImV4cCI6MTc5NDQ0NTgwNCwic2ltdWxhdGlvbiI6ZmFsc2UsInBlcnNvbl9pZCI6Ik4xMjQ3MTE2OTEiLCJ2ZXJzaW9uIjoiMS4zLjIiL",
+      "errors": 1,
+      "last_error": "[sj] avg5 1802 失敗: Topic: api/v1/data/kbars, Corr: c9, Client: PYAPI/N124711691/1112/011003/991927/220.141.34.6, payload: {'token': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYmYiOjE3OTQ0NDU4MDQsImV4cCI6MTc5NDUzMjIwNCwic2ltdWxhdGlvbiI6ZmFsc2UsInBlcnNvbl9pZCI6Ik4xMjQ3MTE2OTEiLCJ2ZXJzaW9uIjoiMS4zLjIiLC",
       "fix": "尚無對應建議，需人工判斷"
     },
     "隔日沖推播": {
@@ -88,9 +88,9 @@
     },
     "盤中監控": {
       "exists": true,
-      "errors": 12,
-      "last_error": "[universe] 掃描失敗，維持現有 29 檔: HTTPConnectionPool(host='localhost', port=5455): Read timed out. (read timeout=30)",
-      "fix": "網路逾時 → 確認目標服務可達，或增加 timeout 設定"
+      "errors": 19,
+      "last_error": "[avg5] 2221 第2次失敗: Topic: api/v1/data/kbars, Corr: c1918, Client: PYAPI/N124711691/1112/012007/818769/220.141.34.6, payload: {'token': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYmYiOjE3OTQ0NDY0MDgsImV4cCI6MTc5NDUzMjgwOCwic2ltdWxhdGlvbiI6ZmFsc2UsInBlcnNvbl9pZCI6Ik4xMjQ3MTE2OTEiLCJ2ZXJzaW9uIjoiMS4zLjI",
+      "fix": "尚無對應建議，需人工判斷"
     },
     "蝦皮軟纖監測": {
       "exists": true,
