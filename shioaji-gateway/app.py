@@ -10,6 +10,9 @@
   GET /intraday?code=IX0001[&date=2026-08-14] -> {ok, points:[{t:"09:01",price,high,low,volume},...]}  (指定日1分鐘走勢，預設當日)
   GET /scanner?type=pct|volume|amount&date=2026-08-28&count=200 -> {ok, items:[{code,name,close,change_price,pct,volume,amount},...]}  (行情排行，count上限200)
   GET /market_snapshot                     -> {ok, items:[{code,name,suffix,close,high,low,change_rate,total_volume},...]}  (全市場TSE+OTC即時快照)
+  GET /ticks/subscribe?codes=&client=&backfill=1 -> {ok, data:{code:{subscribed,name,reference,limit_up,limit_down,head_seq,resume_seq,backfill}}}
+  GET /ticks?codes=&after=code:seq,...&client=  -> {ok, data:{code:{subscribed,seq,first_seq,ticks,truncated,reset}}}
+  GET /ticks/unsubscribe?codes=&client=         -> {ok, data:{code:{subscribed}}}
 """
 import heapq
 import itertools
@@ -18,9 +21,14 @@ import re
 import sys
 import threading
 import time
+import uuid
+from collections import deque
 from datetime import UTC, date, datetime, timedelta
 
 from flask import Flask, jsonify, request
+
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "lib"))
+from log_redact import redact  # noqa: E402
 
 app = Flask(__name__)
 SECRETS_DIR = "/Users/steven/CCProject/.secrets"
@@ -135,6 +143,19 @@ _bidask_subscribed = {}   # code -> 最後被 /bidask 查詢的時間
 BIDASK_IDLE_TIMEOUT = 90  # 超過這麼久沒人查詢就自動退訂
 BIDASK_SWEEP_INTERVAL = 60
 
+# ── tick 中繼 ──────────────────────────────────────────────────
+# 讓 intraday_monitor 等服務不必自己登入 Shioaji（同帳號多登入會互踢 session）。
+# 鎖順序：_lock（SDK 呼叫）與 _tick_lock 絕不嵌套；SDK 回呼只取 _tick_lock。
+BOOT_ID = uuid.uuid4().hex          # 程序重啟偵測：客戶端看到改變就重訂閱
+_tick_lock = threading.Lock()       # leaf lock，只做 dict/deque 操作
+_tick_seq = {}                      # code -> 最新序號（程序內單調，重登不歸零）
+_tick_ring = {}                     # code -> deque[(seq, ts_iso, close, volume, tick_type)]
+_tick_meta = {}                     # code -> {api_id, gen, first_live_ts, first_live_seq, last_ts, last_tick_at}
+_tick_clients = {}                  # code -> {client_id: 最後 poll 時間}
+TICK_RING_MAX = 5000                # 每檔保留的 tick 數（約 27 檔 × 5000 × 200B ≈ 27MB 上限）
+TICK_IDLE_TIMEOUT = 180             # 超過這麼久沒 poll 就自動退訂
+TICK_SWEEP_INTERVAL = 60
+
 
 def _is_candidate_code(code):
     """隔日沖候選代號：4碼個股、5碼數字 ETF、00xxxX 字尾 ETF（含正/反 ETF）；排除 6 碼數字權證"""
@@ -171,6 +192,65 @@ def _make_on_bidask(api):
     return _on_bidask
 
 
+def _make_on_tick(api):
+    """每個 session 專屬的逐筆回呼（在 SDK Rust 執行緒上跑）。
+
+    只取 _tick_lock，絕不碰 _lock/_state_cv：取 _lock 會跟正在等 SDK 回覆的
+    執行緒互鎖。`_conn["api"] is not api` 是單純 dict 讀取（GIL 保證原子），
+    用來丟棄舊 session 的延遲回呼。
+    """
+    api_id = id(api)
+
+    def _on_tick(*args):
+        tick = args[-1]                 # SDK 版本間簽名不同，取最後一個參數
+        if _conn["api"] is not api:
+            return
+        try:
+            if getattr(tick, "simtrade", False):
+                return                  # 模擬撮合不計入
+            code = tick.code
+            ts = tick.datetime.strftime("%Y-%m-%dT%H:%M:%S.%f")
+            close = float(tick.close)
+            volume = int(tick.volume)
+            tick_type = int(tick.tick_type)
+        except Exception:
+            return
+        with _tick_lock:
+            seq = _tick_seq.get(code, 0) + 1
+            _tick_seq[code] = seq
+            _tick_ring.setdefault(code, deque(maxlen=TICK_RING_MAX)).append(
+                (seq, ts, close, volume, tick_type))
+            meta = _tick_meta.setdefault(code, {})
+            meta["api_id"] = api_id
+            meta["last_ts"] = ts
+            meta["last_tick_at"] = time.time()
+            if meta.get("first_live_ts") is None:
+                meta["first_live_ts"] = ts
+                meta["first_live_seq"] = seq
+
+    return _on_tick
+
+
+def _parse_sdk_ticks(ticks):
+    """把 api.ticks() 回傳的陣列轉成 [(ts_iso, close, volume, tick_type)]。
+
+    時間戳慣例與 /intraday、/big_orders 相同：kb.ts/ticks.ts 是「台灣本地時鐘
+    數值以 epoch 秒編碼」，用 utcfromtimestamp 取數值本身，不能轉本地時區。
+    """
+    out = []
+    sim = getattr(ticks, "simtrade", None)
+    for i, (ts, close, volume, tick_type) in enumerate(
+            zip(ticks.ts, ticks.close, ticks.volume, ticks.tick_type)):
+        if sim is not None and i < len(sim) and sim[i]:
+            continue
+        if close is None:
+            continue
+        t = datetime.fromtimestamp(ts / 1e9, tz=UTC)
+        out.append((t.strftime("%Y-%m-%dT%H:%M:%S.%f"),
+                    float(close), int(volume), int(tick_type)))
+    return out
+
+
 def _handle_session_down(dead_api_id):
     """SDK 的 session-down 回呼（在 Rust 執行緒上跑）。
 
@@ -195,6 +275,7 @@ def _login():
     api = sj.Shioaji(simulation=False)
     api.login(api_key=api_key, secret_key=secret_key)
     api.quote.set_on_bidask_stk_v1_callback(_make_on_bidask(api))
+    api.set_on_tick_stk_v1_callback(_make_on_tick(api))
     register = getattr(api, "set_session_down_callback", None) or getattr(api, "on_session_down", None)
     if register is not None:
         api_id = id(api)
@@ -230,7 +311,7 @@ def _mark_down(api, exc):
             _conn["api"] = None
             _last_session_down["ts"] = time.time()
             _last_session_down["count"] += 1
-        _login_state["last_error"] = f"{type(exc).__name__}: {exc}"
+        _login_state["last_error"] = redact(f"{type(exc).__name__}: {exc}")
         _state_cv.notify_all()
 
 
@@ -285,6 +366,10 @@ def _relogin(deadline, prior_api):
                     old.clear_session_down_callback()
                 except Exception:
                     pass
+                try:
+                    old.clear_on_tick_stk_v1_callback()
+                except Exception:
+                    pass
                 # 必須「先登出舊的、再登入新的」：反過來的話 SDK 會在登入後才釋放
                 # 共用的 token slot（log: Successfully released token slot 1），
                 # 把剛拿到的新 token 一起作廢，變成每 5 分鐘一次的重登迴圈。
@@ -297,7 +382,7 @@ def _relogin(deadline, prior_api):
                 backoff = min(LOGIN_BACKOFF_MAX_S,
                               LOGIN_BACKOFF_BASE_S * (2 ** (_login_state["failures"] - 1)))
                 _login_state["next_attempt_at"] = time.monotonic() + backoff
-                _login_state["last_error"] = f"{type(e).__name__}: {e}"
+                _login_state["last_error"] = redact(f"{type(e).__name__}: {e}")
                 _conn["api"] = None
                 _state_cv.notify_all()
             raise
@@ -314,6 +399,7 @@ def _relogin(deadline, prior_api):
     finally:
         _login_lock.release()       # 先放掉重連鎖，_run 之後才會重取 _lock
     _spawn_bidask_resubscribe(new_api, generation)
+    _spawn_tick_resubscribe(new_api, generation)
     return new_api
 
 
@@ -358,7 +444,7 @@ def _run(fn, priority=0, op="?", budget_s=DEFAULT_BUDGET_S, retry=True):
                     except Exception as e:
                         if not _is_conn_error(e):
                             print(f"[{datetime.now():%Y-%m-%d %H:%M:%S}] 業務錯誤不重登 "
-                                  f"{type(e).__name__}: {e}", flush=True)
+                                  f"{redact(f'{type(e).__name__}: {e}')}", flush=True)
                             outcome = "business_error"
                             raise
                         _mark_down(api, e)
@@ -408,8 +494,18 @@ def health():
     else:
         state = "degraded"
     stats = _lock.stats()
+    with _tick_lock:
+        last_tick_at = max((m.get("last_tick_at") or 0.0) for m in _tick_meta.values()) \
+            if _tick_meta else 0.0
+        tick_stats = {
+            "subscribed_codes": len(_tick_clients),
+            "clients": sorted({c for m in _tick_clients.values() for c in m}),
+            "buffered_ticks": sum(len(r) for r in _tick_ring.values()),
+            "last_tick_age_s": round(max(0.0, now - last_tick_at), 1) if last_tick_at else None,
+        }
     return jsonify({
         "status": "ok",
+        "boot_id": BOOT_ID,
         "logged_in": api is not None,
         "state": state,
         "reconnecting": reconnecting,
@@ -420,6 +516,7 @@ def health():
         "generation": generation,
         "queue_depth": stats["queue_depth"],
         "lock_busy": stats["busy"],
+        "ticks": tick_stats,
     })
 
 
@@ -433,17 +530,29 @@ def snapshot():
             contracts = [_resolve_contract(api, c) for c in codes]
             snaps = api.snapshots(contracts, timeout=_sdk_timeout_ms(SNAPSHOT_TIMEOUT_MS))
             out = {}
-            for c, sn in zip(codes, snaps):
+            for c, sn, ct in zip(codes, snaps, contracts):
                 out[c] = {
                     "close": float(sn.close),
                     "change_price": float(sn.change_price),
                     "change_rate": float(sn.change_rate) if sn.change_rate is not None else None,
                     "total_amount": float(sn.total_amount) if sn.total_amount is not None else None,
+                    # 以下欄位供 intraday_monitor / daytrade_alert 取代直連 SDK
+                    "total_volume": int(sn.total_volume) if sn.total_volume is not None else 0,
+                    "yesterday_volume": int(sn.yesterday_volume) if sn.yesterday_volume is not None else 0,
+                    "buy_volume": int(sn.buy_volume) if sn.buy_volume is not None else 0,
+                    "sell_volume": int(sn.sell_volume) if sn.sell_volume is not None else 0,
+                    "high": float(sn.high) if sn.high is not None else None,
+                    "low": float(sn.low) if sn.low is not None else None,
+                    "open": float(sn.open) if sn.open is not None else None,
+                    "name": getattr(ct, "name", "") or c,
+                    "reference": float(ct.reference) if getattr(ct, "reference", None) is not None else None,
+                    "limit_up": float(ct.limit_up) if getattr(ct, "limit_up", None) is not None else None,
+                    "limit_down": float(ct.limit_down) if getattr(ct, "limit_down", None) is not None else None,
                 }
             return out
         return jsonify({"ok": True, "data": _run(work, op="snapshot", budget_s=8)})
     except Exception as e:
-        return jsonify({"ok": False, "error": str(e)})
+        return jsonify({"ok": False, "error": redact(e)})
 
 
 @app.get("/stock_search")
@@ -476,7 +585,7 @@ def stock_search():
             return results
         return jsonify({"ok": True, "results": _run(work, op="stock_search", budget_s=3)})
     except Exception as e:
-        return jsonify({"ok": False, "error": str(e)})
+        return jsonify({"ok": False, "error": redact(e)})
 
 
 @app.get("/kbars")
@@ -500,7 +609,7 @@ def kbars():
             return [float(c) for c in kb.Close if c]
         return jsonify({"ok": True, "closes": _run(work, op="kbars", budget_s=12)})
     except Exception as e:
-        return jsonify({"ok": False, "error": str(e)})
+        return jsonify({"ok": False, "error": redact(e)})
 
 
 @app.get("/daily_ohlcv")
@@ -543,7 +652,7 @@ def daily_ohlcv():
         bars = _append_today_via_yfinance(code, bars)
         return jsonify({"ok": True, "bars": bars})
     except Exception as e:
-        return jsonify({"ok": False, "error": str(e)})
+        return jsonify({"ok": False, "error": redact(e)})
 
 
 def _append_today_via_yfinance(code, bars):
@@ -603,7 +712,7 @@ def intraday():
             return points
         return jsonify({"ok": True, "points": _run(work, op="intraday", budget_s=12)})
     except Exception as e:
-        return jsonify({"ok": False, "error": str(e)})
+        return jsonify({"ok": False, "error": redact(e)})
 
 
 @app.get("/big_orders")
@@ -646,7 +755,7 @@ def big_orders():
             }
         return jsonify({"ok": True, **_run(work, op="big_orders", budget_s=18)})
     except Exception as e:
-        return jsonify({"ok": False, "error": str(e)})
+        return jsonify({"ok": False, "error": redact(e)})
 
 
 SCANNER_KINDS = {"pct": "ChangePercentRank", "volume": "VolumeRank", "amount": "AmountRank"}
@@ -691,7 +800,7 @@ def scanner():
             return out
         return jsonify({"ok": True, "items": _run(work, op="scanner", budget_s=25, retry=False)})
     except Exception as e:
-        return jsonify({"ok": False, "error": str(e)})
+        return jsonify({"ok": False, "error": redact(e)})
 
 
 @app.get("/market_snapshot")
@@ -759,7 +868,7 @@ def market_snapshot():
             payload["partial"] = True
         return jsonify(payload)
     except Exception as e:
-        return jsonify({"ok": False, "error": str(e)})
+        return jsonify({"ok": False, "error": redact(e)})
 
 
 @app.get("/bidask")
@@ -786,7 +895,7 @@ def bidask():
             _run(work, op="bidask_sub", budget_s=4)
         except Exception as e:
             _bidask_subscribed.pop(code, None)
-            return jsonify({"ok": False, "error": f"訂閱失敗: {e}"})
+            return jsonify({"ok": False, "error": f"訂閱失敗: {redact(e)}"})
         return jsonify({"ok": False, "error": "訂閱中，請稍後重新查詢"})
 
     current = _conn["api"]
@@ -796,6 +905,268 @@ def bidask():
         return jsonify({"ok": False, "error": "訂閱中，請稍後重新查詢"})
     payload = {k: v for k, v in cached.items() if k != "api_id"}
     return jsonify({"ok": True, "code": code, **payload})
+
+
+@app.get("/ticks/subscribe")
+def ticks_subscribe():
+    """訂閱逐筆成交並回傳契約資訊＋當日回補。
+
+    GET /ticks/subscribe?codes=2330,2454&client=intraday_monitor&backfill=1
+      -> {ok, boot_id, generation, data:{code:{subscribed, name, reference, limit_up,
+          limit_down, head_seq, resume_seq, backfill:[[ts,close,volume,tick_type],...]}}}
+    resume_seq 是客戶端輪詢游標的起點：訂閱當下的最新序號。之後的 tick 一定 > 它，
+    回補則涵蓋更早的資料，兩者之間不漏。
+    """
+    codes = [c for c in request.args.get("codes", "").split(",") if c]
+    client = request.args.get("client", "default")
+    backfill = request.args.get("backfill", "1") != "0"
+    if not codes:
+        return jsonify({"ok": False, "error": "no codes"}), 400
+    import shioaji as sj
+    out = {}
+    with _state_cv:
+        generation = _login_state["generation"]
+    for code in codes:
+        try:
+            api = _conn["api"]
+            if api is None:
+                out[code] = {"subscribed": False, "error": "gateway not logged in"}
+                continue
+            contract = _resolve_contract(api, code)
+            with _tick_lock:
+                meta = _tick_meta.setdefault(code, {})
+                already = bool(_tick_clients.get(code))
+                gen_ok = meta.get("gen") == generation
+                marker = _tick_seq.get(code, 0)
+                meta["first_live_ts"] = None
+                meta["gen"] = generation
+            if not (already and gen_ok):
+                _run(lambda api, contract=contract: api.quote.subscribe(
+                        contract,
+                        quote_type=sj.constant.QuoteType.Tick,
+                        version=sj.constant.QuoteVersion.v1),
+                     priority=2, op="tick_sub", budget_s=10)
+            rows = []
+            if backfill:
+                ticks = _run(lambda api, contract=contract: api.ticks(
+                                 contract=contract, date=date.today().strftime("%Y-%m-%d"),
+                                 timeout=_sdk_timeout_ms(TICKS_TIMEOUT_MS)),
+                             priority=2, op="tick_backfill", budget_s=20)
+                parsed = _parse_sdk_ticks(ticks)
+                with _tick_lock:
+                    first_live = meta.get("first_live_ts")
+                    rows = [r for r in parsed
+                            if first_live is None or r[0] < first_live]
+            with _tick_lock:
+                _tick_clients.setdefault(code, {})[client] = time.time()
+                out[code] = {
+                    "subscribed": True,
+                    "name": getattr(contract, "name", "") or code,
+                    "reference": float(contract.reference)
+                    if getattr(contract, "reference", None) is not None else None,
+                    "limit_up": float(contract.limit_up)
+                    if getattr(contract, "limit_up", None) is not None else None,
+                    "limit_down": float(contract.limit_down)
+                    if getattr(contract, "limit_down", None) is not None else None,
+                    "head_seq": _tick_seq.get(code, 0),
+                    "resume_seq": marker,
+                    "backfill": [list(r) for r in rows],
+                }
+        except Exception as e:
+            out[code] = {"subscribed": False, "error": redact(e)}
+    return jsonify({"ok": True, "boot_id": BOOT_ID, "generation": generation, "data": out})
+
+
+@app.get("/ticks")
+def ticks_poll():
+    """增量拉取逐筆成交（純記憶體讀取，不碰 SDK/_lock）。
+
+    GET /ticks?codes=2330,2454&after=2330:41,2454:100&client=intraday_monitor
+      -> {ok, boot_id, server_time, data:{code:{subscribed, seq, first_seq, ticks, truncated, reset}}}
+    reset=true：游標比 head 還大（gateway 重啟過），客戶端應歸零重訂閱。
+    truncated=true：ring 已淘汰客戶端還沒看到的 tick，應帶 backfill=1 重訂閱。
+    """
+    codes = [c for c in request.args.get("codes", "").split(",") if c]
+    client = request.args.get("client", "default")
+    after = {}
+    for part in request.args.get("after", "").split(","):
+        if ":" in part:
+            c, s = part.split(":", 1)
+            try:
+                after[c] = int(s)
+            except ValueError:
+                pass
+    if not codes:
+        return jsonify({"ok": False, "error": "no codes"}), 400
+    now = time.time()
+    data = {}
+    with _tick_lock:
+        for code in codes:
+            ring = _tick_ring.get(code)
+            head = _tick_seq.get(code, 0)
+            first = ring[0][0] if ring else head + 1
+            after_seq = after.get(code, 0)
+            subscribed = code in _tick_clients
+            if after_seq > head:
+                data[code] = {"subscribed": subscribed, "seq": head, "first_seq": first,
+                              "ticks": [], "truncated": False, "reset": True}
+                continue
+            data[code] = {
+                "subscribed": subscribed,
+                "seq": head,
+                "first_seq": first,
+                # 不吐 seq（客戶端用回應的 seq 欄位更新游標），格式與 subscribe 的 backfill 一致
+                "ticks": [list(r[1:]) for r in ring if r[0] > after_seq] if ring else [],
+                "truncated": after_seq < first - 1,
+            }
+            if subscribed:
+                _tick_clients[code][client] = now
+    with _state_cv:
+        generation = _login_state["generation"]
+    return jsonify({"ok": True, "boot_id": BOOT_ID, "generation": generation,
+                    "server_time": datetime.now().strftime("%Y-%m-%dT%H:%M:%S.%f"),
+                    "data": data})
+
+
+@app.get("/ticks/unsubscribe")
+def ticks_unsubscribe():
+    """取消訂閱；refcount 歸零才真的呼叫 SDK（其他 client 還在用就不動）。"""
+    codes = [c for c in request.args.get("codes", "").split(",") if c]
+    client = request.args.get("client", "default")
+    import shioaji as sj
+    out = {}
+    for code in codes:
+        with _tick_lock:
+            clients = _tick_clients.get(code)
+            was = clients is not None
+            if clients is not None:
+                clients.pop(client, None)
+            remaining = bool(clients)
+            if not remaining:
+                _tick_clients.pop(code, None)
+        if was and not remaining and _conn["api"] is not None:
+            try:
+                def work(api, code=code):
+                    contract = _resolve_contract(api, code)
+                    api.quote.unsubscribe(
+                        contract,
+                        quote_type=sj.constant.QuoteType.Tick,
+                        version=sj.constant.QuoteVersion.v1,
+                    )
+                _run(work, priority=2, op="tick_unsub", budget_s=4)
+            except Exception as e:
+                print(f"[tick] 退訂 {code} 失敗（忽略）: {redact(e)}", flush=True)
+        if not remaining:
+            with _tick_lock:
+                _tick_ring.pop(code, None)
+                _tick_meta.pop(code, None)
+        out[code] = {"subscribed": remaining}
+    return jsonify({"ok": True, "data": out})
+
+
+def _spawn_tick_resubscribe(api, generation):
+    """重登後補訂閱 tick，並用 api.ticks 補上斷線期間的洞（floor < ts < first_live）。"""
+    with _tick_lock:
+        codes = list(_tick_clients.keys())
+    if not codes:
+        return
+
+    def run():
+        import shioaji as sj
+        today = date.today().strftime("%Y-%m-%d")
+        for code in codes:
+            with _state_cv:
+                if _conn["api"] is not api or _login_state["generation"] != generation:
+                    return
+            contract = None
+            try:
+                _lock.acquire(timeout=5)
+            except LockTimeout:
+                continue
+            try:
+                with _state_cv:
+                    if _conn["api"] is not api or _login_state["generation"] != generation:
+                        return
+                with _tick_lock:
+                    if code not in _tick_clients:
+                        continue
+                    floor = _tick_meta.get(code, {}).get("last_ts")
+                    _tick_meta.setdefault(code, {})["first_live_ts"] = None
+                contract = _resolve_contract(api, code)
+                api.quote.subscribe(
+                    contract,
+                    quote_type=sj.constant.QuoteType.Tick,
+                    version=sj.constant.QuoteVersion.v1,
+                )
+            except Exception as e:
+                print(f"[tick] 重訂閱 {code} 失敗（忽略）: {redact(e)}", flush=True)
+                continue
+            finally:
+                _lock.release()
+            # 補洞：重登期間漏掉的成交
+            try:
+                _lock.acquire(timeout=5)
+            except LockTimeout:
+                continue
+            try:
+                ticks = api.ticks(contract=contract, date=today, timeout=TICKS_TIMEOUT_MS)
+                rows = _parse_sdk_ticks(ticks)
+            except Exception as e:
+                print(f"[tick] 補洞 {code} 失敗（忽略）: {redact(e)}", flush=True)
+                continue
+            finally:
+                _lock.release()
+            with _tick_lock:
+                meta = _tick_meta.setdefault(code, {})
+                first_live = meta.get("first_live_ts")
+                for ts, close, volume, tick_type in rows:
+                    if floor and ts <= floor:
+                        continue
+                    if first_live and ts >= first_live:
+                        continue
+                    seq = _tick_seq.get(code, 0) + 1
+                    _tick_seq[code] = seq
+                    _tick_ring.setdefault(code, deque(maxlen=TICK_RING_MAX)).append(
+                        (seq, ts, close, volume, tick_type))
+                    if ts > (meta.get("last_ts") or ""):
+                        meta["last_ts"] = ts
+
+    threading.Thread(target=run, daemon=True, name="tick-resub").start()
+
+
+def _tick_sweep_worker():
+    """背景執行緒：退訂太久沒 poll 的 tick 訂閱（比照 bidask sweep）。"""
+    import shioaji as sj
+    while True:
+        time.sleep(TICK_SWEEP_INTERVAL)
+        now = time.time()
+        stale = []
+        with _tick_lock:
+            for code in list(_tick_clients):
+                clients = _tick_clients[code]
+                for cid, last in list(clients.items()):
+                    if now - last > TICK_IDLE_TIMEOUT:
+                        clients.pop(cid, None)
+                if not clients:
+                    _tick_clients.pop(code, None)
+                    stale.append(code)
+        for code in stale:
+            if _conn["api"] is not None:
+                try:
+                    def work(api, code=code):
+                        contract = _resolve_contract(api, code)
+                        api.quote.unsubscribe(
+                            contract,
+                            quote_type=sj.constant.QuoteType.Tick,
+                            version=sj.constant.QuoteVersion.v1,
+                        )
+                    _run(work, priority=2, op="tick_unsub", budget_s=4)
+                    print(f"[tick] 閒置退訂 {code}", flush=True)
+                except Exception as e:
+                    print(f"[tick] 退訂 {code} 失敗（忽略）: {redact(e)}", flush=True)
+            with _tick_lock:
+                _tick_ring.pop(code, None)
+                _tick_meta.pop(code, None)
 
 
 def _spawn_bidask_resubscribe(api, generation):
@@ -872,4 +1243,5 @@ register(app)
 
 if __name__ == "__main__":
     threading.Thread(target=_bidask_sweep_worker, daemon=True, name="bidask-sweep").start()
+    threading.Thread(target=_tick_sweep_worker, daemon=True, name="tick-sweep").start()
     app.run(host="127.0.0.1", port=5455)

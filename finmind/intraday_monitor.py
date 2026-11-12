@@ -6,9 +6,9 @@
 的候選中，依「成交金額名次 + 漲幅名次」名次和取前 25 檔；新入選者訂閱即時 tick 並回補當日。
 成交金額是 close × total_volume(張) × 1000。
 
-資料層（2026-07-14 改訂閱制）：對監控股訂閱即時 tick 並本地累積，
-1 分鐘 K 棒由本地 tick 重算；中途加入或重啟以一次 api.ticks 回補當日。
-（舊版每 60 秒重抓全日 ticks，一天吃掉 Shioaji ~400MB 流量配額）
+資料層（2026-11-12 改走 shioaji-gateway）：向 gateway 訂閱 tick 並每 5 秒增量輪詢，
+1 分鐘 K 棒由本地 tick 重算；中途加入或重啟由 gateway 以當日 ticks 回補。
+（不自行登入 Shioaji：同帳號多程序直連會互踢 session，2026-11-12 實測 gateway 一天被踢 20 次）
 
 雙軌更新（2026-08-05 改）：
   - 技術指標（VWAP/OBV/KD/MACD/RSI/MACD背離）每 60 秒隨K棒收盤重算一次
@@ -45,9 +45,11 @@ from datetime import date, datetime, timedelta
 
 import pandas as pd
 import requests
-import shioaji as sj
 from dotenv import load_dotenv
 from vshape import VShapeParams, VShapeState, detect_v_shape, replay_state
+
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'lib'))
+from log_redact import redact  # noqa: E402
 
 load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
 warnings.filterwarnings('ignore')
@@ -129,80 +131,47 @@ SECTOR_PEERS = {
     '2303': ['2317'],
 }
 
-# ── Shioaji 連線 ─────────────────────────────────────────────────────────────
-_sj_api = None
-_session_gen = 0                      # 每次建立新 session +1；用來辨識遲到的舊回呼
-_relogin_needed = threading.Event()   # SDK 回報 session 掉了；由主迴圈重登＋重新訂閱
-_snapshot_health = {'fail_streak': 0} # 快照連續失敗次數（callback 沒送達時的後備偵測）
-SDK_TIMEOUT_MS = 5000                 # SDK 預設 30000，死掉的 session 會讓人等滿 30 秒
+# ── Shioaji gateway（HTTP；不自行登入，避免與 gateway 互踢 session）─────────
+# 2026-11-12：同帳號多程序直連會互踢（gateway 當天被踢 20 次），結算因此取不到價。
+_snapshot_health = {'fail_streak': 0} # 快照連續失敗次數（gateway 異常偵測）
+SESSION = requests.Session()
+CLIENT_ID = 'intraday_monitor'
+SNAPSHOT_TIMEOUT = 8
+SUBSCRIBE_TIMEOUT = 30
+TICKS_TIMEOUT = 8
+DAILY_TIMEOUT = 15
+_tick_cursor: dict = {}               # code -> 已收到的最大 seq
+_gateway_boot_id = None               # gateway 重啟偵測
 
 
-def _on_session_down(gen):
-    """只有「目前這個 session」的斷線才算數（舊 session 的延遲回呼直接忽略）。"""
-    if gen == _session_gen:
-        _relogin_needed.set()
+def _get_json(path: str, params: dict, timeout: int) -> dict:
+    r = SESSION.get(f'{GATEWAY}{path}', params=params, timeout=timeout)
+    r.raise_for_status()
+    data = r.json()
+    if not data.get('ok'):
+        raise RuntimeError(data.get('error') or f'{path} 失敗')
+    return data
 
 
-def _get_sj():
-    global _sj_api, _session_gen
-    if _sj_api is None:
-        api = sj.Shioaji(simulation=False)
-        api.login(
-            api_key=os.environ['SHIOAJI_API_KEY'],
-            secret_key=os.environ['SHIOAJI_SECRET_KEY'],
-        )
-        _session_gen += 1
-        gen = _session_gen
-        # 回呼跑在 SDK 的 Rust 執行緒：只設旗標，不做任何其他事
-        register = (getattr(api, 'set_session_down_callback', None)
-                    or getattr(api, 'on_session_down', None))
-        if register is not None:
-            register(lambda gen=gen: _on_session_down(gen))
-        _sj_api = api
-    return _sj_api
-
-
-def connect_with_retry(deadline_sec: int = 1500, interval: int = 30, warmup_poll: int = 5):
-    """登入＋暖機，失敗每 interval 秒重試直到 deadline_sec。
-
-    09:00 開盤前偶有暫時性失敗（2026-10-20 暖機逾時、10-21 login timeout），
-    原本一次失敗就 exit，整天沒有盤中主力訊號。
-
-    08:55 起跑的暖機分成兩段：登入失敗才重新登入；登入成功後只是輪詢快照，
-    不在同一個 session 反覆重登（盤前快照可能要等 09:00 才有資料）。
-    """
-    global _sj_api
+def wait_for_gateway(deadline_sec: int = 1500, interval: int = 30):
+    """等 gateway 登入就緒（取代原本的直連登入＋暖機）。"""
+    global _gateway_boot_id
     deadline = time.monotonic() + deadline_sec
     attempt = 0
     while True:
         attempt += 1
         try:
-            api = _get_sj()
-            probe = [api.Contracts.Stocks[c] for c in ('2330',) if api.Contracts.Stocks.get(c)]
-            started = time.monotonic()
-            errors = 0
-            while True:
-                try:
-                    if api.snapshots(probe, timeout=SDK_TIMEOUT_MS):
-                        print(f'[startup] Shioaji 暖機完成（第 {attempt} 次登入、{time.monotonic() - started:.0f}s）')
-                        return api
-                    errors = 0
-                except Exception as e:
-                    errors += 1
-                    print(f'[startup] 暖機查詢失敗（連續 {errors} 次）：{type(e).__name__}: {e}')
-                    if errors >= 3:
-                        raise
-                if time.monotonic() >= deadline:
-                    raise TimeoutError('暖機逾時（快照一直沒有資料）')
-                time.sleep(warmup_poll)
+            r = SESSION.get(f'{GATEWAY}/health', timeout=5)
+            r.raise_for_status()
+            h = r.json()
+            if h.get('logged_in') and h.get('state') == 'ok':
+                _gateway_boot_id = h.get('boot_id')
+                print(f'[startup] gateway 就緒（第 {attempt} 次檢查，gen={h.get("generation")}）')
+                return
+            raise RuntimeError(f'gateway 尚未就緒：state={h.get("state")} '
+                               f'last_error={redact(h.get("last_error"))}')
         except Exception as e:
-            print(f'[startup] 第 {attempt} 次連線失敗：{type(e).__name__}: {e}')
-            try:
-                if _sj_api is not None:
-                    _sj_api.logout()
-            except Exception:
-                pass
-            _sj_api = None
+            print(f'[startup] 第 {attempt} 次連線 gateway 失敗：{type(e).__name__}: {redact(e)}')
             if time.monotonic() >= deadline:
                 msg = f'⚠️ 盤中主力監控啟動失敗（重試 {attempt} 次）：{type(e).__name__}，今天不會有訊號'
                 print(msg)
@@ -216,32 +185,6 @@ def connect_with_retry(deadline_sec: int = 1500, interval: int = 30, warmup_poll
                         pass
                 raise SystemExit(1)
             time.sleep(interval)
-
-
-def _relogin_and_resubscribe(now: datetime):
-    """session 中途失效：重登、重掛 tick callback、把現有清單重新訂閱（含當日回補）。
-
-    2026-11-11 之前沒有這段：session 掉了就整天靜默、13:36 還 exit 0，
-    KeepAlive 不會重啟，等於整個下午都沒有訊號。
-    """
-    global _sj_api
-    print(f'[{now.strftime("%H:%M:%S")}] session 失效，重新登入...')
-    if _sj_api is not None:
-        try:
-            _sj_api.logout()
-        except Exception:
-            pass
-    _sj_api = None
-    api = connect_with_retry(deadline_sec=90, interval=5)
-    # 先清旗標：接下來重新訂閱可能花數十秒，期間若再斷線會重新設起
-    _relogin_needed.clear()
-    _snapshot_health['fail_streak'] = 0
-    _setup_tick_stream(api)
-    codes = list(_universe.items())
-    for code, name in codes:
-        _subscribe(api, code, name, now, keep_ticks=True)
-    print(f'[{now.strftime("%H:%M:%S")}] 重登完成，重新訂閱 {len(codes)} 檔')
-    return api
 
 
 def trading_days_ago(n):
@@ -260,43 +203,62 @@ _tick_store: dict = {}
 _tick_lock = threading.Lock()
 
 
-def _setup_tick_stream(api):
-    """註冊即時 tick callback（訂閱由 _subscribe() 逐檔加入）。"""
-
-    @api.on_tick_stk_v1()
-    def _on_tick(exchange, tick):
-        if _sj_api is not api:      # 舊 session 的殘留 tick，丟掉避免重複計算成交量
-            return
-        if getattr(tick, 'simtrade', False):  # 排除試撮
-            return
-        row = (pd.Timestamp(tick.datetime), float(tick.close), int(tick.volume), int(tick.tick_type))
-        with _tick_lock:
-            _tick_store.setdefault(tick.code, []).append(row)
+def _decode_ticks(rows: list) -> list:
+    """gateway tick 列 [ts_iso, close, volume, tick_type] -> 本地 tick store 格式。"""
+    return [(pd.Timestamp(r[0]), float(r[1]), int(r[2]), int(r[3])) for r in rows]
 
 
-def _backfill_code(api, contract, code: str) -> None:
-    """個股加入監控時一次性回補當日 ticks（之後全靠訂閱流）。"""
-    try:
-        ticks = api.ticks(contract, date=str(date.today()), timeout=SDK_TIMEOUT_MS)
-        ts = pd.to_datetime(list(ticks.ts), unit='ns')
-        # 歷史 ticks 理論上不含試撮；若 SDK 提供 simtrade 欄位則防禦性過濾（與即時流一致）
-        sim = list(getattr(ticks, 'simtrade', []) or [])
-        rows = [
-            (ts[i], float(ticks.close[i]), int(ticks.volume[i]), int(ticks.tick_type[i]))
-            for i in range(len(ts))
-            if not sim or not sim[i]
-        ]
-    except Exception as e:
-        print(f'[backfill] {code} 失敗: {e}')
-        return
+def _merge_backfill(code: str, rows: list) -> int:
+    """把回補 tick 併入本地 store：只取比現有最後一筆更新的，避免重複計量。"""
     with _tick_lock:
         streamed = _tick_store.get(code, [])
-        # 已有串流 tick 時，回補只保留串流開始前的部分，避免重複計量
-        cutoff = streamed[0][0] if streamed else None
-        kept = [r for r in rows if cutoff is None or r[0] < cutoff]
-        _tick_store[code] = kept + streamed
+        last_ts = max((r[0] for r in streamed), default=None)
+        kept = [r for r in rows if last_ts is None or r[0] > last_ts]
+        if kept:
+            _tick_store[code] = streamed + kept
     if kept:
-        print(f'[backfill] {code}: 回補 {len(kept)} 筆（至 {kept[-1][0]}）')
+        print(f'[backfill] {code}: 回補 {len(kept)} 筆（至 {max(r[0] for r in kept)}）')
+    return len(kept)
+
+
+def poll_ticks() -> list:
+    """增量拉取 gateway 的 tick；回傳需要重新訂閱的代號。
+
+    gateway 重啟（boot_id 變）或游標失效（reset）→ 全部重訂閱；
+    ring 已淘汰舊 tick（truncated）→ 該檔帶 backfill 重訂閱補洞。
+    """
+    global _gateway_boot_id
+    codes = list(_universe)
+    if not codes:
+        return []
+    after = ','.join(f'{c}:{_tick_cursor.get(c, 0)}' for c in codes)
+    try:
+        data = _get_json('/ticks', {'codes': ','.join(codes), 'after': after,
+                                    'client': CLIENT_ID}, TICKS_TIMEOUT)
+    except Exception as e:
+        print(f'[ticks] 輪詢失敗: {redact(e)}')
+        return []
+    if data.get('boot_id') != _gateway_boot_id:
+        _gateway_boot_id = data.get('boot_id')
+        _tick_cursor.clear()
+        return list(_universe)          # gateway 重啟：全部重訂閱
+    need, batch = [], {}
+    for code, d in (data.get('data') or {}).items():
+        if not d.get('subscribed') or d.get('reset'):
+            _tick_cursor[code] = 0
+            need.append(code)
+            continue
+        rows = _decode_ticks(d.get('ticks') or [])
+        if rows:
+            batch[code] = rows
+        _tick_cursor[code] = int(d.get('seq') or 0)
+        if d.get('truncated'):
+            need.append(code)           # ring 已淘汰：重訂閱時帶 backfill 補洞
+    if batch:
+        with _tick_lock:
+            for code, rows in batch.items():
+                _tick_store.setdefault(code, []).extend(rows)
+    return need
 
 
 def pick_universe() -> dict:
@@ -336,40 +298,43 @@ def pick_universe() -> dict:
     return {code: names[code] for code in sorted(rank_sum, key=lambda c: rank_sum[c])[:UNIVERSE_SIZE]}
 
 
-def _subscribe(api, code: str, name: str, now: datetime, keep_ticks: bool = False) -> bool:
-    """訂閱並回補；成功回 True（呼叫端據此計算本輪新增檔數）。
+def _subscribe(code: str, name: str, now: datetime, keep_ticks: bool = False) -> bool:
+    """向 gateway 訂閱並回補；成功回 True（呼叫端據此計算本輪新增檔數）。
 
-    keep_ticks=True 供重連使用：不清掉當日已累積的 tick，回補失敗也不會讓整個上午消失。
+    keep_ticks=True 供重連／補洞使用：不清掉當日已累積的 tick。
+    09:00 前不要求回補（盤前沒有成交，省掉每檔一次歷史查詢）。
     """
-    contract = api.Contracts.Stocks.get(code)
-    if contract is None:
-        print(f'[subscribe] {code} 無合約，跳過')
-        return False
+    global _gateway_boot_id
     try:
-        api.quote.subscribe(
-            contract,
-            quote_type=sj.constant.QuoteType.Tick,
-            version=sj.constant.QuoteVersion.v1,
-        )
+        data = _get_json('/ticks/subscribe',
+                         {'codes': code, 'client': CLIENT_ID,
+                          'backfill': '1' if now.hour >= 9 else '0'},
+                         SUBSCRIBE_TIMEOUT)
     except Exception as e:
-        print(f'[subscribe] {code} 失敗（該檔今日無即時資料）: {e}')
+        print(f'[subscribe] {code} 失敗: {redact(e)}')
         return False
+    info = (data.get('data') or {}).get(code) or {}
+    if not info.get('subscribed'):
+        print(f'[subscribe] {code} 失敗（該檔今日無即時資料）: {redact(info.get("error"))}')
+        return False
+    _gateway_boot_id = data.get('boot_id') or _gateway_boot_id
 
     if not keep_ticks:
         with _tick_lock:
-            _tick_store.pop(code, None)  # 重新加入時清空，避免舊 cutoff 漏掉淘汰期間的 tick
+            _tick_store.pop(code, None)  # 重新加入時清空，避免舊資料漏掉淘汰期間的 tick
     _last_bar_signals.pop(code, None)
-    _backfill_code(api, contract, code)
+    _merge_backfill(code, _decode_ticks(info.get('backfill') or []))
+    _tick_cursor[code] = int(info.get('resume_seq') or 0)
 
     # vshape 固定清單的標的不在當日候選池，呼叫端只能傳代號當 name；
-    # contract 已經拿到了，這裡優先用合約的中文名補上。
+    # gateway 已回傳合約中文名，這裡優先補上。
     if not name or name == code:
-        name = getattr(contract, 'name', None) or code
+        name = info.get('name') or code
     # 順勢門檻按這檔自己的漲停幅度換算：10% 限制 → 7%，20%（槓桿 ETF）→ 14%。
     # 無漲跌幅限制的標的 shioaji 用 9999.95 當哨兵，這種要退回預設值，
     # 否則會算出數萬 % 的門檻讓追高過濾器完全失效。
-    ref = getattr(contract, 'reference', 0) or 0
-    limit_up = getattr(contract, 'limit_up', 0) or 0
+    ref = info.get('reference') or 0
+    limit_up = info.get('limit_up') or 0
     limit_pct = (limit_up - ref) / ref * 100 if ref and limit_up else 0
     _universe_max_chg[code] = (
         MAX_CHG_PCT * (limit_pct / 10.0) if 0 < limit_pct <= 25 else MAX_CHG_PCT
@@ -381,24 +346,23 @@ def _subscribe(api, code: str, name: str, now: datetime, keep_ticks: bool = Fals
     return True
 
 
-def _unsubscribe(api, code: str) -> None:
-    contract = api.Contracts.Stocks.get(code)
+def _unsubscribe(code: str) -> None:
     try:
-        if contract is not None:
-            api.quote.unsubscribe(contract)
+        _get_json('/ticks/unsubscribe', {'codes': code, 'client': CLIENT_ID}, 5)
     except Exception as e:
-        print(f'[unsubscribe] {code} 失敗: {e}')
+        print(f'[unsubscribe] {code} 失敗: {redact(e)}')
     _universe.pop(code, None)
     _universe_max_chg.pop(code, None)
     _universe_joined.pop(code, None)
     _universe_missed.pop(code, None)
     _last_bar_signals.pop(code, None)
+    _tick_cursor.pop(code, None)
     with _tick_lock:
         _tick_store.pop(code, None)
     print(f'[unsubscribe] {code} 移出監控（剩 {len(_universe)} 檔）')
 
 
-def sync_universe(api) -> None:
+def sync_universe() -> None:
     """重掃名單：新入選者訂閱＋回補；連續 DROP_STREAK 輪未入選且停留滿 MIN_RESIDENCE_MIN 才退訂。"""
     global _vshape_watch
     now = datetime.now()
@@ -425,7 +389,7 @@ def sync_universe(api) -> None:
         if code in _universe:
             _universe[code] = _universe[code] or name
             _universe_missed[code] = 0
-        elif not _subscribe(api, code, name, now) and code not in _fixed_watch_alerted:
+        elif not _subscribe(code, name, now) and code not in _fixed_watch_alerted:
             # 訂閱失敗時整個 V 型功能等於沒開；只提醒一次，避免每分鐘洗版
             _fixed_watch_alerted.add(code)
             print(f'[universe] 固定標的 {code} 訂閱失敗，V 型反轉本日不會運作')
@@ -436,7 +400,7 @@ def sync_universe(api) -> None:
         if code in fixed:
             continue
         if code in _ever_fixed:
-            _unsubscribe(api, code)
+            _unsubscribe(code)
             _ever_fixed.discard(code)
             _fixed_watch_alerted.discard(code)
             print(f'[vshape] {code} 已從監控清單移除，退訂')
@@ -464,7 +428,7 @@ def sync_universe(api) -> None:
             # 剛從合約補好的中文名又蓋回去
             _universe[code] = _universe.get(code) or name
             _universe_missed[code] = 0
-        elif added < max_new and _subscribe(api, code, name, now):
+        elif added < max_new and _subscribe(code, name, now):
             added += 1
 
     for code in list(_universe):
@@ -473,7 +437,7 @@ def sync_universe(api) -> None:
         _universe_missed[code] = _universe_missed.get(code, 0) + 1
         stayed = (now - _universe_joined.get(code, now)).total_seconds()
         if _universe_missed[code] >= DROP_STREAK and stayed >= MIN_RESIDENCE_MIN * 60:
-            _unsubscribe(api, code)
+            _unsubscribe(code)
 
     print(f'[universe] 候選 {len(picked)} 檔 → 監控 {len(_universe)} 檔（本輪新增 {added}）')
 
@@ -501,38 +465,30 @@ def get_1min_kbars(code: str) -> pd.DataFrame:
         return pd.DataFrame()
 
 
-def _parse_snaps(snaps, contract_map: dict = None) -> dict:
+def _parse_snaps(payload: dict) -> dict:
     result = {}
-    for s in snaps:
-        name = ''
-        if contract_map and s.code in contract_map:
-            name = getattr(contract_map[s.code], 'name', '')
-        result[s.code] = {
-            'name':        name or _universe.get(s.code, s.code),
-            'close':       s.close,
-            'chg_pct':     round(float(s.change_rate), 2),
-            'total_vol':   int(s.total_volume),
-            'yday_vol':    int(getattr(s, 'yesterday_volume', 0)),
-            'buy_volume':  getattr(s, 'buy_volume', 0),
-            'sell_volume': getattr(s, 'sell_volume', 0),
+    for code, s in payload.items():
+        result[code] = {
+            'name':        s.get('name') or _universe.get(code, code),
+            'close':       s.get('close'),
+            'chg_pct':     round(float(s.get('change_rate') or 0), 2),
+            'total_vol':   int(s.get('total_volume') or 0),
+            'yday_vol':    int(s.get('yesterday_volume') or 0),
+            'buy_volume':  int(s.get('buy_volume') or 0),
+            'sell_volume': int(s.get('sell_volume') or 0),
         }
     return result
 
 
 def get_snapshot(codes: list) -> dict:
-    """批次取指定股票即時快照"""
+    """批次取指定股票即時快照（走 gateway）"""
     try:
-        api = _get_sj()
-        contracts = [api.Contracts.Stocks[c] for c in codes if api.Contracts.Stocks.get(c)]
-        if not contracts:
-            return {}
-        cmap = {c.code: c for c in contracts}
-        result = _parse_snaps(api.snapshots(contracts, timeout=SDK_TIMEOUT_MS), cmap)
+        data = _get_json('/snapshot', {'codes': ','.join(codes)}, SNAPSHOT_TIMEOUT)
         _snapshot_health['fail_streak'] = 0
-        return result
+        return _parse_snaps(data.get('data') or {})
     except Exception as e:
         _snapshot_health['fail_streak'] += 1
-        print(f'[snapshot] 失敗（連續 {_snapshot_health["fail_streak"]} 次）: {e}')
+        print(f'[snapshot] 失敗（連續 {_snapshot_health["fail_streak"]} 次）: {redact(e)}')
         return {}
 
 
@@ -553,27 +509,18 @@ def _save_avg5_cache(stocks: dict):
 def get_avg5_vol(code: str, cache: dict) -> int:
     if code in cache:
         return cache[code]
-    api = _get_sj()
-    contract = api.Contracts.Stocks.get(code)
-    if contract is None:
-        return 0
-    start = str(date.today() - timedelta(days=20))
-    end   = str(date.today() - timedelta(days=1))
-    # 當日首次 kbars 呼叫偶發失敗（連線暖機），重試一次即可（2408 每日固定中招）
+    # 當日首次查詢偶發失敗（gateway 暖機），重試一次即可（2408 每日固定中招）
     for attempt in (1, 2):
         try:
-            kb = api.kbars(contract, start=start, end=end, timeout=SDK_TIMEOUT_MS)
-            df = pd.DataFrame({**kb})
-            if df.empty:
+            data = _get_json('/daily_ohlcv', {'code': code, 'days': 20}, DAILY_TIMEOUT)
+            bars = [b for b in (data.get('bars') or []) if b.get('date') < str(date.today())]
+            if len(bars) < 5:
                 return 0
-            df['ts'] = pd.to_datetime(df['ts'])
-            df['_d'] = df['ts'].dt.date
-            daily = df.groupby('_d')['Volume'].sum().reset_index()
-            result = int(round(daily['Volume'].tail(5).mean(), 0)) if len(daily) >= 5 else 0
+            result = int(round(sum(b['volume'] for b in bars[-5:]) / 5, 0))
             cache[code] = result
             return result
         except Exception as e:
-            print(f'[avg5] {code} 第{attempt}次失敗: {e}')
+            print(f'[avg5] {code} 第{attempt}次失敗: {redact(e)}')
             if attempt == 1:
                 import time as _t
                 _t.sleep(2)
@@ -1055,8 +1002,11 @@ def _save_vshape_state() -> None:
     with _tick_lock:
         last_tick = None
         for rows in _tick_store.values():
-            if rows and (last_tick is None or rows[-1][0] > last_tick):
-                last_tick = rows[-1][0]
+            if rows:
+                # 重登補洞會把較舊的 tick append 在後面，不能只看 rows[-1]
+                m = max(r[0] for r in rows)
+                if last_tick is None or m > last_tick:
+                    last_tick = m
     payload = {
         'updated': now.strftime('%H:%M:%S'),   # 前端直接顯示，維持原格式
         'date': now.strftime('%Y-%m-%d'),      # 讀者靠這個判斷是否跨日殘檔
@@ -1315,41 +1265,39 @@ if __name__ == '__main__':
 
     # 以今日日期開頭：command-center sources.py 靠這行切分「當日」訊號，缺了會把昨日訊號當今天
     print(f"{_now.strftime('%Y-%m-%d %H:%M:%S')} [startup] intraday_monitor 啟動（動態清單）")
-    print('[startup] 初始化 Shioaji...')
-    _api = connect_with_retry()
+    print('[startup] 初始化 Shioaji gateway...')
+    wait_for_gateway()
 
     _restore_vshape_pushed()      # 異常重啟時補回今日已推播的 V 型階段
 
-    _setup_tick_stream(_api)      # 註冊 tick callback（訂閱由 sync_universe 逐檔加入）
-    sync_universe(_api)           # 開盤先掃名單：訂閱＋回補當日 ticks
+    sync_universe()               # 開盤先掃名單：訂閱＋回補當日 ticks
 
     recompute_technical_cache()   # 開盤暖機：先算一次技術指標，避免 volume_check() 空等到整分邊界
 
     _next_scan = _time.monotonic() + SCAN_INTERVAL
-    _last_relogin = 0.0
     while True:
         _now = datetime.now()
         if _now.hour > 13 or (_now.hour == 13 and _now.minute > 35):
             print(f'[{_now.strftime("%H:%M:%S")}] 盤後，監控結束')
             break
-        # 後備偵測：快照連續失敗 6 次（約 30 秒）就當成斷線，即使 callback 沒送達
-        if _snapshot_health['fail_streak'] >= 6:
-            _relogin_needed.set()
-        # session 掉了就重登（最多每 60 秒試一次，避免迴圈暴衝）
-        if _relogin_needed.is_set() and _time.monotonic() - _last_relogin > 60:
-            _last_relogin = _time.monotonic()
-            _api = _relogin_and_resubscribe(_now)
-            _next_scan = _time.monotonic() + SCAN_INTERVAL
+        # 快照連續失敗只記錄；連線復原由 gateway 負責，本程式不再自行重登
+        if _snapshot_health['fail_streak'] == 6:
+            print(f'[{_now.strftime("%H:%M:%S")}] 快照連續失敗 6 次，等 gateway 恢復')
         if _time.monotonic() >= _next_scan:
-            sync_universe(_api)
+            sync_universe()
             _next_scan = _time.monotonic() + SCAN_INTERVAL
+        # 必須在 recompute_technical_cache 之前：剛收盤那一分鐘的最後幾筆 tick 要先進來
+        need = poll_ticks()
+        for code in need[:MAX_NEW_PER_SCAN]:
+            _subscribe(code, _universe.get(code) or code, _now, keep_ticks=True)
         if _now.second < 5:
             recompute_technical_cache()
         volume_check()
         _time.sleep(5)
 
     try:
-        _api.logout()
-        print('[shutdown] Shioaji 已登出，釋放連線額度')
+        _get_json('/ticks/unsubscribe',
+                  {'codes': ','.join(_universe), 'client': CLIENT_ID}, 5)
+        print('[shutdown] 已退訂 tick，gateway 連線保留給其他服務')
     except Exception:
         pass

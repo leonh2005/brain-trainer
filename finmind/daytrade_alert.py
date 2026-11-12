@@ -6,14 +6,16 @@
 
 import html
 import os
+import sys
 import warnings
 from datetime import date, datetime, timedelta
 
-import pandas as pd
 import requests
-import shioaji as sj
 from ai_analysis import analyze_stock, format_ai_block
 from dotenv import load_dotenv
+
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'lib'))
+from log_redact import redact  # noqa: E402
 
 
 def trading_days_ago(n):
@@ -46,57 +48,60 @@ def send_telegram(text: str):
     )
 
 
-try:
-    finmind = DataLoader()
-    finmind.login_by_token(api_token=TOKEN)
-except Exception as e:
-    print(f'[finmind] 登入失敗，改用降級模式: {e}')
-    send_telegram(f"⚠️ {TODAY} 當沖掃描：FinMind 連線失敗（{type(e).__name__}），改用降級模式繼續（無前一日法人參考/FinMind均量備援）")
-    finmind = None
+finmind = None
 
-# ── Shioaji 連線（singleton）─────────────────────
-_sj_api = None
 
-def _get_sj():
-    global _sj_api
-    if _sj_api is None:
-        _sj_api = sj.Shioaji(simulation=False)
-        _sj_api.login(
-            api_key=os.environ['SHIOAJI_API_KEY'],
-            secret_key=os.environ['SHIOAJI_SECRET_KEY'],
-        )
-        print('[sj] 永豐 API 登入成功')
-    return _sj_api
+def _init_finmind():
+    """FinMind 登入（延後到 main 才做，讓測試 import 時不連網）"""
+    global finmind
+    try:
+        finmind = DataLoader()
+        finmind.login_by_token(api_token=TOKEN)
+    except Exception as e:
+        print(f'[finmind] 登入失敗，改用降級模式: {redact(e)}')
+        send_telegram(f"⚠️ {TODAY} 當沖掃描：FinMind 連線失敗（{type(e).__name__}），改用降級模式繼續（無前一日法人參考/FinMind均量備援）")
+        finmind = None
+
+
+# ── gateway（HTTP；不自行登入 Shioaji，避免與 gateway 互踢 session）─────────
+GATEWAY = 'http://localhost:5455'
+
+
+def _get_json(path: str, params: dict, timeout: int) -> dict:
+    r = requests.get(f'{GATEWAY}{path}', params=params, timeout=timeout)
+    r.raise_for_status()
+    data = r.json()
+    if not data.get('ok'):
+        raise RuntimeError(data.get('error') or f'{path} 失敗')
+    return data
 
 
 def get_top_volume_sj(n: int = 20) -> list:
-    """Shioaji 全市場掃描，回傳今日成交量前 n 名（含股名、即時行情）"""
-    api = _get_sj()
-    all_contracts = [
-        c for c in api.Contracts.Stocks.TSE
-        if hasattr(c, 'code') and c.code.isdigit() and len(c.code) == 4
-    ]
-    cmap = {c.code: c for c in all_contracts}
+    """全市場快照（gateway），回傳今日成交量前 n 名（維持原本只掃上市的範圍）"""
+    try:
+        data = _get_json('/market_snapshot', {}, 40)
+    except Exception as e:
+        print(f'[gateway] 全市場快照失敗: {redact(e)}')
+        return []
     rows = {}
-    for i in range(0, len(all_contracts), 200):
-        chunk = all_contracts[i:i+200]
-        try:
-            snaps = api.snapshots(chunk)
-            for s in snaps:
-                if s.close <= 0 or s.total_volume <= 0:
-                    continue
-                rng = s.high - s.low
-                rows[s.code] = {
-                    'code':      s.code,
-                    'name':      getattr(cmap.get(s.code), 'name', s.code),
-                    'close':     s.close,
-                    'chg_pct':   round(float(s.change_rate), 2),
-                    'amp_pct':   round(rng / s.low * 100, 2) if s.low > 0 else 0.0,
-                    'close_pos': round((s.close - s.low) / rng * 100, 1) if rng > 0 else 50.0,
-                    'vol_k':     int(s.total_volume),  # 單位：張（Shioaji 量本就是張，勿再 /1000）
-                }
-        except Exception as e:
-            print(f'[sj] snapshot batch {i} 失敗: {e}')
+    for s in data.get('items', []):
+        code = s.get('code') or ''
+        if s.get('suffix') != '.TW' or not (code.isdigit() and len(code) == 4):
+            continue
+        close, vol = s.get('close'), s.get('total_volume') or 0
+        if not close or close <= 0 or vol <= 0:
+            continue
+        high, low = s.get('high'), s.get('low')
+        rng = (high - low) if high is not None and low is not None else 0
+        rows[code] = {
+            'code':      code,
+            'name':      s.get('name') or code,
+            'close':     close,
+            'chg_pct':   round(float(s.get('change_rate') or 0), 2),
+            'amp_pct':   round(rng / low * 100, 2) if low and low > 0 else 0.0,
+            'close_pos': round((close - low) / rng * 100, 1) if rng > 0 else 50.0,
+            'vol_k':     int(vol),  # 單位：張（gateway 的 total_volume 已是張）
+        }
     if not rows:
         return []
     top = sorted(rows.values(), key=lambda x: x['vol_k'], reverse=True)[:n]
@@ -104,70 +109,57 @@ def get_top_volume_sj(n: int = 20) -> list:
     return top
 
 
-def get_sj_avg5(symbol: str) -> int:
-    """Shioaji 歷史日K 算近5日均量（不含今日）"""
+_bars_cache = {}
+
+
+def get_daily_bars(symbol: str) -> list:
+    """gateway 日K（不含今日）；近5均量與連漲跌天數共用一次查詢"""
+    if symbol in _bars_cache:
+        return _bars_cache[symbol]
     try:
-        api = _get_sj()
-        contract = api.Contracts.Stocks.get(symbol)
-        if contract is None:
-            return 0
-        start = str(date.today() - timedelta(days=20))
-        end   = str(date.today() - timedelta(days=1))
-        kb = api.kbars(contract, start=start, end=end)
-        df = pd.DataFrame({**kb})
-        if df.empty:
-            return 0
-        df['ts'] = pd.to_datetime(df['ts'])
-        df['_d'] = df['ts'].dt.date
-        daily = df.groupby('_d').agg(volume=('Volume', 'sum')).reset_index()
-        if len(daily) >= 5:
-            return int(round(daily['volume'].tail(5).mean(), 0))
+        data = _get_json('/daily_ohlcv', {'code': symbol, 'days': 20}, 15)
+        bars = [b for b in (data.get('bars') or []) if b.get('date') < str(date.today())]
     except Exception as e:
-        print(f'[sj] avg5 {symbol} 失敗: {e}')
-    return 0
+        print(f'[gateway] 日K {symbol} 失敗: {redact(e)}')
+        bars = []
+    _bars_cache[symbol] = bars
+    return bars
+
+
+def get_sj_avg5(symbol: str) -> int:
+    """近5日均量（不含今日）"""
+    bars = get_daily_bars(symbol)
+    if len(bars) < 5:
+        return 0
+    return int(round(sum(b['volume'] for b in bars[-5:]) / 5, 0))
 
 
 def get_price_streak(symbol: str) -> int:
-    """Shioaji 歷史日K 算連漲跌天數（不含今日，正=連漲、負=連跌、0=無資料或平盤，
+    """連漲跌天數（不含今日，正=連漲、負=連跌、0=無資料或平盤，
     同 chip-tracker/db.py price_streak() 語意）"""
-    try:
-        api = _get_sj()
-        contract = api.Contracts.Stocks.get(symbol)
-        if contract is None:
-            return 0
-        start = str(date.today() - timedelta(days=20))
-        end   = str(date.today() - timedelta(days=1))
-        kb = api.kbars(contract, start=start, end=end)
-        df = pd.DataFrame({**kb})
-        if df.empty:
-            return 0
-        df['ts'] = pd.to_datetime(df['ts'])
-        df['_d'] = df['ts'].dt.date
-        daily = df.groupby('_d').agg(close=('Close', 'last')).reset_index().sort_values('_d')
-        closes = daily['close'].tolist()
-        if len(closes) < 2:
-            return 0
-        chg_pcts = []  # 新到舊
-        for i in range(len(closes) - 1, 0, -1):
-            prev, cur = closes[i - 1], closes[i]
-            if prev:
-                chg_pcts.append((cur - prev) / prev * 100)
-        if not chg_pcts or chg_pcts[0] == 0:
-            return 0
-        up = chg_pcts[0] > 0
-        count = 0
-        for v in chg_pcts:
-            if v == 0 or (v > 0) != up:
-                break
-            count += 1
-        return count if up else -count
-    except Exception as e:
-        print(f'[sj] streak {symbol} 失敗: {e}')
+    closes = [b['close'] for b in get_daily_bars(symbol)]
+    if len(closes) < 2:
         return 0
+    chg_pcts = []  # 新到舊
+    for i in range(len(closes) - 1, 0, -1):
+        prev, cur = closes[i - 1], closes[i]
+        if prev:
+            chg_pcts.append((cur - prev) / prev * 100)
+    if not chg_pcts or chg_pcts[0] == 0:
+        return 0
+    up = chg_pcts[0] > 0
+    count = 0
+    for v in chg_pcts:
+        if v == 0 or (v > 0) != up:
+            break
+        count += 1
+    return count if up else -count
 
 
 def get_avg5_finmind(stock_id: str) -> int:
-    """FinMind 近5日均量（Shioaji 失敗時備用）"""
+    """FinMind 近5日均量（gateway 失敗時備用）"""
+    if finmind is None:
+        return 0
     try:
         D10 = trading_days_ago(15)
         h = finmind.taiwan_stock_daily(stock_id=stock_id, start_date=D10)
@@ -262,140 +254,143 @@ def get_stock_sector(code: str) -> str:
 
 # ── 主程式 ────────────────────────────────────────
 
-top20 = get_top_volume_sj(n=20)
-if not top20:
-    print('[error] Shioaji 全市場掃描失敗，結束執行')
-    send_telegram(f"⚠️ {TODAY} 當沖掃描失敗：Shioaji 無法取得全市場資料，請確認 API 連線")
-    exit(1)
+def main():
+    _init_finmind()
 
-candidates = []
-for row in top20:
-    code      = row['code']
-    # 近5日均量：Shioaji kbars，失敗用 FinMind
-    avg5 = get_sj_avg5(code)
-    if avg5 == 0:
-        avg5 = get_avg5_finmind(code)
+    top20 = get_top_volume_sj(n=20)
+    if not top20:
+        print('[error] Shioaji 全市場掃描失敗，結束執行')
+        send_telegram(f"⚠️ {TODAY} 當沖掃描失敗：Shioaji 無法取得全市場資料，請確認 API 連線")
+        exit(1)
 
-    # 2026-10 回測（3~10月、911檔次）：振幅 8-12% 組平均 -1.61%、3-5% 組 -0.69%，
-    # 加振幅上限是唯一跨月穩定有效的修改，故設 3%~5%
-    if 3 <= row['amp_pct'] < 5 and avg5 >= 3000 and row['chg_pct'] >= 1.5:
-        streak = get_price_streak(code)
-        if streak < 0:
-            print(f'[daytrade] {code} {row["name"]} 連跌{-streak}天，排除')
-            continue
-        candidates.append({
-            'code':      code,
-            'name':      row['name'],
-            'close':     row['close'],
-            'chg_pct':   row['chg_pct'],
-            'amp_pct':   row['amp_pct'],
-            'vol_k':     row['vol_k'],
-            'avg5':      avg5,
-            'close_pos': row['close_pos'],
-        })
-
-inst_net, inst_date = get_institutional_net()
-idx_chg, idx_val = get_index_intraday()
-short_list = get_short_candidates()
-
-# 大盤即時跌逾 0.5% 時跳過推播。實測「當日開盤跳空」對當日報酬相關性 0.72，
-# 遠優於前一日三大法人買賣超的 0.05，故改用即時指數而非落後一日的法人資料。
-SKIP_THRESHOLD = -0.5
-mkt_bearish_skip = idx_chg is not None and idx_chg <= SKIP_THRESHOLD
-if mkt_bearish_skip and candidates:
-    print(f'[daytrade] 大盤即時 {idx_chg:+.2f}%（跌逾 {abs(SKIP_THRESHOLD)}%），跳過本日{len(candidates)}檔候選')
     candidates = []
+    for row in top20:
+        code      = row['code']
+        # 近5日均量：Shioaji kbars，失敗用 FinMind
+        avg5 = get_sj_avg5(code)
+        if avg5 == 0:
+            avg5 = get_avg5_finmind(code)
 
-# ── 組訊息 ────────────────────────────────────────
+        # 2026-10 回測（3~10月、911檔次）：振幅 8-12% 組平均 -1.61%、3-5% 組 -0.69%，
+        # 加振幅上限是唯一跨月穩定有效的修改，故設 3%~5%
+        if 3 <= row['amp_pct'] < 5 and avg5 >= 3000 and row['chg_pct'] >= 1.5:
+            streak = get_price_streak(code)
+            if streak < 0:
+                print(f'[daytrade] {code} {row["name"]} 連跌{-streak}天，排除')
+                continue
+            candidates.append({
+                'code':      code,
+                'name':      row['name'],
+                'close':     row['close'],
+                'chg_pct':   row['chg_pct'],
+                'amp_pct':   row['amp_pct'],
+                'vol_k':     row['vol_k'],
+                'avg5':      avg5,
+                'close_pos': row['close_pos'],
+            })
 
-lines = [f"📊 <b>當沖候選</b>｜{TODAY} 09:10\n"]
-if idx_chg is not None:
-    lines.append(f"🌐 大盤即時：{idx_val:,.2f}（{idx_chg:+.2f}%）\n")
-else:
-    lines.append("🌐 大盤即時：資料取得失敗\n")
-if inst_date:
-    lines.append(f"　前一日三大法人現貨：買賣超 {inst_net:+,.1f} 億（{inst_date}）\n")
-lines.append("📋 <b>篩選條件</b>")
-lines.append("今日量前20（Shioaji即時）＋ 3%≤振幅&lt;5% ＋ 近5均量&gt;3000張 ＋ 漲幅&gt;1.5%\n")
+    inst_net, inst_date = get_institutional_net()
+    idx_chg, idx_val = get_index_intraday()
+    short_list = get_short_candidates()
 
-if candidates:
-    lines.append(f"✅ 符合 {len(candidates)} 檔：\n")
-    sectors = {}
-    for c in candidates:
-        sectors.setdefault(get_stock_sector(c['code']) or '其他', []).append(c)
-    for sector, group in sectors.items():
-        lines.append(f"🏷️ <b>{html.escape(sector)}</b>\n")
-        for c in group:
-            pos_emoji = "🔴" if c['close_pos'] >= 80 else "🟡" if c['close_pos'] >= 50 else "🟢"
-            in_price_band = 100 <= c['close'] <= 150
-            in_price_band_hi = 1000 <= c['close'] <= 1500
-            ai = analyze_stock(
-                code=c['code'], name=c['name'], close=c['close'],
-                chg_pct=c['chg_pct'], amp_pct=c['amp_pct'],
-                vol_k=c['vol_k'], avg5=c['avg5'], close_pos=c['close_pos'],
-                fi_net=0, signal="", strategy="當沖"
-            )
-            entry = (
-                f"{pos_emoji} <b>{c['code']} {c['name']}</b>\n"
-                f"   收:{c['close']:.1f}  漲:{c['chg_pct']:+.1f}%  振:{c['amp_pct']:.1f}%\n"
-                f"   量:{c['vol_k']:,}張  近5均:{c['avg5']:,}張  收盤位:{c['close_pos']:.0f}%\n"
-                f"{format_ai_block(ai)}"
-            )
-            if in_price_band:
-                entry = f"💰 <b>100-150價格帶</b>\n<blockquote>{entry}</blockquote>"
-            elif in_price_band_hi:
-                entry = f"💎 <b>1000-1500價格帶</b>\n<blockquote>{entry}</blockquote>"
-            lines.append(entry + "\n")
-    lines.append("⚡ 進場參考：開盤後5~15分鐘確認方向再進")
-    lines.append("🛑 停損：跌破進場價 -1.5% 出清")
-elif mkt_bearish_skip:
-    lines.append(f"🌧️ 大盤即時跌逾 0.5%（{idx_chg:+.2f}%），今日跳過推播")
-else:
-    lines.append("❌ 今日無符合當沖條件標的\n建議觀望或等待盤中突破訊號")
+    # 大盤即時跌逾 0.5% 時跳過推播。實測「當日開盤跳空」對當日報酬相關性 0.72，
+    # 遠優於前一日三大法人買賣超的 0.05，故改用即時指數而非落後一日的法人資料。
+    SKIP_THRESHOLD = -0.5
+    mkt_bearish_skip = idx_chg is not None and idx_chg <= SKIP_THRESHOLD
+    if mkt_bearish_skip and candidates:
+        print(f'[daytrade] 大盤即時 {idx_chg:+.2f}%（跌逾 {abs(SKIP_THRESHOLD)}%），跳過本日{len(candidates)}檔候選')
+        candidates = []
 
-# 空方觀察：回測無 edge，只列條件符合者，不列入候選、不追蹤
-if short_list:
-    lines.append("\n🔻 <b>空方觀察</b>（跌幅&gt;1.5%＋振幅3~5%＋量&gt;500張）")
-    for s in short_list[:10]:
-        lines.append(f"　{s['code']} {html.escape(s['name'])}  {s['close']:.1f}  {s['chg']:+.1f}%  振{s['amp']:.1f}%  量{s['vol']:,}張")
-    lines.append("⚠️ 此名單回測平均為負（7 個月全虧），僅供觀察，不建議交易")
+    # ── 組訊息 ────────────────────────────────────────
 
-lines.append("\n⚠️ 數據參考，非投資建議，買賣自負")
+    lines = [f"📊 <b>當沖候選</b>｜{TODAY} 09:10\n"]
+    if idx_chg is not None:
+        lines.append(f"🌐 大盤即時：{idx_val:,.2f}（{idx_chg:+.2f}%）\n")
+    else:
+        lines.append("🌐 大盤即時：資料取得失敗\n")
+    if inst_date:
+        lines.append(f"　前一日三大法人現貨：買賣超 {inst_net:+,.1f} 億（{inst_date}）\n")
+    lines.append("📋 <b>篩選條件</b>")
+    lines.append("今日量前20（Shioaji即時）＋ 3%≤振幅&lt;5% ＋ 近5均量&gt;3000張 ＋ 漲幅&gt;1.5%\n")
 
-msg = "\n".join(lines)
-send_telegram(msg)
-print(msg)
+    if candidates:
+        lines.append(f"✅ 符合 {len(candidates)} 檔：\n")
+        sectors = {}
+        for c in candidates:
+            sectors.setdefault(get_stock_sector(c['code']) or '其他', []).append(c)
+        for sector, group in sectors.items():
+            lines.append(f"🏷️ <b>{html.escape(sector)}</b>\n")
+            for c in group:
+                pos_emoji = "🔴" if c['close_pos'] >= 80 else "🟡" if c['close_pos'] >= 50 else "🟢"
+                in_price_band = 100 <= c['close'] <= 150
+                in_price_band_hi = 1000 <= c['close'] <= 1500
+                ai = analyze_stock(
+                    code=c['code'], name=c['name'], close=c['close'],
+                    chg_pct=c['chg_pct'], amp_pct=c['amp_pct'],
+                    vol_k=c['vol_k'], avg5=c['avg5'], close_pos=c['close_pos'],
+                    fi_net=0, signal="", strategy="當沖"
+                )
+                entry = (
+                    f"{pos_emoji} <b>{c['code']} {c['name']}</b>\n"
+                    f"   收:{c['close']:.1f}  漲:{c['chg_pct']:+.1f}%  振:{c['amp_pct']:.1f}%\n"
+                    f"   量:{c['vol_k']:,}張  近5均:{c['avg5']:,}張  收盤位:{c['close_pos']:.0f}%\n"
+                    f"{format_ai_block(ai)}"
+                )
+                if in_price_band:
+                    entry = f"💰 <b>100-150價格帶</b>\n<blockquote>{entry}</blockquote>"
+                elif in_price_band_hi:
+                    entry = f"💎 <b>1000-1500價格帶</b>\n<blockquote>{entry}</blockquote>"
+                lines.append(entry + "\n")
+        lines.append("⚡ 進場參考：開盤後5~15分鐘確認方向再進")
+        lines.append("🛑 停損：跌破進場價 -1.5% 出清")
+    elif mkt_bearish_skip:
+        lines.append(f"🌧️ 大盤即時跌逾 0.5%（{idx_chg:+.2f}%），今日跳過推播")
+    else:
+        lines.append("❌ 今日無符合當沖條件標的\n建議觀望或等待盤中突破訊號")
 
-# 儲存候選清單供盤中監控腳本使用
-import json
+    # 空方觀察：回測無 edge，只列條件符合者，不列入候選、不追蹤
+    if short_list:
+        lines.append("\n🔻 <b>空方觀察</b>（跌幅&gt;1.5%＋振幅3~5%＋量&gt;500張）")
+        for s in short_list[:10]:
+            lines.append(f"　{s['code']} {html.escape(s['name'])}  {s['close']:.1f}  {s['chg']:+.1f}%  振{s['amp']:.1f}%  量{s['vol']:,}張")
+        lines.append("⚠️ 此名單回測平均為負（7 個月全虧），僅供觀察，不建議交易")
 
-candidate_list = [{
-    'code': c['code'], 'name': c['name'], 'close': c['close'],
-    'checks': {'量前20': True, '3%≤振幅<5%': True, '近5日均量≥3000張': True, '漲幅≥1.5%': True},  # 單一AND篩選，能列入候選就是全通過
-} for c in candidates]
-with open(os.path.join(os.path.dirname(__file__), '..', 'telebot', 'data', 'daytrade_candidates.json'), 'w') as f:
-    json.dump(candidate_list, f, ensure_ascii=False)
-print(f'[daytrade] 候選清單已寫入 telebot/data/daytrade_candidates.json: {[c["code"] for c in candidate_list]}')
+    lines.append("\n⚠️ 數據參考，非投資建議，買賣自負")
 
-# 存進當沖 10:30 追蹤紀錄（供 check_daytrade_track.py 比對是否仍上漲）
-try:
-    track_path = os.path.join(os.path.dirname(__file__), '..', 'telebot', 'data', 'daytrade_track.json')
-    track = {}
-    if os.path.exists(track_path):
-        with open(track_path, encoding='utf-8') as f:
-            track = json.load(f)
-    track[TODAY] = {
-        'candidates': [
-            {'code': c['code'], 'name': c['name'], 'baseline': round(c['close'] / (1 + c['chg_pct'] / 100), 2)}
-            for c in candidates
-        ],
-        'checked': False, 'checked_at': None, 'track_results': [],
-    }
-    with open(track_path, 'w', encoding='utf-8') as f:
-        json.dump(track, f, ensure_ascii=False, indent=2)
-except Exception as e:
-    print(f'[daytrade_track] 寫入失敗: {e}')
+    msg = "\n".join(lines)
+    send_telegram(msg)
+    print(msg)
 
-if _sj_api is not None:
-    _sj_api.logout()
-    print('[sj] 永豐 API 已登出')
+    # 儲存候選清單供盤中監控腳本使用
+    import json
+
+    candidate_list = [{
+        'code': c['code'], 'name': c['name'], 'close': c['close'],
+        'checks': {'量前20': True, '3%≤振幅<5%': True, '近5日均量≥3000張': True, '漲幅≥1.5%': True},  # 單一AND篩選，能列入候選就是全通過
+    } for c in candidates]
+    with open(os.path.join(os.path.dirname(__file__), '..', 'telebot', 'data', 'daytrade_candidates.json'), 'w') as f:
+        json.dump(candidate_list, f, ensure_ascii=False)
+    print(f'[daytrade] 候選清單已寫入 telebot/data/daytrade_candidates.json: {[c["code"] for c in candidate_list]}')
+
+    # 存進當沖 10:30 追蹤紀錄（供 check_daytrade_track.py 比對是否仍上漲）
+    try:
+        track_path = os.path.join(os.path.dirname(__file__), '..', 'telebot', 'data', 'daytrade_track.json')
+        track = {}
+        if os.path.exists(track_path):
+            with open(track_path, encoding='utf-8') as f:
+                track = json.load(f)
+        track[TODAY] = {
+            'candidates': [
+                {'code': c['code'], 'name': c['name'], 'baseline': round(c['close'] / (1 + c['chg_pct'] / 100), 2)}
+                for c in candidates
+            ],
+            'checked': False, 'checked_at': None, 'track_results': [],
+        }
+        with open(track_path, 'w', encoding='utf-8') as f:
+            json.dump(track, f, ensure_ascii=False, indent=2)
+    except Exception as e:
+        print(f'[daytrade_track] 寫入失敗: {e}')
+
+
+if __name__ == '__main__':
+    main()
