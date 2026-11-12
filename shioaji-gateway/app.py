@@ -618,7 +618,9 @@ def daily_ohlcv():
     GET /daily_ohlcv?code=2330&days=90 -> {ok, bars:[{date,open,high,low,close,volume}, ...]}（舊到新）"""
     code = request.args.get("code", "")
     days = int(request.args.get("days", "90"))
-    priority = -1 if request.args.get("priority") == "high" else 0
+    # low 讓盤中監控的即時快照（priority 0）先過，避免 09:10 批次查詢餓死它
+    prio_arg = request.args.get("priority")
+    priority = -1 if prio_arg == "high" else (1 if prio_arg == "low" else 0)
     if not code:
         return jsonify({"ok": False, "error": "no code"}), 400
     try:
@@ -940,25 +942,37 @@ def ticks_subscribe():
                 marker = _tick_seq.get(code, 0)
                 meta["first_live_ts"] = None
                 meta["gen"] = generation
-            if not (already and gen_ok):
-                _run(lambda api, contract=contract: api.quote.subscribe(
-                        contract,
-                        quote_type=sj.constant.QuoteType.Tick,
-                        version=sj.constant.QuoteVersion.v1),
-                     priority=2, op="tick_sub", budget_s=10)
+                # 先登記 client：回補期間若發生重登，resubscribe 才看得到這檔
+                _tick_clients.setdefault(code, {})[client] = time.time()
+            try:
+                if not (already and gen_ok):
+                    _run(lambda api, contract=contract: api.quote.subscribe(
+                            contract,
+                            quote_type=sj.constant.QuoteType.Tick,
+                            version=sj.constant.QuoteVersion.v1),
+                         priority=2, op="tick_sub", budget_s=10)
+            except Exception:
+                with _tick_lock:
+                    _tick_clients.get(code, {}).pop(client, None)
+                    if not _tick_clients.get(code):
+                        _tick_clients.pop(code, None)
+                raise
             rows = []
             if backfill:
-                ticks = _run(lambda api, contract=contract: api.ticks(
-                                 contract=contract, date=date.today().strftime("%Y-%m-%d"),
-                                 timeout=_sdk_timeout_ms(TICKS_TIMEOUT_MS)),
-                             priority=2, op="tick_backfill", budget_s=20)
-                parsed = _parse_sdk_ticks(ticks)
-                with _tick_lock:
-                    first_live = meta.get("first_live_ts")
-                    rows = [r for r in parsed
-                            if first_live is None or r[0] < first_live]
+                try:
+                    ticks = _run(lambda api, contract=contract: api.ticks(
+                                     contract=contract, date=date.today().strftime("%Y-%m-%d"),
+                                     timeout=_sdk_timeout_ms(TICKS_TIMEOUT_MS)),
+                                 priority=2, op="tick_backfill", budget_s=20)
+                    parsed = _parse_sdk_ticks(ticks)
+                    with _tick_lock:
+                        first_live = meta.get("first_live_ts")
+                        rows = [r for r in parsed
+                                if first_live is None or r[0] < first_live]
+                except Exception as e:
+                    # 訂閱已成立：回補失敗不影響即時 tick，也不要留下孤兒訂閱
+                    print(f"[tick] {code} 回補失敗（訂閱仍有效）: {redact(e)}", flush=True)
             with _tick_lock:
-                _tick_clients.setdefault(code, {})[client] = time.time()
                 out[code] = {
                     "subscribed": True,
                     "name": getattr(contract, "name", "") or code,
@@ -1064,6 +1078,15 @@ def ticks_unsubscribe():
     return jsonify({"ok": True, "data": out})
 
 
+def _drop_tick_code(code):
+    """訂閱已失效：清掉 client/ring/meta，讓客戶端看到 subscribed=false 自行重訂閱。
+    不可在持有 _lock 時呼叫（鎖順序：_lock 與 _tick_lock 不嵌套）。"""
+    with _tick_lock:
+        _tick_clients.pop(code, None)
+        _tick_ring.pop(code, None)
+        _tick_meta.pop(code, None)
+
+
 def _spawn_tick_resubscribe(api, generation):
     """重登後補訂閱 tick，並用 api.ticks 補上斷線期間的洞（floor < ts < first_live）。"""
     with _tick_lock:
@@ -1082,6 +1105,8 @@ def _spawn_tick_resubscribe(api, generation):
             try:
                 _lock.acquire(timeout=5)
             except LockTimeout:
+                # 補訂閱失敗＝這檔沒有即時資料了：清掉登記，讓客戶端重試
+                _drop_tick_code(code)
                 continue
             try:
                 with _state_cv:
@@ -1099,7 +1124,8 @@ def _spawn_tick_resubscribe(api, generation):
                     version=sj.constant.QuoteVersion.v1,
                 )
             except Exception as e:
-                print(f"[tick] 重訂閱 {code} 失敗（忽略）: {redact(e)}", flush=True)
+                print(f"[tick] 重訂閱 {code} 失敗（交給客戶端重試）: {redact(e)}", flush=True)
+                _drop_tick_code(code)
                 continue
             finally:
                 _lock.release()
@@ -1109,7 +1135,8 @@ def _spawn_tick_resubscribe(api, generation):
             except LockTimeout:
                 continue
             try:
-                ticks = api.ticks(contract=contract, date=today, timeout=TICKS_TIMEOUT_MS)
+                # 補洞是背景工作：timeout 短一點，別長時間佔住共用 _lock
+                ticks = api.ticks(contract=contract, date=today, timeout=4000)
                 rows = _parse_sdk_ticks(ticks)
             except Exception as e:
                 print(f"[tick] 補洞 {code} 失敗（忽略）: {redact(e)}", flush=True)
@@ -1117,7 +1144,9 @@ def _spawn_tick_resubscribe(api, generation):
             finally:
                 _lock.release()
             with _tick_lock:
-                meta = _tick_meta.setdefault(code, {})
+                meta = _tick_meta.get(code)
+                if meta is None or meta.get("gen") != generation:
+                    continue        # 期間又重登：交給新一代的 resub，避免重複插入
                 first_live = meta.get("first_live_ts")
                 for ts, close, volume, tick_type in rows:
                     if floor and ts <= floor:
@@ -1165,8 +1194,24 @@ def _tick_sweep_worker():
                 except Exception as e:
                     print(f"[tick] 退訂 {code} 失敗（忽略）: {redact(e)}", flush=True)
             with _tick_lock:
-                _tick_ring.pop(code, None)
-                _tick_meta.pop(code, None)
+                reappeared = bool(_tick_clients.get(code))
+                if not reappeared:
+                    _tick_ring.pop(code, None)
+                    _tick_meta.pop(code, None)
+            if reappeared and _conn["api"] is not None:
+                # 退訂期間剛好有新 client 訂閱：把剛才殺掉的訂閱補回來
+                try:
+                    def resub(api, code=code):
+                        contract = _resolve_contract(api, code)
+                        api.quote.subscribe(
+                            contract,
+                            quote_type=sj.constant.QuoteType.Tick,
+                            version=sj.constant.QuoteVersion.v1,
+                        )
+                    _run(resub, priority=2, op="tick_resub", budget_s=4)
+                    print(f"[tick] 補回訂閱 {code}", flush=True)
+                except Exception as e:
+                    print(f"[tick] 補回訂閱 {code} 失敗: {redact(e)}", flush=True)
 
 
 def _spawn_bidask_resubscribe(api, generation):

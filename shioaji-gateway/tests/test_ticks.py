@@ -209,6 +209,31 @@ def test_subscribe_resume_seq_excludes_ticks_during_backfill(monkeypatch):
     assert [t[0] for t in polled["ticks"]] == ["2026-11-12T09:00:03.000000"]
 
 
+def test_subscribe_backfill_failure_still_subscribed(monkeypatch):
+    """回補失敗不可回 subscribed=false 又留下 SDK 訂閱（孤兒訂閱 sweep 掃不到）。"""
+    api = _fake_api()
+    calls = _patch_subscribe(monkeypatch, api, _sdk_ticks([]))
+
+    def boom(**kw):
+        raise TimeoutError("kbars timeout")
+
+    api.ticks = boom
+    d = _client().get("/ticks/subscribe?codes=2330&client=c1&backfill=1").get_json()["data"]["2330"]
+    assert d["subscribed"] is True
+    assert d["backfill"] == []
+    assert calls["subscribe"] == 1
+    assert gw._tick_clients["2330"]["c1"] > 0
+
+
+def test_drop_tick_code_clears_registration():
+    _seed("2330", [1, 2])
+    gw._drop_tick_code("2330")
+    assert "2330" not in gw._tick_clients
+    assert "2330" not in gw._tick_ring
+    assert "2330" not in gw._tick_meta
+    assert gw._tick_seq["2330"] == 2      # 序號保持單調，不可歸零
+
+
 def test_subscribe_refcount_two_clients(monkeypatch):
     api = _fake_api()
     calls = _patch_subscribe(monkeypatch, api, _sdk_ticks([]))

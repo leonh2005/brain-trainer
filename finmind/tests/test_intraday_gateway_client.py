@@ -126,6 +126,30 @@ def test_poll_ticks_boot_id_change_resubscribes_all(monkeypatch):
     assert m._tick_cursor == {}
 
 
+def test_poll_ticks_truncated_does_not_advance_cursor_or_append(monkeypatch):
+    """truncated 時必須留給 backfill 補洞：先推進游標會讓被淘汰那段永遠補不回來。"""
+    m._universe['2330'] = '台積電'
+    m._tick_cursor['2330'] = 100
+    monkeypatch.setattr(m, '_get_json', lambda p, q, t: {
+        'ok': True, 'boot_id': 'boot-1',
+        'data': {'2330': {'subscribed': True, 'seq': 9000, 'first_seq': 8000,
+                          'ticks': [["2026-11-12T10:00:00.000000", 100.0, 1, 1]],
+                          'truncated': True}},
+    })
+    assert m.poll_ticks() == ['2330']
+    assert m._tick_cursor['2330'] == 100          # 游標不動
+    assert '2330' not in m._tick_store            # 這批不併入
+
+
+def test_append_ticks_dedupes_by_timestamp():
+    m._tick_store['2330'] = [(pd.Timestamp("2026-11-12T09:00:02"), 101.0, 2, 1)]
+    m._append_ticks('2330', [
+        (pd.Timestamp("2026-11-12T09:00:02"), 101.0, 2, 1),   # 重複
+        (pd.Timestamp("2026-11-12T09:00:03"), 102.0, 3, 1),
+    ])
+    assert [r[1] for r in m._tick_store['2330']] == [101.0, 102.0]
+
+
 def test_poll_ticks_reports_unsubscribed_and_truncated(monkeypatch):
     m._universe.update({'2330': '台積電', '2454': '聯發科'})
     monkeypatch.setattr(m, '_get_json', lambda p, q, t: {

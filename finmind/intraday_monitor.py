@@ -208,17 +208,25 @@ def _decode_ticks(rows: list) -> list:
     return [(pd.Timestamp(r[0]), float(r[1]), int(r[2]), int(r[3])) for r in rows]
 
 
-def _merge_backfill(code: str, rows: list) -> int:
-    """把回補 tick 併入本地 store：只取比現有最後一筆更新的，避免重複計量。"""
+def _append_ticks(code: str, rows: list, label: str = None) -> int:
+    """把 tick 併入本地 store：只取比現有最後一筆更新的，避免重複計量。
+
+    輪詢與回補共用同一條規則：gateway 重登補洞或 truncated 重訂閱時，
+    同一批 tick 可能被送兩次，靠時間戳去重。
+    """
     with _tick_lock:
         streamed = _tick_store.get(code, [])
         last_ts = max((r[0] for r in streamed), default=None)
         kept = [r for r in rows if last_ts is None or r[0] > last_ts]
         if kept:
             _tick_store[code] = streamed + kept
-    if kept:
-        print(f'[backfill] {code}: 回補 {len(kept)} 筆（至 {max(r[0] for r in kept)}）')
+    if kept and label:
+        print(f'[{label}] {code}: 回補 {len(kept)} 筆（至 {max(r[0] for r in kept)}）')
     return len(kept)
+
+
+def _merge_backfill(code: str, rows: list) -> int:
+    return _append_ticks(code, rows, 'backfill')
 
 
 def poll_ticks() -> list:
@@ -244,20 +252,19 @@ def poll_ticks() -> list:
         return list(_universe)          # gateway 重啟：全部重訂閱
     need, batch = [], {}
     for code, d in (data.get('data') or {}).items():
-        if not d.get('subscribed') or d.get('reset'):
-            _tick_cursor[code] = 0
+        # 未訂閱／游標失效／ring 已淘汰：不推進游標、不併入這批，
+        # 交給 _subscribe 帶 backfill 補洞（先推進游標的話，被淘汰那段永遠補不回來）
+        if not d.get('subscribed') or d.get('reset') or d.get('truncated'):
+            if d.get('reset'):
+                _tick_cursor[code] = 0
             need.append(code)
             continue
         rows = _decode_ticks(d.get('ticks') or [])
         if rows:
             batch[code] = rows
         _tick_cursor[code] = int(d.get('seq') or 0)
-        if d.get('truncated'):
-            need.append(code)           # ring 已淘汰：重訂閱時帶 backfill 補洞
-    if batch:
-        with _tick_lock:
-            for code, rows in batch.items():
-                _tick_store.setdefault(code, []).extend(rows)
+    for code, rows in batch.items():
+        _append_ticks(code, rows)
     return need
 
 
@@ -1275,20 +1282,26 @@ if __name__ == '__main__':
     recompute_technical_cache()   # 開盤暖機：先算一次技術指標，避免 volume_check() 空等到整分邊界
 
     _next_scan = _time.monotonic() + SCAN_INTERVAL
+    _snapshot_warned = False
     while True:
         _now = datetime.now()
         if _now.hour > 13 or (_now.hour == 13 and _now.minute > 35):
             print(f'[{_now.strftime("%H:%M:%S")}] 盤後，監控結束')
             break
         # 快照連續失敗只記錄；連線復原由 gateway 負責，本程式不再自行重登
-        if _snapshot_health['fail_streak'] == 6:
-            print(f'[{_now.strftime("%H:%M:%S")}] 快照連續失敗 6 次，等 gateway 恢復')
+        if _snapshot_health['fail_streak'] >= 6 and not _snapshot_warned:
+            _snapshot_warned = True
+            print(f'[{_now.strftime("%H:%M:%S")}] 快照連續失敗 '
+                  f'{_snapshot_health["fail_streak"]} 次，等 gateway 恢復')
+        elif _snapshot_health['fail_streak'] == 0:
+            _snapshot_warned = False
         if _time.monotonic() >= _next_scan:
             sync_universe()
             _next_scan = _time.monotonic() + SCAN_INTERVAL
         # 必須在 recompute_technical_cache 之前：剛收盤那一分鐘的最後幾筆 tick 要先進來
         need = poll_ticks()
-        for code in need[:MAX_NEW_PER_SCAN]:
+        # 每輪最多補 2 檔：重訂閱是阻塞 HTTP（含回補），做太多會讓輪詢與指標停擺
+        for code in need[:2]:
             _subscribe(code, _universe.get(code) or code, _now, keep_ticks=True)
         if _now.second < 5:
             recompute_technical_cache()

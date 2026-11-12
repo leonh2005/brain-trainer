@@ -83,6 +83,9 @@ def get_top_volume_sj(n: int = 20) -> list:
     except Exception as e:
         print(f'[gateway] 全市場快照失敗: {redact(e)}')
         return []
+    if data.get('partial'):
+        # 22 秒預算用盡或連續 3 批失敗：量排名可能缺漏，至少留下痕跡
+        print('[gateway] 全市場快照不完整（partial），量排名可能缺漏')
     rows = {}
     for s in data.get('items', []):
         code = s.get('code') or ''
@@ -117,11 +120,11 @@ def get_daily_bars(symbol: str) -> list:
     if symbol in _bars_cache:
         return _bars_cache[symbol]
     try:
-        data = _get_json('/daily_ohlcv', {'code': symbol, 'days': 20}, 15)
+        data = _get_json('/daily_ohlcv', {'code': symbol, 'days': 20, 'priority': 'low'}, 15)
         bars = [b for b in (data.get('bars') or []) if b.get('date') < str(date.today())]
     except Exception as e:
         print(f'[gateway] 日K {symbol} 失敗: {redact(e)}')
-        bars = []
+        return []          # 失敗不進快取：否則 streak 會靜默變成 0（排除條件失效）
     _bars_cache[symbol] = bars
     return bars
 
@@ -248,7 +251,7 @@ def get_stock_sector(code: str) -> str:
             _json.dump({'industry': industry}, f, ensure_ascii=False)
         return industry
     except Exception as e:
-        print(f'[finmind] 產業別查詢失敗 {code}: {e}')
+        print(f'[finmind] 產業別查詢失敗 {code}: {redact(e)}')
         return ''
 
 
@@ -266,28 +269,31 @@ def main():
     candidates = []
     for row in top20:
         code      = row['code']
-        # 近5日均量：Shioaji kbars，失敗用 FinMind
+        # 2026-10 回測（3~10月、911檔次）：振幅 8-12% 組平均 -1.61%、3-5% 組 -0.69%，
+        # 加振幅上限是唯一跨月穩定有效的修改，故設 3%~5%
+        # 先用不吃 gateway 的條件篩掉，再查日均量（09:10 少打十幾次 daily_ohlcv）
+        if not (3 <= row['amp_pct'] < 5 and row['chg_pct'] >= 1.5):
+            continue
+        # 近5日均量：gateway 日K，失敗用 FinMind
         avg5 = get_sj_avg5(code)
         if avg5 == 0:
             avg5 = get_avg5_finmind(code)
-
-        # 2026-10 回測（3~10月、911檔次）：振幅 8-12% 組平均 -1.61%、3-5% 組 -0.69%，
-        # 加振幅上限是唯一跨月穩定有效的修改，故設 3%~5%
-        if 3 <= row['amp_pct'] < 5 and avg5 >= 3000 and row['chg_pct'] >= 1.5:
-            streak = get_price_streak(code)
-            if streak < 0:
-                print(f'[daytrade] {code} {row["name"]} 連跌{-streak}天，排除')
-                continue
-            candidates.append({
-                'code':      code,
-                'name':      row['name'],
-                'close':     row['close'],
-                'chg_pct':   row['chg_pct'],
-                'amp_pct':   row['amp_pct'],
-                'vol_k':     row['vol_k'],
-                'avg5':      avg5,
-                'close_pos': row['close_pos'],
-            })
+        if avg5 < 3000:
+            continue
+        streak = get_price_streak(code)
+        if streak < 0:
+            print(f'[daytrade] {code} {row["name"]} 連跌{-streak}天，排除')
+            continue
+        candidates.append({
+            'code':      code,
+            'name':      row['name'],
+            'close':     row['close'],
+            'chg_pct':   row['chg_pct'],
+            'amp_pct':   row['amp_pct'],
+            'vol_k':     row['vol_k'],
+            'avg5':      avg5,
+            'close_pos': row['close_pos'],
+        })
 
     inst_net, inst_date = get_institutional_net()
     idx_chg, idx_val = get_index_intraday()

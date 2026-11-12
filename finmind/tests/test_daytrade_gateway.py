@@ -67,6 +67,19 @@ def test_daily_bars_filters_today_and_caches(monkeypatch):
     assert calls['n'] == 1
 
 
+def test_daily_bars_failure_not_cached(monkeypatch):
+    calls = {'n': 0}
+
+    def boom(p, q, t):
+        calls['n'] += 1
+        raise TimeoutError('gateway slow')
+
+    monkeypatch.setattr(d, '_get_json', boom)
+    assert d.get_daily_bars('2330') == []
+    assert d.get_daily_bars('2330') == []
+    assert calls['n'] == 2          # 失敗不進快取，下次仍會重試
+
+
 def test_avg5_from_bars(monkeypatch):
     bars = [{'date': f'2026-11-0{i}', 'close': 100.0 + i, 'volume': i * 1000}
             for i in range(1, 6)]
