@@ -1,5 +1,5 @@
 {
- "updated_at": "2026-11-13T17:01:01",
+ "updated_at": "2026-11-13T21:51:19",
  "hits": [],
  "hit_count": 0,
  "results": {
@@ -17,7 +17,7 @@
   "volume": {
    "ok": false,
    "latest_date": "2026-11-13",
-   "latest_amount": 949200797304.0,
+   "latest_amount": 951580008082.0,
    "ma20": 978093031387.45,
    "detail": "2026-11-13 成交 0.95 兆 vs 20日均量 0.98 兆"
   },
