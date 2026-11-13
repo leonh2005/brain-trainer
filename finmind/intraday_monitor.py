@@ -315,11 +315,19 @@ def _subscribe(code: str, name: str, now: datetime, keep_ticks: bool = False) ->
     09:00 前不要求回補（盤前沒有成交，省掉每檔一次歷史查詢）。
     """
     global _gateway_boot_id
+    # 已有本地資料時只補「最後一筆之後」：重訂閱不必每次搬整天的 tick
+    since_ts = None
+    if keep_ticks:
+        with _tick_lock:
+            existing = _tick_store.get(code) or []
+        if existing:
+            since_ts = max(r[0] for r in existing).strftime('%Y-%m-%dT%H:%M:%S.%f')
+    params = {'codes': code, 'client': CLIENT_ID,
+              'backfill': '1' if now.hour >= 9 else '0'}
+    if since_ts:
+        params['since_ts'] = since_ts
     try:
-        data = _get_json('/ticks/subscribe',
-                         {'codes': code, 'client': CLIENT_ID,
-                          'backfill': '1' if now.hour >= 9 else '0'},
-                         SUBSCRIBE_TIMEOUT)
+        data = _get_json('/ticks/subscribe', params, SUBSCRIBE_TIMEOUT)
     except Exception as e:
         print(f'[subscribe] {code} 失敗: {redact(e)}')
         return False

@@ -209,6 +209,46 @@ def test_subscribe_resume_seq_excludes_ticks_during_backfill(monkeypatch):
     assert [t[0] for t in polled["ticks"]] == ["2026-11-12T09:00:03.000000"]
 
 
+def test_subscribe_since_ts_filters_rows(monkeypatch):
+    api = _fake_api()
+    rows = [(_ns("2026-11-12T09:00:01.000000"), 99.0, 1, 1),
+            (_ns("2026-11-12T09:00:05.000000"), 100.0, 2, 1)]
+    _patch_subscribe(monkeypatch, api, _sdk_ticks(rows))
+    d = _client().get(
+        "/ticks/subscribe?codes=2330&client=c1&backfill=1"
+        "&since_ts=2026-11-12T09:00:03.000000").get_json()["data"]["2330"]
+    assert [r[0] for r in d["backfill"]] == ["2026-11-12T09:00:05.000000"]
+
+
+def test_run_timeout_does_not_mark_down_when_disabled(monkeypatch):
+    """回補逾時不該重登：否則「逾時→重登→重訂閱」會變成迴圈（2026-11-13 事故）。"""
+    api = _fake_api()
+    monkeypatch.setattr(gw, "_conn", {"api": api})
+
+    def boom(a):
+        raise TimeoutError("slow kbars")
+
+    with pytest.raises(TimeoutError):
+        gw._run(boom, op="tick_backfill", mark_down_on_timeout=False)
+    assert gw._last_session_down["count"] == 0
+    assert gw._conn["api"] is api
+
+
+def test_run_timeout_marks_down_by_default(monkeypatch):
+    api = _fake_api()
+    monkeypatch.setattr(gw, "_conn", {"api": api})
+    monkeypatch.setattr(gw, "_relogin",
+                        lambda deadline, prior: (_ for _ in ()).throw(
+                            gw.GatewayReconnecting("test")))
+
+    def boom(a):
+        raise TimeoutError("slow")
+
+    with pytest.raises(Exception):
+        gw._run(boom, op="snapshot")
+    assert gw._last_session_down["count"] == 1
+
+
 def test_subscribe_backfill_failure_still_subscribed(monkeypatch):
     """回補失敗不可回 subscribed=false 又留下 SDK 訂閱（孤兒訂閱 sweep 掃不到）。"""
     api = _fake_api()

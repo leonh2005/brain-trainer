@@ -403,11 +403,16 @@ def _relogin(deadline, prior_api):
     return new_api
 
 
-def _run(fn, priority=0, op="?", budget_s=DEFAULT_BUDGET_S, retry=True):
+def _run(fn, priority=0, op="?", budget_s=DEFAULT_BUDGET_S, retry=True,
+         mark_down_on_timeout=True):
     """用持久連線執行 fn(api)。
 
     重登一律在 _lock 之外進行（2026-11-11 事故：重登期間所有請求被鎖住 30-60 秒）。
     整個請求有預算上限，等鎖太久或預算用盡就快速失敗。
+
+    mark_down_on_timeout=False 供「慢但非致命」的資料查詢（如 tick 回補）使用：
+    一次查詢逾時不代表 session 死了，若照樣重登會把整條連線與所有訂閱一起打掉，
+    2026-11-13 因此形成「逾時→重登→重訂閱→再逾時」的迴圈（一天 142 次登入、4 次 451）。
     """
     deadline = time.monotonic() + budget_s
     _request_ctx.deadline = deadline
@@ -442,9 +447,10 @@ def _run(fn, priority=0, op="?", budget_s=DEFAULT_BUDGET_S, retry=True):
                         outcome = "ok" if attempt == 0 else "retry_ok"
                         return result
                     except Exception as e:
-                        if not _is_conn_error(e):
-                            print(f"[{datetime.now():%Y-%m-%d %H:%M:%S}] 業務錯誤不重登 "
-                                  f"{redact(f'{type(e).__name__}: {e}')}", flush=True)
+                        if not _is_conn_error(e) or (
+                                not mark_down_on_timeout and isinstance(e, TimeoutError)):
+                            print(f"[{datetime.now():%Y-%m-%d %H:%M:%S}] 不重登 "
+                                  f"op={op} {redact(f'{type(e).__name__}: {e}')}", flush=True)
                             outcome = "business_error"
                             raise
                         _mark_down(api, e)
@@ -922,6 +928,7 @@ def ticks_subscribe():
     codes = [c for c in request.args.get("codes", "").split(",") if c]
     client = request.args.get("client", "default")
     backfill = request.args.get("backfill", "1") != "0"
+    since_ts = request.args.get("since_ts") or None   # 客戶端已有資料時只補這之後的
     if not codes:
         return jsonify({"ok": False, "error": "no codes"}), 400
     import shioaji as sj
@@ -959,12 +966,14 @@ def ticks_subscribe():
                     ticks = _run(lambda api, contract=contract: api.ticks(
                                      contract=contract, date=date.today().strftime("%Y-%m-%d"),
                                      timeout=_sdk_timeout_ms(TICKS_TIMEOUT_MS)),
-                                 priority=2, op="tick_backfill", budget_s=20)
+                                 priority=2, op="tick_backfill", budget_s=20,
+                                 mark_down_on_timeout=False)
                     parsed = _parse_sdk_ticks(ticks)
                     with _tick_lock:
                         first_live = meta.get("first_live_ts")
                         rows = [r for r in parsed
-                                if first_live is None or r[0] < first_live]
+                                if (first_live is None or r[0] < first_live)
+                                and (since_ts is None or r[0] > since_ts)]
                 except Exception as e:
                     # 訂閱已成立：回補失敗不影響即時 tick；明確標記讓客戶端不要推進游標
                     backfill_error = redact(e)

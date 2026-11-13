@@ -67,14 +67,14 @@ def test_get_snapshot_failure_increments_streak(monkeypatch):
 
 # ── 訂閱 ───────────────────────────────────────────────────────
 
-def _subscribe_payload(**over):
+def _subscribe_payload(code='00631L', **over):
     info = {
         'subscribed': True, 'name': '元大台灣50正2', 'reference': 100.0,
         'limit_up': 120.0, 'limit_down': 80.0, 'head_seq': 5, 'resume_seq': 3,
         'backfill': [["2026-11-12T09:00:01.000000", 99.0, 1, 1]],
     }
     info.update(over)
-    return {'ok': True, 'boot_id': 'boot-1', 'generation': 7, 'data': {'00631L': info}}
+    return {'ok': True, 'boot_id': 'boot-1', 'generation': 7, 'data': {code: info}}
 
 
 def test_subscribe_sets_metadata_and_cursor(monkeypatch):
@@ -86,6 +86,20 @@ def test_subscribe_sets_metadata_and_cursor(monkeypatch):
     # 20% 漲跌幅 → 7% × 2 = 14%
     assert m._universe_max_chg['00631L'] == pytest.approx(14.0)
     assert len(m._tick_store['00631L']) == 1
+
+
+def test_subscribe_keep_ticks_sends_since_ts(monkeypatch):
+    """重訂閱時只要求補最後一筆之後的 tick，別每次搬整天。"""
+    m._tick_store['2330'] = [(pd.Timestamp("2026-11-12T10:00:00"), 100.0, 1, 1)]
+    seen = {}
+
+    def fake(path, params, timeout):
+        seen.update(params)
+        return _subscribe_payload(code='2330')
+
+    monkeypatch.setattr(m, '_get_json', fake)
+    m._subscribe('2330', '台積電', datetime(2026, 11, 12, 10, 30), keep_ticks=True)
+    assert seen.get('since_ts') == '2026-11-12T10:00:00.000000'
 
 
 def test_subscribe_keep_ticks_merges(monkeypatch):
