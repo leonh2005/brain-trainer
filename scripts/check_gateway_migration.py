@@ -106,16 +106,51 @@ def check_daytrade():
     return out
 
 
+GEN_FILE = '/tmp/gateway_migration_gen.json'
+
+
+def check_generation():
+    """兩次執行之間的 generation 增量＝盤中重登次數。
+
+    正常：Shioaji 每小時 token 失效會重登 1 次（隔夜 9 小時約 9 次）。
+    異常：2026-11-13 的「逾時→重登→重訂閱」迴圈，15 分鐘就跳 5 次。
+    """
+    try:
+        with urllib.request.urlopen(f'{GATEWAY}/health', timeout=8) as r:
+            gen = json.loads(r.read()).get('generation')
+    except Exception:
+        return []
+    prev = None
+    try:
+        with open(GEN_FILE) as f:
+            saved = json.load(f)
+        if saved.get('date') == TODAY:
+            prev = saved.get('gen')
+    except Exception:
+        pass
+    try:
+        with open(GEN_FILE, 'w') as f:
+            json.dump({'date': TODAY, 'gen': gen}, f)
+    except Exception:
+        pass
+    if prev is None:
+        return [('ℹ️', f'generation={gen}（首次執行，下次才能算增量）')]
+    delta = (gen or 0) - prev
+    return [('✅' if delta <= 3 else '❌',
+             f'兩次檢查間重登 {delta} 次（generation {prev}→{gen}，正常 ≤3）')]
+
+
 def check_gateway_log():
-    """gateway 的 session down 格式：`[2026-11-12 09:10:05] session down; api cleared`。"""
+    """SDK 回呼版 session down（`[YYYY-MM-DD HH:MM:SS] session down; api cleared`）。
+    注意：_mark_down 觸發的重登不會印這行，真正的重登量看 generation。"""
     log = tail(GATEWAY_LOG, 400_000)
     downs = len(re.findall(rf'\[{TODAY} [0-9:]{{8}}\] session down', log))
-    return [('✅' if downs == 0 else '❌', f'今日 session down 次數: {downs}（今天以前是 20）')]
+    return [('ℹ️', f'SDK 回報 session down 行數: {downs}')]
 
 
 def main():
     expect_daytrade = '--expect-daytrade' in sys.argv
-    checks = check_health() + check_monitor() + check_gateway_log()
+    checks = check_health() + check_monitor() + check_generation() + check_gateway_log()
     if expect_daytrade:
         checks += check_daytrade()
     fails = sum(1 for icon, _ in checks if icon == '❌')
