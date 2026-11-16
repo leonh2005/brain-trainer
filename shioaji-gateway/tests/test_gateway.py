@@ -130,6 +130,7 @@ def fake_conn(monkeypatch):
     """把模組級連線換成假的，避免任何真實登入。"""
     state = {"api": SimpleNamespace(name="first", logout=lambda: None)}
     monkeypatch.setattr(gw, "_conn", state)
+    monkeypatch.setattr(gw, "_retired_apis", [])
     return state
 
 

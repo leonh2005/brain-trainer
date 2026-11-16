@@ -34,6 +34,11 @@ app = Flask(__name__)
 SECRETS_DIR = "/Users/steven/CCProject/.secrets"
 
 _conn = {"api": None}
+# 退休待清理的舊 session。session-down / mark_down 期間不能 logout（回呼在 Rust 執行緒上，
+# 碰 SDK 會死鎖），先保留參考，交給持有 _login_lock 的 _relogin 統一 logout。
+# 不這做的話：失敗重登建立的 api、session 死掉的 api 都沒人關 → Solace 連線累積 →
+# 451 Too Many Connections → 更難登入（2026-11-16 事故：單一 process 殘留 10 條連線）。
+_retired_apis = []
 _STOCK_CODE_RE = re.compile(r"^\d{4,6}[A-Z]?$")     # 個股 4 碼、ETF 5-6 碼，可加字母（00631L）
 
 
@@ -262,6 +267,8 @@ def _handle_session_down(dead_api_id):
         if current is None or id(current) != dead_api_id:
             return
         _conn["api"] = None
+        # 保留舊 api 參考，稍後由 _relogin  logout；直接在此 logout 會碰 SDK 而死鎖。
+        _retired_apis.append(current)
         _last_session_down["ts"] = time.time()
         _last_session_down["count"] += 1
         _state_cv.notify_all()
@@ -272,15 +279,24 @@ def _login():
     import shioaji as sj
     api_key = os.environ.get("SHIOAJI_API_KEY") or _read_secret("shioaji_api.txt")
     secret_key = os.environ.get("SHIOAJI_SECRET_KEY") or _read_secret("shioaji_secret.txt")
-    api = sj.Shioaji(simulation=False)
-    api.login(api_key=api_key, secret_key=secret_key)
-    api.quote.set_on_bidask_stk_v1_callback(_make_on_bidask(api))
-    api.set_on_tick_stk_v1_callback(_make_on_tick(api))
-    register = getattr(api, "set_session_down_callback", None) or getattr(api, "on_session_down", None)
-    if register is not None:
-        api_id = id(api)
-        register(lambda: _handle_session_down(api_id))
-    return api
+    api = None
+    try:
+        api = sj.Shioaji(simulation=False)
+        api.login(api_key=api_key, secret_key=secret_key)
+        api.quote.set_on_bidask_stk_v1_callback(_make_on_bidask(api))
+        api.set_on_tick_stk_v1_callback(_make_on_tick(api))
+        register = getattr(api, "set_session_down_callback", None) or getattr(api, "on_session_down", None)
+        if register is not None:
+            api_id = id(api)
+            register(lambda: _handle_session_down(api_id))
+        return api
+    except BaseException:
+        # api.login() 失敗（451 / P2P Closed）時，SDK 可能已經開了 Solace 連線。
+        # 不 logout 這個半登入的 api，區域變數一消失連線就永遠洩漏 →
+        # 累積到連線上限後每次重登都失敗，形成「無法順利登入」的惡性循環。
+        if api is not None:
+            _quiet_logout(api)
+        raise
 
 
 def _is_conn_error(e):
@@ -309,6 +325,7 @@ def _mark_down(api, exc):
     with _state_cv:
         if _conn["api"] is api:
             _conn["api"] = None
+            _retired_apis.append(api)   # 保留參考，交給 _relogin 統一 logout
             _last_session_down["ts"] = time.time()
             _last_session_down["count"] += 1
         _login_state["last_error"] = redact(f"{type(exc).__name__}: {exc}")
@@ -356,12 +373,19 @@ def _relogin(deadline, prior_api):
             api = _conn["api"]
             if api is not None and api is not prior_api:
                 return api          # 別的執行緒已經補好了
-            was_marked_down = api is None
             _login_state["reconnecting"] = True
             _login_state["last_attempt"] = time.time()
+            # 取出並清空退休 session（session-down / mark_down 期間不能碰 SDK）。
+            retired = list(_retired_apis)
+            _retired_apis.clear()
         old = prior_api
         try:
-            if old is not None:
+            # 必須「先登出舊的、再登入新的」：反過來的話 SDK 會在登入後才釋放
+            # 共用的 token slot（log: Successfully released token slot 1），
+            # 把剛拿到的新 token 一起作廢，變成每 5 分鐘一次的重登迴圈。
+            for dead in retired:
+                _quiet_logout(dead)
+            if old is not None and not any(d is old for d in retired):
                 try:
                     old.clear_session_down_callback()
                 except Exception:
@@ -370,9 +394,6 @@ def _relogin(deadline, prior_api):
                     old.clear_on_tick_stk_v1_callback()
                 except Exception:
                     pass
-                # 必須「先登出舊的、再登入新的」：反過來的話 SDK 會在登入後才釋放
-                # 共用的 token slot（log: Successfully released token slot 1），
-                # 把剛拿到的新 token 一起作廢，變成每 5 分鐘一次的重登迴圈。
                 _quiet_logout(old)
             new_api = _login()
         except BaseException as e:

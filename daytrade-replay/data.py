@@ -550,23 +550,34 @@ def _get_sj():
     def _login():
         global _sj_login_time, _sj_last_check
         load_dotenv(os.path.join(os.path.dirname(__file__), '../finmind/.env'))
-        api = sj.Shioaji(simulation=False)
-        api.login(
-            api_key=os.environ['SHIOAJI_API_KEY'],
-            secret_key=os.environ['SHIOAJI_SECRET_KEY'],
-        )
-        now = time.time()
-        _sj_login_time = now
-        _sj_last_check = now
-        print('[sj] 永豐 API 登入成功')
+        api = None
+        try:
+            api = sj.Shioaji(simulation=False)
+            api.login(
+                api_key=os.environ['SHIOAJI_API_KEY'],
+                secret_key=os.environ['SHIOAJI_SECRET_KEY'],
+            )
+            now = time.time()
+            _sj_login_time = now
+            _sj_last_check = now
+            print('[sj] 永豐 API 登入成功')
 
-        # 登記 tick callback（per-api-instance，重連後必須重新登記）
-        @api.on_tick_stk_v1()
-        def _on_tick_stk(exchange, tick):
-            _realtime_feed.on_tick(tick)
+            # 登記 tick callback（per-api-instance，重連後必須重新登記）
+            @api.on_tick_stk_v1()
+            def _on_tick_stk(exchange, tick):
+                _realtime_feed.on_tick(tick)
 
-        print('[sj] tick callback 已登記')
-        return api
+            print('[sj] tick callback 已登記')
+            return api
+        except BaseException:
+            # 登入失敗（451 / P2P Closed）時 SDK 可能已開 Solace 連線；
+            # 不 logout 這個半登入的 api 就會連線洩漏（2026-11-16 gateway 事故同因）。
+            if api is not None:
+                try:
+                    api.logout()
+                except Exception:
+                    pass
+            raise
 
     now = time.time()
 

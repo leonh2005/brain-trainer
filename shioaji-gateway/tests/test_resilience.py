@@ -15,6 +15,7 @@ import pytest
 @pytest.fixture(autouse=True)
 def _clean_state(monkeypatch):
     monkeypatch.setattr(gw, "_conn", {"api": None})
+    monkeypatch.setattr(gw, "_retired_apis", [])
     monkeypatch.setattr(gw, "_login_state", {
         "reconnecting": False, "failures": 0, "next_attempt_at": 0.0,
         "last_attempt": 0.0, "last_success": 0.0, "last_error": None, "generation": 0,
@@ -345,3 +346,73 @@ def test_bidask_old_session_cache_not_served(monkeypatch):
     d = gw.app.test_client().get("/bidask?code=2330").get_json()
     assert d["ok"] is False
     assert d["error"] == "訂閱中，請稍後重新查詢"
+
+
+# ── 連線清理（2026-11-16 451 Too Many Connections 事故）──────────
+
+def test_session_down_retires_old_api():
+    """session down 要保留舊 api 參考，不能直接丟掉（否則連線洩漏）。"""
+    api = SimpleNamespace(logout=lambda: None)
+    gw._conn["api"] = api
+    gw._handle_session_down(id(api))
+    assert gw._conn["api"] is None
+    assert gw._retired_apis == [api]
+    assert gw._last_session_down["count"] == 1
+
+
+def test_stale_session_down_does_not_retire_current_api():
+    """舊 session 的延遲回呼不可把新 api 放進退休清單。"""
+    old = SimpleNamespace(logout=lambda: None)
+    new = SimpleNamespace(logout=lambda: None)
+    gw._conn["api"] = new
+    gw._handle_session_down(id(old))
+    assert gw._retired_apis == []
+    assert gw._conn["api"] is new
+
+
+def test_relogin_logout_retired_apis(monkeypatch):
+    """_relogin 必須在登入前 logout 所有退休 session。"""
+    logged_out = []
+    retired = [SimpleNamespace(logout=lambda i=i: logged_out.append(i)) for i in range(3)]
+    monkeypatch.setattr(gw, "_retired_apis", retired)
+    new_api = SimpleNamespace(name="new", logout=lambda: None)
+    monkeypatch.setattr(gw, "_login", lambda: new_api)
+
+    # prior_api=None 代表走 session-down 路徑
+    assert gw._relogin(time.monotonic() + 5, None) is new_api
+    assert logged_out == [0, 1, 2]
+    assert gw._retired_apis == [], "取出後要清空，避免下次重複 logout"
+
+
+def test_relogin_does_not_logout_prior_api_twice(monkeypatch):
+    """prior_api 同時在退休清單時，只能 logout 一次。"""
+    calls = []
+    old = SimpleNamespace(
+        logout=lambda: calls.append("logout"),
+        clear_session_down_callback=lambda: None,
+        clear_on_tick_stk_v1_callback=lambda: None,
+    )
+    monkeypatch.setattr(gw, "_retired_apis", [old])
+    monkeypatch.setattr(gw, "_login", lambda: SimpleNamespace(logout=lambda: None))
+    gw._relogin(time.monotonic() + 5, old)
+    assert calls == ["logout"]
+
+
+def test_login_failure_logout_partial_api(monkeypatch):
+    """api.login() 失敗時要 logout 半登入的 api，避免 Solace 連線洩漏。"""
+    monkeypatch.setenv("SHIOAJI_API_KEY", "fake-key")
+    monkeypatch.setenv("SHIOAJI_SECRET_KEY", "fake-secret")
+    calls = []
+
+    def fail_login(**kw):
+        raise RuntimeError("451 Too Many Connections")
+
+    partial = SimpleNamespace(
+        login=fail_login,
+        logout=lambda: calls.append("logout"),
+    )
+    monkeypatch.setitem(sys.modules, "shioaji", SimpleNamespace(Shioaji=lambda **kw: partial))
+
+    with pytest.raises(RuntimeError, match="451"):
+        gw._login()
+    assert calls == ["logout"], "登入失敗也要關掉本次建立的 api"

@@ -1,14 +1,12 @@
 """
 週成交量前 20 標的篩選（排除美債 ETF）
-使用 TWSE/TPEX API 取得近一週日量，Shioaji 補全名稱。
+使用 TWSE/TPEX API 取得近一週日量與名稱；不登入 Shioaji（避免佔用帳號連線額度）。
 """
 import json
-import os
 import warnings
 from pathlib import Path
 
 import requests
-import shioaji as sj
 
 warnings.filterwarnings("ignore")
 
@@ -17,19 +15,6 @@ WATCHLIST_PATH = Path(__file__).parent / "watchlist.json"
 US_BOND_KEYWORDS = ["美債", "美國債", "US Bond", "UST", "Treasury"]
 US_BOND_CODES = {"00779B", "00780B", "00781B", "00782B", "00783B", "00784B",
                  "00720B", "00724B", "00725B", "00726B", "00727B"}
-
-_sj_api = None
-
-
-def _get_sj():
-    global _sj_api
-    if _sj_api is None:
-        _sj_api = sj.Shioaji(simulation=False)
-        _sj_api.login(
-            api_key=os.environ["SHIOAJI_API_KEY"],
-            secret_key=os.environ["SHIOAJI_SECRET_KEY"],
-        )
-    return _sj_api
 
 
 def _is_us_bond(code: str, name: str) -> bool:

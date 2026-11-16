@@ -22,18 +22,27 @@ def _get_api() -> sj.Shioaji:
         return _api
 
     api = sj.Shioaji()
-    api.login(
-        api_key=os.environ["SHIOAJI_API_KEY"],
-        secret_key=os.environ["SHIOAJI_SECRET_KEY"],
-    )
+    try:
+        api.login(
+            api_key=os.environ["SHIOAJI_API_KEY"],
+            secret_key=os.environ["SHIOAJI_SECRET_KEY"],
+        )
 
-    ca_path = os.environ.get("SHIOAJI_CA_PATH", "")
-    ca_passwd = os.environ.get("SHIOAJI_CA_PASSWD", "")
-    person_id = os.environ.get("SHIOAJI_PERSON_ID", "")
-    if ca_path and ca_passwd:
-        ok = api.activate_ca(ca_path=ca_path, ca_passwd=ca_passwd, person_id=person_id)
-        if not ok:
-            raise RuntimeError("CA 憑證啟動失敗，請確認路徑與密碼")
+        ca_path = os.environ.get("SHIOAJI_CA_PATH", "")
+        ca_passwd = os.environ.get("SHIOAJI_CA_PASSWD", "")
+        person_id = os.environ.get("SHIOAJI_PERSON_ID", "")
+        if ca_path and ca_passwd:
+            ok = api.activate_ca(ca_path=ca_path, ca_passwd=ca_passwd, person_id=person_id)
+            if not ok:
+                raise RuntimeError("CA 憑證啟動失敗，請確認路徑與密碼")
+    except BaseException:
+        # 登入 / CA 啟動失敗時要 logout，避免半登入的 Solace 連線洩漏
+        # （下單需要独立連線，不能走報價 gateway，只能确保失败时释出）。
+        try:
+            api.logout()
+        except Exception:
+            pass
+        raise
 
     _api = api
     return _api

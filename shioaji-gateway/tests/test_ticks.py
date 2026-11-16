@@ -15,6 +15,7 @@ import pytest
 @pytest.fixture(autouse=True)
 def _clean_state(monkeypatch):
     monkeypatch.setattr(gw, "_conn", {"api": None})
+    monkeypatch.setattr(gw, "_retired_apis", [])
     monkeypatch.setattr(gw, "_login_state", {
         "reconnecting": False, "failures": 0, "next_attempt_at": 0.0,
         "last_attempt": 0.0, "last_success": 0.0, "last_error": None, "generation": 3,

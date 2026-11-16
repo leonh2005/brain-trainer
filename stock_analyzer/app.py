@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 import os
 import sys
-import threading
-import time
 
 from dotenv import load_dotenv
 
@@ -14,7 +12,6 @@ from datetime import UTC, date, datetime, timedelta
 import feedparser
 import pandas as pd
 import requests
-import shioaji as sj
 import yfinance as yf
 from flask import Flask, jsonify, render_template, request
 from openai import OpenAI
@@ -73,42 +70,8 @@ FINMIND_TOKEN = os.environ["FINMIND_TOKEN"]
 DISCOUNT_RATE = 0.10
 TERMINAL_GROWTH = 0.03
 
-# ── Shioaji singleton（閒置自動登出，不長期佔用帳號連線額度）────
-_sj_api = None
-_sj_last_used = 0.0
-_sj_lock = threading.Lock()
-SJ_IDLE_TIMEOUT = 300   # 閒置超過 5 分鐘就放掉連線，把額度讓給 gateway 等服務
-
-def _get_sj():
-    global _sj_api, _sj_last_used
-    with _sj_lock:
-        _sj_last_used = time.time()
-        if _sj_api is None:
-            _sj_api = sj.Shioaji(simulation=False)
-            _sj_api.login(
-                api_key=os.environ["SHIOAJI_API_KEY"],
-                secret_key=os.environ["SHIOAJI_SECRET_KEY"],
-            )
-        return _sj_api
-
-
-def _sj_idle_watchdog():
-    """背景執行緒：閒置過久就登出。Shioaji 單帳號有同時連線數上限，
-    常駐服務抓著不放會排擠 gateway 等服務的額度（曾造成 451 Too Many Connections）。"""
-    global _sj_api
-    while True:
-        time.sleep(30)
-        with _sj_lock:
-            if _sj_api is not None and time.time() - _sj_last_used > SJ_IDLE_TIMEOUT:
-                try:
-                    _sj_api.logout()
-                    print('[sj] 閒置登出，釋放連線額度', flush=True)
-                except Exception:
-                    pass
-                _sj_api = None
-
-
-threading.Thread(target=_sj_idle_watchdog, daemon=True, name="sj-idle-watchdog").start()
+# ── 現價統一走 shioaji-gateway（2026-11-16：不再自行登入，避免 451 Too Many Connections）──
+SHIOAJI_GATEWAY = os.environ.get("SHIOAJI_GATEWAY", "http://localhost:5455")
 
 
 # ── 股票名稱對照表（中文搜尋用）────────────────────────────────
@@ -266,13 +229,12 @@ def fetch_fundamentals(code: str) -> dict:
     pe = per_latest.get("PER")
     pbr = per_latest.get("PBR")
 
-    # 現價（由 Shioaji analyze 取得，這裡用 Shioaji snapshot 補）
+    # 現價：走 shioaji-gateway 的 /snapshot，不再自行登入 Shioaji
     try:
-        api = _get_sj()
-        contract = api.Contracts.Stocks.get(code)
-        snap = api.snapshots([contract])[0] if contract else None
-        price = round(float(snap.close), 2) if snap else 0
-    except:
+        r = requests.get(f"{SHIOAJI_GATEWAY}/snapshot", params={"codes": code}, timeout=4)
+        snap = (r.json().get("data") or {}).get(code) or {}
+        price = round(float(snap["close"]), 2) if snap.get("close") else 0
+    except Exception:
         price = 0
 
     # DCF 估值
