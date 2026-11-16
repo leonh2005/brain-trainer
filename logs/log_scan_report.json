@@ -1,6 +1,6 @@
 {
-  "scanned_at": "2026-11-16 03:00:45",
-  "since": "2026-11-15 03:00:00",
+  "scanned_at": "2026-11-17 03:00:46",
+  "since": "2026-11-16 03:00:01",
   "results": {
     "市場儀表板": {
       "exists": true,
@@ -28,15 +28,15 @@
     },
     "財經新聞分析": {
       "exists": true,
-      "errors": 0,
-      "last_error": null,
-      "fix": null
+      "errors": 4,
+      "last_error": "2026-11-16 04:30:14,734 [WARNING] fetcher.ptt_fetcher: PTT index fetch failed: HTTPSConnectionPool(host='www.ptt.cc', port=443): Read timed out. (read timeout=10)",
+      "fix": "網路逾時 → 確認目標服務可達，或增加 timeout 設定"
     },
     "川普監測": {
       "exists": true,
-      "errors": 0,
-      "last_error": null,
-      "fix": null
+      "errors": 3,
+      "last_error": "2026-11-16 12:05:06,627 WARNING 分析失敗：Trump heads to Asia as pressure builds over Iran w — 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reaso",
+      "fix": "尚無對應建議，需人工判斷"
     },
     "持倉新聞(台股)": {
       "exists": true,
@@ -76,9 +76,9 @@
     },
     "當沖推播": {
       "exists": true,
-      "errors": 0,
-      "last_error": null,
-      "fix": null
+      "errors": 2,
+      "last_error": "[error] Shioaji 全市場掃描失敗，結束執行",
+      "fix": "尚無對應建議，需人工判斷"
     },
     "隔日沖推播": {
       "exists": true,
@@ -88,9 +88,9 @@
     },
     "盤中監控": {
       "exists": true,
-      "errors": 0,
-      "last_error": null,
-      "fix": null
+      "errors": 417,
+      "last_error": "[universe] 掃描失敗，維持現有 32 檔: ServerError: login: request #P2P/v:bcsolace01/Oryfkqqm/PYAPI/hj7FsrPYHW/1116/051532/137859000/LOGINING/_ code: 451, detail: Too Many Connections.",
+      "fix": "尚無對應建議，需人工判斷"
     },
     "蝦皮軟纖監測": {
       "exists": true,
