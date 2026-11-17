@@ -7,6 +7,7 @@
 import html
 import os
 import sys
+import time
 import warnings
 from datetime import date, datetime, timedelta
 
@@ -76,12 +77,36 @@ def _get_json(path: str, params: dict, timeout: int) -> dict:
     return data
 
 
-def get_top_volume_sj(n: int = 20) -> list:
-    """全市場快照（gateway），回傳今日成交量前 n 名（維持原本只掃上市的範圍）"""
-    try:
-        data = _get_json('/market_snapshot', {}, 40)
-    except Exception as e:
-        print(f'[gateway] 全市場快照失敗: {redact(e)}')
+# 重試只針對「短暫連線/忙碌」錯誤。2026-11-17 事故：09:10 掃描撞上開盤重登風暴，
+# gateway busy 一次就放棄 → 候選檔 5 天沒更新。這些錯誤等幾秒通常就好。
+_RETRYABLE_BUSY = ('busy', 'reconnecting', 'timeout', 'timed out', 'connection',
+                   'connection aborted', 'remote disconnected', 'login already')
+
+
+def _is_retryable_gateway_error(e) -> bool:
+    msg = str(e).lower()
+    return any(k in msg for k in _RETRYABLE_BUSY)
+
+
+def get_top_volume_sj(n: int = 20, retries: int = 3) -> list:
+    """全市場快照（gateway），回傳今日成交量前 n 名（維持原本只掃上市的範圍）
+
+    短暫的 busy/reconnecting/timeout 會重試（指數 backoff），避免開盤壅塞時
+    一次失敗就整輪放棄（2026-11-17 教訓）。
+    """
+    data = None
+    for attempt in range(retries):
+        try:
+            data = _get_json('/market_snapshot', {}, 40)
+            break
+        except Exception as e:
+            if attempt >= retries - 1 or not _is_retryable_gateway_error(e):
+                print(f'[gateway] 全市場快照失敗: {redact(e)}')
+                return []
+            wait = 2 ** attempt   # 1s, 2s
+            print(f'[gateway] 全市場快照第 {attempt + 1} 次失敗（{wait}s 後重試）: {redact(e)}')
+            time.sleep(wait)
+    if data is None:
         return []
     global _market_partial
     _market_partial = bool(data.get('partial'))

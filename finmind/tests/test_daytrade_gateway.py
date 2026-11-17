@@ -44,9 +44,39 @@ def test_top_volume_computes_amplitude_and_close_pos(monkeypatch):
 
 def test_top_volume_gateway_failure_returns_empty(monkeypatch):
     def boom(p, q, t):
-        raise RuntimeError('gateway down')
+        raise RuntimeError('gateway down')   # 非 busy 類，不重試
     monkeypatch.setattr(d, '_get_json', boom)
     assert d.get_top_volume_sj() == []
+
+
+def test_top_volume_retries_on_busy_then_succeeds(monkeypatch):
+    """開盤 busy 重試後成功，不應整輪放棄（2026-11-17 事故）。"""
+    calls = {'n': 0}
+
+    def flaky(p, q, t):
+        calls['n'] += 1
+        if calls['n'] < 3:
+            raise RuntimeError('gateway busy: queue wait exceeded')
+        return {'ok': True, 'items': [_snap('2330')]}
+
+    monkeypatch.setattr(d, '_get_json', flaky)
+    monkeypatch.setattr(d.time, 'sleep', lambda s: None)   # 不真的等
+    assert [r['code'] for r in d.get_top_volume_sj()] == ['2330']
+    assert calls['n'] == 3
+
+
+def test_top_volume_busy_all_retries_fail_returns_empty(monkeypatch):
+    """busy 重試耗盡仍回空，不無限重試。"""
+    calls = {'n': 0}
+
+    def boom(p, q, t):
+        calls['n'] += 1
+        raise RuntimeError('gateway busy')
+
+    monkeypatch.setattr(d, '_get_json', boom)
+    monkeypatch.setattr(d.time, 'sleep', lambda s: None)
+    assert d.get_top_volume_sj() == []
+    assert calls['n'] == 3
 
 
 def test_daily_bars_filters_today_and_caches(monkeypatch):
