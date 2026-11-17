@@ -416,3 +416,30 @@ def test_login_failure_logout_partial_api(monkeypatch):
     with pytest.raises(RuntimeError, match="451"):
         gw._login()
     assert calls == ["logout"], "登入失敗也要關掉本次建立的 api"
+
+
+# ── 慢查詢逾時不得觸發重登（2026-11-17 開盤 storm）──────────────
+
+@pytest.mark.parametrize("url", [
+    "/daily_ohlcv?code=2330&days=5",
+    "/intraday?code=2330",
+    "/kbars?code=2330&days=5",
+    "/big_orders?code=2330",
+    "/scanner?type=pct&count=5",
+    "/market_snapshot",
+])
+def test_slow_query_timeout_does_not_mark_down(monkeypatch, url):
+    """慢查詢逾時只回錯，不可 mark_down → 重登（開盤 meas 40→50 storm 教訓）。"""
+    monkeypatch.setattr(gw, "_conn", {"api": SimpleNamespace(logout=lambda: None)})
+    captured = {}
+
+    def fake_run(fn, **kw):
+        captured.update(kw)
+        raise TimeoutError("Timeout Topic: api/v1/data/kbars, Timeout: 14037ms")
+
+    monkeypatch.setattr(gw, "_run", fake_run)
+
+    r = gw.app.test_client().get(url)
+    assert r.status_code == 200
+    assert r.get_json().get("ok") is False
+    assert captured.get("mark_down_on_timeout") is False, f"{url} 必須關閉逾時重登"

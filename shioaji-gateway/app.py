@@ -634,7 +634,8 @@ def kbars():
                 timeout=_sdk_timeout_ms(KBARS_TIMEOUT_MS),
             )
             return [float(c) for c in kb.Close if c]
-        return jsonify({"ok": True, "closes": _run(work, op="kbars", budget_s=12)})
+        return jsonify({"ok": True, "closes": _run(
+            work, op="kbars", budget_s=12, mark_down_on_timeout=False)})
     except Exception as e:
         return jsonify({"ok": False, "error": redact(e)})
 
@@ -677,7 +678,11 @@ def daily_ohlcv():
                     bar["volume"] += int(v)
             bars = [daily[d] for d in sorted(daily.keys())]
             return bars[-days:]
-        bars = _run(work, priority=priority, op="daily_ohlcv", budget_s=20)
+        # 歷史日K 是慢查詢，逾時不代表 session 死了。2026-11-17 開盤證實：
+        # 一旦逾時就 mark_down，重登期間其他請求跟著失敗 → 再逾時 → 再重登，
+        # 幾分鐘內 gen 從 40 衝到 50、ma_monitor 全部取價失敗。
+        bars = _run(work, priority=priority, op="daily_ohlcv", budget_s=20,
+                    mark_down_on_timeout=False)
         bars = _append_today_via_yfinance(code, bars)
         return jsonify({"ok": True, "bars": bars})
     except Exception as e:
@@ -739,7 +744,8 @@ def intraday():
                     "volume": int(volume),
                 })
             return points
-        return jsonify({"ok": True, "points": _run(work, op="intraday", budget_s=12)})
+        return jsonify({"ok": True, "points": _run(
+            work, op="intraday", budget_s=12, mark_down_on_timeout=False)})
     except Exception as e:
         return jsonify({"ok": False, "error": redact(e)})
 
@@ -782,7 +788,8 @@ def big_orders():
                 "big_count": big_count,
                 "super_count": super_count,
             }
-        return jsonify({"ok": True, **_run(work, op="big_orders", budget_s=18)})
+        return jsonify({"ok": True, **_run(
+            work, op="big_orders", budget_s=18, mark_down_on_timeout=False)})
     except Exception as e:
         return jsonify({"ok": False, "error": redact(e)})
 
@@ -827,7 +834,8 @@ def scanner():
                             # volume/amount 是當筆量，排行要看日累計
                             "volume": int(it.total_volume or 0), "amount": int(it.total_amount or 0)})
             return out
-        return jsonify({"ok": True, "items": _run(work, op="scanner", budget_s=25, retry=False)})
+        return jsonify({"ok": True, "items": _run(
+            work, op="scanner", budget_s=25, retry=False, mark_down_on_timeout=False)})
     except Exception as e:
         return jsonify({"ok": False, "error": redact(e)})
 
@@ -891,7 +899,7 @@ def market_snapshot():
         return items, partial
     try:
         items, partial = _run(work, priority=1, op="market_snapshot",
-                              budget_s=25, retry=False)
+                              budget_s=25, retry=False, mark_down_on_timeout=False)
         payload = {"ok": True, "items": items}
         if partial:
             payload["partial"] = True
