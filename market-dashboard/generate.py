@@ -196,6 +196,10 @@ BB_RSS_SOURCES = (
     "https://www.bing.com/news/search?q=BofA+bull+bear+indicator&format=RSS",
     "https://www.bing.com/news/search?q=%E7%BE%8E%E9%93%B6%E7%89%9B%E7%86%8A%E6%8C%87%E6%A0%87&format=RSS&setmkt=zh-TW",
 )
+# 2026-11-17：Google/Bing 的新聞標題被 10 月舊聞淹沒，且數值多在內文不在標題。
+# Newsquawk blog RSS 每日更新、句式固定（"Bull & Bear Indicator fell to 7.1 (from 7.2)"），
+# 是目前唯一能穩定抓到最新讀數的來源。用獨立的 parser 解析（見 _fetch_bb_newsquawk）。
+BB_NEWSQUAWK_RSS = "https://newsquawk.com/blog/feed.rss"
 
 
 # 指標值：0.0–10.0。{1,2} 是必要的——只寫 \d\.\d 會把 "10.0" 截成 "0.0"
@@ -261,6 +265,48 @@ def _fetch_bb_from_rss(url: str) -> list[tuple[str, float]]:
     return out
 
 
+def _fetch_bb_newsquawk(url: str) -> list[tuple[str, float]]:
+    """抓 Newsquawk blog RSS 的「Bull & Bear Indicator X (from Y)」，回傳 [(pubDate, X)]。
+
+    新聞標題抓不到最新讀數時的主力來源。Newsquawk 的 Daily US Opening News 固定用
+    "Bull & Bear Indicator fell/rose to 7.1 (from 7.2)" 句式，數值寫在 <li> 內文
+    （不在 title），且 ET.tostring 會再轉義一層，所以直接對 unescape 後的原始 RSS
+    全文做「逐 item 區塊」比對。取 X（新值），不取 Y（前值）。
+    """
+    from email.utils import parsedate_to_datetime
+    from html import unescape
+
+    headers = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36"}
+    try:
+        r = requests.get(url, headers=headers, timeout=15)
+        txt = unescape(r.text)
+    except Exception:
+        return []
+
+    # 動詞限縮在漲跌相關，避免抓到門檻或其他數字
+    pat = re.compile(
+        r"Bull\s*[&和]?\s*(?:and\s*)?Bear\s*Indicator\s+"
+        r"(?:fell|slid|slipped|eased|declined|dropped|rose|climbed|risen|up|down)\s+"
+        r"to\s+(\d{1,2}\.\d)\s*(?:\(from\s*\d{1,2}\.\d\))?",
+        re.I,
+    )
+    out: list[tuple[str, float]] = []
+    # 用 <item> 切塊，每塊內找 pubDate 與讀數
+    for block in re.findall(r"<item>(.*?)</item>", txt, re.S | re.I):
+        mpub = re.search(r"<pubDate>([^<]+)</pubDate>", block, re.I)
+        mval = pat.search(block)
+        if not mpub or not mval:
+            continue
+        v = float(mval.group(1))
+        if not (0.0 <= v <= 10.0):
+            continue
+        try:
+            out.append((parsedate_to_datetime(mpub.group(1).strip()).strftime("%Y-%m-%d"), v))
+        except Exception:
+            continue
+    return out
+
+
 def _write_bb_cache(history: list) -> None:
     """原子寫入 bb_cache.json（mkstemp + os.replace）。
 
@@ -308,6 +354,8 @@ def fetch_bofa_bull_bear() -> dict:
     found: list[tuple[str, float]] = []
     for src in BB_RSS_SOURCES:
         found.extend(_fetch_bb_from_rss(src))
+    # Newsquawk 內文含最新讀數（新聞標題來源抓不到時的主力）
+    found.extend(_fetch_bb_newsquawk(BB_NEWSQUAWK_RSS))
 
     if found:
         latest_date, latest_value = max(found, key=lambda x: x[0])

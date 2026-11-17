@@ -52,6 +52,7 @@ def _with_cache(tmp_path, monkeypatch, history, found):
     cache.write_text(json.dumps({"history": history}))
     monkeypatch.setattr(generate, "BB_CACHE", cache)
     monkeypatch.setattr(generate, "_fetch_bb_from_rss", lambda url: found)
+    monkeypatch.setattr(generate, "_fetch_bb_newsquawk", lambda url: [])  # 不打真實 RSS
     result = generate.fetch_bofa_bull_bear()          # 先執行才會寫檔
     return json.loads(cache.read_text())["history"], result
 
@@ -132,6 +133,7 @@ def test_corrupted_cache_falls_back_to_empty(tmp_path, monkeypatch):
     cache.write_text('{"history": [{"date"')
     monkeypatch.setattr(generate, "BB_CACHE", cache)
     monkeypatch.setattr(generate, "_fetch_bb_from_rss", lambda url: [])
+    monkeypatch.setattr(generate, "_fetch_bb_newsquawk", lambda url: [])
     result = generate.fetch_bofa_bull_bear()
     assert result["value"] is None
 
@@ -141,3 +143,27 @@ def test_future_dated_cache_not_treated_as_fresh(tmp_path, monkeypatch):
     _, result = _with_cache(
         tmp_path, monkeypatch, [{"date": "2999-01-01", "value": 7.4}], [])
     assert result["days_old"] is not None and result["days_old"] < 0
+
+
+# ── Newsquawk 來源（2026-11-17 新增）─────────────────────────────
+
+def test_newsquawk_parses_fell_to_from(monkeypatch):
+    """抓 "Indicator fell to 7.1 (from 7.2)" 取新值 7.1，不取前值 7.2。"""
+    rss = '''<?xml version="1.0"?><rss><channel>
+      <item><title>Newsquawk Daily</title>
+      <pubDate>Fri, 30 Oct 2026 10:51:00 +0000</pubDate>
+      <description>BofA weekly flow data. Bull &amp; Bear Indicator fell to 7.1 (from 7.2).</description>
+      </item></channel></rss>'''
+    monkeypatch.setattr(generate.requests, "get", lambda *a, **k: type("R", (), {"text": rss})())
+    found = generate._fetch_bb_newsquawk("http://fake")
+    assert found == [("2026-10-30", 7.1)]
+
+
+def test_newsquawk_ignores_other_numbers(monkeypatch):
+    """沒有 Indicator 漲跌句式就不抓，避免把門檻/其他數字當讀數。"""
+    rss = '''<rss><channel><item>
+      <pubDate>Fri, 30 Oct 2026 10:51:00 +0000</pubDate>
+      <description>Fed funds at 5.5%, sell threshold 8.0, no indicator reading here.</description>
+      </item></channel></rss>'''
+    monkeypatch.setattr(generate.requests, "get", lambda *a, **k: type("R", (), {"text": rss})())
+    assert generate._fetch_bb_newsquawk("http://fake") == []
