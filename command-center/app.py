@@ -10,6 +10,7 @@ import time
 from datetime import datetime
 
 import agent as agent_mod
+import bonsai as bonsai_mod
 import httpx
 import jobs as jobs_mod
 import route_planner
@@ -426,6 +427,30 @@ def jobs_status(jid: str):
         return jobs_mod.status(jid)
     except KeyError:
         raise HTTPException(404, f'unknown job: {jid}')
+
+
+# ── Bonsai 27B 本地模型控制（只允許本機回環；指令寫死在 bonsai.py）──────────
+def _bonsai_guard(request: Request):
+    if not bonsai_mod.is_local(request.client.host):
+        raise HTTPException(403, '僅限本機操作')
+
+
+@app.get('/api/bonsai/status')
+def bonsai_status(request: Request):
+    _bonsai_guard(request)
+    return bonsai_mod.status()
+
+
+@app.post('/api/bonsai/start')
+def bonsai_start(request: Request):
+    _bonsai_guard(request)
+    return bonsai_mod.start()
+
+
+@app.post('/api/bonsai/stop')
+def bonsai_stop(request: Request):
+    _bonsai_guard(request)
+    return bonsai_mod.stop()
 
 
 @app.get('/api/stock/{symbol}')

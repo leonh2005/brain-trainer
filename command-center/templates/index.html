@@ -404,6 +404,7 @@ const CARDS=[
   {id:'chips',   ic:'📊', title:'籌碼追蹤',   span:'wide', url:'/api/signals/chips', render:renderChips, site:'/svc/5850/'},
   {id:'ma',      ic:'📈', title:'均線警報',   span:'full', url:'/api/signals/ma', render:renderMA, site:'/ma-watchlist'},
   {id:'futures', ic:'🧪', title:'期貨基差驗證', span:'', url:'/api/signals/futures', render:renderFutures},
+  {id:'bonsai',  ic:'🦉', title:'Bonsai 27B 本地模型', span:'', custom:'bonsai', render:renderBonsai},
 ];
 const LIFE=[
   {id:'portfolio',ic:'💼', title:'投資組合', span:'wide', url:'/api/portfolio', render:renderPortfolio, site:'/svc/5800/'},
@@ -423,7 +424,49 @@ const LIFE=[
 
 const CARD_POLL_MS=60000;
 const cardLastUpdated={};
+/* ── Bonsai 27B 本地模型卡（自訂：開/關 Terminal + 載入/卸載）── */
+let bonsaiState={loaded:false,terminal_open:false};
+function renderBonsai(){
+  const box=el('div');
+  box.innerHTML='<div id="bc-body"></div>';
+  paintBonsai();
+  return box;
+}
+function paintBonsai(){
+  const body=$('#cb-bonsai'); if(!body)return;
+  const s=bonsaiState;
+  body.innerHTML=`<div class="mini" style="color:var(--muted);line-height:1.7">
+      ${s.loaded?'🟢 模型已載入':'⚪ 模型未載入'}${s.terminal_open?'　·　Terminal 已開啟':''}<br>
+      <span style="font-size:10px">prism-ml/bonsai-27b · Qwen3.6-27B · 2-bit</span>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:11px">
+      <button class="btn" id="bonsai-toggle"><span class="k">${s.loaded?'⏹':'▶'}</span>${s.loaded?'停用（登出並關閉 Terminal）':'啟用（開 Terminal 載入）'}</button>
+    </div>`;
+  const btn=$('#bonsai-toggle');
+  btn.addEventListener('click',()=>toggleBonsai(btn));
+}
+function syncBonsai(){
+  fetch('/api/bonsai/status').then(r=>r.json()).then(s=>{
+    const changed=(s.loaded!==bonsaiState.loaded)||(s.terminal_open!==bonsaiState.terminal_open);
+    bonsaiState=s;
+    if(changed)paintBonsai();
+  }).catch(()=>{});
+}
+function toggleBonsai(btn){
+  if(btn.disabled)return;
+  btn.disabled=true;const orig=btn.innerHTML;btn.innerHTML='<span class="k">…</span>處理中';
+  const doStop=bonsaiState.loaded||bonsaiState.terminal_open;
+  fetch(`/api/bonsai/${doStop?'stop':'start'}`,{method:'POST'}).then(r=>r.json()).then(res=>{
+    if(doStop)toast(res.stopped?'⏹ 已登出模型並關閉 Terminal':'⚠️ 停止失敗');
+    else toast(res.started?'▶ 已開啟 Terminal 並開始載入模型（約 30 秒）':'⚠️ '+(res.reason||'啟用失敗'));
+    setTimeout(syncBonsai,doStop?1500:35000);  // 載入較久，等 35 秒再查狀態
+  }).catch(e=>toast('❌ '+e.message)).finally(()=>{
+    btn.disabled=false;btn.innerHTML=orig;
+  });
+}
+
 function loadCard(d){
+  if(d.custom==='bonsai'){ syncBonsai(); return; }
   fetch(d.url).then(r=>r.json()).then(res=>{
     // stale 也是狀態的一部分：跨日或斷流翻轉時 updated（檔案 mtime）不會變，
     // 只比 mtime 的話卡片會永遠停在舊階段、連警示都不出現
