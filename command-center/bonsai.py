@@ -11,7 +11,8 @@ import time
 LMS = os.path.expanduser('~/.lmstudio/bin/lms')
 MODEL = 'prism-ml/bonsai-27b'
 CONTEXT = '16384'
-LOAD_CMD = f'{LMS} load {MODEL} -c {CONTEXT} -y'
+# 載入完成後接著進入 lms chat 互動模式，使用者才能在同一個 Terminal 視窗跟模型對話
+LOAD_CMD = f'{LMS} load {MODEL} -c {CONTEXT} -y && {LMS} chat {MODEL}'
 UNLOAD_CMD = f'{LMS} unload {MODEL}'
 
 _lock = threading.Lock()

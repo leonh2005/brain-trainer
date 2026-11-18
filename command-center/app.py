@@ -11,6 +11,7 @@ from datetime import datetime
 
 import agent as agent_mod
 import bonsai as bonsai_mod
+import deepseek_pro as deepseek_pro_mod
 import httpx
 import jobs as jobs_mod
 import route_planner
@@ -453,6 +454,30 @@ def bonsai_stop(request: Request):
     return bonsai_mod.stop()
 
 
+# ── DeepSeek V4 Pro 越獄版 本地模型控制（只允許本機回環；指令寫死在 deepseek_pro.py）──
+def _deepseek_pro_guard(request: Request):
+    if not deepseek_pro_mod.is_local(request.client.host):
+        raise HTTPException(403, '僅限本機操作')
+
+
+@app.get('/api/deepseek-pro/status')
+def deepseek_pro_status(request: Request):
+    _deepseek_pro_guard(request)
+    return deepseek_pro_mod.status()
+
+
+@app.post('/api/deepseek-pro/start')
+def deepseek_pro_start(request: Request):
+    _deepseek_pro_guard(request)
+    return deepseek_pro_mod.start()
+
+
+@app.post('/api/deepseek-pro/stop')
+def deepseek_pro_stop(request: Request):
+    _deepseek_pro_guard(request)
+    return deepseek_pro_mod.stop()
+
+
 @app.get('/api/stock/{symbol}')
 def stock_query(symbol: str):
     if not (symbol.isdigit() and 4 <= len(symbol) <= 6):
@@ -483,7 +508,7 @@ def get_card_order():
 
 @app.post('/api/card-order')
 def set_card_order(req: CardOrder):
-    if req.key not in ('signals', 'life', 'tools', 'blocks'):
+    if req.key not in ('signals', 'life', 'tools', 'blocks', 'local-models'):
         raise HTTPException(400, f'unknown key: {req.key}')
     data = {}
     try:
