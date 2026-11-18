@@ -399,6 +399,20 @@ def test_short_a_rejects_low_volume():
     assert state.stage == "idle"
 
 
+def test_short_a_uses_recent_volume_max_when_breakout_bar_is_low_volume():
+    """A 轉對稱防護：大量在前一根、突破那根縮量時仍要觸發 A（2026-11-18）。"""
+    big_rally = (100.0, 100.5, 99.9, 100.45, 3000)   # 大量拉抬（但沒破 100.5 高點）
+    # 突破那根：high 101.0 > 前高，長上影、收在低點附近，但量只有 800
+    low_vol_breakout = (100.15, 101.0, 100.1, 100.15, 800)
+    df = make_df(flat_bars_short() + [big_rally, low_vol_breakout])
+    state = VShapeState()
+
+    events = feed_short(df, state, VShapeParams())
+
+    assert [e.stage for e in events] == ["A"], "大量在前一根，近 3 根量比仍應成立 A 轉"
+    assert state.stage == "A"
+
+
 def test_short_b_triggers_below_vwap_and_a_low():
     df = make_df(flat_bars_short() + [SHORT_A, SHORT_B])
     state = VShapeState()
