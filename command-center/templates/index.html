@@ -267,6 +267,7 @@ a.tk:hover .code{color:var(--accent-soft)}
       <a class="nav-item" data-tab="life"><span class="ni">💼</span>投組追蹤</a>
       <a class="nav-item" data-tab="ops"><span class="ni">⚙️</span>出行操作</a>
       <a class="nav-item" data-tab="tools"><span class="ni">🧰</span>模型工具</a>
+      <a class="nav-item" data-tab="automations"><span class="ni">⏱️</span>自動任務</a>
     </nav>
   </aside>
   <div class="sidebar-overlay" id="sidebar-overlay"></div>
@@ -313,6 +314,12 @@ a.tk:hover .code{color:var(--accent-soft)}
         <div class="grid" id="local-models"></div>
         <div class="sec-label">🧰 工具與管理</div>
         <div class="grid" id="tools"></div>
+      </section>
+
+      <section class="tab-page" id="tab-automations" data-page="automations">
+        <div class="sec-label first">⏱️ 自動/跟蹤任務</div>
+        <div id="automations-summary" class="actions" style="margin-bottom:14px"></div>
+        <div class="grid" id="automations"></div>
       </section>
     </main>
   </div>
@@ -1488,6 +1495,59 @@ function mountRoute(){
   $('#rt-go').addEventListener('click',rtGo);
   $('#rt-dest').addEventListener('keydown',e=>{if(e.key==='Enter')rtGo()});
 }
+/* ── 自動/跟蹤任務 ── */
+function renderAutomations(data){
+  const sum=$('#automations-summary'), grid=$('#automations');
+  if(!sum||!grid) return;
+  const s=data.summary||{};
+  sum.innerHTML=[
+    `<span class="pill"><span class="dot up"></span>執行中 ${s.active||0}</span>`,
+    `<span class="pill">已載入 ${s.loaded||0} / ${s.total||0}</span>`,
+    `<span class="pill">常駐 ${s.keepalive||0}</span>`,
+    `<span class="pill">排程 ${s.scheduled||0}</span>`,
+    s.interval?`<span class="pill">間隔 ${s.interval}</span>`:''
+  ].join('');
+  const groups=[
+    {key:'keepalive', ic:'🟢', title:'常駐/監控任務'},
+    {key:'scheduled', ic:'⏰', title:'排程任務'},
+    {key:'interval',  ic:'🔁', title:'間隔執行'},
+    {key:'runAtLoad', ic:'🚀', title:'載入時啟動'},
+    {key:'manual',    ic:'🖐️', title:'手動/其他'},
+  ];
+  const items=data.items||[];
+  grid.innerHTML='';
+  groups.forEach(g=>{
+    const list=items.filter(x=>x.kind===g.key);
+    if(!list.length) return;
+    const c=el('div','card fade-in');
+    c.dataset.id='auto-'+g.key;
+    const rows=list.map(x=>{
+      const dotCls=x.active?'dot up':'dot';
+      const state=x.active?'執行中':(x.loaded?'已載入':'未載入');
+      const exit=(x.exit!=null && x.exit!=='0' && x.exit!==0)?` <span class="mini" style="color:var(--amber)">exit ${esc(x.exit)}</span>`:'';
+      return `<div class="row" style="align-items:flex-start;gap:10px">
+        <span class="${dotCls}" style="margin-top:6px;flex:none"></span>
+        <div style="min-width:0;flex:1">
+          <div style="display:flex;flex-wrap:wrap;gap:6px;align-items:center"><span class="tk">${esc(x.name)}</span><span class="mini">${esc(state)}</span>${exit}</div>
+          <div class="mini" style="margin-top:2px">排程：${esc(x.schedule||'—')}</div>
+          ${x.log?`<div class="mini" style="margin-top:1px;color:var(--faint);word-break:break-all">log: ${esc(x.log)}</div>`:''}
+        </div>
+      </div>`;
+    }).join('');
+    c.innerHTML=`<div class="card-head"><span class="ic">${g.ic}</span><h3>${esc(g.title)}</h3><span class="ts">${list.length} 項</span></div><div class="card-body"><div class="row-grid">${rows}</div></div>`;
+    grid.appendChild(c);
+    addResizeBtn(c,'cc-automations');
+  });
+  if(!grid.children.length){
+    grid.innerHTML='<div class="card"><div class="card-body"><div class="empty">沒有找到自動/跟蹤任務</div></div></div>';
+  }
+}
+function loadAutomations(){
+  fetch('/api/automations').then(r=>r.json()).then(renderAutomations).catch(e=>{
+    const grid=$('#automations'); if(grid) grid.innerHTML=`<div class="card"><div class="card-body"><div class="err">讀取失敗：${esc(e.message)}</div></div></div>`;
+  });
+}
+
 (async function boot(){
   let order={};
   try{ order=await (await fetch('/api/card-order')).json(); }catch(e){}
@@ -1509,6 +1569,8 @@ function mountRoute(){
   mount('#local-models',applySavedOrder(order,'local-models',LOCAL_MODELS,d=>d.id),'cc-order-local-models');
   mountTools(applySavedOrder(order,'tools',TOOLS,t=>t.title));
   mountRoute();
+  loadAutomations();
+  setInterval(loadAutomations, 60000);
   enableSort('#signals','signals');
   enableSort('#life','life');
   enableSort('#local-models','local-models');

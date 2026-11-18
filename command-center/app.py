@@ -946,6 +946,141 @@ def portfolio_test(req: ProbeRequest):
         raise HTTPException(500, '抓取結果格式錯誤')
 
 
+@app.get('/api/automations')
+def automations_list():
+    """列出已設定的自動/跟蹤任務（~/Library/LaunchAgents/com.steven.*）。"""
+    import glob
+    import plistlib
+
+    WDAY = {0: '日', 1: '一', 2: '二', 3: '三', 4: '四', 5: '五', 6: '六', 7: '日'}
+
+    def fmt_cal_one(d):
+        if not isinstance(d, dict):
+            return str(d)
+        wd = d.get('Weekday')
+        h = d.get('Hour')
+        m = d.get('Minute')
+        dom = d.get('Day')
+        mon = d.get('Month')
+        bits = []
+        if wd is not None:
+            bits.append('週' + WDAY.get(int(wd), str(wd)))
+        if mon is not None:
+            bits.append(f'{mon}月')
+        if dom is not None:
+            bits.append(f'{dom}日')
+        if h is not None and m is not None:
+            bits.append(f"{int(h):02d}:{int(m):02d}")
+        elif h is not None:
+            bits.append(f"{int(h):02d}:00")
+        elif m is not None:
+            bits.append(f"每小時 {int(m):02d}分")
+        return ' '.join(bits) if bits else str(d)
+
+    def fmt_cal(v):
+        if v is None:
+            return None
+        if isinstance(v, list):
+            parts = [fmt_cal_one(x) for x in v]
+            if len(parts) > 8:
+                return '；'.join(parts[:8]) + f' …等{len(parts)}次'
+            return '；'.join(parts)
+        return fmt_cal_one(v)
+
+    def fmt_interval(sec):
+        if not sec:
+            return None
+        try:
+            sec = int(sec)
+        except Exception:
+            return str(sec)
+        if sec % 3600 == 0:
+            return f'每 {sec // 3600} 小時'
+        if sec % 60 == 0:
+            return f'每 {sec // 60} 分鐘'
+        return f'每 {sec} 秒'
+
+    def kind_of(p):
+        if p.get('KeepAlive'):
+            return 'keepalive', '常駐/監控'
+        if p.get('StartInterval'):
+            return 'interval', '間隔執行'
+        if p.get('StartCalendarInterval'):
+            return 'scheduled', '排程'
+        if p.get('RunAtLoad'):
+            return 'runAtLoad', '載入時啟動'
+        return 'manual', '手動'
+
+    def sched_of(p):
+        if p.get('StartCalendarInterval'):
+            return fmt_cal(p['StartCalendarInterval'])
+        if p.get('StartInterval'):
+            return fmt_interval(p['StartInterval'])
+        if p.get('RunAtLoad'):
+            return '載入/開機時啟動'
+        return '—'
+
+    loaded = {}
+    try:
+        out = subprocess.run(['launchctl', 'list'], capture_output=True, text=True, timeout=15).stdout
+        for line in out.splitlines()[1:]:
+            parts = line.split('\t')
+            if len(parts) >= 3:
+                pid, status, label = parts[0].strip(), parts[1].strip(), parts[2].strip()
+                loaded[label] = {'pid': pid, 'exit': status}
+    except Exception:
+        pass
+
+    la = os.path.expanduser('~/Library/LaunchAgents')
+    items = []
+    for path in sorted(glob.glob(os.path.join(la, 'com.steven.*.plist'))):
+        base = os.path.basename(path)
+        if '.bak' in base or base.endswith('~'):
+            continue
+        try:
+            with open(path, 'rb') as f:
+                p = plistlib.load(f)
+        except Exception:
+            continue
+        label = p.get('Label') or base.replace('.plist', '')
+        st = loaded.get(label)
+        pid = st['pid'] if st else None
+        active = bool(pid and pid.lstrip('-').isdigit() and int(pid) > 0)
+        kind, kind_label = kind_of(p)
+        log = p.get('StandardOutPath') or p.get('StandardErrorPath') or ''
+        prog = p.get('ProgramArguments') or ([p.get('Program')] if p.get('Program') else [])
+        cmd = ' '.join(str(x) for x in prog) if prog else ''
+        if len(cmd) > 160:
+            cmd = cmd[:157] + '…'
+        items.append({
+            'label': label,
+            'name': label.removeprefix('com.steven.'),
+            'kind': kind,
+            'kind_label': kind_label,
+            'schedule': sched_of(p) or '—',
+            'loaded': label in loaded,
+            'active': active,
+            'pid': int(pid) if active else None,
+            'exit': st['exit'] if st and st.get('exit') not in (None, '', '0') else (st['exit'] if st else None),
+            'runAtLoad': bool(p.get('RunAtLoad')),
+            'keepAlive': bool(p.get('KeepAlive')),
+            'log': log,
+            'cmd': cmd,
+        })
+
+    order = {'keepalive': 0, 'interval': 1, 'scheduled': 2, 'runAtLoad': 3, 'manual': 4}
+    items.sort(key=lambda x: (order.get(x['kind'], 9), x['label']))
+    summary = {
+        'total': len(items),
+        'loaded': sum(1 for x in items if x['loaded']),
+        'active': sum(1 for x in items if x['active']),
+        'keepalive': sum(1 for x in items if x['kind'] == 'keepalive'),
+        'scheduled': sum(1 for x in items if x['kind'] == 'scheduled'),
+        'interval': sum(1 for x in items if x['kind'] == 'interval'),
+    }
+    return {'summary': summary, 'items': items}
+
+
 class ChatRequest(BaseModel):
     prompt: str
 
