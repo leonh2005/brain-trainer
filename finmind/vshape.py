@@ -1,7 +1,10 @@
 """V 型反轉三階段偵測（1 分 K），支援做多（V）與做空（倒 V）兩個方向。
 
-做多（direction="long"）判定定義（2026-11-06 指定）：
+做多（direction="long"）判定定義（2026-11-06 指定；2026-11-18 調整 A 量能/收位）：
   A 疑似止跌：跌破近 N 根低點、長下影線、收盤位置偏高、量能增加
+    量能判定：最近 vol_lookback 根內的「最大量比」（而非當根量比），
+    以抓「大量殺盤→縮量打底→反彈」的 V 轉（如 0050 2026-11-18 10:19，
+    大量在前一根 10:18，創低的 10:19 本身縮量）。B/C 仍用當根量比，維持嚴格。
   B 初步反轉：收盤站回 VWAP、突破 A 段高點、量能擴大
   C 回測確認：回踩 VWAP 附近守住、低點高於 A 段低點、再突破 B 段高點
 
@@ -34,8 +37,9 @@ class VShapeParams:
     early_bars: int = 20        # 開盤後前幾根視為「早期」，改用短基準
     early_lookback: int = 5     # 早期用的回看根數（開盤就急拉/急殺時不至於無基準可用）
     shadow_ratio: float = 0.60  # 影線占全長比例下限
-    close_pos: float = 0.75     # 收盤位置下限（做多從低點算、做空從高點算）
+    close_pos: float = 0.65     # 收盤位置下限（做多從低點算、做空從高點算；2026-11-18 從 0.75 下调，抓創低後收在中間的 V 轉）
     vol_mult: float = 2.0       # 量能相對前 5 根均量的倍數下限
+    vol_lookback: int = 3       # A 階段量能看「最近幾根內的最大量比」（2026-11-18：抓大量殺盤後縮量打底的 V 轉）
     vwap_tol_up: float = 0.002    # C 回測 VWAP 的近端容差（做多 +0.2%／做空 -0.2%）
     vwap_tol_down: float = 0.005  # C 回測 VWAP 的遠端容差（做多 -0.5%／做空 +0.5%）
     a_expiry_bars: int = 30       # A 成立後幾根內沒進 B 就失效
@@ -105,6 +109,28 @@ def _vwap(df: pd.DataFrame) -> float:
     if cum_vol <= 0:
         return float("nan")
     return float((df["close"].astype(float) * vol).cumsum().iloc[-1] / cum_vol)
+
+
+def _volume_ratio_max(df: pd.DataFrame, lookback: int) -> float:
+    """最近 lookback 根（含當根）中，各根相對其前 5 根均量的最大量比。
+
+    2026-11-18：V 轉最常見的型態是「大量殺盤 → 縮量打底 → 反彈」。
+    原本 A 階段要求「創低那根本身大量」，會漏掉創低那是縮量的情況（如 0050 10:19，
+    大量在前一根 10:18）。改看最近幾根最大量比，就能抓到這種型態，且不必放寬
+    其他門檻（避免假訊號暴增）。
+
+    df 的索引即 K 棒順序；只取有足夠前 5 根歷史的那些根來算，避免開盤早期偏差。
+    """
+    n = len(df)
+    if n == 0:
+        return 0.0
+    vol = df["volume"].astype(float)
+    best = 0.0
+    for j in range(max(5, n - lookback), n):
+        avg5 = vol.iloc[j - 5:j].mean()
+        if avg5 > 0:
+            best = max(best, vol.iloc[j] / avg5)
+    return best
 
 
 def _bar_ts(df: pd.DataFrame) -> str:
@@ -179,11 +205,13 @@ def _step_long(df, state, params, emit, ctx) -> VShapeEvent | None:
     if state.stage == "idle":
         lookback = params.lookback_at(n)
         recent_low = float(df["low"].iloc[-(lookback + 1):-1].min())
+        # A 量能看「最近幾根最大量比」，抓大量殺盤後縮量打底的型態（2026-11-18）
+        a_vol_ratio = _volume_ratio_max(df, params.vol_lookback)
         if (
             low < recent_low
             and lower_shadow >= params.shadow_ratio
             and close_pos >= params.close_pos
-            and vol_ratio >= params.vol_mult
+            and a_vol_ratio >= params.vol_mult
         ):
             state.stage = "A"
             state.a_low, state.a_high, state.a_ts = low, high, ts
@@ -192,7 +220,7 @@ def _step_long(df, state, params, emit, ctx) -> VShapeEvent | None:
                 ctx, state, emit, "A",
                 lower_shadow_pct=round(lower_shadow * 100, 1),
                 close_pos_pct=round(close_pos * 100, 1),
-                volume_ratio=round(vol_ratio, 1),
+                volume_ratio=round(a_vol_ratio, 1),
                 recent_low=recent_low,
                 bar_low=low,
                 lookback=lookback,
@@ -264,11 +292,13 @@ def _step_short(df, state, params, emit, ctx) -> VShapeEvent | None:
     if state.stage == "idle":
         lookback = params.lookback_at(n)
         recent_high = float(df["high"].iloc[-(lookback + 1):-1].max())
+        # A 量能看「最近幾根最大量比」，抓大量拉抬後縮量打底的倒 V（2026-11-18）
+        a_vol_ratio = _volume_ratio_max(df, params.vol_lookback)
         if (
             high > recent_high
             and upper_shadow >= params.shadow_ratio
             and close_pos >= params.close_pos
-            and vol_ratio >= params.vol_mult
+            and a_vol_ratio >= params.vol_mult
         ):
             state.stage = "A"
             state.a_low, state.a_high, state.a_ts = low, high, ts
@@ -277,7 +307,7 @@ def _step_short(df, state, params, emit, ctx) -> VShapeEvent | None:
                 ctx, state, emit, "A",
                 upper_shadow_pct=round(upper_shadow * 100, 1),
                 close_pos_pct=round(close_pos * 100, 1),
-                volume_ratio=round(vol_ratio, 1),
+                volume_ratio=round(a_vol_ratio, 1),
                 recent_high=recent_high,
                 bar_high=high,
                 lookback=lookback,

@@ -60,6 +60,24 @@ def test_a_stage_triggers_on_breakdown_with_long_lower_shadow():
     assert state.a_high == 100.0
 
 
+def test_a_stage_uses_recent_volume_max_when_breakdown_bar_is_low_volume():
+    """大量在前一根、創低那根縮量時仍要觸發 A（2026-11-18 0050 10:19 情境）。
+
+    前一根量 3000（≥2×前5均量），創低那根量只有 800（<2×）；
+    舊邏輯「當根量比」會漏掉，新邏輯「近 3 根最大量比」要抓到。
+    """
+    big_down = (99.9, 100.0, 99.5, 99.4, 3000)     # 大量殺盤（但沒破 99.5 低點）
+    # 創低那根：low 99.0 < 前低，長下影（open 99.85 → 下影 85%）、收在高位，但量只有 800
+    low_vol_breakdown = (99.85, 100.0, 99.0, 99.9, 800)
+    df = make_df(flat_bars() + [big_down, low_vol_breakdown])
+    state = VShapeState()
+
+    events = feed(df, state, VShapeParams())
+
+    assert [e.stage for e in events] == ["A"], "大量在前一根，近 3 根量比仍應成立 A"
+    assert state.stage == "A"
+
+
 def test_a_stage_rejects_shallow_lower_shadow():
     # 下影線 (99.6-99.4)/1.0 = 20% < 60%
     bar = (99.8, 100.4, 99.4, 99.6, 2500)
