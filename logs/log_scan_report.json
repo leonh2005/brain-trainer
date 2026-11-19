@@ -1,6 +1,6 @@
 {
-  "scanned_at": "2026-11-19 03:00:46",
-  "since": "2026-11-18 03:00:00",
+  "scanned_at": "2026-11-20 03:00:48",
+  "since": "2026-11-19 03:00:00",
   "results": {
     "市場儀表板": {
       "exists": true,
@@ -28,14 +28,14 @@
     },
     "財經新聞分析": {
       "exists": true,
-      "errors": 295,
-      "last_error": "2026-11-19 03:00:03,949 [WARNING] fetcher.reddit_fetcher: Reddit fetch failed for r/stocks: 404 Client Error: Not Found for url: https://www.reddit.com/r/stocks/hot/.rss",
+      "errors": 288,
+      "last_error": "2026-11-20 02:47:18,888 [WARNING] fetcher.reddit_fetcher: Reddit fetch failed for r/wallstreetbets: 404 Client Error: Not Found for url: https://www.reddit.com/r/wallstreetbets/hot/.rss",
       "fix": "尚無對應建議，需人工判斷"
     },
     "川普監測": {
       "exists": true,
-      "errors": 20,
-      "last_error": "2026-11-18 13:29:17,269 WARNING RSS fetch failed: https://news.google.com/rss/search?q=Trump+tech+OR+semiconductor+OR+AI+chip+export&hl=en-US&gl=US&ceid=US:en — Remote end closed connection without response",
+      "errors": 7,
+      "last_error": "2026-11-19 12:35:03,675 WARNING 分析失敗：Trump Confirms He Raised AI With Xi at Shenzhen Di — 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reaso",
       "fix": "尚無對應建議，需人工判斷"
     },
     "持倉新聞(台股)": {
@@ -46,9 +46,9 @@
     },
     "持倉新聞(美股)": {
       "exists": true,
-      "errors": 1,
-      "last_error": "2026-11-18 21:00:23,328 WARNING GOLD 分析失敗，換下一個模型：gemini-2.5-flash-lite: Error code: 429 - [{'error': {'code': 429, 'message': 'You exceeded your current",
-      "fix": "尚無對應建議，需人工判斷"
+      "errors": 0,
+      "last_error": null,
+      "fix": null
     },
     "HolaQuant": {
       "exists": true,
@@ -76,9 +76,9 @@
     },
     "當沖推播": {
       "exists": true,
-      "errors": 5,
-      "last_error": "[gateway] 日K 2408 失敗: HTTPConnectionPool(host='localhost', port=5455): Read timed out. (read timeout=15)",
-      "fix": "網路逾時 → 確認目標服務可達，或增加 timeout 設定"
+      "errors": 2,
+      "last_error": "[gateway] 全市場快照第 2 次失敗（2s 後重試）: gateway busy: queue wait exceeded",
+      "fix": "尚無對應建議，需人工判斷"
     },
     "隔日沖推播": {
       "exists": true,
@@ -88,9 +88,9 @@
     },
     "盤中監控": {
       "exists": true,
-      "errors": 585,
-      "last_error": "[subscribe] 6147 失敗（該檔今日無即時資料）: gateway not logged in",
-      "fix": "尚無對應建議，需人工判斷"
+      "errors": 57,
+      "last_error": "[snapshot] 失敗（連續 1 次）: HTTPConnectionPool(host='localhost', port=5455): Read timed out. (read timeout=8)",
+      "fix": "網路逾時 → 確認目標服務可達，或增加 timeout 設定"
     },
     "蝦皮軟纖監測": {
       "exists": true,
