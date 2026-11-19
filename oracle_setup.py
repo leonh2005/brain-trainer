@@ -21,12 +21,13 @@ COMPARTMENT_ID = "ocid1.tenancy.oc1..aaaaaaaa33in6usn64ykyh2ji34rqmdxx3tpgk5xbug
 AVAILABILITY_DOMAIN = "BULW:AP-OSAKA-1-AD-1"
 IMAGE_ID = "ocid1.image.oc1.ap-osaka-1.aaaaaaaauk2tyjjxtmfuymyrhiyxxentmj3ykig3zn6zso3266tp6afkxzwa"  # Ubuntu 24.04 aarch64
 SHAPE = "VM.Standard.A1.Flex"
-OCPUS = 1
-MEMORY_IN_GBS = 6
-BOOT_VOLUME_GB = 50  # 實測 API 下限 50 GB（映像 46.6 GB 是下限的由來，但 API 只收 >= 50）
-TARGET_COUNT = 3  # 3 台 → 算力 3/4 OCPU、磁碟 50×3 + 47 = 197/200 GB
+OCPUS = 4
+MEMORY_IN_GBS = 24
+BOOT_VOLUME_GB = 50  # 實測 API 下限 50 GB
+TARGET_COUNT = 1  # 1 台 → 4 OCPU / 24 GB / 50 GB
 INSTANCE_PREFIX = "line-bot-a1"
 SSH_KEY_PATH = os.path.expanduser("~/.ssh/oracle_line_bot")
+FAULT_DOMAINS = ["FAULT-DOMAIN-1", "FAULT-DOMAIN-2", "FAULT-DOMAIN-3"]  # 同 AD 輪替，提高落點多樣性
 # Oracle launch_instance 限額實測約 20 次/小時（1174 輪 log 統計：每小時成功
 # 19-20 次、429 38 次；每次 429 不消耗配額）。因此每輪只發「一個」請求，
 # 180 秒一輪 = 20 次/小時，剛好用滿額度又不會連續撞 429。
@@ -148,9 +149,9 @@ def setup_network(network_client):
     return subnet.id
 
 
-def create_instance(compute_client, subnet_id, ssh_public_key, name):
+def create_instance(compute_client, subnet_id, ssh_public_key, name, fault_domain=None):
     """嘗試建立一台 VM"""
-    details = oci.core.models.LaunchInstanceDetails(
+    details_kwargs = dict(
         compartment_id=COMPARTMENT_ID,
         availability_domain=AVAILABILITY_DOMAIN,
         display_name=name,
@@ -167,8 +168,13 @@ def create_instance(compute_client, subnet_id, ssh_public_key, name):
             subnet_id=subnet_id,
             assign_public_ip=True
         ),
-        metadata={"ssh_authorized_keys": ssh_public_key}
+        metadata={"ssh_authorized_keys": ssh_public_key},
     )
+    if fault_domain:
+        ac = oci.core.models.LaunchInstanceAvailabilityConfigDetails()
+        ac.fault_domain = fault_domain
+        details_kwargs["availability_config"] = ac
+    details = oci.core.models.LaunchInstanceDetails(**details_kwargs)
     return compute_client.launch_instance(
         details,
         # 同一台固定 token：逾時重試時伺服器端視為同一請求，不會重複建出第二台同名 VM
@@ -282,6 +288,7 @@ def main():
     attempt = 0
     permanent_errors = 0
     rr = 0                      # round-robin 游標：每輪輪流試不同的機器
+    fd_rr = 0                   # fault domain 游標：每輪輪流試不同 FD
     while True:
         attempt += 1
         ours = list_ours(compute_client)
@@ -308,24 +315,30 @@ def main():
         if missing:
             name = missing[rr % len(missing)]
             rr += 1
+            fd = FAULT_DOMAINS[fd_rr % len(FAULT_DOMAINS)]
+            fd_rr += 1
             try:
-                instance = create_instance(compute_client, subnet_id, ssh_public_key, name)
-                log(f"✅ {name} 建立成功（{instance.lifecycle_state}）")
+                instance = create_instance(compute_client, subnet_id, ssh_public_key, name, fault_domain=fd)
+                log(f"✅ {name} 建立成功（{instance.lifecycle_state}，FD={fd}）")
                 ours[name] = instance
                 created_now.append(name)
                 permanent_errors = 0
             except oci.exceptions.ServiceError as e:
                 if e.status in (429, 500):
                     reason = "請求頻率過高" if e.status == 429 else "容量不足"
-                    log(f"   {name}：{reason}")
+                    log(f"   {name}：{reason}（FD={fd}）")
+                    permanent_errors = 0
+                elif e.status == 400 and e.code in ("QuotaExceeded", "LimitExceeded"):
+                    # 服務額度/配額未生效（如剛升級 PAYG）時可能暫時出現，持續重試等待生效
+                    log(f"   {name}：HTTP {e.status} {e.code} {e.message}（FD={fd}）")
                     permanent_errors = 0
                 else:
                     # 不 raise：raise 會讓每 60 秒重啟都卡在同一台，其他台永遠輪不到
-                    log(f"   {name}：HTTP {e.status} {e.code} {e.message}")
+                    log(f"   {name}：HTTP {e.status} {e.code} {e.message}（FD={fd}）")
                     permanent_errors += 1
             except oci.exceptions.RequestException as e:
                 # 網路層（逾時／連線中斷）不是 ServiceError 的子類，漏接會讓整支腳本 crash
-                log(f"   {name}：網路錯誤 {type(e).__name__}，稍後重試")
+                log(f"   {name}：網路錯誤 {type(e).__name__}，稍後重試（FD={fd}）")
                 permanent_errors = 0
 
         # 搶到一台就先報，不要等三台全部到齊（剩下兩台可能還要等很久）
