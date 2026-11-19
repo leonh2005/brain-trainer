@@ -28,7 +28,7 @@ _cache = {"data": None, "ts": 0}
 TTL = 900  # 15 分鐘
 
 
-def _get(url, timeout=15):
+def _get(url, timeout=8):
     req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
     with urllib.request.urlopen(req, timeout=timeout) as r:
         return r.read().decode("utf-8", "replace")
@@ -130,7 +130,7 @@ def _tw_earnings():
         req = urllib.request.Request(
             "https://mopsov.twse.com.tw/mops/web/ajax_t100sb02_1", data=body,
             headers={"User-Agent": "Mozilla/5.0", "Content-Type": "application/x-www-form-urlencoded"})
-        with urllib.request.urlopen(req, timeout=15) as r:
+        with urllib.request.urlopen(req, timeout=8) as r:
             html = r.read().decode("utf-8", "replace")
         rows = re.findall(
             r"text-align:left !important;'>(\d{3,6})</td><td>([^<]*)</td>\s*"
@@ -300,21 +300,26 @@ def _leader_meetings():
 
 
 def _build():
+    from concurrent.futures import ThreadPoolExecutor
+
+    tasks = {
+        "market": _market,
+        "cpi_us": lambda: _cpi_yoy("CPIAUCSL"),
+        "cpi_core_us": lambda: _cpi_yoy("CPILFESL"),
+        "fed_rate": _fed_rate,
+        "events": _events,
+        "war": _war_news,
+        "tw": _tw_econ,
+    }
     data = {}
-    for key, fn in [
-        ("market", _market),
-        ("cpi_us", lambda: _cpi_yoy("CPIAUCSL")),
-        ("cpi_core_us", lambda: _cpi_yoy("CPILFESL")),
-        ("fed_rate", _fed_rate),
-        ("events", _events),
-        ("war", _war_news),
-        ("tw", _tw_econ),
-    ]:
-        try:
-            data[key] = fn()
-        except Exception as e:
-            data[key] = None
-            data.setdefault("errors", {})[key] = str(e)
+    with ThreadPoolExecutor(max_workers=len(tasks)) as ex:
+        future_map = {ex.submit(fn): key for key, fn in tasks.items()}
+        for fut, key in future_map.items():
+            try:
+                data[key] = fut.result(timeout=20)
+            except Exception as e:
+                data[key] = None
+                data.setdefault("errors", {})[key] = str(e)
     return data
 
 

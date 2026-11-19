@@ -989,6 +989,16 @@
       "lows_pct": 1.41,
       "spx_above_ma50": false,
       "triggered": false
+    },
+    {
+      "date": "2026-11-18",
+      "highs": 2,
+      "lows": 8,
+      "total": 436,
+      "highs_pct": 0.45,
+      "lows_pct": 1.83,
+      "spx_above_ma50": false,
+      "triggered": false
     }
   ]
 }

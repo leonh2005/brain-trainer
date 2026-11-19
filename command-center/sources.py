@@ -263,9 +263,24 @@ def _enrich_track_results(results: list, checked_at: str) -> list:
 def daytrade():
     p = f'{CC}/telebot/data/daytrade_candidates.json'
     d = _read_json(p)
-    for c in d:
+    if isinstance(d, dict):
+        candidates = d.get('candidates', [])
+        short_candidates = d.get('short_candidates', [])
+    elif isinstance(d, list):
+        candidates = d
+        short_candidates = []
+    else:
+        candidates = []
+        short_candidates = []
+    for c in candidates:
+        c.setdefault('side', 'long')
         c['sector'] = _stock_sector(c.get('code', ''))
         c['streak'] = _price_streak(c.get('code', ''))
+    for c in short_candidates:
+        c.setdefault('side', 'short')
+        c['sector'] = _stock_sector(c.get('code', ''))
+        c['streak'] = _price_streak(c.get('code', ''))
+    out = {'candidates': candidates, 'short_candidates': short_candidates}
     track_path = f'{CC}/telebot/data/daytrade_track.json'
     if os.path.exists(track_path):
         with open(track_path, encoding='utf-8') as f:
@@ -275,11 +290,15 @@ def daytrade():
             latest_date = checked_dates[-1]
             entry = track[latest_date]
             checked_at = entry.get('checked_at')
-            d = {'candidates': d, 'track': {
+            results = _enrich_track_results(entry.get('track_results', []), checked_at)
+            for r in results:
+                if 'win' not in r and 'up' in r:
+                    r['win'] = (not r['up']) if r.get('side') == 'short' else r['up']
+            out['track'] = {
                 'date': latest_date, 'checked_at': checked_at,
-                'results': _enrich_track_results(entry.get('track_results', []), checked_at),
-            }}
-    return d, _mtime(p)
+                'results': results,
+            }
+    return out, _mtime(p)
 
 
 SWING_DAILY_BUDGET = 1_000_000  # 隔日沖每日投入總額，平均分配到當天所有候選標的
@@ -473,7 +492,10 @@ def _track_history(track_path: str, r_stop_pct: float | None = None):
             for r in results:
                 risk = _stop_loss_amount(r['baseline'], r['buy_shares'], r_stop_pct) if r.get('net_pnl') is not None and r.get('buy_shares') else None
                 r['r_multiple'] = round(r['net_pnl'] / risk, 2) if risk else None
-        hits = sum(1 for r in results if r.get('up'))
+        for r in results:
+            if 'win' not in r and 'up' in r:
+                r['win'] = (not r['up']) if r.get('side') == 'short' else r['up']
+        hits = sum(1 for r in results if r.get('win', r.get('up')))
         day_net_pnl = sum(r['net_pnl'] for r in results if r.get('net_pnl') is not None)
         day_cost = sum(r['baseline'] * r['buy_shares'] for r in results if r.get('net_pnl') is not None and 'buy_shares' in r)
         day_pct = round(day_net_pnl / day_cost * 100, 2) if day_cost else None

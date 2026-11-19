@@ -743,11 +743,13 @@ function renderTrackGrouped(box,track,headText){
 
   track.results.slice().sort((a,b)=>(b.net_pnl||0)-(a.net_pnl||0)).forEach(r=>{
     const row=el('div','row');
-    const mark=r.up?'✅':'❌';
+    const win = (r.win!=null ? r.win : r.up);
+    const mark=win?'✅':'❌';
     const pct=r.pct;
+    const sideTag = r.side==='short' ? '<span class="badge short" style="margin-right:4px">空</span>' : '';
     const icons=[mktIcon(r),sectorIcon(r)].filter(Boolean).join(' ');
-    row.innerHTML=`<span>${mark} ${tkLink(r.name,r.code)}${supportBtn(r.code)}${icons?' '+icons:''}</span><span class="spacer"></span>`
-      +`<span class="chg ${r.up?'up':'down'}">${pct!=null?fmt(pct)+'%':'—'}</span>`;
+    row.innerHTML=`<span>${mark} ${sideTag}${tkLink(r.name,r.code)}${supportBtn(r.code)}${icons?' '+icons:''}</span><span class="spacer"></span>`
+      +`<span class="chg ${win?'up':'down'}">${pct!=null?fmt(pct)+'%':'—'}</span>`;
     box.appendChild(row);
   });
 }
@@ -864,11 +866,16 @@ function renderPullback(d){
   return box;
 }
 function renderDaytrade(d){
-  const arr=Array.isArray(d)?d:((d&&d.candidates)||[]);
+  const longArr=Array.isArray(d)?d:((d&&d.candidates)||[]);
+  const shortArr=(!Array.isArray(d)&&d&&d.short_candidates)||[];
   const box=el('div');
-  if(!arr.length){
-    box.appendChild(el('div','empty','今日無當沖候選'));
-  } else {
+  const renderGroup = (arr, label, side) => {
+    if(!arr.length) return false;
+    if(label){
+      const h=el('div','mini',label);
+      h.style.cssText='margin-top:10px;font-weight:600;color:var(--muted);font-size:12px';
+      box.appendChild(h);
+    }
     const groups=groupBySector(arr,item=>(typeof item==='string'?item:item.code),item=>(typeof item==='object'?item.sector:''));
     groups.forEach((items,sector)=>{
       const head=el('div','mini','🏷️ '+sector);
@@ -886,9 +893,10 @@ function renderDaytrade(d){
         const scoreTxt=sc.total?` <span class="chg ${sc.full?'up':'down'}" style="font-size:11px">${sc.passed}/${sc.total}</span>`:'';
         const priceTxt=close!=null?` <span style="font-family:var(--mono);color:var(--text-dim)">${fmt(close)}</span>`:'';
         const streakBadge=streakTxt(item)?' '+streakTxt(item):'';
-        const b=el('span','pill'+(inBand?' price-band':inBandHi?' price-band-hi':''));
-        b.innerHTML=tkLink(name,code,' style="font-size:12px"')+priceTxt+scoreTxt+streakBadge+supportBtn(code);
-        if(inBand||inBandHi){
+        const sideTag=side==='short'?' <span class="badge short">空</span>':'';
+        const b=el('span','pill'+(inBand&&side!=='short'?' price-band':inBandHi&&side!=='short'?' price-band-hi':''));
+        b.innerHTML=sideTag+tkLink(name,code,' style="font-size:12px"')+priceTxt+scoreTxt+streakBadge+supportBtn(code);
+        if(side!=='short' && (inBand||inBandHi)){
           const wrap=el('div','price-band-wrap'+(inBandHi?' price-band-hi':''));
           const label=el('div','price-band-label'+(inBandHi?' price-band-hi':''),inBandHi?'💎 1000-1500價格帶':'💰 100-150價格帶');
           wrap.appendChild(label);
@@ -900,15 +908,22 @@ function renderDaytrade(d){
       });
       box.appendChild(pills);
     });
+    return true;
+  };
+  const hasShort=shortArr.length>0;
+  const hasLong=renderGroup(longArr, hasShort?'🟢 多方候選':'', 'long');
+  const hasShortRendered=renderGroup(shortArr, '🔻 空方候選', 'short');
+  if(!hasLong && !hasShortRendered){
+    box.appendChild(el('div','empty','今日無當沖候選'));
   }
 
   const track=!Array.isArray(d)&&d&&d.track;
   if(track&&track.results&&track.results.length){
-    const hit=track.results.filter(r=>r.up).length;
+    const hit=track.results.filter(r=>(r.win!=null?r.win:r.up)).length;
     const checkedTime=track.checked_at?track.checked_at.slice(11,16):'?';
     const pnlSum=track.results.reduce((s,r)=>s+(r.net_pnl!=null?r.net_pnl:0),0);
     renderTrackGrouped(box,{...track,href:'/daytrade-history'},
-      `${track.date} 候選（${checkedTime}比對）上漲：${hit}/${track.results.length} 淨損益${pnlSum>=0?'+':''}${Math.round(pnlSum)}（看歷史紀錄）`);
+      `${track.date} 候選（${checkedTime}比對）命中：${hit}/${track.results.length} 淨損益${pnlSum>=0?'+':''}${Math.round(pnlSum)}（看歷史紀錄）`);
   }
   return box;
 }

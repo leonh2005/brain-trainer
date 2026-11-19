@@ -391,12 +391,12 @@ def main():
     else:
         lines.append("❌ 今日無符合當沖條件標的\n建議觀望或等待盤中突破訊號")
 
-    # 空方觀察：回測無 edge，只列條件符合者，不列入候選、不追蹤
+    # 空方觀察：納入候選與追蹤結算
     if short_list:
         lines.append("\n🔻 <b>空方觀察</b>（跌幅&gt;1.5%＋振幅3~5%＋量&gt;500張）")
         for s in short_list[:10]:
             lines.append(f"　{s['code']} {html.escape(s['name'])}  {s['close']:.1f}  {s['chg']:+.1f}%  振{s['amp']:.1f}%  量{s['vol']:,}張")
-        lines.append("⚠️ 此名單回測平均為負（7 個月全虧），僅供觀察，不建議交易")
+        lines.append("⚠️ 空方候選已納入追蹤結算（歷史回測平均為負，數據僅供參考）")
 
     lines.append("\n⚠️ 數據參考，非投資建議，買賣自負")
 
@@ -404,29 +404,41 @@ def main():
     send_telegram(msg)
     print(msg)
 
-    # 儲存候選清單供盤中監控腳本使用
+    # 儲存候選清單供盤中監控/卡片顯示使用（含多方與空方）
     import json
 
     candidate_list = [{
-        'code': c['code'], 'name': c['name'], 'close': c['close'],
+        'code': c['code'], 'name': c['name'], 'close': c['close'], 'side': 'long',
         'checks': {'量前20': True, '3%≤振幅<5%': True, '近5日均量≥3000張': True, '漲幅≥1.5%': True},  # 單一AND篩選，能列入候選就是全通過
     } for c in candidates]
+    short_candidate_list = [{
+        'code': s['code'], 'name': s['name'], 'close': s['close'], 'side': 'short',
+        'chg_pct': s['chg'], 'amp_pct': s['amp'], 'vol_k': s['vol'],
+        'checks': {'跌幅≥1.5%': True, '3%≤振幅<5%': True, '量≥500張': True},
+    } for s in short_list[:10]]
+    payload = {'candidates': candidate_list, 'short_candidates': short_candidate_list}
     with open(os.path.join(os.path.dirname(__file__), '..', 'telebot', 'data', 'daytrade_candidates.json'), 'w') as f:
-        json.dump(candidate_list, f, ensure_ascii=False)
-    print(f'[daytrade] 候選清單已寫入 telebot/data/daytrade_candidates.json: {[c["code"] for c in candidate_list]}')
+        json.dump(payload, f, ensure_ascii=False)
+    print(f'[daytrade] 候選清單已寫入 telebot/data/daytrade_candidates.json: long={[c["code"] for c in candidate_list]} short={[c["code"] for c in short_candidate_list]}')
 
-    # 存進當沖 10:30 追蹤紀錄（供 check_daytrade_track.py 比對是否仍上漲）
+    # 存進當沖 10:30 追蹤紀錄（供 check_daytrade_track.py 比對結算，含多/空方）
     try:
         track_path = os.path.join(os.path.dirname(__file__), '..', 'telebot', 'data', 'daytrade_track.json')
         track = {}
         if os.path.exists(track_path):
             with open(track_path, encoding='utf-8') as f:
                 track = json.load(f)
+        track_candidates = [
+            {'code': c['code'], 'name': c['name'], 'side': 'long',
+             'baseline': round(c['close'] / (1 + c['chg_pct'] / 100), 2)}
+            for c in candidates
+        ] + [
+            {'code': s['code'], 'name': s['name'], 'side': 'short',
+             'baseline': round(s['close'] / (1 + s['chg'] / 100), 2)}
+            for s in short_list[:10]
+        ]
         track[TODAY] = {
-            'candidates': [
-                {'code': c['code'], 'name': c['name'], 'baseline': round(c['close'] / (1 + c['chg_pct'] / 100), 2)}
-                for c in candidates
-            ],
+            'candidates': track_candidates,
             'checked': False, 'checked_at': None, 'track_results': [],
         }
         with open(track_path, 'w', encoding='utf-8') as f:
