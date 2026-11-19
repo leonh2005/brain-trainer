@@ -2,7 +2,7 @@
 Oracle Cloud 自動建立 ARM VM 腳本
 - 沿用既有 VCN、子網路、Internet Gateway
 - 產生 SSH 金鑰
-- 持續嘗試建立 ARM VM（1 OCPU / 6 GB × 3 台），直到成功為止
+- 持續嘗試建立目標 A1 VM，直到成功為止（規格由 OCPUS/MEMORY_IN_GBS/TARGET_COUNT 控制）
 """
 
 import fcntl
@@ -30,9 +30,10 @@ SSH_KEY_PATH = os.path.expanduser("~/.ssh/oracle_line_bot")
 FAULT_DOMAINS = ["FAULT-DOMAIN-1", "FAULT-DOMAIN-2", "FAULT-DOMAIN-3"]  # 同 AD 輪替，提高落點多樣性
 # Oracle launch_instance 限額實測約 20 次/小時（1174 輪 log 統計：每小時成功
 # 19-20 次、429 38 次；每次 429 不消耗配額）。因此每輪只發「一個」請求，
-# 180 秒一輪 = 20 次/小時，剛好用滿額度又不會連續撞 429。
-# 2026-11-08 由 200 秒調成 180 秒（使用者要求加密；再短只會換來 429，有效次數不變）。
-RETRY_INTERVAL = 180
+# 基準 180 秒一輪 = 20 次/小時，剛好用滿額度又不會連續撞 429。
+# 2026-11-08 由 200 秒調成 180 秒；動態間隔：429 自動退避、容量不足/正常回應維持基準。
+BASE_RETRY_INTERVAL = 180
+MAX_RETRY_INTERVAL = 600
 LAUNCHD_LABEL = "com.steven.oracle-a1-grab"
 LOG_DIR = os.path.expanduser("~/CCProject/logs")
 LOCK_PATH = f"{LOG_DIR}/.oracle_a1_grab.lock"  # 防止 LaunchAgent 與手動執行併發，建出重複 VM
@@ -284,11 +285,12 @@ def main():
     subnet_id = setup_network(network_client)
 
     # 每輪都重新問 OCI 現況，不依賴記憶體狀態，中斷重跑也不會漏掉任何一台。
-    # 只有「3 台全部 RUNNING 且都拿到公開 IP」才算完成，逾時不算。
+    # 只有「目標台數全部 RUNNING 且都拿到公開 IP」才算完成，逾時不算。
     attempt = 0
     permanent_errors = 0
     rr = 0                      # round-robin 游標：每輪輪流試不同的機器
     fd_rr = 0                   # fault domain 游標：每輪輪流試不同 FD
+    retry_interval = BASE_RETRY_INTERVAL
     while True:
         attempt += 1
         ours = list_ours(compute_client)
@@ -309,10 +311,12 @@ def main():
 
         # 1. 缺的就建 —— 每輪只發一個請求（限額約 20 次/小時）
         #    同時發 3 個只會讓第 2、3 台永遠吃 429，對成功率沒有幫助。
-        #    輪替而非固定第一台：三台同 AD 同 shape，容量狀態一致，輪替不會降低
-        #    命中率；但若第一台一直吃永久錯誤，固定寫法會讓它卡住整支腳本。
+        #    輪替而非固定第一台：容量狀態相近時輪替不會降低命中率；
+        #    但若第一台一直吃永久錯誤，固定寫法會讓它卡住整支腳本。
         created_now = []
+        launch_attempted = False
         if missing:
+            launch_attempted = True
             name = missing[rr % len(missing)]
             rr += 1
             fd = FAULT_DOMAINS[fd_rr % len(FAULT_DOMAINS)]
@@ -323,29 +327,45 @@ def main():
                 ours[name] = instance
                 created_now.append(name)
                 permanent_errors = 0
+                retry_interval = BASE_RETRY_INTERVAL
             except oci.exceptions.ServiceError as e:
-                if e.status in (429, 500):
-                    reason = "請求頻率過高" if e.status == 429 else "容量不足"
-                    log(f"   {name}：{reason}（FD={fd}）")
+                if e.status == 429:
+                    log(f"   {name}：請求頻率過高（FD={fd}）")
                     permanent_errors = 0
+                    # 429 不消耗有效配額，退避後再試以恢復節奏
+                    retry_interval = min(
+                        max(retry_interval * 2, BASE_RETRY_INTERVAL + 120),
+                        MAX_RETRY_INTERVAL,
+                    )
+                elif e.status == 500:
+                    log(f"   {name}：容量不足（FD={fd}）")
+                    permanent_errors = 0
+                    # 真實容量檢查結果，維持基準節奏
+                    retry_interval = BASE_RETRY_INTERVAL
                 elif e.status == 400 and e.code in ("QuotaExceeded", "LimitExceeded"):
                     # 服務額度/配額未生效（如剛升級 PAYG）時可能暫時出現，持續重試等待生效
                     log(f"   {name}：HTTP {e.status} {e.code} {e.message}（FD={fd}）")
                     permanent_errors = 0
+                    retry_interval = BASE_RETRY_INTERVAL
                 else:
                     # 不 raise：raise 會讓每 60 秒重啟都卡在同一台，其他台永遠輪不到
                     log(f"   {name}：HTTP {e.status} {e.code} {e.message}（FD={fd}）")
                     permanent_errors += 1
+                    retry_interval = BASE_RETRY_INTERVAL
             except oci.exceptions.RequestException as e:
                 # 網路層（逾時／連線中斷）不是 ServiceError 的子類，漏接會讓整支腳本 crash
                 log(f"   {name}：網路錯誤 {type(e).__name__}，稍後重試（FD={fd}）")
                 permanent_errors = 0
+                retry_interval = BASE_RETRY_INTERVAL
+        else:
+            # 本輪未嘗試 launch（僅等待就緒/IP），無需退避
+            retry_interval = BASE_RETRY_INTERVAL
 
-        # 搶到一台就先報，不要等三台全部到齊（剩下兩台可能還要等很久）
+        # 搶到一台就先報，不要等目標全部到齊
         if created_now:
             done = sum(1 for n in target_names if n in ours)
             tail = ("繼續搶剩下的" if done < TARGET_COUNT
-                    else "三台都建好了，等 RUNNING／IP")
+                    else "目標都建好了，等 RUNNING／IP")
             notify(f"🟡 Oracle 搶機進度 {done}/{TARGET_COUNT}\n"
                    f"本輪建立：{', '.join(created_now)}\n{tail}")
 
@@ -358,13 +378,13 @@ def main():
                         compute_client.start_instance(ours[name].id)
                     except oci.exceptions.ServiceError as e:
                         log(f"   啟動失敗：{e.code} {e.message}")
-            # 注意：搶到後不加速重試。限額約 20 次/小時，連發必定 429；
-            # 而 list_instances 有最終一致性延遲，無延遲 continue 還會對同一台重複 launch。
-            log(f"{RETRY_INTERVAL} 秒後再確認...")
-            time.sleep(RETRY_INTERVAL)
+            # 注意：限額約 20 次/小時；429 時自動退避，容量不足/正常時維持基準節奏。
+            # list_instances 有最終一致性延遲，無延遲 continue 可能對同一台重複 launch。
+            log(f"{retry_interval} 秒後再確認...")
+            time.sleep(retry_interval)
             continue
 
-        # 2. 三台都 RUNNING，取 IP；有缺就再等一輪，不寫完成檔
+        # 2. 全部 RUNNING，取 IP；有缺就再等一輪，不寫完成檔
         report = []
         all_ready = True
         for name in target_names:
@@ -377,8 +397,9 @@ def main():
                 log(f"⚠️ {name}：尚未取得公開 IP")
 
         if not all_ready:
-            log(f"{RETRY_INTERVAL} 秒後再確認 IP...")
-            time.sleep(RETRY_INTERVAL)
+            # 僅等待 IP，不涉及 launch 配額
+            log(f"{BASE_RETRY_INTERVAL} 秒後再確認 IP...")
+            time.sleep(BASE_RETRY_INTERVAL)
             continue
         break
 
