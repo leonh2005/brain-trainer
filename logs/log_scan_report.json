@@ -1,6 +1,6 @@
 {
-  "scanned_at": "2026-11-20 03:00:48",
-  "since": "2026-11-19 03:00:00",
+  "scanned_at": "2026-11-21 03:00:49",
+  "since": "2026-11-20 03:00:00",
   "results": {
     "市場儀表板": {
       "exists": true,
@@ -29,13 +29,13 @@
     "財經新聞分析": {
       "exists": true,
       "errors": 288,
-      "last_error": "2026-11-20 02:47:18,888 [WARNING] fetcher.reddit_fetcher: Reddit fetch failed for r/wallstreetbets: 404 Client Error: Not Found for url: https://www.reddit.com/r/wallstreetbets/hot/.rss",
+      "last_error": "2026-11-21 02:47:17,428 [WARNING] fetcher.reddit_fetcher: Reddit fetch failed for r/wallstreetbets: 404 Client Error: Not Found for url: https://www.reddit.com/r/wallstreetbets/hot/.rss",
       "fix": "尚無對應建議，需人工判斷"
     },
     "川普監測": {
       "exists": true,
-      "errors": 7,
-      "last_error": "2026-11-19 12:35:03,675 WARNING 分析失敗：Trump Confirms He Raised AI With Xi at Shenzhen Di — 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reaso",
+      "errors": 18,
+      "last_error": "2026-11-20 13:15:04,058 WARNING 分析失敗：Trump's Nvidia stock trades raise conflict-of-inte — 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reaso",
       "fix": "尚無對應建議，需人工判斷"
     },
     "持倉新聞(台股)": {
@@ -46,9 +46,9 @@
     },
     "持倉新聞(美股)": {
       "exists": true,
-      "errors": 0,
-      "last_error": null,
-      "fix": null
+      "errors": 1,
+      "last_error": "2026-11-20 21:00:20,228 WARNING MSFT 分析失敗，換下一個模型：gemini-2.5-flash-lite: Error code: 503 - [{'error': {'code': 503, 'message': 'This model is currently e",
+      "fix": "尚無對應建議，需人工判斷"
     },
     "HolaQuant": {
       "exists": true,
@@ -76,9 +76,9 @@
     },
     "當沖推播": {
       "exists": true,
-      "errors": 2,
-      "last_error": "[gateway] 全市場快照第 2 次失敗（2s 後重試）: gateway busy: queue wait exceeded",
-      "fix": "尚無對應建議，需人工判斷"
+      "errors": 0,
+      "last_error": null,
+      "fix": null
     },
     "隔日沖推播": {
       "exists": true,
@@ -88,7 +88,7 @@
     },
     "盤中監控": {
       "exists": true,
-      "errors": 57,
+      "errors": 55,
       "last_error": "[snapshot] 失敗（連續 1 次）: HTTPConnectionPool(host='localhost', port=5455): Read timed out. (read timeout=8)",
       "fix": "網路逾時 → 確認目標服務可達，或增加 timeout 設定"
     },
