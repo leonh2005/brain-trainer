@@ -6,7 +6,6 @@ import time
 
 CC = '/Users/steven/CCProject'
 FINMIND_PY = f'{CC}/finmind/venv/bin/python3'
-COMFY = '/Volumes/1TOWC/ComfyUI'
 LA_DIR = os.path.expanduser('~/Library/LaunchAgents')
 
 
@@ -68,14 +67,6 @@ JOBS = {
         'cmd': ['/opt/homebrew/bin/python3', f'{CC}/scripts/foreign_return_monitor.py'],
         'cwd': CC,
         'log': f'{CC}/logs/foreign_return.log',
-    },
-    'comfyui': {
-        'name': '啟動 ComfyUI（AI 影片）',
-        'server': [f'{COMFY}/venv/bin/python', 'main.py'],
-        'cwd': COMFY,
-        'port': 8188,
-        'requires': COMFY,          # 外接硬碟目錄，未掛載則不啟動
-        'log': f'{CC}/logs/comfyui.log',
     },
     # 盤中主力監控：LaunchAgent 每天 08:55 起跑，stoppable 讓卡片能 bootout 停掉
     # （單靠 kill 會被 KeepAlive 在 5 分鐘後拉回來）。停止後隔天要按「啟用」重新 bootstrap。
