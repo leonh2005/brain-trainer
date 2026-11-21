@@ -1,27 +1,27 @@
 {
-  "generated_at": "2026-11-20 14:01",
+  "generated_at": "2026-11-21 07:00",
   "count": 6,
   "threshold": 6,
   "cells": [
     {
       "name": "VIX",
       "triggered": true,
-      "detail": "28.44（>20 警戒）"
+      "detail": "35.88（>20 警戒）"
     },
     {
       "name": "F&G",
       "triggered": true,
-      "detail": "18.6（<45 恐慌）"
+      "detail": "9.7（<45 恐慌）"
     },
     {
       "name": "CAPE",
       "triggered": true,
-      "detail": "37.9（>25 偏高）"
+      "detail": "36.4（>25 偏高）"
     },
     {
       "name": "S&P vs 200MA",
       "triggered": true,
-      "detail": "-2.34%"
+      "detail": "-5.96%"
     },
     {
       "name": "台股 vs 200MA",
@@ -31,17 +31,17 @@
     {
       "name": "M1B比",
       "triggered": false,
-      "detail": "3.04%（>7% 偏熱）"
+      "detail": "3.01%（>7% 偏熱）"
     },
     {
       "name": "融資市值比",
       "triggered": true,
-      "detail": "0.396%（>0.35%）"
+      "detail": "0.423%（>0.35%）"
     },
     {
       "name": "美銀牛熊",
       "triggered": false,
-      "detail": "7.1（21 天前，已過期）"
+      "detail": "7.1（22 天前，已過期）"
     },
     {
       "name": "巴菲特現金",
