@@ -163,7 +163,7 @@ check_and_restart "guru-tracker"      5910 \
 
 
 # ── 可選服務（目前非必要，掛了不自動重啟，只記 log）──────────────
-for name_port in "stock_analyzer:5100" "portfolio-analyzer:5800"; do
+for name_port in "stock_analyzer:5100"; do
   n="${name_port%%:*}"
   p="${name_port##*:}"
   if ! is_port_up "$p"; then

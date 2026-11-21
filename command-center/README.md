@@ -25,7 +25,6 @@ Steven 的統一入口儀表板：聚合 20+ 個自建服務的訊號與狀態�
 | 籌碼 | chip-tracker/chip.db |
 | 新聞情緒 | news-analyzer/news.db |
 | 市場恐慌 | market-dashboard/*_cache.json |
-| 投組 | portfolio-analyzer:5800 /api/data |
 | 健康 | dashboard:5600 /api/status + log_scan_report.json |
 | 兔子 | rabbit-care/rabbit.db |
 | 技能樹 | skill-tree/skill_tree.db |

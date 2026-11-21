@@ -1067,7 +1067,6 @@ def automations_list():
         'com.steven.oracle-a1-grab': '持續嘗試申請/搶佔 Oracle Cloud A1 實例資源。',
         'com.steven.oracle-daily-report': '產生 Oracle 相關狀態的每日報告。',
         'com.steven.plant-quiz': '植物辨識/知識測驗 Web 服務。',
-        'com.steven.portfolio-analyzer': '投資組合分析 Web 服務。',
         'com.steven.portfolio-monitor': '提供投資組合監控頁面的本機靜態檔案伺服器。',
         'com.steven.portfolio-news-tw': '每個交易日早上推播台股持倉相關新聞摘要。',
         'com.steven.portfolio-news-us': '每日推播美股持倉相關新聞摘要。',
