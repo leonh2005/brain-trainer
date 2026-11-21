@@ -1029,7 +1029,6 @@ def automations_list():
         'com.steven.bd-monitor': '每日監控 94i.in 論壇新 4K 資源並推播 Telegram 通知。',
         'com.steven.brain7-tunnel': 'Brain7 連線隧道監管服務，維持遠端連線可用。',
         'com.steven.caffeine': '使用 caffeinate 防止 Mac 進入睡眠，維持服務常駐運作。',
-        'com.steven.ccr-gateway': 'Claude Code Router 閘道服務，提供本機路由與轉發。',
         'com.steven.chip-tracker-updater': '定時更新籌碼追蹤資料（法人/籌碼面資訊）。',
         'com.steven.chip-tracker': '籌碼追蹤 Web 服務，提供籌碼資料查詢介面。',
         'com.steven.claude-cycle-monitor': '監控 Claude 使用週期/額度狀態並回報。',
