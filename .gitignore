@@ -114,3 +114,8 @@ finmind/.local/
 
 # 語音轉逐字稿：上傳音檔與輸出都在本機，不進版控
 transcribe/data/
+
+# 二手 PS5 Pro / XSX 監控的執行期狀態與鎖檔（public repo，不進版控）
+scripts/console_monitor_state/
+scripts/console_monitor_current.json
+scripts/console_monitor.lock
