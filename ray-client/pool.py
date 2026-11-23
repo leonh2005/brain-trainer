@@ -31,21 +31,38 @@ def connect() -> dict[str, Any]:
 
 
 def submit(func: Callable, argslist: list[tuple], name: str) -> list[Any]:
-    source = inspect.getsource(func)
-    code_hash = hashlib.sha256(source.encode("utf-8")).hexdigest()[:12]
-    remote_func = ray.remote(func)
-    refs = [remote_func.remote(*args) for args in argslist]
+    try:
+        source = inspect.getsource(func)
+    except (OSError, TypeError):
+        source = repr(func)
+    code_hash = hashlib.sha256(source.encode("utf-8", "replace")).hexdigest()[:12]
+    count = len(argslist)
+    # 先寫 log 再派發：log 失敗就不會讓任務在沒有紀錄的情況下跑掉
     _write({
         "ts": datetime.now(TPE).isoformat(),
         "event": "submit",
         "name": name,
-        "tasks": len(refs),
+        "tasks": count,
         "code_sha12": code_hash,
     })
+    try:
+        remote_func = ray.remote(func)
+        refs = [remote_func.remote(*args) for args in argslist]
+    except Exception as exc:
+        _write({
+            "ts": datetime.now(TPE).isoformat(),
+            "event": "finish",
+            "name": name,
+            "tasks": count,
+            "duration_s": 0,
+            "status": "error",
+            "error": f"{type(exc).__name__}: {exc}",
+        })
+        raise
     return refs
 
 
-def collect(refs: list[Any], name: str, started: float) -> list[Any] | None:
+def collect(refs: list[Any], name: str, started: float) -> list[Any]:
     error = None
     try:
         results = ray.get(refs)
@@ -63,6 +80,8 @@ def collect(refs: list[Any], name: str, started: float) -> list[Any] | None:
         "status": status,
         "error": error,
     })
+    if error:
+        raise RuntimeError(f"{name} 失敗：{error}")
     return results
 
 
