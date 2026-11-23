@@ -41,7 +41,7 @@ code{background:var(--wash);padding:1px 5px;border-radius:4px}
 <h3>A · Availability（可用性）</h3><ul>
 <li>VM：<code>ray-head.service</code>，systemd <code>Restart=always</code> + linger。</li>
 <li>Mac：<code>com.steven.ray-tunnel</code> LaunchAgent，<code>KeepAlive=true</code> + ServerAliveInterval。</li>
-<li>健康檢查：<code>python3 health.py</code> → <code>OK ray_cluster CPU=4.0</code>。</li>
+<li>健康檢查：<code>./health.sh</code>（自動用 venv）→ <code>OK ray_cluster CPU=4.0</code>。</li>
 <li>使用 log：<code>logs/ray_usage.log</code>；<code>usage.py 7</code> 顯示每日次數、任務數、秒數、錯誤與「是否值得保留」判讀。</li>
 </ul></section>
 
@@ -50,7 +50,8 @@ code{background:var(--wash);padding:1px 5px;border-radius:4px}
 <li><code>systemctl --user is-active ray-head.service</code> → <code>active</code>。</li>
 <li><code>usage.py 7</code> → 1 次、16 任務、0.6 秒、0 錯誤；判讀為低使用量，建議按需啟用而非常駐。</li>
 </ul>
-<p class="note">你要求改常駐，因此服務維持常駐；但 log 的判讀會如實指出低使用量，日後可依數據決定是否關掉。</p></section>
+<p class="note">你要求改常駐，因此服務維持常駐；但 log 的判讀會如實指出低使用量，日後可依數據決定是否關掉。</p>
+<p class="note">code-review 後已補強：發布腳本擋路徑遍歷／多種金鑰格式／誤推他人 staged 檔案／分支檢查／token 不出現在 process list；log 單行損壞不再讓報表崩潰；健康檢查用 wrapper 自動選 venv。</p></section>
 
 <section class="card"><h2>四、之後所有 HTML 報告</h2><ul class="note">
 <li>用 <code>scripts/publish_report.sh &lt;html&gt;</code> 一鍵：拷到 <code>reports/</code> → commit/push → 等 Pages 200 → Telegram 寄連結。</li>
