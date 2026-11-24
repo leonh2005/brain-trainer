@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Python + SQL 十個專案構想</title><style>
+:root{color-scheme:light;--page:#f9f9f7;--surface:#fcfcfb;--ink:#0b0b0b;--ink2:#52514e;--line:#e1e0d9;--blue:#2a78d6;--wash:rgba(42,120,214,.06);--border:rgba(11,11,11,.10)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--page:#0d0d0d;--surface:#1a1a19;--ink:#f0efec;--ink2:#c3c2b7;--line:#2c2c2a;--blue:#3987e5;--wash:rgba(57,135,229,.12);--border:rgba(255,255,255,.10)}}
+:root[data-theme="dark"]{color-scheme:dark;--page:#0d0d0d;--surface:#1a1a19;--ink:#f0efec;--ink2:#c3c2b7;--line:#2c2c2a;--blue:#3987e5;--wash:rgba(57,135,229,.12);--border:rgba(255,255,255,.10)}
+*{box-sizing:border-box}body{margin:0;background:var(--page);color:var(--ink);font:14px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif}
+.wrap{max-width:1100px;margin:0 auto;padding:32px 18px 64px}header{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+h1{font-size:24px;margin:0 0 4px;letter-spacing:-.02em}.sub{color:var(--ink2);margin:0 0 20px;font-size:13px}
+button{background:var(--surface);color:var(--ink2);border:1px solid var(--border);border-radius:8px;padding:6px 12px;cursor:pointer;font:inherit}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:16px}
+h2{font-size:18px;margin:0 0 4px}.tag{color:var(--ink2);font-size:12px;margin-bottom:12px}
+h3{font-size:13px;margin:14px 0 4px;color:var(--blue)}
+p,ul{margin:4px 0}.note{color:var(--ink2);font-size:13px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:0 24px}
+.kpi{background:var(--wash);border-radius:8px;padding:8px 10px;margin:6px 0;font-size:13px}
+.badge{display:inline-block;border:1px solid var(--border);border-radius:6px;padding:1px 6px;font-size:11px;color:var(--ink2);margin-right:4px}
+</style></head><body><div class="wrap">
+<header><div><h1>Python ＋ SQL：十個有趣又實用的專案</h1>
+<p class="sub">2026-11-23 · 每個都按 PRD / SOW 四核心區塊寫：Goal / Scope / Who / When-Risk · 數字為示例，可依實際調整</p></div>
+<button id="theme" type="button">切換深色</button></header>
+
+<section class="card"><p class="note">這份報告同時是 Ray 常駐服務的測試任務之一：提交紀錄已寫入 <code>logs/ray_usage.log</code>，可用 <code>python3 usage.py 7</code> 查使用率。以下是十個「一個人就能做、Python 寫邏輯、SQL 管狀態」的點子，刻意避開空泛的 AI 口號，每個都有可驗收的成果。</p></section>
+
+<section class="card"><h2>1. 個人知識庫語意搜尋</h2><div class="tag"><span class="badge">SQLite FTS5</span><span class="badge">Python</span><span class="badge">Embedding</span></div>
+<div class="grid"><div>
+<h3>Why · 背景與目標</h3><ul><li>痛點：Obsidian vault 越長越大，關鍵字搜尋找不到「意思相近」的舊筆記。</li><li>SMART：4 週內建立索引，對 5,000 篇筆記的queries 平均回應 &lt; 1 秒。</li></ul>
+<div class="kpi">KPI：搜尋命中率 ≥ 80%、索引更新 &lt; 5 分鐘</div>
+<h3>What · 範疇與交付</h3><ul><li>In：Markdown 解析、FTS5 索引、embeddings 向量表、CLI 搜尋。</li><li>Out：不改動原筆記、不做網頁版。</li><li>交付：indexer.py、search.py、SQLite schema、使用說明。</li></ul></div><div>
+<h3>Who · 利害關係人</h3><ul><li>Sponsor / 使用者：你自己。PM：你（兼任）。</li><li>RACI：你 R/A；Obsidian 為 Consulted；無需知會其他人;</li><li>受眾：未來的自己。</li></ul>
+<h3>When &amp; Risk</h3><ul><li>里程碑：W1 schema、W2 索引、W3 搜尋、W4 驗收。</li><li>資源：本機 + 幾小時；無預算。</li><li>風險：embedding 模型更換導致索引不相容 → 版本號寫進 DB，必要時重建。</li></ul></div></div></section>
+
+<section class="card"><h2>2. 台股事件驅動回測平台</h2><div class="tag"><span class="badge">SQLite</span><span class="badge">Python</span><span class="badge">Backtest</span></div>
+<div class="grid"><div>
+<h3>Why</h3><ul><li>痛點：每次回测都重寫程式，參數與結果散在 /tmp。</li><li>SMART：6 週內把 0050/0052 的回测結果結構化，任何參數组合可重現。</li></ul>
+<div class="kpi">KPI：每筆結果含程式 hash + 資料版本，100% 可重跑</div>
+<h3>What</h3><ul><li>In：K線入庫、策略參數表、回测結果表、_report_ 產出。</li><li>Out：不下單、不做即時交易。</li><li>交付：schema.sql、run.py、report.html。</li></ul></div><div>
+<h3>Who</h3><ul><li>Sponsor/PM/執行：你；顧問：過去的回測筆記。</li><li>受眾：你自己的投資決策。</li></ul>
+<h3>When &amp; Risk</h3><ul><li>W1 資料、W2 schema、W3 策略、W4 報表、W5-6 驗證。</li><li>預算：0；使用既有 Shioaji/FinMind。</li><li>風險：資料分割/股息還原錯誤 → 寫 unit test 與 checksum，已有踩坑紀錄可复用。</li></ul></div></div></section>
+
+<section class="card"><h2>3. 二手商品價格追蹤與議價助手</h2><div class="tag"><span class="badge">SQLite</span><span class="badge">爬蟲</span><span class="badge">異常偵測</span></div>
+<div class="grid"><div>
+<h3>Why</h3><ul><li>痛點：想買 XSX/PS5 Pro，但不知道現在 price 是便宜還是盤子價。</li><li>SMART：4 週內每天抓 3 平台，建立 30 天價格分布，偏離 &gt; 15% 自動通知。</li></ul>
+<div class="kpi">KPI：資料完整率 ≥ 95%、誤報 &lt; 3 次/週</div>
+<h3>What</h3><ul><li>In：露天/PTT/旋轉抓取、價格歷史表、Telegram 通知。</li><li>Out：自動下標、付款。</li><li>交付：crawler/、price.db、alert.py。</li></ul></div><div>
+<h3>Who</h3><ul><li>你 R/A；商店為 Consulted（只讀公開頁）。</li></ul>
+<h3>When &amp; Risk</h3><ul><li>W1 爬蟲、W2 DB、W3 統計、W4 通知。</li><li>風險：Cloudflare/API 改版 → 每來源獨立 state、失敗不寫資料。</li></ul></div></div></section>
+
+<section class="card"><h2>4. 代理任務與成本追蹤器</h2><div class="tag"><span class="badge">SQLite queue</span><span class="badge">Agent SDK</span><span class="badge">Usage log</span></div>
+<div class="grid"><div>
+<h3>Why</h3><ul><li>痛點：agent-orchestrator 跑了任務，但不知道哪個模型/任務最貴。</li><li>SMART：4 週內每筆任務记录 token、成本、耗時、結果，产出週報。</li></ul>
+<div class="kpi">KPI：成本歸因覆蓋率 ≥ 90%</div>
+<h3>What</h3><ul><li>In：SQLite queue、worker、usage 表、週報。</li><li>Out：改寫現有 agent 邏輯太多。</li><li>交付：schema、worker hook、report.py。</li></ul></div><div>
+<h3>Who</h3><ul><li>你 R/A；agent-orchestrator 為 Consulted。</li></ul>
+<h3>When &amp; Risk</h3><ul><li>W1 schema、W2 hook、W3 報表、W4 驗證。</li><li>風險：並發寫入衝突 → WAL + 交易。</li></ul></div></div></section>
+
+<section class="card"><h2>5. 訂閱與固定支出管理</h2><div class="tag"><span class="badge">SQLite</span><span class="badge">OCR</span><span class="badge">提醒</span></div>
+<div class="grid"><div>
+<h3>Why</h3><ul><li>痛點：訂閱�到處都是，續費日容易錯過。</li><li>SMART：3 週內建立訂閱-table，提前 7 天 Telegram 提醒，每月支出誤差 &lt; 5%。</li></ul>
+<div class="kpi">KPI：遺漏續費 = 0、提醒準時率 100%</div>
+<h3>What</h3><ul><li>In：手動/OCR 發票、週期計算、提醒。</li><li>Out：自動刷卡、取消訂閱。</li><li>交付：db.sqlite、add.py、remind.py。</li></ul></div><div>
+<h3>Who</h3><ul><li>你 R/A；銀行帳單為 Consulted。</li></ul>
+<h3>When &amp; Risk</h3><ul><li>W1 DB、W2 輸入、W3 提醒。</li><li>風險：OCR 辨錯金額 → 保留人工確認欄位。</li></ul></div></div></section>
+
+<section class="card"><h2>6. YouTube 影片知識管線</h2><div class="tag"><span class="badge">SQLite</span><span class="badge">STT</span><span class="badge">摘要</span></div>
+<div class="grid"><div>
+<h3>Why</h3><ul><li>痛點：看過的影片找不到重點，逐字稿散落。</li><li>SMART：6 週內建立影片→逐字稿→摘要→主题 的 DB，支援按主题查。</li></ul>
+<div class="kpi">KPI：逐字稿入库率 ≥ 95%、摘要可追溯時間戳</div>
+<h3>What</h3><ul><li>In：RSS 抓取、yt-dlp、STT、摘要、SQLite FTS。</li><li>Out：重製影片、上传。</li><li>交付：pipeline.py、schema.sql、search.py。</li></ul></div><div>
+<h3>Who</h3><ul><li>你 R/A；YouTube 為 Consulted。</li></ul>
+<h3>When &amp; Risk</h3><ul><li>W1 抓取、W2 STT、W3 摘要、W4-6 搜尋。</li><li>風險：403/無字幕 → 已有的降級流程可复用。</li></ul></div></div></section>
+
+<section class="card"><h2>7. 社群情緒與話題雷達</h2><div class="tag"><span class="badge">SQLite</span><span class="badge">分類器</span><span class="badge">日報</span></div>
+<div class="grid"><div>
+<h3>Why</h3><ul><li>痛點：_threads/Dcard/PTT 的討論分散，想看某主題的風向要手動翻。</li><li>SMART：6 週內每天產出 3 個主題的情緒分數與变化。</li></ul>
+<div class="kpi">KPI：分類一致性 ≥ 85%（人工抽樣）</div>
+<h3>What</h3><ul><li>In：三平台抓取、文章表、分類結果、Telegram 日報。</li><li>Out：自動發文、回覆。</li><li>交付：scraper/、classify.py、daily.py。</li></ul></div><div>
+<h3>Who</h3><ul><li>你 R/A；社群平台為 Consulted。</li></ul>
+<h3>When &amp; Risk</h3><ul><li>W1 抓取、W2 schema、W3 分類、W4 報表、W5-6 校準。</li><li>風險：平台封鎖 → 用瀏覽器 cookies + 間隔，失敗隔離。</li></ul></div></div></section>
+
+<section class="card"><h2>8. 家庭電費與能源分析</h2><div class="tag"><span class="badge">SQLite</span><span class="badge">OpenData</span><span class="badge">預測</span></div>
+<div class="grid"><div>
+<h3>Why</h3><ul><li>痛點：只知道電費很貴，不知道是哪台設備造成。</li><li>SMART：8 週內建立用電日表，季節预测误差 &lt; 15%。</li></ul>
+<div class="kpi">KPI：月度電費预测误差 &lt; 15%</div>
+<h3>What</h3><ul><li>In：台電 OpenData、手動電表讀數、模型、報表。</li><li>Out：控制家電、自動缴费。</li><li>交付：ingest.py、model.py、dashboard.html。</li></ul></div><div>
+<h3>Who</h3><ul><li>你 R/A；台電 OpenData 為 Consulted；家人 Informed。</li></ul>
+<h3>When &amp; Risk</h3><ul><li>W1-2 資料、W3-4 model、W5-6 dashboard、W7-8 驗證。</li><li>風險：資料延遲 → 保留 last-good 與 stale 標記。</li></ul></div></div></section>
+
+<section class="card"><h2>9. 發票與收據结构化</h2><div class="tag"><span class="badge">SQLite</span><span class="badge">OCR</span><span class="badge">統計</span></div>
+<div class="grid"><div>
+<h3>Why</h3><ul><li>痛點：發票照片一堆，報帳時找不到。</li><li>SMART：5 週內 OCR 入庫，含統編/日期/金額，查詢 &lt; 2 秒。</li></ul>
+<div class="kpi">KPI：OCR 欄位正確率 ≥ 90%（人工覆核）</div>
+<h3>What</h3><ul><li>In：圖片上傳、OCR、欄位校正、發票查核 API。</li><li>Out：自動申報、稅務建議。</li><li>交付：ocr.py、schema.sql、search.py。</li></ul></div><div>
+<h3>Who</h3><ul><li>你 R/A；財政部開放資料為 Consulted。</li></ul>
+<h3>When &amp; Risk</h3><ul><li>W1 DB、W2 OCR、W3 校正、W4 查詢、W5 驗證。</li><li>風險：敏感資料 → 不進 public repo，DB 放本機。</li></ul></div></div></section>
+
+<section class="card"><h2>10. 氣象與行程決策助手</h2><div class="tag"><span class="badge">SQLite</span><span class="badge">OpenData</span><span class="badge">規則引擎</span></div>
+<div class="grid"><div>
+<h3>Why</h3><ul><li>痛點：出門前要查好多來源，規則重複。</li><li>SMART：4 週內用 CWA/OpenData 建立天氣表，依規則推播「帶傘/停車/uintes」建議。</li></ul>
+<div class="kpi">KPI：預報命中率 ≥ 80%、通知延遲 &lt; 10 分鐘</div>
+<h3>What</h3><ul><li>In：氣象抓取、SQLite、規則表、Telegram。</li><li>Out：自動改變行程、訂票。</li><li>交付：ingest.py、rules.sql、notify.py。</li></ul></div><div>
+<h3>Who</h3><ul><li>你 R/A；CWA 為 Consulted；家人 Informed。</li></ul>
+<h3>When &amp; Risk</h3><ul><li>W1 抓取、W2 DB、W3 規則、W4 通知。</li><li>風險：API 變更 → schema version + 失敗告警。</li></ul></div></div></section>
+
+<section class="card"><h2>共同pattern：這十個都適合的技術骨架</h2><ul class="note">
+<li><b>Python 做編排：</b>抓取、清洗、計算、通知；保持純函式可測。</li>
+<li><b>SQL 做事實來源：</b>SQLite（單機）或 Postgres（多人）；所有状态可查、可回溯。</li>
+<li><b> idempotency：</b>用 <code>source + external_id</code> 當唯一鍵，重跑不重複。</li>
+<li><b>可觀測：</b>每次執行寫 log（時間、筆數、耗時、錯誤），才能判斷是否值得保留 —— 正是我們剛為 Ray 做的</li>
+</ul></section>
+</div><script>
+const btn=document.getElementById('theme');
+function isDark(){const t=document.documentElement.getAttribute('data-theme');return t==='dark'||(!t&&window.matchMedia('(prefers-color-scheme:dark)').matches)}
+function sync(){btn.textContent=isDark()?'切換淺色':'切換深色'}
+btn.onclick=()=>{document.documentElement.setAttribute('data-theme',isDark()?'light':'dark');sync()};
+const mq=window.matchMedia('(prefers-color-scheme:dark)');if(mq.addEventListener)mq.addEventListener('change',sync);else if(mq.addListener)mq.addListener(sync);sync();
+</script></body></html>

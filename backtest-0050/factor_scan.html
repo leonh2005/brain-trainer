@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>0050 因子掃描</title><style>
+:root{color-scheme:light;--page:#f9f9f7;--surface:#fcfcfb;--ink:#0b0b0b;--ink2:#52514e;--muted:#898781;--line:#e1e0d9;
+--blue:#2a78d6;--orange:#eb6834;--gray:#c3c2b7;--good:#006300;--bad:#d03b3b;--wash:rgba(42,120,214,.06);--border:rgba(11,11,11,.10)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--page:#0d0d0d;--surface:#1a1a19;
+--ink:#f0efec;--ink2:#c3c2b7;--muted:#898781;--line:#2c2c2a;--blue:#3987e5;--orange:#d95926;--gray:#383835;
+--good:#0ca30c;--bad:#d03b3b;--wash:rgba(57,135,229,.12);--border:rgba(255,255,255,.10)}}
+:root[data-theme="dark"]{color-scheme:dark;--page:#0d0d0d;--surface:#1a1a19;--ink:#f0efec;--ink2:#c3c2b7;
+--muted:#898781;--line:#2c2c2a;--blue:#3987e5;--orange:#d95926;--gray:#383835;--good:#0ca30c;--bad:#d03b3b;--wash:rgba(57,135,229,.12);--border:rgba(255,255,255,.10)}
+*{box-sizing:border-box}body{margin:0;background:var(--page);color:var(--ink);font:14px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif}
+.wrap{max-width:940px;margin:0 auto;padding:32px 18px 64px}header{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+h1{font-size:24px;margin:0 0 4px;letter-spacing:-.02em}.sub{color:var(--ink2);margin:0 0 20px;font-size:13px}
+button{background:var(--surface);color:var(--ink2);border:1px solid var(--border);border-radius:8px;padding:6px 12px;cursor:pointer;font:inherit}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:16px}
+h2{font-size:16px;margin:0 0 14px}.note{color:var(--ink2);font-size:13px}.note li{margin:6px 0}
+table{width:100%;border-collapse:collapse;font-size:13px}th,td{text-align:left;padding:8px 9px;border-bottom:1px solid var(--line)}
+th{color:var(--ink2);font-weight:600}td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
+tr.hi td{background:var(--wash)}
+.bar{display:grid;grid-template-columns:150px 1fr 74px;gap:10px;align-items:center;margin:7px 0;font-size:12px}
+.track{min-width:0}
+@media(max-width:520px){.bar{grid-template-columns:92px 1fr 56px;gap:6px;font-size:11px}}
+.track{height:18px;background:transparent;position:relative}.fill{height:18px;border-radius:0 4px 4px 0;min-width:2px}
+.fill.b{background:var(--blue)}.fill.o{background:var(--orange)}.fill.g{background:var(--gray)}
+.val{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+.legend{font-size:12px;color:var(--ink2);margin-bottom:10px}.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;vertical-align:middle;margin:0 5px 0 12px}
+.legend>span:first-child>i{margin-left:0}
+.warn{border-left:3px solid var(--bad);padding-left:12px;color:var(--ink2);font-size:13px}
+</style></head><body><div class="wrap">
+<header><div><h1>0050 因子掃描：有沒有機會打贏買進持有</h1>
+<p class="sub">2026-01-02 → 11-20 · 同一份 Shioaji/FinMind 資料、次日開盤成交、手續費買賣各 0.1425%、交易稅僅賣方 0.1%</p></div>
+<button id="theme" type="button">切換深色</button></header>
+
+<section class="card"><h2>結論先講</h2>
+<p class="note">掃了 24 組參數（停損 10/12/15/18% × 核心 25/50/75% × 補倉 MA10/MA20），其中 <b>9 組打贏買進持有的 28.04%</b>。下面只列 6 種代表性結果。表現最好的是「18% 停損、核心 25%、站回 MA20」(+40.47%)，但它只在 11/9 減倉一次等於押注尾盤崩跌；風險調整後更穩的是「12% 停損、核心 25%」(+40.00%、最大回撤 −16.72%)。</p>
+<p class="warn" style="margin-top:12px">⚠ 這是在同一段 2026 行情裡挑出來的贏家，屬於 in-sample 選擇，過擬合風險很高。這些參數沒有任何保證，未來資料很可能不成立；要當策略用，2022 以來的 walk-forward 已完成：8 段 0 勝／4 平／4 負，策略 +169.36% 低於分段重置持有 +209.93%，這兩組都沒有重現。</p></section>
+
+<section class="card"><h2>六種代表性結果</h2><table>
+<thead><tr><th>組合（停損 / 核心 / 補倉）</th><th class="n">期末資產</th><th class="n">報酬</th><th class="n">年化</th><th class="n">最大回撤</th><th class="n">調整次數</th><th>調整日</th></tr></thead>
+<tbody>
+<tr><td>買進持有（對照）</td><td class="n">1,280,401</td><td class="n">+28.04%</td><td class="n">+32.36%</td><td class="n">−27.31%</td><td class="n">—</td><td>—</td></tr>
+<tr class="hi"><td>18% / 25% / MA20</td><td class="n">1,404,689</td><td class="n">+40.47%</td><td class="n">+47.03%</td><td class="n">−20.32%</td><td class="n">1</td><td>11/09</td></tr>
+<tr class="hi"><td>12% / 25% / MA20</td><td class="n">1,399,960</td><td class="n">+40.00%</td><td class="n">+46.47%</td><td class="n">−16.72%</td><td class="n">3</td><td>07/29, 08/06, 11/04</td></tr>
+<tr><td>10% / 25% / MA20</td><td class="n">1,378,351</td><td class="n">+37.84%</td><td class="n">+43.91%</td><td class="n">−16.11%</td><td class="n">5</td><td>04/01, 04/09, 07/21, 08/06, 11/03</td></tr>
+<tr><td>18% / 50% / MA20</td><td class="n">1,362,330</td><td class="n">+36.23%</td><td class="n">+42.01%</td><td class="n">−22.66%</td><td class="n">1</td><td>11/09</td></tr>
+<tr><td>12% / 50% / MA20</td><td class="n">1,361,170</td><td class="n">+36.12%</td><td class="n">+41.87%</td><td class="n">−20.37%</td><td class="n">3</td><td>07/29, 08/06, 11/04</td></tr>
+<tr><td>15% / 50% / MA20（上一版）</td><td class="n">1,254,357</td><td class="n">+25.44%</td><td class="n">+29.31%</td><td class="n">−25.35%</td><td class="n">3</td><td>07/30, 08/06, 11/06</td></tr>
+</tbody></table></section>
+
+<section class="card"><h2>報酬率比較</h2><div class="legend"><span><i class="b" style="background:var(--blue)"></i>策略</span><span><i style="background:var(--gray)"></i>買進持有</span></div>
+<div class="bar"><span>18/25/MA20</span><div class="track"><div class="fill b" style="width:80.9%" title="1,404,689 元，+40.47%"></div></div><span class="val">+40.47%</span></div>
+<div class="bar"><span>12/25/MA20</span><div class="track"><div class="fill b" style="width:80.0%" title="1,399,960 元，+40.00%"></div></div><span class="val">+40.00%</span></div>
+<div class="bar"><span>10/25/MA20</span><div class="track"><div class="fill b" style="width:75.7%" title="1,378,351 元，+37.84%"></div></div><span class="val">+37.84%</span></div>
+<div class="bar"><span>18/50/MA20</span><div class="track"><div class="fill b" style="width:72.5%" title="1,362,330 元，+36.23%"></div></div><span class="val">+36.23%</span></div>
+<div class="bar"><span>12/50/MA20</span><div class="track"><div class="fill b" style="width:72.2%" title="1,361,170 元，+36.12%"></div></div><span class="val">+36.12%</span></div>
+<div class="bar"><span>15/50/MA20</span><div class="track"><div class="fill b" style="width:50.9%" title="1,254,357 元，+25.44%"></div></div><span class="val">+25.44%</span></div>
+<div class="bar"><span>買進持有</span><div class="track"><div class="fill g" style="width:56.1%" title="1,280,401 元，+28.04%"></div></div><span class="val">+28.04%</span></div>
+</section>
+
+<section class="card"><h2>最大回撤比較（越短越好）</h2><div class="legend"><span><i class="o" style="background:var(--orange)"></i>策略</span><span><i style="background:var(--gray)"></i>買進持有</span></div>
+<div class="bar"><span>10/25/MA20</span><div class="track"><div class="fill o" style="width:53.7%" title="最大回撤 −16.11%"></div></div><span class="val">−16.11%</span></div>
+<div class="bar"><span>12/25/MA20</span><div class="track"><div class="fill o" style="width:55.7%" title="最大回撤 −16.72%"></div></div><span class="val">−16.72%</span></div>
+<div class="bar"><span>18/25/MA20</span><div class="track"><div class="fill o" style="width:67.7%" title="最大回撤 −20.32%"></div></div><span class="val">−20.32%</span></div>
+<div class="bar"><span>12/50/MA20</span><div class="track"><div class="fill o" style="width:67.7%" title="最大回撤 −20.37%"></div></div><span class="val">−20.37%</span></div>
+<div class="bar"><span>18/50/MA20</span><div class="track"><div class="fill o" style="width:75.5%" title="最大回撤 −22.66%"></div></div><span class="val">−22.66%</span></div>
+<div class="bar"><span>15/50/MA20</span><div class="track"><div class="fill o" style="width:84.3%" title="最大回撤 −25.35%"></div></div><span class="val">−25.35%</span></div>
+<div class="bar"><span>買進持有</span><div class="track"><div class="fill g" style="width:91.0%" title="最大回撤 −27.31%"></div></div><span class="val">−27.31%</span></div>
+</section>
+
+<section class="card"><h2>規則與資料</h2><ul class="note">
+<li>停損：收盤價自波段高點回撤設定百分比 → 次日開盤減到核心倉位；補倉：收盤站上指定均線 → 次日開盤補滿，並重置停損基準。</li>
+<li>1/2 收盤 66.95 元全額買入；11/20 收盤結算並扣賣方成本；股息 1/22 每股 1 元、7/21 每股 0.6 元，持有才發放；空手現金不計息。</li>
+<li>股息發現金不再投入、空手現金不計息；年化以 365.25/322 天換算；股價用 Shioaji，1 月缺口與開盤價由與之零誤差的 FinMind 資料補齊。</li>
+</ul></section>
+</div><script>
+const btn=document.getElementById('theme');
+function isDark(){const t=document.documentElement.getAttribute('data-theme');return t==='dark'||(!t&&window.matchMedia('(prefers-color-scheme:dark)').matches)}
+function sync(){btn.textContent=isDark()?'切換淺色':'切換深色'}
+btn.onclick=()=>{document.documentElement.setAttribute('data-theme',isDark()?'light':'dark');sync()};
+const mq=window.matchMedia('(prefers-color-scheme:dark)');if(mq.addEventListener)mq.addEventListener('change',sync);else if(mq.addListener)mq.addListener(sync);sync();
+</script></body></html>

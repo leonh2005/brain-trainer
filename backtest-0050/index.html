@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>0050 年初百萬回測</title>
+<style>
+:root{color-scheme:light;--page:#f9f9f7;--surface:#fcfcfb;--ink:#0b0b0b;--ink2:#52514e;--muted:#898781;
+--line:#e1e0d9;--axis:#c3c2b7;--series:#2a78d6;--wash:rgba(42,120,214,.10);
+--good:#006300;--critical:#d03b3b;--border:rgba(11,11,11,.10);}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--page:#0d0d0d;--surface:#1a1a19;
+--ink:#f0efec;--ink2:#c3c2b7;--muted:#898781;--line:#2c2c2a;--axis:#383835;--series:#3987e5;
+--wash:rgba(57,135,229,.10);--good:#0ca30c;--critical:#d03b3b;--border:rgba(255,255,255,.10);}}
+:root[data-theme="dark"]{color-scheme:dark;--page:#0d0d0d;--surface:#1a1a19;--ink:#f0efec;--ink2:#c3c2b7;
+--muted:#898781;--line:#2c2c2a;--axis:#383835;--series:#3987e5;--wash:rgba(57,135,229,.10);
+--good:#0ca30c;--critical:#d03b3b;--border:rgba(255,255,255,.10);}
+*{box-sizing:border-box}body{margin:0;background:var(--page);color:var(--ink);font:14px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif}
+.wrap{max-width:920px;margin:0 auto;padding:32px 18px 64px}
+header{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
+h1{font-size:24px;margin:0 0 4px;letter-spacing:-.02em}.sub{color:var(--ink2);margin:0 0 24px;font-size:13px}
+button{background:var(--surface);color:var(--ink2);border:1px solid var(--border);border-radius:8px;padding:6px 12px;cursor:pointer;font:inherit}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:16px}
+.hero-label{color:var(--ink2);font-size:13px}.hero{font-size:48px;font-weight:650;letter-spacing:-.03em;line-height:1.15;margin:4px 0}
+.delta{font-size:15px;color:var(--good);font-weight:600}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-top:18px}
+.kpi{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px}
+.kpi .lab{color:var(--ink2);font-size:12px}.kpi .val{font-size:20px;font-weight:600;margin-top:2px}
+.kpi .val.neg{color:var(--critical)}
+h2{font-size:16px;margin:0 0 12px;font-weight:600}
+.chartbox{position:relative}svg{width:100%;height:auto;display:block;touch-action:pan-y}
+.grid{stroke:var(--line);stroke-width:1}.axis{stroke:var(--axis);stroke-width:1}.tick{fill:var(--muted);font-size:11px;font-variant-numeric:tabular-nums}
+.line{fill:none;stroke:var(--series);stroke-width:2;stroke-linejoin:round;stroke-linecap:round}
+.area{fill:var(--wash)}.enddot{fill:var(--series);stroke:var(--surface);stroke-width:2}
+.cross{stroke:var(--ink2);stroke-width:1}.ddband{fill:var(--critical);opacity:.07}
+.ddlabel{fill:var(--critical);font-size:11px;font-weight:600}.endlabel{fill:var(--ink);font-size:12px;font-weight:600}
+.tip{position:absolute;pointer-events:none;background:var(--surface);border:1px solid var(--border);border-radius:8px;
+padding:8px 10px;box-shadow:0 4px 16px rgba(0,0,0,.12);font-size:12px;min-width:150px;opacity:0;transition:opacity .1s}
+.tip .v{font-size:15px;font-weight:650;color:var(--ink)}.tip .k{color:var(--ink2)}
+.tip .row{display:flex;align-items:center;gap:6px}.tip .key{width:14px;height:2px;background:var(--series)}
+table{width:100%;border-collapse:collapse;font-size:13px}th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line)}
+th{color:var(--ink2);font-weight:600}td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
+details summary{cursor:pointer;color:var(--ink2);font-size:13px}.note{color:var(--ink2);font-size:13px}.note li{margin:6px 0}
+</style></head><body><div class="wrap">
+<header><div><h1>0050 年初百萬回測</h1><p class="sub">2026-01-02 進場 → 2026-11-20 收盤 · 資料：Shioaji 日 K（1 月缺口由同價快取補）＋ FinMind 除息</p></div>
+<button id="theme" type="button">切換深色</button></header>
+<section class="card"><div class="hero-label">期末總資產（含交易成本、股息不再投入）</div>
+<div class="hero">1,280,401</div><div class="delta">+28.04% （含息、含成本）</div>
+<div class="kpis">
+<div class="kpi"><div class="lab">投入本金</div><div class="val">1,000,000</div></div>
+<div class="kpi"><div class="lab">持有股數</div><div class="val">14,915</div></div>
+<div class="kpi"><div class="lab">純股價報酬</div><div class="val">+26.14%</div></div>
+<div class="kpi"><div class="lab">每股股息</div><div class="val">1.60</div></div>
+<div class="kpi"><div class="lab">年化報酬</div><div class="val">+32.36%</div></div>
+<div class="kpi"><div class="lab">最大回撤</div><div class="val neg">-27.31%</div></div>
+</div></section>
+<section class="card"><h2>淨值曲線（元）</h2><div class="chartbox" id="box">
+<svg id="chart" viewBox="0 0 860 340" role="img" aria-label="0050 投資組合淨值曲線，2026 年 1 月 2 日至 11 月 20 日"><g id="g"></g></svg>
+<div class="tip" id="tip" aria-live="polite"><div class="v" id="tv"></div><div class="k" id="tk"></div><div class="row"><span class="key"></span><span id="tr"></span></div></div>
+</div><p class="note">最大回撤區間 2026-10-06 → 2026-11-20；游標或方向鍵可查看每日數值，完整資料見下方表格。</p></section>
+<section class="card"><h2>不同假設的結果</h2><table><thead><tr><th>情境</th><th class="n">期末資產</th><th class="n">報酬率</th></tr></thead><tbody>
+<tr><td>全額買入、不含成本、股息不再投入</td><td class="n">1,285,288</td><td class="n">+28.53%</td></tr>
+<tr><td>全額買入、含成本、股息不再投入（主情境）</td><td class="n">1,280,401</td><td class="n">+28.04%</td></tr>
+<tr><td>全額買入、含成本、股息當日再投入</td><td class="n">1,281,495</td><td class="n">+28.15%</td></tr>
+<tr><td>只買 14 張（14,000 股）、含成本、餘額現金</td><td class="n">1,263,197</td><td class="n">+26.32%</td></tr>
+</tbody></table></section>
+<section class="card"><h2>假設與資料處理</h2><ul class="note">
+<li>1/1 為假日，以第一個交易日 <b>1/2 收盤價 66.95</b> 進場；11/20 收盤價 <b>84.45</b> 出場（11/21 為星期六，gateway 補的假資料已剔除）。</li>
+<li>手續費買賣各 0.1425%，交易稅僅賣方 0.1%；股息依 FinMind 公告：1/22 每股 1.0 元、7/21 每股 0.6 元，共 1.6 元。</li>
+<li>Shioaji 日 K 在 2025-12～2026-01 有缺口，以既有 0050 收盤快取補齊；兩資料源在 281 個重疊交易日價格完全相同。</li>
+<li>股價為未還原息值，故股息另計；報酬率以 322 天計算年化。</li>
+</ul>
+<details><summary>展開每日淨值明細（212 筆）</summary><div id="tbl"></div></details></section>
+</div>
+<script>
+const DATA=[["2026-01-02",998575.0],["2026-01-05",1036609.0],["2026-01-06",1050033.0],["2026-01-07",1041829.0],["2026-01-08",1045558.0],["2026-01-09",1041829.0],["2026-01-12",1049287.0],["2026-01-13",1054507.0],["2026-01-14",1055253.0],["2026-01-15",1053761.0],["2026-01-16",1073897.0],["2026-01-19",1082846.0],["2026-01-20",1082846.0],["2026-01-21",1071660.0],["2026-01-22",1085829.0],["2026-01-23",1092541.0],["2026-01-26",1092541.0],["2026-01-27",1104473.0],["2026-01-28",1121626.0],["2026-01-29",1114914.0],["2026-01-30",1097761.0],["2026-02-02",1081355.0],["2026-02-03",1102982.0],["2026-02-04",1102236.0],["2026-02-05",1088812.0],["2026-02-06",1087321.0],["2026-02-09",1117897.0],["2026-02-10",1141015.0],["2026-02-11",1166371.0],["2026-02-23",1169354.0],["2026-02-24",1199185.0],["2026-02-25",1224541.0],["2026-02-26",1225287.0],["2026-03-02",1213354.0],["2026-03-03",1189490.0],["2026-03-04",1142507.0],["2026-03-05",1169354.0],["2026-03-06",1161151.0],["2026-03-09",1112677.0],["2026-03-10",1136541.0],["2026-03-11",1181287.0],["2026-03-12",1157422.0],["2026-03-13",1147727.0],["2026-03-16",1142507.0],["2026-03-17",1158168.0],["2026-03-18",1175321.0],["2026-03-19",1148473.0],["2026-03-20",1146982.0],["2026-03-23",1122371.0],["2026-03-24",1124609.0],["2026-03-25",1151456.0],["2026-03-26",1145490.0],["2026-03-27",1133558.0],["2026-03-30",1117151.0],["2026-03-31",1094033.0],["2026-04-01",1140270.0],["2026-04-02",1117897.0],["2026-04-07",1138032.0],["2026-04-08",1196202.0],["2026-04-09",1195456.0],["2026-04-10",1219320.0],["2026-04-13",1217083.0],["2026-04-14",1254371.0],["2026-04-15",1270032.0],["2026-04-16",1282710.0],["2026-04-17",1270032.0],["2026-04-20",1275998.0],["2026-04-21",1297625.0],["2026-04-22",1302846.0],["2026-04-23",1302846.0],["2026-04-24",1356541.0],["2026-04-27",1402032.0],["2026-04-28",1387117.0],["2026-04-29",1368473.0],["2026-04-30",1364744.0],["2026-05-04",1425896.0],["2026-05-05",1425896.0],["2026-05-06",1443049.0],["2026-05-07",1472134.0],["2026-05-08",1461693.0],["2026-05-11",1460202.0],["2026-05-12",1459456.0],["2026-05-13",1439320.0],["2026-05-14",1447524.0],["2026-05-15",1437829.0],["2026-05-18",1430371.0],["2026-05-19",1403524.0],["2026-05-20",1394574.0],["2026-05-21",1444541.0],["2026-05-22",1466168.0],["2026-05-25",1518371.0],["2026-05-26",1507930.0],["2026-05-27",1544473.0],["2026-05-28",1513896.0],["2026-05-29",1586981.0],["2026-06-01",1588473.0],["2026-06-02",1591456.0],["2026-06-03",1619795.0],["2026-06-04",1597422.0],["2026-06-05",1568337.0],["2026-06-08",1520608.0],["2026-06-09",1558642.0],["2026-06-10",1510168.0],["2026-06-11",1504201.0],["2026-06-12",1535523.0],["2026-06-15",1584744.0],["2026-06-16",1594439.0],["2026-06-17",1595930.0],["2026-06-18",1615320.0],["2026-06-22",1672744.0],["2026-06-23",1657083.0],["2026-06-24",1613083.0],["2026-06-25",1613828.0],["2026-06-26",1552676.0],["2026-06-29",1572812.0],["2026-06-30",1622778.0],["2026-07-01",1645896.0],["2026-07-02",1637693.0],["2026-07-03",1630981.0],["2026-07-06",1629489.0],["2026-07-07",1598913.0],["2026-07-08",1596676.0],["2026-07-09",1592947.0],["2026-07-13",1595930.0],["2026-07-14",1572066.0],["2026-07-15",1600405.0],["2026-07-16",1601896.0],["2026-07-17",1508676.0],["2026-07-20",1494507.0],["2026-07-21",1552676.0],["2026-07-22",1572812.0],["2026-07-23",1573557.0],["2026-07-24",1540744.0],["2026-07-27",1537015.0],["2026-07-28",1472879.0],["2026-07-29",1421422.0],["2026-07-30",1418439.0],["2026-07-31",1557896.0],["2026-08-03",1545218.0],["2026-08-04",1525083.0],["2026-08-05",1572066.0],["2026-08-06",1564608.0],["2026-08-07",1557896.0],["2026-08-10",1578778.0],["2026-08-11",1583998.0],["2026-08-12",1592947.0],["2026-08-13",1615320.0],["2026-08-14",1610845.0],["2026-08-17",1611591.0],["2026-08-18",1588473.0],["2026-08-19",1561625.0],["2026-08-20",1572066.0],["2026-08-21",1584744.0],["2026-08-24",1572066.0],["2026-08-25",1581015.0],["2026-08-26",1603388.0],["2026-08-27",1605625.0],["2026-08-28",1619049.0],["2026-08-31",1608608.0],["2026-09-01",1641422.0],["2026-09-02",1616812.0],["2026-09-03",1607862.0],["2026-09-04",1633218.0],["2026-09-07",1663049.0],["2026-09-08",1659320.0],["2026-09-09",1659320.0],["2026-09-10",1651862.0],["2026-09-11",1630235.0],["2026-09-14",1618303.0],["2026-09-15",1608608.0],["2026-09-16",1618303.0],["2026-09-17",1635456.0],["2026-09-18",1662303.0],["2026-09-21",1684676.0],["2026-09-22",1692133.0],["2026-09-23",1701083.0],["2026-09-24",1700337.0],["2026-09-29",1683930.0],["2026-09-30",1695116.0],["2026-10-01",1707794.0],["2026-10-02",1706303.0],["2026-10-05",1753286.0],["2026-10-06",1761489.0],["2026-10-07",1754777.0],["2026-10-08",1738371.0],["2026-10-12",1736133.0],["2026-10-13",1700337.0],["2026-10-14",1709286.0],["2026-10-15",1648133.0],["2026-10-16",1649625.0],["2026-10-19",1636947.0],["2026-10-20",1623523.0],["2026-10-21",1636947.0],["2026-10-22",1618303.0],["2026-10-28",1644405.0],["2026-10-29",1623523.0],["2026-10-30",1589218.0],["2026-11-02",1576540.0],["2026-11-03",1524337.0],["2026-11-04",1513151.0],["2026-11-05",1472879.0],["2026-11-06",1403524.0],["2026-11-09",1477354.0],["2026-11-10",1510913.0],["2026-11-11",1563117.0],["2026-11-12",1529557.0],["2026-11-13",1552676.0],["2026-11-16",1462439.0],["2026-11-17",1425896.0],["2026-11-18",1427388.0],["2026-11-19",1369219.0],["2026-11-20",1280401.0]];
+const NS="http://www.w3.org/2000/svg", g=document.getElementById('g'), box=document.getElementById('box');
+const W=860,H=340,L=64,R=18,T=18,B=36;
+const vals=DATA.map(d=>d[1]), lo=Math.floor(Math.min(...vals)/100000)*100000, hi=Math.ceil(Math.max(...vals)/100000)*100000;
+const x=i=>L+i/(DATA.length-1)*(W-L-R), y=v=>T+(hi-v)/(hi-lo)*(H-T-B);
+function el(n,a,t){const e=document.createElementNS(NS,n);for(const k in a)e.setAttribute(k,a[k]);if(t!==undefined)e.textContent=t;g.appendChild(e);return e}
+for(let v=lo;v<=hi;v+=100000){el('line',{class:'grid',x1:L,x2:W-R,y1:y(v),y2:y(v)});
+ el('text',{class:'tick',x:L-8,y:y(v)+4,'text-anchor':'end'},(v/10000)+'萬')}
+el('line',{class:'axis',x1:L,x2:W-R,y1:H-B,y2:H-B});
+[0,Math.floor(DATA.length/4),Math.floor(DATA.length/2),Math.floor(DATA.length*3/4),DATA.length-1].forEach(i=>{
+ el('text',{class:'tick',x:x(i),y:H-B+18,'text-anchor':i===0?'start':i===DATA.length-1?'end':'middle'},DATA[i][0].slice(5))});
+const pts=DATA.map((d,i)=>x(i).toFixed(1)+','+y(d[1]).toFixed(1)).join(' ');
+el('polygon',{class:'area',points:`${L},${H-B} ${pts} ${W-R},${H-B}`});
+const bi=DATA.findIndex(d=>d[0]==='2026-10-06'), ei=DATA.findIndex(d=>d[0]==='2026-11-20');
+el('rect',{class:'ddband',x:x(bi),y:T,width:Math.max(2,x(ei)-x(bi)),height:H-T-B});
+el('polyline',{class:'line',points:pts});
+el('circle',{class:'enddot',cx:x(DATA.length-1),cy:y(DATA[DATA.length-1][1]),r:5});
+el('text',{class:'endlabel',x:x(DATA.length-1)-6,y:y(DATA[DATA.length-1][1])-12,'text-anchor':'end'},'1,280,401');
+el('text',{class:'ddlabel',x:x(bi)+6,y:T+16},'最大回撤 -27.31%');
+const cross=el('line',{class:'cross',x1:0,x2:0,y1:T,y2:H-B,opacity:0});
+const tip=document.getElementById('tip'),tv=document.getElementById('tv'),tk=document.getElementById('tk'),tr=document.getElementById('tr');
+const svg=document.getElementById('chart');let idx=-1;
+function show(i){idx=i;const d=DATA[i];cross.setAttribute('x1',x(i));cross.setAttribute('x2',x(i));cross.style.opacity=.55;
+ tv.textContent=d[1].toLocaleString('en-US')+' 元';tk.textContent=d[0];
+ const r=(d[1]/1000000-1)*100;tr.textContent=(r>=0?'+':'')+r.toFixed(2)+'% 報酬';
+ const sx=x(i)/860*box.clientWidth, sy=y(d[1])/340*box.clientHeight;
+ tip.style.left=Math.max(4,Math.min(sx+12,box.clientWidth-tip.offsetWidth-4))+'px';
+ tip.style.top=Math.max(4,Math.min(sy-70,box.clientHeight-tip.offsetHeight-4))+'px';tip.style.opacity=1}
+svg.tabIndex=0;
+svg.addEventListener('mousemove',e=>{const r=svg.getBoundingClientRect(),px=(e.clientX-r.left)/r.width*W;
+ let best=0,bd=1e9;DATA.forEach((d,i)=>{const dd=Math.abs(x(i)-px);if(dd<bd){bd=dd;best=i}});show(best)});
+svg.addEventListener('mouseleave',()=>{tip.style.opacity=0;cross.style.opacity=0;idx=-1});
+svg.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key==='ArrowLeft'){e.preventDefault();show(Math.min(DATA.length-1,Math.max(0,(idx<0?-1:idx)+(e.key==='ArrowRight'?1:-1))))}});
+svg.addEventListener('blur',()=>{tip.style.opacity=0;cross.style.opacity=0;idx=-1});
+let html='<table><thead><tr><th>日期</th><th class="n">淨值</th><th class="n">報酬率</th></tr></thead><tbody>';
+DATA.slice().reverse().forEach(d=>{const r=(d[1]/1000000-1)*100;html+='<tr><td>'+d[0]+'</td><td class="n">'+d[1].toLocaleString('en-US')+'</td><td class="n">'+(r>=0?'+':'')+r.toFixed(2)+'%</td></tr>'});
+document.getElementById('tbl').innerHTML=html;
+const themeBtn=document.getElementById('theme');
+function isDark(){const t=document.documentElement.getAttribute('data-theme');return t==='dark'||(!t&&window.matchMedia('(prefers-color-scheme:dark)').matches)}
+function syncBtn(){themeBtn.textContent=isDark()?'切換淺色':'切換深色'}
+themeBtn.onclick=()=>{document.documentElement.setAttribute('data-theme',isDark()?'light':'dark');syncBtn()};
+syncBtn();
+</script></body></html>

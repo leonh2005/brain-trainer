@@ -119,3 +119,4 @@ transcribe/data/
 scripts/console_monitor_state/
 scripts/console_monitor_current.json
 scripts/console_monitor.lock
+.ray-demo-venv/

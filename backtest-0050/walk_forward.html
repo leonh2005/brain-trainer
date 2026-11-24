@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>0050 walk-forward 驗證</title><style>
+:root{color-scheme:light;--page:#f9f9f7;--surface:#fcfcfb;--ink:#0b0b0b;--ink2:#52514e;--muted:#898781;--line:#e1e0d9;
+--good:#006300;--bad:#ff6b6b;--gray:#6b6a65;--border:rgba(11,11,11,.10)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--page:#0d0d0d;--surface:#1a1a19;
+--ink:#f0efec;--ink2:#c3c2b7;--muted:#898781;--line:#2c2c2a;--good:#0ca30c;--bad:#ff6b6b;--gray:#6b6a65;--border:rgba(255,255,255,.10)}}
+:root[data-theme="dark"]{color-scheme:dark;--page:#0d0d0d;--surface:#1a1a19;--ink:#f0efec;--ink2:#c3c2b7;
+--muted:#898781;--line:#2c2c2a;--good:#0ca30c;--bad:#ff6b6b;--gray:#6b6a65;--border:rgba(255,255,255,.10)}
+*{box-sizing:border-box}body{margin:0;background:var(--page);color:var(--ink);font:14px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif}
+.wrap{max-width:960px;margin:0 auto;padding:32px 18px 64px}header{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+h1{font-size:24px;margin:0 0 4px;letter-spacing:-.02em}.sub{color:var(--ink2);margin:0 0 20px;font-size:13px}
+button{background:var(--surface);color:var(--ink2);border:1px solid var(--border);border-radius:8px;padding:6px 12px;cursor:pointer;font:inherit}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:16px}
+h2{font-size:16px;margin:0 0 12px}.lab{color:var(--ink2);font-size:13px}.hero{font-size:32px;font-weight:650;letter-spacing:-.02em;margin:2px 0}
+.up{color:var(--good)}.down{color:var(--bad)}.note{color:var(--ink2);font-size:13px}.note li{margin:6px 0}
+.cmp{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
+.box{border:1px solid var(--border);border-radius:10px;padding:12px 14px}
+.tw{overflow-x:auto}table{width:100%;min-width:620px;border-collapse:collapse;font-size:13px}th,td{text-align:left;padding:8px 9px;border-bottom:1px solid var(--line)}
+th{color:var(--ink2);font-weight:600}td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
+.warn{border-left:3px solid var(--bad);padding-left:12px;color:var(--ink2);font-size:13px}
+.tie{color:var(--gray)}
+</style></head><body><div class="wrap">
+<header><div><h1>0050 策略 walk-forward 驗證</h1>
+<p class="sub">2022-01-03 → 2026-11-20 · 12 個月訓練 / 6 個月測試 · 每次往前滑 6 個月 · 共 8 段（末段因資料止於 11/20 僅約 5 個月）</p></div>
+<button id="theme" type="button">切換深色</button></header>
+
+<section class="card"><div class="cmp">
+<div class="box"><div class="lab">策略 · 樣本外複利</div><div class="hero">2,693,644</div><div class="up">+169.36%</div></div>
+<div class="box"><div class="lab">分段重置持有 · 樣本外</div><div class="hero">3,099,278</div><div class="up">+209.93%</div></div>
+<div class="box"><div class="lab">8 段結果</div><div class="hero"><span class="down">0 勝</span> / 4 平 / 4 負</div><div class="note">落後 40.57 個百分點</div></div>
+</div>
+<p class="warn" style="margin-top:14px">⚠ 結論：前面挑出的 in-sample 贏家（18%/25%/MA20、12%/25%/MA20）沒有被任何一段選中，也沒有在樣本外重現。8 段中 4 段完全沒觸發停損（與持有完全相同），另外 4 段表現更差。用「訓練報酬最高」或「訓練報酬/最大回撤」選參數，樣本外結果完全一樣 —— 不是選法造成的，而是每個訓練窗選出的參數都沒能在下一段重現。</p>
+</section>
+
+<section class="card"><h2>各段結果（以前一段期末資金複利到這一段）</h2><div class="tw"><table><caption>8 段 walk-forward 結果，起始資金 1,000,000 元</caption>
+<thead><tr><th scope="col">段</th><th scope="col">訓練期間</th><th scope="col">選中參數</th><th class="n">訓練報酬</th><th scope="col">測試期間</th><th class="n">策略</th><th class="n">持有</th><th class="n">差異</th><th class="n">交易</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>2022-01→2023-01</td><td>18/25/MA20</td><td class="n down">−21.34%</td><td>2023-01→2023-06</td><td class="n">+18.46%</td><td class="n">+18.46%</td><td class="n tie">平手</td><td class="n">0</td></tr>
+<tr><td>2</td><td>2022-07→2023-06</td><td>10/25/MA20</td><td class="n up">+25.08%</td><td>2023-07→2024-01</td><td class="n">+4.27%</td><td class="n">+4.27%</td><td class="n tie">平手</td><td class="n">0</td></tr>
+<tr><td>3</td><td>2023-01→2024-01</td><td>18/75/MA20</td><td class="n up">+25.39%</td><td>2024-01→2024-07</td><td class="n">+40.01%</td><td class="n">+40.01%</td><td class="n tie">平手</td><td class="n">0</td></tr>
+<tr><td>4</td><td>2023-07→2024-07</td><td>18/75/MA20</td><td class="n up">+45.96%</td><td>2024-07→2024-12</td><td class="n">+3.10%</td><td class="n">+5.04%</td><td class="n down">−1.94pp</td><td class="n">2</td></tr>
+<tr><td>5</td><td>2024-01→2024-12</td><td>10/25/MA10</td><td class="n up">+51.31%</td><td>2025-01→2025-06</td><td class="n down">−6.32%</td><td class="n up">+0.69%</td><td class="n down">−7.01pp</td><td class="n">4</td></tr>
+<tr><td>6</td><td>2024-07→2025-06</td><td>10/25/MA20</td><td class="n up">+13.43%</td><td>2025-07→2025-12</td><td class="n">+35.09%</td><td class="n">+35.09%</td><td class="n tie">平手</td><td class="n">0</td></tr>
+<tr><td>7</td><td>2025-01→2025-12</td><td>10/25/MA20</td><td class="n up">+46.54%</td><td>2026-01→2026-06</td><td class="n">+55.53%</td><td class="n">+61.89%</td><td class="n down">−6.36pp</td><td class="n">2</td></tr>
+<tr><td>8</td><td>2025-07→2026-06</td><td>10/75/MA10</td><td class="n up">+123.93%</td><td>2026-07→2026-11（部分）</td><td class="n down">−23.25%</td><td class="n down">−22.52%</td><td class="n down">−0.73pp</td><td class="n">5</td></tr>
+</tbody></table></div></section>
+
+<section class="card"><h2>方法與資料</h2><ul class="note">
+<li>每段用訓練期 24 組參數（停損 10/12/15/18% × 核心 25/50/75% × 補倉 MA10/MA20）中報酬最高的一組，套用到下一段 6 個月；每段起點都以收盤價全額買入。</li>
+<li>改用「訓練報酬 / |最大回撤|」當選參數準則再跑一次，8 段的樣本外結果完全相同（只有第 1 段選中參數不同，但該段 0 筆交易）。</li>
+<li>2025-06-18 的 1:4 分割已向前還原（分割前股價與股息 ÷4）。FinMind 0050 另缺 2025-06-11～06-17 共 5 個交易日，本回測未補；1,178 筆並非完整交易日曆。</li>
+<li>起始資金 1,000,000 元；段內停損／補倉訊號在收盤產生、次日開盤成交（與其他報告一致）。</li>
+<li>本表的「分段重置持有」每 6 個月強制結算再買入，與其他報告的連續買進持有不同：2026 兩段複利約 +25.4%，低於連續持有的 +28.04%。</li>
+<li>手續費買賣各 0.1425%、交易稅僅賣方 0.1%；股息依還原後每股金額計入；空手現金不計息；每段期末按收盤結算並扣賣方成本。</li>
+<li>資料來源：FinMind 0050 日 OHLC（與 Shioaji 在重疊交易日零誤差；2025-12～2026-01 缺口由 FinMind 補，2022–2025 未交叉驗證），共 1,178 個交易日。</li>
+</ul></section>
+</div><script>
+const btn=document.getElementById('theme');
+function isDark(){const t=document.documentElement.getAttribute('data-theme');return t==='dark'||(!t&&window.matchMedia('(prefers-color-scheme:dark)').matches)}
+function sync(){btn.textContent=isDark()?'切換淺色':'切換深色'}
+btn.onclick=()=>{document.documentElement.setAttribute('data-theme',isDark()?'light':'dark');sync()};
+const mq=window.matchMedia('(prefers-color-scheme:dark)');if(mq.addEventListener)mq.addEventListener('change',sync);else if(mq.addListener)mq.addListener(sync);sync();
+</script></body></html>
