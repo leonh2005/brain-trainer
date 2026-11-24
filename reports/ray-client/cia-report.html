@@ -42,7 +42,7 @@ code{background:var(--wash);padding:1px 5px;border-radius:4px}
 <li>VM：<code>ray-head.service</code>，systemd <code>Restart=always</code> + linger。</li>
 <li>Mac：<code>com.steven.ray-tunnel</code> LaunchAgent，<code>KeepAlive=true</code> + ServerAliveInterval。</li>
 <li>健康檢查：<code>./health.sh</code>（自動用 venv）→ <code>OK ray_cluster CPU=4.0</code>。</li>
-<li>使用 log：<code>logs/ray_usage.log</code>；<code>usage.py 7</code> 顯示每日次數、任務數、秒數、錯誤與「是否值得保留」判讀。</li>
+<li>使用 log：<code>logs/ray_usage.log</code>；<code>usage.py 7</code> 顯示每日次數、任務數、秒數、錯誤與「是否值得保留」判讀；<strong>每週日 20:00</strong> 由 <code>com.steven.ray-weekly-report</code> 自動寄 Telegram 週報。</li>
 </ul></section>
 
 <section class="card"><h2>三、目前 observable 狀態</h2><ul class="note">
