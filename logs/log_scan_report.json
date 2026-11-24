@@ -1,6 +1,6 @@
 {
-  "scanned_at": "2026-11-24 03:00:53",
-  "since": "2026-11-23 03:00:01",
+  "scanned_at": "2026-11-25 03:00:51",
+  "since": "2026-11-24 03:00:00",
   "results": {
     "市場儀表板": {
       "exists": true,
@@ -28,14 +28,14 @@
     },
     "財經新聞分析": {
       "exists": true,
-      "errors": 296,
-      "last_error": "2026-11-24 03:00:11,082 [WARNING] fetcher.reddit_fetcher: Reddit fetch failed for r/stocks: 404 Client Error: Not Found for url: https://www.reddit.com/r/stocks/hot/.rss",
+      "errors": 289,
+      "last_error": "2026-11-25 03:00:10,425 [WARNING] fetcher.reddit_fetcher: Reddit fetch failed for r/stocks: 404 Client Error: Not Found for url: https://www.reddit.com/r/stocks/hot/.rss",
       "fix": "尚無對應建議，需人工判斷"
     },
     "川普監測": {
       "exists": true,
-      "errors": 3,
-      "last_error": "2026-11-23 11:45:03,270 WARNING 分析失敗：Thailand’s AI-Data Center Investments at Risk as T — 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reaso",
+      "errors": 9,
+      "last_error": "2026-11-24 12:20:03,814 WARNING 分析失敗：Trump's Nvidia Intervention Sparks Bipartisan Prob — 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reaso",
       "fix": "尚無對應建議，需人工判斷"
     },
     "持倉新聞(台股)": {
@@ -46,9 +46,9 @@
     },
     "持倉新聞(美股)": {
       "exists": true,
-      "errors": 6,
-      "last_error": "2026-11-23 21:00:57,770 ERROR Telegram 推播失敗：('Connection aborted.', ConnectionResetError(54, 'Connection reset by peer'))",
-      "fix": "尚無對應建議，需人工判斷"
+      "errors": 0,
+      "last_error": null,
+      "fix": null
     },
     "HolaQuant": {
       "exists": true,
@@ -88,9 +88,9 @@
     },
     "盤中監控": {
       "exists": true,
-      "errors": 21,
-      "last_error": "[snapshot] 失敗（連續 1 次）: HTTPConnectionPool(host='localhost', port=5455): Read timed out. (read timeout=8)",
-      "fix": "網路逾時 → 確認目標服務可達，或增加 timeout 設定"
+      "errors": 22,
+      "last_error": "[subscribe] 5536 失敗（該檔今日無即時資料）: gateway busy: queue wait exceeded",
+      "fix": "尚無對應建議，需人工判斷"
     },
     "蝦皮軟纖監測": {
       "exists": true,
