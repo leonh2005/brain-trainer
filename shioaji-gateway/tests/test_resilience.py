@@ -236,7 +236,11 @@ def test_snapshot_passes_timeout(monkeypatch):
 
     def snapshots(contracts, timeout=None):
         recorded["timeout"] = timeout
-        return [SimpleNamespace(close=1.0, change_price=0.1, change_rate=0.1, total_amount=1.0)]
+        return [SimpleNamespace(
+            code="2330", close=1.0, change_price=0.1, change_rate=0.1,
+            total_amount=1.0, total_volume=1, yesterday_volume=1,
+            buy_volume=1, sell_volume=1, high=1.0, low=1.0, open=1.0,
+        )]
 
     api = SimpleNamespace(snapshots=snapshots)
     monkeypatch.setattr(gw, "_conn", {"api": api})
@@ -244,6 +248,7 @@ def test_snapshot_passes_timeout(monkeypatch):
 
     r = gw.app.test_client().get("/snapshot?codes=2330")
     assert r.status_code == 200
+    assert r.get_json()["ok"] is True, f"快照.endpoint 不該因假資料缺欄位而整批失敗：{r.get_json()}"
     assert recorded["timeout"] == gw.SNAPSHOT_TIMEOUT_MS
 
 

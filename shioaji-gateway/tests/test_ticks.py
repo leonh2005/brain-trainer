@@ -315,7 +315,7 @@ def test_parse_sdk_ticks_filters_simtrade_and_formats_wallclock():
 
 def test_snapshot_includes_extended_fields(monkeypatch):
     api = _fake_api()
-    sn = SimpleNamespace(close=100.0, change_price=1.0, change_rate=1.01,
+    sn = SimpleNamespace(code="2330", close=100.0, change_price=1.0, change_rate=1.01,
                          total_amount=5e9, total_volume=123, yesterday_volume=200,
                          buy_volume=30, sell_volume=25, high=101.0, low=99.0, open=99.5)
     api.snapshots = lambda contracts, timeout=None: [sn]

@@ -203,3 +203,37 @@ def test_scanner_route_returns_json_error_for_bad_count():
     assert resp.status_code == 200
     body = resp.get_json()
     assert body["ok"] is False
+
+
+# ── /snapshot 代號對位 ────────────────────────────────────────────
+
+def _fake_snapshot(code: str, close: float) -> SimpleNamespace:
+    return SimpleNamespace(
+        code=code, close=close, change_price=0.0, change_rate=0.0,
+        total_amount=0.0, total_volume=0, yesterday_volume=0,
+        buy_volume=0, sell_volume=0, high=close, low=close, open=close,
+    )
+
+
+def test_snapshot_skips_evicted_code_without_shifting_later_prices(monkeypatch):
+    """SDK 省略被淘汰的快照時，不能被 zip 對位把後面代號的價格套到前面。"""
+    monkeypatch.setattr(gw, "_resolve_contract", lambda api, code: SimpleNamespace(
+        code=code, name=f"name-{code}", reference=100.0,
+        limit_up=110.0, limit_down=90.0))
+
+    # 2026-11-25 09:45 真實事故：2303 快取鍵被淘汰，SDK 只回 2356（38.7）與 2883（30.25）
+    snaps = [_fake_snapshot("2356", 38.7), _fake_snapshot("2883", 30.25)]
+
+    class FakeAPI:
+        def snapshots(self, contracts, timeout):
+            return snaps
+
+    monkeypatch.setattr(gw, "_run", lambda work, **kwargs: work(FakeAPI()))
+
+    with gw.app.test_client() as client:
+        resp = client.get("/snapshot?codes=2303,2356,2883")
+
+    data = resp.get_json()["data"]
+    assert set(data) == {"2356", "2883"}, f"缺價代號不該拿到別人的價格：{data}"
+    assert data["2356"]["close"] == 38.7
+    assert data["2883"]["close"] == 30.25

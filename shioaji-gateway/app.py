@@ -556,8 +556,14 @@ def snapshot():
         def work(api):
             contracts = [_resolve_contract(api, c) for c in codes]
             snaps = api.snapshots(contracts, timeout=_sdk_timeout_ms(SNAPSHOT_TIMEOUT_MS))
+            # SDK 快取鍵被淘汰時會省略該檔 snapshot（list 變短），
+            # 用 zip 對位會把後面代號的價格套到前面代號 → 必須照 sn.code 認領
+            by_code = {sn.code: sn for sn in snaps}
             out = {}
-            for c, sn, ct in zip(codes, snaps, contracts):
+            for c, ct in zip(codes, contracts):
+                sn = by_code.get(c)
+                if sn is None:
+                    continue
                 out[c] = {
                     "close": float(sn.close),
                     "change_price": float(sn.change_price),
