@@ -1,6 +1,6 @@
 {
-  "scanned_at": "2026-11-26 03:00:52",
-  "since": "2026-11-25 03:00:00",
+  "scanned_at": "2026-11-27 03:00:56",
+  "since": "2026-11-26 03:00:00",
   "results": {
     "市場儀表板": {
       "exists": true,
@@ -28,14 +28,14 @@
     },
     "財經新聞分析": {
       "exists": true,
-      "errors": 289,
-      "last_error": "2026-11-26 03:00:12,964 [WARNING] fetcher.reddit_fetcher: Reddit fetch failed for r/stocks: 404 Client Error: Not Found for url: https://www.reddit.com/r/stocks/hot/.rss",
+      "errors": 159,
+      "last_error": "2026-11-26 16:02:12,437 [WARNING] fetcher.reddit_fetcher: Reddit fetch failed for r/wallstreetbets: 404 Client Error: Not Found for url: https://www.reddit.com/r/wallstreetbets/hot/.rss",
       "fix": "尚無對應建議，需人工判斷"
     },
     "川普監測": {
       "exists": true,
-      "errors": 7,
-      "last_error": "2026-11-25 12:45:04,033 WARNING 分析失敗：FSSAI Sanctions Prosecution Against Bisleri: Watch — 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reaso",
+      "errors": 8,
+      "last_error": "2026-11-26 13:15:03,769 WARNING 分析失敗：Nvidia AI Chips: 900,000 Units Approved for China  — 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reaso",
       "fix": "尚無對應建議，需人工判斷"
     },
     "持倉新聞(台股)": {
@@ -46,8 +46,8 @@
     },
     "持倉新聞(美股)": {
       "exists": true,
-      "errors": 3,
-      "last_error": "2026-11-25 21:00:52,039 WARNING GOOG 分析失敗，換下一個模型：gemini-2.5-flash-lite: Error code: 503 - [{'error': {'code': 503, 'message': 'This model is currently e",
+      "errors": 1,
+      "last_error": "2026-11-26 21:00:24,134 WARNING GOOG 分析失敗，換下一個模型：gemini-2.5-flash-lite: Error code: 503 - [{'error': {'code': 503, 'message': 'This model is currently e",
       "fix": "尚無對應建議，需人工判斷"
     },
     "HolaQuant": {
@@ -88,9 +88,9 @@
     },
     "盤中監控": {
       "exists": true,
-      "errors": 22,
-      "last_error": "[snapshot] 失敗（連續 2 次）: HTTPConnectionPool(host='localhost', port=5455): Read timed out. (read timeout=8)",
-      "fix": "網路逾時 → 確認目標服務可達，或增加 timeout 設定"
+      "errors": 23,
+      "last_error": "[subscribe] 6274 失敗（該檔今日無即時資料）: gateway busy: queue wait exceeded",
+      "fix": "尚無對應建議，需人工判斷"
     },
     "蝦皮軟纖監測": {
       "exists": true,
