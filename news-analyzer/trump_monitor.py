@@ -138,8 +138,20 @@ def fetch_articles() -> list[dict]:
     return articles
 
 
+def _gemini_api_key() -> str:
+    secret = Path(os.path.expanduser("~/CCProject/.secrets/gemini_key.txt"))
+    if secret.exists():
+        key = secret.read_text(encoding="utf-8").strip()
+        if key:
+            return key
+    key = os.getenv("GEMINI_API_KEY")
+    if key:
+        return key.strip()
+    raise RuntimeError("GEMINI_API_KEY not set and .secrets/gemini_key.txt missing")
+
+
 def gemini_call(messages: list, max_tokens=1000) -> dict:
-    client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
+    client = genai.Client(api_key=_gemini_api_key())
     prompt = "\n\n".join(
         m["content"] for m in messages if m.get("role") in ("system", "user")
     )

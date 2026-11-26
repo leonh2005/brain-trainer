@@ -138,7 +138,7 @@ SECTOR_PEERS = {
 _snapshot_health = {'fail_streak': 0} # 快照連續失敗次數（gateway 異常偵測）
 SESSION = requests.Session()
 CLIENT_ID = 'intraday_monitor'
-SNAPSHOT_TIMEOUT = 8
+SNAPSHOT_TIMEOUT = 12
 SUBSCRIBE_TIMEOUT = 30
 TICKS_TIMEOUT = 8
 DAILY_TIMEOUT = 15
@@ -503,15 +503,20 @@ def _parse_snaps(payload: dict) -> dict:
 
 
 def get_snapshot(codes: list) -> dict:
-    """批次取指定股票即時快照（走 gateway）"""
-    try:
-        data = _get_json('/snapshot', {'codes': ','.join(codes)}, SNAPSHOT_TIMEOUT)
-        _snapshot_health['fail_streak'] = 0
-        return _parse_snaps(data.get('data') or {})
-    except Exception as e:
-        _snapshot_health['fail_streak'] += 1
-        print(f'[snapshot] 失敗（連續 {_snapshot_health["fail_streak"]} 次）: {redact(e)}')
-        return {}
+    """批次取指定股票即時快照（走 gateway）；失敗重試一次以抗 gateway 瞬時忙碌"""
+    last_err = None
+    for attempt in (1, 2):
+        try:
+            data = _get_json('/snapshot', {'codes': ','.join(codes)}, SNAPSHOT_TIMEOUT)
+            _snapshot_health['fail_streak'] = 0
+            return _parse_snaps(data.get('data') or {})
+        except Exception as e:
+            last_err = e
+            if attempt == 1:
+                time.sleep(2)
+    _snapshot_health['fail_streak'] += 1
+    print(f'[snapshot] 失敗（連續 {_snapshot_health["fail_streak"]} 次）: {redact(last_err)}')
+    return {}
 
 
 def _load_avg5_cache() -> dict:
