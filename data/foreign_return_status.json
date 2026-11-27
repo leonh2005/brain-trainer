@@ -1,32 +1,32 @@
 {
- "updated_at": "2026-11-26T17:00:29",
+ "updated_at": "2026-11-27T17:00:32",
  "hits": [],
  "hit_count": 0,
  "results": {
   "futures": {
    "ok": false,
-   "latest_net": -106275,
-   "latest_date": "2026-11-26",
+   "latest_net": -107503,
+   "latest_date": "2026-11-27",
    "recent_changes": [
-    250,
     -2527,
-    -566
+    -566,
+    -1228
    ],
-   "detail": "近 3 日淨空單變化 [250, -2527, -566]（減碼為正）"
+   "detail": "近 3 日淨空單變化 [-2527, -566, -1228]（減碼為正）"
   },
   "volume": {
    "ok": false,
-   "latest_date": "2026-11-26",
-   "latest_amount": 837652988083.0,
-   "ma20": 974575992842.05,
-   "detail": "2026-11-26 成交 0.84 兆 vs 20日均量 0.97 兆"
+   "latest_date": "2026-11-27",
+   "latest_amount": 681609604843.0,
+   "ma20": 975652187049.35,
+   "detail": "2026-11-27 成交 0.68 兆 vs 20日均量 0.98 兆"
   },
   "fx": {
    "ok": false,
-   "latest_date": "2026-11-25",
-   "latest_rate": 33.126,
-   "total_appreciation": -0.19,
-   "detail": "2026-11-20~2026-11-25 USD/NTD 32.936→33.126（台幣貶值 0.190 元）"
+   "latest_date": "2026-11-26",
+   "latest_rate": 32.947,
+   "total_appreciation": -0.052,
+   "detail": "2026-11-23~2026-11-26 USD/NTD 32.895→32.947（台幣貶值 0.052 元）"
   }
  }
 }
