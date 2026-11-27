@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Comfy 影片產生器</title>
+<style>
+  body { font-family: system-ui, sans-serif; max-width: 720px; margin: 32px auto; padding: 0 16px; color: #e8ecf1; background: #0b1020; }
+  h1 { font-size: 22px; }
+  label { display: block; margin: 12px 0; }
+  #workflow-desc { display: block; margin-top: 6px; color: #9fb0d0; }
+  input, textarea, select { width: 100%; box-sizing: border-box; padding: 8px; border-radius: 6px; border: 1px solid #2c3a5c; background: #121a36; color: inherit; }
+  textarea { min-height: 72px; }
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  button { padding: 10px 20px; border: 0; border-radius: 6px; background: #2563eb; color: white; cursor: pointer; }
+  #status { margin: 16px 0; color: #9fb0d0; }
+  video { width: 100%; border-radius: 8px; }
+  a { display: inline-block; margin-top: 12px; color: #7dd3fc; }
+</style>
+</head>
+<body>
+<h1>Comfy 影片產生器</h1>
+<form id="gen">
+  <label>工作流
+    <select name="workflow" id="workflow">
+      {% for w in workflows %}<option value="{{ w.filename }}" data-description="{{ w.description }}">{{ w.title }}</option>{% endfor %}
+    </select>
+    <small id="workflow-desc"></small>
+  </label>
+  <label>提示詞（英文效果較穩定）
+    <textarea name="prompt" required>a red fox walking through snow, cinematic lighting, slow camera pan</textarea>
+  </label>
+  <label>負面提示詞
+    <input name="negative" value="blurry, deformed, watermark, text">
+  </label>
+  <div class="grid">
+    <label>尺寸配對
+      <select name="size">
+        {% for s in sizes %}<option value="{{ s.value }}">{{ s.label }}（{{ s.width }}×{{ s.height }}）</option>{% endfor %}
+      </select>
+    </label>
+    <label>幀數 <input name="frames" type="number" value="25" min="9" max="257"></label>
+    <label>步數 <input name="steps" type="number" value="8" min="1" max="100"></label>
+    <label>Seed <input name="seed" type="number" value="0" min="0"></label>
+    <label>圖片檔名（I2V 用，選填） <input name="image" placeholder="input.png"></label>
+  </div>
+  <button type="submit">產生影片</button>
+</form>
+<div id="status"></div>
+<video id="preview" controls hidden></video>
+<a id="download" hidden download>⬇ 下載影片</a>
+<script>
+const form = document.getElementById('gen');
+const workflowSelect = document.getElementById('workflow');
+const descEl = document.getElementById('workflow-desc');
+const statusEl = document.getElementById('status');
+
+function showDescription() {
+  descEl.textContent = workflowSelect.selectedOptions[0]?.dataset.description || '';
+}
+workflowSelect.addEventListener('change', showDescription);
+showDescription();
+const preview = document.getElementById('preview');
+const download = document.getElementById('download');
+let timer = null;
+
+const lastId = {{ last_id|tojson }};
+preview.hidden = true;
+download.hidden = true;
+if (lastId) {
+  statusEl.textContent = `接回任務 ${lastId}`;
+  timer = setInterval(() => poll(lastId), 3000);
+  poll(lastId);
+}
+
+form.addEventListener('submit', async (event) => {
+  event.preventDefault();
+  clearInterval(timer);
+  statusEl.textContent = '送出中…';
+  preview.hidden = true;
+  download.hidden = true;
+  const response = await fetch('/generate', { method: 'POST', body: new FormData(form) });
+  if (!response.ok) {
+    statusEl.textContent = await response.text();
+    return;
+  }
+  const { prompt_id } = await response.json();
+  statusEl.textContent = `排隊中 (${prompt_id})`;
+  timer = setInterval(() => poll(prompt_id), 3000);
+  poll(prompt_id);
+});
+
+async function poll(id) {
+  const response = await fetch('/status/' + id);
+  const data = await response.json();
+  statusEl.textContent = data.status === 'running'
+    ? `running ${data.percent ?? 0}% · ${data.phase ?? ''}`
+    : data.status;
+  if (data.status === 'completed') {
+    clearInterval(timer);
+    const finished = data.completed_at ? ` · 完成於 ${data.completed_at}` : '';
+    const duration = data.duration_seconds ? ` · 耗時 ${data.duration_seconds}s` : '';
+    statusEl.textContent = `completed${finished}${duration}`;
+    preview.src = '/video/' + id;
+    preview.hidden = false;
+    download.href = '/download/' + id;
+    download.hidden = false;
+  } else if (data.status === 'error') {
+    clearInterval(timer);
+  }
+}
+</script>
+</body>
+</html>
