@@ -1,5 +1,6 @@
 """comfy_web Flask 薄層的單元測試（TDD：先寫，預期 RED）。"""
 
+import io
 import json
 
 import pytest
@@ -34,6 +35,7 @@ WORKFLOW = {
     "7": {"class_type": "CreateVideo", "inputs": {"images": ["8", 0], "fps": 24}},
     "8": {"class_type": "VAEDecode", "inputs": {"samples": ["3", 0], "vae": ["9", 0]}},
     "9": {"class_type": "VAELoader", "inputs": {"vae_name": "ltx.safetensors"}},
+    "10": {"class_type": "LoadImage", "inputs": {"image": "input.png"}},
 }
 
 HISTORY = {
@@ -68,6 +70,7 @@ def client(monkeypatch, tmp_path):
     )
     monkeypatch.setattr(app_module, "_get_json", lambda path: HISTORY if "pid1" in path else {})
     monkeypatch.setattr(app_module, "_get_bytes", lambda url: b"\x00\x00\x00 ftypmp42")
+    monkeypatch.setattr(app_module, "_upload_image", lambda file: {"name": "uploaded.png"})
     monkeypatch.setattr(app_module, "_start_progress_listener", lambda *args: None)
     app_module.PROGRESS.clear()
     app_module.LAST_PROMPT_ID = None
@@ -160,6 +163,29 @@ def test_generate_records_last_prompt_id(client):
         data={"prompt": "cat", "workflow": "t2v.api.json", "size": "768x512"},
     )
     assert app_module.LAST_PROMPT_ID == "pid1"
+
+
+def test_index_has_image_upload_field(client):
+    test_client, _ = client
+    response = test_client.get("/")
+    assert b'name="image_file"' in response.data
+    assert b'enctype="multipart/form-data"' in response.data
+
+
+def test_generate_uploads_image_for_i2v(client):
+    test_client, captured = client
+    response = test_client.post(
+        "/generate",
+        data={
+            "prompt": "a cat turning head",
+            "workflow": "t2v.api.json",
+            "size": "768x512",
+            "image_file": (io.BytesIO(b"\x89PNG\r\n\x1a\n"), "cat.png"),
+        },
+        content_type="multipart/form-data",
+    )
+    assert response.status_code == 200
+    assert captured["prompt"]["10"]["inputs"]["image"] == "uploaded.png"
 
 
 def test_generate_rejects_empty_prompt(client):

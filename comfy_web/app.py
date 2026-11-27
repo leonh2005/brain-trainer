@@ -58,6 +58,7 @@ SIZE_PRESETS = {
 }
 
 app = Flask(__name__)
+app.config["MAX_CONTENT_LENGTH"] = 20 * 1024 * 1024
 
 
 def _post_json(path: str, payload: dict) -> dict:
@@ -85,6 +86,25 @@ def _get_bytes(url: str) -> bytes:
     """從 ComfyUI /view 抓回檔案內容。"""
     with urllib.request.urlopen(url, timeout=120) as resp:
         return resp.read()
+
+
+def _upload_image(file_storage) -> dict:
+    """把選擇的圖片上傳到 ComfyUI input，回傳檔名資訊。"""
+    filename = Path(file_storage.filename or "image.png").name
+    boundary = uuid.uuid4().hex
+    header = (
+        f"--{boundary}\r\n"
+        f'Content-Disposition: form-data; name="image"; filename="{filename}"\r\n'
+        f"Content-Type: {file_storage.mimetype or 'application/octet-stream'}\r\n\r\n"
+    ).encode()
+    body = header + file_storage.read() + f"\r\n--{boundary}--\r\n".encode()
+    req = urllib.request.Request(
+        f"{COMFY_URL}/upload/image",
+        data=body,
+        headers={"Content-Type": f"multipart/form-data; boundary={boundary}"},
+    )
+    with urllib.request.urlopen(req, timeout=30) as resp:
+        return json.loads(resp.read())
 
 
 def _running_ids() -> set[str]:
@@ -303,6 +323,8 @@ def generate():
     if size not in SIZE_PRESETS:
         abort(400, "未知的尺寸配對")
     _, width, height = SIZE_PRESETS[size]
+    uploaded = request.files.get("image_file")
+    image_name = _upload_image(uploaded).get("name", "") if uploaded and uploaded.filename else ""
     values = {
         "prompt": prompt,
         "negative": form.get("negative", "").strip(),
@@ -311,7 +333,7 @@ def generate():
         "frames": _form_int(form, "frames", 25, 9, 257),
         "steps": _form_int(form, "steps", 8, 1, 100),
         "seed": _form_int(form, "seed", 0, 0, 2**64 - 1),
-        "image": form.get("image", "").strip(),
+        "image": image_name,
     }
     workflow = _patch_workflow(workflow, values)
     client_id = uuid.uuid4().hex
