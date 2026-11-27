@@ -130,6 +130,17 @@ def test_generate_patches_prompt_and_options(client):
     assert workflow["3"]["inputs"]["seed"] == 42
 
 
+def test_current_prompt_id_falls_back_to_latest_history(client, monkeypatch):
+    import comfy_web.app as app_module
+
+    history = {"older": {}, "newest": {}}
+    monkeypatch.setattr(
+        app_module, "_get_json", lambda path: history if path == "/history" else {}
+    )
+    app_module.LAST_PROMPT_ID = None
+    assert app_module._current_prompt_id() == "newest"
+
+
 def test_index_resumes_last_job(client, monkeypatch):
     import comfy_web.app as app_module
 

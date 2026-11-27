@@ -156,10 +156,17 @@ def _start_progress_listener(prompt_id: str, client_id: str) -> None:
 
 
 def _current_prompt_id() -> str | None:
-    """頁面重載後仍可接回最近一筆（或正在跑的）任務。"""
+    """頁面重載後仍可接回最近一筆（執行中或已完成）任務。"""
     if LAST_PROMPT_ID:
         return LAST_PROMPT_ID
-    return next(iter(_running_ids()), None)
+    running = _running_ids()
+    if running:
+        return next(iter(running), None)
+    try:
+        history = _get_json("/history")
+    except Exception:
+        return None
+    return next(reversed(list(history)), None)
 
 
 def _workflow_names() -> list[str]:
