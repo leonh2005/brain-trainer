@@ -271,6 +271,9 @@ def build_message(ctx: dict) -> str:
             lines.append("🟡 緩衝不足 20 個百分點，考慮補擔保品")
         else:
             lines.append("✅ 仍高於追繳線")
+        credit = ctx["credit_limit"]
+        if credit > ctx["loan"]:
+            lines.append(f"借滿額度 {credit:,.0f} 時維持率：{pledge['value'] / credit * 100:.0f}%")
         lines.append("")
     elif pledge["status"] == "missing":
         lines += [
@@ -360,6 +363,7 @@ def main() -> None:
         "source": source, "positions": positions, "prices": prices,
         "failed_codes": failed_codes, "pledge": pledge,
         "loan": float(config.get("loan_amount", 0) or 0),
+        "credit_limit": float(config.get("credit_limit", 0) or 0),
         "events": events, "events_status": events_status,
         "war_news": war_news, "verdict": verdict,
     }
