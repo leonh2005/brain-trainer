@@ -91,8 +91,71 @@ def handoff_to_gemma() -> str:
     return ""
 
 
+def _parse_sections(text: str) -> dict:
+    """把 '## 標題' 分節解析成 {標題: 內容}。"""
+    out = {}
+    cur_title, cur_lines = None, []
+    for line in text.splitlines():
+        if line.startswith('## '):
+            if cur_title:
+                out[cur_title] = '\n'.join(cur_lines).strip()
+            cur_title = line[3:].strip()
+            cur_lines = []
+        elif cur_title:
+            cur_lines.append(line)
+    if cur_title:
+        out[cur_title] = '\n'.join(cur_lines).strip()
+    return out
+
+
+def _merge_auto_month(path: str, new_content: str) -> str:
+    """把新的 ## 分節合併進當月檔，同標題覆蓋，其餘保留。"""
+    sections: dict = {}
+    if os.path.exists(path):
+        existing = open(path, encoding='utf-8').read()
+        body = existing.split('---', 2)[-1] if existing.startswith('---') else existing
+        sections = _parse_sections(body)
+    sections.update(_parse_sections(new_content))
+
+    now = datetime.now(TZ)
+    header = (
+        '---\n'
+        f'name: auto_monthly_{now.strftime("%Y_%m")}\n'
+        f'description: {now.strftime("%Y-%m")} 自動記憶更新（claude_cycle_monitor 依 git log 產生）\n'
+        'metadata:\n'
+        '  node_type: memory\n'
+        '  type: project\n'
+        f'  modified: {now.strftime("%Y-%m-%dT%H:%M:%S")}\n'
+        '---\n\n'
+    )
+    body = '\n\n'.join(f'## {title}\n{text}' for title, text in sections.items())
+    return header + body + '\n'
+
+
+def _ensure_auto_indexed(memory_dir: str) -> None:
+    """確保當月自動記憶檔出現在 MEMORY.md 索引。"""
+    fname = f'auto_{datetime.now(TZ).strftime("%Y-%m")}.md'
+    idx_path = os.path.join(memory_dir, 'MEMORY.md')
+    try:
+        idx = open(idx_path, encoding='utf-8').read()
+    except OSError:
+        return
+    if fname in idx:
+        return
+    line = f'- [自動記憶 {fname[5:-3]}]({fname}) — Gemini 依 git log 產生的當月專案狀態更新\n'
+    marker = '## Project\n'
+    if marker in idx:
+        idx = idx.replace(marker, marker + line, 1)
+    else:
+        idx = idx.rstrip() + '\n' + line
+    try:
+        open(idx_path, 'w', encoding='utf-8').write(idx)
+    except OSError:
+        pass
+
+
 def auto_update_memory() -> str:
-    """用 Gemini 分析近期 git 變更，自動更新記憶檔案"""
+    """用 Gemini 分析近期 git 變更，合併進當月自動記憶檔。"""
     import google.genai as genai
     api_key = os.getenv('GEMINI_API_KEY')
     if not api_key:
@@ -115,8 +178,8 @@ def auto_update_memory() -> str:
         '~/.claude/projects/-Users-steven-CCProject/memory/'
     )
     try:
-        index = open(os.path.join(memory_dir, 'MEMORY.md')).read()
-    except Exception:
+        index = open(os.path.join(memory_dir, 'MEMORY.md'), encoding='utf-8').read()
+    except OSError:
         index = ''
 
     prompt = (
@@ -125,9 +188,11 @@ def auto_update_memory() -> str:
         + '\n\n'.join(logs) +
         "\n\n現有記憶索引：\n" + index +
         "\n\n請判斷這些 commit 中是否有需要更新記憶的重要事項"
-        "（專案狀態、架構變更、重要決策等）。"
-        "若有，直接輸出需要新增或修改的記憶內容（Markdown 格式，含 frontmatter）；"
-        "若無新事項，輸出「無需更新」即可。不要輸出其他說明。"
+        "（專案狀態、架構變更、重要決策等）。\n"
+        "若有，用下列格式輸出，不要 frontmatter、不要程式碼區塊、不要其他說明：\n"
+        "## <專案或主題名稱>\n"
+        "<一兩句話的更新內容>\n\n"
+        "若無新事項，只輸出「無需更新」。"
     )
 
     try:
@@ -138,10 +203,14 @@ def auto_update_memory() -> str:
         result = resp.text.strip()
         if '無需更新' in result:
             return "✅ 記憶無需更新"
-        fname = os.path.join(memory_dir, f'auto_{datetime.now(TZ).strftime("%Y%m%d_%H%M")}.md')
-        with open(fname, 'w') as f:
-            f.write(result)
-        return f"✅ 記憶已更新：{os.path.basename(fname)}"
+        month_file = os.path.join(
+            memory_dir, f'auto_{datetime.now(TZ).strftime("%Y-%m")}.md'
+        )
+        merged = _merge_auto_month(month_file, result)
+        with open(month_file, 'w', encoding='utf-8') as f:
+            f.write(merged)
+        _ensure_auto_indexed(memory_dir)
+        return f"✅ 記憶已合併：{os.path.basename(month_file)}"
     except Exception as e:
         import traceback
         print(f"[記憶更新失敗] {traceback.format_exc()}", flush=True)
