@@ -237,3 +237,58 @@ def test_snapshot_skips_evicted_code_without_shifting_later_prices(monkeypatch):
     assert set(data) == {"2356", "2883"}, f"缺價代號不該拿到別人的價格：{data}"
     assert data["2356"]["close"] == 38.7
     assert data["2883"]["close"] == 30.25
+
+
+# ── /positions 與權限例外 ────────────────────────────────────────
+
+def test_permission_errors_are_not_conn_errors():
+    """權限/簽署例外重登一萬次也不會好，卻因 MRO 含 OSError 被當成連線錯誤 →
+    每次 /positions 都打斷共用 session（2026-11-28 CRITICAL）。"""
+    import shioaji as sj
+
+    assert gw._is_conn_error(sj.ShioajiPermissionError("denied")) is False
+    assert gw._is_conn_error(sj.AccountNotSignError("not signed")) is False
+    # 真正的連線錯誤仍要重登
+    assert gw._is_conn_error(sj.AuthError("auth failed")) is True
+
+
+def test_positions_without_stock_account_raises_business_error(monkeypatch):
+    """stock_account 為 None 時丟 ValueError（業務錯誤），不得觸發重登。"""
+    executed = {}
+
+    def fake_run(work, **kwargs):
+        executed.update(kwargs)
+        return work(SimpleNamespace(stock_account=None))
+
+    monkeypatch.setattr(gw, "_run", fake_run)
+
+    with gw.app.test_client() as client:
+        resp = client.get("/positions")
+
+    body = resp.get_json()
+    assert body["ok"] is False
+    assert "no stock account" in body["error"]
+    assert executed.get("retry") is False
+
+
+def test_positions_passes_sdk_timeout(monkeypatch):
+    """/positions 必須顯式傳 timeout，否則 SDK 預設 30 秒會一路佔住共用鎖。"""
+    seen = {}
+
+    class FakeAPI:
+        stock_account = SimpleNamespace()
+
+        def list_positions(self, account, timeout):
+            seen["timeout"] = timeout
+            return [SimpleNamespace(code="006208", name="富邦台50", quantity=1000,
+                                    price=150.0, last_price=208.0, pnl=58000.0,
+                                    cond="Cash")]
+
+    monkeypatch.setattr(gw, "_run", lambda work, **kwargs: work(FakeAPI()))
+
+    with gw.app.test_client() as client:
+        resp = client.get("/positions")
+
+    assert resp.get_json()["ok"] is True
+    assert seen["timeout"] == gw.POSITIONS_TIMEOUT_MS
+    assert resp.get_json()["data"][0]["code"] == "006208"

@@ -121,6 +121,7 @@ DAILY_TIMEOUT_MS = 15000
 TICKS_TIMEOUT_MS = 12000
 SCANNER_TIMEOUT_MS = 20000
 MARKET_SNAPSHOT_BATCH_TIMEOUT_MS = 4000
+POSITIONS_TIMEOUT_MS = 8000
 MARKET_SNAPSHOT_TOTAL_S = 22.0
 DEFAULT_BUDGET_S = 12.0
 RECONNECT_WAIT_S = 2.5           # 重連期間其他請求最多等這麼久
@@ -309,11 +310,17 @@ def _is_conn_error(e):
     不在原本的白名單（AuthError/ConnectionError/ResponseRecvError/ServerError/TimeoutError）
     內 → 每個請求 0.014 秒直接回錯且永不重登，gateway 從 01:00 卡到 09:20 全服務取價失敗。
     白名單天生會漏掉未知例外類型；改成未知一律當連線問題（fail-safe），只有確定重登無用的
-    才原樣往上拋。"""
+    才原樣往上拋。
+
+    2026-11-28 補：sj.ShioajiPermissionError（MRO 含 OSError）與 sj.AccountNotSignError
+    是權限/簽署問題，重登一萬次也不會好，卻會被「未知一律當連線問題」判成連線錯誤 →
+    每個 /positions 呼叫都打掉共用 session。兩者必須列入排除。
+    """
     import shioaji as sj
     return not isinstance(e, (LookupError, ValueError, TypeError, AttributeError,
                               LockTimeout, GatewayBusy, GatewayReconnecting,
-                              sj.ValidationError, sj.BadRequestError))
+                              sj.ValidationError, sj.BadRequestError,
+                              sj.ShioajiPermissionError, sj.AccountNotSignError))
 
 
 def _note_success():
@@ -592,11 +599,16 @@ def snapshot():
 def positions():
     """證券庫存（需帳號已開通 API 帳務查詢權限）。
 
-    慢查詢：逾時不代表 session 死了，用 mark_down_on_timeout=False，
-    避免無謂重登把整條連線與訂閱一起打掉。
+    三個必要的保護：
+    - 權限不足時拋 sj.ShioajiPermissionError，已被 _is_conn_error 排除 → 不會重登
+    - retry=False：這是低頻查詢，失敗就回報，不必為它打斷共用 session
+    - timeout 必須明給，否則 SDK 預設 30 秒會一路佔住 _lock
     """
     def work(api):
-        rows = api.list_positions(api.stock_account)
+        account = api.stock_account
+        if account is None:
+            raise ValueError("no stock account")
+        rows = api.list_positions(account, timeout=_sdk_timeout_ms(POSITIONS_TIMEOUT_MS))
         out = []
         for p in rows:
             out.append({
@@ -611,6 +623,7 @@ def positions():
         return out
     try:
         return jsonify({"ok": True, "data": _run(work, op="positions", budget_s=15,
+                                                 retry=False,
                                                  mark_down_on_timeout=False)})
     except Exception as e:
         return jsonify({"ok": False, "error": redact(e)})

@@ -1,0 +1,7 @@
+{
+  "_note": "loan_amount=質押借款金額（元）；maintenance_call_pct=券商追繳線（%）；pledged=質押給券商的部位；holdings=API 權限開通前的庫存備援（股數）",
+  "loan_amount": 0,
+  "maintenance_call_pct": 130,
+  "pledged": [],
+  "holdings": []
+}
