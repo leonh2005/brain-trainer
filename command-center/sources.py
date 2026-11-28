@@ -952,9 +952,14 @@ def futures_shadow():
     }, updated
 
 
+def holiday_guard():
+    """連假守衛：質押維持率、壓力測試、下次連假（proxy 5991 儀表板）。"""
+    return _proxy('http://127.0.0.1:5991/api/status', timeout=30, ttl=30)
+
+
 SIGNALS = {
     'daytrade': daytrade, 'swing': swing, 'intraday': intraday, 'ma': ma,
     'chips': chips, 'news': news, 'market-fear': market_fear,
     'disposition': disposition, 'pullback': pullback, 'futures': futures_shadow,
-    'vshape': vshape,
+    'vshape': vshape, 'holiday-guard': holiday_guard,
 }

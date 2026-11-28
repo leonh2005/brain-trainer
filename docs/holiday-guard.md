@@ -5,6 +5,17 @@
 觸發條件：今天是連假前 T-3、T-2、T-1（連假 = 休市 ≥ 3 天）
 通知：Telegram
 
+## 儀表板
+
+http://localhost:5991/ （LaunchAgent `com.steven.holiday-guard-web`）
+
+- 質押維持率與 -9.7% 壓力測試（紅／黃／綠三色）
+- 台股庫存明細，質押部位標記
+- 下次連假 T-1 倒數
+- 60 秒自動刷新
+
+command-center（5950）已加入「🏖️ 連假守衛」卡片，點擊可進 `/svc/5991/`。
+
 ## 你需要在 config/pledge_portfolio.json 填的四項
 
 ```json

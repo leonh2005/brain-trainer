@@ -379,6 +379,7 @@ const SIGNALS=[
   {id:'intraday',ic:'🎯', title:'盤中主力訊號', span:'wide', url:'/api/signals/intraday', render:renderIntraday, site:'/svc/5400/', ctrl:'intraday-monitor'},
   {id:'vshape',  ic:'🔄', title:'V型反轉',   span:'wide', url:'/api/signals/vshape', render:renderVshape, site:'/svc/5995/'},
   {id:'chips',   ic:'📊', title:'籌碼追蹤',   span:'wide', url:'/api/signals/chips', render:renderChips, site:'/svc/5850/'},
+  {id:'holiday-guard', ic:'🏖️', title:'連假守衛', span:'', url:'/api/signals/holiday-guard', render:renderHolidayGuard, site:'/svc/5991/'},
   {id:'ma',      ic:'📈', title:'均線警報',   span:'full', url:'/api/signals/ma', render:renderMA, site:'/ma-watchlist'},
   {id:'news',    ic:'📰', title:'新聞情緒',   span:'', url:'/api/signals/news', render:renderNews, site:'/svc/5300/'},
   {id:'disposition', ic:'🚧', title:'處置股警示', span:'', url:'/api/signals/disposition', render:renderDisposition},
@@ -1082,6 +1083,28 @@ function renderDisposition(d){
       row.innerHTML=`${tkLink(r.name,r.code)}${supportBtn(r.code)}<span class="mini" style="margin-left:6px">${r.market}</span><span class="spacer"></span><span class="mini">${r.start.slice(5)}~${r.end.slice(5)}處置，${r.exit_date.slice(5)}出關</span>`;
       return row;
     });
+  }
+  return box;
+}
+function renderHolidayGuard(d){
+  if(!d||d.error||!d.pledge)return el('div','empty','無法取得資料');
+  const p=d.pledge;
+  const box=el('div');
+  const line=(label,value,color)=>{
+    const row=el('div','row');
+    row.innerHTML=`<span class="tk">${label}</span><span class="spacer"></span><b style="color:${color||'inherit'}">${value}</b>`;
+    return row;
+  };
+  const color = p.ratio==null ? 'var(--muted)'
+    : (p.ratio < p.call_pct ? 'var(--up)'
+    : (p.ratio < p.call_pct + 20 ? 'var(--amber)' : 'var(--down)'));
+  box.appendChild(line('質押維持率', p.ratio!=null?p.ratio.toFixed(0)+'%':'--', color));
+  box.appendChild(line('壓力測試 -9.7%', p.worst_ratio!=null?p.worst_ratio.toFixed(0)+'%':'--', color));
+  if(d.holiday&&d.holiday.t1){
+    box.appendChild(line('下次連假 T-1', d.holiday.t1.slice(5), 'inherit'));
+    box.appendChild(line('距 T-1', d.holiday.days_to_t1+' 天', 'inherit'));
+  }else{
+    box.appendChild(line('下次連假', '近期無', 'var(--muted)'));
   }
   return box;
 }
