@@ -18,6 +18,7 @@ import heapq
 import itertools
 import os
 import re
+import subprocess
 import sys
 import threading
 import time
@@ -169,7 +170,34 @@ def _is_candidate_code(code):
             or bool(re.fullmatch(r"00\d{3}[A-Z]", code)))
 
 
+KEYCHAIN_ACCOUNT = "shioaji"
+KEYCHAIN_ITEMS = {
+    "shioaji_api.txt": "api_key",
+    "shioaji_secret.txt": "secret_key",
+}
+
+
 def _read_secret(filename):
+    """Keychain 優先，其次 ~/CCProject/.secrets/ 檔案。
+
+    Keychain 版由 `security add-generic-password -a shioaji -s api_key -w` 寫入：
+    金鑰由系統加密保管，不需要落地的明文檔。LaunchAgent 在同一個登入 keychain
+    session 內，可直接讀取。查無項目或逾時就退回舊的檔案方式。
+    """
+    item = KEYCHAIN_ITEMS.get(filename)
+    if item:
+        try:
+            result = subprocess.run(
+                ["security", "find-generic-password", "-a", KEYCHAIN_ACCOUNT,
+                 "-s", item, "-w"],
+                capture_output=True, text=True, timeout=5,
+            )
+            if result.returncode == 0:
+                value = result.stdout.strip()
+                if value:
+                    return value
+        except (OSError, subprocess.SubprocessError):
+            pass
     with open(os.path.join(SECRETS_DIR, filename), encoding="utf-8") as f:
         return f.read().strip()
 
@@ -605,10 +633,13 @@ def positions():
     - timeout 必須明給，否則 SDK 預設 30 秒會一路佔住 _lock
     """
     def work(api):
+        import shioaji as sj
         account = api.stock_account
         if account is None:
             raise ValueError("no stock account")
-        rows = api.list_positions(account, timeout=_sdk_timeout_ms(POSITIONS_TIMEOUT_MS))
+        # Unit.Share 回傳股數；預設的 Unit.Common 是「張」，直接乘市值會少 1000 倍
+        rows = api.list_positions(account, unit=sj.Unit.Share,
+                                  timeout=_sdk_timeout_ms(POSITIONS_TIMEOUT_MS))
         out = []
         for p in rows:
             out.append({

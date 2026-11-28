@@ -234,9 +234,12 @@ def save_state(state: dict) -> None:
 
 
 def build_verdict(pledge: dict, events: list[str], events_status: str) -> tuple[str, bool]:
-    """回傳 (建議文字, 是否紅燈)。三態：紅燈／資料不完整／通過。"""
-    if pledge["status"] == "ok" and pledge["worst_ratio"] < pledge["call_pct"]:
-        return "🚨 需補擔保品或部分還款", True
+    """回傳 (建議文字, 是否紅燈)。三態：紅燈／緩衝不足／資料不完整／通過。"""
+    if pledge["status"] == "ok":
+        if pledge["worst_ratio"] < pledge["call_pct"]:
+            return "🚨 需補擔保品或部分還款", True
+        if pledge["worst_ratio"] < pledge["call_pct"] + 20:
+            return "🟡 緩衝不足，考慮補擔保品", False
     if pledge["status"] in ("missing", "unset") or events_status != "ok":
         return "⚪ 資料不完整，無法確認", False
     if events:

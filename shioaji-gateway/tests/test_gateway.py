@@ -272,14 +272,16 @@ def test_positions_without_stock_account_raises_business_error(monkeypatch):
 
 
 def test_positions_passes_sdk_timeout(monkeypatch):
-    """/positions 必須顯式傳 timeout，否則 SDK 預設 30 秒會一路佔住共用鎖。"""
+    """/positions 必須顯式傳 timeout，否則 SDK 預設 30 秒會一路佔住共用鎖。
+    也必須指定 Unit.Share，否則 quantity 是「張」，市值會少算 1000 倍。"""
     seen = {}
 
     class FakeAPI:
         stock_account = SimpleNamespace()
 
-        def list_positions(self, account, timeout):
+        def list_positions(self, account, unit=None, timeout=None):
             seen["timeout"] = timeout
+            seen["unit"] = unit
             return [SimpleNamespace(code="006208", name="富邦台50", quantity=1000,
                                     price=150.0, last_price=208.0, pnl=58000.0,
                                     cond="Cash")]
@@ -291,4 +293,5 @@ def test_positions_passes_sdk_timeout(monkeypatch):
 
     assert resp.get_json()["ok"] is True
     assert seen["timeout"] == gw.POSITIONS_TIMEOUT_MS
+    assert str(seen["unit"]).endswith("Share")
     assert resp.get_json()["data"][0]["code"] == "006208"
