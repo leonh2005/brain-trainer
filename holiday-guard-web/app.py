@@ -147,24 +147,25 @@ HTML = """<!doctype html>
   h1{font-size:26px;margin:0 0 4px;letter-spacing:-.01em}
   .sub{color:var(--muted);font-size:13px;margin-bottom:28px}
   h2{font-size:16px;margin:32px 0 10px;padding-bottom:8px;border-bottom:1px solid var(--line)}
-  .grid{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:12px}
+  .grid{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:12px;align-items:stretch}
   @media (max-width:720px){.grid{grid-template-columns:1fr}}
   .card{background:var(--card);border:1px solid var(--line);border-radius:12px;
-        padding:16px 18px}
-  .card .label{font-size:12px;color:var(--muted);letter-spacing:.04em}
-  .metric{font-size:38px;font-weight:650;line-height:1.15;margin-top:4px;
-          font-variant-numeric:tabular-nums}
-  .metric.small{font-size:26px}
-  .metric .unit{font-size:16px;font-weight:400;color:var(--muted);margin-left:2px}
-  .hint{font-size:12.5px;color:var(--muted);margin-top:6px}
+        padding:16px 18px;display:flex;flex-direction:column;min-height:150px}
+  .card .label{font-size:12px;color:var(--muted);letter-spacing:.04em;min-height:18px}
+  .metric{font-size:34px;font-weight:650;line-height:1.2;margin-top:2px;
+          font-variant-numeric:tabular-nums;white-space:nowrap}
+  .metric .unit{font-size:15px;font-weight:400;color:var(--muted);margin-left:2px}
+  .hint{font-size:12.5px;color:var(--muted);margin-top:auto;padding-top:10px;line-height:1.5}
   .bar{height:8px;background:var(--bg);border-radius:4px;overflow:hidden;margin-top:10px}
   .bar span{display:block;height:100%;border-radius:4px;transition:width .4s}
   table{width:100%;border-collapse:collapse;background:var(--card);
-        border:1px solid var(--line);border-radius:10px;overflow:hidden;font-size:13.5px}
-  th,td{padding:9px 12px;text-align:left;border-bottom:1px solid var(--line)}
+        border:1px solid var(--line);border-radius:10px;overflow:hidden;font-size:13.5px;
+        table-layout:fixed}
+  th,td{padding:9px 12px;text-align:left;border-bottom:1px solid var(--line);
+        overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   th{font-weight:600;color:var(--muted);font-size:12px;letter-spacing:.03em;background:var(--bg)}
   tr:last-child td{border-bottom:none}
-  td.num{text-align:right;font-variant-numeric:tabular-nums}
+  th.num,td.num{text-align:right;font-variant-numeric:tabular-nums}
   .up{color:var(--danger)} .down{color:var(--good)}
   .tag{display:inline-block;font-size:11px;padding:1px 7px;border-radius:20px;
        background:var(--bg);border:1px solid var(--line);color:var(--muted);margin-left:6px}
@@ -190,18 +191,24 @@ HTML = """<!doctype html>
     </div>
     <div class="card">
       <div class="label">壓力測試（跌 9.7%）</div>
-      <div class="metric small" id="worst">--</div>
+      <div class="metric" id="worst">--</div>
+      <div class="bar"><span id="worst-bar" style="width:0"></span></div>
       <div class="hint" id="worst-hint">--</div>
     </div>
     <div class="card">
-      <div class="label">下次連假</div>
-      <div class="metric small" id="holiday">--</div>
+      <div class="label">下次連假 T-1</div>
+      <div class="metric" id="holiday">--</div>
+      <div class="bar"><span id="holiday-bar" style="width:0"></span></div>
       <div class="hint" id="holiday-hint">--</div>
     </div>
   </div>
 
   <h2>質押部位</h2>
   <table>
+    <colgroup>
+      <col style="width:18%"><col style="width:20%"><col style="width:18%">
+      <col style="width:24%"><col style="width:20%">
+    </colgroup>
     <thead><tr><th>代號</th><th class="num">股數</th><th class="num">現價</th>
       <th class="num">市值</th><th class="num">損益</th></tr></thead>
     <tbody id="pledged-body"></tbody>
@@ -209,6 +216,10 @@ HTML = """<!doctype html>
 
   <h2>台股庫存 <span class="tag" id="source">--</span></h2>
   <table>
+    <colgroup>
+      <col style="width:14%"><col style="width:16%"><col style="width:16%">
+      <col style="width:22%"><col style="width:18%"><col style="width:14%">
+    </colgroup>
     <thead><tr><th>代號</th><th class="num">股數</th><th class="num">現價</th>
       <th class="num">市值</th><th class="num">損益</th><th>質押</th></tr></thead>
     <tbody id="positions-body"></tbody>
@@ -253,29 +264,38 @@ function render(d) {
   }
 
   const worstEl = document.getElementById('worst');
+  const worstBar = document.getElementById('worst-bar');
   const worstHint = document.getElementById('worst-hint');
   if (p.status === 'ok') {
-    worstEl.textContent = fmt(p.worst_ratio) + '%';
+    worstEl.innerHTML = fmt(p.worst_ratio) + '<span class="unit">%</span>';
     worstEl.style.color = colorFor(p.worst_ratio, p.call_pct);
+    worstBar.style.width = Math.min(100, p.worst_ratio / 3) + '%';
+    worstBar.style.background = colorFor(p.worst_ratio, p.call_pct);
     let extra = '';
     if (p.credit_limit > p.loan) {
       extra = ` ／ 借滿 ${fmt(p.credit_limit)} 時 ${fmt(p.value / p.credit_limit * 100)}%`;
     }
     worstHint.textContent = (p.worst_ratio < p.call_pct ? '會跌破追繳線' : '仍高於追繳線') + extra;
   } else {
-    worstEl.textContent = '--'; worstHint.textContent = '--';
+    worstEl.textContent = '--';
+    worstBar.style.width = '0';
+    worstHint.textContent = '--';
   }
 
   const hEl = document.getElementById('holiday');
+  const hBar = document.getElementById('holiday-bar');
   const hHint = document.getElementById('holiday-hint');
   if (d.holiday.t1) {
-    const status = d.holiday.status;
-    hEl.innerHTML = status === 'idle'
-      ? `<span style="font-size:15px">T-1 · ${d.holiday.t1.slice(5)}</span>`
-      : `<span style="color:var(--warn)">${status} 進行中</span>`;
-    hHint.textContent = `距 T-1 還有 ${d.holiday.days_to_t1} 天 ／ ${d.holiday.resume ? d.holiday.resume.slice(5) + ' 開市' : ''}`;
+    const active = d.holiday.status !== 'idle';
+    hEl.textContent = d.holiday.t1.slice(5);
+    hEl.style.color = active ? 'var(--warn)' : 'inherit';
+    hBar.style.width = Math.max(0, Math.min(100, (30 - d.holiday.days_to_t1) / 30 * 100)) + '%';
+    hBar.style.background = active ? 'var(--warn)' : 'var(--accent)';
+    hHint.textContent = (active ? d.holiday.status + ' 進行中 ／ ' : '')
+      + `距 T-1 ${d.holiday.days_to_t1} 天 ／ ${d.holiday.resume ? d.holiday.resume.slice(5) + ' 開市' : ''}`;
   } else {
     hEl.textContent = '--';
+    hBar.style.width = '0';
     hHint.textContent = '近期無連假';
   }
 
