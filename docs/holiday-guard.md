@@ -66,6 +66,21 @@ command-center（5950）已加入「🏖️ 連假守衛」卡片，點擊可進
 所以 401 後會記在 `data/holiday_guard_state.json`，**7 天內不再嘗試**，直接用設定檔。
 權限開通後最多 7 天會自動切回 API，不需要改任何設定。
 
+## 國際行事曆與利多利空判斷
+
+資料來源：市場分析服務 5350 `/api/econ`（FOMC / CPI / PPI / PCE / 非農 / 三巫日 / 法說會 / 元首會面 / 地緣消息）。
+
+判斷流程：
+1. 取接下來 30 天事件，最近 3 個進入判斷
+2. Google News RSS 搜尋每個事件的中文新聞標題（免費、3 小時快取）
+3. 新聞標題 + 事件 → Jev（TypeSafe API）判斷「利多／利空／中性」機率
+4. 快取 6 小時（`data/holiday_guard_jev_cache.json`）
+
+成本：Jev 按 input token 計費，每百萬 $0.042；單次判斷約 400–800 tokens ≈ $0.00003，一天 4 次可忽略。
+
+API：`POST https://api.typesafe.ai/v1/systemone`，key 從 `~/.claude.json` 的 MCP 設定讀取（`TYPESAFE_API_KEY`）。
+Jev 失敗時自動退回「觀察重點」文字，不影響其他功能。
+
 ## 已知限制
 
 - 假日檔 `data/tw_market_holidays.json` 目前只有 2025、2026。缺當年資料時服務會發 Telegram 警告並停止判定（不會靜默）。

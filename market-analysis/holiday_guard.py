@@ -13,7 +13,10 @@
 結論三態：紅燈（需補擔保品）／資料不完整／全部通過。
 """
 
+import hashlib
 import json
+import re
+import time
 import urllib.parse
 import urllib.request
 from datetime import date, timedelta
@@ -237,6 +240,129 @@ def get_war_news() -> list[dict]:
     return [{"date": str(w.get("date", "")), "title": str(w.get("title", ""))[:120],
              "link": str(w.get("link", ""))}
             for w in payload.get("war", [])[:6] if w.get("title")]
+
+
+JEV_CACHE = ROOT / "data" / "holiday_guard_jev_cache.json"
+JEV_TTL = 6 * 3600          # 快取 6 小時，一天最多 4 次呼叫
+JEV_MAX_EVENTS = 3          # 只判斷最近 3 個事件
+JEV_URL = "https://api.typesafe.ai/v1/systemone"
+NEWS_TTL = 3 * 3600         # 新聞搜尋快取 3 小時
+NEWS_PER_EVENT = 5          # 每個事件取前 5 則標題
+
+
+def search_event_news(event: dict, limit: int = NEWS_PER_EVENT) -> list[str]:
+    """Google News RSS 搜尋事件相關新聞標題（中文優先，補英文）。
+
+    免費、與 5350 的地緣消息同源；只取標題當 Jev 的判斷素材。
+    """
+    queries = [event["title"]]
+    category = str(event.get("category", ""))
+    if category and category not in event["title"]:
+        queries.append(category)
+    if category in ("Fed會議", "FOMC", "CPI", "PPI", "PCE", "非農"):
+        queries.append(f"{category} 美股")
+
+    titles: list[str] = []
+    for q in queries[:2]:
+        url = ("https://news.google.com/rss/search?q=" + urllib.parse.quote(q)
+               + "&hl=zh-TW&gl=TW&ceid=TW:zh-Hant")
+        try:
+            xml = urllib.request.urlopen(url, timeout=15).read().decode("utf-8", errors="replace")
+        except Exception:  # noqa: BLE001 - 新聞抓不到就退回純文字提示
+            continue
+        found = re.findall(r"<item>.*?<title>(.*?)</title>", xml, re.S)
+        for raw in found:
+            title = re.sub(r"<.*?>", "", raw).replace("&amp;", "&").strip()
+            if title and title not in titles:
+                titles.append(title[:100])
+        if len(titles) >= limit:
+            break
+    return titles[:limit]
+
+
+def _jev_key() -> str:
+    """TypeSafe key 從 Claude 的 MCP 設定讀取（單一來源，不另外落地）。"""
+    try:
+        cfg = json.loads((Path.home() / ".claude.json").read_text(encoding="utf-8"))
+        return cfg["mcpServers"]["jev"]["env"]["TYPESAFE_API_KEY"]
+    except (OSError, KeyError, ValueError, TypeError):
+        return ""
+
+
+def _http_post_json(url: str, body: dict, headers: dict, timeout: int = 60) -> dict:
+    payload = json.dumps(body, ensure_ascii=False).encode("utf-8")
+    base = {"Content-Type": "application/json", "Accept": "application/json"}
+    req = urllib.request.Request(url, data=payload, headers={**base, **headers})
+    with urllib.request.urlopen(req, timeout=timeout) as resp:
+        return json.load(resp)
+
+
+def jev_event_bias(events: list[dict]) -> dict:
+    """搜尋事件相關新聞，交給 Jev 判斷利多/利空。失敗回空 dict（上層退回文字提示）。"""
+    if not events:
+        return {}
+    picked = events[:JEV_MAX_EVENTS]
+
+    news = {f"{e['date']}|{e['title']}": search_event_news(e) for e in picked}
+    key_src = json.dumps(
+        {"e": [[e["date"], e["title"]] for e in picked], "n": news},
+        ensure_ascii=False, sort_keys=True)
+    cache_key = hashlib.sha1(key_src.encode("utf-8")).hexdigest()[:16]
+    try:
+        cache = json.loads(JEV_CACHE.read_text(encoding="utf-8"))
+        if cache.get("key") == cache_key and time.time() - cache.get("ts", 0) < JEV_TTL:
+            return cache.get("bias", {})
+    except (OSError, ValueError):
+        pass
+
+    api_key = _jev_key()
+    if not api_key:
+        return {}
+
+    lines = ["台股加權指數交易環境。接下來的事件與相關新聞："]
+    for i, event in enumerate(picked):
+        titles = news.get(f"{event['date']}|{event['title']}", [])
+        lines.append(f"\n事件 {i + 1}：{event['date']} {event['title']}")
+        lines.extend(f"  - {t}" for t in titles) if titles else lines.append("  - （無相關新聞）")
+    state = "\n".join(lines)
+
+    questions = {
+        f"e{i}": {
+            "type": "choice",
+            "instructions": f"根據上述新聞，{e['title']} 對台股未來一週的影響方向",
+            "criteria": {
+                "利多": "新聞內容對台股有正面推動",
+                "利空": "新聞內容對台股有負面壓力",
+                "中性": "影響有限或方向不明",
+            },
+        }
+        for i, e in enumerate(picked)
+    }
+    try:
+        resp = _http_post_json(JEV_URL,
+                               {"state": state, "questions": questions, "model": "jev-latest"},
+                               {"Authorization": f"Bearer {api_key}"}, timeout=90)
+    except Exception:  # noqa: BLE001 - Jev 失敗不可影響主流程
+        return {}
+
+    bias: dict = {}
+    answers = resp.get("answers", {})
+    for i, event in enumerate(picked):
+        ans = answers.get(f"e{i}", {})
+        if isinstance(ans, dict) and ans.get("type") == "choice":
+            bias[f"{event['date']}|{event['title']}"] = {
+                "choice": ans.get("choice"),
+                "confidence": ans.get("confidence"),
+                "probabilities": ans.get("probabilities", {}),
+                "news": news.get(f"{event['date']}|{event['title']}", []),
+            }
+    try:
+        JEV_CACHE.write_text(
+            json.dumps({"key": cache_key, "ts": time.time(), "bias": bias}, ensure_ascii=False),
+            encoding="utf-8")
+    except OSError:
+        pass
+    return bias
 
 
 def send_telegram(text: str) -> bool:

@@ -85,6 +85,7 @@ def build_status() -> dict:
 
     calendar, calendar_status = hg.get_calendar(30)
     war = hg.get_war_news()
+    jev_bias = hg.jev_event_bias(calendar)
 
     return {
         "ts": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
@@ -107,6 +108,7 @@ def build_status() -> dict:
         "calendar": calendar,
         "calendar_status": calendar_status,
         "war": war,
+        "jev_bias": jev_bias,
     }
 
 
@@ -237,9 +239,11 @@ HTML = """<!doctype html>
   <h2>國際行事曆 <span class="tag" id="next-event-tag">--</span></h2>
   <table>
     <colgroup>
-      <col style="width:12%"><col style="width:10%"><col style="width:30%"><col style="width:48%">
+      <col style="width:11%"><col style="width:9%"><col style="width:26%">
+      <col style="width:14%"><col style="width:40%">
     </colgroup>
-    <thead><tr><th>日期</th><th class="num">倒數</th><th>事件</th><th>觀察重點</th></tr></thead>
+    <thead><tr><th>日期</th><th class="num">倒數</th><th>事件</th>
+      <th>Jev 判斷</th><th>觀察重點</th></tr></thead>
     <tbody id="calendar-body"></tbody>
   </table>
 
@@ -341,15 +345,30 @@ function render(d) {
   if (d.calendar && d.calendar.length) {
     const nearest = d.calendar[0];
     nextTag.textContent = `最近：${nearest.title}（${nearest.days === 0 ? '今天' : nearest.days + ' 天後'}）`;
-    cal.innerHTML = d.calendar.map((e, i) => `
+    const biasMap = d.jev_bias || {};
+    cal.innerHTML = d.calendar.map((e, i) => {
+      const jb = biasMap[e.date + '|' + e.title];
+      let jevCell = '<span style="color:var(--muted)">--</span>';
+      if (jb && jb.probabilities) {
+        const pct = (jb.probabilities[jb.choice] || 0) * 100;
+        const tone = jb.choice === '利多' ? 'var(--up)'
+                   : jb.choice === '利空' ? 'var(--down)' : 'var(--muted)';
+        jevCell = `<b style="color:${tone}">${jb.choice} ${pct.toFixed(0)}%</b>`;
+      }
+      const extra = (jb && jb.news && jb.news.length)
+        ? `<br><span style="font-size:11.5px;color:var(--muted)">新聞：${jb.news.slice(0, 2).join('｜')}</span>`
+        : '';
+      return `
       <tr${i === 0 ? ' style="background:var(--bg)"' : ''}>
         <td>${e.date.slice(5)}</td>
         <td class="num">${e.days === 0 ? '今天' : e.days + ' 天'}</td>
         <td>${e.title}</td>
-        <td style="color:var(--muted);font-size:12.5px">${e.hint}</td></tr>`).join('');
+        <td>${jevCell}</td>
+        <td style="color:var(--muted);font-size:12.5px">${e.hint}${extra}</td></tr>`;
+    }).join('');
   } else {
     nextTag.textContent = '';
-    cal.innerHTML = '<tr><td colspan="4" style="color:var(--muted)">近期無事件</td></tr>';
+    cal.innerHTML = '<tr><td colspan="5" style="color:var(--muted)">近期無事件</td></tr>';
   }
 
   const warEl = document.getElementById('war');
