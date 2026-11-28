@@ -120,3 +120,7 @@ scripts/console_monitor_state/
 scripts/console_monitor_current.json
 scripts/console_monitor.lock
 .ray-demo-venv/
+
+# 連假守衛：執行期快取與日誌
+data/holiday_guard_jev_cache.json
+logs/holiday_guard_web.*
