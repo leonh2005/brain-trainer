@@ -72,18 +72,16 @@ command-center（5950）已加入「🏖️ 連假守衛」卡片，點擊可進
 
 判斷流程：
 1. 取接下來 30 天事件，最近 3 個進入判斷
-2. 搜尋新聞（中英文並行）：
-   - Google News RSS（zh-TW）每事件取 5 則
-   - Finnhub general news 依事件關鍵字過濾（fomc/payroll/cpi…），無相關就不加
+2. 搜尋新聞（三來源各留名額）：
+   - **本地 news.db**（`news-analyzer/news.db`，62,103 筆，含 PTT 2,864、Reddit 2,020，唯讀查詢）
+   - Google News RSS（zh-TW，每事件 3 則）
+   - Finnhub general news（英文，有相關才加）
 3. 新聞標題 + 事件 → Jev（TypeSafe API）判斷「利多／利空／中性」機率
 4. 快取 6 小時（`data/holiday_guard_jev_cache.json`）
 
-**論壇來源的技術限制**（2026-11-28 實測）：
-- Reddit 公開 JSON API 已回非 JSON（反爬）
-- PTT 需要 over18 cookie 與 User-Agent 繞過，服務端直連會空回
-- last30days 是重量級研究任務（subprocess、一次只能跑一個、輸出整份報告），不適合即時單事件判斷
-
-目前以「Google News 已索引的轉載與媒體報導」代表論壇聲量。
+**論壇來源**：以 news.db 的 PTT／Reddit 條目代表。last30days 的 X 與 web search backend
+在此機器上失效（`ProductDisabled`、`No web search backend`），只剩本地 corpus，故不採用。
+Reddit 公開 JSON API 已被反爬、PTT 直連需 over18 cookie，皆無法從服務端抓取。
 
 成本：Jev 按 input token 計費，每百萬 $0.042；單次判斷約 400–800 tokens ≈ $0.00003，一天 4 次可忽略。
 
