@@ -16,6 +16,7 @@
 import hashlib
 import json
 import re
+import sqlite3
 import time
 import urllib.parse
 import urllib.request
@@ -293,17 +294,73 @@ def search_finnhub_news(event: dict, limit: int = 4) -> list[str]:
     return out
 
 
-def search_event_news(event: dict, limit: int = NEWS_PER_EVENT) -> list[str]:
-    """事件相關新聞：Google News RSS（中文）+ Finnhub（英文）。
+LOCAL_NEWS_DB = ROOT / "news-analyzer" / "news.db"
+LOCAL_KEYWORDS = {
+    "Fed會議": ["FOMC", "Fed", "利率決策"],
+    "FOMC": ["FOMC", "Fed", "利率決策"],
+    "CPI": ["CPI", "通膨", "消費者物價"],
+    "PPI": ["PPI", "生產者物價"],
+    "PCE": ["PCE", "核心物價"],
+    "非農": ["非農", "就業報告"],
+    "三巫日": ["三巫日"],
+    "結算日": ["結算", "台指期"],
+    "元首會面": ["領袖", "峰會"],
+}
 
-    免費、與 5350 的地緣消息同源；只取標題當 Jev 的判斷素材。
+
+def search_local_news(event: dict, days: int = 30, limit: int = 4) -> list[str]:
+    """從 news-analyzer 的 news.db 搜尋（含 PTT / Reddit 論壇）。
+
+    6 萬筆、35 天滾動，比外部 API 更即時也更貼近台股。
+    以唯讀模式開啟，不影響 5300 服務。
     """
+    if not LOCAL_NEWS_DB.exists():
+        return []
+    category = str(event.get("category", ""))
+    keys = LOCAL_KEYWORDS.get(category)
+    extra = ""
+    if not keys:
+        # 法說會這類沒有通用關鍵字，改用公司名（標題開頭的中文詞）
+        m = re.match(r"([一-鿿A-Za-z0-9]{2,6})", str(event.get("title", "")))
+        keys = [m.group(1)] if m else []
+        if category == "法說會" and keys:
+            # 只留與法說會相關的討論，避免抓到同公司無關的舊新聞（例：跌停）
+            extra = " AND (" + " OR ".join(
+                f"title LIKE '%{w}%'" for w in ("法說", "財報", "營收", "展望")) + ")"
+    keys = [k for k in keys if k]
+    if not keys:
+        return []
+    cond = " OR ".join("title LIKE ?" for _ in keys)
+    params = [f"%{k}%" for k in keys]
+    params += [f"-{days} days", limit]
+    sql = (f"SELECT source, title FROM articles WHERE ({cond}){extra} "
+           "AND published_at >= date('now', ?) ORDER BY published_at DESC LIMIT ?")
+    try:
+        conn = sqlite3.connect(f"file:{LOCAL_NEWS_DB}?mode=ro", uri=True, timeout=5)
+        try:
+            rows = conn.execute(sql, params).fetchall()
+        finally:
+            conn.close()
+    except sqlite3.Error:
+        return []
+    return [f"[{src}] {str(title)[:80]}" for src, title in rows]
+
+
+def search_event_news(event: dict, limit: int = NEWS_PER_EVENT) -> list[str]:
+    """事件相關新聞，三個來源各留名額：
+
+    - 本地 news.db（含 PTT/Reddit 論壇）
+    - Google News RSS（中文媒體）
+    - Finnhub general news（英文一手，有相關才加）
+    """
+    local = search_local_news(event, limit=3)
+
     queries = [event["title"]]
     category = str(event.get("category", ""))
     if category and category not in event["title"]:
         queries.append(category)
 
-    titles: list[str] = []
+    google: list[str] = []
     for q in queries[:2]:
         url = ("https://news.google.com/rss/search?q=" + urllib.parse.quote(q)
                + "&hl=zh-TW&gl=TW&ceid=TW:zh-Hant")
@@ -314,15 +371,16 @@ def search_event_news(event: dict, limit: int = NEWS_PER_EVENT) -> list[str]:
         found = re.findall(r"<item>.*?<title>(.*?)</title>", xml, re.S)
         for raw in found:
             title = re.sub(r"<.*?>", "", raw).replace("&amp;", "&").strip()
-            if title and title[:100] not in titles:
-                titles.append(title[:100])
-        if len(titles) >= limit:
+            if title and title[:100] not in google:
+                google.append(title[:100])
+        if len(google) >= 3:
             break
 
-    # 中文與英文各留固定名額，避免英文被中文淹沒
-    zh = titles[:limit]
-    en = [h for h in search_finnhub_news(event, limit=3) if h not in zh]
-    return zh + en
+    titles = local[:3] + google[:3]
+    for headline in search_finnhub_news(event, limit=2):
+        if headline not in titles:
+            titles.append(headline)
+    return titles
 
 
 def _jev_key() -> str:
