@@ -952,9 +952,11 @@ def futures_shadow():
     }, updated
 
 
+@_wrap
 def holiday_guard():
     """連假守衛：質押維持率、壓力測試、下次連假（proxy 5991 儀表板）。"""
-    return _proxy('http://127.0.0.1:5991/api/status', timeout=30, ttl=30)
+    d = _proxy('http://127.0.0.1:5991/api/status', timeout=30, ttl=30)
+    return d, d.get('ts', '')
 
 
 SIGNALS = {
