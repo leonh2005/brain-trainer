@@ -250,8 +250,51 @@ NEWS_TTL = 3 * 3600         # 新聞搜尋快取 3 小時
 NEWS_PER_EVENT = 5          # 每個事件取前 5 則標題
 
 
+FINNHUB_KEYWORDS = {
+    "Fed會議": ["fomc", "powell", "fed hike", "fed cut", "fed rate", "rate decision"],
+    "FOMC": ["fomc", "powell", "fed hike", "fed cut", "fed rate", "rate decision"],
+    "CPI": ["cpi", "consumer price", "inflation data"],
+    "PPI": ["ppi", "producer price"],
+    "PCE": ["pce", "core inflation"],
+    "非農": ["nonfarm", "payroll", "unemployment rate", "jobs report"],
+}
+
+
+def _finnhub_key() -> str:
+    try:
+        return (ROOT / ".secrets" / "finnhub_key.txt").read_text(encoding="utf-8").strip()
+    except OSError:
+        return ""
+
+
+def search_finnhub_news(event: dict, limit: int = 4) -> list[str]:
+    """Finnhub general news 依事件關鍵字過濾（英文一手，Reuters/CNBC 等）。"""
+    keywords = FINNHUB_KEYWORDS.get(str(event.get("category", "")))
+    if not keywords:
+        return []
+    key = _finnhub_key()
+    if not key:
+        return []
+    try:
+        data = http_json(f"https://finnhub.io/api/v1/news?category=general&token={key}",
+                         timeout=15)
+    except Exception:  # noqa: BLE001
+        return []
+    if not isinstance(data, list):
+        return []
+    out: list[str] = []
+    for item in data:
+        headline = str(item.get("headline", ""))
+        if headline and any(k in headline.lower() for k in keywords):
+            if headline[:100] not in out:
+                out.append(headline[:100])
+        if len(out) >= limit:
+            break
+    return out
+
+
 def search_event_news(event: dict, limit: int = NEWS_PER_EVENT) -> list[str]:
-    """Google News RSS 搜尋事件相關新聞標題（中文優先，補英文）。
+    """事件相關新聞：Google News RSS（中文）+ Finnhub（英文）。
 
     免費、與 5350 的地緣消息同源；只取標題當 Jev 的判斷素材。
     """
@@ -259,8 +302,6 @@ def search_event_news(event: dict, limit: int = NEWS_PER_EVENT) -> list[str]:
     category = str(event.get("category", ""))
     if category and category not in event["title"]:
         queries.append(category)
-    if category in ("Fed會議", "FOMC", "CPI", "PPI", "PCE", "非農"):
-        queries.append(f"{category} 美股")
 
     titles: list[str] = []
     for q in queries[:2]:
@@ -273,11 +314,15 @@ def search_event_news(event: dict, limit: int = NEWS_PER_EVENT) -> list[str]:
         found = re.findall(r"<item>.*?<title>(.*?)</title>", xml, re.S)
         for raw in found:
             title = re.sub(r"<.*?>", "", raw).replace("&amp;", "&").strip()
-            if title and title not in titles:
+            if title and title[:100] not in titles:
                 titles.append(title[:100])
         if len(titles) >= limit:
             break
-    return titles[:limit]
+
+    # 中文與英文各留固定名額，避免英文被中文淹沒
+    zh = titles[:limit]
+    en = [h for h in search_finnhub_news(event, limit=3) if h not in zh]
+    return zh + en
 
 
 def _jev_key() -> str:
