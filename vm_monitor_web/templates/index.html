@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VM 資源檢視器</title>
+<style>
+  body { font-family: system-ui, sans-serif; max-width: 960px; margin: 24px auto; padding: 0 16px; color: #e8ecf1; background: #0b1020; }
+  h1 { font-size: 22px; margin-bottom: 4px; }
+  .sub { color: #9fb0d0; font-size: 13px; margin-bottom: 16px; }
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .card { background: #121a36; border: 1px solid #24304d; border-radius: 10px; padding: 14px; }
+  .card h3 { margin: 0 0 8px; font-size: 13px; color: #9fb0d0; font-weight: 500; }
+  .big { font-size: 26px; font-variant-numeric: tabular-nums; }
+  .small { font-size: 12px; color: #9fb0d0; margin-top: 4px; }
+  .bar { height: 6px; background: #24304d; border-radius: 3px; margin-top: 10px; overflow: hidden; }
+  .bar i { display: block; height: 100%; background: #3b82f6; width: 0; }
+  table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  th, td { text-align: left; padding: 5px 6px; border-bottom: 1px solid #24304d; }
+  th { color: #9fb0d0; font-weight: 500; }
+  .wide { grid-column: 1 / -1; }
+  #error { display: none; background: #7f1d1d; padding: 10px 12px; border-radius: 8px; margin-bottom: 12px; }
+</style>
+</head>
+<body>
+<h1>VM 資源檢視器 <span id="host" class="sub"></span></h1>
+<div class="sub">每 {{ interval_ms }} ms 更新 · 最後更新 <span id="updated">—</span></div>
+<div id="error"></div>
+<div class="grid">
+  <div class="card"><h3>CPU 使用率</h3><div class="big" id="cpu">—</div><div class="bar"><i id="cpu-bar"></i></div><div class="small" id="load">load —</div></div>
+  <div class="card"><h3>記憶體</h3><div class="big" id="mem">—</div><div class="bar"><i id="mem-bar"></i></div><div class="small" id="mem-detail">—</div></div>
+  <div class="card"><h3>uptime</h3><div class="big" id="uptime">—</div><div class="small">Oracle ARM · 4 vCPU</div></div>
+  <div class="card"><h3>磁碟 /</h3><div class="big" id="disk-root">—</div><div class="bar"><i id="disk-root-bar"></i></div><div class="small" id="disk-root-detail">—</div></div>
+  <div class="card"><h3>磁碟 /mnt/data</h3><div class="big" id="disk-data">—</div><div class="bar"><i id="disk-data-bar"></i></div><div class="small" id="disk-data-detail">—</div></div>
+  <div class="card"><h3>網路</h3><div class="big" id="net">—</div><div class="small" id="net-detail">RX — / TX —</div></div>
+  <div class="card wide"><h3>Top processes</h3><table><thead><tr><th>PID</th><th>CPU%</th><th>MEM%</th><th>RSS</th><th>STATE</th><th>COMMAND</th></tr></thead><tbody id="proc"></tbody></table></div>
+</div>
+<script>
+const INTERVAL = {{ interval_ms }};
+const el = (id) => document.getElementById(id);
+let inFlight = false;
+let prevNet = null;
+
+el('host').textContent = '{{ host }}';
+
+function gib(bytes) { return (bytes / 1024 ** 3).toFixed(1) + ' GiB'; }
+function rate(current, previous, dt) {
+  if (previous === null || dt <= 0) return '—';
+  const value = (current - previous) / dt;
+  return Math.max(0, value / 1024 ** 2).toFixed(2) + ' MB/s';
+}
+function bar(id, percent) { el(id).style.width = Math.max(0, Math.min(100, percent)) + '%'; }
+
+async function refresh() {
+  if (inFlight) return;
+  inFlight = true;
+  try {
+    const response = await fetch('/api/stats', { cache: 'no-store' });
+    const data = await response.json();
+    if (!data.ok) {
+      el('error').style.display = 'block';
+      el('error').textContent = '抓取失敗：' + data.error;
+      return;
+    }
+    el('error').style.display = 'none';
+    el('cpu').textContent = data.cpu + '%';
+    bar('cpu-bar', data.cpu);
+    el('load').textContent = 'load ' + data.load.map(v => v.toFixed(2)).join(' / ');
+    const mem = data.memory;
+    el('mem').textContent = Math.round(100 * mem.used / mem.total) + '%';
+    bar('mem-bar', 100 * mem.used / mem.total);
+    el('mem-detail').textContent = gib(mem.used) + ' / ' + gib(mem.total) + ' · 可用 ' + gib(mem.available);
+    el('uptime').textContent = data.uptime || '—';
+    for (const [key, node, detail] of [['/', 'disk-root', 'disk-root-detail'], ['/mnt/data', 'disk-data', 'disk-data-detail']]) {
+      const disk = data.disks[key];
+      if (!disk) { el(node).textContent = 'N/A'; el(detail).textContent = '未掛載'; bar(node + '-bar', 0); continue; }
+      el(node).textContent = disk.percent + '%';
+      el(detail).textContent = gib(disk.used) + ' / ' + gib(disk.size);
+      bar(node + '-bar', disk.percent);
+    }
+    const now = Date.now();
+    const dt = prevNet ? (now - prevNet.ts) / 1000 : 0;
+    el('net').textContent = rate(data.network.rx_bytes, prevNet && prevNet.rx, dt) + ' ↓';
+    el('net-detail').textContent = 'RX ' + gib(data.network.rx_bytes) + ' / TX ' + gib(data.network.tx_bytes) +
+      ' · ↑ ' + rate(data.network.tx_bytes, prevNet && prevNet.tx, dt);
+    prevNet = { rx: data.network.rx_bytes, tx: data.network.tx_bytes, ts: now };
+
+    const tbody = el('proc');
+    tbody.replaceChildren();
+    for (const p of data.processes) {
+      const tr = document.createElement('tr');
+      for (const value of [p.pid, p.cpu.toFixed(1), p.mem.toFixed(1), (p.rss_kb / 1024).toFixed(0) + ' MB', p.stat, p.comm]) {
+        const td = document.createElement('td');
+        td.textContent = value;
+        tr.appendChild(td);
+      }
+      tbody.appendChild(tr);
+    }
+    el('updated').textContent = new Date().toLocaleTimeString('zh-TW');
+  } catch (error) {
+    el('error').style.display = 'block';
+    el('error').textContent = '連線錯誤：' + error;
+  } finally {
+    inFlight = false;
+  }
+}
+
+setInterval(refresh, INTERVAL);
+refresh();
+</script>
+</body>
+</html>
