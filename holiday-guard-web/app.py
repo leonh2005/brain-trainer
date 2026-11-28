@@ -144,12 +144,12 @@ HTML = """<!doctype html>
   :root{
     --bg:#f7f7f5; --card:#fff; --ink:#1a1a18; --muted:#6b6b66;
     --line:#e4e4df; --accent:#2f6f4f; --warn:#a8501f; --danger:#c0392b;
-    --good:#2f8f5f;
+    --up:#d32f2f; --down:#1b8a4b;
   }
   @media (prefers-color-scheme: dark){
     :root{ --bg:#16161a; --card:#1e1e23; --ink:#ececee; --muted:#9a9aa2;
            --line:#2e2e35; --accent:#6fbf94; --warn:#e08a55; --danger:#e8756a;
-           --good:#6fd39b; }
+           --up:#ff7061; --down:#4ad98a; }
   }
   *{box-sizing:border-box}
   body{margin:0;background:var(--bg);color:var(--ink);
@@ -177,7 +177,7 @@ HTML = """<!doctype html>
   th{font-weight:600;color:var(--muted);font-size:12px;letter-spacing:.03em;background:var(--bg)}
   tr:last-child td{border-bottom:none}
   th.num,td.num{text-align:right;font-variant-numeric:tabular-nums}
-  .up{color:var(--danger)} .down{color:var(--good)}
+  .up{color:var(--up)} .down{color:var(--down)}
   .tag{display:inline-block;font-size:11px;padding:1px 7px;border-radius:20px;
        background:var(--bg);border:1px solid var(--line);color:var(--muted);margin-left:6px}
   ul.events{list-style:none;padding:0;margin:0;font-size:13.5px}
@@ -255,10 +255,11 @@ const fmt = n => n == null ? '--' : n.toLocaleString('zh-TW', {maximumFractionDi
 const fmt2 = n => n == null ? '--' : n.toLocaleString('zh-TW', {minimumFractionDigits: 2, maximumFractionDigits: 2});
 
 function colorFor(ratio, call) {
+  // 台股慣例：紅 = 好、綠 = 壞
   if (ratio == null) return 'var(--muted)';
-  if (ratio < call) return 'var(--danger)';
+  if (ratio < call) return 'var(--down)';
   if (ratio < call + 20) return 'var(--warn)';
-  return 'var(--good)';
+  return 'var(--up)';
 }
 
 function render(d) {
