@@ -33,6 +33,20 @@ CHECK_WINDOW = 3             # T-3 ~ T-1
 HOLIDAY_MIN_GAP = 4          # 交易日間隔 >= 4 天視為連假
 LOOKAHEAD = 25
 
+# 事件類型 → 觀察重點（利多/利空取決於實際結果，不斷言方向）
+EVENT_HINTS = {
+    "非農": "數據強於預期 → 降息預期降溫 → 偏空；弱於預期 → 偏多",
+    "Fed會議": "降息 → 偏多；維持或升息 → 偏空（看會後聲明措辭）",
+    "FOMC": "降息 → 偏多；維持或升息 → 偏空（看會後聲明措辭）",
+    "CPI": "高於預期 → 通膨黏著 → 偏空；低於預期 → 偏多",
+    "PPI": "高於預期 → 成本壓力 → 偏空",
+    "PCE": "核心高於預期 → 偏空；低於預期 → 偏多",
+    "結算日": "波動加大，方向中性",
+    "三巫日": "波動加大，方向中性偏空",
+    "法說會": "財報與展望優於預期 → 偏多；低於預期 → 偏空",
+    "元首會面": "看會後聯合聲明；破局 → 偏空",
+}
+
 
 def http_json(url: str, timeout: int = 20) -> dict:
     with urllib.request.urlopen(url, timeout=timeout) as resp:
@@ -177,30 +191,52 @@ def compute_pledge(config: dict, prices: dict) -> dict:
             "worst_ratio": worst_ratio, "call_pct": call_pct, "missing": []}
 
 
-def get_events(start: date, end: date) -> tuple[list[str], str]:
-    """回傳 (事件清單, status: ok|error)。抓取失敗不可偽裝成「有事件」。"""
+def get_calendar(days: int = 30) -> tuple[list[dict], str]:
+    """接下來 N 天的國際／本地事件，附觀察重點。回傳 (events, status)。"""
     try:
         payload = http_json(ECON_API, timeout=30)["data"]
     except Exception:  # noqa: BLE001
         return [], "error"
-    events = []
+    today = date.today()
+    end = today + timedelta(days=days)
+    out = []
     for ev in payload.get("events", []):
         try:
             ev_date = date.fromisoformat(str(ev.get("date", ""))[:10])
         except ValueError:
             continue
-        if start <= ev_date <= end:
-            events.append(f"{ev_date.month}/{ev_date.day} {ev.get('title', '')}")
-    return events, "ok"
+        if today <= ev_date <= end:
+            category = str(ev.get("category", ""))
+            out.append({
+                "date": ev_date.isoformat(),
+                "days": (ev_date - today).days,
+                "title": str(ev.get("title", "")),
+                "category": category,
+                "hint": EVENT_HINTS.get(category, "無特定方向"),
+            })
+    out.sort(key=lambda x: x["date"])
+    return out, "ok"
 
 
-def get_war_news() -> list[str]:
-    """近期地緣消息（非特指假期間，只在 T-1 附上）。"""
+def get_events(start: date, end: date) -> tuple[list[str], str]:
+    """假期間的事件（字串清單，供 Telegram 訊息使用）。"""
+    calendar, status = get_calendar(60)
+    if status != "ok":
+        return [], "error"
+    picked = [e for e in calendar
+              if start <= date.fromisoformat(e["date"]) <= end]
+    return [f"{e['date'][5:]} {e['title']}" for e in picked], "ok"
+
+
+def get_war_news() -> list[dict]:
+    """近期地緣消息（Google News RSS）。"""
     try:
         payload = http_json(ECON_API, timeout=30)["data"]
     except Exception:  # noqa: BLE001
         return []
-    return [str(w.get("title", ""))[:60] for w in payload.get("war", [])[:2] if w.get("title")]
+    return [{"date": str(w.get("date", "")), "title": str(w.get("title", ""))[:120],
+             "link": str(w.get("link", ""))}
+            for w in payload.get("war", [])[:6] if w.get("title")]
 
 
 def send_telegram(text: str) -> bool:
@@ -308,7 +344,7 @@ def build_message(ctx: dict) -> str:
         lines.extend(f"  {e}" for e in ctx["events"]) if ctx["events"] else lines.append("  無重大國定事件")
         if ctx["offset"] <= 1 and ctx["war_news"]:
             lines.append("  近期地緣消息：")
-            lines.extend(f"    {w}" for w in ctx["war_news"])
+            lines.extend(f"    {w['title']}" for w in ctx["war_news"])
         lines.append("")
 
     lines.append(ctx["verdict"])

@@ -67,6 +67,9 @@ def build_status() -> dict:
     holiday = {"t1": None, "resume": None, "offset": None,
                "days_to_t1": None, "status": "unknown"}
     events: list[str] = []
+    calendar: list[dict] = []
+    calendar_status = "ok"
+    war: list[dict] = []
     if t1:
         offset = hg.trading_offset(today, t1, holidays)
         resume = hg.next_trading_day(t1, holidays)
@@ -79,6 +82,9 @@ def build_status() -> dict:
         }
         if resume:
             events, _ = hg.get_events(t1 + timedelta(days=1), resume)
+
+    calendar, calendar_status = hg.get_calendar(30)
+    war = hg.get_war_news()
 
     return {
         "ts": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
@@ -98,6 +104,9 @@ def build_status() -> dict:
         "failed_codes": failed,
         "holiday": holiday,
         "events": events,
+        "calendar": calendar,
+        "calendar_status": calendar_status,
+        "war": war,
     }
 
 
@@ -225,8 +234,17 @@ HTML = """<!doctype html>
     <tbody id="positions-body"></tbody>
   </table>
 
-  <h2>假期間事件</h2>
-  <ul class="events" id="events"><li>--</li></ul>
+  <h2>國際行事曆 <span class="tag" id="next-event-tag">--</span></h2>
+  <table>
+    <colgroup>
+      <col style="width:12%"><col style="width:10%"><col style="width:30%"><col style="width:48%">
+    </colgroup>
+    <thead><tr><th>日期</th><th class="num">倒數</th><th>事件</th><th>觀察重點</th></tr></thead>
+    <tbody id="calendar-body"></tbody>
+  </table>
+
+  <h2>地緣消息</h2>
+  <ul class="events" id="war"><li>--</li></ul>
 </div>
 <script>
 const fmt = n => n == null ? '--' : n.toLocaleString('zh-TW', {maximumFractionDigits: 0});
@@ -318,10 +336,26 @@ function render(d) {
        <td class="num ${d.totals.pnl < 0 ? 'down' : 'up'}"><strong>${fmt(d.totals.pnl)}</strong></td>
        <td></td></tr>`;
 
-  const ev = document.getElementById('events');
-  ev.innerHTML = d.events.length
-    ? d.events.map(e => `<li>${e}</li>`).join('')
-    : '<li>假期間無重大國定事件</li>';
+  const cal = document.getElementById('calendar-body');
+  const nextTag = document.getElementById('next-event-tag');
+  if (d.calendar && d.calendar.length) {
+    const nearest = d.calendar[0];
+    nextTag.textContent = `最近：${nearest.title}（${nearest.days === 0 ? '今天' : nearest.days + ' 天後'}）`;
+    cal.innerHTML = d.calendar.map((e, i) => `
+      <tr${i === 0 ? ' style="background:var(--bg)"' : ''}>
+        <td>${e.date.slice(5)}</td>
+        <td class="num">${e.days === 0 ? '今天' : e.days + ' 天'}</td>
+        <td>${e.title}</td>
+        <td style="color:var(--muted);font-size:12.5px">${e.hint}</td></tr>`).join('');
+  } else {
+    nextTag.textContent = '';
+    cal.innerHTML = '<tr><td colspan="4" style="color:var(--muted)">近期無事件</td></tr>';
+  }
+
+  const warEl = document.getElementById('war');
+  warEl.innerHTML = (d.war && d.war.length)
+    ? d.war.map(w => `<li>${w.date ? w.date + '　' : ''}${w.title}</li>`).join('')
+    : '<li>目前無地緣消息</li>';
 }
 
 async function refresh() {
