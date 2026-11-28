@@ -588,6 +588,34 @@ def snapshot():
         return jsonify({"ok": False, "error": redact(e)})
 
 
+@app.get("/positions")
+def positions():
+    """證券庫存（需帳號已開通 API 帳務查詢權限）。
+
+    慢查詢：逾時不代表 session 死了，用 mark_down_on_timeout=False，
+    避免無謂重登把整條連線與訂閱一起打掉。
+    """
+    def work(api):
+        rows = api.list_positions(api.stock_account)
+        out = []
+        for p in rows:
+            out.append({
+                "code": getattr(p, "code", "") or "",
+                "name": getattr(p, "name", "") or "",
+                "quantity": int(getattr(p, "quantity", 0) or 0),
+                "price": float(getattr(p, "price", 0) or 0),
+                "last_price": float(getattr(p, "last_price", 0) or 0),
+                "pnl": float(getattr(p, "pnl", 0) or 0),
+                "cond": str(getattr(p, "cond", "") or ""),
+            })
+        return out
+    try:
+        return jsonify({"ok": True, "data": _run(work, op="positions", budget_s=15,
+                                                 mark_down_on_timeout=False)})
+    except Exception as e:
+        return jsonify({"ok": False, "error": redact(e)})
+
+
 @app.get("/stock_search")
 def stock_search():
     """模糊搜尋代號或中文名稱，回傳最多 limit 筆 [{code, name}]。
